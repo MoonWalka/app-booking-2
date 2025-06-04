@@ -4,7 +4,7 @@ import styles from './StatsCards.module.css';
 
 /**
  * Composant générique pour afficher des cartes de statistiques
- * Compatible avec tous les types d'entités (artistes, programmateurs, concerts, etc.)
+ * Compatible avec tous les types d'entités (artistes, contacts, concerts, etc.)
  */
 const StatsCards = ({ stats }) => {
   if (!stats || stats.length === 0) return null;

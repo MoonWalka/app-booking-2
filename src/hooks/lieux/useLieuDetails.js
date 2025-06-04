@@ -90,10 +90,10 @@ const useLieuDetails = (id, locationParam) => {
     // Configuration des entités liées
     relatedEntities: [
       { 
-        name: 'programmateur', 
-        idField: 'programmateurId', 
-        collection: 'programmateurs',
-        essential: true // Le programmateur est essentiel pour l'affichage du lieu
+        name: 'contact', 
+        idField: 'contactId', 
+        collection: 'contacts',
+        essential: true // Le contact est essentiel pour l'affichage du lieu
       }
     ],
     
@@ -185,25 +185,25 @@ const useLieuDetails = (id, locationParam) => {
   
   // Fonctions additionnelles spécifiques aux lieux
   
-  // Gestion du programmateur
-  const handleProgrammateurChange = useCallback((newProgrammateur) => {
+  // Gestion du contact
+  const handleContactChange = useCallback((newContact) => {
     if (!detailsHook?.setFormData) return;
     
-    if (newProgrammateur) {
+    if (newContact) {
       detailsHook.setFormData(prev => ({
         ...prev,
-        programmateurId: newProgrammateur.id,
-        programmateur: {
-          id: newProgrammateur.id,
-          nom: newProgrammateur.nom,
-          prenom: newProgrammateur.prenom
+        contactId: newContact.id,
+        contact: {
+          id: newContact.id,
+          nom: newContact.nom,
+          prenom: newContact.prenom
         }
       }));
     } else {
       detailsHook.setFormData(prev => ({
         ...prev,
-        programmateurId: null,
-        programmateur: null
+        contactId: null,
+        contact: null
       }));
     }
   }, [detailsHook]);
@@ -250,7 +250,7 @@ const useLieuDetails = (id, locationParam) => {
   return {
     // Données principales
     lieu: detailsHook?.entity || null,
-    programmateur: detailsHook?.relatedData?.programmateur || null,
+    contact: detailsHook?.relatedData?.contact || null,
     loading: detailsHook?.loading || false,
     isLoading: detailsHook?.loading || false,
     isSubmitting: detailsHook?.isSubmitting || false,
@@ -281,7 +281,7 @@ const useLieuDetails = (id, locationParam) => {
     handleConfirmDelete: detailsHook?.handleConfirmDelete || (() => {}),
     
     // Fonctions spécifiques aux lieux
-    handleProgrammateurChange,
+    handleContactChange,
     updateCoordinates,
     addEquipement,
     removeEquipement,

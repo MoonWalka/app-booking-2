@@ -143,7 +143,7 @@ export const useStructureForm = (structureId) => {
     // Options supplémentaires
     addCreatedAt: isNewStructure, // Ajouter createdAt seulement pour les nouvelles structures
     relatedEntities: [
-      // On pourrait ajouter ici les programmateurs liés ou autres relations
+      // On pourrait ajouter ici les contacts liés ou autres relations
     ]
   });
   

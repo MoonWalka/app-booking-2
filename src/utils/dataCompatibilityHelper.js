@@ -14,7 +14,7 @@ import { db } from '@/services/firebase-service';
 
 /**
  * Vérifie si une collection organisationnelle existe et a des données
- * @param {string} entityType - Type d'entité (concerts, programmateurs, etc.)
+ * @param {string} entityType - Type d'entité (concerts, contacts, etc.)
  * @param {string} orgId - ID de l'organisation
  * @returns {Promise<boolean>} - True si la collection org existe et a des données
  */
@@ -194,7 +194,7 @@ export const migrateToOrganizationalCollections = async (entityType, orgId, dryR
  * @returns {Promise<Object>} - Rapport de compatibilité
  */
 export const analyzeDataCompatibility = async (orgId) => {
-  const entityTypes = ['concerts', 'programmateurs', 'artistes', 'lieux', 'structures'];
+  const entityTypes = ['concerts', 'contacts', 'artistes', 'lieux', 'structures'];
   const report = {
     organizationId: orgId,
     timestamp: new Date(),

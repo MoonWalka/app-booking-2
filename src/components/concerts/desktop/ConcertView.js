@@ -9,14 +9,14 @@ import styles from './ConcertView.module.css';
 import { useConcertDetails } from '@/hooks/concerts';
 import { useConcertStatus } from '@/hooks/concerts';
 import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
-import { useProgrammateurSearch } from '@/hooks/programmateurs/useProgrammateurSearch';
+import { useContactSearch } from '@/hooks/contacts/useContactSearch';
 import useArtisteSearch from '@/hooks/artistes/useArtisteSearch';
 
 // Import des composants
 import ConcertHeader from './ConcertHeader';
 import ConcertGeneralInfo from './ConcertGeneralInfo';
-import ConcertLocationSectionFixed from './ConcertLocationSectionFixed';
-import ConcertOrganizerSectionFixed from './ConcertOrganizerSectionFixed';
+import ConcertLocationSection from './ConcertLocationSection';
+import ConcertOrganizerSection from './ConcertOrganizerSection';
 import ConcertArtistSection from './ConcertArtistSection';
 import ConcertStructureSection from './ConcertStructureSection';
 import NotesSection from '../sections/NotesSection';
@@ -41,9 +41,9 @@ const ConcertView = memo(({ id: propId }) => {
     }
   }, []);
   
-  callbacksRef.current.onSelectProgrammateur = useCallback((programmateur) => {
-    if (callbacksRef.current.setProgrammateur) {
-      callbacksRef.current.setProgrammateur(programmateur);
+  callbacksRef.current.onSelectContact = useCallback((contact) => {
+    if (callbacksRef.current.setContact) {
+      callbacksRef.current.setContact(contact);
     }
   }, []);
   
@@ -55,7 +55,7 @@ const ConcertView = memo(({ id: propId }) => {
   
   const searchConfig = useMemo(() => ({
     lieu: { onSelect: callbacksRef.current.onSelectLieu, maxResults: 10 },
-    programmateur: { onSelect: callbacksRef.current.onSelectProgrammateur, maxResults: 10 },
+    contact: { onSelect: callbacksRef.current.onSelectContact, maxResults: 10 },
     artiste: { onSelect: callbacksRef.current.onSelectArtiste, maxResults: 10 }
   }), []);
   
@@ -63,17 +63,17 @@ const ConcertView = memo(({ id: propId }) => {
   
   const concertStatus = useConcertStatus();
   const lieuSearchHook = useLieuSearch(searchConfig.lieu);
-  const programmateurSearchHook = useProgrammateurSearch(searchConfig.programmateur);
+  const contactSearchHook = useContactSearch(searchConfig.contact);
   const artisteSearchHook = useArtisteSearch('', searchConfig.artiste);
   
   if (detailsHook) {
     callbacksRef.current.setLieu = detailsHook.setLieu;
-    callbacksRef.current.setProgrammateur = detailsHook.setProgrammateur;
+    callbacksRef.current.setContact = detailsHook.setContact;
     callbacksRef.current.setArtiste = detailsHook.setArtiste;
   }
 
   const {
-    concert, lieu, programmateur, artiste, structure, loading, isSubmitting, formData, 
+    concert, lieu, contact, artiste, structure, loading, isSubmitting, formData, 
     formDataStatus, showFormGenerator, generatedFormLink, setShowFormGenerator, 
     setGeneratedFormLink, handleDelete, copyToClipboard, formatDate, formatMontant, 
     isDatePassed, handleFormGenerated, handleChange, handleSave
@@ -96,11 +96,11 @@ const ConcertView = memo(({ id: propId }) => {
           handleLieuSelect: lieuSearchHook?.setLieu || lieuSearchHook?.handleLieuSelect || (() => {}),
           setSelectedEntity: lieuSearchHook?.setLieu || lieuSearchHook?.setSelectedEntity || (() => {})
         },
-        programmateur: {
-          ...programmateurSearchHook,
+        contact: {
+          ...contactSearchHook,
           // Mapper les méthodes pour compatibilité
-          handleProgrammateurSelect: programmateurSearchHook?.setProgrammateur || programmateurSearchHook?.handleProgrammateurSelect || (() => {}),
-          setSelectedEntity: programmateurSearchHook?.setProgrammateur || programmateurSearchHook?.setSelectedEntity || (() => {})
+          handleContactSelect: contactSearchHook?.setContact || contactSearchHook?.handleContactSelect || (() => {}),
+          setSelectedEntity: contactSearchHook?.setContact || contactSearchHook?.setSelectedEntity || (() => {})
         },
         artiste: {
           ...artisteSearchHook,
@@ -120,17 +120,17 @@ const ConcertView = memo(({ id: propId }) => {
         handleLieuSelect: () => {},
         setSelectedEntity: () => {},
         handleCreateLieu: () => {},
-        handleCreateProgrammateur: type === 'programmateur' ? () => navigate('/programmateurs/nouveau') : () => {},
+        handleCreateContact: type === 'contact' ? () => navigate('/contacts/nouveau') : () => {},
         handleCreateArtiste: type === 'artiste' ? () => navigate('/artistes/nouveau') : () => {}
       });
       
       return { 
         lieu: createReadOnlySearch('lieu'), 
-        programmateur: createReadOnlySearch('programmateur'), 
+        contact: createReadOnlySearch('contact'), 
         artiste: createReadOnlySearch('artiste') 
       };
     }
-  }, [isEditMode, lieuSearchHook, programmateurSearchHook, artisteSearchHook, navigate]);
+  }, [isEditMode, lieuSearchHook, contactSearchHook, artisteSearchHook, navigate]);
 
   const statusInfo = useMemo(() => {
     if (!detailsHook?.getStatusInfo) return {};
@@ -143,11 +143,11 @@ const ConcertView = memo(({ id: propId }) => {
   const navigationCallbacks = useMemo(() => ({
     navigateToList: () => navigate('/concerts'),
     navigateToLieuDetails: (lieuId) => navigate(`/lieux/${lieuId}`),
-    navigateToProgrammateurDetails: (progId) => navigate(`/programmateurs/${progId}`),
+    navigateToContactDetails: (progId) => navigate(`/contacts/${progId}`),
     navigateToStructureDetails: (structureId) => navigate(`/structures/${structureId}`),
     navigateToArtisteDetails: (artisteId) => navigate(`/artistes/${artisteId}`),
     handleCreateLieu: () => navigate('/lieux/nouveau'),
-    handleCreateProgrammateur: () => navigate('/programmateurs/nouveau'),
+    handleCreateContact: () => navigate('/contacts/nouveau'),
     handleCreateArtiste: () => navigate('/artistes/nouveau')
   }), [navigate]);
 
@@ -200,7 +200,7 @@ const ConcertView = memo(({ id: propId }) => {
         artiste={artiste}
         formDataStatus={formDataStatus}
       />
-      <ConcertLocationSectionFixed 
+      <ConcertLocationSection 
         concertId={id}
         lieu={lieu}
         isEditMode={isEditMode}
@@ -217,13 +217,13 @@ const ConcertView = memo(({ id: propId }) => {
         handleRemoveLieu={() => callbacksRef.current.setLieu && callbacksRef.current.setLieu(null)}
         handleCreateLieu={navigationCallbacks.handleCreateLieu}
       />
-      <ConcertOrganizerSectionFixed 
+      <ConcertOrganizerSection 
         concertId={id}
-        programmateur={programmateur}
+        contact={contact}
         isEditMode={isEditMode}
         formData={formData}
         onChange={handleChange}
-        navigateToProgrammateurDetails={navigationCallbacks.navigateToProgrammateurDetails}
+        navigateToContactDetails={navigationCallbacks.navigateToContactDetails}
         showFormGenerator={showFormGenerator}
         setShowFormGenerator={setShowFormGenerator}
         generatedFormLink={generatedFormLink}
@@ -232,15 +232,15 @@ const ConcertView = memo(({ id: propId }) => {
         copyToClipboard={copyToClipboard}
         formatDate={formatDate}
         concert={concert}
-        selectedProgrammateur={programmateur}
-        programmateurSearchTerm={searchObjects.programmateur.searchTerm}
-        setProgrammateurSearchTerm={searchObjects.programmateur.setSearchTerm}
-        showProgrammateurResults={searchObjects.programmateur.showResults}
-        programmateurResults={searchObjects.programmateur.results}
-        isSearchingProgrammateurs={searchObjects.programmateur.isSearching}
-        handleSelectProgrammateur={searchObjects.programmateur.setSelectedEntity}
-        handleRemoveProgrammateur={() => callbacksRef.current.setProgrammateur && callbacksRef.current.setProgrammateur(null)}
-        handleCreateProgrammateur={navigationCallbacks.handleCreateProgrammateur}
+        selectedContact={contact}
+        contactSearchTerm={searchObjects.contact.searchTerm}
+        setContactSearchTerm={searchObjects.contact.setSearchTerm}
+        showContactResults={searchObjects.contact.showResults}
+        contactResults={searchObjects.contact.results}
+        isSearchingContacts={searchObjects.contact.isSearching}
+        handleSelectContact={searchObjects.contact.setSelectedEntity}
+        handleRemoveContact={() => callbacksRef.current.setContact && callbacksRef.current.setContact(null)}
+        handleCreateContact={navigationCallbacks.handleCreateContact}
       />
       <ConcertStructureSection 
         concertId={id}
@@ -286,7 +286,7 @@ const ConcertView = memo(({ id: propId }) => {
             </button>
             <FormGenerator
               concertId={id}
-              programmateurId={programmateur?.id}
+              contactId={contact?.id}
               onFormGenerated={(formLinkId, formUrl) => {
                 setGeneratedFormLink(formUrl);
                 if (handleFormGenerated) {

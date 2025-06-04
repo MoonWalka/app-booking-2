@@ -59,7 +59,7 @@ const StructureFormEnhanced = () => {
   });
 
   // État pour les associations
-  const [programmateursAssocies, setProgrammateursAssocies] = useState([]);
+  const [contactsAssocies, setContactsAssocies] = useState([]);
   const [concertsAssocies, setConcertsAssocies] = useState([]);
   const [contratsAssocies] = useState([]);
   const [lieuxAssocies, setLieuxAssocies] = useState([]);
@@ -92,9 +92,9 @@ const StructureFormEnhanced = () => {
     onCompanySelect: handleCompanySelect
   });
 
-  // États pour la recherche de programmateurs
-  const [programmateurSearchTerm, setProgrammateurSearchTerm] = useState('');
-  const [programmateurSearchResults, setProgrammateurSearchResults] = useState([]);
+  // États pour la recherche de contacts
+  const [contactSearchTerm, setContactSearchTerm] = useState('');
+  const [contactSearchResults, setContactSearchResults] = useState([]);
 
   // États pour la recherche de concerts
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
@@ -107,14 +107,14 @@ const StructureFormEnhanced = () => {
   // Fonction pour charger les associations
   const loadAssociations = useCallback(async (structure) => {
     try {
-      // Charger les programmateurs associés
-      if (structure.programmateursIds?.length > 0) {
-        const programmateurPromises = structure.programmateursIds.map(async (id) => {
-          const docSnap = await getDoc(doc(db, 'programmateurs', id));
+      // Charger les contacts associés
+      if (structure.contactsIds?.length > 0) {
+        const contactPromises = structure.contactsIds.map(async (id) => {
+          const docSnap = await getDoc(doc(db, 'contacts', id));
           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
         });
-        const programmateurs = (await Promise.all(programmateurPromises)).filter(p => p !== null);
-        setProgrammateursAssocies(programmateurs);
+        const contacts = (await Promise.all(contactPromises)).filter(p => p !== null);
+        setContactsAssocies(contacts);
       }
 
       // Charger les concerts associés
@@ -206,21 +206,21 @@ const StructureFormEnhanced = () => {
     loadStructure();
   }, [id, isNewFromUrl, loadAssociations]);
 
-  // Effet pour préremplir les infos du signataire avec le premier programmateur associé
+  // Effet pour préremplir les infos du signataire avec le premier contact associé
   useEffect(() => {
-    if (programmateursAssocies.length > 0 && 
+    if (contactsAssocies.length > 0 && 
         (!signataire.prenom && !signataire.nom && !signataire.fonction)) {
-      const programmateur = programmateursAssocies[0];
+      const contact = contactsAssocies[0];
       setSignataire(prev => ({
         ...prev,
-        prenom: programmateur.contact?.prenom || '',
-        nom: programmateur.contact?.nom || programmateur.nom || '',
-        fonction: programmateur.contact?.fonction || programmateur.fonction || '',
-        email: programmateur.contact?.email || programmateur.email || '',
-        telephone: programmateur.contact?.telephone || programmateur.telephone || ''
+        prenom: contact.contact?.prenom || '',
+        nom: contact.contact?.nom || contact.nom || '',
+        fonction: contact.contact?.fonction || contact.fonction || '',
+        email: contact.contact?.email || contact.email || '',
+        telephone: contact.contact?.telephone || contact.telephone || ''
       }));
     }
-  }, [programmateursAssocies, signataire.prenom, signataire.nom, signataire.fonction]);
+  }, [contactsAssocies, signataire.prenom, signataire.nom, signataire.fonction]);
 
   // Gestionnaire de changement des champs
   const handleChange = (e) => {
@@ -328,31 +328,31 @@ const StructureFormEnhanced = () => {
   };
 
   // Fonctions de recherche
-  const searchProgrammateurs = useCallback(async (searchTerm) => {
+  const searchContacts = useCallback(async (searchTerm) => {
     if (!searchTerm || searchTerm.length < 2) {
-      setProgrammateurSearchResults([]);
+      setContactSearchResults([]);
       return;
     }
 
     try {
       const q = query(
-        collection(db, 'programmateurs'),
+        collection(db, 'contacts'),
         where('nom', '>=', searchTerm),
         where('nom', '<=', searchTerm + '\uf8ff')
       );
       const querySnapshot = await getDocs(q);
-      const programmateurs = querySnapshot.docs.map(doc => ({
+      const contacts = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       
-      setProgrammateurSearchResults(programmateurs.filter(p => 
-        !programmateursAssocies.find(pa => pa.id === p.id)
+      setContactSearchResults(contacts.filter(p => 
+        !contactsAssocies.find(pa => pa.id === p.id)
       ));
     } catch (error) {
-      console.error('Erreur recherche programmateurs:', error);
+      console.error('Erreur recherche contacts:', error);
     }
-  }, [programmateursAssocies]);
+  }, [contactsAssocies]);
 
   const searchConcerts = useCallback(async (searchTerm) => {
     if (!searchTerm || searchTerm.length < 2) {
@@ -409,10 +409,10 @@ const StructureFormEnhanced = () => {
   // Effets pour la recherche avec debounce
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      searchProgrammateurs(programmateurSearchTerm);
+      searchContacts(contactSearchTerm);
     }, 300);
     return () => clearTimeout(timeoutId);
-  }, [programmateurSearchTerm, searchProgrammateurs]);
+  }, [contactSearchTerm, searchContacts]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -445,7 +445,7 @@ const StructureFormEnhanced = () => {
         ...formData,
         adresseLieu,
         signataire,
-        programmateursIds: programmateursAssocies.map(p => p.id),
+        contactsIds: contactsAssocies.map(p => p.id),
         concertsIds: concertsAssocies.map(c => c.id),
         lieuxIds: lieuxAssocies.map(l => l.id),
         contratsIds: contratsAssocies.map(c => c.id),
@@ -876,28 +876,28 @@ const StructureFormEnhanced = () => {
               </div>
             </div>
 
-            {/* Section Programmateurs associés */}
+            {/* Section Contacts associés */}
             <div className={styles.formSection}>
               <div className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
                   <i className="bi bi-person-badge section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Programmateurs associés ({programmateursAssocies.length})</h3>
+                  <h3 className={styles.sectionTitle}>Contacts associés ({contactsAssocies.length})</h3>
                 </div>
                 <div className={styles.sectionBody}>
-                  {/* Recherche de programmateurs */}
+                  {/* Recherche de contacts */}
                   <div className={styles.searchBar} style={{ marginBottom: '20px' }}>
                     <div className={styles.searchInputGroup}>
                       <input
                         type="text"
                         className={styles.searchInput}
-                        placeholder="Rechercher un programmateur à associer..."
-                        value={programmateurSearchTerm}
-                        onChange={(e) => setProgrammateurSearchTerm(e.target.value)}
+                        placeholder="Rechercher un contact à associer..."
+                        value={contactSearchTerm}
+                        onChange={(e) => setContactSearchTerm(e.target.value)}
                       />
                       <button
                         type="button"
                         className={styles.searchBtn}
-                        onClick={() => navigate('/programmateurs/nouveau')}
+                        onClick={() => navigate('/contacts/nouveau')}
                       >
                         <i className="bi bi-plus"></i>
                         Nouveau
@@ -905,28 +905,28 @@ const StructureFormEnhanced = () => {
                     </div>
 
                     {/* Résultats de recherche */}
-                    {programmateurSearchResults.length > 0 && (
+                    {contactSearchResults.length > 0 && (
                       <div className={styles.searchResults}>
-                        {programmateurSearchResults.map((programmateur) => (
+                        {contactSearchResults.map((contact) => (
                           <div
-                            key={programmateur.id}
+                            key={contact.id}
                             className={styles.searchResultItem}
                             onClick={() => {
-                              setProgrammateursAssocies(prev => [...prev, programmateur]);
-                              setProgrammateurSearchTerm('');
-                              setProgrammateurSearchResults([]);
-                              toast.success(`Programmateur "${programmateur.nom}" ajouté`);
+                              setContactsAssocies(prev => [...prev, contact]);
+                              setContactSearchTerm('');
+                              setContactSearchResults([]);
+                              toast.success(`Contact "${contact.nom}" ajouté`);
                             }}
                           >
                             <div className={styles.resultTitle}>
-                              {programmateur.contact?.prenom} {programmateur.contact?.nom || programmateur.nom}
+                              {contact.contact?.prenom} {contact.contact?.nom || contact.nom}
                             </div>
                             <div className={styles.resultDetails}>
-                              {programmateur.structure?.raisonSociale && 
-                                <span><i className="bi bi-building"></i> {programmateur.structure.raisonSociale}</span>
+                              {contact.structure?.raisonSociale && 
+                                <span><i className="bi bi-building"></i> {contact.structure.raisonSociale}</span>
                               }
-                              {programmateur.contact?.email && 
-                                <span><i className="bi bi-envelope"></i> {programmateur.contact.email}</span>
+                              {contact.contact?.email && 
+                                <span><i className="bi bi-envelope"></i> {contact.contact.email}</span>
                               }
                             </div>
                           </div>
@@ -935,8 +935,8 @@ const StructureFormEnhanced = () => {
                     )}
                   </div>
 
-                  {/* Liste des programmateurs associés */}
-                  {programmateursAssocies.length > 0 ? (
+                  {/* Liste des contacts associés */}
+                  {contactsAssocies.length > 0 ? (
                     <div className={styles.tableResponsive}>
                       <table className={styles.table}>
                         <thead>
@@ -948,21 +948,21 @@ const StructureFormEnhanced = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {programmateursAssocies.map((programmateur) => (
-                            <tr key={programmateur.id}>
+                          {contactsAssocies.map((contact) => (
+                            <tr key={contact.id}>
                               <td>
                                 <strong>
-                                  {programmateur.contact?.prenom} {programmateur.contact?.nom || programmateur.nom}
+                                  {contact.contact?.prenom} {contact.contact?.nom || contact.nom}
                                 </strong>
                               </td>
-                              <td>{programmateur.contact?.email || programmateur.email || '-'}</td>
-                              <td>{programmateur.contact?.telephone || programmateur.telephone || '-'}</td>
+                              <td>{contact.contact?.email || contact.email || '-'}</td>
+                              <td>{contact.contact?.telephone || contact.telephone || '-'}</td>
                               <td>
                                 <div style={{ display: 'flex', gap: '8px' }}>
                                   <button
                                     type="button"
                                     className={`${styles.tcBtn} ${styles.tcBtnSecondary}`}
-                                    onClick={() => navigate(`/programmateurs/${programmateur.id}`)}
+                                    onClick={() => navigate(`/contacts/${contact.id}`)}
                                     style={{ fontSize: '12px', padding: '4px 8px' }}
                                   >
                                     <i className="bi bi-eye"></i>
@@ -972,10 +972,10 @@ const StructureFormEnhanced = () => {
                                     type="button"
                                     className={`${styles.tcBtn} ${styles.tcBtnDanger}`}
                                     onClick={() => {
-                                      setProgrammateursAssocies(prev => 
-                                        prev.filter(p => p.id !== programmateur.id)
+                                      setContactsAssocies(prev => 
+                                        prev.filter(p => p.id !== contact.id)
                                       );
-                                      toast.info('Programmateur retiré');
+                                      toast.info('Contact retiré');
                                     }}
                                     style={{ fontSize: '12px', padding: '4px 8px' }}
                                   >
@@ -992,7 +992,7 @@ const StructureFormEnhanced = () => {
                   ) : (
                     <div className={styles.alert}>
                       <i className="bi bi-info-circle"></i>
-                      Aucun programmateur associé pour le moment.
+                      Aucun contact associé pour le moment.
                     </div>
                   )}
                 </div>

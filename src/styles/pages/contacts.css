@@ -1,0 +1,326 @@
+/*
+ * Styles pour contacts.css
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Mai 2025
+ * Dernière mise à jour: 20 mai 2025
+ */
+
+/* =============================
+   WRAPPER PRINCIPAL DE LA PAGE
+   ============================= */
+.contacts-page {
+  /* Assure une cohérence avec les autres pages (lieux, concerts) */
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =============================
+   VARIABLES SPÉCIFIQUES CONTACTS
+   ============================= */
+:root {
+  --tc-contact-color: #6f42c1; /* Violet pour les contacts */
+  --tc-contact-color-light: #f0e6fa;
+  --tc-contact-color-rgb: 111, 66, 193;
+}
+
+/* =============================
+   DÉTAILS DU CONTACT
+   ============================= */
+.tc-contact-container {
+  padding: var(--tc-space-4);
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
+  margin-bottom: var(--tc-space-4);
+}
+
+.tc-contact-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-space-4);
+}
+
+.tc-contact-info {
+  flex: 1;
+}
+
+.tc-contact-name {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-1);
+}
+
+.tc-contact-organization {
+  color: var(--tc-text-muted);
+  margin-bottom: var(--tc-space-2);
+}
+
+.tc-contact-actions {
+  display: flex;
+  gap: var(--tc-space-2);
+}
+
+.tc-notes-section {
+  margin-top: var(--tc-space-4);
+  padding: var(--tc-space-2);
+  background-color: rgba(var(--tc-warning-color-rgb), 0.1);
+  border-radius: var(--tc-radius-base);
+  border-left: 4px solid var(--tc-color-warning);
+}
+
+/* =============================
+   FORMULAIRE DU CONTACT
+   ============================= */
+.tc-contact-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tc-form-header {
+  margin-bottom: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-default);
+  padding-bottom: var(--tc-space-2);
+}
+
+.tc-modern-title {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  margin: 0 0 var(--tc-space-2) 0;
+  font-size: var(--tc-font-size-lg);
+}
+
+.tc-breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+}
+
+.tc-form-card {
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-sm);
+  margin-bottom: var(--tc-space-4);
+  overflow: hidden;
+  transition: all var(--tc-transition-duration);
+}
+
+.tc-form-card:hover {
+  box-shadow: var(--tc-shadow-md);
+  transform: translateY(-2px);
+}
+
+.tc-card-header {
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--tc-border-default);
+}
+
+.tc-card-header i.bi-person-badge {
+  color: var(--tc-color-primary);
+  margin-right: var(--tc-space-2);
+  font-size: var(--tc-font-size-lg);
+}
+
+.tc-card-body {
+  padding: var(--tc-space-4);
+}
+
+.tc-form-group {
+  margin-bottom: var(--tc-space-4);
+}
+
+.tc-form-label {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-2);
+  display: block;
+}
+
+.tc-optional {
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-normal);
+}
+
+.tc-form-display {
+  padding: var(--tc-space-2) 0;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  color: var(--tc-text-default);
+}
+
+.tc-email-link, .tc-phone-link {
+  text-decoration: none;
+  color: var(--tc-color-primary);
+  transition: color var(--tc-transition-duration);
+}
+
+.tc-email-link:hover, .tc-phone-link:hover {
+  color: var(--tc-color-primary-dark);
+  text-decoration: underline;
+}
+
+.tc-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-6);
+}
+
+/* =============================
+   LISTE DES CONTACTS
+   ============================= */
+.tc-contacts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-space-4);
+}
+
+.tc-contact-list-card {
+  background-color: var(--tc-bg-default);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-base);
+  margin-bottom: var(--tc-space-2);
+  overflow: hidden;
+  transition: transform var(--tc-transition-duration);
+}
+
+.tc-contact-list-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-shadow-lg);
+}
+
+.tc-contact-card-header {
+  padding: var(--tc-space-2);
+  background-color: var(--tc-color-gray-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tc-contact-card-body {
+  padding: var(--tc-space-2);
+}
+
+.tc-contact-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-1);
+  margin-top: var(--tc-space-2);
+}
+
+.tc-tag {
+  padding: var(--tc-space-1) var(--tc-space-2);
+  background-color: var(--tc-color-gray-100);
+  border-radius: var(--tc-radius-sm);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-color-primary-dark);
+}
+
+/* =============================
+   COMPOSANTS DE SÉLECTION
+   ============================= */
+.tc-detail-card {
+  border-left: 3px solid var(--tc-color-primary);
+}
+
+.tc-contact-search {
+  position: relative;
+  margin-bottom: var(--tc-space-2);
+}
+
+.tc-dropdown-menu {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: var(--tc-space-2) 0;
+  z-index: var(--tc-z-index-dropdown);
+}
+
+.tc-contact-item {
+  padding: var(--tc-space-2) var(--tc-space-4);
+  cursor: pointer;
+  transition: background-color var(--tc-transition-duration);
+  border-bottom: 1px solid var(--tc-color-gray-200);
+}
+
+.tc-contact-item:hover {
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
+}
+
+.tc-contact-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--tc-color-gray-100);
+  border: 1px solid var(--tc-border-default);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-2) var(--tc-space-4);
+  transition: all var(--tc-transition-duration);
+}
+
+.tc-contact-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-1);
+}
+
+.tc-contact-contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-muted);
+}
+
+.tc-contact-link {
+  color: var(--tc-color-primary);
+  text-decoration: none;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.tc-contact-link:hover {
+  text-decoration: underline;
+}
+
+/* =============================
+   STRUCTURE JURIDIQUE
+   ============================= */
+.tc-structure-card .tc-data-label {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-gray-600);
+  margin-bottom: var(--tc-space-1);
+  display: block;
+}
+
+.tc-structure-card .tc-data-value {
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-default);
+}
+
+.tc-structure-card .tc-raison-sociale {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.tc-structure-card .tc-code-value {
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.tc-structure-card .tc-type-badge {
+  display: inline-block;
+  padding: var(--tc-space-1) var(--tc-space-2);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  line-height: 1;
+  color: var(--tc-color-gray-700);
+  background-color: var(--tc-color-gray-100);
+  border-radius: var(--tc-radius-sm);
+}

@@ -10,7 +10,7 @@ const ContratGenerationPage = () => {
   const { concertId } = useParams();
   const navigate = useNavigate();
   const [concert, setConcert] = useState(null);
-  const [programmateur, setProgrammateur] = useState(null);
+  const [contact, setContact] = useState(null);
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,11 +30,11 @@ const ContratGenerationPage = () => {
         const concertData = { id: concertId, ...concertDoc.data() };
         setConcert(concertData);
 
-        // Récupérer les données du programmateur si disponible
-        if (concertData.programmateurId) {
-          const programmateurDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
-          if (programmateurDoc.exists()) {
-            setProgrammateur({ id: programmateurDoc.id, ...programmateurDoc.data() });
+        // Récupérer les données du contact si disponible
+        if (concertData.contactId) {
+          const contactDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
+          if (contactDoc.exists()) {
+            setContact({ id: contactDoc.id, ...contactDoc.data() });
           }
         }
 
@@ -124,7 +124,7 @@ const ContratGenerationPage = () => {
           
           <ContratGenerator 
             concert={concert}
-            programmateur={programmateur}
+            contact={contact}
             artiste={artiste}
             lieu={lieu}
           />

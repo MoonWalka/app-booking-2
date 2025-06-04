@@ -1,0 +1,82 @@
+/*
+ * Styles pour ContactHeader
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.container {
+  /* Base styles for ContactHeader */
+  margin-bottom: var(--tc-space-4);
+}
+
+.detailsHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--tc-space-6);
+  flex-wrap: wrap;
+  gap: var(--tc-space-4);
+}
+
+.titleContainer {
+  flex: 1;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-space-2);
+  font-size: var(--tc-font-size-sm);
+}
+
+.breadcrumbItem {
+  color: var(--tc-text-secondary);
+  text-decoration: none;
+}
+
+.breadcrumbDivider {
+  margin: 0 var(--tc-space-2);
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-tertiary);
+}
+
+.headerTitle {
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--tc-space-2);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--tc-space-2);
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .detailsHeaderContainer {
+    flex-direction: column;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: var(--tc-space-2);
+  }
+
+  .breadcrumb {
+    font-size: var(--tc-font-size-xs);
+  }
+}
+
+@media (max-width: 576px) {
+  .headerActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .container {
+    margin-bottom: var(--tc-space-2);
+  }
+}

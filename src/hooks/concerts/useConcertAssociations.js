@@ -4,14 +4,14 @@ import { doc, getDoc, updateDoc, arrayUnion, serverTimestamp, db } from '@/servi
  * Hook pour gérer les associations entre un concert et d'autres entités
  */
 const useConcertAssociations = () => {
-  // Mise à jour des associations programmateur-concert
-  const updateProgrammateurAssociation = async (concertId, concertData, newProgrammateurId, oldProgrammateurId, currentLieu) => {
+  // Mise à jour des associations contact-concert
+  const updateContactAssociation = async (concertId, concertData, newContactId, oldContactId, currentLieu) => {
     try {
-      // Si un nouveau programmateur est sélectionné
-      if (newProgrammateurId) {
-        const progRef = doc(db, 'programmateurs', newProgrammateurId);
+      // Si un nouveau contact est sélectionné
+      if (newContactId) {
+        const progRef = doc(db, 'contacts', newContactId);
         
-        // Ajouter le concert à la liste des concerts associés du programmateur
+        // Ajouter le concert à la liste des concerts associés du contact
         const concertReference = {
           id: concertId,
           titre: concertData.titre || 'Sans titre',
@@ -25,9 +25,9 @@ const useConcertAssociations = () => {
         });
       }
       
-      // Si un ancien programmateur était associé et a changé
-      if (oldProgrammateurId && oldProgrammateurId !== newProgrammateurId) {
-        const oldProgRef = doc(db, 'programmateurs', oldProgrammateurId);
+      // Si un ancien contact était associé et a changé
+      if (oldContactId && oldContactId !== newContactId) {
+        const oldProgRef = doc(db, 'contacts', oldContactId);
         const oldProgDoc = await getDoc(oldProgRef);
         
         if (oldProgDoc.exists()) {
@@ -43,7 +43,7 @@ const useConcertAssociations = () => {
         }
       }
     } catch (error) {
-      console.error('Erreur lors de la mise à jour des associations programmateur-concert:', error);
+      console.error('Erreur lors de la mise à jour des associations contact-concert:', error);
     }
   };
 
@@ -148,7 +148,7 @@ const useConcertAssociations = () => {
           id: concertId,
           titre: concertData.titre || 'Sans titre',
           date: concertData.date || null,
-          programmateurNom: concertData.programmateurNom || null
+          contactNom: concertData.contactNom || null
         };
         
         await updateDoc(lieuRef, {
@@ -180,7 +180,7 @@ const useConcertAssociations = () => {
   };
 
   return {
-    updateProgrammateurAssociation,
+    updateContactAssociation,
     updateArtisteAssociation,
     updateStructureAssociation,
     updateLieuAssociation

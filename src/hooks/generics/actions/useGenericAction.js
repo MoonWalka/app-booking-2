@@ -35,7 +35,7 @@ import {
  * - delete: Suppression d'entités
  * - batch_operations: Opérations en lot
  * 
- * @param {string} entityType - Type d'entité (concerts, programmateurs, etc.)
+ * @param {string} entityType - Type d'entité (concerts, contacts, etc.)
  * @param {Object} actionConfig - Configuration des actions
  * @param {Object} options - Options additionnelles
  * 

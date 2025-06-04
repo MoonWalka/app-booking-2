@@ -4,34 +4,34 @@ import Card from '@/components/ui/Card';
 import styles from './StructureAssociationsSection.module.css';
 
 /**
- * Component for displaying programmateurs associated with a structure
+ * Component for displaying contacts associated with a structure
  * 
  * @param {Object} props - Component props
- * @param {Array} props.programmateurs - List of programmateurs associated with the structure
- * @param {Boolean} props.loadingProgrammateurs - Whether programmateurs are currently loading
+ * @param {Array} props.contacts - List of contacts associated with the structure
+ * @param {Boolean} props.loadingContacts - Whether contacts are currently loading
  */
-const StructureAssociationsSection = ({ programmateurs, loadingProgrammateurs }) => {
+const StructureAssociationsSection = ({ contacts, loadingContacts }) => {
   // Debug temporaire pour analyser les données reçues
   console.log('[DEBUG StructureAssociationsSection] Données reçues:', {
-    programmateurs,
-    loadingProgrammateurs,
-    nombreProgrammateurs: programmateurs?.length || 0
+    contacts,
+    loadingContacts,
+    nombreContacts: contacts?.length || 0
   });
 
   return (
     <Card
-      title={`Programmateurs associés (${programmateurs?.length || 0})`}
+      title={`Contacts associés (${contacts?.length || 0})`}
       icon={<i className="bi bi-person-badge"></i>}
     >
-        {loadingProgrammateurs ? (
+        {loadingContacts ? (
           <div className="text-center p-3">
             <div className={`${styles.spinner} ${styles.spinnerSmall}`} role="status">
               <span className="visually-hidden">Chargement...</span>
             </div>
           </div>
-        ) : programmateurs.length > 0 ? (
-          <div className={styles.programmateursList}>
-            {programmateurs.map(prog => {
+        ) : contacts.length > 0 ? (
+          <div className={styles.contactsList}>
+            {contacts.map(prog => {
               // Gérer les différentes structures de données possibles
               const nom = prog.nom || prog.contact?.nom || 'Nom non renseigné';
               const prenom = prog.prenom || prog.contact?.prenom || '';
@@ -42,19 +42,19 @@ const StructureAssociationsSection = ({ programmateurs, loadingProgrammateurs })
               const fullName = prenom ? `${prenom} ${nom}` : nom;
               
               return (
-                <div key={prog.id} className={styles.programmateurCard}>
-                  <div className={styles.programmateurInfo}>
-                    <h4 className={styles.programmateurName}>
+                <div key={prog.id} className={styles.contactCard}>
+                  <div className={styles.contactInfo}>
+                    <h4 className={styles.contactName}>
                       <i className="bi bi-person-badge me-2"></i>
-                      <Link to={`/programmateurs/${prog.id}`}>{fullName}</Link>
+                      <Link to={`/contacts/${prog.id}`}>{fullName}</Link>
                     </h4>
                     {fonction && (
-                      <div className={styles.programmateurFunction}>
+                      <div className={styles.contactFunction}>
                         <i className="bi bi-briefcase me-2"></i>
                         {fonction}
                       </div>
                     )}
-                    <div className={styles.programmateurDetails}>
+                    <div className={styles.contactDetails}>
                       {email && (
                         <div className={styles.detailItem}>
                           <i className="bi bi-envelope me-2"></i>
@@ -76,7 +76,7 @@ const StructureAssociationsSection = ({ programmateurs, loadingProgrammateurs })
         ) : (
           <div className={styles.alertInfo}>
             <i className="bi bi-info-circle me-2"></i>
-            Aucun programmateur n'est associé à cette structure.
+            Aucun contact n'est associé à cette structure.
           </div>
         )}
     </Card>

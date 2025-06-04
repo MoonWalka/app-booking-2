@@ -28,7 +28,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       const formData = { ...formSubmissionDoc.data(), id: formSubmissionDoc.id };
 
       // ==========================================
-      // 2. GESTION DU CONTACT/PROGRAMMATEUR
+      // 2. GESTION DU CONTACT/CONTACT
       // ==========================================
       
       // Séparer les champs par catégorie - SUPPORT DES DEUX FORMATS
@@ -87,46 +87,46 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         console.log("Données lieu mappées:", lieuFields);
       }
 
-      // Récupérer les données du concert pour vérifier s'il a déjà un programmateur
+      // Récupérer les données du concert pour vérifier s'il a déjà un contact
       const concertDoc = await getDoc(doc(db, 'concerts', concertId));
       const concertData = concertDoc.data();
       
-      // Utiliser le programmateur existant du concert en priorité
-      let programmId = concertData.programmateurId || formData.programmId;
+      // Utiliser le contact existant du concert en priorité
+      let programmId = concertData.contactId || formData.programmId;
       let structureId = null;
       
-      // Gestion du programmateur (contact)
+      // Gestion du contact (contact)
       if (Object.keys(contactFields).length > 0) {
         if (programmId) {
-          // Mise à jour programmateur existant avec SEULEMENT les données de contact
+          // Mise à jour contact existant avec SEULEMENT les données de contact
           const programmUpdateData = {
             ...contactFields,
             updatedAt: Timestamp.now()
           };
           
-          await updateDoc(doc(db, 'programmateurs', programmId), programmUpdateData);
-          console.log("Programmateur existant mis à jour avec les données de contact:", programmUpdateData);
+          await updateDoc(doc(db, 'contacts', programmId), programmUpdateData);
+          console.log("Contact existant mis à jour avec les données de contact:", programmUpdateData);
         } else {
-          // Création nouveau programmateur avec SEULEMENT les données de contact
-          const newProgrammateurData = {
+          // Création nouveau contact avec SEULEMENT les données de contact
+          const newContactData = {
             ...contactFields,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now()
           };
           
-          const newProgRef = await addDoc(collection(db, 'programmateurs'), newProgrammateurData);
+          const newProgRef = await addDoc(collection(db, 'contacts'), newContactData);
           programmId = newProgRef.id;
           
-          // Mettre à jour la soumission et le concert avec l'ID du programmateur créé
+          // Mettre à jour la soumission et le concert avec l'ID du contact créé
           await updateDoc(doc(db, 'formSubmissions', formId), {
             programmId: programmId
           });
           
           await updateDoc(doc(db, 'concerts', concertId), {
-            programmateurId: programmId
+            contactId: programmId
           });
           
-          console.log("Nouveau programmateur créé avec les données de contact:", newProgrammateurData);
+          console.log("Nouveau contact créé avec les données de contact:", newContactData);
         }
       }
 
@@ -149,13 +149,13 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           tva: structureFields.tva || '',
           numeroIntracommunautaire: structureFields.numeroIntracommunautaire || '',
           // Initialiser les associations
-          programmateursAssocies: []
+          contactsAssocies: []
         };
 
-        // Vérifier si le programmateur a déjà une structure associée
+        // Vérifier si le contact a déjà une structure associée
         let existingStructureId = null;
         if (programmId) {
-          const progDoc = await getDoc(doc(db, 'programmateurs', programmId));
+          const progDoc = await getDoc(doc(db, 'contacts', programmId));
           if (progDoc.exists()) {
             const progData = progDoc.data();
             existingStructureId = progData.structureId;
@@ -186,36 +186,36 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           console.log("Nouvelle structure créée:", structureId, structureData);
         }
 
-        // Associer la structure au programmateur
+        // Associer la structure au contact
         if (programmId && structureId) {
-          await updateDoc(doc(db, 'programmateurs', programmId), {
+          await updateDoc(doc(db, 'contacts', programmId), {
             structureId: structureId,
             structureNom: structureData.nom,
             updatedAt: Timestamp.now()
           });
 
-          // Ajouter le programmateur à la liste des programmateurs associés de la structure
+          // Ajouter le contact à la liste des contacts associés de la structure
           const structureDoc = await getDoc(doc(db, 'structures', structureId));
           if (structureDoc.exists()) {
             const structureDataFromDB = structureDoc.data();
-            const programmateursAssocies = structureDataFromDB.programmateursAssocies || [];
+            const contactsAssocies = structureDataFromDB.contactsAssocies || [];
             
-            // Vérifier si le programmateur n'est pas déjà dans la liste
-            const progExists = programmateursAssocies.some(prog => prog.id === programmId);
+            // Vérifier si le contact n'est pas déjà dans la liste
+            const progExists = contactsAssocies.some(prog => prog.id === programmId);
             
             if (!progExists) {
-              const progDoc = await getDoc(doc(db, 'programmateurs', programmId));
+              const progDoc = await getDoc(doc(db, 'contacts', programmId));
               if (progDoc.exists()) {
                 const progData = progDoc.data();
                 
-                programmateursAssocies.push({
+                contactsAssocies.push({
                   id: programmId,
                   nom: `${progData.prenom || ''} ${progData.nom || ''}`.trim(),
                   dateAssociation: Timestamp.now()
                 });
 
                 await updateDoc(doc(db, 'structures', structureId), {
-                  programmateursAssocies: programmateursAssocies,
+                  contactsAssocies: contactsAssocies,
                   updatedAt: Timestamp.now()
                 });
               }
@@ -241,26 +241,26 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           lieuUpdateData.longitude = formData.lieuData.longitude;
         }
 
-        // Ajouter le programmateur à la liste des programmateurs associés du lieu
+        // Ajouter le contact à la liste des contacts associés du lieu
         if (programmId) {
-          const progDoc = await getDoc(doc(db, 'programmateurs', programmId));
+          const progDoc = await getDoc(doc(db, 'contacts', programmId));
           if (progDoc.exists()) {
             const progData = progDoc.data();
             
             const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
             const lieuData = lieuDoc.data();
             
-            const programmateursAssocies = lieuData.programmateursAssocies || [];
-            const progExists = programmateursAssocies.some(prog => prog.id === programmId);
+            const contactsAssocies = lieuData.contactsAssocies || [];
+            const progExists = contactsAssocies.some(prog => prog.id === programmId);
             
             if (!progExists) {
-              programmateursAssocies.push({
+              contactsAssocies.push({
                 id: programmId,
                 nom: `${progData.prenom || ''} ${progData.nom || ''}`.trim(),
                 dateAssociation: Timestamp.now()
               });
               
-              lieuUpdateData.programmateursAssocies = programmateursAssocies;
+              lieuUpdateData.contactsAssocies = contactsAssocies;
             }
           }
         }
@@ -274,7 +274,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           ...lieuFields,
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
-          programmateursAssocies: []
+          contactsAssocies: []
         };
         
         // Ajouter les coordonnées si disponibles
@@ -283,13 +283,13 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           newLieuData.longitude = formData.lieuData.longitude;
         }
 
-        // Initialiser avec le programmateur actuel si disponible
+        // Initialiser avec le contact actuel si disponible
         if (programmId) {
-          const progDoc = await getDoc(doc(db, 'programmateurs', programmId));
+          const progDoc = await getDoc(doc(db, 'contacts', programmId));
           if (progDoc.exists()) {
             const progData = progDoc.data();
             
-            newLieuData.programmateursAssocies = [{
+            newLieuData.contactsAssocies = [{
               id: programmId,
               nom: `${progData.prenom || ''} ${progData.nom || ''}`.trim(),
               dateAssociation: Timestamp.now()
@@ -321,7 +321,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
 
       // Ajouter les références aux entités créées/mises à jour
       if (programmId) {
-        concertUpdates.programmateurId = programmId;
+        concertUpdates.contactId = programmId;
       }
       
       if (structureId) {
@@ -333,7 +333,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         const [category, field] = fieldPath.split('.');
         
         if (category === 'contact') {
-          concertUpdates[`programmateur${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
+          concertUpdates[`contact${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
         } else if (category === 'structure') {
           concertUpdates[`structure${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
         } else if (category === 'lieu') {
@@ -350,7 +350,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       setValidationInProgress(false);
       
       console.log("✅ Validation terminée avec succès !");
-      console.log("- Programmateur ID:", programmId);
+      console.log("- Contact ID:", programmId);
       console.log("- Structure ID:", structureId);
       console.log("- Concert ID:", concertId);
       

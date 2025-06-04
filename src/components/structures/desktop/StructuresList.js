@@ -101,15 +101,15 @@ const StructuresList = () => {
 
     setDeleting(true);
     try {
-      // Vérifier les programmateurs associés
-      const programmateurQuery = query(
-        collection(db, 'programmateurs'),
+      // Vérifier les contacts associés
+      const contactQuery = query(
+        collection(db, 'contacts'),
         where('structureId', '==', structureToDelete.id)
       );
-      const programmateurSnapshot = await getDocs(programmateurQuery);
+      const contactSnapshot = await getDocs(contactQuery);
 
-      if (!programmateurSnapshot.empty) {
-        alert(`Cette structure ne peut pas être supprimée car elle est associée à ${programmateurSnapshot.size} programmateur(s).`);
+      if (!contactSnapshot.empty) {
+        alert(`Cette structure ne peut pas être supprimée car elle est associée à ${contactSnapshot.size} contact(s).`);
         return;
       }
 

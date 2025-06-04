@@ -14,7 +14,7 @@ import {
 
 /**
  * Service pour la gestion des structures
- * Gère la synchronisation bidirectionnelle entre structures et programmateurs
+ * Gère la synchronisation bidirectionnelle entre structures et contacts
  */
 
 /**
@@ -52,7 +52,7 @@ export async function ensureStructureEntity(structureId, structureData = {}) {
         type: structureData.type || 'association',
         adresse: structureData.adresse || {},
         contacts: structureData.contacts || {},
-        programmateursAssocies: structureData.programmateursAssocies || [],
+        contactsAssocies: structureData.contactsAssocies || [],
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
         ...structureData
@@ -134,10 +134,10 @@ export async function getStructureById(structureId) {
 }
 
 /**
- * Synchronise les données d'une structure avec ses programmateurs associés
+ * Synchronise les données d'une structure avec ses contacts associés
  * @param {string} structureId - ID de la structure
  */
-export async function syncStructureToAssociatedProgrammateurs(structureId) {
+export async function syncStructureToAssociatedContacts(structureId) {
   // Fonction désactivée temporairement pour éviter les boucles infinies
   // TODO: Réactiver quand la logique bidirectionnelle sera stabilisée
   
@@ -157,12 +157,12 @@ export async function syncStructureToAssociatedProgrammateurs(structureId) {
     }
 
     const structureData = structureDoc.data();
-    const programmateursAssocies = structureData.programmateursAssocies || [];
+    const contactsAssocies = structureData.contactsAssocies || [];
 
-    // Mettre à jour chaque programmateur associé
-    for (const progId of programmateursAssocies) {
+    // Mettre à jour chaque contact associé
+    for (const progId of contactsAssocies) {
       try {
-        const progRef = doc(db, 'programmateurs', progId);
+        const progRef = doc(db, 'contacts', progId);
         await updateDoc(progRef, {
           structure: {
             id: structureId,
@@ -172,11 +172,11 @@ export async function syncStructureToAssociatedProgrammateurs(structureId) {
           updatedAt: Timestamp.now()
         });
       } catch (error) {
-        console.error(`Erreur lors de la synchronisation des programmateurs avec la structure ${structureId}:`, error);
+        console.error(`Erreur lors de la synchronisation des contacts avec la structure ${structureId}:`, error);
       }
     }
   } catch (error) {
-    console.error(`Erreur lors de la synchronisation des programmateurs avec la structure ${structureId}:`, error);
+    console.error(`Erreur lors de la synchronisation des contacts avec la structure ${structureId}:`, error);
   }
   */
 }

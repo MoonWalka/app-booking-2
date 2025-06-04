@@ -13,9 +13,9 @@ import {
 } from '@/services/firebase-service';
 
 /**
- * Hook générique pour la recherche d'entités (lieux, programmateurs, artistes, concerts, etc.)
+ * Hook générique pour la recherche d'entités (lieux, contacts, artistes, concerts, etc.)
  * @param {Object} options - Options de configuration du hook
- * @param {string} options.entityType - Type d'entité à rechercher ('lieux', 'programmateurs', 'artistes', 'concerts')
+ * @param {string} options.entityType - Type d'entité à rechercher ('lieux', 'contacts', 'artistes', 'concerts')
  * @param {string} options.searchField - Champ sur lequel effectuer la recherche principale (par défaut: 'nom')
  * @param {string[]} options.additionalSearchFields - Champs supplémentaires pour la recherche (optionnel)
  * @param {number} options.maxResults - Nombre maximum de résultats à retourner (par défaut: 10)
@@ -276,7 +276,7 @@ export const useEntitySearch = (options) => {
             ...entityAdditionalData
           };
           break;
-        case 'programmateurs':
+        case 'contacts':
           entityData = {
             ...entityData,
             email: '',
@@ -369,7 +369,7 @@ export const useEntitySearch = (options) => {
           backgroundColor = '#17a2b8'; // Bleu info
           icon = 'bi-geo-alt-fill';
           break;
-        case 'programmateurs':
+        case 'contacts':
           backgroundColor = '#6f42c1'; // Violet
           icon = 'bi-person-fill';
           break;

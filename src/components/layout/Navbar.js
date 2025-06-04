@@ -29,7 +29,7 @@ const Navbar = () => {
               <Link className={styles.navLink} to="/concerts">Concerts</Link>
             </li>
             <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/programmateurs">{mapTerm('Programmateurs')}</Link>
+              <Link className={styles.navLink} to="/contacts">{mapTerm('Contacts')}</Link>
             </li>
             <li className={styles.navItem}>
               <Link className={styles.navLink} to="/lieux">Lieux</Link>

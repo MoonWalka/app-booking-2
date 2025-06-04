@@ -48,7 +48,7 @@ export const useConcertListData = () => {
   const cacheRef = useRef({
     concerts: {},
     lieux: {},
-    programmateurs: {},
+    contacts: {},
     // NOUVEAU: Métadonnées de cache
     timestamps: {},
     hitCounts: {},
@@ -109,7 +109,7 @@ export const useConcertListData = () => {
       collections: {
         concerts: Object.keys(cacheRef.current.concerts || {}).length,
         lieux: Object.keys(cacheRef.current.lieux || {}).length,
-        programmateurs: Object.keys(cacheRef.current.programmateurs || {}).length
+        contacts: Object.keys(cacheRef.current.contacts || {}).length
       },
       performance: cacheRef.current.performance
     };
@@ -126,7 +126,7 @@ export const useConcertListData = () => {
       cacheRef.current = {
         concerts: {},
         lieux: {},
-        programmateurs: {},
+        contacts: {},
         timestamps: {},
         hitCounts: {},
         performance: {}
@@ -288,17 +288,17 @@ export const useConcertListData = () => {
 
       const concertsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
-      // Collecter les IDs uniques pour les lieux et programmateurs
+      // Collecter les IDs uniques pour les lieux et contacts
       const lieuxIds = [...new Set(concertsData.filter(c => c.lieuId).map(c => c.lieuId))];
-      const programmateurIds = [...new Set(concertsData.filter(c => c.programmateurId).map(c => c.programmateurId))];
+      const contactIds = [...new Set(concertsData.filter(c => c.contactId).map(c => c.contactId))];
       
-      // Charger les lieux et programmateurs en batch (en parallèle)
-      const [lieuxData, programmateursData] = await Promise.all([
+      // Charger les lieux et contacts en batch (en parallèle)
+      const [lieuxData, contactsData] = await Promise.all([
         fetchEntitiesBatch('lieux', lieuxIds),
-        fetchEntitiesBatch('programmateurs', programmateurIds)
+        fetchEntitiesBatch('contacts', contactIds)
       ]);
       
-      // Enrichir chaque concert avec les données de lieu et programmateur
+      // Enrichir chaque concert avec les données de lieu et contact
       const enrichedConcerts = concertsData.map(concert => {
         const enriched = { ...concert };
         
@@ -308,10 +308,10 @@ export const useConcertListData = () => {
           if (lieu) enriched.lieu = lieu;
         }
         
-        // Ajouter les données du programmateur s'il existe
-        if (concert.programmateurId) {
-          const prog = programmateursData.find(p => p.id === concert.programmateurId);
-          if (prog) enriched.programmateur = prog;
+        // Ajouter les données du contact s'il existe
+        if (concert.contactId) {
+          const prog = contactsData.find(p => p.id === concert.contactId);
+          if (prog) enriched.contact = prog;
         }
         
         return enriched;

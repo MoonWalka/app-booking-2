@@ -47,7 +47,7 @@ function DesktopLayout({ children }) {
   const navItems = [
     { to: "/", icon: "bi-speedometer2", label: "Dashboard", end: true },
     { to: "/concerts", icon: "bi-calendar-event", label: "Concerts" },
-    { to: "/programmateurs", icon: "bi-person-badge", label: mapTerm("Programmateurs") },
+    { to: "/contacts", icon: "bi-person-badge", label: mapTerm("Contacts") },
     { to: "/lieux", icon: "bi-geo-alt", label: "Lieux" },
     { to: "/structures", icon: "bi-building", label: "Structures" },
     { to: "/contrats", icon: "bi-file-earmark-text", label: "Contrats" },

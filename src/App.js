@@ -14,9 +14,9 @@ import FlexContainer from '@/components/ui/FlexContainer';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
-import ProgrammateursPage from '@/pages/ProgrammateursPage';
-import ProgrammateurDetails from '@/components/programmateurs/ProgrammateurDetails';
-import ProgrammateurForm from '@/components/programmateurs/ProgrammateurForm';
+import ContactsPage from '@/pages/ContactsPage';
+import ContactDetails from '@/components/contacts/ContactDetails';
+import ContactForm from '@/components/contacts/ContactForm';
 import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ArtistesPage from '@/pages/ArtistesPage';
@@ -26,11 +26,17 @@ import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-import ProgrammateursList from '@/components/programmateurs/ProgrammateursList';
+import ContactsList from '@/components/contacts/ContactsList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import DiagnosticButton from '@/components/debug/DiagnosticButton';
+import RefactoringTestButton from '@/components/debug/RefactoringTestButton';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
+import ConcertDetailsRefactored from '@/components/concerts/ConcertDetailsRefactored';
+import ArtisteDetailsRefactored from '@/components/artistes/ArtisteDetailsRefactored';
+import LieuDetailsRefactored from '@/components/lieux/LieuDetailsRefactored';
+import ContactDetailsRefactored from '@/components/contacts/ContactDetailsRefactored';
+import StructureDetailsRefactored from '@/components/structures/StructureDetailsRefactored';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
@@ -138,8 +144,10 @@ function App() {
                     </div>
                   </FlexContainer>
                 }>
-                  <Routes>
-                    <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
+                  <>
+                    <RefactoringTestButton />
+                    <Routes>
+                      <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                     
                     <Route path="/login" element={<LoginPage />} />
                     
@@ -177,10 +185,11 @@ function App() {
                       }>
                         <Route index element={<ConcertsList />} />
                         <Route path=":id" element={<ConcertDetails />} />
+                        <Route path=":id/refactored" element={<ConcertDetailsRefactored />} />
                         <Route path=":id/edit" element={<ConcertFormWrapper />} />
                       </Route>
                       
-                      <Route path="/programmateurs/*" element={
+                      <Route path="/contacts/*" element={
                         <PrivateRoute>
                           <Suspense fallback={
                             <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
@@ -192,14 +201,14 @@ function App() {
                               </div>
                             </FlexContainer>
                           }>
-                            <ProgrammateursPage />
+                            <ContactsPage />
                           </Suspense>
                         </PrivateRoute>
                       }>
-                        <Route index element={<ProgrammateursList />} />
-                        <Route path="nouveau" element={<ProgrammateurForm />} />
-                        <Route path=":id/edit" element={<ProgrammateurForm />} />
-                        <Route path=":id" element={<ProgrammateurDetails />} />
+                        <Route index element={<ContactsList />} />
+                        <Route path="nouveau" element={<ContactForm />} />
+                        <Route path=":id/edit" element={<ContactForm />} />
+                        <Route path=":id" element={<ContactDetails />} />
                       </Route>
                       
                       <Route path="/lieux/*" element={
@@ -342,7 +351,8 @@ function App() {
                           <Route path="*" element={<Navigate to="/concerts" replace />} />
                         </Route>
                       </Routes>
-                    </Suspense>
+                    </>
+                  </Suspense>
                   </ModalProvider>
                 </ParametresProvider>
               </OrganizationProvider>

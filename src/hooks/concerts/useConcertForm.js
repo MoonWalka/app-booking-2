@@ -135,7 +135,7 @@ export const useConcertForm = (concertId) => {
     relatedEntities: [
       { name: 'lieu', collection: 'lieux', idField: 'lieuId' },
       { name: 'artiste', collection: 'artistes', idField: 'artisteId' },
-      { name: 'programmateur', collection: 'programmateurs', idField: 'programmateurId' }
+      { name: 'contact', collection: 'contacts', idField: 'contactId' }
     ]
   }), [isNewConcert, concertId]);
   
@@ -325,7 +325,7 @@ export const useConcertForm = (concertId) => {
     // TODO: Gérer les entités liées différemment car relatedData n'existe pas dans useGenericEntityForm
     lieu: null,
     artiste: null,
-    programmateur: null
+    contact: null
   };
 };
 

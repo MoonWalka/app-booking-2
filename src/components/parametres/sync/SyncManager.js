@@ -15,7 +15,7 @@ const SyncManager = () => {
   const [collections, setCollections] = useState({
     concerts: true,
     lieux: true,
-    programmateurs: true,
+    contacts: true,
     artistes: true,
     structures: true
   });
@@ -232,7 +232,7 @@ const SyncManager = () => {
                             <div className="text-muted small">
                               {name === 'concerts' && 'Événements et spectacles'}
                               {name === 'lieux' && 'Salles et venues'}
-                              {name === 'programmateurs' && 'Contacts et organisateurs'}
+                              {name === 'contacts' && 'Contacts et organisateurs'}
                               {name === 'artistes' && 'Musiciens et groupes'}
                               {name === 'structures' && 'Entreprises et associations'}
                             </div>

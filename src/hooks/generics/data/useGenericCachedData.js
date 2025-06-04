@@ -45,10 +45,10 @@ import useGenericDataFetcher from './useGenericDataFetcher';
  * });
  * 
  * // Cache avec invalidation basée sur les tags
- * const { data, invalidate } = useGenericCachedData('programmateurs', {
- *   cacheKey: 'active-programmateurs',
+ * const { data, invalidate } = useGenericCachedData('contacts', {
+ *   cacheKey: 'active-contacts',
  *   strategy: 'tags',
- *   tags: ['programmateurs', 'users'],
+ *   tags: ['contacts', 'users'],
  *   levels: ['memory', 'local']
  * });
  * 

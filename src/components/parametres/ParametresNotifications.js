@@ -11,7 +11,7 @@ const ParametresNotifications = () => {
     concerts: true,
     contrats: true,
     artistes: true,
-    programmateurs: true,
+    contacts: true,
     lieux: true,
     notification_push: false
   });
@@ -119,10 +119,10 @@ const ParametresNotifications = () => {
           <Form.Group className={styles.notificationGroup}>
             <Form.Check 
               type="switch"
-              id="notification-programmateurs"
-              label="Nouveaux programmateurs"
-              name="programmateurs"
-              checked={localState.programmateurs}
+              id="notification-contacts"
+              label="Nouveaux contacts"
+              name="contacts"
+              checked={localState.contacts}
               onChange={handleChange}
             />
           </Form.Group>

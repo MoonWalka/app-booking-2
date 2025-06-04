@@ -1,5 +1,5 @@
 import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
-import useProgrammateurSearch from '@/hooks/programmateurs/useProgrammateurSearch';
+import useContactSearch from '@/hooks/contacts/useContactSearch';
 
 /**
  * Hook optimisé pour les formulaires de lieux utilisant directement le hook générique
@@ -56,7 +56,7 @@ export const useLieuForm = (lieuId) => {
       capacite: null,
       equipements: [],
       description: '',
-      programmateurId: null,
+      contactId: null,
       actif: true
     },
     validateForm: validateLieuForm,
@@ -68,9 +68,9 @@ export const useLieuForm = (lieuId) => {
     },
     relatedEntities: [
       {
-        name: 'programmateur',
-        collection: 'programmateurs',
-        idField: 'programmateurId'
+        name: 'contact',
+        collection: 'contacts',
+        idField: 'contactId'
       }
     ]
   });
@@ -93,7 +93,7 @@ export const useLieuForm = (lieuId) => {
   };
 
   // Toujours appeler le hook à ce niveau pour respecter les règles de React
-  const programmateurSearch = useProgrammateurSearch(formHook.formData, formHook.setFormData);
+  const contactSearch = useContactSearch(formHook.formData, formHook.setFormData);
 
   // Retourner le hook générique enrichi de fonctionnalités spécifiques
   return {
@@ -103,8 +103,8 @@ export const useLieuForm = (lieuId) => {
     removeEquipement,
     // Raccourcis pour une meilleure DX
     lieu: formHook.formData,
-    programmateur: formHook.relatedData?.programmateur,
-    programmateurSearch // toujours présent
+    contact: formHook.relatedData?.contact,
+    contactSearch // toujours présent
   };
 };
 

@@ -1,0 +1,84 @@
+/* Section carte pour les lieux */
+.mapSection {
+  margin-top: 1rem;
+}
+
+.mapContainer {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.mapActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.mapButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #6c757d;
+  background-color: transparent;
+  border: 1px solid #6c757d;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  transition: all 0.15s ease-in-out;
+}
+
+.mapButton:hover {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.coordinates {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.noAddress {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.noAddress i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.textMuted {
+  color: #6c757d;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mapContainer {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+  }
+  
+  .mapActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .mapButton {
+    text-align: center;
+    justify-content: center;
+  }
+}

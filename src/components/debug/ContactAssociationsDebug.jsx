@@ -11,7 +11,7 @@ const ContactAssociationsDebug = () => {
   useEffect(() => {
     const loadContacts = async () => {
       try {
-        const snapshot = await getDocs(collection(db, 'programmateurs'));
+        const snapshot = await getDocs(collection(db, 'contacts'));
         const contactsData = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
@@ -70,7 +70,7 @@ const ContactAssociationsDebug = () => {
         try {
           const lieuxQuery = query(
             collection(db, 'lieux'),
-            where('programmateurId', '==', contact.id)
+            where('contactId', '==', contact.id)
           );
           const snapshot = await getDocs(lieuxQuery);
           debug.lieux = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -83,7 +83,7 @@ const ContactAssociationsDebug = () => {
       try {
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('programmateurId', '==', contact.id)
+          where('contactId', '==', contact.id)
         );
         const snapshot = await getDocs(concertsQuery);
         debug.concerts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

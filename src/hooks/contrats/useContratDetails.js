@@ -33,9 +33,9 @@ const useContratDetails = (contratId) => {
       essential: true
     },
     { 
-      name: 'programmateur', 
-      collection: 'programmateurs', 
-      idField: 'programmateurId',
+      name: 'contact', 
+      collection: 'contacts', 
+      idField: 'contactId',
       type: 'custom-query',
       essential: true
     },
@@ -64,9 +64,9 @@ const useContratDetails = (contratId) => {
   
   // Requêtes personnalisées pour charger les entités liées indirectement (via le concert)
   const customQueries = {
-    // Requête personnalisée pour charger le programmateur via le concert
-    programmateur: async (contratData) => {
-      console.log('[DEBUG] Chargement programmateur pour contrat:', contratData);
+    // Requête personnalisée pour charger le contact via le concert
+    contact: async (contratData) => {
+      console.log('[DEBUG] Chargement contact pour contrat:', contratData);
       
       if (!contratData.concertId) {
         console.log('[DEBUG] Pas de concertId dans le contrat');
@@ -86,26 +86,26 @@ const useContratDetails = (contratId) => {
         const concertData = concertDoc.data();
         console.log('[DEBUG] Données du concert:', concertData);
         
-        if (!concertData.programmateurId) {
-          console.log('[DEBUG] Pas de programmateurId dans le concert');
+        if (!concertData.contactId) {
+          console.log('[DEBUG] Pas de contactId dans le concert');
           return null;
         }
         
-        // Récupérer ensuite le programmateur
-        console.log('[DEBUG] Récupération du programmateur:', concertData.programmateurId);
-        const progDoc = await getDoc(doc(db, 'programmateurs', concertData.programmateurId));
+        // Récupérer ensuite le contact
+        console.log('[DEBUG] Récupération du contact:', concertData.contactId);
+        const progDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
         
         if (!progDoc.exists()) {
-          console.log('[DEBUG] Programmateur non trouvé');
+          console.log('[DEBUG] Contact non trouvé');
           return null;
         }
         
-        const programmateurData = { id: progDoc.id, ...progDoc.data() };
-        console.log('[DEBUG] Données du programmateur:', programmateurData);
+        const contactData = { id: progDoc.id, ...progDoc.data() };
+        console.log('[DEBUG] Données du contact:', contactData);
         
-        return programmateurData;
+        return contactData;
       } catch (err) {
-        console.error('[DEBUG] Erreur lors du chargement du programmateur:', err);
+        console.error('[DEBUG] Erreur lors du chargement du contact:', err);
         return null;
       }
     },
@@ -285,7 +285,7 @@ const useContratDetails = (contratId) => {
     setContrat: genericDetails.updateFormData,
     concert: genericDetails.relatedData.concert || null,
     template: genericDetails.relatedData.template || null,
-    programmateur: genericDetails.relatedData.programmateur || null,
+    contact: genericDetails.relatedData.contact || null,
     lieu: genericDetails.relatedData.lieu || null,
     artiste: genericDetails.relatedData.artiste || null,
     entreprise: genericDetails.relatedData.entreprise || null,

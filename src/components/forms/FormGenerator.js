@@ -14,7 +14,7 @@ import Button from '@ui/Button';
 import FormField from '@/components/ui/FormField';
 import styles from './FormGenerator.module.css';
 
-const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
+const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
   const [loading, setLoading] = useState(false);
   const [loadingExisting, setLoadingExisting] = useState(true);
   const [formLink, setFormLink] = useState('');
@@ -71,17 +71,17 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
   const generateForm = async () => {
     setLoading(true);
     try {
-      // Récupérer l'email du programmateur si disponible
+      // Récupérer l'email du contact si disponible
       let emailToStore = '';
-      if (programmateurId) {
+      if (contactId) {
         try {
-          const progDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+          const progDoc = await getDoc(doc(db, 'contacts', contactId));
           if (progDoc.exists()) {
             const progData = progDoc.data();
             emailToStore = progData.email || progData.contact?.email || '';
           }
         } catch (error) {
-          console.error('Erreur lors de la récupération du programmateur:', error);
+          console.error('Erreur lors de la récupération du contact:', error);
         }
       }
       
@@ -96,8 +96,8 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
       // Créer un document dans la collection formLinks
       const formRef = await addDoc(collection(db, 'formLinks'), {
         concertId,
-        programmateurId: programmateurId || null,
-        programmateurEmail: emailToStore, // Stocker l'email du programmateur
+        contactId: contactId || null,
+        contactEmail: emailToStore, // Stocker l'email du contact
         token,
         createdAt: serverTimestamp(),
         expiryDate,
@@ -170,7 +170,7 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
   if (loadingExisting) {
     return (
       <Card
-        title="Formulaire pour le programmateur"
+        title="Formulaire pour le contact"
         className="mb-4"
       >
         <div className={styles.loadingContainer}>
@@ -185,13 +185,13 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
 
   return (
     <Card
-      title="Formulaire pour le programmateur"
+      title="Formulaire pour le contact"
       className="mb-4"
     >
       {!formLink ? (
         <div>
           <p>
-            Générez un lien de formulaire à envoyer au programmateur pour qu'il puisse remplir ses informations.
+            Générez un lien de formulaire à envoyer au contact pour qu'il puisse remplir ses informations.
           </p>
           <Button
             variant="primary"
@@ -209,7 +209,7 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
           </div>
           
           <p>
-            Voici le lien du formulaire à envoyer au programmateur :
+            Voici le lien du formulaire à envoyer au contact :
           </p>
           
           <div className={styles.inputGroup}>
@@ -231,7 +231,7 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
           
           <div className={styles.alertInfo}>
             <i className="bi bi-info-circle"></i>
-            <span>Ce lien permet au programmateur de remplir ses informations pour ce concert sans avoir accès au reste de l'application.</span>
+            <span>Ce lien permet au contact de remplir ses informations pour ce concert sans avoir accès au reste de l'application.</span>
           </div>
           
           <div className={styles.footerActions}>
@@ -250,7 +250,7 @@ const FormGenerator = ({ concertId, programmateurId, onFormGenerated }) => {
           {existingLink && existingLink.completed && (
             <div className={styles.alertWarning}>
               <i className="bi bi-exclamation-triangle-fill"></i>
-              <strong>Attention :</strong> Le formulaire a déjà été complété par le programmateur. Générer un nouveau lien si vous souhaitez qu'il puisse soumettre de nouvelles informations.
+              <strong>Attention :</strong> Le formulaire a déjà été complété par le contact. Générer un nouveau lien si vous souhaitez qu'il puisse soumettre de nouvelles informations.
             </div>
           )}
         </div>

@@ -20,7 +20,7 @@ import useGenericAction from './useGenericAction';
  * - auto_save: Sauvegarde automatique
  * - validation: Validation en temps réel
  * 
- * @param {string} entityType - Type d'entité (concerts, programmateurs, etc.)
+ * @param {string} entityType - Type d'entité (concerts, contacts, etc.)
  * @param {Object} formConfig - Configuration du formulaire
  * @param {Object} options - Options additionnelles
  * 

@@ -1,0 +1,164 @@
+.genericDetailView {
+  padding: var(--spacing-md);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.badgeContainer {
+  margin: var(--spacing-md) 0;
+}
+
+.detailSection {
+  margin-bottom: var(--spacing-lg);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Section Info - Grille d'informations */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-xl) var(--spacing-lg);
+  padding: var(--spacing-sm) 0;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.infoItem:last-child {
+  border-bottom: none;
+}
+
+.infoItem label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.infoItem p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-weight: var(--font-weight-normal);
+}
+
+.infoItem a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.infoItem a:hover {
+  text-decoration: underline;
+}
+
+/* Styles spéciaux pour les badges dans infoGrid */
+.infoItem .badge {
+  align-self: flex-start;
+  margin-top: var(--spacing-xs);
+}
+
+/* Amélioration de l'espacement pour les valeurs vides */
+.infoItem .textMuted {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Section Texte */
+.textContent {
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.textContent p {
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.textContent p:last-child {
+  margin-bottom: 0;
+}
+
+.textMuted {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Section Adresse */
+.addressContent {
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.addressContent > div {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Section Relations */
+.relationsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.relationsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.relationsList .relation-card {
+  margin-bottom: 0;
+}
+
+.moreItems {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Style spécifique pour les concerts avec plus d'infos */
+.detailSection.concertInfo .infoGrid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.detailSection.concertInfo .infoItem {
+  padding: var(--spacing-md) 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .genericDetailView {
+    padding: var(--spacing-sm);
+  }
+  
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .relationsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sectionTitle {
+    font-size: var(--font-size-base);
+  }
+}

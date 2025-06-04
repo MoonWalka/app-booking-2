@@ -4,10 +4,10 @@ import { useEntitySearch } from '@/hooks/common';
 import styles from './EntitySearchField.module.css';
 
 /**
- * Composant pour la recherche d'entités (programmateurs, lieux, artistes)
+ * Composant pour la recherche d'entités (contacts, lieux, artistes)
  * 
  * @param {Object} props - Propriétés du composant
- * @param {string} props.entityType - Type d'entité à rechercher ('programmateur', 'lieu', 'artiste')
+ * @param {string} props.entityType - Type d'entité à rechercher ('contact', 'lieu', 'artiste')
  * @param {string} props.placeholder - Texte d'aide dans le champ
  * @param {string} props.label - Label du champ
  * @param {Function} props.onSelect - Callback appelé quand une entité est sélectionnée
@@ -17,7 +17,7 @@ import styles from './EntitySearchField.module.css';
  * @param {string} props.className - Classes CSS additionnelles
  */
 const EntitySearchField = ({
-  entityType = 'programmateur',
+  entityType = 'contact',
   placeholder = 'Rechercher...',
   label = 'Rechercher',
   onSelect,
@@ -90,7 +90,7 @@ const EntitySearchField = ({
   // Obtenir l'icône en fonction du type d'entité
   const getEntityIcon = () => {
     switch (entityType) {
-      case 'programmateur':
+      case 'contact':
         return 'bi-person';
       case 'lieu':
         return 'bi-geo-alt';
@@ -213,7 +213,7 @@ const EntitySearchField = ({
 };
 
 EntitySearchField.propTypes = {
-  entityType: PropTypes.oneOf(['programmateur', 'lieu', 'artiste']),
+  entityType: PropTypes.oneOf(['contact', 'lieu', 'artiste']),
   placeholder: PropTypes.string,
   label: PropTypes.string,
   onSelect: PropTypes.func,

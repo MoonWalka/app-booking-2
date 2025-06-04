@@ -75,9 +75,9 @@ function MobileLayout() {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/programmateurs" onClick={closeMenu}>
+              <NavLink to="/contacts" onClick={closeMenu}>
                 <i className="bi bi-person-badge"></i>
-                <span>{mapTerm("Programmateurs")}</span>
+                <span>{mapTerm("Contacts")}</span>
               </NavLink>
             </li>
             <li>
@@ -143,7 +143,7 @@ function MobileLayout() {
           <i className="bi bi-calendar-event"></i>
           <span>Concerts</span>
         </NavLink>
-        <NavLink to="/programmateurs">
+        <NavLink to="/contacts">
           <i className="bi bi-person-badge"></i>
           <span>Cont.</span>
         </NavLink>

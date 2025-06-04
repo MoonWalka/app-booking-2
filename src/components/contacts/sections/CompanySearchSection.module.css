@@ -1,0 +1,404 @@
+/*
+ * Styles pour CompanySearchSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+/* 
+ * Styles pour CompanySearchSection
+ * Section de recherche d'entreprises pour les contacts
+ * Dernière mise à jour: 04/05/2025
+ */
+
+.container {
+  margin-bottom: var(--tc-space-6);
+  padding: var(--tc-space-4);
+  background-color: var(--tc-bg-secondary);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-box-shadow-sm);
+}
+
+.sectionTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-4);
+  color: var(--tc-text-default);
+  border-bottom: 1px solid var(--tc-border-color-light);
+  padding-bottom: var(--tc-space-2);
+}
+
+.searchContainer {
+  position: relative;
+  margin-bottom: var(--tc-space-4);
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--tc-space-2);
+  font-size: var(--tc-font-size-base);
+  line-height: 1.5;
+  color: var(--tc-text-default);
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-border-default);
+  border-radius: var(--tc-radius-base);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.searchInput:focus {
+  color: var(--tc-text-default);
+  background-color: var(--tc-color-white);
+  border-color: var(--tc-primary-color-light);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--tc-primary-color-shadow);
+}
+
+.searchResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-border-default);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-box-shadow-md);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.resultItem {
+  padding: var(--tc-space-2);
+  border-bottom: 1px solid var(--tc-border-color-light);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.resultItem:last-child {
+  border-bottom: none;
+}
+
+.resultItem:hover {
+  background-color: var(--tc-white-hover);
+}
+
+.companyName {
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-space-1);
+  color: var(--tc-text-default);
+}
+
+.companyDetails {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+}
+
+.noResults {
+  padding: var(--tc-space-4);
+  text-align: center;
+  color: var(--tc-text-muted);
+  font-style: italic;
+}
+
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+  padding: var(--tc-space-4);
+}
+
+.errorMessage {
+  padding: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
+  color: var(--tc-color-error);
+  background-color: var(--tc-danger-color-light);
+  border-radius: var(--tc-radius-base);
+}
+
+.helperText {
+  margin-top: var(--tc-space-1);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+}
+
+/* Responsive styles */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .searchResults {
+    max-height: 200px;
+  }
+}
+
+/* =============================
+   NOUVELLE STRUCTURE AVEC CARD
+   ============================= */
+.sectionCard {
+  margin-bottom: var(--tc-space-4);
+}
+
+/* =============================
+   MODE SELECTOR - CHOIX RECHERCHE/MANUEL
+   ============================= */
+.modeSelector {
+  margin-bottom: var(--tc-space-5);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-border-color-light);
+}
+
+.modeButtons {
+  display: flex;
+  gap: var(--tc-space-2);
+  width: 100%;
+  margin-top: var(--tc-space-2);
+}
+
+.modeButton {
+  flex: 1;
+  padding: var(--tc-space-3) var(--tc-space-4);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-radius-base);
+  transition: all 0.2s ease-in-out;
+}
+
+.modeButton:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tc-box-shadow-sm);
+}
+
+/* =============================
+   MODE RECHERCHE
+   ============================= */
+.searchMode {
+  padding: var(--tc-space-4) 0;
+}
+
+.searchTypeGroup {
+  display: flex;
+  gap: var(--tc-space-4);
+  margin-bottom: var(--tc-space-3);
+  padding: var(--tc-space-3);
+  background-color: var(--tc-bg-secondary);
+  border-radius: var(--tc-radius-base);
+}
+
+.searchTypeOption {
+  flex: 1;
+}
+
+.searchInputGroup {
+  display: flex;
+  gap: var(--tc-space-2);
+  margin-bottom: var(--tc-space-4);
+}
+
+.searchInput {
+  flex: 1;
+  padding: var(--tc-space-3);
+  font-size: var(--tc-font-size-base);
+  border: 1px solid var(--tc-border-default);
+  border-radius: var(--tc-radius-base);
+  transition: all 0.2s ease-in-out;
+}
+
+.searchInput:focus {
+  border-color: var(--tc-primary-color);
+  box-shadow: 0 0 0 3px var(--tc-primary-color-shadow);
+}
+
+.searchButton {
+  padding: var(--tc-space-3) var(--tc-space-4);
+  border-radius: var(--tc-radius-base);
+  font-weight: var(--tc-font-weight-medium);
+  min-width: 60px;
+}
+
+/* =============================
+   RÉSULTATS DE RECHERCHE
+   ============================= */
+.resultsContainer {
+  background-color: var(--tc-color-white);
+  border: 1px solid var(--tc-border-default);
+  border-radius: var(--tc-radius-lg);
+  padding: var(--tc-space-4);
+  margin-top: var(--tc-space-4);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.resultsTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-3);
+  color: var(--tc-text-default);
+}
+
+.resultsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-space-3);
+  margin-bottom: var(--tc-space-2);
+  background-color: var(--tc-bg-secondary);
+  border: 1px solid var(--tc-border-color-light);
+  border-radius: var(--tc-radius-base);
+  transition: all 0.2s ease-in-out;
+}
+
+.resultItem:hover {
+  background-color: var(--tc-white-hover);
+  border-color: var(--tc-primary-color-light);
+  transform: translateY(-1px);
+  box-shadow: var(--tc-box-shadow-sm);
+}
+
+.resultInfo {
+  flex: 1;
+}
+
+.companyName {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-1);
+  color: var(--tc-text-default);
+}
+
+.companyDetails {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted);
+  margin-bottom: var(--tc-space-1);
+}
+
+.companyAddress {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-light);
+  font-style: italic;
+}
+
+.selectButton {
+  margin-left: var(--tc-space-3);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-radius-base);
+  white-space: nowrap;
+}
+
+/* =============================
+   ENTREPRISE SÉLECTIONNÉE
+   ============================= */
+.selectedCompany {
+  background-color: var(--tc-success-color-light);
+  border: 2px solid var(--tc-success-color);
+  border-radius: var(--tc-radius-lg);
+  padding: var(--tc-space-4);
+  margin-top: var(--tc-space-4);
+}
+
+.selectedHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--tc-space-3);
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-success-color-dark);
+}
+
+.selectedDetails {
+  margin-bottom: var(--tc-space-3);
+}
+
+.selectedDetails h5 {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-default);
+}
+
+.selectedDetails p {
+  margin-bottom: var(--tc-space-1);
+  color: var(--tc-text-muted);
+}
+
+.changeButton {
+  padding: var(--tc-space-2) var(--tc-space-3);
+  font-size: var(--tc-font-size-sm);
+  border-radius: var(--tc-radius-base);
+}
+
+/* =============================
+   MODE MANUEL
+   ============================= */
+.manualMode {
+  padding: var(--tc-space-4) 0;
+}
+
+.manualModeText {
+  background-color: var(--tc-info-color-light);
+  color: var(--tc-info-color-dark);
+  padding: var(--tc-space-3);
+  border-radius: var(--tc-radius-base);
+  border-left: 4px solid var(--tc-info-color);
+  margin: 0;
+}
+
+/* =============================
+   RESPONSIVE DESIGN
+   ============================= */
+@media (max-width: 768px) {
+  .modeButtons {
+    flex-direction: column;
+  }
+  
+  .modeButton {
+    width: 100%;
+    margin-bottom: var(--tc-space-2);
+  }
+  
+  .searchTypeGroup {
+    flex-direction: column;
+    gap: var(--tc-space-2);
+  }
+  
+  .searchInputGroup {
+    flex-direction: column;
+  }
+  
+  .searchButton {
+    width: 100%;
+  }
+  
+  .resultItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--tc-space-2);
+  }
+  
+  .selectButton {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  .resultsContainer {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionCard {
+    margin: 0 -var(--tc-space-2) var(--tc-space-4) -var(--tc-space-2);
+  }
+  
+  .resultsContainer {
+    max-height: 250px;
+  }
+  
+  .companyName {
+    font-size: var(--tc-font-size-base);
+  }
+}
+
+/* =============================
+   CARTE DE FORMULAIRE (LEGACY)
+   ============================= */

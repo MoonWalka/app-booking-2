@@ -1,0 +1,146 @@
+/*
+ * Styles pour ContactsList
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Date de création: Inconnue
+ * Dernière mise à jour: 5 mai 2025
+ */
+
+
+.contactsMobileContainer {
+  padding: var(--tc-space-3);
+  background-color: var(--tc-bg-default);
+}
+
+.contactsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-space-4);
+  padding-bottom: var(--tc-space-3);
+  border-bottom: 1px solid var(--tc-border-default));
+}
+
+.contactsHeader h1 {
+  font-size: 1.75rem;
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default));
+  margin: 0;
+}
+
+.contactsAddBtn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-size-xl);
+  padding: 0;
+}
+
+.contactsSearchContainer {
+  margin-bottom: var(--tc-space-4);
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  color: var(--tc-text-muted));
+  text-align: center;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--tc-text-muted));
+}
+
+.emptyState i {
+  font-size: 3rem;
+  margin-bottom: var(--tc-space-3);
+  opacity: 0.5;
+}
+
+.contactsListMobile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-3);
+}
+
+.contactCard {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--tc-space-3);
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default));
+  border-radius: var(--tc-radius-base));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.contactCard:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.contactInfo {
+  flex: 1;
+}
+
+.contactName {
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: 1.var(--tc-space-3);
+  margin: 0 0 var(--tc-space-2) 0;
+  color: var(--tc-text-default);
+}
+
+.contactStructure {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-muted));
+  margin-bottom: var(--tc-space-2);
+}
+
+.contactContact {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  font-size: 0.875rem;
+  color: var(--tc-text-muted));
+  margin-bottom: var(--tc-space-1);
+}
+
+.contactConcerts {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  font-size: 0.875rem;
+  color: var(--tc-color-primary);
+  margin-top: var(--tc-space-2);
+}
+
+.concertCount {
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.contactActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-2);
+}
+
+.contactActionBtn {
+  width: var(--tc-space-8);
+  height: var(--tc-space-8);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

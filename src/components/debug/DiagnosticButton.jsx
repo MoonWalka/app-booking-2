@@ -15,7 +15,7 @@ const DiagnosticButton = () => {
       diagnosticResults.push('='.repeat(50));
       
       // Récupérer les données
-      const contactsSnapshot = await getDocs(collection(db, 'programmateurs'));
+      const contactsSnapshot = await getDocs(collection(db, 'contacts'));
       const contacts = contactsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -41,8 +41,8 @@ const DiagnosticButton = () => {
         
         // Chercher les lieux qui référencent ce contact
         const lieuxQuiLeReferencent = lieux.filter(lieu => {
-          return lieu.programmateurId === contactProblematique.id ||
-                 (lieu.programmateursAssocies && lieu.programmateursAssocies.some(ref => {
+          return lieu.contactId === contactProblematique.id ||
+                 (lieu.contactsAssocies && lieu.contactsAssocies.some(ref => {
                    const id = typeof ref === 'object' ? ref.id : ref;
                    return id === contactProblematique.id;
                  }));
@@ -54,8 +54,8 @@ const DiagnosticButton = () => {
         } else {
           lieuxQuiLeReferencent.forEach(lieu => {
             diagnosticResults.push(`✅ ${lieu.nom} (${lieu.id})`);
-            diagnosticResults.push(`   - Via programmateurId: ${lieu.programmateurId === contactProblematique.id ? 'OUI' : 'NON'}`);
-            diagnosticResults.push(`   - Via programmateursAssocies: ${lieu.programmateursAssocies ? 'OUI' : 'NON'}`);
+            diagnosticResults.push(`   - Via contactId: ${lieu.contactId === contactProblematique.id ? 'OUI' : 'NON'}`);
+            diagnosticResults.push(`   - Via contactsAssocies: ${lieu.contactsAssocies ? 'OUI' : 'NON'}`);
           });
           
           const lieuxIds = lieuxQuiLeReferencent.map(lieu => lieu.id);
@@ -92,7 +92,7 @@ const DiagnosticButton = () => {
 
     try {
       const { contactId, lieuxIds } = window.tempDiagnosticData;
-      await updateDoc(doc(db, 'programmateurs', contactId), {
+      await updateDoc(doc(db, 'contacts', contactId), {
         lieuxIds: lieuxIds
       });
       

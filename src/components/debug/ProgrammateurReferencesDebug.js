@@ -11,10 +11,10 @@ import { db } from '@/services/firebase-service';
 import Button from '@components/ui/Button';
 
 /**
- * Composant de debug pour identifier les références d'un programmateur
+ * Composant de debug pour identifier les références d'un contact
  */
-const ProgrammateurReferencesDebug = () => {
-  const [programmateurId, setProgrammateurId] = useState('wH1GzFXf6W0GIFczbQyG');
+const ContactReferencesDebug = () => {
+  const [contactId, setContactId] = useState('wH1GzFXf6W0GIFczbQyG');
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +24,7 @@ const ProgrammateurReferencesDebug = () => {
     
     try {
       const report = {
-        programmateur: null,
+        contact: null,
         structures: [],
         concerts: [],
         lieux: [],
@@ -57,25 +57,25 @@ const ProgrammateurReferencesDebug = () => {
         return 'N/A';
       };
 
-      // 1. Vérifier l'existence du programmateur
+      // 1. Vérifier l'existence du contact
       try {
-        const progDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+        const progDoc = await getDoc(doc(db, 'contacts', contactId));
         if (progDoc.exists()) {
-          report.programmateur = {
+          report.contact = {
             id: progDoc.id,
             ...progDoc.data()
           };
         }
       } catch (error) {
-        report.errors.push(`Erreur programmateur: ${error.message}`);
+        report.errors.push(`Erreur contact: ${error.message}`);
       }
 
-      // 2. Chercher les structures qui référencent ce programmateur
+      // 2. Chercher les structures qui référencent ce contact
       try {
-        // Recherche par programmateurIds
+        // Recherche par contactIds
         const structuresQuery1 = query(
           collection(db, 'structures'),
-          where('programmateurIds', 'array-contains', programmateurId)
+          where('contactIds', 'array-contains', contactId)
         );
         const structuresSnapshot1 = await getDocs(structuresQuery1);
         
@@ -83,7 +83,7 @@ const ProgrammateurReferencesDebug = () => {
           const data = docSnapshot.data();
           report.structures.push({
             id: docSnapshot.id,
-            type: 'programmateurIds',
+            type: 'contactIds',
             ...data,
             // Convertir les dates pour éviter les erreurs d'affichage
             createdAt: formatFirebaseDate(data.createdAt),
@@ -93,10 +93,10 @@ const ProgrammateurReferencesDebug = () => {
           });
         });
 
-        // Recherche par programmateursAssocies (ancien format)
+        // Recherche par contactsAssocies (ancien format)
         const structuresQuery2 = query(
           collection(db, 'structures'),
-          where('programmateursAssocies', 'array-contains', programmateurId)
+          where('contactsAssocies', 'array-contains', contactId)
         );
         const structuresSnapshot2 = await getDocs(structuresQuery2);
         
@@ -104,7 +104,7 @@ const ProgrammateurReferencesDebug = () => {
           const data = docSnapshot.data();
           report.structures.push({
             id: docSnapshot.id,
-            type: 'programmateursAssocies',
+            type: 'contactsAssocies',
             ...data,
             // Convertir les dates pour éviter les erreurs d'affichage
             createdAt: formatFirebaseDate(data.createdAt),
@@ -121,7 +121,7 @@ const ProgrammateurReferencesDebug = () => {
       try {
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('programmateurId', '==', programmateurId)
+          where('contactId', '==', contactId)
         );
         const concertsSnapshot = await getDocs(concertsQuery);
         
@@ -139,7 +139,7 @@ const ProgrammateurReferencesDebug = () => {
       try {
         const lieuxQuery = query(
           collection(db, 'lieux'),
-          where('programmateurId', '==', programmateurId)
+          where('contactId', '==', contactId)
         );
         const lieuxSnapshot = await getDocs(lieuxQuery);
         
@@ -171,10 +171,10 @@ const ProgrammateurReferencesDebug = () => {
     script += 'import { db } from "@/services/firebase-service";\n\n';
 
     results.structures.forEach(structure => {
-      const field = structure.type === 'programmateurIds' ? 'programmateurIds' : 'programmateursAssocies';
+      const field = structure.type === 'contactIds' ? 'contactIds' : 'contactsAssocies';
       script += `// Structure: ${structure.raisonSociale || 'N/A'} (${structure.id})\n`;
       script += `await updateDoc(doc(db, 'structures', '${structure.id}'), {\n`;
-      script += `  ${field}: arrayRemove('${programmateurId}')\n`;
+      script += `  ${field}: arrayRemove('${contactId}')\n`;
       script += `});\n\n`;
     });
 
@@ -183,15 +183,15 @@ const ProgrammateurReferencesDebug = () => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'monospace' }}>
-      <h2>🔍 Debug Références Programmateur</h2>
+      <h2>🔍 Debug Références Contact</h2>
       
       <div style={{ marginBottom: '20px' }}>
         <label>
-          ID Programmateur:
+          ID Contact:
           <input 
             type="text" 
-            value={programmateurId}
-            onChange={(e) => setProgrammateurId(e.target.value)}
+            value={contactId}
+            onChange={(e) => setContactId(e.target.value)}
             style={{ marginLeft: '10px', padding: '5px', width: '300px' }}
           />
         </label>
@@ -212,17 +212,17 @@ const ProgrammateurReferencesDebug = () => {
             <div style={{ color: 'red' }}>❌ {results.error}</div>
           ) : (
             <>
-              {/* Programmateur */}
+              {/* Contact */}
               <div style={{ marginBottom: '15px' }}>
-                <h4>👤 Programmateur</h4>
-                {results.programmateur ? (
+                <h4>👤 Contact</h4>
+                {results.contact ? (
                   <div style={{ backgroundColor: 'white', padding: '10px', marginLeft: '20px' }}>
-                    <div><strong>Nom:</strong> {results.programmateur.prenom} {results.programmateur.nom}</div>
-                    <div><strong>Email:</strong> {results.programmateur.email}</div>
-                    <div><strong>Structure ID:</strong> {results.programmateur.structureId || 'Aucune'}</div>
+                    <div><strong>Nom:</strong> {results.contact.prenom} {results.contact.nom}</div>
+                    <div><strong>Email:</strong> {results.contact.email}</div>
+                    <div><strong>Structure ID:</strong> {results.contact.structureId || 'Aucune'}</div>
                   </div>
                 ) : (
-                  <div style={{ color: 'red', marginLeft: '20px' }}>❌ Programmateur introuvable</div>
+                  <div style={{ color: 'red', marginLeft: '20px' }}>❌ Contact introuvable</div>
                 )}
               </div>
 
@@ -238,7 +238,7 @@ const ProgrammateurReferencesDebug = () => {
                       <div><strong>Type:</strong> {structure.type || 'N/A'}</div>
                       <div><strong>Ville:</strong> {structure.ville || 'N/A'}</div>
                       <div><strong>Champ de référence:</strong> {structure.type}</div>
-                      <div><strong>Programmateurs:</strong> {JSON.stringify(structure.programmateurIds || structure.programmateursAssocies || [])}</div>
+                      <div><strong>Contacts:</strong> {JSON.stringify(structure.contactIds || structure.contactsAssocies || [])}</div>
                       <div><strong>Date création:</strong> {structure.createdAt || structure.dateCreation || 'N/A'}</div>
                       <div><strong>Date modification:</strong> {structure.updatedAt || structure.dateModification || 'N/A'}</div>
                       
@@ -265,12 +265,12 @@ const ProgrammateurReferencesDebug = () => {
                               const { updateDoc, doc, arrayRemove } = await import('@/services/firebase-service');
                               const { db } = await import('@/services/firebase-service');
                               
-                              const field = structure.type === 'programmateurIds' ? 'programmateurIds' : 'programmateursAssocies';
+                              const field = structure.type === 'contactIds' ? 'contactIds' : 'contactsAssocies';
                               await updateDoc(doc(db, 'structures', structure.id), {
-                                [field]: arrayRemove(programmateurId)
+                                [field]: arrayRemove(contactId)
                               });
                               
-                              alert('Référence supprimée avec succès ! Vous pouvez maintenant supprimer le programmateur.');
+                              alert('Référence supprimée avec succès ! Vous pouvez maintenant supprimer le contact.');
                               checkReferences(); // Relancer l'analyse
                             } catch (error) {
                               alert(`Erreur lors de la suppression de la référence: ${error.message}`);
@@ -304,7 +304,7 @@ const ProgrammateurReferencesDebug = () => {
                     </div>
                   ))
                 ) : (
-                  <div style={{ color: 'green', marginLeft: '20px' }}>✅ Aucune structure ne référence ce programmateur</div>
+                  <div style={{ color: 'green', marginLeft: '20px' }}>✅ Aucune structure ne référence ce contact</div>
                 )}
               </div>
 
@@ -319,7 +319,7 @@ const ProgrammateurReferencesDebug = () => {
                     </div>
                   ))
                 ) : (
-                  <div style={{ color: 'green', marginLeft: '20px' }}>✅ Aucun concert ne référence ce programmateur</div>
+                  <div style={{ color: 'green', marginLeft: '20px' }}>✅ Aucun concert ne référence ce contact</div>
                 )}
               </div>
 
@@ -334,7 +334,7 @@ const ProgrammateurReferencesDebug = () => {
                     </div>
                   ))
                 ) : (
-                  <div style={{ color: 'green', marginLeft: '20px' }}>✅ Aucun lieu ne référence ce programmateur</div>
+                  <div style={{ color: 'green', marginLeft: '20px' }}>✅ Aucun lieu ne référence ce contact</div>
                 )}
               </div>
 
@@ -373,9 +373,9 @@ const ProgrammateurReferencesDebug = () => {
                 <h4>📋 Résumé</h4>
                 <div>Total des références qui empêchent la suppression: <strong>{results.structures.length + results.concerts.length + results.lieux.length}</strong></div>
                 {(results.structures.length + results.concerts.length + results.lieux.length) === 0 ? (
-                  <div style={{ color: 'green', fontWeight: 'bold' }}>✅ Ce programmateur peut être supprimé en toute sécurité !</div>
+                  <div style={{ color: 'green', fontWeight: 'bold' }}>✅ Ce contact peut être supprimé en toute sécurité !</div>
                 ) : (
-                  <div style={{ color: 'orange', fontWeight: 'bold' }}>⚠️ Ce programmateur a des références qui empêchent sa suppression.</div>
+                  <div style={{ color: 'orange', fontWeight: 'bold' }}>⚠️ Ce contact a des références qui empêchent sa suppression.</div>
                 )}
               </div>
             </>
@@ -386,4 +386,4 @@ const ProgrammateurReferencesDebug = () => {
   );
 };
 
-export default ProgrammateurReferencesDebug; 
+export default ContactReferencesDebug; 

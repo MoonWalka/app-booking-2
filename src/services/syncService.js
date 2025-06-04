@@ -12,7 +12,7 @@ import firebaseEmulatorService from './firebase-emulator-service';
  * @param {Array} collections - Liste des collections à synchroniser
  * @returns {Promise<boolean>} - true si succès, false sinon
  */
-export async function exportLocalDataToFirebase(collections = ['concerts', 'lieux', 'programmateurs', 'artistes', 'structures']) {
+export async function exportLocalDataToFirebase(collections = ['concerts', 'lieux', 'contacts', 'artistes', 'structures']) {
   // En mode local, vérifier que Firebase est bien disponible pour la synchronisation
   if (!firebaseDB || typeof firebaseDB.collection !== 'function') {
     console.error('Firebase n\'est pas correctement initialisé pour la synchronisation');
@@ -57,7 +57,7 @@ export async function exportLocalDataToFirebase(collections = ['concerts', 'lieu
  * @param {Array} collections - Liste des collections à importer
  * @returns {Promise<boolean>} - true si succès, false sinon
  */
-export async function importFirebaseDataToLocal(collections = ['concerts', 'lieux', 'programmateurs', 'artistes', 'structures']) {
+export async function importFirebaseDataToLocal(collections = ['concerts', 'lieux', 'contacts', 'artistes', 'structures']) {
   // En mode local, vérifier que Firebase est bien disponible pour la synchronisation
   if (!firebaseDB || typeof firebaseDB.collection !== 'function') {
     console.error('Firebase n\'est pas correctement initialisé pour la synchronisation');
@@ -224,7 +224,7 @@ export function enableAutoSync(intervalMinutes = 30) {
   // Démarrer la synchronisation automatique
   const interval = setInterval(async () => {
     try {
-      await exportLocalDataToFirebase(['concerts', 'lieux', 'programmateurs']);
+      await exportLocalDataToFirebase(['concerts', 'lieux', 'contacts']);
     } catch (error) {
       console.error('Erreur dans la synchronisation automatique:', error);
     }

@@ -19,9 +19,9 @@ import LieuxDesktopList from './lieux/desktop/LieuxList';
 import LieuxDesktopView from './lieux/desktop/LieuView';
 import LieuxDesktopForm from './lieux/desktop/LieuForm';
 
-import ProgrammateursDesktopList from './programmateurs/desktop/ProgrammateursList';
-import ProgrammateursDesktopView from './programmateurs/desktop/ProgrammateurView';
-import ProgrammateursDesktopForm from './programmateurs/desktop/ProgrammateurForm';
+import ContactsDesktopList from './contacts/desktop/ContactsList';
+import ContactsDesktopView from './contacts/desktop/ContactView';
+import ContactsDesktopForm from './contacts/desktop/ContactForm';
 
 import StructuresDesktopList from './structures/desktop/StructuresList';
 // Les composants suivants n'existent pas, utilisez les composants Details à la place
@@ -43,9 +43,9 @@ import ConcertsMobileForm from './concerts/mobile/ConcertForm';
 // Utilisons seulement le composant LieuView qui existe
 import LieuxMobileView from './lieux/mobile/LieuView';
 
-import ProgrammateursMobileList from './programmateurs/mobile/ProgrammateursList';
-import ProgrammateursMobileView from './programmateurs/mobile/ProgrammateurView';
-import ProgrammateursMobileForm from './programmateurs/mobile/ProgrammateurForm';
+import ContactsMobileList from './contacts/mobile/ContactsList';
+import ContactsMobileView from './contacts/mobile/ContactView';
+import ContactsMobileForm from './contacts/mobile/ContactForm';
 
 import StructuresMobileList from './structures/mobile/StructuresList';
 // Le composant StructureMobileView n'existe pas, utilisons le Details à la place
@@ -81,13 +81,13 @@ export const componentMapping = {
   'lieux/mobile/LieuView': LieuxMobileView,
   'lieux/mobile/LieuForm': null,
 
-  // Programmateurs
-  'programmateurs/desktop/ProgrammateursList': ProgrammateursDesktopList,
-  'programmateurs/desktop/ProgrammateurView': ProgrammateursDesktopView,
-  'programmateurs/desktop/ProgrammateurForm': ProgrammateursDesktopForm,
-  'programmateurs/mobile/ProgrammateursList': ProgrammateursMobileList,
-  'programmateurs/mobile/ProgrammateurView': ProgrammateursMobileView,
-  'programmateurs/mobile/ProgrammateurForm': ProgrammateursMobileForm,
+  // Contacts
+  'contacts/desktop/ContactsList': ContactsDesktopList,
+  'contacts/desktop/ContactView': ContactsDesktopView,
+  'contacts/desktop/ContactForm': ContactsDesktopForm,
+  'contacts/mobile/ContactsList': ContactsMobileList,
+  'contacts/mobile/ContactView': ContactsMobileView,
+  'contacts/mobile/ContactForm': ContactsMobileForm,
 
   // Structures
   'structures/desktop/StructuresList': StructuresDesktopList,

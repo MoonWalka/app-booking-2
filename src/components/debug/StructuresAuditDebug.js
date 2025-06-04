@@ -79,7 +79,7 @@ const StructuresAuditDebug = () => {
         const hasName = !!(structure.nom || structure.raisonSociale);
         const hasType = !!structure.type;
         const hasValidFields = hasName && hasType;
-        const hasRequiredData = hasName || structure.programmateurIds?.length > 0 || structure.programmateursAssocies?.length > 0;
+        const hasRequiredData = hasName || structure.contactIds?.length > 0 || structure.contactsAssocies?.length > 0;
 
         // Classification des structures
         if (!hasRequiredData) {
@@ -87,7 +87,7 @@ const StructuresAuditDebug = () => {
             ...structure,
             issues: [
               !hasName && 'Aucun nom/raison sociale',
-              !structure.programmateurIds?.length && !structure.programmateursAssocies?.length && 'Aucun programmateur associé'
+              !structure.contactIds?.length && !structure.contactsAssocies?.length && 'Aucun contact associé'
             ].filter(Boolean)
           });
         } else if (!hasValidFields) {
@@ -114,12 +114,12 @@ const StructuresAuditDebug = () => {
           structureNames.set(structureName, structure.id);
         }
 
-        // Détecter les structures orphelines (avec programmateurs associés mais aucune autre donnée utile)
-        if ((structure.programmateurIds?.length > 0 || structure.programmateursAssocies?.length > 0) && 
+        // Détecter les structures orphelines (avec contacts associés mais aucune autre donnée utile)
+        if ((structure.contactIds?.length > 0 || structure.contactsAssocies?.length > 0) && 
             !hasName && !structure.ville && !structure.adresse) {
           report.orphanedStructures.push({
             ...structure,
-            associatedProgrammateurs: structure.programmateurIds || structure.programmateursAssocies || []
+            associatedContacts: structure.contactIds || structure.contactsAssocies || []
           });
         }
       });
@@ -149,14 +149,14 @@ const StructuresAuditDebug = () => {
   };
 
   const cleanupStructure = async (structure) => {
-    if (!window.confirm(`Nettoyer la structure ${structure.id} (supprimer les références aux programmateurs) ?`)) {
+    if (!window.confirm(`Nettoyer la structure ${structure.id} (supprimer les références aux contacts) ?`)) {
       return;
     }
 
     try {
       await updateDoc(doc(db, 'structures', structure.id), {
-        programmateurIds: [],
-        programmateursAssocies: []
+        contactIds: [],
+        contactsAssocies: []
       });
       alert('Structure nettoyée avec succès !');
       auditStructures(); // Relancer l'audit
@@ -235,7 +235,7 @@ const StructuresAuditDebug = () => {
               {results.emptyStructures.length > 0 && (
                 <div style={{ marginBottom: '20px' }}>
                   <h4>🗑️ Structures Vides ({results.emptyStructures.length})</h4>
-                  <p style={{ color: '#666', fontSize: '14px' }}>Ces structures n'ont ni nom ni programmateurs associés</p>
+                  <p style={{ color: '#666', fontSize: '14px' }}>Ces structures n'ont ni nom ni contacts associés</p>
                   {results.emptyStructures.map(structure => (
                     <div key={structure.id} style={{ backgroundColor: 'white', padding: '10px', marginBottom: '10px', border: '1px solid #ddd', borderRadius: '5px' }}>
                       <div><strong>ID:</strong> {structure.id}</div>
@@ -265,11 +265,11 @@ const StructuresAuditDebug = () => {
               {results.orphanedStructures.length > 0 && (
                 <div style={{ marginBottom: '20px' }}>
                   <h4>👻 Structures Orphelines ({results.orphanedStructures.length})</h4>
-                  <p style={{ color: '#666', fontSize: '14px' }}>Ces structures ont des programmateurs associés mais pas de données utiles</p>
+                  <p style={{ color: '#666', fontSize: '14px' }}>Ces structures ont des contacts associés mais pas de données utiles</p>
                   {results.orphanedStructures.map(structure => (
                     <div key={structure.id} style={{ backgroundColor: '#fff3cd', padding: '10px', marginBottom: '10px', border: '1px solid #ffeaa7', borderRadius: '5px' }}>
                       <div><strong>ID:</strong> {structure.id}</div>
-                      <div><strong>Programmateurs associés:</strong> {JSON.stringify(structure.associatedProgrammateurs)}</div>
+                      <div><strong>Contacts associés:</strong> {JSON.stringify(structure.associatedContacts)}</div>
                       <div><strong>Type:</strong> {structure.type || 'N/A'}</div>
                       <div><strong>Dates:</strong> Créé: {structure.createdAt}, Modifié: {structure.updatedAt}</div>
                       <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
@@ -318,7 +318,7 @@ const StructuresAuditDebug = () => {
                       <div><strong>Nom/Raison sociale:</strong> {structure.nom || structure.raisonSociale || 'N/A'}</div>
                       <div><strong>Type:</strong> {structure.type || 'N/A'}</div>
                       <div><strong>Problèmes:</strong> {structure.issues.join(', ')}</div>
-                      <div><strong>Programmateurs:</strong> {JSON.stringify(structure.programmateurIds || structure.programmateursAssocies || [])}</div>
+                      <div><strong>Contacts:</strong> {JSON.stringify(structure.contactIds || structure.contactsAssocies || [])}</div>
                       <button
                         onClick={() => deleteStructure(structure.id)}
                         style={{ 
@@ -349,7 +349,7 @@ const StructuresAuditDebug = () => {
                       <div><strong>Nom:</strong> {structure.nom || structure.raisonSociale}</div>
                       <div><strong>Type:</strong> {structure.type}</div>
                       <div><strong>Ville:</strong> {structure.ville || 'N/A'}</div>
-                      <div><strong>Programmateurs:</strong> {(structure.programmateurIds || structure.programmateursAssocies || []).length}</div>
+                      <div><strong>Contacts:</strong> {(structure.contactIds || structure.contactsAssocies || []).length}</div>
                       <a 
                         href={`/structures/${structure.id}`}
                         target="_blank"

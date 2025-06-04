@@ -33,10 +33,10 @@ const useDeleteStructure = (onDeleteSuccess) => {
     // Entités liées à vérifier
     relatedEntities: [
       {
-        collection: 'programmateurs',
+        collection: 'contacts',
         field: 'structureId',
         referenceType: 'direct',
-        message: 'Cette structure ne peut pas être supprimée car des programmateurs y sont associés.',
+        message: 'Cette structure ne peut pas être supprimée car des contacts y sont associés.',
         detailsField: 'nom',
         detailsLimit: 5
       },

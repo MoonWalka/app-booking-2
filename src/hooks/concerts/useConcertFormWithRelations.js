@@ -19,7 +19,7 @@ export const useConcertFormWithRelations = (concertId) => {
   // États pour les entités liées
   const [lieu, setLieu] = useState(null);
   const [artiste, setArtiste] = useState(null);
-  const [programmateur, setProgrammateur] = useState(null);
+  const [contact, setContact] = useState(null);
   const [structure, setStructure] = useState(null);
   const [loadingRelations, setLoadingRelations] = useState(false);
   
@@ -51,14 +51,14 @@ export const useConcertFormWithRelations = (concertId) => {
           setArtiste(null);
         }
         
-        // Charger le programmateur
-        if (baseHook.formData.programmateurId) {
-          const progDoc = await getDoc(doc(db, 'programmateurs', baseHook.formData.programmateurId));
+        // Charger le contact
+        if (baseHook.formData.contactId) {
+          const progDoc = await getDoc(doc(db, 'contacts', baseHook.formData.contactId));
           if (progDoc.exists()) {
-            setProgrammateur({ id: progDoc.id, ...progDoc.data() });
+            setContact({ id: progDoc.id, ...progDoc.data() });
           }
         } else {
-          setProgrammateur(null);
+          setContact(null);
         }
         
         // Charger la structure
@@ -84,7 +84,7 @@ export const useConcertFormWithRelations = (concertId) => {
   }, [
     baseHook.formData?.lieuId, 
     baseHook.formData?.artisteId, 
-    baseHook.formData?.programmateurId,
+    baseHook.formData?.contactId,
     baseHook.formData?.structureId,
     baseHook.isNewConcert,
     baseHook.formData
@@ -101,17 +101,17 @@ export const useConcertFormWithRelations = (concertId) => {
     baseHook.handleArtisteChange(newArtiste);
   };
   
-  const handleProgrammateurChange = (newProgrammateur) => {
-    setProgrammateur(newProgrammateur);
+  const handleContactChange = (newContact) => {
+    setContact(newContact);
     // Appeler la méthode de base si elle existe
-    if (baseHook.handleProgrammateurChange) {
-      baseHook.handleProgrammateurChange(newProgrammateur);
+    if (baseHook.handleContactChange) {
+      baseHook.handleContactChange(newContact);
     } else {
       // Sinon, mettre à jour manuellement
       baseHook.setFormData(prev => ({
         ...prev,
-        programmateurId: newProgrammateur?.id || null,
-        programmateurNom: newProgrammateur?.nom || ''
+        contactId: newContact?.id || null,
+        contactNom: newContact?.nom || ''
       }));
     }
   };
@@ -137,12 +137,12 @@ export const useConcertFormWithRelations = (concertId) => {
     // Surcharger avec nos versions qui mettent à jour les états locaux
     handleLieuChange,
     handleArtisteChange,
-    handleProgrammateurChange,
+    handleContactChange,
     handleStructureChange,
     // Ajouter les entités liées
     lieu,
     artiste,
-    programmateur,
+    contact,
     structure,
     // Ajouter l'état de chargement des relations
     loading: baseHook.loading || loadingRelations

@@ -2,27 +2,27 @@ import React from 'react';
 import Button from '@/components/ui/Button';
 import styles from '../LieuForm.module.css';
 
-const LieuProgrammateurSection = ({ programmateurSearch }) => {
+const LieuContactSection = ({ contactSearch }) => {
   // Defensive: fallback to empty array and no-op if undefined
   const {
     query = '',
     setQuery = () => {},
-    programmateurs = [],
+    contacts = [],
     isLoading = false,
     handleSearch = () => {},
-    selectProgrammateur = () => {},
-    removeProgrammateur = () => {}
-  } = programmateurSearch || {};
+    selectContact = () => {},
+    removeContact = () => {}
+  } = contactSearch || {};
 
   return (
     <div className={styles.formSection}>
-      <h3 className={styles.sectionTitle}>Programmateur associé</h3>
+      <h3 className={styles.sectionTitle}>Contact associé</h3>
       
       <div className={styles.searchContainer}>
         <input
           type="text"
           className={styles.searchInput}
-          placeholder="Rechercher un programmateur..."
+          placeholder="Rechercher un contact..."
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -31,17 +31,17 @@ const LieuProgrammateurSection = ({ programmateurSearch }) => {
         />
         {isLoading && <div className={styles.spinner}></div>}
         
-        {programmateurs.length > 0 && (
+        {contacts.length > 0 && (
           <ul className={styles.searchSuggestions}>
-            {programmateurs.map(programmateur => (
+            {contacts.map(contact => (
               <li 
-                key={programmateur.id}
-                onClick={() => selectProgrammateur(programmateur)}
+                key={contact.id}
+                onClick={() => selectContact(contact)}
                 className={styles.suggestionItem}
               >
-                {programmateur.nom}
+                {contact.nom}
                 <span className={styles.suggestionSubtext}>
-                  {programmateur.structure || 'Aucune structure'}
+                  {contact.structure || 'Aucune structure'}
                 </span>
               </li>
             ))}
@@ -49,16 +49,16 @@ const LieuProgrammateurSection = ({ programmateurSearch }) => {
         )}
       </div>
 
-      {programmateurSearch.programmateurId && (
-        <div className={styles.selectedProgrammateur}>
-          <div className={styles.selectedProgrammateurInfo}>
-            <h4>{programmateurSearch.programmateurNom}</h4>
+      {contactSearch.contactId && (
+        <div className={styles.selectedContact}>
+          <div className={styles.selectedContactInfo}>
+            <h4>{contactSearch.contactNom}</h4>
           </div>
           <Button 
             type="button"
             variant="danger"
             size="small"
-            onClick={removeProgrammateur}
+            onClick={removeContact}
           >
             <i className="bi bi-x-circle"></i> Retirer
           </Button>
@@ -68,4 +68,4 @@ const LieuProgrammateurSection = ({ programmateurSearch }) => {
   );
 };
 
-export default LieuProgrammateurSection;
+export default LieuContactSection;

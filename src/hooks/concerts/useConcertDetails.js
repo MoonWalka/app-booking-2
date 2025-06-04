@@ -51,7 +51,7 @@ const useConcertDetails = (id, locationParam) => {
       debugLog(`[useConcertDetails] Retour du hook pour concert ${id}:`, 'info', 'useConcertDetails');
       debugLog(`  - concert: ${stableRefsRef.current.concert ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
       debugLog(`  - lieu: ${stableRefsRef.current.lieu ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
-      debugLog(`  - programmateur: ${stableRefsRef.current.programmateur ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
+      debugLog(`  - contact: ${stableRefsRef.current.contact ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
       debugLog(`  - loading: ${stableRefsRef.current.loading}`, 'debug', 'useConcertDetails');
       debugLog(`  - genericDetails: ${stableRefsRef.current.genericDetails ? 'PRÉSENT' : 'NULL'}`, 'debug', 'useConcertDetails');
       
@@ -68,7 +68,7 @@ const useConcertDetails = (id, locationParam) => {
   
   // 🔒 STABILISATION: États spécifiques avec valeurs par défaut stables
   const [cacheKey, setCacheKey] = useState(() => getCacheKey(id));
-  const [initialProgrammateurId, setInitialProgrammateurId] = useState(null);
+  const [initialContactId, setInitialContactId] = useState(null);
   const [initialArtisteId, setInitialArtisteId] = useState(null);
   const [initialStructureId, setInitialStructureId] = useState(null);
   const [initialLieuId, setInitialLieuId] = useState(null);
@@ -93,13 +93,13 @@ const useConcertDetails = (id, locationParam) => {
       essential: true // Le lieu est essentiel pour l'affichage du concert
     },
     {
-      name: 'programmateur',
-      collection: 'programmateurs',
-      idField: 'programmateurId',  // Champ principal
-      alternativeIdFields: ['programmateur'], // Champs alternatifs pour compatibilité
-      nameField: 'programmateurNom',
+      name: 'contact',
+      collection: 'contacts',
+      idField: 'contactId',  // Champ principal
+      alternativeIdFields: ['contact'], // Champs alternatifs pour compatibilité
+      nameField: 'contactNom',
       type: 'one-to-one',
-      essential: true // Le programmateur est essentiel pour l'affichage du concert
+      essential: true // Le contact est essentiel pour l'affichage du concert
     },
     {
       name: 'artiste',
@@ -116,7 +116,7 @@ const useConcertDetails = (id, locationParam) => {
       idField: 'structureId',
       alternativeIdFields: ['structure'], // Champs alternatifs pour compatibilité
       nameField: 'structureNom',
-      type: 'custom', // CHANGEMENT: Type custom pour charger via le programmateur
+      type: 'custom', // CHANGEMENT: Type custom pour charger via le contact
       essential: true // La structure est essentielle pour debug
     }
   ], []); // Pas de dépendances car la configuration est statique
@@ -131,8 +131,8 @@ const useConcertDetails = (id, locationParam) => {
   // Mettre à jour les références sans déclencher de re-renders
   transformConcertDataRef.current = useCallback((data) => {
     // Stocker les IDs initiaux pour la gestion des relations bidirectionnelles
-    if (data.programmateurId) {
-      setInitialProgrammateurId(data.programmateurId);
+    if (data.contactId) {
+      setInitialContactId(data.contactId);
     }
     
     if (data.artisteId) {
@@ -172,7 +172,7 @@ const useConcertDetails = (id, locationParam) => {
   // ✅ CORRECTION: Stabiliser les callbacks de succès - SANS dépendances instables
   handleSaveSuccessRef.current = useCallback((data) => {
     // Mettre à jour les IDs initiaux pour la prochaine édition
-    setInitialProgrammateurId(data.programmateurId || null);
+    setInitialContactId(data.contactId || null);
     setInitialArtisteId(data.artisteId || null);
     setInitialStructureId(data.structureId || null);
     setInitialLieuId(data.lieuId || null);
@@ -231,44 +231,44 @@ const useConcertDetails = (id, locationParam) => {
         }
       }
       
-      // Sinon, charger via le programmateur
-      const programmateurId = concertData.programmateurId;
-      if (!programmateurId) {
-        console.log('🏢 Pas de programmateur, pas de structure');
-        debugLog('[useConcertDetails] Pas de programmateur, pas de structure', 'info', 'useConcertDetails');
+      // Sinon, charger via le contact
+      const contactId = concertData.contactId;
+      if (!contactId) {
+        console.log('🏢 Pas de contact, pas de structure');
+        debugLog('[useConcertDetails] Pas de contact, pas de structure', 'info', 'useConcertDetails');
         return null;
       }
       
       try {
         const { doc, getDoc, db } = await import('@/services/firebase-service');
-        const programmateurDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+        const contactDoc = await getDoc(doc(db, 'contacts', contactId));
         
-        if (!programmateurDoc.exists()) {
-          console.log('🏢 Programmateur non trouvé');
-          debugLog('[useConcertDetails] Programmateur non trouvé', 'warn', 'useConcertDetails');
+        if (!contactDoc.exists()) {
+          console.log('🏢 Contact non trouvé');
+          debugLog('[useConcertDetails] Contact non trouvé', 'warn', 'useConcertDetails');
           return null;
         }
         
-        const programmateurData = programmateurDoc.data();
-        if (!programmateurData.structureId) {
-          console.log('🏢 Programmateur sans structure');
-          debugLog('[useConcertDetails] Programmateur sans structure', 'info', 'useConcertDetails');
+        const contactData = contactDoc.data();
+        if (!contactData.structureId) {
+          console.log('🏢 Contact sans structure');
+          debugLog('[useConcertDetails] Contact sans structure', 'info', 'useConcertDetails');
           return null;
         }
         
-        // Charger la structure du programmateur
-        const structureDoc = await getDoc(doc(db, 'structures', programmateurData.structureId));
+        // Charger la structure du contact
+        const structureDoc = await getDoc(doc(db, 'structures', contactData.structureId));
         if (structureDoc.exists()) {
           const result = { id: structureDoc.id, ...structureDoc.data() };
-          console.log('🏢 Structure trouvée via programmateur:', result);
-          debugLog('[useConcertDetails] Structure trouvée via programmateur', 'info', 'useConcertDetails');
+          console.log('🏢 Structure trouvée via contact:', result);
+          debugLog('[useConcertDetails] Structure trouvée via contact', 'info', 'useConcertDetails');
           return result;
         }
         
-        console.log('🏢 Structure du programmateur non trouvée');
+        console.log('🏢 Structure du contact non trouvée');
         return null;
       } catch (err) {
-        console.error('🏢 Erreur lors du chargement de la structure via programmateur:', err);
+        console.error('🏢 Erreur lors du chargement de la structure via contact:', err);
         return null;
       }
     },
@@ -362,13 +362,13 @@ const useConcertDetails = (id, locationParam) => {
       const updatePromises = [];
       
       // Mise à jour des relations bidirectionnelles
-      if (relatedData.programmateur?.id || initialProgrammateurId) {
+      if (relatedData.contact?.id || initialContactId) {
         updatePromises.push(
-          stableAssociations.updateProgrammateurAssociation(
+          stableAssociations.updateContactAssociation(
             id,
             entity,
-            relatedData.programmateur?.id || null,
-            initialProgrammateurId,
+            relatedData.contact?.id || null,
+            initialContactId,
             relatedData.lieu
           )
         );
@@ -416,7 +416,7 @@ const useConcertDetails = (id, locationParam) => {
       console.error("[useConcertDetails] Erreur lors des mises à jour bidirectionnelles:", error);
       throw error; // Propager l'erreur pour la gestion en amont
     }
-  }, [id, initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
+  }, [id, initialContactId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
   
   const handleBidirectionalUpdates = useCallback(async () => {
     return handleBidirectionalUpdatesRef.current();
@@ -434,19 +434,19 @@ const useConcertDetails = (id, locationParam) => {
     const promises = [];
     const results = {};
   
-    // Programmateur
-    if (relatedData.programmateur?.id || initialProgrammateurId) {
-      const progId = relatedData.programmateur?.id || initialProgrammateurId;
+    // Contact
+    if (relatedData.contact?.id || initialContactId) {
+      const progId = relatedData.contact?.id || initialContactId;
       if (progId) {
         promises.push(
           (async () => {
             try {
-              const docRef = doc(db, 'programmateurs', progId);
+              const docRef = doc(db, 'contacts', progId);
               const docSnap = await getDoc(docRef);
-              results.programmateur = docSnap.exists() ? { id: progId, ...docSnap.data() } : null;
+              results.contact = docSnap.exists() ? { id: progId, ...docSnap.data() } : null;
             } catch (error) {
-              console.error("Erreur lors du chargement du programmateur:", error);
-              results.programmateur = null;
+              console.error("Erreur lors du chargement du contact:", error);
+              results.contact = null;
             }
           })()
         );
@@ -513,7 +513,7 @@ const useConcertDetails = (id, locationParam) => {
     // Attendre que toutes les promesses se terminent
     await Promise.all(promises);
     return results;
-  }, [initialProgrammateurId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
+  }, [initialContactId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
   
 
   
@@ -663,13 +663,13 @@ const useConcertDetails = (id, locationParam) => {
           action: 'form',
           formStatus: formStatusInfo
         };
-        if (formDataConcert && (!formDataConcert.programmateurData && (!formDataConcert.data || Object.keys(formDataConcert.data).length === 0))) 
+        if (formDataConcert && (!formDataConcert.contactData && (!formDataConcert.data || Object.keys(formDataConcert.data).length === 0))) 
           return { 
             message: 'Formulaire envoyé, en attente de réponse', 
             actionNeeded: false,
             formStatus: formStatusInfo
           };
-        if (formDataConcert && (formDataConcert.programmateurData || (formDataConcert.data && Object.keys(formDataConcert.data).length > 0)) && formDataConcert.status !== 'validated') 
+        if (formDataConcert && (formDataConcert.contactData || (formDataConcert.data && Object.keys(formDataConcert.data).length > 0)) && formDataConcert.status !== 'validated') 
           return { 
             message: 'Formulaire à valider', 
             actionNeeded: true, 
@@ -921,14 +921,14 @@ const useConcertDetails = (id, locationParam) => {
   const returnData = useMemo(() => {
     const concert = genericDetails?.entity || null;
     const lieu = genericDetails?.relatedData?.lieu || null;
-    const programmateur = genericDetails?.relatedData?.programmateur || null;
+    const contact = genericDetails?.relatedData?.contact || null;
     const loading = genericDetails?.loading || genericDetails?.isLoading || false;
     
     // Mettre à jour les références stables pour le diagnostic
     stableRefsRef.current = {
       concert,
       lieu,
-      programmateur,
+      contact,
       loading,
       genericDetails: !!genericDetails
     };
@@ -937,7 +937,7 @@ const useConcertDetails = (id, locationParam) => {
       // Données principales du hook générique
       concert,
       lieu,
-      programmateur,
+      contact,
       artiste: genericDetails?.relatedData?.artiste || null,
       structure: genericDetails?.relatedData?.structure || null,
       loading,
@@ -979,7 +979,7 @@ const useConcertDetails = (id, locationParam) => {
       
       // Fonctions pour la gestion des entités liées
       setLieu: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
-      setProgrammateur: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
+      setContact: (prog) => genericDetails?.setRelatedEntity('contact', prog),
       setArtiste: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
       setStructure: (structure) => genericDetails?.setRelatedEntity('structure', structure),
       
@@ -989,9 +989,9 @@ const useConcertDetails = (id, locationParam) => {
         setSelectedEntity: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
         setSearchTerm: () => {} // Stub pour compatibilité
       },
-      programmateurSearch: {
-        selectedEntity: genericDetails?.relatedData?.programmateur || null,
-        setSelectedEntity: (prog) => genericDetails?.setRelatedEntity('programmateur', prog),
+      contactSearch: {
+        selectedEntity: genericDetails?.relatedData?.contact || null,
+        setSelectedEntity: (prog) => genericDetails?.setRelatedEntity('contact', prog),
         setSearchTerm: () => {} // Stub pour compatibilité
       },
       artisteSearch: {

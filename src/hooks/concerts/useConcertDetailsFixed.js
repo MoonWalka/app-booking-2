@@ -53,11 +53,11 @@ const useConcertDetailsFixed = (id, locationParam) => {
       essential: true
     },
     {
-      name: 'programmateur',
-      collection: 'programmateurs',
-      idField: 'programmateurId',
-      alternativeIdFields: ['programmateur'],
-      nameField: 'programmateurNom',
+      name: 'contact',
+      collection: 'contacts',
+      idField: 'contactId',
+      alternativeIdFields: ['contact'],
+      nameField: 'contactNom',
       type: 'one-to-one',
       essential: true
     },
@@ -76,7 +76,7 @@ const useConcertDetailsFixed = (id, locationParam) => {
       idField: 'structureId',
       alternativeIdFields: ['structure'],
       nameField: 'structureNom',
-      type: 'custom', // Type custom pour charger via le programmateur
+      type: 'custom', // Type custom pour charger via le contact
       essential: true // La structure est essentielle pour debug
     }
   ], []);
@@ -121,44 +121,44 @@ const useConcertDetailsFixed = (id, locationParam) => {
             }
           }
           
-          // Sinon, charger via le programmateur
-          const programmateurId = concertData.programmateurId;
-          if (!programmateurId) {
-            console.log('🏢 Pas de programmateur, pas de structure');
-            debugLog('[useConcertDetailsFixed] Pas de programmateur, pas de structure', 'info', 'useConcertDetailsFixed');
+          // Sinon, charger via le contact
+          const contactId = concertData.contactId;
+          if (!contactId) {
+            console.log('🏢 Pas de contact, pas de structure');
+            debugLog('[useConcertDetailsFixed] Pas de contact, pas de structure', 'info', 'useConcertDetailsFixed');
             return null;
           }
           
           try {
             const { doc, getDoc, db } = await import('@/services/firebase-service');
-            const programmateurDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+            const contactDoc = await getDoc(doc(db, 'contacts', contactId));
             
-            if (!programmateurDoc.exists()) {
-              console.log('🏢 Programmateur non trouvé');
-              debugLog('[useConcertDetailsFixed] Programmateur non trouvé', 'warn', 'useConcertDetailsFixed');
+            if (!contactDoc.exists()) {
+              console.log('🏢 Contact non trouvé');
+              debugLog('[useConcertDetailsFixed] Contact non trouvé', 'warn', 'useConcertDetailsFixed');
               return null;
             }
             
-            const programmateurData = programmateurDoc.data();
-            if (!programmateurData.structureId) {
-              console.log('🏢 Programmateur sans structure');
-              debugLog('[useConcertDetailsFixed] Programmateur sans structure', 'info', 'useConcertDetailsFixed');
+            const contactData = contactDoc.data();
+            if (!contactData.structureId) {
+              console.log('🏢 Contact sans structure');
+              debugLog('[useConcertDetailsFixed] Contact sans structure', 'info', 'useConcertDetailsFixed');
               return null;
             }
             
-            // Charger la structure du programmateur
-            const structureDoc = await getDoc(doc(db, 'structures', programmateurData.structureId));
+            // Charger la structure du contact
+            const structureDoc = await getDoc(doc(db, 'structures', contactData.structureId));
             if (structureDoc.exists()) {
               const result = { id: structureDoc.id, ...structureDoc.data() };
-              console.log('🏢 Structure trouvée via programmateur:', result);
-              debugLog('[useConcertDetailsFixed] Structure trouvée via programmateur', 'info', 'useConcertDetailsFixed');
+              console.log('🏢 Structure trouvée via contact:', result);
+              debugLog('[useConcertDetailsFixed] Structure trouvée via contact', 'info', 'useConcertDetailsFixed');
               return result;
             }
             
-            console.log('🏢 Structure du programmateur non trouvée');
+            console.log('🏢 Structure du contact non trouvée');
             return null;
           } catch (err) {
-            console.error('🏢 Erreur lors du chargement de la structure via programmateur:', err);
+            console.error('🏢 Erreur lors du chargement de la structure via contact:', err);
             return null;
           }
         }
@@ -225,7 +225,7 @@ const useConcertDetailsFixed = (id, locationParam) => {
           await concertAssociations.handleBidirectionalUpdates({
             concert: genericDetails.entity,
             lieu: genericDetails.relatedData?.lieu,
-            programmateur: genericDetails.relatedData?.programmateur,
+            contact: genericDetails.relatedData?.contact,
             artiste: genericDetails.relatedData?.artiste,
             structure: genericDetails.relatedData?.structure
           });
@@ -276,7 +276,7 @@ const useConcertDetailsFixed = (id, locationParam) => {
     // Données principales
     concert: genericDetails.entity,
     lieu: genericDetails.relatedData?.lieu,
-    programmateur: genericDetails.relatedData?.programmateur,
+    contact: genericDetails.relatedData?.contact,
     artiste: genericDetails.relatedData?.artiste,
     structure: genericDetails.relatedData?.structure,
     
@@ -300,7 +300,7 @@ const useConcertDetailsFixed = (id, locationParam) => {
     handleSave: genericDetails.handleSave,
     handleDelete,
     setLieu: genericDetails.setLieu,
-    setProgrammateur: genericDetails.setProgrammateur,
+    setContact: genericDetails.setContact,
     setArtiste: genericDetails.setArtiste,
     setStructure: genericDetails.setStructure,
     

@@ -73,7 +73,7 @@ export const diagnosticConcerts = async () => {
 export const diagnosticDemoData = async () => {
   console.log('🎭 === DIAGNOSTIC DONNÉES DÉMO ===');
   
-  const collections = ['concerts', 'artistes', 'lieux', 'programmateurs', 'structures'];
+  const collections = ['concerts', 'artistes', 'lieux', 'contacts', 'structures'];
   
   for (const collName of collections) {
     try {

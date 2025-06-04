@@ -69,9 +69,9 @@ import {
  * });
  * 
  * // Avec cache personnalisé
- * const { data, isStale, invalidateCache } = useGenericDataFetcher('programmateurs', {
+ * const { data, isStale, invalidateCache } = useGenericDataFetcher('contacts', {
  *   mode: 'collection',
- *   cacheKey: 'active-programmateurs',
+ *   cacheKey: 'active-contacts',
  *   cacheTTL: 10 * 60 * 1000 // 10 minutes
  * });
  * ```

@@ -3,6 +3,17 @@
 ## Objectif
 Remplacer **toutes** les occurrences du domaine `programmateur` (et variantes : Programmateur, programmateurs, etc.) par le domaine `contact` dans toute l'application, afin d'unifier la gestion des contacts et de supprimer la notion de programmateur.
 
+## ✅ Phase 1 TERMINÉE (Décembre 2024)
+**Mapping terminologique UI** - Le système `terminologyMapping.js` est implémenté et actif dans 8 composants :
+- ✅ Sidebar navigation (`/programmateurs` → "Contacts")
+- ✅ Navbar
+- ✅ Layout components (mobile/desktop)
+- ✅ Programmateur components (form, header, list)
+- ✅ Lieu components (organizer section)
+- ✅ EntityConfigurations (`title: 'Contact'`, `pluralTitle: 'Contacts'`)
+
+**Résultat :** L'interface utilisateur affiche "Contact/Contacts" partout, while le code interne utilise encore "programmateur".
+
 ---
 
 ## 1. Audit exhaustif des fichiers et usages

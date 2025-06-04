@@ -45,7 +45,7 @@ const ConcertView = () => {
   const {
     concert,
     lieu,
-    programmateur,
+    contact,
     artiste,
     structure,
     loading,
@@ -131,12 +131,12 @@ const ConcertView = () => {
           navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
         />
 
-        {/* Programmateur */}
+        {/* Contact */}
         <ConcertOrganizerSectionMobile 
           concertId={id}
-          programmateur={programmateur}
+          contact={contact}
           isEditMode={false}
-          navigateToProgrammateurDetails={(progId) => navigate(`/programmateurs/${progId}`)}
+          navigateToContactDetails={(progId) => navigate(`/contacts/${progId}`)}
           formData={formData}
           formDataStatus={formDataStatus}
           showFormGenerator={showFormGenerator}
@@ -179,7 +179,7 @@ const ConcertView = () => {
         <div className="p-3 border rounded mb-3">
           <FormGenerator
             concertId={id}
-            programmateurId={concert.programmateurId}
+            contactId={concert.contactId}
             onFormGenerated={handleFormGenerated}
           />
         </div>

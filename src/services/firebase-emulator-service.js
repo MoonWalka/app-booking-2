@@ -307,7 +307,7 @@ const _getRawLocalData = async () => {
     return {};
   }
 
-  const collections = ['concerts', 'lieux', 'programmateurs', 'artistes', 'structures', 'forms'];
+  const collections = ['concerts', 'lieux', 'contacts', 'artistes', 'structures', 'forms'];
   const rawData = {};
 
   try {

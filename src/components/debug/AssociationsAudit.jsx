@@ -7,9 +7,9 @@ const AssociationsAudit = () => {
   const [rapport, setRapport] = useState(null);
 
   const verifierRetourReference = (lieu, contactId) => {
-    if (lieu.programmateurId === contactId) return true;
-    if (lieu.programmateursAssocies) {
-      return lieu.programmateursAssocies.some(ref => {
+    if (lieu.contactId === contactId) return true;
+    if (lieu.contactsAssocies) {
+      return lieu.contactsAssocies.some(ref => {
         const id = typeof ref === 'object' ? ref.id : ref;
         return id === contactId;
       });
@@ -44,7 +44,7 @@ const AssociationsAudit = () => {
 
     try {
       // Récupérer tous les contacts
-      const contactsSnapshot = await getDocs(collection(db, 'programmateurs'));
+      const contactsSnapshot = await getDocs(collection(db, 'contacts'));
       const contacts = contactsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -108,31 +108,31 @@ const AssociationsAudit = () => {
           incoherences: []
         };
 
-        // Méthode 1: programmateurId
-        if (lieu.programmateurId) {
+        // Méthode 1: contactId
+        if (lieu.contactId) {
           newRapport.statistiques.lieuxAvecContacts++;
-          lieuAnalyse.contactsReferences.push(lieu.programmateurId);
+          lieuAnalyse.contactsReferences.push(lieu.contactId);
           
-          const contactExiste = contacts.find(c => c.id === lieu.programmateurId);
+          const contactExiste = contacts.find(c => c.id === lieu.contactId);
           if (contactExiste) {
             lieuAnalyse.contactsReelsAssocies.push({
-              id: lieu.programmateurId,
+              id: lieu.contactId,
               nom: contactExiste.contact?.nom || contactExiste.nom,
               retourReference: verifierRetourReferenceLieu(contactExiste, lieu.id)
             });
           } else {
-            lieuAnalyse.incoherences.push(`Contact ${lieu.programmateurId} référencé mais n'existe pas`);
+            lieuAnalyse.incoherences.push(`Contact ${lieu.contactId} référencé mais n'existe pas`);
             newRapport.statistiques.referencesOrphelines++;
           }
         }
 
-        // Méthode 2: programmateursAssocies
-        if (lieu.programmateursAssocies && Array.isArray(lieu.programmateursAssocies)) {
-          if (lieu.programmateursAssocies.length > 0 && !lieu.programmateurId) {
+        // Méthode 2: contactsAssocies
+        if (lieu.contactsAssocies && Array.isArray(lieu.contactsAssocies)) {
+          if (lieu.contactsAssocies.length > 0 && !lieu.contactId) {
             newRapport.statistiques.lieuxAvecContacts++;
           }
           
-          for (const progRef of lieu.programmateursAssocies) {
+          for (const progRef of lieu.contactsAssocies) {
             const progId = typeof progRef === 'object' ? progRef.id : progRef;
             if (!lieuAnalyse.contactsReferences.includes(progId)) {
               lieuAnalyse.contactsReferences.push(progId);

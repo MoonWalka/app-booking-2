@@ -64,7 +64,7 @@ import useGenericFilteredSearch from '../search/useGenericFilteredSearch';
  *   selectedItems, 
  *   toggleSelection, 
  *   selectAll 
- * } = useGenericEntityList('programmateurs', {
+ * } = useGenericEntityList('contacts', {
  *   enableSelection: true,
  *   enableFilters: true,
  *   filters: {
@@ -82,7 +82,7 @@ import useGenericFilteredSearch from '../search/useGenericFilteredSearch';
  * @complexity HIGH
  * @businessCritical true
  * @generic true
- * @replaces useConcertsList (SUPPRIMÉ), useProgrammateursList, useEntityList
+ * @replaces useConcertsList (SUPPRIMÉ), useContactsList, useEntityList
  */
 const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo

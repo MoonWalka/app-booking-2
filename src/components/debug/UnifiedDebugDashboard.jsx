@@ -172,9 +172,9 @@ const UnifiedDebugDashboard = () => {
     setNavTestResults([]);
     
     // Test rapide de détection d'éléments
-    const programmateursElements = document.querySelectorAll('[href*="/programmateurs"]');
-    addNavTestResult('Détection liens programmateurs', programmateursElements.length > 0 ? 'success' : 'warning', 
-      `${programmateursElements.length} liens trouvés`);
+    const contactsElements = document.querySelectorAll('[href*="/contacts"]');
+    addNavTestResult('Détection liens contacts', contactsElements.length > 0 ? 'success' : 'warning', 
+      `${contactsElements.length} liens trouvés`);
     
     const clickableElements = document.querySelectorAll('.clickableRow, [data-testid*="item"]');
     addNavTestResult('Détection éléments cliquables', clickableElements.length > 0 ? 'success' : 'warning', 
@@ -195,16 +195,16 @@ const UnifiedDebugDashboard = () => {
     setNavTestResults([]);
     
     try {
-      // Test 1: Navigation vers les programmateurs
-      addNavTestResult('Navigation vers /programmateurs', 'running');
+      // Test 1: Navigation vers les contacts
+      addNavTestResult('Navigation vers /contacts', 'running');
       await new Promise(resolve => setTimeout(resolve, 100));
       
       try {
-        navigate('/programmateurs');
+        navigate('/contacts');
         await new Promise(resolve => setTimeout(resolve, 500));
-        addNavTestResult('Navigation vers /programmateurs', 'success', 'Navigation réussie');
+        addNavTestResult('Navigation vers /contacts', 'success', 'Navigation réussie');
       } catch (error) {
-        addNavTestResult('Navigation vers /programmateurs', 'error', error.message);
+        addNavTestResult('Navigation vers /contacts', 'error', error.message);
       }
       
       // Test 2: Attendre le chargement
@@ -212,7 +212,7 @@ const UnifiedDebugDashboard = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Vérifier si des éléments sont présents
-      const listElements = document.querySelectorAll('[data-testid="programmateur-item"], .programmateur-item, .clickableRow');
+      const listElements = document.querySelectorAll('[data-testid="contact-item"], .contact-item, .clickableRow');
       if (listElements.length > 0) {
         addNavTestResult('Chargement de la liste', 'success', `${listElements.length} éléments trouvés`);
         
@@ -230,7 +230,7 @@ const UnifiedDebugDashboard = () => {
           await new Promise(resolve => setTimeout(resolve, 500));
           
           // Vérifier si la navigation a eu lieu
-          if (location.pathname.includes('/programmateurs/') && location.pathname !== '/programmateurs') {
+          if (location.pathname.includes('/contacts/') && location.pathname !== '/contacts') {
             addNavTestResult('Test de clic sur un élément', 'success', `Navigation vers ${location.pathname}`);
           } else {
             addNavTestResult('Test de clic sur un élément', 'warning', 'Pas de navigation détectée');

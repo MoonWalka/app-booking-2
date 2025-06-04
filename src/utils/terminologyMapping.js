@@ -1,66 +1,66 @@
 /**
  * Système de mapping terminologique - Phase 1
- * Permet de changer "programmateur" → "contact" dans l'UI sans impact sur la logique
+ * Permet de changer "contact" → "contact" dans l'UI sans impact sur la logique
  * 
  * Usage: import { mapTerm } from '@/utils/terminologyMapping'
- * Puis: mapTerm("programmateur") → "contact"
+ * Puis: mapTerm("contact") → "contact"
  */
 
 // Mapping des termes singuliers
 const SINGULAR_MAPPING = {
-  'programmateur': 'contact',
-  'Programmateur': 'Contact',
-  'PROGRAMMATEUR': 'CONTACT'
+  'contact': 'contact',
+  'Contact': 'Contact',
+  'CONTACT': 'CONTACT'
 };
 
 // Mapping des termes pluriels
 const PLURAL_MAPPING = {
-  'programmateurs': 'contacts',
-  'Programmateurs': 'Contacts', 
-  'PROGRAMMATEURS': 'CONTACTS'
+  'contacts': 'contacts',
+  'Contacts': 'Contacts', 
+  'CONTACTS': 'CONTACTS'
 };
 
 // Mapping des expressions complètes
 const EXPRESSION_MAPPING = {
   // Navigation et titres
-  'Liste des programmateurs': 'Liste des contacts',
-  'Tous les programmateurs': 'Tous les contacts',
-  'Aucun programmateur': 'Aucun contact',
-  'Nouveau programmateur': 'Nouveau contact',
-  'Créer un programmateur': 'Ajouter un contact',
-  'Modifier le programmateur': 'Modifier le contact',
-  'Supprimer le programmateur': 'Supprimer le contact',
-  'Détails du programmateur': 'Détails du contact',
+  'Liste des contacts': 'Liste des contacts',
+  'Tous les contacts': 'Tous les contacts',
+  'Aucun contact': 'Aucun contact',
+  'Nouveau contact': 'Nouveau contact',
+  'Créer un contact': 'Ajouter un contact',
+  'Modifier le contact': 'Modifier le contact',
+  'Supprimer le contact': 'Supprimer le contact',
+  'Détails du contact': 'Détails du contact',
   
   // Actions et boutons
-  'Ajouter un programmateur': 'Ajouter un contact',
-  'Rechercher un programmateur': 'Rechercher un contact',
-  'Sélectionner un programmateur': 'Sélectionner un contact',
-  'Associer un programmateur': 'Associer un contact',
-  'Choisir un programmateur': 'Choisir un contact',
+  'Ajouter un contact': 'Ajouter un contact',
+  'Rechercher un contact': 'Rechercher un contact',
+  'Sélectionner un contact': 'Sélectionner un contact',
+  'Associer un contact': 'Associer un contact',
+  'Choisir un contact': 'Choisir un contact',
   
   // Messages et notifications
-  'Le programmateur a été': 'Le contact a été',
-  'Ce programmateur': 'Ce contact',
-  'Aucun programmateur trouvé': 'Aucun contact trouvé',
-  'Programmateur introuvable': 'Contact introuvable',
-  'Programmateur non trouvé': 'Contact non trouvé',
-  'Erreur lors du chargement du programmateur': 'Erreur lors du chargement du contact',
+  'Le contact a été': 'Le contact a été',
+  'Ce contact': 'Ce contact',
+  'Aucun contact trouvé': 'Aucun contact trouvé',
+  'Contact introuvable': 'Contact introuvable',
+  'Contact non trouvé': 'Contact non trouvé',
+  'Erreur lors du chargement du contact': 'Erreur lors du chargement du contact',
   
   // Formulaires
-  'Nom du programmateur': 'Nom du contact',
-  'Email du programmateur': 'Email du contact',
-  'Téléphone du programmateur': 'Téléphone du contact',
-  'Informations du programmateur': 'Informations du contact',
-  'Données du programmateur': 'Données du contact',
+  'Nom du contact': 'Nom du contact',
+  'Email du contact': 'Email du contact',
+  'Téléphone du contact': 'Téléphone du contact',
+  'Informations du contact': 'Informations du contact',
+  'Données du contact': 'Données du contact',
   
   // Relations
-  'associé à ce programmateur': 'associé à ce contact',
-  'programmateur associé': 'contact associé',
-  'du programmateur': 'du contact',
-  'au programmateur': 'au contact',
-  'le programmateur': 'le contact',
-  'un programmateur': 'un contact',
+  'associé à ce contact': 'associé à ce contact',
+  'contact associé': 'contact associé',
+  'du contact': 'du contact',
+  'au contact': 'au contact',
+  'le contact': 'le contact',
+  'un contact': 'un contact',
   
   // Spécifiques métier - garder la nuance
   'Responsable programmation': 'Responsable programmation', // garder tel quel

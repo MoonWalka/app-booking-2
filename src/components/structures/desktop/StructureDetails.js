@@ -28,8 +28,8 @@ const StructureDetails = () => {
     structure,
     loading,
     error,
-    programmateurs,
-    loadingProgrammateurs,
+    contacts,
+    loadingContacts,
     concerts,
     loadingConcerts,
     formatValue
@@ -126,10 +126,10 @@ const StructureDetails = () => {
           formatValue={formatValue} 
         />
 
-        {/* Associated Programmateurs Section */}
+        {/* Associated Contacts Section */}
         <StructureAssociationsSection 
-          programmateurs={programmateurs}
-          loadingProgrammateurs={loadingProgrammateurs} 
+          contacts={contacts}
+          loadingContacts={loadingContacts} 
         />
 
         {/* Associated Concerts Section */}

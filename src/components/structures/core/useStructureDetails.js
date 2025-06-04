@@ -23,8 +23,8 @@ export const useStructureDetailsCore = (id) => {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [programmateurs, setProgrammateurs] = useState([]);
-  const [loadingProgrammateurs, setLoadingProgrammateurs] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [loadingContacts, setLoadingContacts] = useState(false);
   
   // Chargement des données de la structure
   useEffect(() => {
@@ -39,9 +39,9 @@ export const useStructureDetailsCore = (id) => {
           };
           setStructure(structureData);
           
-          // Charger les programmateurs associés si nécessaire
-          if (structureData.programmateursAssocies?.length > 0) {
-            fetchProgrammateurs(structureData.programmateursAssocies);
+          // Charger les contacts associés si nécessaire
+          if (structureData.contactsAssocies?.length > 0) {
+            fetchContacts(structureData.contactsAssocies);
           }
         } else {
           setError('Structure non trouvée');
@@ -58,27 +58,27 @@ export const useStructureDetailsCore = (id) => {
     fetchStructure();
   }, [id, navigate]);
 
-  // Chargement des programmateurs associés
-  const fetchProgrammateurs = async (programmateursIds) => {
-    setLoadingProgrammateurs(true);
+  // Chargement des contacts associés
+  const fetchContacts = async (contactsIds) => {
+    setLoadingContacts(true);
     try {
-      const programmateursData = [];
+      const contactsData = [];
       
-      for (const progId of programmateursIds) {
-        const progDoc = await getDoc(doc(db, 'programmateurs', progId));
+      for (const progId of contactsIds) {
+        const progDoc = await getDoc(doc(db, 'contacts', progId));
         if (progDoc.exists()) {
-          programmateursData.push({
+          contactsData.push({
             id: progDoc.id,
             ...progDoc.data()
           });
         }
       }
       
-      setProgrammateurs(programmateursData);
+      setContacts(contactsData);
     } catch (error) {
-      console.error('Erreur lors du chargement des programmateurs:', error);
+      console.error('Erreur lors du chargement des contacts:', error);
     } finally {
-      setLoadingProgrammateurs(false);
+      setLoadingContacts(false);
     }
   };
 
@@ -94,17 +94,17 @@ export const useStructureDetailsCore = (id) => {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      // Vérifier s'il y a des associations avec des programmateurs
-      if (structure.programmateursAssocies?.length > 0) {
-        // Mise à jour des programmateurs pour retirer la référence à cette structure
-        for (const progId of structure.programmateursAssocies) {
-          const progRef = doc(db, 'programmateurs', progId);
+      // Vérifier s'il y a des associations avec des contacts
+      if (structure.contactsAssocies?.length > 0) {
+        // Mise à jour des contacts pour retirer la référence à cette structure
+        for (const progId of structure.contactsAssocies) {
+          const progRef = doc(db, 'contacts', progId);
           const progDoc = await getDoc(progRef);
           
           if (progDoc.exists()) {
             const progData = progDoc.data();
             
-            // Si le programmateur a une structureId correspondant à cette structure,
+            // Si le contact a une structureId correspondant à cette structure,
             // mettre à jour pour enlever cette référence
             if (progData.structureId === id) {
               await updateDoc(progRef, {
@@ -162,8 +162,8 @@ export const useStructureDetailsCore = (id) => {
     showDeleteModal,
     setShowDeleteModal,
     deleting,
-    programmateurs,
-    loadingProgrammateurs,
+    contacts,
+    loadingContacts,
     
     // Fonctions utilitaires
     formatValue,

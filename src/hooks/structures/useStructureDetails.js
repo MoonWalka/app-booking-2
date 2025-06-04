@@ -28,7 +28,7 @@ const useStructureDetails = (id) => {
       // S'assurer que les tableaux sont toujours initialisés
       return {
         ...data,
-        programmateursAssocies: data.programmateursAssocies || [],
+        contactsAssocies: data.contactsAssocies || [],
         lieuxAssocies: data.lieuxAssocies || [],
         artistesAssocies: data.artistesAssocies || []
       };
@@ -48,12 +48,12 @@ const useStructureDetails = (id) => {
     // Configuration des entités liées avec requêtes personnalisées
     relatedEntities: [
       { 
-        name: 'programmateurs', 
-        collection: 'programmateurs', 
-        idField: 'programmateursAssocies',
-        alternativeIdFields: ['programmateurIds'], // Support de l'ancien et nouveau format
+        name: 'contacts', 
+        collection: 'contacts', 
+        idField: 'contactsAssocies',
+        alternativeIdFields: ['contactIds'], // Support de l'ancien et nouveau format
         type: 'one-to-many',
-        essential: true // Les programmateurs sont essentiels pour l'affichage de la structure
+        essential: true // Les contacts sont essentiels pour l'affichage de la structure
       },
       {
         name: 'lieux',
@@ -72,33 +72,33 @@ const useStructureDetails = (id) => {
     
     // Requêtes personnalisées pour gérer les relations complexes
     customQueries: {
-      programmateurs: async (structureData) => {
-        console.log('[DEBUG useStructureDetails] customQuery programmateurs appelée avec:', structureData);
+      contacts: async (structureData) => {
+        console.log('[DEBUG useStructureDetails] customQuery contacts appelée avec:', structureData);
         
         // Importer les services Firebase
         const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
         const { db } = await import('@/services/firebase-service');
         
-        let programmateurs = [];
+        let contacts = [];
         
         try {
           // Méthode 1: Vérifier les IDs directs dans la structure (format actuel et ancien)
-          const programmateurIds = structureData.programmateurIds || structureData.programmateursAssocies || [];
+          const contactIds = structureData.contactIds || structureData.contactsAssocies || [];
           
-          if (programmateurIds.length > 0) {
-            console.log('[DEBUG] Chargement programmateurs par IDs directs:', programmateurIds);
+          if (contactIds.length > 0) {
+            console.log('[DEBUG] Chargement contacts par IDs directs:', contactIds);
             
-            // Charger chaque programmateur individuellement
-            const programmateurPromises = programmateurIds.map(async (progId) => {
+            // Charger chaque contact individuellement
+            const contactPromises = contactIds.map(async (progId) => {
               try {
                 // S'assurer que progId est une string
                 const idString = typeof progId === 'object' ? progId.id : progId;
                 if (!idString || typeof idString !== 'string') {
-                  console.error(`ID programmateur invalide:`, progId);
+                  console.error(`ID contact invalide:`, progId);
                   return null;
                 }
                 
-                const progRef = doc(db, 'programmateurs', idString);
+                const progRef = doc(db, 'contacts', idString);
                 const progDoc = await getDoc(progRef);
                 
                 if (progDoc.exists()) {
@@ -106,44 +106,44 @@ const useStructureDetails = (id) => {
                 }
                 return null;
               } catch (error) {
-                console.error(`Erreur chargement programmateur ${progId}:`, error);
+                console.error(`Erreur chargement contact ${progId}:`, error);
                 return null;
               }
             });
             
-            const results = await Promise.all(programmateurPromises);
-            programmateurs = results.filter(Boolean);
+            const results = await Promise.all(contactPromises);
+            contacts = results.filter(Boolean);
             
-            console.log('[DEBUG] Programmateurs trouvés par IDs directs:', programmateurs.length);
+            console.log('[DEBUG] Contacts trouvés par IDs directs:', contacts.length);
           }
           
-          // Méthode 2: Si aucun programmateur trouvé par IDs directs, 
-          // chercher par référence inverse (programmateurs avec structureId)
-          if (programmateurs.length === 0) {
+          // Méthode 2: Si aucun contact trouvé par IDs directs, 
+          // chercher par référence inverse (contacts avec structureId)
+          if (contacts.length === 0) {
             console.log('[DEBUG] Recherche par référence inverse (structureId)');
             
-            const programmateursQuery = query(
-              collection(db, 'programmateurs'),
+            const contactsQuery = query(
+              collection(db, 'contacts'),
               where('structureId', '==', structureData.id)
             );
             
-            const querySnapshot = await getDocs(programmateursQuery);
+            const querySnapshot = await getDocs(contactsQuery);
             
             querySnapshot.forEach((docSnapshot) => {
-              programmateurs.push({
+              contacts.push({
                 id: docSnapshot.id,
                 ...docSnapshot.data()
               });
             });
             
-            console.log('[DEBUG] Programmateurs trouvés par référence inverse:', programmateurs.length);
+            console.log('[DEBUG] Contacts trouvés par référence inverse:', contacts.length);
           }
           
-          console.log('[DEBUG] Total programmateurs retournés:', programmateurs.length);
-          return programmateurs;
+          console.log('[DEBUG] Total contacts retournés:', contacts.length);
+          return contacts;
           
         } catch (error) {
-          console.error('[ERROR] useStructureDetails customQuery programmateurs:', error);
+          console.error('[ERROR] useStructureDetails customQuery contacts:', error);
           return [];
         }
       },
@@ -213,18 +213,18 @@ const useStructureDetails = (id) => {
           
           console.log('[DEBUG] Concerts trouvés par structureId:', concerts.length);
           
-          // Méthode 3: Chercher par programmateur associé (si structure a des programmateurs)
+          // Méthode 3: Chercher par contact associé (si structure a des contacts)
           // Cette recherche sera fait seulement si les deux premières méthodes n'ont pas trouvé de concerts
           if (concerts.length === 0) {
-            const programmateurIds = structureData.programmateurIds || structureData.programmateursAssocies || [];
+            const contactIds = structureData.contactIds || structureData.contactsAssocies || [];
             
-            if (programmateurIds.length > 0) {
-              console.log('[DEBUG] Recherche concerts via programmateurs associés:', programmateurIds);
+            if (contactIds.length > 0) {
+              console.log('[DEBUG] Recherche concerts via contacts associés:', contactIds);
               
-              for (const programmateurId of programmateurIds) {
+              for (const contactId of contactIds) {
                 const concertsByProgQuery = query(
                   collection(db, 'concerts'),
-                  where('programmateurId', '==', programmateurId)
+                  where('contactId', '==', contactId)
                 );
                 
                 const progConcertsSnapshot = await getDocs(concertsByProgQuery);
@@ -240,7 +240,7 @@ const useStructureDetails = (id) => {
                 });
               }
               
-              console.log('[DEBUG] Concerts trouvés via programmateurs:', concerts.length);
+              console.log('[DEBUG] Concerts trouvés via contacts:', concerts.length);
             }
           }
           
@@ -282,32 +282,32 @@ const useStructureDetails = (id) => {
     useDeleteModal: true   // Utiliser un modal pour confirmer la suppression
   });
 
-  // Fonction pour ajouter un programmateur à la structure
-  const addProgrammateur = useCallback((programmateur) => {
-    if (!programmateur || !programmateur.id) return;
+  // Fonction pour ajouter un contact à la structure
+  const addContact = useCallback((contact) => {
+    if (!contact || !contact.id) return;
     
-    // Vérifier si le programmateur n'est pas déjà associé
-    const programmateursAssocies = detailsHook.formData.programmateursAssocies || [];
-    if (programmateursAssocies.includes(programmateur.id)) return;
+    // Vérifier si le contact n'est pas déjà associé
+    const contactsAssocies = detailsHook.formData.contactsAssocies || [];
+    if (contactsAssocies.includes(contact.id)) return;
     
     detailsHook.setFormData(prev => ({
       ...prev,
-      programmateursAssocies: [...programmateursAssocies, programmateur.id]
+      contactsAssocies: [...contactsAssocies, contact.id]
     }));
     
     // Mettre à jour les données liées
-    detailsHook.loadRelatedEntity('programmateurs', programmateur.id);
+    detailsHook.loadRelatedEntity('contacts', contact.id);
   }, [detailsHook]);
 
-  // Fonction pour retirer un programmateur de la structure
-  const removeProgrammateur = useCallback((programmateurId) => {
-    if (!programmateurId) return;
+  // Fonction pour retirer un contact de la structure
+  const removeContact = useCallback((contactId) => {
+    if (!contactId) return;
     
-    const programmateursAssocies = detailsHook.formData.programmateursAssocies || [];
+    const contactsAssocies = detailsHook.formData.contactsAssocies || [];
     
     detailsHook.setFormData(prev => ({
       ...prev,
-      programmateursAssocies: programmateursAssocies.filter(id => id !== programmateurId)
+      contactsAssocies: contactsAssocies.filter(id => id !== contactId)
     }));
   }, [detailsHook]);
   
@@ -345,8 +345,8 @@ const useStructureDetails = (id) => {
     ...detailsHook,
     
     // Fonctionnalités spécifiques aux structures
-    addProgrammateur,
-    removeProgrammateur,
+    addContact,
+    removeContact,
     addLieu,
     removeLieu,
     
@@ -370,8 +370,8 @@ const useStructureDetails = (id) => {
     }),
     
     // Accès simplifié aux entités liées
-    programmateurs: detailsHook.relatedData?.programmateurs || [],
-    loadingProgrammateurs: detailsHook.loadingRelated?.programmateurs || false,
+    contacts: detailsHook.relatedData?.contacts || [],
+    loadingContacts: detailsHook.loadingRelated?.contacts || false,
     lieux: detailsHook.relatedData?.lieux || [],
     loadingLieux: detailsHook.loadingRelated?.lieux || false,
     concerts: detailsHook.relatedData?.concerts || [],

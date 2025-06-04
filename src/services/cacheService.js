@@ -11,7 +11,7 @@ const CACHE_DURATIONS = {
   
   // Collections semi-statiques avec cache plus long
   lieux: 300000, // 5 minutes
-  programmateurs: 300000, // 5 minutes
+  contacts: 300000, // 5 minutes
   artistes: 300000, // 5 minutes
   structures: 600000, // 10 minutes
   

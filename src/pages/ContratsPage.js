@@ -61,16 +61,16 @@ const ContratsPage = () => {
                   );
                 }
                 
-                // Charger le nom du programmateur si manquant
-                if (concertData.programmateurId && !concertData.programmateurNom) {
+                // Charger le nom du contact si manquant
+                if (concertData.contactId && !concertData.contactNom) {
                   promises.push(
-                    getDocs(query(collection(db, 'programmateurs'), where('__name__', '==', concertData.programmateurId)))
+                    getDocs(query(collection(db, 'contacts'), where('__name__', '==', concertData.contactId)))
                       .then(snapshot => {
                         if (!snapshot.empty) {
-                          concertData.programmateurNom = snapshot.docs[0].data().nom;
+                          concertData.contactNom = snapshot.docs[0].data().nom;
                         }
                       })
-                      .catch(err => console.error('Erreur chargement programmateur:', err))
+                      .catch(err => console.error('Erreur chargement contact:', err))
                   );
                 }
                 
@@ -210,7 +210,7 @@ const ContratsPage = () => {
                     
                     <div className="small text-muted mb-3">
                       <i className="bi bi-person me-1"></i>
-                      {contrat.concert?.programmateurNom || 'N/A'}
+                      {contrat.concert?.contactNom || 'N/A'}
                     </div>
                     
                     <div className="d-flex gap-2" onClick={e => e.stopPropagation()}>
@@ -291,13 +291,13 @@ const ContratsPage = () => {
                   )
                 },
                 {
-                  label: 'Programmateur',
-                  key: 'concert.programmateurNom',
+                  label: 'Contact',
+                  key: 'concert.contactNom',
                   sortable: true,
                   render: (contrat) => (
                     <div>
                       <i className="bi bi-person me-2"></i>
-                      {contrat.concert?.programmateurNom || 'N/A'}
+                      {contrat.concert?.contactNom || 'N/A'}
                     </div>
                   )
                 },

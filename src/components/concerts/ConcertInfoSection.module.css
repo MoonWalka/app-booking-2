@@ -1,0 +1,112 @@
+/* Layout 2 colonnes simple, sans Bootstrap */
+.infoContainer {
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.column {
+  flex: 1;
+}
+
+.infoItem {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #212529;
+}
+
+.value {
+  color: #212529;
+}
+
+.textMuted {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.artisteLink {
+  color: #0d6efd;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.artisteLink:hover {
+  text-decoration: underline;
+}
+
+.passedBadge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #6c757d;
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.statusBadge.success {
+  background-color: #198754;
+  color: white;
+}
+
+.statusBadge.primary {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.statusBadge.warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.statusBadge.info {
+  background-color: #0dcaf0;
+  color: #000;
+}
+
+.statusBadge.danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.statusBadge.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.notesSection {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.notesContent {
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

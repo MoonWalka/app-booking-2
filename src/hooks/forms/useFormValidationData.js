@@ -1,7 +1,7 @@
 /**
  * @fileoverview Hook de validation des données de formulaire pour les concerts
  * Gère la récupération et la validation des soumissions de formulaires associées aux concerts,
- * incluant les données du programmateur, du lieu et de la structure.
+ * incluant les données du contact, du lieu et de la structure.
  * 
  * @author TourCraft Team
  * @since 2024
@@ -11,7 +11,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/services/firebase-service';
 
 /**
- * Configuration des champs de contact du programmateur
+ * Configuration des champs de contact du contact
  * @type {Array<{id: string, label: string}>}
  */
 const contactFields = [
@@ -23,7 +23,7 @@ const contactFields = [
 ];
 
 /**
- * Configuration des champs de structure du programmateur
+ * Configuration des champs de structure du contact
  * @type {Array<{id: string, label: string}>}
  */
 const structureFields = [
@@ -53,14 +53,14 @@ const lieuFields = [
  * Hook de validation des données de formulaire pour un concert
  * 
  * Ce hook gère la logique complexe de récupération et validation des données
- * de formulaire soumises par les programmateurs pour un concert donné.
+ * de formulaire soumises par les contacts pour un concert donné.
  * 
  * @description
  * Fonctionnalités principales :
  * - Récupération des données du concert et du lieu associé
  * - Recherche de la soumission de formulaire (formSubmissions)
  * - Gestion des liens de formulaire non soumis (formLinks)
- * - Récupération des données du programmateur existant
+ * - Récupération des données du contact existant
  * - Initialisation des valeurs de validation
  * - Gestion des états de validation
  * 
@@ -76,7 +76,7 @@ const lieuFields = [
  * @returns {Function} returns.setValidated - Fonction pour modifier l'état de validation
  * @returns {Object} returns.validatedFields - Champs validés avec leurs valeurs
  * @returns {Function} returns.setValidatedFields - Fonction pour modifier les champs validés
- * @returns {Object|null} returns.programmateur - Données du programmateur existant
+ * @returns {Object|null} returns.contact - Données du contact existant
  * @returns {Object|null} returns.lieu - Données du lieu de concert
  * @returns {Array} returns.contactFields - Configuration des champs de contact
  * @returns {Array} returns.structureFields - Configuration des champs de structure
@@ -91,7 +91,7 @@ const lieuFields = [
  *   validated,
  *   validatedFields,
  *   setValidatedFields,
- *   programmateur,
+ *   contact,
  *   lieu
  * } = useFormValidationData('concert-123');
  * 
@@ -102,7 +102,7 @@ const lieuFields = [
  * ```
  * 
  * @dependencies
- * - Firebase Firestore (collections: concerts, formSubmissions, formLinks, lieux, programmateurs)
+ * - Firebase Firestore (collections: concerts, formSubmissions, formLinks, lieux, contacts)
  * - React hooks (useState, useEffect, useCallback)
  * 
  * @complexity HIGH
@@ -118,14 +118,14 @@ const lieuFields = [
  *    - Vérification des formLinks si aucune soumission
  * 4. Sélection de la soumission la plus récente
  * 5. Mise à jour du concert avec formSubmissionId
- * 6. Récupération des données du programmateur existant
+ * 6. Récupération des données du contact existant
  * 7. Initialisation des valeurs de validation
  * 8. Gestion des états de validation existants
  * 
  * @errorHandling
  * - Concert inexistant : "Ce concert n'existe pas."
  * - Aucun formulaire : "Aucun formulaire n'a été soumis pour ce concert."
- * - Lien sans soumission : "Un lien de formulaire a été généré mais le programmateur n'a pas encore soumis de réponse."
+ * - Lien sans soumission : "Un lien de formulaire a été généré mais le contact n'a pas encore soumis de réponse."
  * - Soumission introuvable : "La soumission de formulaire n'a pas été trouvée."
  * - Erreurs génériques : "Impossible de charger les données du formulaire: {error}"
  */
@@ -137,7 +137,7 @@ const useFormValidationData = (concertId) => {
   const [error, setError] = useState(null);
   const [validated, setValidated] = useState(false);
   const [validatedFields, setValidatedFields] = useState({});
-  const [programmateur, setProgrammateur] = useState(null);
+  const [contact, setContact] = useState(null);
   const [lieu, setLieu] = useState(null);
   
   const fetchData = useCallback(async () => {
@@ -284,33 +284,33 @@ const useFormValidationData = (concertId) => {
           // PAS de mapping vers initialValues - les données restent dans formDocData
         }
         
-        // Récupérer les données existantes du programmateur (s'il existe)
-        // D'abord essayer avec programmId de la soumission, sinon utiliser programmateurId du concert
-        const programmateurIdToUse = formDocData.programmId || concertData.programmateurId;
+        // Récupérer les données existantes du contact (s'il existe)
+        // D'abord essayer avec programmId de la soumission, sinon utiliser contactId du concert
+        const contactIdToUse = formDocData.programmId || concertData.contactId;
         
-        if (programmateurIdToUse) {
+        if (contactIdToUse) {
           try {
-            const progDoc = await getDoc(doc(db, 'programmateurs', programmateurIdToUse));
+            const progDoc = await getDoc(doc(db, 'contacts', contactIdToUse));
             if (progDoc.exists()) {
-              // Définir les données existantes du programmateur
+              // Définir les données existantes du contact
               const programmData = {
                 id: progDoc.id,
                 ...progDoc.data()
               };
-              setProgrammateur(programmData);
-              console.log("Programmateur trouvé:", programmData);
+              setContact(programmData);
+              console.log("Contact trouvé:", programmData);
               
               // NE PAS initialiser automatiquement les champs validés
               // Les données existantes seront affichées dans "Valeur existante"
               // L'utilisateur choisira de copier ou non depuis "Valeur du formulaire"
             } else {
-              console.log("Programmateur non trouvé avec ID:", programmateurIdToUse);
+              console.log("Contact non trouvé avec ID:", contactIdToUse);
             }
           } catch (error) {
-            console.error("Erreur lors de la récupération des données du programmateur:", error);
+            console.error("Erreur lors de la récupération des données du contact:", error);
           }
         } else {
-          console.log("Aucun programmateur lié à ce concert ou formulaire");
+          console.log("Aucun contact lié à ce concert ou formulaire");
         }
         
         // Si la soumission a déjà été validée, utiliser les champs validés existants
@@ -350,7 +350,7 @@ const useFormValidationData = (concertId) => {
     setValidated,
     validatedFields,
     setValidatedFields,
-    programmateur,
+    contact,
     lieu,
     contactFields,
     structureFields,

@@ -2,13 +2,13 @@ import { useState, useEffect, useCallback } from 'react'; // NOUVEAU: useEffect 
 import { collection, query, where, doc, getDoc, getDocs, updateDoc, db } from '@/services/firebase-service';
 
 /**
- * Hook pour gérer les formulaires professionnels envoyés aux programmateurs
+ * Hook pour gérer les formulaires professionnels envoyés aux contacts
  * Gère spécifiquement les formulaires associés aux concerts existants
  *
  * Ce hook s'occupe spécifiquement de :
  * - La récupération des formulaires associés à un concert existant
  * - La gestion du statut de ces formulaires (envoyé, validé, etc.)
- * - La génération de nouveaux formulaires pour les programmateurs
+ * - La génération de nouveaux formulaires pour les contacts
  * - NOUVEAU: Synchronisation automatique et surveillance des changements
  */
 const useConcertFormsManagement = (concertId) => {
@@ -31,7 +31,7 @@ const useConcertFormsManagement = (concertId) => {
 
   // NOUVEAU: Fonction pour analyser les données du formulaire - Stabilisée avec useCallback
   const analyzeFormData = useCallback((data) => {
-    const requiredFields = ['programmateurNom', 'programmateurEmail', 'lieuNom', 'date'];
+    const requiredFields = ['contactNom', 'contactEmail', 'lieuNom', 'date'];
     const optionalFields = ['description', 'montant', 'conditions'];
     
     let completedFields = 0;
@@ -40,7 +40,7 @@ const useConcertFormsManagement = (concertId) => {
     
     // Analyser les champs requis
     requiredFields.forEach(field => {
-      const value = data.programmateurData?.[field] || data.data?.[field];
+      const value = data.contactData?.[field] || data.data?.[field];
       if (value && value.toString().trim()) {
         completedFields++;
       } else {
@@ -50,14 +50,14 @@ const useConcertFormsManagement = (concertId) => {
     
     // Analyser les champs optionnels
     optionalFields.forEach(field => {
-      const value = data.programmateurData?.[field] || data.data?.[field];
+      const value = data.contactData?.[field] || data.data?.[field];
       if (value && value.toString().trim()) {
         completedFields++;
       }
     });
     
     // Validation spécifique
-    const email = data.programmateurData?.programmateurEmail || data.data?.programmateurEmail;
+    const email = data.contactData?.contactEmail || data.data?.contactEmail;
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       validationErrors.push('Email invalide');
     }
@@ -90,7 +90,7 @@ const useConcertFormsManagement = (concertId) => {
     setFormData(formDataObj);
     
     // Déterminer si le formulaire contient des données
-    const hasData = formDataObj.programmateurData || 
+    const hasData = formDataObj.contactData || 
       (formDataObj.data && Object.keys(formDataObj.data).length > 0);
     
     setFormDataStatus({
@@ -234,7 +234,7 @@ const useConcertFormsManagement = (concertId) => {
     }
   };
 
-  // Valider un formulaire rempli par le programmateur
+  // Valider un formulaire rempli par le contact
   const validateForm = async () => {
     if (!formData) return false;
     

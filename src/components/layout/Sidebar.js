@@ -26,7 +26,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/programmateurs" className={window.location.pathname.includes('/programmateurs') ? styles.active : ''}>
+            <Link to="/contacts" className={window.location.pathname.includes('/contacts') ? styles.active : ''}>
               <i className="bi bi-person-lines-fill"></i>
               Contacts
             </Link>

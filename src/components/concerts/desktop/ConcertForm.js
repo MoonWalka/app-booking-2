@@ -13,7 +13,7 @@ import ConcertFormHeader from '../sections/ConcertFormHeader';
 import ConcertFormActions from '../sections/ConcertFormActions';
 import ConcertInfoSection from '../sections/ConcertInfoSection';
 import LieuSearchSection from '../sections/LieuSearchSection';
-import ProgrammateurSearchSection from '../sections/ProgrammateurSearchSection';
+import ContactSearchSection from '../sections/ContactSearchSection';
 import ArtisteSearchSection from '../sections/ArtisteSearchSection';
 import StructureSearchSection from '../sections/StructureSearchSection';
 import NotesSection from '../sections/NotesSection';
@@ -47,11 +47,11 @@ const ConcertFormDesktop = () => {
     isSubmitting,
     lieu,
     artiste,
-    programmateur,
+    contact,
     structure,
     handleLieuChange,
     handleArtisteChange,
-    handleProgrammateurChange,
+    handleContactChange,
     handleStructureChange
   } = formHook;
 
@@ -76,7 +76,7 @@ const ConcertFormDesktop = () => {
     maxResults: 10
   });
 
-  // Recherche de programmateurs
+  // Recherche de contacts
   const {
     searchTerm: progSearchTerm,
     setSearchTerm: setProgSearchTerm,
@@ -85,9 +85,9 @@ const ConcertFormDesktop = () => {
     setShowResults: setShowProgResults,
     isSearching: isSearchingProgs,
     dropdownRef: progDropdownRef,
-    handleCreate: handleCreateProgrammateur
+    handleCreate: handleCreateContact
   } = useEntitySearch({
-    entityType: 'programmateurs',
+    entityType: 'contacts',
     searchField: 'nom',
     additionalSearchFields: ['raisonSociale'],
     maxResults: 10
@@ -136,9 +136,9 @@ const ConcertFormDesktop = () => {
   }, [handleChange]);
 
   // DÉFINIR LES CALLBACKS DE SUPPRESSION ICI
-  const handleRemoveProgrammateurCallback = useCallback(() => {
-    handleProgrammateurChange(null);
-  }, [handleProgrammateurChange]);
+  const handleRemoveContactCallback = useCallback(() => {
+    handleContactChange(null);
+  }, [handleContactChange]);
 
   const handleRemoveArtisteCallback = useCallback(() => {
     handleArtisteChange(null);
@@ -208,7 +208,7 @@ const ConcertFormDesktop = () => {
               handleCreateLieu={handleCreateLieu}
             />
           
-          <ProgrammateurSearchSection 
+          <ContactSearchSection 
               progSearchTerm={progSearchTerm}
               setProgSearchTerm={setProgSearchTerm}
               progResults={progResults}
@@ -216,10 +216,10 @@ const ConcertFormDesktop = () => {
               setShowProgResults={setShowProgResults}
               isSearchingProgs={isSearchingProgs}
               progDropdownRef={progDropdownRef}
-              selectedProgrammateur={programmateur || (formData.programmateurId ? { id: formData.programmateurId, nom: formData.programmateurNom || 'Programmateur sélectionné' } : null)}
-              handleSelectProgrammateur={handleProgrammateurChange}
-              handleRemoveProgrammateur={handleRemoveProgrammateurCallback}
-              handleCreateProgrammateur={handleCreateProgrammateur}
+              selectedContact={contact || (formData.contactId ? { id: formData.contactId, nom: formData.contactNom || 'Contact sélectionné' } : null)}
+              handleSelectContact={handleContactChange}
+              handleRemoveContact={handleRemoveContactCallback}
+              handleCreateContact={handleCreateContact}
             />
           
           <ArtisteSearchSection 

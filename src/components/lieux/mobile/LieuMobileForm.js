@@ -34,7 +34,7 @@ const LieuMobileForm = () => {
     error,
     handleChange,
     handleSubmit,
-    programmateurSearch,
+    contactSearch,
     submitting
   } = useLieuForm(id);
 
@@ -281,38 +281,38 @@ const LieuMobileForm = () => {
           />
         </div>
 
-        {/* NOUVEAU: Section Programmateurs associés */}
+        {/* NOUVEAU: Section Contacts associés */}
         <div className={styles?.formSection || "form-section mb-4 p-3 border rounded"}>
           <h2 className="h6 mb-3">
             <i className="bi bi-people me-2"></i>
-            Programmateurs associés
+            Contacts associés
           </h2>
           
-          {/* Interface de recherche de programmateurs */}
+          {/* Interface de recherche de contacts */}
           <FormField
             type="text"
-            id="programmateurSearch"
-            name="programmateurSearch"
-            label="Rechercher et associer des programmateurs"
-            placeholder="Rechercher un programmateur..."
-            value={programmateurSearch.searchTerm || ''}
-            onChange={(e) => programmateurSearch.setSearchTerm(e.target.value)}
+            id="contactSearch"
+            name="contactSearch"
+            label="Rechercher et associer des contacts"
+            placeholder="Rechercher un contact..."
+            value={contactSearch.searchTerm || ''}
+            onChange={(e) => contactSearch.setSearchTerm(e.target.value)}
           />
 
           {/* Résultats de recherche */}
-          {programmateurSearch.searchTerm && (
+          {contactSearch.searchTerm && (
             <div className={styles?.searchResults || "search-results border rounded p-2 mb-3"}>
-              {programmateurSearch.loading ? (
+              {contactSearch.loading ? (
                 <div className="text-center p-2">
                   <Spinner size="sm" className="me-2" />
                   Recherche en cours...
                 </div>
-              ) : programmateurSearch.results && programmateurSearch.results.length > 0 ? (
+              ) : contactSearch.results && contactSearch.results.length > 0 ? (
                 <div>
                   <div className="small text-muted mb-2">
-                    {programmateurSearch.results.length} résultat{programmateurSearch.results.length !== 1 ? 's' : ''}
+                    {contactSearch.results.length} résultat{contactSearch.results.length !== 1 ? 's' : ''}
                   </div>
-                  {programmateurSearch.results.map(prog => (
+                  {contactSearch.results.map(prog => (
                     <div 
                       key={prog.id}
                       className="p-2 border-bottom"
@@ -328,7 +328,7 @@ const LieuMobileForm = () => {
                         <Button
                           variant="outline-primary"
                           size="sm"
-                          onClick={() => programmateurSearch.associateProgrammateur(prog.id)}
+                          onClick={() => contactSearch.associateContact(prog.id)}
                         >
                           <i className="bi bi-plus"></i>
                         </Button>
@@ -338,17 +338,17 @@ const LieuMobileForm = () => {
                 </div>
               ) : (
                 <div className="text-center text-muted p-2">
-                  Aucun programmateur trouvé
+                  Aucun contact trouvé
                 </div>
               )}
             </div>
           )}
 
-          {/* Programmateurs déjà associés */}
-          {lieu.programmateursAssocies && lieu.programmateursAssocies.length > 0 && (
+          {/* Contacts déjà associés */}
+          {lieu.contactsAssocies && lieu.contactsAssocies.length > 0 && (
             <div>
-              <div className="small text-muted mb-2">Programmateurs associés :</div>
-              {lieu.programmateursAssocies.map(prog => (
+              <div className="small text-muted mb-2">Contacts associés :</div>
+              {lieu.contactsAssocies.map(prog => (
                 <div 
                   key={prog.id}
                   className="p-2 bg-light rounded mb-2"
@@ -361,7 +361,7 @@ const LieuMobileForm = () => {
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      onClick={() => programmateurSearch.dissociateProgrammateur(prog.id)}
+                      onClick={() => contactSearch.dissociateContact(prog.id)}
                     >
                       <i className="bi bi-x"></i>
                     </Button>
@@ -371,13 +371,13 @@ const LieuMobileForm = () => {
             </div>
           )}
 
-          {/* Message si aucun programmateur associé */}
-          {(!lieu.programmateursAssocies || lieu.programmateursAssocies.length === 0) && (
+          {/* Message si aucun contact associé */}
+          {(!lieu.contactsAssocies || lieu.contactsAssocies.length === 0) && (
             <div className="text-center text-muted p-3 border rounded bg-light">
               <i className="bi bi-people-fill fs-4 d-block mb-2 opacity-50"></i>
-              Aucun programmateur associé à ce lieu
+              Aucun contact associé à ce lieu
               <div className="small mt-1">
-                Utilisez la recherche ci-dessus pour associer des programmateurs
+                Utilisez la recherche ci-dessus pour associer des contacts
               </div>
             </div>
           )}

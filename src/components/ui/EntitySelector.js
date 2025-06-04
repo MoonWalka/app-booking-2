@@ -6,10 +6,10 @@ import styles from './EntitySelector.module.css';
 
 /**
  * Composant générique pour la sélection d'entités
- * Utilisé pour sélectionner des programmateurs, artistes, lieux, etc.
+ * Utilisé pour sélectionner des contacts, artistes, lieux, etc.
  * 
  * @param {Object} props - Propriétés du composant
- * @param {string} props.entityType - Type d'entité (artistes, programmateurs, lieux, etc.)
+ * @param {string} props.entityType - Type d'entité (artistes, contacts, lieux, etc.)
  * @param {string} props.label - Label du sélecteur
  * @param {Object} props.selectedEntity - Entité sélectionnée
  * @param {Function} props.onSelect - Fonction appelée lors de la sélection (reçoit l'entité complète)
@@ -56,8 +56,8 @@ const EntitySelector = ({
       icon: 'bi-music-note',
       idField: 'id',
     },
-    programmateurs: {
-      collection: 'programmateurs',
+    contacts: {
+      collection: 'contacts',
       displayField: 'nom',
       icon: 'bi-person',
       idField: 'id',

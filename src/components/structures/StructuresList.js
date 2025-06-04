@@ -165,8 +165,9 @@ function StructuresList() {
   const headerActions = (
     <AddButton
       onClick={() => navigate('/structures/nouveau')}
-      buttonText="Nouvelle structure"
-    />
+    >
+      Nouvelle structure
+    </AddButton>
   );
 
   // Gestion du clic sur une ligne

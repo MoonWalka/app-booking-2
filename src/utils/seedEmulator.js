@@ -10,8 +10,8 @@ const sampleConcerts = [
     statut: 'contact',
     lieuId: 'lieu-1',
     lieuNom: 'Salle de Test',
-    programmateurId: 'prog-1',
-    programmateurNom: 'Programmateur Test',
+    contactId: 'prog-1',
+    contactNom: 'Contact Test',
     artisteId: 'artiste-1',
     artisteNom: 'Artiste Test',
     createdAt: new Date().toISOString(),
@@ -25,8 +25,8 @@ const sampleConcerts = [
     statut: 'preaccord',
     lieuId: 'lieu-2',
     lieuNom: 'Autre Salle',
-    programmateurId: 'prog-2',
-    programmateurNom: 'Autre Programmateur',
+    contactId: 'prog-2',
+    contactNom: 'Autre Contact',
     artisteId: 'artiste-2',
     artisteNom: 'Autre Artiste',
     createdAt: new Date().toISOString(),
@@ -55,10 +55,10 @@ const sampleLieux = [
   }
 ];
 
-const sampleProgrammateurs = [
+const sampleContacts = [
   {
     id: 'prog-1',
-    nom: 'Programmateur Test',
+    nom: 'Contact Test',
     email: 'prog1@test.com',
     telephone: '0123456789',
     createdAt: new Date().toISOString(),
@@ -66,7 +66,7 @@ const sampleProgrammateurs = [
   },
   {
     id: 'prog-2',
-    nom: 'Autre Programmateur',
+    nom: 'Autre Contact',
     email: 'prog2@test.com',
     telephone: '0987654321',
     createdAt: new Date().toISOString(),
@@ -111,12 +111,12 @@ export const seedEmulator = async () => {
       console.log(`✅ Lieu ajouté: ${lieu.nom}`);
     }
     
-    // Peupler les programmateurs
-    console.log('👥 Ajout des programmateurs...');
-    for (const prog of sampleProgrammateurs) {
-      const progRef = doc(collection('programmateurs'), prog.id);
+    // Peupler les contacts
+    console.log('👥 Ajout des contacts...');
+    for (const prog of sampleContacts) {
+      const progRef = doc(collection('contacts'), prog.id);
       await setDoc(progRef, prog);
-      console.log(`✅ Programmateur ajouté: ${prog.nom}`);
+      console.log(`✅ Contact ajouté: ${prog.nom}`);
     }
     
     // Peupler les artistes

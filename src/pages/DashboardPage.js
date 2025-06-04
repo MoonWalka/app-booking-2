@@ -12,7 +12,7 @@ const DashboardPage = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState({
     concerts: 0,
-    programmateurs: 1,
+    contacts: 1,
     lieux: 1,
     contrats: 0
   });
@@ -38,9 +38,9 @@ const DashboardPage = () => {
         <Col md={3} className="mb-4">
           <Card bg="success" text="white">
             <Card.Body>
-              <Card.Title>Programmateurs</Card.Title>
-              <p className="card-text display-4">{stats.programmateurs}</p>
-              <p className="card-text">Programmateurs actifs</p>
+              <Card.Title>Contacts</Card.Title>
+              <p className="card-text display-4">{stats.contacts}</p>
+              <p className="card-text">Contacts actifs</p>
             </Card.Body>
           </Card>
         </Col>
@@ -79,7 +79,7 @@ const DashboardPage = () => {
             <Card.Body>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">Création du lieu "La Cigale"</li>
-                <li className="list-group-item">Création du programmateur "Jean Dupont"</li>
+                <li className="list-group-item">Création du contact "Jean Dupont"</li>
               </ul>
             </Card.Body>
           </Card>
@@ -103,9 +103,9 @@ const DashboardPage = () => {
         </div>
         <div className={styles.statCard}>
           <Card>
-            <h5 className="card-title">Programmateurs</h5>
+            <h5 className="card-title">Contacts</h5>
             <p className={styles.statValue}>1</p>
-            <p className="card-text">Programmateurs actifs</p>
+            <p className="card-text">Contacts actifs</p>
           </Card>
         </div>
         <div className={styles.statCard}>
@@ -138,7 +138,7 @@ const DashboardPage = () => {
           >
             <ul className="list-group list-group-flush">
               <li className="list-group-item">Création du lieu "La Cigale"</li>
-              <li className="list-group-item">Création du programmateur "Jean Dupont"</li>
+              <li className="list-group-item">Création du contact "Jean Dupont"</li>
             </ul>
           </Card>
         </div>

@@ -1,0 +1,104 @@
+/*
+ * Styles pour ContactAddressSection
+ * Standardisé selon le Guide de Style CSS de TourCraft
+ * Dernière mise à jour: 16 May 2025
+ */
+
+.container {
+  /* Base styles for ContactAddressSection */
+  margin-bottom: var(--tc-space-4);
+}
+
+.cardWrapper {
+  background-color: var(--tc-color-white);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-box-shadow);
+  margin-bottom: var(--tc-space-6);
+  overflow: hidden;
+  transition: var(--tc-transition-base);
+}
+
+.cardWrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-box-shadow-lg);
+}
+
+.cardHeader {
+  background-color: var(--tc-color-gray-100);
+  padding: var(--tc-space-4);
+  display: flex;
+  align-items: center;
+  border-bottom: var(--tc-border-width) solid var(--tc-border-default);
+  gap: var(--tc-space-2);
+}
+
+.cardBody {
+  padding: var(--tc-space-6);
+}
+
+.formGroup {
+  margin-bottom: var(--tc-space-4);
+}
+
+.cardLabel {
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-secondary);
+  display: block;
+}
+
+.suggestionsContainer {
+  border: var(--tc-border-width) solid var(--tc-border-color-light);
+  border-radius: var(--tc-radius-sm);
+  margin-top: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.suggestionsList {
+  padding: var(--tc-space-2) 0;
+}
+
+.suggestionItem {
+  padding: var(--tc-space-2) var(--tc-space-4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color var(--tc-transition-duration);
+}
+
+.suggestionItem:hover {
+  background-color: var(--tc-primary-color-light);
+}
+
+.addressDisplay {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive design - medium devices */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: var(--tc-space-4);
+  }
+  
+  .cardWrapper:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Additional responsive support for small screens */
+@media (max-width: 576px) {
+  .cardHeader {
+    padding: var(--tc-space-2);
+  }
+  
+  .suggestionItem {
+    padding: var(--tc-space-2);
+  }
+  
+  .cardWrapper:hover {
+    transform: none;
+  }
+}

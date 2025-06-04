@@ -121,3 +121,76 @@
     justify-content: center !important;
   }
 } 
+
+/* =============================
+   CLASSES POUR CONCERTDETAILSREFACTORED
+   ============================= */
+.detailsCard {
+  margin-bottom: var(--tc-space-4);
+}
+
+.sectionTitle {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-text-primary);
+  margin-bottom: var(--tc-space-3);
+  display: flex;
+  align-items: center;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-3);
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-1);
+}
+
+.infoItem label {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-text-muted);
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.infoItem p {
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-color-text-primary);
+  margin: 0;
+}
+
+.relationsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-3);
+}
+
+.moreItems {
+  text-align: center;
+  color: var(--tc-color-text-muted);
+  font-size: var(--tc-font-size-sm);
+  margin-top: var(--tc-space-3);
+}
+
+.notesContent {
+  font-size: var(--tc-font-size-base);
+  color: var(--tc-color-text-primary);
+  line-height: var(--tc-line-height-relaxed);
+  white-space: pre-wrap;
+}
+
+/* Responsive pour les nouvelles classes */
+@media (max-width: var(--tc-breakpoint-sm)) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .relationsGrid {
+    grid-template-columns: 1fr;
+  }
+} 

@@ -21,3 +21,6 @@ export { default as useSearchAndFilter } from './useSearchAndFilter';
 
 // Import du nouveau hook générique de suppression d'entité
 export { default as useGenericEntityDelete } from './useGenericEntityDelete';
+
+// Import du hook sécurisé pour les relations
+export { default as useSafeRelations } from './useSafeRelations';

@@ -54,7 +54,8 @@ const createSafeData = (data) => {
     template,
     contrat,
     concert, 
-    programmateur, 
+    contact,  // Nouveau format
+    programmateur,  // Rétrocompatibilité
     artiste, 
     lieu, 
     entreprise,
@@ -62,7 +63,8 @@ const createSafeData = (data) => {
     // Format 2 : Ancien format
     contratData, 
     concertData, 
-    programmateurData, 
+    contactData,  // Nouveau format
+    programmateurData,  // Rétrocompatibilité
     artisteData, 
     lieuData, 
     entrepriseInfo 
@@ -75,7 +77,8 @@ const createSafeData = (data) => {
   const safeData = {
     template: effectiveTemplate,
     concert: concert || concertData || {},
-    programmateur: programmateur || programmateurData || {},
+    contact: contact || contactData || {},  // Nouveau format
+    programmateur: programmateur || programmateurData || {},  // Rétrocompatibilité
     artiste: artiste || artisteData || {},
     lieu: lieu || lieuData || {},
     entreprise: entreprise || entrepriseInfo || {}
@@ -219,17 +222,29 @@ const prepareContractVariables = (safeData) => {
     'representant_entreprise': safeData.entreprise?.representant || 'Non spécifié',
     'fonction_representant': safeData.entreprise?.fonctionRepresentant || 'Non spécifiée',
     
-    // Variables programmateur
-    'programmateur_nom': safeData.programmateur?.nom || 'Non spécifié',
-    'programmateur_prenom': safeData.programmateur?.prenom || '',
-    'programmateur_structure': safeData.programmateur?.structure || 'Non spécifiée',
-    'programmateur_email': safeData.programmateur?.email || 'Non spécifié',
-    'programmateur_telephone': safeData.programmateur?.telephone || 'Non spécifié',
-    'programmateur_adresse': safeData.programmateur?.adresse || 'Non spécifiée',
-    'programmateur_siret': safeData.programmateur?.siret || 'Non spécifié',
-    'programmateur_numero_intracommunautaire': safeData.programmateur?.numeroIntracommunautaire || safeData.programmateur?.numero_intracommunautaire || 'Non spécifié',
-    'programmateur_representant': safeData.programmateur?.representant || safeData.programmateur?.nom || 'Non spécifié',
-    'programmateur_qualite_representant': safeData.programmateur?.qualiteRepresentant || safeData.programmateur?.qualite_representant || safeData.programmateur?.fonction || 'Non spécifiée',
+    // Variables contact (ex-programmateur) - Support rétrocompatibilité
+    'contact_nom': safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
+    'contact_prenom': safeData.contact?.prenom || safeData.programmateur?.prenom || '',
+    'contact_structure': safeData.contact?.structure || safeData.programmateur?.structure || 'Non spécifiée',
+    'contact_email': safeData.contact?.email || safeData.programmateur?.email || 'Non spécifié',
+    'contact_telephone': safeData.contact?.telephone || safeData.programmateur?.telephone || 'Non spécifié',
+    'contact_adresse': safeData.contact?.adresse || safeData.programmateur?.adresse || 'Non spécifiée',
+    'contact_siret': safeData.contact?.siret || safeData.programmateur?.siret || 'Non spécifié',
+    'contact_numero_intracommunautaire': safeData.contact?.numeroIntracommunautaire || safeData.programmateur?.numeroIntracommunautaire || safeData.programmateur?.numero_intracommunautaire || 'Non spécifié',
+    'contact_representant': safeData.contact?.representant || safeData.programmateur?.representant || safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
+    'contact_qualite_representant': safeData.contact?.qualiteRepresentant || safeData.programmateur?.qualiteRepresentant || safeData.programmateur?.qualite_representant || safeData.contact?.fonction || safeData.programmateur?.fonction || 'Non spécifiée',
+    
+    // Variables programmateur (DEPRECATED - pour rétrocompatibilité des anciens templates)
+    'programmateur_nom': safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
+    'programmateur_prenom': safeData.contact?.prenom || safeData.programmateur?.prenom || '',
+    'programmateur_structure': safeData.contact?.structure || safeData.programmateur?.structure || 'Non spécifiée',
+    'programmateur_email': safeData.contact?.email || safeData.programmateur?.email || 'Non spécifié',
+    'programmateur_telephone': safeData.contact?.telephone || safeData.programmateur?.telephone || 'Non spécifié',
+    'programmateur_adresse': safeData.contact?.adresse || safeData.programmateur?.adresse || 'Non spécifiée',
+    'programmateur_siret': safeData.contact?.siret || safeData.programmateur?.siret || 'Non spécifié',
+    'programmateur_numero_intracommunautaire': safeData.contact?.numeroIntracommunautaire || safeData.programmateur?.numeroIntracommunautaire || safeData.programmateur?.numero_intracommunautaire || 'Non spécifié',
+    'programmateur_representant': safeData.contact?.representant || safeData.programmateur?.representant || safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
+    'programmateur_qualite_representant': safeData.contact?.qualiteRepresentant || safeData.programmateur?.qualiteRepresentant || safeData.programmateur?.qualite_representant || safeData.contact?.fonction || safeData.programmateur?.fonction || 'Non spécifiée',
     
     // Variables artiste
     'artiste_nom': safeData.artiste?.nom || 'Non spécifié',

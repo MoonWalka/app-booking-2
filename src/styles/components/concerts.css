@@ -207,7 +207,7 @@
 }
 
 /* ARTISTES ET PROGRAMMATEURS */
-.tc-artist-name, .tc-programmateur-name {
+.tc-artist-name, .tc-contact-name {
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -216,7 +216,7 @@
   max-width: 180px;
 }
 
-.tc-artist-name i, .tc-programmateur-name i {
+.tc-artist-name i, .tc-contact-name i {
   margin-right: var(--tc-space-1);
   color: var(--tc-text-muted);
 }
@@ -241,7 +241,7 @@
 @media (max-width: var(--tc-breakpoint-lg)) {
   .tc-text-truncate-container,
   .tc-artist-name, 
-  .tc-programmateur-name {
+  .tc-contact-name {
     max-width: 140px;
   }
 }
@@ -258,7 +258,7 @@
   
   .tc-text-truncate-container,
   .tc-artist-name, 
-  .tc-programmateur-name {
+  .tc-contact-name {
     max-width: 100px;
   }
   

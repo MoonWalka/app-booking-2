@@ -121,7 +121,7 @@ const FormValidationInterface = () => {
         
         <FormGenerator
           concertId={id}
-          programmateurId={concert?.programmateurId}
+          contactId={concert?.contactId}
           onFormGenerated={(formLinkId, formUrl) => {
             // Optionnel : afficher un message de succès
             console.log('Formulaire généré avec succès:', formUrl);
@@ -155,7 +155,7 @@ const FormValidationInterface = () => {
       <div className="mb-4">
         <FormGenerator
           concertId={id}
-          programmateurId={concert?.programmateurId}
+          contactId={concert?.contactId}
           onFormGenerated={(formLinkId, formUrl) => {
             console.log('Nouveau formulaire généré:', formUrl);
             // Optionnel : rafraîchir les données

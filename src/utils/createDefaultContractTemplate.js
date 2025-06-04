@@ -50,11 +50,11 @@ N° SIRET : [siret_entreprise]<br/>
 Ci-après dénommée "<strong>LE PRODUCTEUR</strong>"</p>
 
 <p><strong>D'autre part,</strong></p>
-<p>[programmateur_nom] [programmateur_prenom]<br/>
-Structure : [programmateur_structure]<br/>
-Adresse : [programmateur_adresse]<br/>
-Email : [programmateur_email]<br/>
-Téléphone : [programmateur_telephone]<br/>
+<p>[contact_nom] [contact_prenom]<br/>
+Structure : [contact_structure]<br/>
+Adresse : [contact_adresse]<br/>
+Email : [contact_email]<br/>
+Téléphone : [contact_telephone]<br/>
 Ci-après dénommé "<strong>L'ORGANISATEUR</strong>"</p>
 
 <h3>IL A ÉTÉ CONVENU CE QUI SUIT :</h3>
@@ -118,8 +118,8 @@ Ci-après dénommé "<strong>L'ORGANISATEUR</strong>"</p>
 </td>
 <td style="width: 50%; text-align: center;">
 <p><strong>L'ORGANISATEUR</strong></p>
-<p>[programmateur_nom] [programmateur_prenom]</p>
-<p>[programmateur_structure]</p>
+<p>[contact_nom] [contact_prenom]</p>
+<p>[contact_structure]</p>
 <br/><br/><br/>
 <p>Signature :</p>
 </td>

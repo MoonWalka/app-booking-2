@@ -3,7 +3,7 @@
  */
 
 /**
- * Valide un formulaire de programmateur
+ * Valide un formulaire de contact
  * @param {Object} data - Les données du formulaire à valider
  * @returns {Object} - { isValid, errors } Résultat de la validation
  */

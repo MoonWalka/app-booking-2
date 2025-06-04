@@ -16,8 +16,8 @@ const ConcertActions = ({
   
   // Fonction pour déterminer le statut du formulaire
   const getFormStatus = () => {
-    if (!concert.programmateurId) {
-      return { status: 'no_programmateur', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun programmateur associé' };
+    if (!concert.contactId) {
+      return { status: 'no_contact', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun contact associé' };
     }
     
     if (hasUnvalidatedForm) {
@@ -45,9 +45,9 @@ const ConcertActions = ({
   // Fonction pour déterminer le statut du contrat
   const getContractStatus = () => {
     if (!hasContract) {
-      // Vérifier si on peut générer un contrat (besoin d'un programmateur au minimum)
-      if (!concert.programmateurId) {
-        return { status: 'no_programmateur', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun programmateur associé' };
+      // Vérifier si on peut générer un contrat (besoin d'un contact au minimum)
+      if (!concert.contactId) {
+        return { status: 'no_contact', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun contact associé' };
       }
       return { status: 'not_generated', icon: 'bi-file-earmark-plus', class: 'notGenerated', tooltip: 'Générer contrat' };
     }
@@ -79,8 +79,8 @@ const ConcertActions = ({
       case 'validated':
         handleViewForm(concert.id);
         break;
-      case 'no_programmateur':
-        // Rediriger vers l'édition du concert pour ajouter un programmateur
+      case 'no_contact':
+        // Rediriger vers l'édition du concert pour ajouter un contact
         window.location.href = `/concerts/${concert.id}/edit`;
         break;
       case 'not_sent':
@@ -113,9 +113,9 @@ const ConcertActions = ({
           console.error('ID du contrat non trouvé pour le concert:', concert.id);
         }
         break;
-      case 'no_programmateur':
+      case 'no_contact':
       default:
-        // Rediriger vers l'édition du concert pour ajouter un programmateur
+        // Rediriger vers l'édition du concert pour ajouter un contact
         window.location.href = `/concerts/${concert.id}/edit`;
         break;
     }
@@ -128,7 +128,7 @@ const ConcertActions = ({
         className={`${styles.actionButton} ${styles.formButton} ${styles[formStatus.class]}`}
         onClick={handleFormClick}
         title={formStatus.tooltip}
-        disabled={formStatus.status === 'no_programmateur'}
+        disabled={formStatus.status === 'no_contact'}
       >
         <i className={formStatus.icon}></i>
       </button>
@@ -138,7 +138,7 @@ const ConcertActions = ({
         className={`${styles.actionButton} ${styles.contractButton} ${styles[contractStatusInfo.class]}`}
         onClick={handleContractClick}
         title={contractStatusInfo.tooltip}
-        disabled={contractStatusInfo.status === 'no_programmateur'}
+        disabled={contractStatusInfo.status === 'no_contact'}
       >
         <i className={contractStatusInfo.icon}></i>
       </button>

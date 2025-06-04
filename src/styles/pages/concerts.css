@@ -381,7 +381,7 @@
   
   .tc-concerts-table .tc-lieu-nom,
   .tc-concerts-table .tc-artist-name,
-  .tc-concerts-table .tc-programmateur-name {
+  .tc-concerts-table .tc-contact-name {
     max-width: 120px;
   }
 }

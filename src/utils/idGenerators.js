@@ -39,7 +39,7 @@ export const generateLieuId = () => {
 };
 
 /**
- * Génère un identifiant unique pour un programmateur
+ * Génère un identifiant unique pour un contact
  * Préfixé par 'pro-' suivi d'un timestamp et d'une chaîne aléatoire
  * 
  * @returns {string} Identifiant unique formaté

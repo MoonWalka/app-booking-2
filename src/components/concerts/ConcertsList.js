@@ -175,7 +175,7 @@ function ConcertsList() {
     {
       id: 'programmateur',
       label: 'Programmateur',
-      field: 'programmateurId',
+      field: 'contactId',
       type: 'text',
       placeholder: 'Nom du programmateur'
     },
@@ -291,7 +291,7 @@ function ConcertsList() {
   const renderActions = (concert) => {
     // Logique métier des formulaires
     const getFormStatus = () => {
-      if (!concert.programmateurId) {
+      if (!concert.contactId) {
         return { 
           status: 'no_programmateur', 
           icon: 'bi-person-x', 
@@ -336,7 +336,7 @@ function ConcertsList() {
 
     // Logique métier des contrats
     const getContractStatus = () => {
-      if (!concert.programmateurId) {
+      if (!concert.contactId) {
         return { 
           status: 'no_programmateur', 
           icon: 'bi-person-x', 

@@ -33,7 +33,7 @@ const useConcertFormFixed = (concertId = null) => {
       lieuId: '',
       lieuNom: '',
       lieuVille: '',
-      programmateurId: '',
+      contactId: '',
       programmateurNom: '',
       artisteId: '',
       artisteNom: '',
@@ -66,9 +66,9 @@ const useConcertFormFixed = (concertId = null) => {
         });
       }
       
-      if (formData.programmateurId && formData.programmateurNom) {
+      if (formData.contactId && formData.programmateurNom) {
         setLocalProgrammateur({
-          id: formData.programmateurId,
+          id: formData.contactId,
           nom: formData.programmateurNom,
           prenom: formData.programmateurPrenom || ''
         });
@@ -138,7 +138,7 @@ const useConcertFormFixed = (concertId = null) => {
     if (programmateur) {
       genericFormHook.handleChange({
         target: {
-          name: 'programmateurId',
+          name: 'contactId',
           value: programmateur.id
         }
       });
@@ -153,7 +153,7 @@ const useConcertFormFixed = (concertId = null) => {
   
   const handleRemoveProgrammateur = useCallback(() => {
     setLocalProgrammateur(null);
-    genericFormHook.handleChange({ target: { name: 'programmateurId', value: '' } });
+    genericFormHook.handleChange({ target: { name: 'contactId', value: '' } });
     genericFormHook.handleChange({ target: { name: 'programmateurNom', value: '' } });
   }, [genericFormHook]);
   

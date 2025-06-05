@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Configuration des champs de contact du contact
@@ -130,6 +131,7 @@ const lieuFields = [
  * - Erreurs génériques : "Impossible de charger les données du formulaire: {error}"
  */
 const useFormValidationData = (concertId) => {
+  const { currentOrganization } = useOrganization();
   const [formData, setFormData] = useState(null);
   const [formId, setFormId] = useState(null);
   const [concert, setConcert] = useState(null);
@@ -189,6 +191,8 @@ const useFormValidationData = (concertId) => {
       } else {
         console.log("Recherche dans formSubmissions par concertId");
         // Chercher dans la collection formSubmissions
+        // NOTE: Ne pas filtrer par organizationId pour les formSubmissions existantes
+        // car elles n'ont pas encore ce champ
         const submissionsQuery = query(
           collection(db, 'formSubmissions'), 
           where('concertId', '==', concertId)
@@ -199,6 +203,7 @@ const useFormValidationData = (concertId) => {
         if (submissionsSnapshot.empty) {
           console.log("Aucune soumission trouvée, recherche dans formLinks");
           // Si aucune soumission, vérifier si un lien a été généré
+          // NOTE: Ne pas filtrer par organizationId pour les formLinks existants
           const linksQuery = query(
             collection(db, 'formLinks'), 
             where('concertId', '==', concertId)
@@ -332,7 +337,7 @@ const useFormValidationData = (concertId) => {
       setError(`Impossible de charger les données du formulaire: ${err.message}`);
       setLoading(false);
     }
-  }, [concertId]);
+  }, [concertId, currentOrganization?.id]);
 
   useEffect(() => {
     if (concertId) {

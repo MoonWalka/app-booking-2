@@ -24,6 +24,7 @@ import {
   deleteDoc,
   startAfter
 } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook générique pour les actions CRUD
@@ -73,6 +74,7 @@ import {
 const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { currentOrganization } = useOrganization();
   
   const { 
     onSuccess, 
@@ -105,7 +107,9 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       const entityData = {
         ...data,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        // Ajouter l'organizationId si disponible
+        ...(currentOrganization?.id && { organizationId: currentOrganization.id })
       };
       
       let result;
@@ -145,7 +149,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, validateBeforeAction, enableLogging, autoResetError]);
+  }, [entityType, validateBeforeAction, enableLogging, autoResetError, currentOrganization?.id]);
   
   // ✅ CORRECTION: Fonction de mise à jour stabilisée
   const update = useCallback(async (id, data) => {
@@ -159,7 +163,9 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       
       const updateData = {
         ...data,
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        // Préserver l'organizationId existant si non fourni
+        ...(currentOrganization?.id && !data.organizationId && { organizationId: currentOrganization.id })
       };
       
       await updateDoc(doc(db, entityType, id), updateData);
@@ -191,7 +197,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, enableLogging, autoResetError]);
+  }, [entityType, enableLogging, autoResetError, currentOrganization?.id]);
   
   // ✅ CORRECTION: Fonction de suppression stabilisée
   const remove = useCallback(async (id) => {

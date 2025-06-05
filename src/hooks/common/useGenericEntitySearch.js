@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { db } from '@/services/firebase-service';
 import { collection, query, where, getDocs, limit } from '@/services/firebase-service';
 import useDebounce from './useDebounce';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook générique pour la recherche d'entités dans Firestore
@@ -40,6 +41,9 @@ const useGenericEntitySearch = ({
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [allData, setAllData] = useState([]);
+  
+  // Organisation context
+  const { currentOrganization } = useOrganization();
   
   // 🔧 FIX: Stabiliser les searchFields pour éviter les re-créations
   const stableSearchFields = useMemo(() => searchFields, [searchFields]);
@@ -98,7 +102,19 @@ const useGenericEntitySearch = ({
     const fetchAllData = async () => {
       try {
         setIsSearching(true);
-        const q = query(collection(db, config.collectionName));
+        
+        // Vérifier qu'on a une organisation
+        if (!currentOrganization?.id) {
+          console.warn('⚠️ Pas d\'organisation sélectionnée pour la recherche');
+          setAllData([]);
+          setIsSearching(false);
+          return;
+        }
+        
+        const q = query(
+          collection(db, config.collectionName),
+          where('organizationId', '==', currentOrganization.id)
+        );
         const querySnapshot = await getDocs(q);
         const fetchedData = querySnapshot.docs.map(doc => ({
           id: doc.id,
@@ -115,25 +131,43 @@ const useGenericEntitySearch = ({
 
     fetchAllData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allData.length]); // Dépendance réduite pour éviter les boucles
+  }, [allData.length, currentOrganization]); // Dépendance réduite pour éviter les boucles
 
   // 🔧 FIX: Fonction pour récupérer toute la collection - mémorisée
   const fetchCollection = useCallback(async () => {
     const config = configRef.current;
-    const q = query(collection(db, config.collectionName));
+    
+    // Vérifier qu'on a une organisation
+    if (!currentOrganization?.id) {
+      console.warn('⚠️ Pas d\'organisation sélectionnée pour la recherche');
+      return [];
+    }
+    
+    const q = query(
+      collection(db, config.collectionName),
+      where('organizationId', '==', currentOrganization.id)
+    );
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
-  }, []); // Pas de dépendances car on utilise le ref
+  }, [currentOrganization]); // Dépend de l'organisation
   
   // 🔧 FIX: Fonction pour rechercher dans Firestore - mémorisée
   const searchFirestore = useCallback(async (term) => {
     const config = configRef.current;
+    
+    // Vérifier qu'on a une organisation
+    if (!currentOrganization?.id) {
+      console.warn('⚠️ Pas d\'organisation sélectionnée pour la recherche');
+      return [];
+    }
+    
     const queries = config.searchFields.map(field => {
       return query(
         collection(db, config.collectionName),
+        where('organizationId', '==', currentOrganization.id),
         where(field, ">=", term.toLowerCase()),
         where(field, "<=", term.toLowerCase() + '\uf8ff'),
         limit(config.resultLimit)
@@ -155,7 +189,7 @@ const useGenericEntitySearch = ({
     });
     
     return Array.from(uniqueResults.values());
-  }, []); // Pas de dépendances car on utilise le ref
+  }, [currentOrganization]); // Dépend de l'organisation
   
   // Fonction utilitaire pour accéder aux propriétés imbriquées
   const getNestedValue = useCallback((obj, path) => {

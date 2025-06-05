@@ -181,7 +181,7 @@
  */
 
 // src/hooks/contrats/useContratGenerator.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { db } from '@/services/firebase-service';
 import { 
   collection, 
@@ -196,8 +196,10 @@ import {
   serverTimestamp
 } from '@/services/firebase-service';
 import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
+import { useOrganization } from '@/context/OrganizationContext';
 
 export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
+  const { currentOrganization } = useOrganization();
   const [templates, setTemplates] = useState([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -249,15 +251,25 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         // Vérifier et créer un modèle par défaut si nécessaire
         await ensureDefaultTemplate();
         
-        // Récupérer les modèles de contrat
+        // Récupérer tous les modèles de contrat
         const templatesQuery = query(
-          collection(db, 'contratTemplates'), 
+          collection(db, 'contratTemplates'),
           orderBy('name')
         );
         const templatesSnapshot = await getDocs(templatesQuery);
         
+        // Filtrer les templates : garder ceux de l'organisation courante OU ceux sans organizationId (globaux)
+        let allDocs = templatesSnapshot.docs;
+        if (currentOrganization?.id) {
+          allDocs = templatesSnapshot.docs.filter(doc => {
+            const data = doc.data();
+            // Garder le template s'il appartient à l'organisation courante OU s'il n'a pas d'organizationId (template global)
+            return data.organizationId === currentOrganization.id || !data.organizationId;
+          });
+        }
+        
         // Convertir les documents en objets
-        const templatesList = templatesSnapshot.docs.map(doc => ({
+        const templatesList = allDocs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
@@ -318,15 +330,26 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         // Vérifier si un contrat existe déjà pour ce concert
         if (concert?.id) {
           console.log("Recherche d'un contrat existant pour le concert:", concert.id);
+          // Récupérer tous les contrats pour ce concert
           const contratsQuery = query(
             collection(db, 'contrats'),
             where('concertId', '==', concert.id)
           );
           const contratsSnapshot = await getDocs(contratsQuery);
           
-          if (!contratsSnapshot.empty) {
-            const contratData = contratsSnapshot.docs[0].data();
-            const contratDocId = contratsSnapshot.docs[0].id;
+          // Filtrer par organisation si nécessaire
+          let contratDocs = contratsSnapshot.docs;
+          if (currentOrganization?.id) {
+            // Privilégier les contrats de l'organisation courante, mais accepter aussi ceux sans organizationId
+            contratDocs = contratsSnapshot.docs.filter(doc => {
+              const data = doc.data();
+              return data.organizationId === currentOrganization.id || !data.organizationId;
+            });
+          }
+          
+          if (contratDocs.length > 0) {
+            const contratData = contratDocs[0].data();
+            const contratDocId = contratDocs[0].id;
             console.log("Contrat existant trouvé:", contratDocId);
             setContratId(contratDocId);
             setPdfUrl(contratData.pdfUrl);
@@ -335,7 +358,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
             if (contratData.templateId) {
               console.log("Utilisation du template du contrat existant:", contratData.templateId);
               setSelectedTemplateId(contratData.templateId);
-              const templateDoc = templatesSnapshot.docs.find(doc => doc.id === contratData.templateId);
+              const templateDoc = allDocs.find(doc => doc.id === contratData.templateId);
               if (templateDoc) {
                 setSelectedTemplate({
                   id: templateDoc.id,
@@ -361,7 +384,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
     };
 
     fetchData();
-  }, [concert?.id, programmateur?.structureId]);
+  }, [concert?.id, programmateur?.structureId, currentOrganization?.id]);
   
   // Mettre à jour le modèle sélectionné quand l'ID change
   useEffect(() => {
@@ -389,8 +412,28 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
   };
 
   // Fonction pour préparer les variables du contrat
-  const prepareContractVariables = () => {
+  const prepareContractVariables = useCallback(() => {
     console.log("Préparation des variables du contrat");
+    console.log("🔍 État actuel de structureData:", structureData);
+    console.log("🔍 programmateur.structureId:", programmateur?.structureId);
+    
+    // Log de débogage pour vérifier ce qui est transmis
+    if (structureData) {
+      console.log("✅ Structure chargée:", {
+        nom: structureData.nom,
+        siret: structureData.siret,
+        adresse: structureData.adresse,
+        email: structureData.email,
+        telephone: structureData.telephone,
+        numeroIntracommunautaire: structureData.numeroIntracommunautaire
+      });
+    } else {
+      console.log("⚠️ Structure non chargée, utilisation des données du programmateur:", {
+        structure: programmateur?.structure,
+        siret: programmateur?.siret,
+        adresse: programmateur?.adresse
+      });
+    }
     
     // Fonction helper pour convertir un montant en lettres
     const montantEnLettres = (montant) => {
@@ -488,6 +531,27 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       programmateur_email: programmateur?.email || 'Non spécifié',
       programmateur_telephone: programmateur?.telephone || 'Non spécifié',
       programmateur_siret: structureData?.siret || programmateur?.siret || 'Non spécifié',
+      
+      // Variables contact (alias pour compatibilité avec les anciens templates)
+      contact_nom: programmateur?.nom || 'Non spécifié',
+      contact_prenom: programmateur?.prenom || '',
+      contact_structure: structureData?.nom || programmateur?.structure || 'Non spécifiée',
+      contact_email: programmateur?.email || 'Non spécifié',
+      contact_telephone: programmateur?.telephone || 'Non spécifié',
+      contact_siret: structureData?.siret || programmateur?.siret || 'Non spécifié',
+      contact_adresse: (() => {
+        // Si on a une structure avec des données d'adresse
+        if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
+          const addr = structureData.adresseLieu;
+          return `${addr.adresse || ''} ${addr.codePostal || ''} ${addr.ville || ''}`.trim() || 'Non spécifiée';
+        }
+        // Si l'adresse est directement une chaîne dans structureData
+        else if (structureData?.adresse && typeof structureData.adresse === 'string') {
+          return structureData.adresse;
+        }
+        // Sinon utiliser l'adresse du contact
+        return programmateur?.adresse || 'Non spécifiée';
+      })(),
       programmateur_adresse: (() => {
         // Si on a une structure avec des données d'adresse
         if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
@@ -652,7 +716,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
         : 'Non spécifié',
     };
-  };
+  }, [structureData, programmateur, artiste, lieu, concert, entrepriseInfo]);
   
   // Fonction pour sauvegarder le contrat généré
   const saveGeneratedContract = async (url) => {
@@ -727,7 +791,8 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           dateEnvoi: null,
           status: 'generated',
           pdfUrl: url,
-          variables
+          variables,
+          ...(currentOrganization?.id && { organizationId: currentOrganization.id })
         };
         
         console.log("Données du contrat à enregistrer:", contratData);
@@ -792,6 +857,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
     showErrorAlert,
     showSuccessAlert,
     showDebugInfo,
+    structureData, // Ajout de structureData pour qu'il soit accessible
     
     // Fonctions
     validateDataBeforeGeneration,

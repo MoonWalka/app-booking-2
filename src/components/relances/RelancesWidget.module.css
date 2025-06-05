@@ -1,0 +1,122 @@
+/* Widget de relances */
+.widget {
+  width: 100%;
+}
+
+/* Chargement */
+.loading {
+  padding: var(--spacing-lg);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+/* Résumé des statistiques */
+.summary {
+  display: flex;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.stat {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.stat strong {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.stat.overdue strong {
+  color: var(--color-danger);
+}
+
+/* Liste des relances */
+.relancesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.emptyMessage {
+  text-align: center;
+  color: var(--color-text-secondary);
+  padding: var(--spacing-lg) 0;
+  margin: 0;
+}
+
+/* Item de relance */
+.relanceItem {
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-base);
+  transition: all 0.2s ease;
+}
+
+.relanceItem:hover {
+  background-color: var(--color-background-secondary);
+  border-color: var(--color-primary);
+}
+
+.overdueItem {
+  border-left: 3px solid var(--color-danger);
+}
+
+.relanceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.relanceTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.relanceMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.dueDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.overdueItem .dueDate {
+  color: var(--color-danger);
+}
+
+/* Lien "Voir plus" */
+.moreLink {
+  padding-top: var(--spacing-sm);
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--spacing-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .summary {
+    font-size: var(--font-size-xs);
+  }
+
+  .relanceItem {
+    padding: var(--spacing-xs);
+  }
+
+  .relanceTitle {
+    font-size: var(--font-size-xs);
+  }
+}

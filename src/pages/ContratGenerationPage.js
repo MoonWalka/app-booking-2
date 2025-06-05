@@ -124,7 +124,7 @@ const ContratGenerationPage = () => {
           
           <ContratGenerator 
             concert={concert}
-            contact={contact}
+            programmateur={contact}
             artiste={artiste}
             lieu={lieu}
           />

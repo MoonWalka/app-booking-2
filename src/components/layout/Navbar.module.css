@@ -107,6 +107,8 @@
 
 .dFlex {
   display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
 }
 
 .navbarText {
@@ -117,6 +119,10 @@
 
 .me3 {
   margin-right: var(--tc-space-4);
+}
+
+.ms3 {
+  margin-left: var(--tc-space-4);
 }
 
 .btnOutlineLight {

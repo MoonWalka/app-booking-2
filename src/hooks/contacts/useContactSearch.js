@@ -8,8 +8,9 @@
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { useGenericEntitySearch } from '@/hooks/common'; // Retiré car non utilisé dans cette version simplifiée
-import { collection, getDocs, db, doc, getDoc } from '@/services/firebase-service';
+import { collection, getDocs, db, doc, getDoc, query, where } from '@/services/firebase-service';
 import { debugLog } from '@/utils/logUtils';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Fonction utilitaire pour accéder aux propriétés imbriquées d'un objet
@@ -43,6 +44,7 @@ export const useContactSearch = ({
   maxResults = 50,
 } = {}) => {
   const navigate = useNavigate();
+  const { currentOrganization } = useOrganization();
   const [selectedContact, setSelectedContact] = useState(null);
   const [error, setError] = useState(null);
   const [allContacts, setAllContacts] = useState([]);
@@ -63,7 +65,19 @@ export const useContactSearch = ({
       try {
         debugLog('[useContactSearch] Chargement des contacts', 'info');
         
-        const snapshot = await getDocs(collection(db, 'contacts'));
+        // Vérifier qu'on a une organisation
+        if (!currentOrganization?.id) {
+          console.warn('⚠️ Pas d\'organisation sélectionnée pour les contacts');
+          setAllContacts([]);
+          setIsLoading(false);
+          return;
+        }
+        
+        const contactsQuery = query(
+          collection(db, 'contacts'),
+          where('organizationId', '==', currentOrganization.id)
+        );
+        const snapshot = await getDocs(contactsQuery);
         const contacts = await Promise.all(
           snapshot.docs.map(async (docSnap) => {
             const data = docSnap.data();
@@ -105,7 +119,7 @@ export const useContactSearch = ({
     };
     
     loadContacts();
-  }, [allContacts.length]); // 🔧 FIX: Ajouter la dépendance manquante
+  }, [allContacts.length, currentOrganization]); // 🔧 FIX: Ajouter les dépendances manquantes
   
   // 🔧 FIX: Filtrage et tri mémorisés pour éviter les recalculs
   const filteredAndSortedContacts = useMemo(() => {

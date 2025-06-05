@@ -30,7 +30,7 @@ const FormValidationInterface = () => {
     setValidated,
     validatedFields,
     setValidatedFields,
-    programmateur,
+    contact: programmateur,  // Alias pour compatibilité
     lieu,
     contactFields,
     structureFields,

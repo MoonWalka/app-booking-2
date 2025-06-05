@@ -1,174 +1,239 @@
 // src/components/contacts/desktop/ContactView.js
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import Card from '@/components/ui/Card';
-import { ContactHeader } from './sections/ContactHeader';
-import ContactSection from './ContactContactSection';
-import ContactConcertsSectionV2 from './sections/ContactConcertsSectionV2';
-import ContactStructureSectionV2 from './sections/ContactStructureSectionV2';
-import ContactLieuxSectionV2 from './sections/ContactLieuxSectionV2';
+import React, { useMemo } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useContactDetails } from '@/hooks/contacts';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
-import { useContactDetails } from '@/hooks/contacts';
-import styles from './ContactDetails.module.css';
+import Button from '@/components/ui/Button';
+import FormHeader from '@/components/ui/FormHeader';
+import EntityCard from '@/components/ui/EntityCard';
+import styles from './ContactView.module.css';
 
 /**
- * Composant d'affichage des détails d'un contact - Version Desktop
- * Adapté du style maquette concert details
+ * Composant des détails d'un contact - Interface moderne et épurée
+ * Aligné avec l'architecture de ConcertView et LieuView
  */
-const ContactView = () => {
+function ContactView({ id: propId }) {
+  const { id: urlId } = useParams();
   const navigate = useNavigate();
-  const { id } = useParams();
-  
-  // Utilisation du hook pour récupérer les données
+  const id = propId || urlId;
+
+  // Hook Firebase existant
   const detailsHook = useContactDetails(id);
-  
+
   const {
     contact,
     structure,
     lieux,
     concerts,
+    artistes,
     loading,
-    loadingStructure,
-    loadingLieux,
-    loadingConcerts,
-    error,
-    handleDelete,
-    formatValue
+    error
   } = detailsHook || {};
-  
-  console.log('[TRACE-UNIQUE][ContactView] loading:', loading);
-  console.log('[TRACE-UNIQUE][ContactView] error:', error);
-  console.log('[TRACE-UNIQUE][ContactView] contact:', contact);
-  console.log('[TRACE-UNIQUE][ContactView] structure:', structure);
-  console.log('[TRACE-UNIQUE][ContactView] lieux:', lieux);
-  console.log('[TRACE-UNIQUE][ContactView] concerts:', concerts);
-  console.log('[TRACE-UNIQUE][ContactView] loadingStructure:', loadingStructure);
-  console.log('[TRACE-UNIQUE][ContactView] loadingLieux:', loadingLieux);
-  console.log('[TRACE-UNIQUE][ContactView] loadingConcerts:', loadingConcerts);
-  
-  // État local pour contrôler l'affichage des sections
-  const [sections, setSections] = useState({
-    contactVisible: true,
-    structureVisible: true,
-    lieuxVisible: true,
-    concertsVisible: true
+
+  // Debug - Affichage des données reçues
+  console.log('[ContactView] Données reçues:', {
+    contact: contact ? { 
+      id: contact.id, 
+      nom: contact.nom, 
+      prenom: contact.prenom,
+      structureId: contact.structureId
+    } : null,
+    structure: structure ? { 
+      id: structure.id, 
+      nom: structure.nom 
+    } : null,
+    lieuxCount: lieux?.length || 0,
+    concertsCount: concerts?.length || 0
   });
-  
-  // Gestion du toggle des sections - Commenté car non utilisé actuellement
-  // const toggleSection = (sectionName) => {
-  //   setSections(prev => ({
-  //     ...prev,
-  //     [sectionName]: !prev[sectionName]
-  //   }));
-  // };
-  
+
+  // Formatage des données pour l'affichage
+  const contactData = useMemo(() => {
+    if (!contact) return null;
+
+    const formatDate = (value) => {
+      if (!value) return "Date inconnue";
+      try {
+        return new Date(value).toLocaleDateString('fr-FR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      } catch {
+        return "Date invalide";
+      }
+    };
+
+    return {
+      id: contact.id,
+      nom: contact.nom || "Nom non renseigné",
+      prenom: contact.prenom || "Prénom non renseigné",
+      nomComplet: `${contact.prenom || ''} ${contact.nom || ''}`.trim() || 'Contact sans nom',
+      dateCreation: contact.dateCreation ? formatDate(contact.dateCreation) : "Date inconnue",
+      email: contact.email || "Email non renseigné",
+      telephone: contact.telephone || "Téléphone non renseigné",
+      fonction: contact.fonction || "Fonction non renseignée",
+      adresse: contact.adresse || "",
+      ville: contact.ville || "",
+      codePostal: contact.codePostal || "",
+      adresseComplete: [contact.adresse, contact.codePostal, contact.ville]
+        .filter(Boolean)
+        .join(' ') || "Adresse non renseignée",
+      notes: contact.notes || ""
+    };
+  }, [contact]);
+
+  // Handlers
+  const handleEdit = () => navigate(`/contacts/${id}/edit`);
+
+  // Navigation vers les entités liées
+  const navigateToEntity = (entityType, entityId) => {
+    console.log(`[ContactView] Navigation vers ${entityType} avec ID:`, entityId);
+    
+    if (!entityId) {
+      console.warn(`[ContactView] ID manquant pour ${entityType}`);
+      return;
+    }
+    
+    const routes = {
+      structure: `/structures/${entityId}`,
+      lieu: `/lieux/${entityId}`,
+      concert: `/concerts/${entityId}`,
+      artiste: `/artistes/${entityId}`
+    };
+    
+    if (routes[entityType]) {
+      console.log(`[ContactView] Navigation vers:`, routes[entityType]);
+      navigate(routes[entityType]);
+    } else {
+      console.error(`[ContactView] Route inconnue pour ${entityType}`);
+    }
+  };
+
   if (loading) {
     return <LoadingSpinner message="Chargement du contact..." />;
   }
-  
+
   if (error) {
-    console.log('[TRACE-UNIQUE][ContactView] Affichage de l\'erreur:', error);
     return <ErrorMessage message={error.message || error} />;
   }
-  
-  if (!contact) {
-    console.log('[TRACE-UNIQUE][ContactView] Aucun contact trouvé');
+
+  if (!contactData) {
     return <ErrorMessage message="Contact introuvable" />;
   }
-  
-  // Fonction pour rediriger vers la page d'édition
-  const handleEditClick = () => {
-    navigate(`/contacts/${contact.id}/edit`);
-  };
-  
+
   return (
     <div className={styles.contactDetails}>
-      {/* Header avec ContactHeader en mode lecture */}
-      <ContactHeader 
-        contact={contact}
-        isEditMode={false}
-        isNewFromUrl={false}
-        onEdit={handleEditClick}
-        onSave={() => {}}
-        onCancel={() => {}}
-        onDelete={() => handleDelete(contact.id)}
-        isSubmitting={false}
-        canSave={false}
-        navigateToList={() => navigate('/contacts')}
+      {/* Header avec FormHeader */}
+      <FormHeader
+        title={contactData.nomComplet}
+        subtitle={`Créé le ${contactData.dateCreation}`}
+        icon={<i className="bi bi-person"></i>}
+        roundedTop={true}
+        actions={[
+          <Button 
+            key="edit"
+            variant="primary" 
+            onClick={handleEdit}
+            icon={<i className="bi bi-pencil"></i>}
+          >
+            Modifier
+          </Button>
+        ]}
       />
-      
-      {/* Sections - style maquette concert details */}
-      <div>
-        {/* Section Contact - style maquette */}
-        <Card
-          title="Informations de contact"
-          icon={<i className="bi bi-person-vcard"></i>}
-          headerClassName="contact"
-          collapsible={true}
-          defaultCollapsed={!sections.contactVisible}
-          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, contactVisible: !collapsed}))}
-        >
-          <ContactSection
-            contact={contact}
-            isEditing={false}
-            formatValue={formatValue}
-            showCardWrapper={false}
-          />
-        </Card>
-        
-        {/* Section Structure - style maquette */}
-        <Card
-          title="Structure"
-          icon={<i className="bi bi-building"></i>}
-          headerClassName="contact"
-          collapsible={true}
-          defaultCollapsed={!sections.structureVisible}
-          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, structureVisible: !collapsed}))}
-        >
-          <ContactStructureSectionV2 
-            contactId={contact?.id}
-            structure={structure}
-            isEditMode={false}
-            navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
-          />
-        </Card>
-        
-        {/* Section Lieux - style maquette */}
-        <Card
-          title="Lieux associés"
-          icon={<i className="bi bi-geo-alt"></i>}
-          headerClassName="lieu"
-          collapsible={true}
-          defaultCollapsed={!sections.lieuxVisible}
-          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, lieuxVisible: !collapsed}))}
-        >
-          <ContactLieuxSectionV2
-            contactId={contact?.id}
-            lieux={lieux}
-            isEditMode={false}
-            navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
-          />
-        </Card>
 
-        {/* Section Concerts - style maquette */}
-        <Card
-          title="Concerts associés"
-          icon={<i className="bi bi-calendar-event"></i>}
-          headerClassName="info"
-          collapsible={true}
-          defaultCollapsed={!sections.concertsVisible}
-          onCollapseToggle={(collapsed) => setSections(prev => ({...prev, concertsVisible: !collapsed}))}
-        >
-          <ContactConcertsSectionV2
-            contactId={contact?.id}
-            isEditMode={false}
-            navigateToConcertDetails={(concertId) => navigate(`/concerts/${concertId}`)}
-          />
-        </Card>
+      {/* Informations Générales */}
+      <div className={styles.section}>
+        <h2>Informations générales</h2>
+        
+        {/* Détails du contact */}
+        <div className={styles.contactInfoGrid}>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Email</p>
+            <p className={styles.value}>{contactData.email}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Téléphone</p>
+            <p className={styles.value}>{contactData.telephone}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Fonction</p>
+            <p className={styles.value}>{contactData.fonction}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Adresse</p>
+            <p className={styles.value}>{contactData.adresseComplete}</p>
+          </div>
+        </div>
+
+        {/* Entités liées */}
+        {(structure || lieux?.length > 0 || concerts?.length > 0 || artistes?.length > 0) && (
+          <div className={styles.entitiesSection}>
+            <p className={styles.entitiesLabel}>Entités liées</p>
+            <div className={styles.entitiesGrid}>
+              
+              {/* Structure */}
+              {structure && (
+                <EntityCard
+                  entityType="structure"
+                  name={structure.nom || 'Structure'}
+                  subtitle="Structure"
+                  onClick={() => {
+                    console.log('[ContactView] Clic sur structure:', structure);
+                    navigateToEntity('structure', structure.id);
+                  }}
+                />
+              )}
+              
+              {/* Premiers lieux */}
+              {lieux?.slice(0, 2).map((lieu) => (
+                <EntityCard
+                  key={lieu.id}
+                  entityType="lieu"
+                  name={lieu.nom || 'Lieu'}
+                  subtitle={`Lieu (${lieux.length})`}
+                  onClick={() => navigateToEntity('lieu', lieu.id)}
+                />
+              ))}
+              
+              {/* Premiers concerts */}
+              {concerts?.slice(0, 2).map((concert) => (
+                <EntityCard
+                  key={concert.id}
+                  entityType="concert"
+                  name={concert.titre || 'Concert'}
+                  subtitle={`Concert (${concerts.length})`}
+                  onClick={() => navigateToEntity('concert', concert.id)}
+                />
+              ))}
+              
+              {/* Premiers artistes */}
+              {artistes?.slice(0, 2).map((artiste) => (
+                <EntityCard
+                  key={artiste.id}
+                  entityType="artiste"
+                  name={artiste.nom || 'Artiste'}
+                  subtitle={`Artiste (${artistes.length})`}
+                  onClick={() => navigateToEntity('artiste', artiste.id)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
+
+      {/* Notes */}
+      {contactData.notes && (
+        <div className={styles.section}>
+          <h2>Notes</h2>
+          <p className={styles.notesContent}>
+            {contactData.notes}
+          </p>
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default ContactView;

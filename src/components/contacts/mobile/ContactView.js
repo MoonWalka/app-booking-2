@@ -10,9 +10,10 @@ import { useContactDetails } from '@/hooks/contacts';
  * Composant d'affichage des détails d'un contact - Version Mobile
  * Séparé du mode édition pour une meilleure séparation des préoccupations
  */
-const ContactView = () => {
-  const { id } = useParams();
+const ContactView = ({ id: propId }) => {
+  const { id: urlId } = useParams();
   const navigate = useNavigate();
+  const id = propId || urlId;
   const{ 
     contact, 
     loading, 

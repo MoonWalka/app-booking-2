@@ -10,6 +10,7 @@ function ConcertLieuMap({ lieu, onDirections }) {
   console.log('[ConcertLieuMap] Lieu reçu:', lieu);
 
   // Fonction pour ouvrir Google Maps
+  // eslint-disable-next-line no-unused-vars
   const handleDirections = () => {
     if (lieu?.latitude && lieu?.longitude) {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${lieu.latitude},${lieu.longitude}`;

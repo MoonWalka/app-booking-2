@@ -209,6 +209,35 @@ service cloud.firestore {
                                       isAdmin(request.auth.uid));
     }
     
+    // 🔔 RELANCES : Gestion des relances et rappels
+    match /relances/{relanceId} {
+      // Lecture autorisée pour les membres de l'organisation
+      allow read: if request.auth != null && 
+                    resource.data.organizationId != null &&
+                    isOrgMember(resource.data.organizationId, request.auth.uid);
+      
+      // Création par les membres de l'organisation
+      allow create: if request.auth != null && 
+                      request.resource.data.organizationId != null &&
+                      isOrgMember(request.resource.data.organizationId, request.auth.uid) &&
+                      validateRelanceData(request.resource.data) &&
+                      request.resource.data.userId == request.auth.uid;
+      
+      // Mise à jour par le créateur ou les admins de l'organisation
+      allow update: if request.auth != null && 
+                      resource.data.organizationId != null &&
+                      isOrgMember(resource.data.organizationId, request.auth.uid) &&
+                      (resource.data.userId == request.auth.uid || 
+                       isOrgAdmin(resource.data.organizationId, request.auth.uid)) &&
+                      validateRelanceData(request.resource.data);
+      
+      // Suppression par le créateur ou les admins de l'organisation
+      allow delete: if request.auth != null && 
+                      resource.data.organizationId != null &&
+                      (resource.data.userId == request.auth.uid || 
+                       isOrgAdmin(resource.data.organizationId, request.auth.uid));
+    }
+    
     // 🔧 LOGS et AUDIT : Accès admin uniquement
     match /logs/{logId} {
       allow read, write: if request.auth != null && isAdmin(request.auth.uid);
@@ -311,5 +340,22 @@ service cloud.firestore {
            data.role in ['member', 'admin'] &&
            data.status in ['pending', 'accepted', 'rejected', 'expired'] &&
            data.createdAt is timestamp;
+  }
+  
+  // Validation des données de relance
+  function validateRelanceData(data) {
+    return data.keys().hasAll(['titre', 'dateEcheance', 'priorite', 'status', 'organizationId', 'userId']) &&
+           data.titre is string &&
+           data.titre.size() > 0 &&
+           data.titre.size() <= 200 &&
+           data.dateEcheance is string &&
+           data.priorite in ['low', 'medium', 'high'] &&
+           data.status in ['pending', 'completed'] &&
+           data.organizationId is string &&
+           data.userId is string &&
+           (!('description' in data) || (data.description is string && data.description.size() <= 1000)) &&
+           (!('entityType' in data) || data.entityType in ['concert', 'contrat', 'contact', 'autre', '']) &&
+           (!('entityId' in data) || data.entityId is string) &&
+           (!('entityName' in data) || data.entityName is string);
   }
 } 

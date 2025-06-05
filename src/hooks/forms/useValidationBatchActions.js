@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { db } from '@/services/firebase-service';
 import { doc, getDoc, updateDoc, collection, addDoc, Timestamp } from '@/services/firebase-service';
 import { ensureStructureEntity } from '@/services/structureService';
+import { useOrganization } from '@/context/OrganizationContext';
 
 const useValidationBatchActions = ({ formId, concertId, validatedFields, setValidated }) => {
+  const { currentOrganization } = useOrganization();
   const [validationInProgress, setValidationInProgress] = useState(false);
 
   // Valider le formulaire et mettre à jour les données
@@ -111,7 +113,8 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           const newContactData = {
             ...contactFields,
             createdAt: Timestamp.now(),
-            updatedAt: Timestamp.now()
+            updatedAt: Timestamp.now(),
+            ...(currentOrganization?.id && { organizationId: currentOrganization.id })
           };
           
           const newProgRef = await addDoc(collection(db, 'contacts'), newContactData);
@@ -165,20 +168,21 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         if (existingStructureId) {
           // Mettre à jour la structure existante
           structureId = existingStructureId;
-          await ensureStructureEntity(structureId, structureData);
+          await ensureStructureEntity(structureId, structureData, currentOrganization?.id);
           console.log("Structure existante mise à jour:", structureId, structureData);
         } else {
           // Créer une nouvelle structure
           // Utiliser le SIRET comme ID si disponible, sinon générer un ID automatique
           if (structureFields.siret) {
             structureId = structureFields.siret;
-            await ensureStructureEntity(structureId, structureData);
+            await ensureStructureEntity(structureId, structureData, currentOrganization?.id);
           } else {
             // Créer avec un ID automatique
             const newStructureRef = await addDoc(collection(db, 'structures'), {
               ...structureData,
               createdAt: Timestamp.now(),
-              updatedAt: Timestamp.now()
+              updatedAt: Timestamp.now(),
+              ...(currentOrganization?.id && { organizationId: currentOrganization.id })
             });
             structureId = newStructureRef.id;
           }

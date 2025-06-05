@@ -1,197 +1,129 @@
-/*
- * Styles pour ContactView - Version moderne V2
- * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 31 Mai 2025
- */
+/* Contact Details - Interface moderne et épurée */
 
-/* Container principal pour la vue du contact */
-.contactViewContainer {
-  background-color: var(--tc-bg-default);
-  min-height: 100vh;
-  padding: var(--tc-space-4);
-  font-family: var(--tc-font-sans);
-  color: var(--tc-text-default);
-  line-height: var(--tc-line-height-normal);
-}
-
-/* Container de chargement */
-.loadingContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-  background-color: var(--tc-bg-white);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-base);
-  margin: var(--tc-space-4);
-  padding: var(--tc-space-6);
-}
-
-/* Sections empilées verticalement */
-.sectionsStack {
+.contactDetails {
+  width: 100%;
+  padding: var(--tc-space-4) var(--tc-space-6);
   display: flex;
   flex-direction: column;
   gap: var(--tc-space-6);
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
-/* Styles pour les cartes de section */
-.sectionCard {
-  background-color: var(--tc-bg-white);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-base);
-  border: 1px solid var(--tc-border-light);
-  overflow: hidden;
-  transition: var(--tc-transition-base);
-}
+/* Le header utilise maintenant FormHeader */
 
-.sectionCard:hover {
-  box-shadow: var(--tc-shadow-hover);
-}
-
-/* Header de section */
-.sectionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--tc-bg-subtle);
-  padding: var(--tc-space-4);
-  border-bottom: 1px solid var(--tc-border-light);
-}
-
-.sectionTitle {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-color-primary);
-  margin: 0;
-}
-
-.sectionContent {
+/* Sections */
+.section {
+  background: var(--tc-card-bg-color, white);
+  border-radius: var(--tc-card-border-radius);
+  box-shadow: var(--tc-card-shadow-medium);
+  border: 1px solid var(--tc-card-border-color);
   padding: var(--tc-space-6);
 }
 
-/* Actions section */
-.sectionActions {
-  display: flex;
-  gap: var(--tc-space-2);
-  align-items: center;
+.section h2 {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-primary);
+  margin: 0 0 var(--tc-space-6) 0;
 }
 
-/* Grid layout pour les sections qui en ont besoin */
-.twoColumnsGrid {
+/* Contact Info Grid */
+.contactInfoGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--tc-space-6);
+  margin-bottom: var(--tc-space-8);
 }
 
-/* Informations d'entité liée */
-.relatedEntityCard {
-  background-color: var(--tc-bg-subtle);
-  border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-radius-base);
-  padding: var(--tc-space-4);
-  transition: var(--tc-transition-base);
-}
-
-.relatedEntityCard:hover {
-  background-color: var(--tc-bg-light);
-  border-color: var(--tc-color-primary);
-}
-
-.relatedEntityTitle {
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-default);
-  margin-bottom: var(--tc-space-1);
-}
-
-.relatedEntityInfo {
+.infoItem .label {
+  color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-secondary);
+  margin: 0 0 var(--tc-space-2) 0;
+  font-weight: var(--tc-font-weight-medium);
 }
 
-/* État vide */
-.emptyState {
+.infoItem .value {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-primary);
+  margin: 0;
+}
+
+/* Entities Section */
+.entitiesSection {
+  margin-top: var(--tc-space-6);
+}
+
+.entitiesLabel {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  margin: 0 0 var(--tc-space-4) 0;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.entitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--tc-space-4);
+}
+
+.singleEntityGrid {
+  display: grid;
+  grid-template-columns: minmax(280px, 400px);
+  gap: var(--tc-space-4);
+}
+
+/* Section Header avec badge */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3);
+  margin-bottom: var(--tc-space-6);
+}
+
+.sectionHeader h2 {
+  margin: 0;
+}
+
+.badge {
+  background-color: var(--tc-primary-light);
+  color: var(--tc-primary);
+  padding: var(--tc-space-1) var(--tc-space-3);
+  border-radius: var(--tc-border-radius-full);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-semibold);
+  min-width: 24px;
   text-align: center;
-  padding: var(--tc-space-8);
-  color: var(--tc-text-secondary);
 }
 
-.emptyStateIcon {
-  font-size: 2rem;
-  color: var(--tc-color-gray-400);
-  margin-bottom: var(--tc-space-4);
+/* Notes */
+.notesContent {
+  color: var(--tc-text-primary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin: 0;
 }
 
-.emptyStateMessage {
-  font-size: var(--tc-font-size-base);
-  margin-bottom: var(--tc-space-4);
-}
-
-/* Responsive design */
-@media (max-width: var(--tc-breakpoint-lg)) {
-  .twoColumnsGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: var(--tc-breakpoint-md)) {
-  .contactViewContainer {
-    padding: var(--tc-space-2);
-  }
-  
-  .sectionsStack {
+/* Responsive */
+@media (max-width: 768px) {
+  .contactDetails {
+    padding: var(--tc-space-3) var(--tc-space-4);
     gap: var(--tc-space-4);
   }
-  
-  .sectionCard {
-    border-radius: var(--tc-radius-sm);
-    margin-left: 0;
-    margin-right: 0;
-  }
-  
-  .sectionContent {
+
+  .section {
     padding: var(--tc-space-4);
   }
-  
-  .sectionHeader {
-    padding: var(--tc-space-3);
-  }
-}
 
-@media (max-width: var(--tc-breakpoint-sm)) {
-  .contactViewContainer {
-    padding: var(--tc-space-1);
+  .contactInfoGrid {
+    grid-template-columns: 1fr;
+    gap: var(--tc-space-4);
   }
-  
-  .sectionActions {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .relatedEntityCard {
-    padding: var(--tc-space-3);
-  }
-}
 
-/* Print styles */
-@media print {
-  .contactViewContainer {
-    background-color: white !important;
-    padding: 0 !important;
+  .entitiesGrid {
+    grid-template-columns: 1fr;
   }
-  
-  .sectionCard {
-    box-shadow: none !important;
-    border: 1px solid #ddd !important;
-    break-inside: avoid;
-    margin-bottom: 20px !important;
-  }
-  
-  .sectionActions {
-    display: none !important;
+
+  .singleEntityGrid {
+    grid-template-columns: 1fr;
   }
 }

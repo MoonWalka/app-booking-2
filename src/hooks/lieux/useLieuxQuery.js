@@ -8,7 +8,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, getDocs, db } from '@/services/firebase-service';
+import { collection, query, orderBy, getDocs, db, where } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook de requête pour la récupération et gestion des données de lieux
@@ -110,13 +111,27 @@ const useLieuxQuery = () => {
     bars: 0,
     plateaux: 0
   });
+  
+  const { currentOrganization } = useOrganization();
 
   // Fetch lieux data from Firestore
   useEffect(() => {
     const fetchLieux = async () => {
       setLoading(true);
       try {
-        const q = query(collection(db, 'lieux'), orderBy('nom'));
+        // Vérifier qu'on a une organisation
+        if (!currentOrganization?.id) {
+          console.warn('⚠️ Pas d\'organisation sélectionnée pour les lieux');
+          setLieux([]);
+          setLoading(false);
+          return;
+        }
+        
+        const q = query(
+          collection(db, 'lieux'),
+          where('organizationId', '==', currentOrganization.id),
+          orderBy('nom')
+        );
         const querySnapshot = await getDocs(q);
         const lieuxData = querySnapshot.docs.map(doc => ({
           id: doc.id,
@@ -165,7 +180,7 @@ const useLieuxQuery = () => {
     };
 
     fetchLieux();
-  }, []);
+  }, [currentOrganization]);
 
   return {
     lieux,

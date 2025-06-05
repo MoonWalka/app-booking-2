@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGenericEntityDetails } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook optimisé pour la gestion des détails d'une structure
@@ -13,6 +14,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
  */
 const useStructureDetails = (id) => {
   const navigate = useNavigate();
+  const { currentOrganization } = useOrganization();
   
   // Configuration de base pour le hook générique
   const detailsHook = useGenericEntityDetails({
@@ -134,9 +136,13 @@ const useStructureDetails = (id) => {
           if (contacts.length === 0) {
             console.log('[DEBUG] Recherche par référence inverse (structureId)');
             
+            const constraints = [where('structureId', '==', structureData.id)];
+            if (currentOrganization?.id) {
+              constraints.push(where('organizationId', '==', currentOrganization.id));
+            }
             const contactsQuery = query(
               collection(db, 'contacts'),
-              where('structureId', '==', structureData.id)
+              ...constraints
             );
             
             const querySnapshot = await getDocs(contactsQuery);
@@ -206,9 +212,13 @@ const useStructureDetails = (id) => {
           }
           
           // Méthode 2: Chercher par structureId (référence dans le concert)
+          const concertConstraints = [where('structureId', '==', structureData.id)];
+          if (currentOrganization?.id) {
+            concertConstraints.push(where('organizationId', '==', currentOrganization.id));
+          }
           const concertsQuery = query(
             collection(db, 'concerts'),
-            where('structureId', '==', structureData.id)
+            ...concertConstraints
           );
           
           const querySnapshot = await getDocs(concertsQuery);
@@ -234,9 +244,13 @@ const useStructureDetails = (id) => {
               console.log('[DEBUG] Recherche concerts via contacts associés:', contactIds);
               
               for (const contactId of contactIds) {
+                const concertsByProgConstraints = [where('contactId', '==', contactId)];
+                if (currentOrganization?.id) {
+                  concertsByProgConstraints.push(where('organizationId', '==', currentOrganization.id));
+                }
                 const concertsByProgQuery = query(
                   collection(db, 'concerts'),
-                  where('contactId', '==', contactId)
+                  ...concertsByProgConstraints
                 );
                 
                 const progConcertsSnapshot = await getDocs(concertsByProgQuery);
@@ -309,9 +323,13 @@ const useStructureDetails = (id) => {
           }
           
           // Méthode 2: Recherche par référence inverse (lieux qui référencent cette structure)
+          const lieuxConstraints = [where('structureId', '==', structureData.id)];
+          if (currentOrganization?.id) {
+            lieuxConstraints.push(where('organizationId', '==', currentOrganization.id));
+          }
           const lieuxQuery = query(
             collection(db, 'lieux'),
-            where('structureId', '==', structureData.id)
+            ...lieuxConstraints
           );
           
           const querySnapshot = await getDocs(lieuxQuery);
@@ -328,9 +346,13 @@ const useStructureDetails = (id) => {
           
           // Méthode 3: NOUVELLE - Via les concerts de cette structure
           console.log('[useStructureDetails] 🔍 Méthode 3: Recherche lieux via concerts de la structure');
+          const concertConstraints2 = [where('structureId', '==', structureData.id)];
+          if (currentOrganization?.id) {
+            concertConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          }
           const concertsQuery = query(
             collection(db, 'concerts'),
-            where('structureId', '==', structureData.id)
+            ...concertConstraints2
           );
           
           const concertsSnapshot = await getDocs(concertsQuery);
@@ -428,9 +450,13 @@ const useStructureDetails = (id) => {
           
           // Méthode 2: Charger les artistes via les concerts de cette structure
           // D'abord récupérer les concerts de cette structure
+          const concertConstraints3 = [where('structureId', '==', structureData.id)];
+          if (currentOrganization?.id) {
+            concertConstraints3.push(where('organizationId', '==', currentOrganization.id));
+          }
           const concertsQuery = query(
             collection(db, 'concerts'),
-            where('structureId', '==', structureData.id)
+            ...concertConstraints3
           );
           
           const concertsSnapshot = await getDocs(concertsQuery);

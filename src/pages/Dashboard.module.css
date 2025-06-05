@@ -1,30 +1,51 @@
 /*
  * Styles pour Dashboard
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 6 Juin 2025
  */
 
-/* Dashboard.module.css - Styles pour les composants du tableau de bord */
-
-.dashboardStats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tc-space-4);
-  margin: var(--tc-space-4) 0;
+/* Dashboard - Styles modernes et épurés */
+.dashboardContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--tc-space-4) var(--tc-space-6);
+  background-color: var(--tc-bg-default);
+  min-height: 100vh;
 }
 
-.statCard {
-  background-color: var(--tc-color-white);
-  padding: var(--tc-space-4);
-  border-radius: var(--tc-radius-base);
-  box-shadow: var(--tc-shadow-sm);
-  flex: 1 1 200px; /* flex-grow, flex-shrink, flex-basis */
-  text-align: center;
+.dashboardHeader {
+  margin-bottom: var(--tc-space-8);
 }
 
-.statValue {
-  font-size: var(--tc-font-size-2xl);
+.dashboardTitle {
+  font-size: var(--tc-font-size-3xl);
   font-weight: var(--tc-font-weight-bold);
-  color: var(--tc-color-primary);
-  margin: var(--tc-space-2) 0;
+  color: var(--tc-text-primary);
+  margin: 0 0 var(--tc-space-2) 0;
+}
+
+.dashboardSubtitle {
+  font-size: var(--tc-font-size-lg);
+  color: var(--tc-text-secondary);
+  margin: 0;
+}
+
+.mainContent {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboardContainer {
+    padding: var(--tc-space-3) var(--tc-space-4);
+  }
+
+  .dashboardTitle {
+    font-size: var(--tc-font-size-2xl);
+  }
+
+  .dashboardSubtitle {
+    font-size: var(--tc-font-size-base);
+  }
 }

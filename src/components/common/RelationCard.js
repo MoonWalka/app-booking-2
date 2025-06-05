@@ -43,7 +43,6 @@ const RelationCard = ({
         };
       
       case 'contact':
-      case 'contact':
         return {
           title: entity.nom || 'Contact sans nom',
           subtitle: entity.structure?.nom || entity.email || '',
@@ -83,7 +82,6 @@ const RelationCard = ({
       const routes = {
         artiste: '/artistes',
         lieu: '/lieux',
-        contact: '/contacts',
         contact: '/contacts',
         structure: '/structures',
         concert: '/concerts'

@@ -270,8 +270,10 @@ function findInverseRelation(targetConfig, inverseField) {
   return null;
 }
 
-export default {
+const bidirectionalRelationsService = {
   updateBidirectionalRelation,
   batchUpdateBidirectionalRelations,
   checkAndFixBidirectionalRelations
 };
+
+export default bidirectionalRelationsService;

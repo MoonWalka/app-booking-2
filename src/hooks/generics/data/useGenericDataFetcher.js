@@ -26,6 +26,7 @@ import {
   getDoc,
   onSnapshot
 } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook générique pour la récupération de données
@@ -82,6 +83,9 @@ import {
  * @replaces useDataFetcher, useEntityLoader, useCollectionLoader
  */
 const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
+  // Organisation context
+  const { currentOrganization } = useOrganization();
+  
   // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo
   const stableFetchConfig = useMemo(() => ({
     mode: fetchConfig.mode || 'collection',
@@ -222,6 +226,11 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     let q = collection(db, entityType);
     const constraints = [];
     
+    // Ajouter le filtre organisation si disponible
+    if (currentOrganization?.id) {
+      constraints.push(where('organizationId', '==', currentOrganization.id));
+    }
+    
     // Filtres
     Object.entries(stableFetchConfig.filters).forEach(([field, value]) => {
       if (value !== undefined && value !== null && value !== '') {
@@ -250,7 +259,7 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     }
     
     return q;
-  }, [entityType, stableFetchConfig]);
+  }, [entityType, stableFetchConfig, currentOrganization?.id]);
   
   // ✅ CORRECTION 7: Transformation des données stable
   const processData = useCallback((rawData) => {

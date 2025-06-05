@@ -161,6 +161,7 @@ export const OrganizationProvider = ({ children }) => {
   const contextValue = {
     // État
     currentOrg,
+    currentOrganization: currentOrg, // Alias pour la compatibilité
     userOrgs,
     loading,
     error,

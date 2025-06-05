@@ -170,6 +170,7 @@ export const AuthProvider = ({ children }) => {
   // 🔧 FIX BOUCLE: Stabiliser l'objet value
   const contextValue = {
     currentUser,
+    user: currentUser, // Alias pour la compatibilité
     loading,
     login,
     logout,

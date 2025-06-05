@@ -57,6 +57,8 @@ export default function useContactDetails(id) {
       try {
         setLoadingLieux(true);
         
+        let lieuxLoaded = [];
+        
         // Vérifier d'abord si le contact a des lieuxIds ou lieuxAssocies dans ses données
         if (details.entity.lieuxIds?.length > 0 || details.entity.lieuxAssocies?.length > 0) {
           const lieuxRefs = details.entity.lieuxIds || details.entity.lieuxAssocies || [];
@@ -72,9 +74,8 @@ export default function useContactDetails(id) {
           });
           
           const lieuxResults = await Promise.all(lieuxPromises);
-          const validLieux = lieuxResults.filter(lieu => lieu !== null);
+          lieuxLoaded = lieuxResults.filter(lieu => lieu !== null);
           
-          setLieux(validLieux);
         } else {
           // Si pas de référence directe, chercher par référence inverse
           
@@ -84,7 +85,7 @@ export default function useContactDetails(id) {
             where('contacts', 'array-contains', id)
           );
           let querySnapshot = await getDocs(lieuxQuery);
-          let lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           
           // Méthode 2: Si rien trouvé, chercher par contactId
           if (lieuxLoaded.length === 0) {
@@ -99,9 +100,50 @@ export default function useContactDetails(id) {
           console.log(`[DIAGNOSTIC] useContactDetails - ${lieuxLoaded.length} lieux trouvés par référence inverse`, { 
             lieuxIds: lieuxLoaded.map(lieu => lieu.id) 
           });
-          
-          setLieux(lieuxLoaded);
         }
+        
+        // Méthode 3: Récupérer les lieux via les concerts du contact
+        // Cette logique est importante car un contact peut être associé à des lieux via ses concerts
+        console.log('[DEBUG] useContactDetails - Recherche des lieux via les concerts du contact');
+        
+        // Attendre que les concerts soient chargés
+        if (concerts.length > 0) {
+          const lieuxDesConcerts = [];
+          
+          // Parcourir tous les concerts pour récupérer leurs lieux
+          for (const concert of concerts) {
+            if (concert.lieuId) {
+              lieuxDesConcerts.push(concert.lieuId);
+            }
+          }
+          
+          // Supprimer les doublons
+          const uniqueLieuxIds = [...new Set(lieuxDesConcerts)];
+          console.log(`[DEBUG] useContactDetails - ${uniqueLieuxIds.length} lieux uniques trouvés via ${concerts.length} concerts`);
+          
+          // Charger les lieux qui ne sont pas déjà dans la liste
+          for (const lieuId of uniqueLieuxIds) {
+            // Vérifier si ce lieu n'est pas déjà dans notre liste
+            const existingLieu = lieuxLoaded.find(l => l.id === lieuId);
+            if (!existingLieu) {
+              try {
+                const lieuDoc = await getDoc(doc(db, 'lieux', lieuId));
+                if (lieuDoc.exists()) {
+                  const lieuData = { id: lieuDoc.id, ...lieuDoc.data() };
+                  lieuxLoaded.push(lieuData);
+                  console.log(`[DEBUG] useContactDetails - Lieu trouvé via concerts: ${lieuData.nom}`);
+                }
+              } catch (error) {
+                console.error(`[ERROR] useContactDetails - Erreur lors du chargement du lieu ${lieuId} via concerts:`, error);
+              }
+            }
+          }
+          
+          console.log(`[DEBUG] useContactDetails - Total de ${lieuxLoaded.length} lieux trouvés pour ce contact`);
+        }
+        
+        // Mettre à jour la liste finale des lieux
+        setLieux(lieuxLoaded);
         
       } catch (error) {
         console.error('[ERROR] useContactDetails - Erreur lors du chargement des lieux:', error);
@@ -112,7 +154,7 @@ export default function useContactDetails(id) {
     };
     
     fetchLieuxAssocies();
-  }, [id, details.entity]);
+  }, [id, details.entity, concerts]); // Ajouter concerts comme dépendance
   
   // Charger les concerts associés au contact
   useEffect(() => {
@@ -225,7 +267,54 @@ export default function useContactDetails(id) {
           console.log(`[DEBUG] useContactDetails - Artistes avec contact=${id}:`, artistesLoaded.length);
         }
         
-        console.log(`[DIAGNOSTIC] useContactDetails - ${artistesLoaded.length} artistes trouvés par référence inverse`, { 
+        // Méthode 4: Si toujours aucun artiste, chercher via les concerts du contact
+        if (artistesLoaded.length === 0 && concerts.length > 0) {
+          console.log('[DEBUG] useContactDetails - Recherche artistes via concerts du contact');
+          
+          // Extraire tous les artisteId des concerts
+          const artisteIdsFromConcerts = [];
+          concerts.forEach(concert => {
+            if (concert.artisteId) {
+              artisteIdsFromConcerts.push(concert.artisteId);
+            }
+          });
+          
+          // Supprimer les doublons
+          const uniqueArtisteIds = [...new Set(artisteIdsFromConcerts)];
+          
+          if (uniqueArtisteIds.length > 0) {
+            console.log('[DEBUG] useContactDetails - Chargement des artistes:', uniqueArtisteIds);
+            
+            // Charger tous les artistes
+            const artistePromises = uniqueArtisteIds.map(async (artisteId) => {
+              try {
+                const artisteDoc = await getDoc(doc(db, 'artistes', artisteId));
+                if (artisteDoc.exists()) {
+                  return { id: artisteDoc.id, ...artisteDoc.data() };
+                }
+                return null;
+              } catch (error) {
+                console.error(`Erreur chargement artiste ${artisteId}:`, error);
+                return null;
+              }
+            });
+            
+            const results = await Promise.all(artistePromises);
+            const validArtistes = results.filter(artiste => artiste !== null);
+            
+            // Fusionner avec les artistes déjà trouvés (éviter les doublons)
+            const existingIds = new Set(artistesLoaded.map(a => a.id));
+            validArtistes.forEach(artiste => {
+              if (!existingIds.has(artiste.id)) {
+                artistesLoaded.push(artiste);
+              }
+            });
+            
+            console.log(`[DEBUG] useContactDetails - ${validArtistes.length} artistes trouvés via concerts`);
+          }
+        }
+        
+        console.log(`[DIAGNOSTIC] useContactDetails - ${artistesLoaded.length} artistes trouvés au total`, { 
           artisteIds: artistesLoaded.map(artiste => artiste.id) 
         });
         
@@ -240,7 +329,7 @@ export default function useContactDetails(id) {
     };
     
     fetchArtistesAssocies();
-  }, [id, details.entity]);
+  }, [id, details.entity, concerts]);
   
   // Charger la structure associée au contact
   useEffect(() => {

@@ -12,8 +12,9 @@
  */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGenericEntityList } from '@/hooks/generics';
-import { collection, getDocs, query } from '@/services/firebase-service';
+import { collection, getDocs, query, where } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook optimisé pour gérer une liste d'artistes avec pagination et filtres
@@ -44,6 +45,9 @@ export const useArtistesList = ({
   // Références stables
   const isCalculatingRef = useRef(false);
   const entityListRef = useRef(null);
+  
+  // Organisation context
+  const { currentOrganization } = useOrganization();
 
   // ✅ CORRECTION 1: Fonction de transformation stable
   const transformItem = useCallback((data) => ({
@@ -84,7 +88,16 @@ export const useArtistesList = ({
     
     try {
       isCalculatingRef.current = true;
-      const artistesQuery = query(collection(db, 'artistes'));
+      // Vérifier qu'on a une organisation
+      if (!currentOrganization?.id) {
+        console.warn('⚠️ Pas d\'organisation sélectionnée pour les stats');
+        return;
+      }
+      
+      const artistesQuery = query(
+        collection(db, 'artistes'),
+        where('organizationId', '==', currentOrganization.id)
+      );
       const snapshot = await getDocs(artistesQuery);
       
       let avecConcerts = 0;
@@ -119,7 +132,7 @@ export const useArtistesList = ({
     } finally {
       isCalculatingRef.current = false;
     }
-  }, []); // Pas de dépendances car utilise des refs
+  }, [currentOrganization]); // Dépend de l'organisation
 
   // ✅ CORRECTION 5: Effet pour le calcul initial des stats - une seule fois
   useEffect(() => {

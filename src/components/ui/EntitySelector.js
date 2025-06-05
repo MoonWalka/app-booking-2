@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {  collection, getDocs, query, where, orderBy, limit  } from '@/services/firebase-service';
+import {  collection, getDocs, query, where, limit  } from '@/services/firebase-service';
 import { db } from '../../services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import styles from './EntitySelector.module.css';
 
 /**
@@ -47,6 +48,8 @@ const EntitySelector = ({
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
+  
+  const { currentOrganization } = useOrganization();
 
   // Configuration des types d'entités supportés
   const entityConfigs = useMemo(() => ({
@@ -102,7 +105,12 @@ const EntitySelector = ({
       icon: 'bi-box',
       idField,
     };
-  }, [entityType, entityConfigs, displayField, idField]);
+  }, [entityType, displayField, idField, entityConfigs]);
+
+  // Mémoriser les clés des filtres pour éviter les re-renders inutiles
+  const filterKeys = useMemo(() => {
+    return filters ? Object.keys(filters).sort().join(',') : '';
+  }, [filters]);
 
   // Chargement initial des entités
   useEffect(() => {
@@ -111,44 +119,89 @@ const EntitySelector = ({
     const loadEntities = async () => {
       setLoading(true);
       try {
-        const collectionRef = collection(db, config.collection || entityType);
+        // Obtenir la config directement ici pour éviter les problèmes de dépendances
+        const currentConfig = entityConfigs[entityType] || {
+          collection: entityType,
+          displayField: displayField || 'nom',
+          icon: 'bi-box',
+          idField: idField || 'id',
+        };
         
-        // Construction de la requête
-        let q = collectionRef;
+        console.log('[EntitySelector] Loading entities:', { 
+          entityType, 
+          currentConfig, 
+          currentOrganization,
+          organizationId: currentOrganization?.id,
+          filters 
+        });
+        const collectionRef = collection(db, currentConfig.collection || entityType);
         
-        // Ajout des filtres
-        const filterEntries = Object.entries(filters);
-        if (filterEntries.length > 0) {
-          const filterConditions = filterEntries.map(([field, value]) => 
-            where(field, '==', value)
-          );
-          
-          q = query(collectionRef, ...filterConditions);
+        // Construction de la requête avec filtre organisation
+        const queryConditions = [];
+        
+        // Ajouter le filtre organisation si disponible
+        if (currentOrganization?.id) {
+          queryConditions.push(where('organizationId', '==', currentOrganization.id));
         }
         
-        // Tri et limite
-        const sortField = orderByField || config.displayField;
-        q = query(q, orderBy(sortField), limit(maxResults));
+        // Ajout des filtres supplémentaires
+        if (filters) {
+          Object.entries(filters).forEach(([field, value]) => {
+            if (value !== undefined && value !== null) {
+              queryConditions.push(where(field, '==', value));
+            }
+          });
+        }
+        
+        // Ajouter la limite
+        queryConditions.push(limit(maxResults));
+        
+        // Construire la requête
+        const q = queryConditions.length > 0 
+          ? query(collectionRef, ...queryConditions)
+          : query(collectionRef, limit(maxResults));
         
         // Exécution de la requête
         const querySnapshot = await getDocs(q);
+        console.log('[EntitySelector] Query results:', {
+          size: querySnapshot.size,
+          collection: currentConfig.collection || entityType,
+          organizationFilter: currentOrganization?.id,
+          queryConditions: queryConditions.length
+        });
         
         // Transformation des documents
         const loadedEntities = querySnapshot.docs.map(doc => ({
           ...doc.data(),
-          [config.idField]: doc.id
+          id: doc.id // Toujours utiliser 'id' comme identifiant
         }));
+        
+        console.log('[EntitySelector] Loaded entities:', {
+          count: loadedEntities.length,
+          entities: loadedEntities.slice(0, 3), // Afficher les 3 premières pour debug
+          hasOrganizationId: loadedEntities.length > 0 ? loadedEntities[0].organizationId : 'no entities'
+        });
+        
+        // Tri côté client pour éviter les problèmes d'index Firestore
+        const sortField = orderByField || currentConfig.displayField;
+        loadedEntities.sort((a, b) => {
+          const aValue = String(a[sortField] || '').toLowerCase();
+          const bValue = String(b[sortField] || '').toLowerCase();
+          return aValue.localeCompare(bValue);
+        });
         
         setEntities(loadedEntities);
       } catch (error) {
-        console.error(`Erreur lors du chargement des ${entityType}:`, error);
+        console.error(`[EntitySelector] Erreur lors du chargement des ${entityType}:`, error);
+        setEntities([]);
       } finally {
         setLoading(false);
       }
     };
     
     loadEntities();
-  }, [entityType, config, filters, orderByField, maxResults]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityType, currentOrganization?.id, orderByField, maxResults, displayField, idField, filterKeys, entityConfigs]);
 
   // Filtrage des entités basé sur la recherche
   const filteredEntities = useMemo(() => {

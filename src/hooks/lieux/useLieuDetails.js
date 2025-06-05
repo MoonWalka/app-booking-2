@@ -1,9 +1,8 @@
 // src/hooks/lieux/useLieuDetails.js
-import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
+import { useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
 import { useGenericEntityDetails } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
@@ -370,7 +369,7 @@ const useLieuDetails = (id, locationParam) => {
       collection: 'structures',
       idField: 'structureId',
       type: 'custom', // Charger via le contact ou directement
-      essential: false, // ⚠️ SÉCURITÉ: Réduire priorité - structure accessible via contact
+      essential: true, // IMPORTANT: Marquer comme essentiel pour forcer le chargement
       loadRelated: false // 🚫 SÉCURITÉ: Empêche la structure de charger ses relations (évite boucles)
     },
     {

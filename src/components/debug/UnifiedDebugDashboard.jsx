@@ -17,6 +17,7 @@ import persistenceService, { CACHE_STRATEGIES } from '@/services/persistenceServ
 import { utilityCache } from '@/utils/networkStabilizer';
 import ContactAssociationsDebug from './ContactAssociationsDebug';
 import AssociationsAudit from './AssociationsAudit';
+import RelancesAutomatiquesTest from './RelancesAutomatiquesTest';
 
 const UnifiedDebugDashboard = () => {
   // États principaux
@@ -922,6 +923,7 @@ const UnifiedDebugDashboard = () => {
           { id: 'requests', label: '📡 Requêtes', shortLabel: '📡' },
           { id: 'navigation', label: '🧭 Navigation', shortLabel: '🧭' },
           { id: 'navtests', label: '🧪 Nav Tests', shortLabel: '🧪²' },
+          { id: 'relances', label: '🤖 Relances Auto', shortLabel: '🤖' },
           { id: 'deepanalysis', label: '🔬 Deep Analysis', shortLabel: '🔬' }
         ].map(tab => (
           <div
@@ -1273,6 +1275,13 @@ const UnifiedDebugDashboard = () => {
                 <p>Aucun test exécuté. Cliquez sur "Test Rapide" pour un diagnostic rapide ou "Test Complet" pour une analyse complète de la navigation.</p>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Onglet Relances Automatiques */}
+        {activeTab === 'relances' && (
+          <div>
+            <RelancesAutomatiquesTest />
           </div>
         )}
 

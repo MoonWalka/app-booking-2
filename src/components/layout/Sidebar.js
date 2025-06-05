@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../config.js';
 // import { mapTerm } from '@/utils/terminologyMapping'; // Non utilisé dans ce composant
 import styles from './Sidebar.module.css';
+import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 
 const Sidebar = () => {
+  const [showDebug, setShowDebug] = useState(false);
   console.log("Le composant Sidebar est rendu"); // Ce log devrait apparaître dans la console
   return (
     <div className={styles.sidebar}>
@@ -62,7 +64,22 @@ const Sidebar = () => {
             </Link>
           </li>
         </ul>
+        
+        {/* Section Debug */}
+        <div className={styles.debugSection}>
+          <button 
+            className={styles.debugButton}
+            onClick={() => setShowDebug(!showDebug)}
+            title="Outils de debug et tests"
+          >
+            <i className="bi bi-bug"></i>
+            Debug & Tests
+          </button>
+        </div>
       </div>
+      
+      {/* Dashboard de debug */}
+      {showDebug && <UnifiedDebugDashboard />}
     </div>
   );
 };

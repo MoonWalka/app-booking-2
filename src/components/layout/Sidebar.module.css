@@ -88,6 +88,9 @@
  */
 .sidebarContent {
   padding: var(--tc-space-2) 0;
+  flex: 1; /* Prend l'espace disponible */
+  display: flex;
+  flex-direction: column;
 }
 
 /* 
@@ -308,5 +311,61 @@
    */
   .sidebarBackdropVisible {
     display: block;
+  }
+}
+
+/* 
+ * Section Debug
+ * -------------
+ * Section spéciale en bas de la sidebar pour les outils de développement
+ */
+.debugSection {
+  margin-top: auto; /* Pousse vers le bas */
+  padding: var(--tc-space-3) var(--tc-space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.debugButton {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--tc-text-light);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border-radius: var(--tc-radius-base);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--tc-space-2);
+}
+
+.debugButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.debugButton:active {
+  transform: translateY(0);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.debugButton i {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Styles pour mobile */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .mobileSidebar .debugSection {
+    padding: var(--tc-space-2) var(--tc-space-3);
+  }
+  
+  .mobileSidebar .debugButton {
+    font-size: 0.8rem;
+    padding: var(--tc-space-2);
   }
 }

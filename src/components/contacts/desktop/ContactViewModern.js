@@ -1,185 +1,286 @@
 // src/components/contacts/desktop/ContactViewModern.js
-import React, { useState, useMemo, memo } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Alert } from 'react-bootstrap';
-import styles from './ContactView.module.css';
-
-// Import des hooks personnalisés
-import { useGenericEntityDetails } from '@/hooks/common';
-
-// Import des composants sections existants
-import { ContactHeader } from './sections/ContactHeader';
-import ContactGeneralInfo from './ContactGeneralInfo';
-import ContactStructureSection from './ContactStructuresSection';
-import ContactLieuxSection from './ContactLieuxSection';
-import ContactConcertsSection from './ContactConcertsSection';
-import ConfirmationModal from '@/components/ui/ConfirmationModal';
+import React, { useMemo } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import useContactDetailsModern from '@/hooks/contacts/useContactDetailsModern';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import Button from '@/components/ui/Button';
+import FormHeader from '@/components/ui/FormHeader';
+import EntityCard from '@/components/ui/EntityCard';
+import Card from '@/components/ui/Card';
+import styles from './ContactViewModern.module.css';
 
 /**
- * Composant de vue des détails d'un contact - Version Desktop MODERNE
- * Basé sur l'architecture de ConcertView
+ * Composant des détails d'un contact - Interface moderne et épurée
+ * Utilise les vrais hooks Firebase du projet principal
+ * Architecture identique à ConcertView et LieuView
  */
-const ContactViewModern = memo(({ id: propId }) => {
+function ContactViewModern({ id: propId }) {
   const { id: urlId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const id = propId || urlId;
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const isEditMode = useMemo(() => location.pathname.includes('/edit'), [location.pathname]);
-
-  // Configuration des relations pour le contact
-  const relationsConfig = useMemo(() => [
-    {
-      name: 'structure',
-      collection: 'structures',
-      idField: 'structureId',
-      nameField: 'structureNom',
-      type: 'one-to-one',
-      essential: true
-    },
-    {
-      name: 'lieux',
-      collection: 'lieux',
-      idField: 'lieuxIds',
-      nameField: 'lieuxNoms',
-      type: 'one-to-many',
-      essential: false
-    }
-  ], []);
-
-  // Hook générique pour les détails du contact
-  const genericDetails = useGenericEntityDetails({
-    entityType: 'contact',
-    collectionName: 'contacts',
-    id,
-    relationsConfig,
-    onSaveSuccess: () => {},
-    onSaveError: () => {},
-    onDeleteSuccess: () => navigate('/contacts'),
-    onDeleteError: () => {},
-    navigate,
-    returnPath: '/contacts',
-    editPath: '/contacts/:id/edit'
-  });
+  // Hooks Firebase existants - Version moderne
+  const detailsHook = useContactDetailsModern(id);
 
   const {
-    entity: contact,
-    relatedData,
+    contact,
+    structure,
+    lieux,
+    concerts,
+    artistes,
     loading,
-    isSubmitting,
-    formData,
-    handleSave,
-    handleChange,
-    handleDelete
-  } = genericDetails || {};
+    error,
+    // handleDelete, // TODO: Utiliser pour modal de suppression
+  } = detailsHook || {};
 
-  // Extraire les entités liées
-  const structure = relatedData?.structure;
-  const lieux = relatedData?.lieux || [];
+  // Formater les entités liées pour l'affichage
+  const structuresList = structure ? [structure] : [];
+  const lieuxArray = lieux || [];
+  const concertsArray = concerts || [];
+  const artistesArray = artistes || [];
 
-  // Callbacks stables
-  const stableCallbacks = useMemo(() => ({
-    handleEdit: () => navigate(`/contacts/${id}/edit`),
-    handleCancel: () => navigate(`/contacts/${id}`),
-    handleOpenDeleteModal: () => setShowDeleteConfirm(true),
-    handleCloseDeleteModal: () => setShowDeleteConfirm(false)
-  }), [navigate, id]);
+  // Debug - Affichage des données reçues
+  console.log('[ContactViewModern] Données reçues:', {
+    contact: contact ? { 
+      id: contact.id, 
+      nom: contact.nom,
+      prenom: contact.prenom,
+      structureId: contact.structureId,
+      allFields: Object.keys(contact)
+    } : null,
+    structure: structure,
+    lieuxCount: lieuxArray.length,
+    concertsCount: concertsArray.length,
+    artistesCount: artistesArray.length,
+    lieuxData: lieuxArray,
+    concertsData: concertsArray,
+    artistesData: artistesArray
+  });
 
-  // Callbacks de navigation
-  const navigationCallbacks = useMemo(() => ({
-    navigateToList: () => navigate('/contacts'),
-    navigateToStructureDetails: (structureId) => navigate(`/structures/${structureId}`),
-    navigateToLieuDetails: (lieuId) => navigate(`/lieux/${lieuId}`),
-    navigateToConcertDetails: (concertId) => navigate(`/concerts/${concertId}`),
-    handleCreateStructure: () => navigate('/structures/nouveau'),
-    handleCreateLieu: () => navigate('/lieux/nouveau')
-  }), [navigate]);
+  // Formatage des données pour l'affichage
+  const contactData = useMemo(() => {
+    if (!contact) return null;
 
-  // Gestion d'erreur
-  if (!genericDetails && isEditMode) {
-    console.error("[ContactViewModern] Erreur critique: genericDetails est indéfini en mode édition.");
-    return <Alert variant="danger">Erreur lors du chargement des données d'édition du contact.</Alert>;
-  }
-  if (!genericDetails && !isEditMode) {
-    if (!id) return <Alert variant="danger">ID de contact manquant.</Alert>;
-    return <Alert variant="danger">Erreur lors du chargement des données de vue du contact.</Alert>;
-  }
+    const formatDate = (value) => {
+      if (!value) return "Date inconnue";
+      try {
+        return new Date(value).toLocaleDateString('fr-FR', {
+          year: 'numeric',
+          month: 'long', 
+          day: 'numeric'
+        });
+      } catch {
+        return "Date invalide";
+      }
+    };
+
+    return {
+      id: contact.id,
+      nom: contact.nom || "Nom non renseigné",
+      prenom: contact.prenom || "Prénom non renseigné",
+      nomComplet: `${contact.prenom || ''} ${contact.nom || ''}`.trim() || 'Contact sans nom',
+      dateCreation: contact.dateCreation ? formatDate(contact.dateCreation) : "Date inconnue",
+      email: contact.email || "Email non renseigné",
+      telephone: contact.telephone || "Téléphone non renseigné",
+      fonction: contact.fonction || "Fonction non renseignée",
+      adresse: contact.adresse || "Adresse non renseignée",
+      ville: contact.ville || "Ville non renseignée",
+      codePostal: contact.codePostal || "",
+      notes: contact.notes || ""
+    };
+  }, [contact]);
+
+  // Handlers
+  const handleEdit = () => navigate(`/contacts/${id}/edit`);
+
+  // Navigation vers les entités liées
+  const navigateToEntity = (entityType, entityId) => {
+    console.log(`[ContactViewModern] Navigation vers ${entityType} avec ID:`, entityId);
+    
+    if (!entityId) {
+      console.warn(`[ContactViewModern] ID manquant pour ${entityType}`);
+      return;
+    }
+    
+    const routes = {
+      structure: `/structures/${entityId}`,
+      lieu: `/lieux/${entityId}`,
+      concert: `/concerts/${entityId}`,
+      artiste: `/artistes/${entityId}`
+    };
+    
+    if (routes[entityType]) {
+      console.log(`[ContactViewModern] Navigation vers:`, routes[entityType]);
+      navigate(routes[entityType]);
+    } else {
+      console.error(`[ContactViewModern] Route inconnue pour ${entityType}`);
+    }
+  };
 
   if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Chargement du contact...</span>
-          </div>
-          <p className="mt-2">Chargement du contact...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Chargement du contact..." />;
+  }
+
+  if (error) {
+    return <ErrorMessage message={error.message || error} />;
+  }
+
+  if (!contactData) {
+    return <ErrorMessage message="Contact introuvable" />;
   }
 
   return (
-    <div className={styles.contactViewContainer || 'contact-view-container'}>
-      <ContactHeader 
-        contact={contact}
-        onEdit={stableCallbacks.handleEdit}
-        onDelete={stableCallbacks.handleOpenDeleteModal}
-        isEditMode={isEditMode}
-        navigateToList={navigationCallbacks.navigateToList}
-        onSave={handleSave}
-        onCancel={stableCallbacks.handleCancel}
-        isSubmitting={isSubmitting}
-        canSave={true}
+    <div className={styles.contactDetails}>
+      {/* Header avec FormHeader */}
+      <FormHeader
+        title={contactData.nomComplet}
+        subtitle={`Créé le ${contactData.dateCreation}`}
+        icon={<i className="bi bi-person"></i>}
+        roundedTop={true}
+        actions={[
+          <Button 
+            key="edit"
+            variant="primary" 
+            onClick={handleEdit}
+            icon={<i className="bi bi-pencil"></i>}
+          >
+            Modifier
+          </Button>
+        ]}
       />
 
-      <ContactGeneralInfo 
-        contact={contact}
-        isEditMode={isEditMode}
-        formData={formData}
-        onChange={handleChange}
-      />
+      {/* Informations Générales */}
+      <div className={styles.section}>
+        <h2>Informations générales</h2>
+        
+        {/* Détails du contact */}
+        <div className={styles.contactInfoGrid}>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Email</p>
+            <p className={styles.value}>{contactData.email}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Téléphone</p>
+            <p className={styles.value}>{contactData.telephone}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Fonction</p>
+            <p className={styles.value}>{contactData.fonction}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Adresse</p>
+            <p className={styles.value}>
+              {contactData.adresse}
+              {contactData.ville && contactData.ville !== "Ville non renseignée" && (
+                <><br />{contactData.ville} {contactData.codePostal}</>
+              )}
+            </p>
+          </div>
+        </div>
 
-      <ContactStructureSection 
-        contactId={id}
-        structure={structure}
-        isEditMode={isEditMode}
-        formData={formData}
-        onChange={handleChange}
-        navigateToStructureDetails={navigationCallbacks.navigateToStructureDetails}
-      />
+        {/* Entités liées */}
+        {(structuresList.length > 0 || lieuxArray.length > 0 || concertsArray.length > 0 || artistesArray.length > 0) && (
+          <div className={styles.entitiesSection}>
+            <p className={styles.entitiesLabel}>Entités liées</p>
+            <div className={styles.entitiesGrid}>
+              
+              {/* Structure */}
+              {structuresList.slice(0, 3).map((structure) => (
+                <EntityCard
+                  key={structure.id}
+                  entityType="structure"
+                  name={structure.nom || 'Structure'}
+                  subtitle="Structure"
+                  onClick={() => {
+                    console.log('[ContactViewModern] Clic sur structure:', structure);
+                    const structureId = structure.id || structure.structureId;
+                    console.log('[ContactViewModern] ID structure trouvé:', structureId);
+                    navigateToEntity('structure', structureId);
+                  }}
+                />
+              ))}
 
-      <ContactLieuxSection 
-        contactId={id}
-        lieux={lieux}
-        isEditMode={isEditMode}
-        formData={formData}
-        onChange={handleChange}
-        navigateToLieuDetails={navigationCallbacks.navigateToLieuDetails}
-      />
+              {/* Artistes */}
+              {artistesArray.slice(0, 3).map((artiste) => (
+                <EntityCard
+                  key={artiste.id}
+                  entityType="artiste"
+                  name={artiste.nom || 'Artiste'}
+                  subtitle={`Artiste (${artistesArray.length})`}
+                  onClick={() => {
+                    console.log('[ContactViewModern] Clic sur artiste:', artiste);
+                    const artisteId = artiste.id || artiste.artisteId;
+                    console.log('[ContactViewModern] ID artiste trouvé:', artisteId);
+                    navigateToEntity('artiste', artisteId);
+                  }}
+                />
+              ))}
 
-      <ContactConcertsSection 
-        contactId={id}
-        isEditMode={isEditMode}
-        navigateToConcertDetails={navigationCallbacks.navigateToConcertDetails}
-      />
+              {/* Lieux */}
+              {lieuxArray.slice(0, 3).map((lieu) => (
+                <EntityCard
+                  key={lieu.id}
+                  entityType="lieu"
+                  name={lieu.nom || 'Lieu'}
+                  subtitle={`Lieu (${lieuxArray.length})`}
+                  onClick={() => {
+                    console.log('[ContactViewModern] Clic sur lieu:', lieu);
+                    const lieuId = lieu.id || lieu.lieuId;
+                    console.log('[ContactViewModern] ID lieu trouvé:', lieuId);
+                    navigateToEntity('lieu', lieuId);
+                  }}
+                />
+              ))}
 
-      <ConfirmationModal
-        show={showDeleteConfirm}
-        onHide={stableCallbacks.handleCloseDeleteModal}
-        onConfirm={() => {
-          handleDelete();
-          setShowDeleteConfirm(false);
-        }}
-        title="Supprimer le contact"
-        message="Êtes-vous sûr de vouloir supprimer définitivement ce contact ?"
-        entityName={contact?.nom}
-        variant="danger"
-        confirmText="Supprimer définitivement"
-        cancelText="Annuler"
-      />
+              {/* Concerts */}
+              {concertsArray.slice(0, 3).map((concert) => (
+                <EntityCard
+                  key={concert.id}
+                  entityType="concert"
+                  name={concert.titre || 'Concert'}
+                  subtitle={`Concert (${concertsArray.length})`}
+                  onClick={() => {
+                    console.log('[ContactViewModern] Clic sur concert:', concert);
+                    const concertId = concert.id || concert.concertId;
+                    console.log('[ContactViewModern] ID concert trouvé:', concertId);
+                    navigateToEntity('concert', concertId);
+                  }}
+                />
+              ))}
+            </div>
+            
+            {/* Message si plus d'entités */}
+            {(structuresList.length + artistesArray.length + lieuxArray.length + concertsArray.length) > 3 && (
+              <p className={styles.moreEntities}>
+                Et {(structuresList.length + artistesArray.length + lieuxArray.length + concertsArray.length) - 3} autres entités liées...
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Historique des échanges - Card vide pour l'instant */}
+      <Card className={styles.historySection}>
+        <div className={styles.historyContent}>
+          <h2>Historique des échanges</h2>
+          <p className={styles.historyPlaceholder}>
+            Cette section sera développée prochainement...
+          </p>
+        </div>
+      </Card>
+
+      {/* Notes */}
+      {contactData.notes && (
+        <div className={styles.section}>
+          <h2>Notes</h2>
+          <p className={styles.notesContent}>
+            {contactData.notes}
+          </p>
+        </div>
+      )}
     </div>
   );
-});
+}
 
 export default ContactViewModern;

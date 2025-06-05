@@ -1,0 +1,149 @@
+/* Lieu Details - Interface moderne et épurée */
+
+.lieuDetails {
+  width: 100%;
+  padding: var(--tc-space-4) var(--tc-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-6);
+}
+
+/* Le header utilise maintenant FormHeader */
+
+/* Sections */
+.section {
+  background: var(--tc-card-bg-color, white);
+  border-radius: var(--tc-card-border-radius);
+  box-shadow: var(--tc-card-shadow-medium);
+  border: 1px solid var(--tc-card-border-color);
+  padding: var(--tc-space-6);
+}
+
+.section h2 {
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-primary);
+  margin: 0 0 var(--tc-space-6) 0;
+}
+
+/* Lieu Info Grid */
+.lieuInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--tc-space-6);
+  margin-bottom: var(--tc-space-8);
+}
+
+.infoItem .label {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  margin: 0 0 var(--tc-space-2) 0;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.infoItem .value {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-primary);
+  margin: 0;
+}
+
+/* Entities Section */
+.entitiesSection {
+  margin-top: var(--tc-space-6);
+}
+
+.entitiesLabel {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  margin: 0 0 var(--tc-space-4) 0;
+  font-weight: var(--tc-font-weight-medium);
+}
+
+.entitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--tc-space-4);
+}
+
+.moreEntities {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  margin: var(--tc-space-3) 0 0 0;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Map Section */
+.mapSection {
+  overflow: hidden;
+  padding: 0;
+}
+
+.mapHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-space-6);
+  border-bottom: 1px solid var(--tc-card-border-color);
+}
+
+.mapInfo h2 {
+  margin: 0 0 var(--tc-space-1) 0;
+}
+
+.mapSubtitle {
+  color: var(--tc-text-secondary);
+  margin: 0;
+  font-size: var(--tc-font-size-sm);
+}
+
+/* Map container géré par le composant LieuMapSection */
+
+/* Équipements et Notes */
+.equipementsContent,
+.notesContent {
+  color: var(--tc-text-primary);
+  line-height: 1.7;
+  margin: 0;
+  font-size: var(--tc-font-size-base);
+  white-space: pre-wrap; /* Préserve les retours à la ligne */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .lieuDetails {
+    padding: var(--tc-space-3) var(--tc-space-4);
+    gap: var(--tc-space-4);
+  }
+  
+  .section {
+    padding: var(--tc-space-4);
+  }
+  
+  .lieuInfoGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--tc-space-4);
+  }
+  
+  .entitiesGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mapHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--tc-space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .lieuDetails {
+    padding: var(--tc-space-2) var(--tc-space-3);
+    gap: var(--tc-space-3);
+  }
+  
+  .lieuInfoGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,8 +1,9 @@
 // src/hooks/lieux/useLieuDetails.js
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
 import { useGenericEntityDetails } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
@@ -24,6 +25,11 @@ const useLieuDetails = (id, locationParam) => {
   
   // Mode lecture seule - pas d'édition dans ce composant
   const isEditMode = false;
+  
+  // SUPPRIMÉ: Les entités liées sont maintenant gérées par customQueries dans useGenericEntityDetails
+  
+
+  // SUPPRIMÉ: loadRelatedEntities - Les entités sont maintenant chargées automatiquement par customQueries
   
   // Fonction pour formater les dates de manière cohérente
   const formatDate = useCallback((value) => {
@@ -70,6 +76,290 @@ const useLieuDetails = (id, locationParam) => {
     }
   }, [formatDate]);
   
+  // Configuration stabilisée avec useRef pour éviter les re-renders (comme dans useConcertDetails)
+  const customQueriesRef = useRef({
+    contact: async (lieuData) => {
+      console.log('🔥🔥🔥 CUSTOM CONTACT QUERY APPELÉE 🔥🔥🔥');
+      if (!lieuData) return null;
+      
+      console.log('[useLieuDetails] Custom contact query - lieu data:', {
+        id: lieuData.id,
+        contactId: lieuData.contactId,
+        programmateursAssocies: lieuData.programmateursAssocies,
+        allFields: Object.keys(lieuData)
+      });
+      
+      try {
+        const { collection, query, where, getDocs, doc, getDoc, db } = await import('@/services/firebase-service');
+        
+        // Méthode 1: contactId direct
+        if (lieuData.contactId) {
+          console.log('[useLieuDetails] Tentative chargement contact via contactId:', lieuData.contactId);
+          const contactDoc = await getDoc(doc(db, 'contacts', lieuData.contactId));
+          if (contactDoc.exists()) {
+            const contact = { id: contactDoc.id, ...contactDoc.data() };
+            console.log('[useLieuDetails] ✅ Contact trouvé via contactId:', contact);
+            return contact;
+          } else {
+            console.log('[useLieuDetails] ❌ Contact avec contactId non trouvé');
+          }
+        }
+        
+        // Méthode 2: programmateursAssocies array (compatibilité ancienne)
+        if (lieuData.programmateursAssocies && Array.isArray(lieuData.programmateursAssocies) && lieuData.programmateursAssocies.length > 0) {
+          const premierContactId = lieuData.programmateursAssocies[0];
+          const contactId = typeof premierContactId === 'object' ? premierContactId.id : premierContactId;
+          
+          if (contactId && typeof contactId === 'string') {
+            const contactDoc = await getDoc(doc(db, 'contacts', contactId));
+            if (contactDoc.exists()) {
+              const contact = { id: contactDoc.id, ...contactDoc.data() };
+              console.log('[useLieuDetails] ✅ Contact trouvé via programmateursAssocies:', contact);
+              return contact;
+            }
+          }
+        }
+        
+        // Méthode 3: NOUVELLE - Trouver le contact via les concerts de ce lieu
+        console.log('[useLieuDetails] 🔍 Méthode 3: Recherche contact via concerts du lieu');
+        const concertsQuery = query(
+          collection(db, 'concerts'),
+          where('lieuId', '==', lieuData.id)
+        );
+        
+        const concertsSnapshot = await getDocs(concertsQuery);
+        
+        if (!concertsSnapshot.empty) {
+          // Prendre le premier concert et récupérer son contact
+          const premierConcert = concertsSnapshot.docs[0].data();
+          console.log('[useLieuDetails] 🎵 Premier concert trouvé:', premierConcert);
+          
+          if (premierConcert.contactId) {
+            console.log('[useLieuDetails] 🚀 Chargement contact via concert:', premierConcert.contactId);
+            const contactDoc = await getDoc(doc(db, 'contacts', premierConcert.contactId));
+            if (contactDoc.exists()) {
+              const contact = { id: contactDoc.id, ...contactDoc.data() };
+              console.log('[useLieuDetails] ✅ Contact trouvé via concert:', contact);
+              return contact;
+            }
+          }
+        }
+        
+        console.log('[useLieuDetails] ❌ Aucun contact trouvé pour ce lieu');
+        return null;
+      } catch (error) {
+        console.error('[useLieuDetails] Erreur lors du chargement du contact:', error);
+        return null;
+      }
+    },
+
+    structure: async (lieuData) => {
+      console.log('[DEBUG useLieuDetails] customQuery structure appelée avec:', lieuData);
+      
+      if (!lieuData) return null;
+      
+      try {
+        const { collection, query, where, getDocs, doc, getDoc, db } = await import('@/services/firebase-service');
+        
+        // Méthode 1: structureId direct dans le lieu
+        if (lieuData.structureId) {
+          console.log('[useLieuDetails] Tentative chargement structure via structureId:', lieuData.structureId);
+          const structureDoc = await getDoc(doc(db, 'structures', lieuData.structureId));
+          if (structureDoc.exists()) {
+            const structure = { id: structureDoc.id, ...structureDoc.data() };
+            console.log('[useLieuDetails] ✅ Structure trouvée via structureId:', structure);
+            return structure;
+          }
+        }
+        
+        // Méthode 2: Via le contact direct du lieu
+        if (lieuData.contactId) {
+          console.log('[useLieuDetails] Tentative chargement structure via contact direct:', lieuData.contactId);
+          const contactDoc = await getDoc(doc(db, 'contacts', lieuData.contactId));
+          if (contactDoc.exists()) {
+            const contactData = contactDoc.data();
+            if (contactData.structureId) {
+              const structureDoc = await getDoc(doc(db, 'structures', contactData.structureId));
+              if (structureDoc.exists()) {
+                const structure = { id: structureDoc.id, ...structureDoc.data() };
+                console.log('[useLieuDetails] ✅ Structure trouvée via contact direct:', structure);
+                return structure;
+              }
+            }
+          }
+        }
+        
+        // Méthode 3: NOUVELLE - Via le contact des concerts de ce lieu
+        console.log('[useLieuDetails] 🔍 Méthode 3: Recherche structure via contact des concerts');
+        const concertsQuery = query(
+          collection(db, 'concerts'),
+          where('lieuId', '==', lieuData.id)
+        );
+        
+        const concertsSnapshot = await getDocs(concertsQuery);
+        
+        if (!concertsSnapshot.empty) {
+          // Prendre le premier concert et récupérer sa structure via le contact
+          const premierConcert = concertsSnapshot.docs[0].data();
+          console.log('[useLieuDetails] 🎵 Premier concert pour structure:', premierConcert);
+          
+          if (premierConcert.contactId) {
+            console.log('[useLieuDetails] 🚀 Chargement contact du concert:', premierConcert.contactId);
+            const contactDoc = await getDoc(doc(db, 'contacts', premierConcert.contactId));
+            if (contactDoc.exists()) {
+              const contactData = contactDoc.data();
+              console.log('[useLieuDetails] 📋 Données contact:', contactData);
+              
+              if (contactData.structureId) {
+                console.log('[useLieuDetails] 🚀 Chargement structure via contact du concert:', contactData.structureId);
+                const structureDoc = await getDoc(doc(db, 'structures', contactData.structureId));
+                if (structureDoc.exists()) {
+                  const structure = { id: structureDoc.id, ...structureDoc.data() };
+                  console.log('[useLieuDetails] ✅ Structure trouvée via contact du concert:', structure);
+                  return structure;
+                }
+              }
+            }
+          }
+        }
+        
+        console.log('[useLieuDetails] ❌ Aucune structure trouvée pour ce lieu');
+        return null;
+      } catch (error) {
+        console.error('[useLieuDetails] Erreur lors du chargement de la structure:', error);
+        return null;
+      }
+    },
+
+    concerts: async (lieuData) => {
+      console.log('[DEBUG useLieuDetails] customQuery concerts appelée avec:', lieuData);
+      
+      if (!lieuData) return [];
+      
+      try {
+        const { collection, query, where, getDocs } = await import('@/services/firebase-service');
+        const { db } = await import('@/services/firebase-service');
+        
+        // Rechercher tous les concerts qui ont ce lieu
+        const concertsQuery = query(
+          collection(db, 'concerts'),
+          where('lieuId', '==', lieuData.id)
+        );
+        
+        const querySnapshot = await getDocs(concertsQuery);
+        const concerts = [];
+        
+        querySnapshot.forEach((docSnapshot) => {
+          concerts.push({
+            id: docSnapshot.id,
+            ...docSnapshot.data()
+          });
+        });
+        
+        console.log('[useLieuDetails] ✅ Concerts trouvés:', concerts.length);
+        return concerts;
+        
+      } catch (error) {
+        console.error('[useLieuDetails] Erreur lors du chargement des concerts:', error);
+        return [];
+      }
+    },
+
+    artistes: async (lieuData) => {
+      console.log('[DEBUG useLieuDetails] customQuery artistes appelée avec:', lieuData);
+      
+      if (!lieuData) return [];
+      
+      try {
+        const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
+        const { db } = await import('@/services/firebase-service');
+        
+        // D'abord récupérer tous les concerts de ce lieu
+        const concertsQuery = query(
+          collection(db, 'concerts'),
+          where('lieuId', '==', lieuData.id)
+        );
+        
+        const concertsSnapshot = await getDocs(concertsQuery);
+        const artisteIds = [];
+        
+        concertsSnapshot.forEach((docSnapshot) => {
+          const concertData = docSnapshot.data();
+          if (concertData.artisteId) {
+            artisteIds.push(concertData.artisteId);
+          }
+        });
+        
+        // Supprimer les doublons
+        const uniqueArtisteIds = [...new Set(artisteIds)];
+        
+        if (uniqueArtisteIds.length === 0) {
+          console.log('[useLieuDetails] ❌ Aucun artiste trouvé pour ce lieu');
+          return [];
+        }
+        
+        console.log('[useLieuDetails] Chargement artistes:', uniqueArtisteIds);
+        
+        // Charger tous les artistes
+        const artistePromises = uniqueArtisteIds.map(async (artisteId) => {
+          try {
+            const artisteDoc = await getDoc(doc(db, 'artistes', artisteId));
+            if (artisteDoc.exists()) {
+              return { id: artisteDoc.id, ...artisteDoc.data() };
+            }
+            return null;
+          } catch (error) {
+            console.error(`Erreur chargement artiste ${artisteId}:`, error);
+            return null;
+          }
+        });
+        
+        const results = await Promise.all(artistePromises);
+        const artistes = results.filter(Boolean);
+        
+        console.log('[useLieuDetails] ✅ Artistes trouvés:', artistes.length);
+        return artistes;
+        
+      } catch (error) {
+        console.error('[useLieuDetails] Erreur lors du chargement des artistes:', error);
+        return [];
+      }
+    }
+  });
+
+  // Configuration stabilisée des entités liées avec useMemo
+  const relatedEntities = useMemo(() => [
+    { 
+      name: 'contact', 
+      collection: 'contacts',
+      idField: 'contactId',
+      alternativeIdFields: ['programmateursAssocies'], // Champs alternatifs pour compatibilité
+      nameField: 'nom',
+      type: 'custom', // Force l'utilisation de la customQuery même sans contactId
+      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+    },
+    {
+      name: 'structure',
+      collection: 'structures',
+      idField: 'structureId',
+      type: 'custom', // Charger via le contact ou directement
+      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+    },
+    {
+      name: 'concerts',
+      collection: 'concerts',
+      idField: 'lieuId',
+      type: 'custom', // Requête inverse pour trouver les concerts dans ce lieu
+      essential: true // Très important pour un lieu
+    },
+    {
+      name: 'artistes',
+      collection: 'artistes', 
+      type: 'custom', // Charger via les concerts de ce lieu
+      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+    }
+  ], []); // Pas de dépendances car la configuration est statique
+  
   // Configuration de base pour le hook générique - MODE LECTURE SEULE
   const detailsHook = useGenericEntityDetails({
     // Configuration générale
@@ -87,15 +377,11 @@ const useLieuDetails = (id, locationParam) => {
     // Validation avant sauvegarde (non utilisée)
     validateFormFn: validateLieuFormData,
     
-    // Configuration des entités liées
-    relatedEntities: [
-      { 
-        name: 'contact', 
-        idField: 'contactId', 
-        collection: 'contacts',
-        essential: true // Le contact est essentiel pour l'affichage du lieu
-      }
-    ],
+    // Configuration des entités liées (seulement les relations directes)
+    relatedEntities,
+    
+    // Requêtes personnalisées pour les entités liées - STABILISÉES
+    customQueries: customQueriesRef.current,
     
     // Chargement automatique des entités liées
     autoLoadRelated: true,
@@ -168,6 +454,9 @@ const useLieuDetails = (id, locationParam) => {
   useEffect(() => {
     updateDetailsOptions();
   }, [updateDetailsOptions]);
+  
+  // SUPPRIMÉ: L'effet pour charger les entités - Maintenant géré automatiquement par useGenericEntityDetails
+  
   
   // Fonctions de navigation (comme dans useConcertDetails)
   const handleEdit = useCallback(() => {
@@ -251,6 +540,9 @@ const useLieuDetails = (id, locationParam) => {
     // Données principales
     lieu: detailsHook?.entity || null,
     contact: detailsHook?.relatedData?.contact || null,
+    structure: detailsHook?.relatedData?.structure || null,
+    concerts: detailsHook?.relatedData?.concerts || [],
+    artistes: detailsHook?.relatedData?.artistes || [],
     loading: detailsHook?.loading || false,
     isLoading: detailsHook?.loading || false,
     isSubmitting: detailsHook?.isSubmitting || false,

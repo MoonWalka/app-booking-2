@@ -1,0 +1,189 @@
+/* EntityCard - Composant carte d'entité réutilisable */
+
+.entityCard {
+  border-radius: var(--tc-radius-lg);
+  padding: var(--tc-space-5);
+  cursor: pointer !important;
+  transition: var(--tc-transition);
+  border: 1px solid;
+  position: relative;
+  overflow: hidden;
+  pointer-events: auto;
+  user-select: none;
+  min-width: 0; /* Permet la troncature du texte */
+}
+
+.entityCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  transition: all 0.3s ease;
+}
+
+.entityCard:hover:not(.disabled) {
+  transform: translateY(var(--tc-hover-translateY));
+  box-shadow: var(--tc-shadow-hover);
+}
+
+.entityCard:focus {
+  outline: 2px solid var(--tc-primary);
+  outline-offset: 2px;
+}
+
+.disabled {
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+/* Styles par type d'entité */
+.entityArtiste {
+  background-color: #faf7ff;
+  border-color: #e1d4ff;
+}
+
+.entityArtiste::before {
+  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+}
+
+.entityContact {
+  background-color: #f0f8ff;
+  border-color: #d1e7ff;
+}
+
+.entityContact::before {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.entityStructure {
+  background-color: #f0fff4;
+  border-color: #d1f2d1;
+}
+
+.entityStructure::before {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.entityLieu {
+  background-color: #fffbf0;
+  border-color: #fce7a3;
+}
+
+.entityLieu::before {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.entityConcert {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+}
+
+.entityConcert::before {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+/* Contenu de la carte */
+.entityContent {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-4);
+  pointer-events: none; /* Permet aux clics de passer au parent */
+  min-width: 0; /* Permet la troncature */
+}
+
+/* Icône */
+.entityIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--tc-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--tc-font-size-lg);
+  flex-shrink: 0;
+  box-shadow: var(--tc-shadow-md);
+}
+
+.iconEmoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.entityIconArtiste {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+}
+
+.entityIconContact {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.entityIconStructure {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.entityIconLieu {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.entityIconConcert {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* Informations textuelles */
+.entityInfo {
+  flex: 1;
+  min-width: 0; /* Permet la troncature */
+}
+
+.entityName {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-primary);
+  margin: 0 0 var(--tc-space-1) 0;
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-tight);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entityType {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  margin: 0;
+  font-weight: var(--tc-font-weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .entityCard {
+    padding: var(--tc-space-4);
+  }
+  
+  .entityContent {
+    gap: var(--tc-space-3);
+  }
+  
+  .entityIcon {
+    width: 40px;
+    height: 40px;
+    font-size: var(--tc-font-size-base);
+  }
+  
+  .iconEmoji {
+    font-size: 16px;
+  }
+  
+  .entityName {
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .entityType {
+    font-size: var(--tc-font-size-xs);
+  }
+}

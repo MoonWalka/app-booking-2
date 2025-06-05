@@ -1,192 +1,262 @@
 // src/components/lieux/desktop/LieuView.js
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-// Import des composants UI standardisés
-import LoadingSpinner from '@components/ui/LoadingSpinner';
-import Button from '@components/ui/Button';
-import ErrorMessage from '@components/ui/ErrorMessage';
-
-// MIGRATION: Utilisation du hook optimisé au lieu du hook V2
-import { useLieuDetails } from '@hooks/lieux';
-
-// Import section components
-import { LieuHeader } from './sections/LieuHeader';
-import LieuGeneralInfo from './sections/LieuGeneralInfo';
-import LieuAddressSection from './sections/LieuAddressSection';
-import LieuOrganizerSection from './sections/LieuOrganizerSection';
-import LieuInfoSection from './sections/LieuInfoSection';
-import { LieuConcertsSection } from './sections/LieuConcertsSection';
-import { LieuStructuresSection } from './sections/LieuStructuresSection';
-import ConfirmationModal from '@/components/ui/ConfirmationModal';
-
-// Import des styles CSS Module
-import styles from './LieuDetails.module.css';
+import { useLieuDetails } from '@/hooks/lieux';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import Button from '@/components/ui/Button';
+import FormHeader from '@/components/ui/FormHeader';
+import EntityCard from '@/components/ui/EntityCard';
+// import ConfirmationModal from '@/components/ui/ConfirmationModal'; // TODO: Ajouter modal de suppression
+import ConcertLieuMap from '../../concerts/desktop/sections/ConcertLieuMap';
+import styles from './LieuView.module.css';
 
 /**
- * LieuView component - displays a venue's details in read-only mode
- * Edition is handled by LieuForm (like concerts system)
+ * Composant des détails d'un lieu - Interface moderne et épurée
+ * Utilise les vrais hooks Firebase du projet principal
  */
-const LieuView = ({ id: propId }) => {
+function LieuView({ id: propId }) {
   const { id: urlId } = useParams();
   const navigate = useNavigate();
-  
-  // Utiliser l'ID passé en prop s'il existe, sinon utiliser l'ID de l'URL
   const id = propId || urlId;
 
-  // Hook pour les détails en mode lecture seule
+  // Hooks Firebase existants
+  const detailsHook = useLieuDetails(id);
+
   const {
     lieu,
     loading,
-    isLoading,
-    isSubmitting,
     error,
-    isDeleting,
-    showDeleteModal,
-    handleEdit, // Navigation vers LieuForm
-    handleDeleteClick,
-    handleCloseDeleteModal,
-    handleConfirmDelete
-  } = useLieuDetails(id);
+    relatedData,
+    // handleDelete, // TODO: Utiliser pour modal de suppression
+    formatDate
+  } = detailsHook || {};
 
-  // Information sur les concerts associés (à implémenter dans le hook si nécessaire)
-  const hasAssociatedConcerts = lieu?.concerts?.length > 0 || false;
+  // Formater les entités liées pour l'affichage - CORRECTION: utiliser relatedData
+  const contact = relatedData?.contact || null;
+  const structure = relatedData?.structure || null;
+  const concerts = relatedData?.concerts || [];
+  const artistes = relatedData?.artistes || [];
+  
+  const contactsList = contact ? [contact] : [];
+  const structuresList = structure ? [structure] : [];
+  const concertsArray = concerts || [];
+  const artistesArray = artistes || [];
 
-  // Handlers avec notifications
-  const handleEditWithNotification = () => {
-    toast.info('Redirection vers le formulaire d\'édition', {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: true,
-    });
-    handleEdit(); // Navigation vers /lieux/:id/edit
+
+  // Formatage des données pour l'affichage
+  const lieuData = useMemo(() => {
+    if (!lieu) return null;
+
+    return {
+      id: lieu.id,
+      nom: lieu.nom || "Lieu sans nom",
+      dateCreation: lieu.dateCreation ? formatDate(lieu.dateCreation) : "Date inconnue",
+      adresse: lieu.adresse || "Adresse non renseignée",
+      ville: lieu.ville || "Ville non renseignée",
+      codePostal: lieu.codePostal || "",
+      capacite: lieu.capacite ? `${lieu.capacite} personnes` : "Capacité non renseignée",
+      typeAcoustique: lieu.typeAcoustique || "Non spécifié",
+      equipements: lieu.equipements || "Non renseignés",
+      notes: lieu.notes || ""
+    };
+  }, [lieu, formatDate]);
+
+  // Handlers
+  const handleEdit = () => navigate(`/lieux/${id}/edit`);
+
+  // const handleDeleteLieu = () => {
+  //   if (handleDelete) {
+  //     handleDelete();
+  //   }
+  // }; // TODO: Ajouter modal de confirmation
+
+  // Navigation vers les entités liées
+  const navigateToEntity = (entityType, entityId) => {
+    if (!entityId) {
+      return;
+    }
+    
+    const routes = {
+      contact: `/contacts/${entityId}`,
+      structure: `/structures/${entityId}`,
+      concert: `/concerts/${entityId}`,
+      artiste: `/artistes/${entityId}`
+    };
+    
+    if (routes[entityType]) {
+      navigate(routes[entityType]);
+    }
   };
 
-  // If loading, show a spinner
-  if (loading || isLoading) {
-    return (
-      <div className={styles.spinnerContainer}>
-        <LoadingSpinner variant="primary" message="Chargement du lieu..." />
-      </div>
-    );
+  if (loading) {
+    return <LoadingSpinner message="Chargement du lieu..." />;
   }
 
-  // If error, show an error message
   if (error) {
-    // CORRECTION: error est un objet avec une propriété message
-    const errorMessage = typeof error === 'string' ? error : (error?.message || 'Une erreur est survenue');
-    return (
-      <div className={styles.errorContainer}>
-        <ErrorMessage variant="danger">
-          {errorMessage}
-        </ErrorMessage>
-        <Button 
-          variant="primary" 
-          onClick={() => navigate('/lieux')}
-          iconStart="arrow-left"
-        >
-          Retour à la liste des lieux
-        </Button>
-      </div>
-    );
+    return <ErrorMessage message={error.message || error} />;
   }
 
-  // If no lieu or lieu not found after loading is complete, show a message
-  if (!lieu && !loading && !isLoading) {
-    return (
-      <div className={styles.errorContainer}>
-        <ErrorMessage variant="warning">
-          Ce lieu n'existe pas ou n'a pas pu être chargé.
-        </ErrorMessage>
-        <Button 
-          variant="primary" 
-          onClick={() => navigate('/lieux')}
-          iconStart="arrow-left"
-        >
-          Retour à la liste des lieux
-        </Button>
-      </div>
-    );
-  }
-
-  // La condition supplémentaire de sécurité pour éviter une erreur si lieu est null
-  if (!lieu) {
-    return null;
+  if (!lieuData) {
+    return <ErrorMessage message="Lieu introuvable" />;
   }
 
   return (
-    <div className={styles.lieuDetailsContainer}>
-      {/* Header with title and action buttons */}
-      <LieuHeader 
-        lieu={lieu}
-        isEditMode={false}
-        onEdit={handleEditWithNotification}
-        onSave={() => {}}
-        onCancel={() => {}}
-        onDelete={handleDeleteClick}
-        isSubmitting={isSubmitting}
-        canSave={false}
-        navigateToList={() => navigate('/lieux')}
+    <div className={styles.lieuDetails}>
+      {/* Header avec FormHeader */}
+      <FormHeader
+        title={lieuData.nom}
+        subtitle={`Créé le ${lieuData.dateCreation}`}
+        icon={<i className="bi bi-geo-alt"></i>}
+        roundedTop={true}
+        actions={[
+          <Button 
+            key="edit"
+            variant="primary" 
+            onClick={handleEdit}
+            icon={<i className="bi bi-pencil"></i>}
+          >
+            Modifier
+          </Button>
+        ]}
       />
 
-      {/* Sections empilées verticalement avec support du mode édition */}
-      <div className={styles.sectionsStack}>
-        <LieuGeneralInfo 
-          lieu={lieu} 
-          isEditMode={false}
-          formData={{}}
-          onChange={() => {}}
-        />
-        <LieuAddressSection 
-          lieu={lieu} 
-          isEditMode={false}
-          formData={{}}
-          onChange={() => {}}
-          updateCoordinates={() => {}}
-        />
-        <LieuOrganizerSection
-          isEditMode={false}
+      {/* Informations Générales */}
+      <div className={styles.section}>
+        <h2>Informations générales</h2>
+        
+        {/* Détails du lieu */}
+        <div className={styles.lieuInfoGrid}>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Adresse</p>
+            <p className={styles.value}>{lieuData.adresse}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Ville</p>
+            <p className={styles.value}>{lieuData.ville} {lieuData.codePostal}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Capacité</p>
+            <p className={styles.value}>{lieuData.capacite}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Type acoustique</p>
+            <p className={styles.value}>{lieuData.typeAcoustique}</p>
+          </div>
+        </div>
+
+        {/* Entités liées */}
+        {(contactsList.length > 0 || structuresList.length > 0 || concertsArray.length > 0 || artistesArray.length > 0) && (
+          <div className={styles.entitiesSection}>
+            <p className={styles.entitiesLabel}>Entités liées</p>
+            <div className={styles.entitiesGrid}>
+              
+              {/* Contacts */}
+              {contactsList.slice(0, 3).map((contact) => (
+                <EntityCard
+                  key={contact.id}
+                  entityType="contact"
+                  name={contact.nom || contact.prenom || 'Contact'}
+                  subtitle={`Contact (${contactsList.length})`}
+                  onClick={() => {
+                    const contactId = contact.id || contact.contactId;
+                    navigateToEntity('contact', contactId);
+                  }}
+                />
+              ))}
+
+              {/* Structures */}
+              {structuresList.slice(0, 3).map((structure) => (
+                <EntityCard
+                  key={structure.id}
+                  entityType="structure"
+                  name={structure.nom || 'Structure'}
+                  subtitle={`Structure (${structuresList.length})`}
+                  onClick={() => {
+                    const structureId = structure.id || structure.structureId;
+                    navigateToEntity('structure', structureId);
+                  }}
+                />
+              ))}
+
+              {/* Concerts */}
+              {concertsArray.slice(0, 3).map((concert) => (
+                <EntityCard
+                  key={concert.id}
+                  entityType="concert"
+                  name={concert.titre || 'Concert'}
+                  subtitle={`Concert (${concertsArray.length})`}
+                  onClick={() => {
+                    const concertId = concert.id || concert.concertId;
+                    navigateToEntity('concert', concertId);
+                  }}
+                />
+              ))}
+
+              {/* Artistes */}
+              {artistesArray.slice(0, 3).map((artiste) => (
+                <EntityCard
+                  key={artiste.id}
+                  entityType="artiste"
+                  name={artiste.nom || 'Artiste'}
+                  subtitle={`Artiste (${artistesArray.length})`}
+                  onClick={() => {
+                    const artisteId = artiste.id || artiste.artisteId;
+                    navigateToEntity('artiste', artisteId);
+                  }}
+                />
+              ))}
+            </div>
+            
+            {/* Message si plus d'entités */}
+            {(contactsList.length + structuresList.length + concertsArray.length + artistesArray.length) > 3 && (
+              <p className={styles.moreEntities}>
+                Et {(contactsList.length + structuresList.length + concertsArray.length + artistesArray.length) - 3} autres entités liées...
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Section Adresse et Carte */}
+      <div className={`${styles.section} ${styles.mapSection}`}>
+        <div className={styles.mapHeader}>
+          <div className={styles.mapInfo}>
+            <h2>Adresse et localisation</h2>
+            <p className={styles.mapSubtitle}>
+              {lieuData.adresse}, {lieuData.ville} {lieuData.codePostal}
+            </p>
+          </div>
+        </div>
+        
+        {/* Carte interactive */}
+        <ConcertLieuMap 
           lieu={lieu}
-          formData={{}}
-          onChange={() => {}}
-          onProgrammateurChange={() => {}}
-        />
-        <LieuInfoSection 
-          lieu={lieu}
-          isEditMode={false}
-          formData={{}}
-          onChange={() => {}}
-        />
-        <LieuConcertsSection 
-          lieu={lieu} 
-          isEditMode={false}
-        />
-        <LieuStructuresSection 
-          lieu={lieu} 
-          isEditMode={false}
+          onDirections={() => {}}
         />
       </div>
 
-      {/* Delete confirmation modal */}
-      <ConfirmationModal
-        show={showDeleteModal}
-        onHide={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-        title="Supprimer le lieu"
-        message="Êtes-vous sûr de vouloir supprimer définitivement ce lieu ?"
-        entityName={lieu.nom}
-        confirmText="Supprimer définitivement"
-        cancelText="Annuler"
-        variant="danger"
-        isLoading={isDeleting}
-        warningItems={hasAssociatedConcerts ? [
-          `Ce lieu a des concerts associés. La suppression du lieu n'entraîne pas la suppression des concerts, mais les concerts associés perdront leur référence de lieu.`
-        ] : []}
-      />
+      {/* Équipements */}
+      {lieuData.equipements && lieuData.equipements !== "Non renseignés" && (
+        <div className={styles.section}>
+          <h2>Équipements</h2>
+          <p className={styles.equipementsContent}>
+            {lieuData.equipements}
+          </p>
+        </div>
+      )}
+
+      {/* Notes */}
+      {lieuData.notes && (
+        <div className={styles.section}>
+          <h2>Notes</h2>
+          <p className={styles.notesContent}>
+            {lieuData.notes}
+          </p>
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default LieuView;

@@ -52,21 +52,28 @@ const useStructureDetails = (id) => {
         collection: 'contacts', 
         idField: 'contactsAssocies',
         alternativeIdFields: ['contactIds'], // Support de l'ancien et nouveau format
-        type: 'one-to-many',
+        type: 'custom', // Utiliser customQuery pour une logique robuste
         essential: true // Les contacts sont essentiels pour l'affichage de la structure
       },
       {
         name: 'lieux',
         collection: 'lieux',
         idField: 'lieuxAssocies',
-        type: 'one-to-many',
-        essential: false // Les lieux peuvent être chargés à la demande
+        alternativeIdFields: ['lieuxIds'],
+        type: 'custom', // Utiliser customQuery pour logique de fallback
+        essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
       },
       {
         name: 'concerts',
         collection: 'concerts',
         type: 'custom', // Utiliser la customQuery pour une logique plus complexe
         essential: true // Les concerts sont importants pour l'affichage
+      },
+      {
+        name: 'artistes',
+        collection: 'artistes',
+        type: 'custom', // Charger via les concerts ou directement
+        essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
       }
     ],
     
@@ -251,6 +258,227 @@ const useStructureDetails = (id) => {
           console.error('[ERROR] useStructureDetails customQuery concerts:', error);
           return [];
         }
+      },
+
+      lieux: async (structureData) => {
+        console.log('[DEBUG useStructureDetails] customQuery lieux appelée avec:', structureData);
+        
+        // Importer les services Firebase
+        const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
+        const { db } = await import('@/services/firebase-service');
+        
+        let lieux = [];
+        
+        try {
+          // Méthode 1: IDs directs dans la structure
+          const lieuIds = structureData.lieuxIds || structureData.lieuxAssocies || [];
+          
+          if (lieuIds.length > 0) {
+            console.log('[DEBUG] Chargement lieux par IDs directs:', lieuIds);
+            
+            const lieuPromises = lieuIds.map(async (lieuId) => {
+              try {
+                const idString = typeof lieuId === 'object' ? lieuId.id : lieuId;
+                if (!idString || typeof idString !== 'string') {
+                  console.error(`ID lieu invalide:`, lieuId);
+                  return null;
+                }
+                
+                const lieuRef = doc(db, 'lieux', idString);
+                const lieuDoc = await getDoc(lieuRef);
+                
+                if (lieuDoc.exists()) {
+                  return { id: lieuDoc.id, ...lieuDoc.data() };
+                }
+                return null;
+              } catch (error) {
+                console.error(`Erreur chargement lieu ${lieuId}:`, error);
+                return null;
+              }
+            });
+            
+            const results = await Promise.all(lieuPromises);
+            lieux = results.filter(Boolean);
+            
+            console.log('[DEBUG] Lieux trouvés par IDs directs:', lieux.length);
+          }
+          
+          // Méthode 2: Recherche par référence inverse (lieux qui référencent cette structure)
+          const lieuxQuery = query(
+            collection(db, 'lieux'),
+            where('structureId', '==', structureData.id)
+          );
+          
+          const querySnapshot = await getDocs(lieuxQuery);
+          
+          querySnapshot.forEach((docSnapshot) => {
+            const lieuData = { id: docSnapshot.id, ...docSnapshot.data() };
+            
+            // Éviter les doublons
+            const existingLieu = lieux.find(l => l.id === lieuData.id);
+            if (!existingLieu) {
+              lieux.push(lieuData);
+            }
+          });
+          
+          // Méthode 3: NOUVELLE - Via les concerts de cette structure
+          console.log('[useStructureDetails] 🔍 Méthode 3: Recherche lieux via concerts de la structure');
+          const concertsQuery = query(
+            collection(db, 'concerts'),
+            where('structureId', '==', structureData.id)
+          );
+          
+          const concertsSnapshot = await getDocs(concertsQuery);
+          
+          concertsSnapshot.forEach((docSnapshot) => {
+            const concertData = docSnapshot.data();
+            if (concertData.lieuId) {
+              // Ajouter le lieu à charger (on le chargera après)
+              console.log('[useStructureDetails] 🎵 Concert trouvé avec lieu:', concertData.lieuId);
+            }
+          });
+          
+          // Charger tous les lieux des concerts de cette structure
+          const lieuxDesConcerts = [];
+          const concertsArray = [];
+          concertsSnapshot.forEach((docSnapshot) => {
+            const concertData = docSnapshot.data();
+            concertsArray.push(concertData);
+            if (concertData.lieuId) {
+              lieuxDesConcerts.push(concertData.lieuId);
+            }
+          });
+          
+          // Supprimer les doublons et charger les lieux
+          const uniqueLieuxIds = [...new Set(lieuxDesConcerts)];
+          for (const lieuId of uniqueLieuxIds) {
+            try {
+              const lieuDoc = await getDoc(doc(db, 'lieux', lieuId));
+              if (lieuDoc.exists()) {
+                const lieuData = { id: lieuDoc.id, ...lieuDoc.data() };
+                
+                // Éviter les doublons avec les autres méthodes
+                const existingLieu = lieux.find(l => l.id === lieuData.id);
+                if (!existingLieu) {
+                  lieux.push(lieuData);
+                  console.log('[useStructureDetails] ✅ Lieu trouvé via concerts:', lieuData.nom);
+                }
+              }
+            } catch (error) {
+              console.error(`Erreur chargement lieu via concerts ${lieuId}:`, error);
+            }
+          }
+          
+          console.log('[DEBUG] Total lieux retournés:', lieux.length);
+          return lieux;
+          
+        } catch (error) {
+          console.error('[ERROR] useStructureDetails customQuery lieux:', error);
+          return [];
+        }
+      },
+
+      artistes: async (structureData) => {
+        console.log('[DEBUG useStructureDetails] customQuery artistes appelée avec:', structureData);
+        
+        // Importer les services Firebase
+        const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
+        const { db } = await import('@/services/firebase-service');
+        
+        let artistes = [];
+        
+        try {
+          // Méthode 1: IDs directs dans la structure (si ils existent)
+          const artisteIds = structureData.artisteIds || structureData.artistesAssocies || [];
+          
+          if (artisteIds.length > 0) {
+            console.log('[DEBUG] Chargement artistes par IDs directs:', artisteIds);
+            
+            const artistePromises = artisteIds.map(async (artisteId) => {
+              try {
+                const idString = typeof artisteId === 'object' ? artisteId.id : artisteId;
+                if (!idString || typeof idString !== 'string') {
+                  console.error(`ID artiste invalide:`, artisteId);
+                  return null;
+                }
+                
+                const artisteRef = doc(db, 'artistes', idString);
+                const artisteDoc = await getDoc(artisteRef);
+                
+                if (artisteDoc.exists()) {
+                  return { id: artisteDoc.id, ...artisteDoc.data() };
+                }
+                return null;
+              } catch (error) {
+                console.error(`Erreur chargement artiste ${artisteId}:`, error);
+                return null;
+              }
+            });
+            
+            const results = await Promise.all(artistePromises);
+            artistes = results.filter(Boolean);
+            
+            console.log('[DEBUG] Artistes trouvés par IDs directs:', artistes.length);
+          }
+          
+          // Méthode 2: Charger les artistes via les concerts de cette structure
+          // D'abord récupérer les concerts de cette structure
+          const concertsQuery = query(
+            collection(db, 'concerts'),
+            where('structureId', '==', structureData.id)
+          );
+          
+          const concertsSnapshot = await getDocs(concertsQuery);
+          const artisteIds2 = [];
+          
+          concertsSnapshot.forEach((docSnapshot) => {
+            const concertData = docSnapshot.data();
+            if (concertData.artisteId) {
+              artisteIds2.push(concertData.artisteId);
+            }
+          });
+          
+          // Supprimer les doublons
+          const uniqueArtisteIds = [...new Set(artisteIds2)];
+          
+          if (uniqueArtisteIds.length > 0) {
+            console.log('[DEBUG] Chargement artistes via concerts:', uniqueArtisteIds);
+            
+            const artistePromises2 = uniqueArtisteIds.map(async (artisteId) => {
+              try {
+                const artisteRef = doc(db, 'artistes', artisteId);
+                const artisteDoc = await getDoc(artisteRef);
+                
+                if (artisteDoc.exists()) {
+                  const artisteData = { id: artisteDoc.id, ...artisteDoc.data() };
+                  
+                  // Éviter les doublons avec la méthode 1
+                  const existingArtiste = artistes.find(a => a.id === artisteData.id);
+                  if (!existingArtiste) {
+                    return artisteData;
+                  }
+                }
+                return null;
+              } catch (error) {
+                console.error(`Erreur chargement artiste via concert ${artisteId}:`, error);
+                return null;
+              }
+            });
+            
+            const results2 = await Promise.all(artistePromises2);
+            const newArtistes = results2.filter(Boolean);
+            artistes = [...artistes, ...newArtistes];
+            
+            console.log('[DEBUG] Artistes trouvés via concerts:', newArtistes.length);
+          }
+          
+          console.log('[DEBUG] Total artistes retournés:', artistes.length);
+          return artistes;
+          
+        } catch (error) {
+          console.error('[ERROR] useStructureDetails customQuery artistes:', error);
+          return [];
+        }
       }
     },
     
@@ -375,7 +603,9 @@ const useStructureDetails = (id) => {
     lieux: detailsHook.relatedData?.lieux || [],
     loadingLieux: detailsHook.loadingRelated?.lieux || false,
     concerts: detailsHook.relatedData?.concerts || [],
-    loadingConcerts: detailsHook.loadingRelated?.concerts || false
+    loadingConcerts: detailsHook.loadingRelated?.concerts || false,
+    artistes: detailsHook.relatedData?.artistes || [],
+    loadingArtistes: detailsHook.loadingRelated?.artistes || false
   };
 };
 

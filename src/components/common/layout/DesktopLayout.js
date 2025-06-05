@@ -9,6 +9,7 @@ import { APP_NAME } from '@/config.js';
 import { mapTerm } from '@/utils/terminologyMapping';
 import layoutStyles from '@/components/layout/Layout.module.css';
 import sidebarStyles from '@/components/layout/Sidebar.module.css';
+import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 
 function DesktopLayout({ children }) {
   const { currentUser, logout } = useAuth();
@@ -20,6 +21,8 @@ function DesktopLayout({ children }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   // État pour la sidebar mobile (hamburger menu)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  // État pour le dashboard de debug
+  const [showDebug, setShowDebug] = useState(false);
   
   // Effet pour gérer les transitions entre les routes
   useEffect(() => {
@@ -119,6 +122,18 @@ function DesktopLayout({ children }) {
                 </li>
               ))}
             </ul>
+            
+            {/* Section Debug Mobile */}
+            <div className={sidebarStyles.debugSection}>
+              <button 
+                className={sidebarStyles.debugButton}
+                onClick={() => setShowDebug(!showDebug)}
+                title="Outils de debug et tests"
+              >
+                <i className="bi bi-bug"></i>
+                Debug & Tests
+              </button>
+            </div>
           </div>
           
           <div className={sidebarStyles.sidebarFooter}>
@@ -141,6 +156,9 @@ function DesktopLayout({ children }) {
         }`}>
           {children || <Outlet />}
         </main>
+        
+        {/* Dashboard de debug mobile */}
+        {showDebug && <UnifiedDebugDashboard />}
       </div>
     );
   }
@@ -169,6 +187,18 @@ function DesktopLayout({ children }) {
               </li>
             ))}
           </ul>
+          
+          {/* Section Debug Desktop */}
+          <div className={sidebarStyles.debugSection}>
+            <button 
+              className={sidebarStyles.debugButton}
+              onClick={() => setShowDebug(!showDebug)}
+              title="Outils de debug et tests"
+            >
+              <i className="bi bi-bug"></i>
+              Debug & Tests
+            </button>
+          </div>
         </div>
         <div className={sidebarStyles.sidebarFooter}>
           {currentUser && (
@@ -194,6 +224,9 @@ function DesktopLayout({ children }) {
       <main className={`${layoutStyles.content} ${isTransitioning ? "router-transition-active" : ""}`}>
         {children || <Outlet />}
       </main>
+      
+      {/* Dashboard de debug desktop */}
+      {showDebug && <UnifiedDebugDashboard />}
     </div>
   );
 }

@@ -18,16 +18,16 @@ export const CONTRACT_VARIABLES = {
   'fonction_representant': { label: 'Fonction du représentant', category: 'entreprise', source: 'entreprise.fonctionRepresentant' },
   
   // Variables contact  
-  'programmateur_nom': { label: 'Nom du programmateur', category: 'programmateur', source: 'programmateur.nom' },
-  'programmateur_prenom': { label: 'Prénom du programmateur', category: 'programmateur', source: 'programmateur.prenom' },
-  'programmateur_structure': { label: 'Structure du programmateur', category: 'programmateur', source: 'programmateur.structure' },
-  'programmateur_email': { label: 'Email du programmateur', category: 'programmateur', source: 'programmateur.email' },
-  'programmateur_telephone': { label: 'Téléphone du programmateur', category: 'programmateur', source: 'programmateur.telephone' },
-  'programmateur_adresse': { label: 'Adresse du programmateur', category: 'programmateur', source: 'programmateur.adresse' },
-  'programmateur_siret': { label: 'SIRET du programmateur', category: 'programmateur', source: 'programmateur.siret' },
-  'programmateur_numero_intracommunautaire': { label: 'N° TVA Intracommunautaire', category: 'programmateur', source: 'programmateur.numeroIntracommunautaire' },
-  'programmateur_representant': { label: 'Représentant légal', category: 'programmateur', source: 'programmateur.representant' },
-  'programmateur_qualite_representant': { label: 'Qualité du représentant', category: 'programmateur', source: 'programmateur.qualiteRepresentant' },
+  'contact_nom': { label: 'Nom du contact', category: 'contact', source: 'contact.nom' },
+  'contact_prenom': { label: 'Prénom du contact', category: 'contact', source: 'contact.prenom' },
+  'contact_structure': { label: 'Structure du contact', category: 'contact', source: 'contact.structure' },
+  'contact_email': { label: 'Email du contact', category: 'contact', source: 'contact.email' },
+  'contact_telephone': { label: 'Téléphone du contact', category: 'contact', source: 'contact.telephone' },
+  'contact_adresse': { label: 'Adresse du contact', category: 'contact', source: 'contact.adresse' },
+  'contact_siret': { label: 'SIRET du contact', category: 'contact', source: 'contact.siret' },
+  'contact_numero_intracommunautaire': { label: 'N° TVA Intracommunautaire', category: 'contact', source: 'contact.numeroIntracommunautaire' },
+  'contact_representant': { label: 'Représentant légal', category: 'contact', source: 'contact.representant' },
+  'contact_qualite_representant': { label: 'Qualité du représentant', category: 'contact', source: 'contact.qualiteRepresentant' },
   
   // Variables structure (ajout des variables manquantes)
   'structure_nom': { label: 'Nom de la structure', category: 'structure', source: 'structure.nom' },
@@ -203,14 +203,14 @@ export const replaceVariablesWithMockData = (content) => {
   // Support des deux formats : {variable} et [variable]
   return content
     // Format avec accolades
-    .replace(/{programmateur_nom}/g, 'Jean Dupont')
-    .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
-    .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
-    .replace(/{programmateur_siret}/g, '123 456 789 00012')
-    .replace(/{programmateur_numero_intracommunautaire}/g, 'FR12345678901')
-    .replace(/{programmateur_adresse}/g, '456 Rue des Spectacles, 75002 Paris')
-    .replace(/{programmateur_representant}/g, 'Marie Martin')
-    .replace(/{programmateur_qualite_representant}/g, 'Présidente')
+    .replace(/{contact_nom}/g, 'Jean Dupont')
+    .replace(/{contact_structure}/g, 'Association Culturelle XYZ')
+    .replace(/{contact_email}/g, 'contact@asso-xyz.fr')
+    .replace(/{contact_siret}/g, '123 456 789 00012')
+    .replace(/{contact_numero_intracommunautaire}/g, 'FR12345678901')
+    .replace(/{contact_adresse}/g, '456 Rue des Spectacles, 75002 Paris')
+    .replace(/{contact_representant}/g, 'Marie Martin')
+    .replace(/{contact_qualite_representant}/g, 'Présidente')
     .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
     .replace(/{artiste_genre}/g, 'Rock Alternatif')
     .replace(/{concert_titre}/g, 'Concert de printemps')
@@ -236,14 +236,14 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{structure_telephone}/g, '01 23 45 67 89')
     .replace(/{structure_type}/g, 'Association')
     // Format avec crochets (pour compatibilité)
-    .replace(/\[programmateur_nom\]/g, 'Jean Dupont')
-    .replace(/\[programmateur_structure\]/g, 'Association Culturelle XYZ')
-    .replace(/\[programmateur_email\]/g, 'contact@asso-xyz.fr')
-    .replace(/\[programmateur_siret\]/g, '123 456 789 00012')
-    .replace(/\[programmateur_numero_intracommunautaire\]/g, 'FR12345678901')
-    .replace(/\[programmateur_adresse\]/g, '456 Rue des Spectacles, 75002 Paris')
-    .replace(/\[programmateur_representant\]/g, 'Marie Martin')
-    .replace(/\[programmateur_qualite_representant\]/g, 'Présidente')
+    .replace(/\[contact_nom\]/g, 'Jean Dupont')
+    .replace(/\[contact_structure\]/g, 'Association Culturelle XYZ')
+    .replace(/\[contact_email\]/g, 'contact@asso-xyz.fr')
+    .replace(/\[contact_siret\]/g, '123 456 789 00012')
+    .replace(/\[contact_numero_intracommunautaire\]/g, 'FR12345678901')
+    .replace(/\[contact_adresse\]/g, '456 Rue des Spectacles, 75002 Paris')
+    .replace(/\[contact_representant\]/g, 'Marie Martin')
+    .replace(/\[contact_qualite_representant\]/g, 'Présidente')
     .replace(/\[artiste_nom\]/g, 'Les Rockeurs du Dimanche')
     .replace(/\[artiste_genre\]/g, 'Rock Alternatif')
     .replace(/\[concert_titre\]/g, 'Concert de printemps')

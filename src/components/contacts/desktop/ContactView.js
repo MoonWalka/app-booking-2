@@ -1,6 +1,6 @@
 // src/components/contacts/desktop/ContactView.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Card from '@/components/ui/Card';
 import { ContactHeader } from './sections/ContactHeader';
 import ContactSection from './ContactContactSection';
@@ -9,26 +9,33 @@ import ContactStructureSectionV2 from './sections/ContactStructureSectionV2';
 import ContactLieuxSectionV2 from './sections/ContactLieuxSectionV2';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
+import { useContactDetails } from '@/hooks/contacts';
 import styles from './ContactDetails.module.css';
 
 /**
  * Composant d'affichage des détails d'un contact - Version Desktop
  * Adapté du style maquette concert details
  */
-const ContactView = ({
-  contact,
-  structure,
-  lieux,
-  concerts,
-  loading,
-  loadingStructure,
-  loadingLieux,
-  loadingConcerts,
-  error,
-  handleDelete,
-  formatValue
-}) => {
+const ContactView = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  
+  // Utilisation du hook pour récupérer les données
+  const detailsHook = useContactDetails(id);
+  
+  const {
+    contact,
+    structure,
+    lieux,
+    concerts,
+    loading,
+    loadingStructure,
+    loadingLieux,
+    loadingConcerts,
+    error,
+    handleDelete,
+    formatValue
+  } = detailsHook || {};
   
   console.log('[TRACE-UNIQUE][ContactView] loading:', loading);
   console.log('[TRACE-UNIQUE][ContactView] error:', error);

@@ -16,6 +16,7 @@ import { validateConcertForm } from '@/utils/validation';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { generateConcertId } from '@/utils/idGenerators';
 import { debugLog } from '@/utils/logUtils';
+import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 
 /**
  * Hook optimisé pour gérer les formulaires de concerts
@@ -26,6 +27,8 @@ import { debugLog } from '@/utils/logUtils';
  */
 export const useConcertForm = (concertId) => {
   const navigate = useNavigate();
+  const relancesAuto = useRelancesAutomatiques();
+  
   // Déterminer si c'est un nouveau concert - modifier pour éviter les fausses détections
   // On ne considère un concert comme nouveau QUE si l'ID est explicitement 'nouveau'
   const isNewConcert = concertId === 'nouveau';
@@ -62,7 +65,7 @@ export const useConcertForm = (concertId) => {
   }, []);
   
   // Callbacks pour les opérations réussies ou en erreur
-  const onSuccessCallback = useCallback((data, action) => {
+  const onSuccessCallback = useCallback(async (data, action) => {
     console.log("[useConcertForm] onSuccessCallback appelé", { data, action });
     
     // Si c'est un chargement initial (getById), on ne fait rien
@@ -80,11 +83,25 @@ export const useConcertForm = (concertId) => {
       console.log("[useConcertForm] Affichage du message de succès:", message);
       showSuccessToast(message);
       
+      // Déclencher les relances automatiques
+      try {
+        if (action === 'create') {
+          console.log("[useConcertForm] Déclenchement des relances automatiques pour nouveau concert");
+          await relancesAuto.onConcertCree(data);
+        } else if (action === 'update') {
+          console.log("[useConcertForm] Réévaluation des relances automatiques pour concert mis à jour");
+          await relancesAuto.onConcertMisAJour(data);
+        }
+      } catch (error) {
+        console.error("[useConcertForm] Erreur lors de la gestion des relances automatiques:", error);
+        // Ne pas bloquer le flux principal si les relances échouent
+      }
+      
       // Redirection immédiate vers la liste des concerts après sauvegarde
       console.log("[useConcertForm] Redirection immédiate vers /concerts");
       navigate('/concerts');
     }
-  }, [navigate]);
+  }, [navigate, relancesAuto]);
 
   const onErrorCallback = useCallback((error) => {
     

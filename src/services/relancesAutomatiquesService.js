@@ -110,12 +110,20 @@ class RelancesAutomatiquesService {
         const relanceExistante = relancesExistantes.find(r => r.type === typeId);
         const doitExister = this._verifierConditions(typeConfig.conditions, etatConcert);
         
+        console.log(`🔍 Type: ${typeId} | Doit exister: ${doitExister} | Existe déjà: ${!!relanceExistante} | Terminée: ${relanceExistante?.terminee || 'N/A'}`);
+        
         if (doitExister && !relanceExistante) {
           // Créer une nouvelle relance automatique
+          console.log(`➕ Création nécessaire pour: ${typeConfig.nom}`);
           await this._creerRelanceAutomatique(concert, typeConfig, organizationId);
         } else if (!doitExister && relanceExistante && !relanceExistante.terminee) {
           // Marquer la relance comme terminée automatiquement
+          console.log(`✅ Validation automatique de: ${typeConfig.nom}`);
           await this._terminerRelanceAutomatique(relanceExistante.id, `Action "${typeConfig.nom}" effectuée automatiquement`);
+        } else if (doitExister && relanceExistante) {
+          console.log(`⏩ Relance "${typeConfig.nom}" déjà existante et conforme`);
+        } else {
+          console.log(`⏭️ Aucune action nécessaire pour: ${typeConfig.nom}`);
         }
       }
       
@@ -168,9 +176,16 @@ class RelancesAutomatiquesService {
     const champsEssentiels = ['titre', 'date', 'lieuId', 'artisteId', 'contactId'];
     const champsCompletes = champsEssentiels.filter(champ => !!concert[champ]);
     
-    if (champsCompletes.length < champsEssentiels.length) {
-      // Concert incomplet, probablement besoin d'envoyer le formulaire
+    // Concert incomplet et pas de formulaire connu = besoin d'envoyer le formulaire
+    if (champsCompletes.length < champsEssentiels.length && !formulaireData) {
       etat.formulaire_envoye = false;
+    }
+    
+    // Si le concert a été validé via formulaire, marquer comme traité
+    if (concert.formValidated) {
+      etat.formulaire_envoye = true;
+      etat.formulaire_recu = true;
+      etat.formulaire_valide = true;
     }
     
     return etat;
@@ -201,6 +216,8 @@ class RelancesAutomatiquesService {
    */
   async _getRelancesAutomatiques(concertId, organizationId) {
     try {
+      console.log(`🔍 Recherche relances automatiques pour concert: ${concertId}, org: ${organizationId}`);
+      
       const q = query(
         collection(db, 'relances'),
         where('concertId', '==', concertId),
@@ -209,10 +226,14 @@ class RelancesAutomatiquesService {
       );
       
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
+      const relances = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      console.log(`📋 Trouvé ${relances.length} relances automatiques existantes:`, relances.map(r => `${r.type} (${r.id})`));
+      
+      return relances;
     } catch (error) {
       console.error('Erreur lors de la récupération des relances automatiques:', error);
       return [];
@@ -254,6 +275,9 @@ class RelancesAutomatiquesService {
       
       const docRef = await addDoc(collection(db, 'relances'), relanceData);
       console.log(`✅ Relance automatique créée: ${docRef.id}`);
+      
+      // Ajouter la relance à la liste des relances du concert
+      await this._ajouterRelanceAuConcert(concert.id, docRef.id, organizationId);
       return docRef.id;
       
     } catch (error) {
@@ -340,6 +364,46 @@ class RelancesAutomatiquesService {
     dateEcheance.setDate(dateEcheance.getDate() + delaiJours);
     
     return dateEcheance;
+  }
+  
+  /**
+   * Ajoute une relance à la liste des relances du concert
+   * 
+   * @private
+   * @param {string} concertId - ID du concert
+   * @param {string} relanceId - ID de la relance
+   * @param {string} organizationId - ID de l'organisation
+   * @returns {Promise<void>}
+   */
+  async _ajouterRelanceAuConcert(concertId, relanceId, organizationId) {
+    try {
+      console.log(`🔗 Ajout de la relance ${relanceId} au concert ${concertId}`);
+      
+      const concertRef = doc(db, 'concerts', concertId);
+      const concertDoc = await getDoc(concertRef);
+      
+      if (concertDoc.exists()) {
+        const concertData = concertDoc.data();
+        const relancesActuelles = concertData.relances || [];
+        
+        // Vérifier que la relance n'est pas déjà dans la liste
+        if (!relancesActuelles.includes(relanceId)) {
+          const nouvellesRelances = [...relancesActuelles, relanceId];
+          
+          await updateDoc(concertRef, {
+            relances: nouvellesRelances,
+            updatedAt: serverTimestamp()
+          });
+          
+          console.log(`✅ Relance ${relanceId} ajoutée au concert ${concertId}`);
+        } else {
+          console.log(`⏩ Relance ${relanceId} déjà présente dans le concert ${concertId}`);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la relance au concert:', error);
+      // Ne pas faire échouer toute l'opération pour cette erreur
+    }
   }
   
   /**

@@ -3,9 +3,11 @@ import { db } from '@/services/firebase-service';
 import { doc, getDoc, updateDoc, collection, addDoc, Timestamp } from '@/services/firebase-service';
 import { ensureStructureEntity } from '@/services/structureService';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 
 const useValidationBatchActions = ({ formId, concertId, validatedFields, setValidated }) => {
   const { currentOrganization } = useOrganization();
+  const relancesAuto = useRelancesAutomatiques();
   const [validationInProgress, setValidationInProgress] = useState(false);
 
   // Valider le formulaire et mettre à jour les données
@@ -351,6 +353,28 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       if (setValidated) {
         setValidated(true);
       }
+      
+      // Déclencher les relances automatiques après validation du formulaire
+      try {
+        // Récupérer les données du concert mis à jour
+        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+        if (concertDoc.exists()) {
+          const concertData = { id: concertId, ...concertDoc.data() };
+          const formulaireData = { 
+            id: formId, 
+            ...formData, 
+            statut: 'valide',
+            dateValidation: new Date()
+          };
+          
+          console.log("🔄 Déclenchement des relances automatiques après validation formulaire");
+          await relancesAuto.onFormulaireValide(concertData, formulaireData);
+        }
+      } catch (relanceError) {
+        console.error("⚠️ Erreur lors de la gestion des relances automatiques:", relanceError);
+        // Ne pas faire échouer la validation si les relances échouent
+      }
+      
       setValidationInProgress(false);
       
       console.log("✅ Validation terminée avec succès !");

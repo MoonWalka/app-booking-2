@@ -12,6 +12,7 @@ import { relancesAutomatiquesService, RELANCE_TYPES } from '@/services/relancesA
 import { useOrganization } from '@/context/OrganizationContext';
 import { diagnosticRelancesAutomatiques, testerCreationRelanceManuelle, afficherRapportDiagnostic } from '@/utils/debugRelancesAutomatiques';
 import { fixRelancesConcert } from '@/utils/fixRelancesAutomatiques';
+import { cleanupRelancesDoublons, cleanupAllRelancesDoublons } from '@/utils/cleanupRelancesDoublons';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Alert from '@/components/ui/Alert';
@@ -246,6 +247,65 @@ const RelancesAutomatiquesTest = () => {
   };
 
   /**
+   * Nettoyage des doublons pour un concert
+   */
+  const nettoyerDoublonsConcert = async () => {
+    if (!concertIdTest.trim()) {
+      addTestResult('❌ Veuillez saisir un ID de concert', 'error');
+      return;
+    }
+    
+    setTesting(true);
+    addTestResult(`🧹 Nettoyage des doublons pour: ${concertIdTest}`, 'info');
+    
+    try {
+      const resultat = await cleanupRelancesDoublons(concertIdTest, currentOrganization.id);
+      
+      if (resultat.success) {
+        addTestResult(`✅ Nettoyage terminé: ${resultat.doublonesSupprimes} doublons supprimés`, 'success');
+        addTestResult(`📋 ${resultat.relancesConservees} relances conservées`, 'info');
+        if (resultat.typesNettoyes.length > 0) {
+          addTestResult(`🔧 Types nettoyés: ${resultat.typesNettoyes.join(', ')}`, 'info');
+        }
+      } else {
+        addTestResult(`❌ ${resultat.error}`, 'error');
+      }
+      
+    } catch (error) {
+      addTestResult(`❌ Erreur nettoyage: ${error.message}`, 'error');
+    } finally {
+      setTesting(false);
+    }
+  };
+
+  /**
+   * Nettoyage global des doublons
+   */
+  const nettoyerTousLesDoublons = async () => {
+    setTesting(true);
+    addTestResult(`🧹 Nettoyage global des doublons pour l'organisation: ${currentOrganization.nom}`, 'info');
+    
+    try {
+      const resultat = await cleanupAllRelancesDoublons(currentOrganization.id);
+      
+      if (resultat.success) {
+        addTestResult(`✅ Nettoyage global terminé: ${resultat.totalDoublonesSupprimes} doublons supprimés`, 'success');
+        addTestResult(`📋 ${resultat.concertsNettoyes}/${resultat.totalConcerts} concerts nettoyés`, 'info');
+        if (resultat.erreurs.length > 0) {
+          addTestResult(`⚠️ ${resultat.erreurs.length} erreurs rencontrées`, 'warning');
+        }
+      } else {
+        addTestResult(`❌ ${resultat.error}`, 'error');
+      }
+      
+    } catch (error) {
+      addTestResult(`❌ Erreur nettoyage global: ${error.message}`, 'error');
+    } finally {
+      setTesting(false);
+    }
+  };
+
+  /**
    * Test complet du workflow
    */
   const testWorkflowComplet = async () => {
@@ -365,6 +425,14 @@ const RelancesAutomatiquesTest = () => {
             <i className="bi bi-wrench me-2" />
             Corriger relances
           </Button>
+          <Button 
+            variant="warning" 
+            onClick={nettoyerDoublonsConcert}
+            disabled={testing || !concertIdTest.trim()}
+          >
+            <i className="bi bi-trash3 me-2" />
+            Nettoyer doublons
+          </Button>
         </div>
         <small className="text-muted">
           Saisissez l'ID d'un concert existant pour analyser pourquoi les relances automatiques ne se créent pas.
@@ -429,6 +497,15 @@ const RelancesAutomatiquesTest = () => {
         >
           <i className="bi bi-trash me-2" />
           Effacer résultats
+        </Button>
+        
+        <Button 
+          variant="danger" 
+          onClick={nettoyerTousLesDoublons}
+          disabled={testing}
+        >
+          <i className="bi bi-exclamation-triangle me-2" />
+          Nettoyer TOUS les doublons
         </Button>
       </div>
       

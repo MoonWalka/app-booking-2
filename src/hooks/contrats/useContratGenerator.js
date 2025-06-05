@@ -197,9 +197,11 @@ import {
 } from '@/services/firebase-service';
 import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 
 export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
   const { currentOrganization } = useOrganization();
+  const relancesAuto = useRelancesAutomatiques();
   const [templates, setTemplates] = useState([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -780,6 +782,15 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         });
         console.log("Contrat mis à jour avec succès");
         
+        // Déclencher les relances automatiques pour contrat généré
+        try {
+          const contratData = { id: contratId, status: 'generated', dateGeneration: new Date(), pdfUrl: url };
+          console.log("🔄 Déclenchement des relances automatiques après génération contrat");
+          await relancesAuto.onContratGenere(concert, contratData);
+        } catch (relanceError) {
+          console.error("⚠️ Erreur lors de la gestion des relances automatiques:", relanceError);
+        }
+        
         return contratId;
       } else {
         console.log("Création d'un nouveau contrat pour le concert:", concert.id);
@@ -801,6 +812,16 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           const docRef = await addDoc(collection(db, 'contrats'), contratData);
           console.log("Nouveau contrat créé avec ID:", docRef.id);
           setContratId(docRef.id);
+          
+          // Déclencher les relances automatiques pour nouveau contrat généré
+          try {
+            const newContratData = { id: docRef.id, ...contratData };
+            console.log("🔄 Déclenchement des relances automatiques après création contrat");
+            await relancesAuto.onContratGenere(concert, newContratData);
+          } catch (relanceError) {
+            console.error("⚠️ Erreur lors de la gestion des relances automatiques:", relanceError);
+          }
+          
           return docRef.id;
         } catch (innerError) {
           console.error("Erreur lors de l'ajout du document:", innerError);

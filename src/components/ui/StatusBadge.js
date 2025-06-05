@@ -21,7 +21,7 @@ const StatusBadge = ({
       'annule': 'danger',
       'reporte': 'warning',
       
-      // Artistes/Programmateurs
+      // Artistes/Contacts
       'active': 'success',
       'inactive': 'secondary',
       'actif': 'success',

@@ -122,10 +122,6 @@
   color: var(--tc-color-gray-700);
 }
 
-.badgeProgrammateurs {
-  background-color: var(--tc-primary-light);
-  color: var(--tc-color-primary);
-}
 
 .mobileLoadMore {
   display: flex;

@@ -16,6 +16,7 @@ export { default as useConcertDetails } from './useConcertDetailsFixed'; // Vers
 // Supprimer cette exportation redondante
 
 export { default as useConcertStatus } from './useConcertStatus';
+export { default as useConcertWatcher } from './useConcertWatcher';
 
 
 

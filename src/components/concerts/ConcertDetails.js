@@ -2,6 +2,7 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
+import { useConcertWatcher } from '@/hooks/concerts/useConcertWatcher';
 
 // Imports directs des composants
 import ConcertsDesktopView from './desktop/ConcertView';
@@ -22,6 +23,9 @@ const ConcertDetails = () => {
 
   // LOG DEBUG : montage du composant ConcertDetails
   console.log('[DEBUG][ConcertDetails] Montage avec id:', id, '| isMobile:', isMobile, '| isEditMode:', isEditMode);
+  
+  // Surveiller les changements du concert pour déclencher les relances automatiques
+  useConcertWatcher(id, { enabled: !isEditMode });
   
   // Rendu conditionnel optimisé
   if (isMobile) {

@@ -11,6 +11,7 @@ import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatique
 import { relancesAutomatiquesService, RELANCE_TYPES } from '@/services/relancesAutomatiquesService';
 import { useOrganization } from '@/context/OrganizationContext';
 import { diagnosticRelancesAutomatiques, testerCreationRelanceManuelle, afficherRapportDiagnostic } from '@/utils/debugRelancesAutomatiques';
+import { fixRelancesConcert } from '@/utils/fixRelancesAutomatiques';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Alert from '@/components/ui/Alert';
@@ -214,6 +215,37 @@ const RelancesAutomatiquesTest = () => {
   };
 
   /**
+   * Correction des relances d'un concert
+   */
+  const corrigerRelancesConcert = async () => {
+    if (!concertIdTest.trim()) {
+      addTestResult('❌ Veuillez saisir un ID de concert', 'error');
+      return;
+    }
+    
+    setTesting(true);
+    addTestResult(`🔧 Correction des relances pour: ${concertIdTest}`, 'info');
+    
+    try {
+      const resultat = await fixRelancesConcert(concertIdTest, currentOrganization.id);
+      
+      if (resultat.success) {
+        addTestResult(`✅ ${resultat.message}`, 'success');
+        addTestResult(`📋 Concert: ${resultat.concert}`, 'info');
+        addTestResult(`📋 Formulaire: ${resultat.formulaire ? 'Détecté' : 'Non détecté'}`, 'info');
+        addTestResult(`📋 Contrat: ${resultat.contrat ? 'Détecté' : 'Non détecté'}`, 'info');
+      } else {
+        addTestResult(`❌ ${resultat.error}`, 'error');
+      }
+      
+    } catch (error) {
+      addTestResult(`❌ Erreur correction: ${error.message}`, 'error');
+    } finally {
+      setTesting(false);
+    }
+  };
+
+  /**
    * Test complet du workflow
    */
   const testWorkflowComplet = async () => {
@@ -324,6 +356,14 @@ const RelancesAutomatiquesTest = () => {
           >
             <i className="bi bi-tools me-2" />
             Forcer création
+          </Button>
+          <Button 
+            variant="success" 
+            onClick={corrigerRelancesConcert}
+            disabled={testing || !concertIdTest.trim()}
+          >
+            <i className="bi bi-wrench me-2" />
+            Corriger relances
           </Button>
         </div>
         <small className="text-muted">

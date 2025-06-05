@@ -1,320 +1,325 @@
 // src/components/concerts/desktop/ConcertView.js
-import React, { useState, useMemo, memo, useCallback, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Alert } from 'react-bootstrap';
-import FormGenerator from '@/components/forms/FormGenerator';
-import styles from './ConcertView.module.css';
-
-// Import des hooks personnalisés
+import React, { useMemo } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useConcertDetails } from '@/hooks/concerts';
 import { useConcertStatus } from '@/hooks/concerts';
-import { useLieuSearch } from '@/hooks/lieux/useLieuSearch';
-import { useContactSearch } from '@/hooks/contacts/useContactSearch';
-import useArtisteSearch from '@/hooks/artistes/useArtisteSearch';
-
-// Import des composants
-import ConcertHeader from './ConcertHeader';
-import ConcertGeneralInfo from './ConcertGeneralInfo';
-import ConcertLocationSection from './ConcertLocationSection';
-import ConcertOrganizerSection from './ConcertOrganizerSection';
-import ConcertArtistSection from './ConcertArtistSection';
-import ConcertStructureSection from './ConcertStructureSection';
-import NotesSection from '../sections/NotesSection';
-import ConfirmationModal from '@/components/ui/ConfirmationModal';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import Button from '@/components/ui/Button';
+import FormHeader from '@/components/ui/FormHeader';
+import StatutBadge from '@/components/ui/StatutBadge';
+import EntityCard from '@/components/ui/EntityCard';
+// import ConfirmationModal from '@/components/ui/ConfirmationModal'; // TODO: Ajouter modal de suppression
+import ConcertLieuMap from './sections/ConcertLieuMap';
+import styles from './ConcertView.module.css';
 
 /**
- * Composant de vue des détails d'un concert - Version Desktop ULTRA-OPTIMISÉE
+ * Composant des détails d'un concert - Interface moderne et épurée
+ * Utilise les vrais hooks Firebase du projet principal
  */
-const ConcertView = memo(({ id: propId }) => {
+function ConcertView({ id: propId }) {
   const { id: urlId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const id = propId || urlId;
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const isEditMode = useMemo(() => location.pathname.includes('/edit'), [location.pathname]);
-  const callbacksRef = useRef({});
-
-  callbacksRef.current.onSelectLieu = useCallback((lieu) => {
-    if (callbacksRef.current.setLieu) {
-      callbacksRef.current.setLieu(lieu);
-    }
-  }, []);
-  
-  callbacksRef.current.onSelectContact = useCallback((contact) => {
-    if (callbacksRef.current.setContact) {
-      callbacksRef.current.setContact(contact);
-    }
-  }, []);
-  
-  callbacksRef.current.onSelectArtiste = useCallback((artiste) => {
-    if (callbacksRef.current.setArtiste) {
-      callbacksRef.current.setArtiste(artiste);
-    }
-  }, []);
-  
-  const searchConfig = useMemo(() => ({
-    lieu: { onSelect: callbacksRef.current.onSelectLieu, maxResults: 10 },
-    contact: { onSelect: callbacksRef.current.onSelectContact, maxResults: 10 },
-    artiste: { onSelect: callbacksRef.current.onSelectArtiste, maxResults: 10 }
-  }), []);
-  
+  // Hooks Firebase existants
   const detailsHook = useConcertDetails(id);
-  
   const concertStatus = useConcertStatus();
-  const lieuSearchHook = useLieuSearch(searchConfig.lieu);
-  const contactSearchHook = useContactSearch(searchConfig.contact);
-  const artisteSearchHook = useArtisteSearch('', searchConfig.artiste);
-  
-  if (detailsHook) {
-    callbacksRef.current.setLieu = detailsHook.setLieu;
-    callbacksRef.current.setContact = detailsHook.setContact;
-    callbacksRef.current.setArtiste = detailsHook.setArtiste;
-  }
 
   const {
-    concert, lieu, contact, artiste, structure, loading, isSubmitting, formData, 
-    formDataStatus, showFormGenerator, generatedFormLink, setShowFormGenerator, 
-    setGeneratedFormLink, handleDelete, copyToClipboard, formatDate, formatMontant, 
-    isDatePassed, handleFormGenerated, handleChange, handleSave
+    concert,
+    lieu,
+    contact,
+    artiste,
+    structure,
+    loading,
+    error,
+    // handleDelete, // TODO: Utiliser pour modal de suppression
+    formatDate,
+    formatMontant
   } = detailsHook || {};
 
-  const stableCallbacks = useMemo(() => ({
-    handleEdit: () => navigate(`/concerts/${id}/edit`),
-    handleCancel: () => navigate(`/concerts/${id}`),
-    handleOpenDeleteModal: () => setShowDeleteConfirm(true),
-    handleCloseDeleteModal: () => setShowDeleteConfirm(false)
-  }), [navigate, id]);
-  
-  const searchObjects = useMemo(() => {
-    if (isEditMode) {
-      // En mode édition, mapper correctement les méthodes des hooks
-      return {
-        lieu: {
-          ...lieuSearchHook,
-          // Mapper setLieu vers handleLieuSelect pour compatibilité
-          handleLieuSelect: lieuSearchHook?.setLieu || lieuSearchHook?.handleLieuSelect || (() => {}),
-          setSelectedEntity: lieuSearchHook?.setLieu || lieuSearchHook?.setSelectedEntity || (() => {})
-        },
-        contact: {
-          ...contactSearchHook,
-          // Mapper les méthodes pour compatibilité
-          handleContactSelect: contactSearchHook?.setContact || contactSearchHook?.handleContactSelect || (() => {}),
-          setSelectedEntity: contactSearchHook?.setContact || contactSearchHook?.setSelectedEntity || (() => {})
-        },
-        artiste: {
-          ...artisteSearchHook,
-          // Mapper les méthodes pour compatibilité
-          handleArtisteSelect: artisteSearchHook?.setArtiste || artisteSearchHook?.handleArtisteSelect || (() => {}),
-          setSelectedEntity: artisteSearchHook?.setArtiste || artisteSearchHook?.setSelectedEntity || (() => {})
-        }
+  // Debug - Affichage des données reçues
+  console.log('[ConcertView] Données reçues:', {
+    concert: concert ? { id: concert.id, titre: concert.titre } : null,
+    artiste: artiste ? { 
+      id: artiste.id, 
+      artisteId: artiste.artisteId, 
+      nom: artiste.nom,
+      allKeys: Object.keys(artiste)
+    } : null,
+    contact: contact ? { 
+      id: contact.id, 
+      contactId: contact.contactId, 
+      nom: contact.nom, 
+      prenom: contact.prenom,
+      allKeys: Object.keys(contact)
+    } : null,
+    structure: structure ? { 
+      id: structure.id, 
+      structureId: structure.structureId, 
+      nom: structure.nom,
+      allKeys: Object.keys(structure)
+    } : null,
+    lieu: lieu ? { 
+      id: lieu.id, 
+      lieuId: lieu.lieuId, 
+      nom: lieu.nom, 
+      adresse: lieu.adresse,
+      allKeys: Object.keys(lieu)
+    } : null
+  });
+
+  // Formatage des données pour l'affichage
+  const concertData = useMemo(() => {
+    if (!concert) return null;
+
+    const statusDetails = concertStatus?.getStatusDetails?.(concert.statut) || {};
+    
+    // Mapping de fallback pour les statuts
+    const getStatusVariant = (statut) => {
+      const statutMap = {
+        'contact': 'secondary',
+        'preaccord': 'warning', 
+        'contrat': 'warning',
+        'confirme': 'success',
+        'annule': 'danger',
+        'reporte': 'warning'
       };
-    } else {
-      // En mode lecture, créer des objets minimaux
-      const createReadOnlySearch = (type) => ({
-        searchTerm: '', 
-        setSearchTerm: () => {}, 
-        showResults: false, 
-        results: [],
-        isSearching: false, 
-        handleLieuSelect: () => {},
-        setSelectedEntity: () => {},
-        handleCreateLieu: () => {},
-        handleCreateContact: type === 'contact' ? () => navigate('/contacts/nouveau') : () => {},
-        handleCreateArtiste: type === 'artiste' ? () => navigate('/artistes/nouveau') : () => {}
-      });
-      
-      return { 
-        lieu: createReadOnlySearch('lieu'), 
-        contact: createReadOnlySearch('contact'), 
-        artiste: createReadOnlySearch('artiste') 
+      return statutMap[statut] || 'secondary';
+    };
+
+    const getStatusLabel = (statut) => {
+      const labelMap = {
+        'contact': 'Contact établi',
+        'preaccord': 'Pré-accord',
+        'contrat': 'Contrat signé', 
+        'confirme': 'Confirmé',
+        'annule': 'Annulé',
+        'reporte': 'Reporté'
       };
+      return labelMap[statut] || statut || 'En cours';
+    };
+
+    const currentStatut = concert.statut || concert.status || 'contact';
+    
+    console.log('[ConcertView] Statut concert:', {
+      originalStatut: concert.statut,
+      status: concert.status,
+      statusDetails,
+      computed: currentStatut
+    });
+
+    return {
+      id: concert.id,
+      titre: concert.titre || "Concert sans titre",
+      dateCreation: concert.dateCreation ? formatDate(concert.dateCreation) : "Date inconnue",
+      date: concert.date ? formatDate(concert.date) : "Date à définir",
+      heure: concert.heure || "Heure à définir",
+      prix: concert.montant ? formatMontant(concert.montant) : "Prix à définir",
+      statut: {
+        label: statusDetails.label || getStatusLabel(currentStatut),
+        color: statusDetails.color || 'var(--tc-secondary)',
+        variant: statusDetails.variant || getStatusVariant(currentStatut),
+        raw: currentStatut
+      },
+      notes: concert.notes || ""
+    };
+  }, [concert, formatDate, formatMontant, concertStatus]);
+
+  // Handlers
+  const handleEdit = () => navigate(`/concerts/${id}/edit`);
+
+  // const handleDeleteConcert = () => {
+  //   if (handleDelete) {
+  //     handleDelete();
+  //   }
+  // }; // TODO: Ajouter modal de confirmation
+
+  // Navigation vers les entités liées
+  const navigateToEntity = (entityType, entityId) => {
+    console.log(`[ConcertView] Navigation vers ${entityType} avec ID:`, entityId);
+    
+    if (!entityId) {
+      console.warn(`[ConcertView] ID manquant pour ${entityType}`);
+      return;
     }
-  }, [isEditMode, lieuSearchHook, contactSearchHook, artisteSearchHook, navigate]);
-
-  const statusInfo = useMemo(() => {
-    if (!detailsHook?.getStatusInfo) return {};
-    const basicStatus = detailsHook.getStatusInfo();
-    const advancedStatus = concertStatus?.getStatusDetails?.(detailsHook.concert?.statut);
-    return { ...basicStatus, ...advancedStatus, statusBadge: advancedStatus?.badge || basicStatus?.badge,
-             actionButtons: advancedStatus?.actions || [], urgencyLevel: advancedStatus?.urgency || 'normal' };
-  }, [detailsHook, concertStatus]);
-
-  const navigationCallbacks = useMemo(() => ({
-    navigateToList: () => navigate('/concerts'),
-    navigateToLieuDetails: (lieuId) => navigate(`/lieux/${lieuId}`),
-    navigateToContactDetails: (progId) => navigate(`/contacts/${progId}`),
-    navigateToStructureDetails: (structureId) => navigate(`/structures/${structureId}`),
-    navigateToArtisteDetails: (artisteId) => navigate(`/artistes/${artisteId}`),
-    handleCreateLieu: () => navigate('/lieux/nouveau'),
-    handleCreateContact: () => navigate('/contacts/nouveau'),
-    handleCreateArtiste: () => navigate('/artistes/nouveau')
-  }), [navigate]);
-
-  if (!detailsHook && isEditMode) {
-    console.error("[ConcertView] Erreur critique: detailsHook est indéfini en mode édition.");
-    return <Alert variant="danger">Erreur lors du chargement des données d'édition du concert.</Alert>;
-  }
-  if (!detailsHook && !isEditMode) {
-    if (!id) return <Alert variant="danger">ID de concert manquant.</Alert>;
-    return <Alert variant="danger">Erreur lors du chargement des données de vue du concert.</Alert>;
-  }
-
+    
+    const routes = {
+      artiste: `/artistes/${entityId}`,
+      contact: `/contacts/${entityId}`,
+      structure: `/structures/${entityId}`,
+      lieu: `/lieux/${entityId}`
+    };
+    
+    if (routes[entityType]) {
+      console.log(`[ConcertView] Navigation vers:`, routes[entityType]);
+      navigate(routes[entityType]);
+    } else {
+      console.error(`[ConcertView] Route inconnue pour ${entityType}`);
+    }
+  };
 
   if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Chargement du concert...</span>
-          </div>
-          <p className="mt-2">Chargement du concert...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Chargement du concert..." />;
+  }
+
+  if (error) {
+    return <ErrorMessage message={error.message || error} />;
+  }
+
+  if (!concertData) {
+    return <ErrorMessage message="Concert introuvable" />;
   }
 
   return (
-    <div className={styles.concertViewContainer || 'concert-view-container'}>
-      <ConcertHeader 
-        concert={concert}
-        onEdit={stableCallbacks.handleEdit}
-        onDelete={stableCallbacks.handleOpenDeleteModal}
-        isEditMode={isEditMode}
-        formatDate={formatDate}
-        navigateToList={navigationCallbacks.navigateToList}
-        onSave={handleSave}
-        onCancel={stableCallbacks.handleCancel}
-        isSubmitting={isSubmitting}
-        canSave={true}
+    <div className={styles.concertDetails}>
+      {/* Header avec FormHeader */}
+      <FormHeader
+        title={concertData.titre}
+        subtitle={`Créé le ${concertData.dateCreation}`}
+        icon={<i className="bi bi-music-note-beamed"></i>}
+        roundedTop={true}
+        actions={[
+          <Button 
+            key="edit"
+            variant="primary" 
+            onClick={handleEdit}
+            icon={<i className="bi bi-pencil"></i>}
+          >
+            Modifier
+          </Button>
+        ]}
       />
 
-      <ConcertGeneralInfo 
-        concert={concert}
-        isEditMode={isEditMode}
-        formData={formData}
-        onChange={handleChange}
-        formatDate={formatDate}
-        formatMontant={formatMontant}
-        isDatePassed={isDatePassed}
-        statusInfo={statusInfo}
-        artiste={artiste}
-        formDataStatus={formDataStatus}
-      />
-      <ConcertLocationSection 
-        concertId={id}
-        lieu={lieu}
-        isEditMode={isEditMode}
-        formData={formData}
-        onChange={handleChange}
-        navigateToLieuDetails={navigationCallbacks.navigateToLieuDetails}
-        selectedLieu={lieu}
-        lieuSearchTerm={searchObjects.lieu.searchTerm}
-        setLieuSearchTerm={searchObjects.lieu.setSearchTerm}
-        showLieuResults={searchObjects.lieu.showResults}
-        lieuResults={searchObjects.lieu.results}
-        isSearchingLieux={searchObjects.lieu.isSearching}
-        handleSelectLieu={searchObjects.lieu.handleLieuSelect || searchObjects.lieu.setSelectedEntity}
-        handleRemoveLieu={() => callbacksRef.current.setLieu && callbacksRef.current.setLieu(null)}
-        handleCreateLieu={navigationCallbacks.handleCreateLieu}
-      />
-      <ConcertOrganizerSection 
-        concertId={id}
-        contact={contact}
-        isEditMode={isEditMode}
-        formData={formData}
-        onChange={handleChange}
-        navigateToContactDetails={navigationCallbacks.navigateToContactDetails}
-        showFormGenerator={showFormGenerator}
-        setShowFormGenerator={setShowFormGenerator}
-        generatedFormLink={generatedFormLink}
-        setGeneratedFormLink={setGeneratedFormLink}
-        handleFormGenerated={handleFormGenerated}
-        copyToClipboard={copyToClipboard}
-        formatDate={formatDate}
-        concert={concert}
-        selectedContact={contact}
-        contactSearchTerm={searchObjects.contact.searchTerm}
-        setContactSearchTerm={searchObjects.contact.setSearchTerm}
-        showContactResults={searchObjects.contact.showResults}
-        contactResults={searchObjects.contact.results}
-        isSearchingContacts={searchObjects.contact.isSearching}
-        handleSelectContact={searchObjects.contact.setSelectedEntity}
-        handleRemoveContact={() => callbacksRef.current.setContact && callbacksRef.current.setContact(null)}
-        handleCreateContact={navigationCallbacks.handleCreateContact}
-      />
-      <ConcertStructureSection 
-        concertId={id}
-        structure={structure}
-        isEditMode={isEditMode}
-        formData={formData}
-        onChange={handleChange}
-        navigateToStructureDetails={navigationCallbacks.navigateToStructureDetails}
-      />
-      {artiste && (
-        <ConcertArtistSection 
-          concertId={id}
-          artiste={artiste}
-          isEditMode={isEditMode}
-          formData={formData}
-          onChange={handleChange}
-          navigateToArtisteDetails={navigationCallbacks.navigateToArtisteDetails}
-          selectedArtiste={artiste}
-          artisteSearchTerm={searchObjects.artiste.searchTerm}
-          setArtisteSearchTerm={searchObjects.artiste.setSearchTerm}
-          showArtisteResults={searchObjects.artiste.showResults}
-          artisteResults={searchObjects.artiste.results}
-          isSearchingArtistes={searchObjects.artiste.isSearching}
-          handleSelectArtiste={searchObjects.artiste.setArtiste || searchObjects.artiste.setSelectedEntity}
-          handleRemoveArtiste={() => callbacksRef.current.setArtiste && callbacksRef.current.setArtiste(null)}
-          handleCreateArtiste={navigationCallbacks.handleCreateArtiste}
-        />
-      )}
-      <NotesSection 
-        notes={concert?.notes || formData?.notes}
-        onChange={isEditMode ? (newNotes) => handleChange({ target: { name: 'notes', value: newNotes } }) : null}
-        isEditMode={isEditMode}
-      />
-      {showFormGenerator && (
-        <div className={styles.formGeneratorOverlay}>
-          <div className={styles.formGeneratorModal}>
-            <button 
-              className={styles.closeButton}
-              onClick={() => setShowFormGenerator(false)}
-              aria-label="Fermer"
-            >
-              <i className="bi bi-x-lg"></i>
-            </button>
-            <FormGenerator
-              concertId={id}
-              contactId={contact?.id}
-              onFormGenerated={(formLinkId, formUrl) => {
-                setGeneratedFormLink(formUrl);
-                if (handleFormGenerated) {
-                  handleFormGenerated(formLinkId, formUrl);
-                }
-                // Ne pas fermer automatiquement le FormGenerator pour permettre à l'utilisateur de copier le lien
-              }}
+      {/* Informations Générales */}
+      <div className={styles.section}>
+        <h2>Informations générales</h2>
+        
+        {/* Détails du concert */}
+        <div className={styles.concertInfoGrid}>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Date</p>
+            <p className={styles.value}>{concertData.date}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Heure</p>
+            <p className={styles.value}>{concertData.heure}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Prix</p>
+            <p className={styles.value}>{concertData.prix}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <p className={styles.label}>Statut</p>
+            <StatutBadge 
+              status={concertData.statut.raw}
+              entityType="concert"
+              size="medium"
             />
           </div>
         </div>
+
+        {/* Entités liées */}
+        <div className={styles.entitiesSection}>
+          <p className={styles.entitiesLabel}>Entités liées</p>
+          <div className={styles.entitiesGrid}>
+            
+            {/* Artiste */}
+            {artiste && (
+              <EntityCard
+                entityType="artiste"
+                name={artiste.nom || 'Artiste'}
+                subtitle="Artiste"
+                onClick={() => {
+                  console.log('[ConcertView] Clic sur artiste:', artiste);
+                  const artisteId = artiste.id || artiste.artisteId;
+                  console.log('[ConcertView] ID artiste trouvé:', artisteId);
+                  navigateToEntity('artiste', artisteId);
+                }}
+              />
+            )}
+
+            {/* Contact/Organisateur */}
+            {contact && (
+              <EntityCard
+                entityType="contact"
+                name={contact.nom || contact.prenom || 'Contact'}
+                subtitle="Organisateur"
+                onClick={() => {
+                  console.log('[ConcertView] Clic sur contact:', contact);
+                  const contactId = contact.id || contact.contactId;
+                  console.log('[ConcertView] ID contact trouvé:', contactId);
+                  navigateToEntity('contact', contactId);
+                }}
+              />
+            )}
+
+            {/* Structure */}
+            {structure && (
+              <EntityCard
+                entityType="structure"
+                name={structure.nom || 'Structure'}
+                subtitle="Structure"
+                onClick={() => {
+                  console.log('[ConcertView] Clic sur structure:', structure);
+                  const structureId = structure.id || structure.structureId;
+                  console.log('[ConcertView] ID structure trouvé:', structureId);
+                  navigateToEntity('structure', structureId);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Section Lieu */}
+      {lieu && (
+        <div className={`${styles.section} ${styles.lieuSection}`}>
+          <div className={styles.lieuHeader}>
+            <div className={styles.lieuInfo}>
+              <h2>Lieu</h2>
+              <p className={styles.lieuSubtitle}>
+                {lieu.nom || 'Lieu'}, {lieu.ville || lieu.adresse || ''}
+              </p>
+            </div>
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('[ConcertView] Clic sur lieu détails:', lieu);
+                const lieuId = lieu.id || lieu.lieuId;
+                console.log('[ConcertView] ID lieu trouvé:', lieuId);
+                navigateToEntity('lieu', lieuId);
+              }}
+              icon={<i className={styles.iconArrowRight}></i>}
+              iconPosition="right"
+            >
+              Voir détails
+            </Button>
+          </div>
+          
+          {/* Carte interactive */}
+          <ConcertLieuMap 
+            lieu={lieu}
+            onDirections={() => console.log('[ConcertView] Ouverture itinéraire')}
+          />
+        </div>
       )}
-      <ConfirmationModal
-        show={showDeleteConfirm}
-        onHide={stableCallbacks.handleCloseDeleteModal}
-        onConfirm={() => {
-          handleDelete();
-          setShowDeleteConfirm(false);
-        }}
-        title="Supprimer le concert"
-        message="Êtes-vous sûr de vouloir supprimer définitivement ce concert ?"
-        entityName={concert?.titre}
-        variant="danger"
-        confirmText="Supprimer définitivement"
-        cancelText="Annuler"
-      />
+
+      {/* Notes */}
+      {concertData.notes && (
+        <div className={styles.section}>
+          <h2>Notes</h2>
+          <p className={styles.notesContent}>
+            {concertData.notes}
+          </p>
+        </div>
+      )}
     </div>
   );
-});
+}
 
 export default ConcertView;

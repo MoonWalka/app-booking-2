@@ -28,7 +28,6 @@ import StructuresPage from '@/pages/StructuresPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 import ContactsList from '@/components/contacts/ContactsList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
-import DiagnosticButton from '@/components/debug/DiagnosticButton';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
@@ -351,10 +350,6 @@ function App() {
             </AuthProvider>
           </Router>
         </ErrorBoundary>
-        {/* Bouton de diagnostic temporaire */}
-        <div id="diagnostic-button-container">
-          <DiagnosticButton />
-        </div>
       </>
     );
     }

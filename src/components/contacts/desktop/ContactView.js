@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import Card from '@/components/ui/Card';
 import { ContactHeader } from './sections/ContactHeader';
 import ContactSection from './ContactContactSection';
-import ContactConcertsSection from './ContactConcertsSection';
-import ContactStructuresSection from './ContactStructuresSection';
-import ContactLieuxSection from './ContactLieuxSection';
+import ContactConcertsSectionV2 from './sections/ContactConcertsSectionV2';
+import ContactStructureSectionV2 from './sections/ContactStructureSectionV2';
+import ContactLieuxSectionV2 from './sections/ContactLieuxSectionV2';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import styles from './ContactDetails.module.css';
@@ -119,10 +119,11 @@ const ContactView = ({
           defaultCollapsed={!sections.structureVisible}
           onCollapseToggle={(collapsed) => setSections(prev => ({...prev, structureVisible: !collapsed}))}
         >
-          <ContactStructuresSection 
-            contact={contact}
+          <ContactStructureSectionV2 
+            contactId={contact?.id}
             structure={structure}
-            showCardWrapper={false}
+            isEditMode={false}
+            navigateToStructureDetails={(structureId) => navigate(`/structures/${structureId}`)}
           />
         </Card>
         
@@ -135,11 +136,11 @@ const ContactView = ({
           defaultCollapsed={!sections.lieuxVisible}
           onCollapseToggle={(collapsed) => setSections(prev => ({...prev, lieuxVisible: !collapsed}))}
         >
-          <ContactLieuxSection
-            contact={contact}
+          <ContactLieuxSectionV2
+            contactId={contact?.id}
             lieux={lieux}
-            isEditing={false}
-            showCardWrapper={false}
+            isEditMode={false}
+            navigateToLieuDetails={(lieuId) => navigate(`/lieux/${lieuId}`)}
           />
         </Card>
 
@@ -152,10 +153,10 @@ const ContactView = ({
           defaultCollapsed={!sections.concertsVisible}
           onCollapseToggle={(collapsed) => setSections(prev => ({...prev, concertsVisible: !collapsed}))}
         >
-          <ContactConcertsSection
-            concertsAssocies={concerts || []}
-            isEditing={false}
-            showCardWrapper={false}
+          <ContactConcertsSectionV2
+            contactId={contact?.id}
+            isEditMode={false}
+            navigateToConcertDetails={(concertId) => navigate(`/concerts/${concertId}`)}
           />
         </Card>
       </div>

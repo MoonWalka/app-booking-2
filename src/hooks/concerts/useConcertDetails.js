@@ -82,6 +82,7 @@ const useConcertDetails = (id, locationParam) => {
   const concertAssociations = useConcertAssociations();
   
   // Configuration pour les entités liées - Stabilisée avec useMemo
+  // 🏗️ NIVEAU 4 (Concert) - FEUILLE de l'arbre : AUCUNE relation chargée pour éviter boucles
   const relatedEntities = useMemo(() => [
     {
       name: 'lieu',
@@ -90,7 +91,8 @@ const useConcertDetails = (id, locationParam) => {
       alternativeIdFields: ['lieu'], // Champs alternatifs pour compatibilité
       nameField: 'lieuNom',
       type: 'one-to-one',
-      essential: true // Le lieu est essentiel pour l'affichage du concert
+      essential: true, // Le lieu est essentiel pour l'affichage du concert
+      loadRelated: false // 🚫 SÉCURITÉ MAXIMALE: Empêche le lieu de charger ses relations
     },
     {
       name: 'contact',
@@ -99,7 +101,8 @@ const useConcertDetails = (id, locationParam) => {
       alternativeIdFields: ['contact'], // Champs alternatifs pour compatibilité
       nameField: 'contactNom',
       type: 'one-to-one',
-      essential: true // Le contact est essentiel pour l'affichage du concert
+      essential: true, // Le contact est essentiel pour l'affichage du concert
+      loadRelated: false // 🚫 SÉCURITÉ MAXIMALE: Empêche le contact de charger ses relations
     },
     {
       name: 'artiste',
@@ -108,7 +111,8 @@ const useConcertDetails = (id, locationParam) => {
       alternativeIdFields: ['artiste'], // Champs alternatifs pour compatibilité
       nameField: 'artisteNom',
       type: 'one-to-one',
-      essential: false // L'artiste peut être chargé à la demande
+      essential: false, // L'artiste peut être chargé à la demande
+      loadRelated: false // 🚫 SÉCURITÉ MAXIMALE: Empêche l'artiste de charger ses relations
     },
     {
       name: 'structure',
@@ -117,7 +121,8 @@ const useConcertDetails = (id, locationParam) => {
       alternativeIdFields: ['structure'], // Champs alternatifs pour compatibilité
       nameField: 'structureNom',
       type: 'custom', // CHANGEMENT: Type custom pour charger via le contact
-      essential: true // La structure est essentielle pour debug
+      essential: true, // La structure est essentielle pour debug
+      loadRelated: false // 🚫 SÉCURITÉ MAXIMALE: Empêche la structure de charger ses relations
     }
   ], []); // Pas de dépendances car la configuration est statique
   

@@ -1,0 +1,151 @@
+{
+  "timestamp": "2025-06-05T01:52:21.164Z",
+  "analyses": [
+    {
+      "file": "useConcertDetails.js",
+      "path": "/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/concerts/useConcertDetails.js",
+      "relatedEntities": [],
+      "customQueries": [],
+      "relationFields": [
+        "lieuId",
+        "contactId",
+        "artisteId",
+        "structureId"
+      ],
+      "usesGenericHook": true,
+      "hasCustomQueries": true,
+      "hasRelatedEntities": true,
+      "problems": [
+        "Aucune entité liée configurée"
+      ],
+      "hasStableConfig": true,
+      "autoLoadRelated": true
+    },
+    {
+      "file": "useStructureDetails.js",
+      "path": "/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/structures/useStructureDetails.js",
+      "relatedEntities": [],
+      "customQueries": [
+        "contacts"
+      ],
+      "relationFields": [
+        "contactIds",
+        "structureId",
+        "contactId"
+      ],
+      "usesGenericHook": true,
+      "hasCustomQueries": true,
+      "hasRelatedEntities": true,
+      "problems": [
+        "Aucune entité liée configurée",
+        "Configuration potentiellement instable (pas de useMemo)"
+      ],
+      "hasStableConfig": false,
+      "autoLoadRelated": true
+    },
+    {
+      "file": "useLieuDetails.js",
+      "path": "/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/lieux/useLieuDetails.js",
+      "relatedEntities": [],
+      "customQueries": [],
+      "relationFields": [
+        "lieuId",
+        "contactId"
+      ],
+      "usesGenericHook": true,
+      "hasCustomQueries": true,
+      "hasRelatedEntities": true,
+      "problems": [
+        "Aucune entité liée configurée"
+      ],
+      "hasStableConfig": true,
+      "autoLoadRelated": true
+    },
+    {
+      "file": "useContactDetails.js",
+      "path": "/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/contacts/useContactDetails.js",
+      "relatedEntities": [],
+      "customQueries": [],
+      "relationFields": [
+        "contactId"
+      ],
+      "usesGenericHook": true,
+      "hasCustomQueries": false,
+      "hasRelatedEntities": false,
+      "problems": [
+        "Aucune entité liée configurée",
+        "Configuration potentiellement instable (pas de useMemo)",
+        "autoLoadRelated non spécifié"
+      ],
+      "hasStableConfig": false,
+      "autoLoadRelated": null
+    },
+    {
+      "file": "useArtisteDetails.js",
+      "path": "/Users/meltinrecordz/Documents/TourCraft/code/app-booking-2/src/hooks/artistes/useArtisteDetails.js",
+      "relatedEntities": [
+        {
+          "name": "structure",
+          "type": "one-to-one",
+          "idField": "structureId",
+          "essential": true
+        },
+        {
+          "name": "manager",
+          "type": "one-to-one",
+          "idField": "managerId",
+          "essential": false
+        },
+        {
+          "name": "concerts",
+          "type": "one-to-many",
+          "idField": "artisteId",
+          "essential": false
+        }
+      ],
+      "customQueries": [],
+      "relationFields": [
+        "uuid",
+        "structureId",
+        "managerId",
+        "artisteId"
+      ],
+      "usesGenericHook": true,
+      "hasCustomQueries": false,
+      "hasRelatedEntities": true,
+      "problems": [
+        "A des entités liées mais pas de customQueries",
+        "Configuration potentiellement instable (pas de useMemo)",
+        "autoLoadRelated non spécifié"
+      ],
+      "hasStableConfig": false,
+      "autoLoadRelated": null
+    }
+  ],
+  "recommendations": [
+    "Corriger \"Aucune entité liée configurée\" dans 4 hooks",
+    "Corriger \"Configuration potentiellement instable (pas de useMemo)\" dans 3 hooks",
+    "Corriger \"autoLoadRelated non spécifié\" dans 2 hooks",
+    "Activer autoLoadRelated dans: useContactDetails.js, useArtisteDetails.js",
+    "Stabiliser la configuration avec useMemo dans: useStructureDetails.js, useContactDetails.js, useArtisteDetails.js",
+    "Ajouter des customQueries dans: useArtisteDetails.js"
+  ],
+  "summary": {
+    "totalHooks": 5,
+    "hooksWithProblems": 5,
+    "commonProblems": [
+      [
+        "Aucune entité liée configurée",
+        4
+      ],
+      [
+        "Configuration potentiellement instable (pas de useMemo)",
+        3
+      ],
+      [
+        "autoLoadRelated non spécifié",
+        2
+      ]
+    ]
+  }
+}

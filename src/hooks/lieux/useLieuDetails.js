@@ -120,6 +120,31 @@ const useLieuDetails = (id, locationParam) => {
           }
         }
         
+        // Méthode 2bis: NOUVELLE - Recherche contact qui contient ce lieu
+        console.log('[useLieuDetails] 🔍 Méthode 2bis: Recherche contact qui contient ce lieu');
+        const contactsQuery = query(
+          collection(db, 'contacts'),
+          where('lieuxIds', 'array-contains', lieuData.id)
+        );
+        
+        let contactsSnapshot = await getDocs(contactsQuery);
+        
+        // Fallback: essayer avec lieuxAssocies
+        if (contactsSnapshot.empty) {
+          const contactsQuery2 = query(
+            collection(db, 'contacts'),
+            where('lieuxAssocies', 'array-contains', lieuData.id)
+          );
+          contactsSnapshot = await getDocs(contactsQuery2);
+        }
+        
+        if (!contactsSnapshot.empty) {
+          const premierContact = contactsSnapshot.docs[0];
+          const contact = { id: premierContact.id, ...premierContact.data() };
+          console.log('[useLieuDetails] ✅ Contact trouvé via référence inverse:', contact);
+          return contact;
+        }
+        
         // Méthode 3: NOUVELLE - Trouver le contact via les concerts de ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 3: Recherche contact via concerts du lieu');
         const concertsQuery = query(
@@ -328,6 +353,7 @@ const useLieuDetails = (id, locationParam) => {
   });
 
   // Configuration stabilisée des entités liées avec useMemo
+  // 🏗️ NIVEAU 3 (Lieu) - Charge contact + concerts + artistes, ÉVITE structure direct (via contact)
   const relatedEntities = useMemo(() => [
     { 
       name: 'contact', 
@@ -336,27 +362,31 @@ const useLieuDetails = (id, locationParam) => {
       alternativeIdFields: ['programmateursAssocies'], // Champs alternatifs pour compatibilité
       nameField: 'nom',
       type: 'custom', // Force l'utilisation de la customQuery même sans contactId
-      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      loadRelated: false // 🚫 Empêche le contact de charger ses relations (évite boucles)
     },
     {
       name: 'structure',
       collection: 'structures',
       idField: 'structureId',
       type: 'custom', // Charger via le contact ou directement
-      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      essential: false, // ⚠️ SÉCURITÉ: Réduire priorité - structure accessible via contact
+      loadRelated: false // 🚫 SÉCURITÉ: Empêche la structure de charger ses relations (évite boucles)
     },
     {
       name: 'concerts',
       collection: 'concerts',
       idField: 'lieuId',
       type: 'custom', // Requête inverse pour trouver les concerts dans ce lieu
-      essential: true // Très important pour un lieu
+      essential: true, // Très important pour un lieu
+      loadRelated: false // 🚫 Empêche les concerts de charger leurs relations (évite boucles)
     },
     {
       name: 'artistes',
       collection: 'artistes', 
       type: 'custom', // Charger via les concerts de ce lieu
-      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      loadRelated: false // 🚫 Empêche les artistes de charger leurs relations (évite boucles)
     }
   ], []); // Pas de dépendances car la configuration est statique
   

@@ -8,6 +8,7 @@ export { default as Button } from './Button';
 export { default as Card } from './Card';
 export { default as Badge } from './Badge';
 export { default as FormHeader } from './FormHeader';
+export { default as EntityCard } from './EntityCard';
 
 // Composants de formulaire
 export { default as FormField } from './FormField';

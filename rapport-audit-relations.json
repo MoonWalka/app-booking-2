@@ -1,0 +1,1487 @@
+{
+  "timestamp": "2025-06-05T01:51:14.694Z",
+  "collections": {
+    "concerts": {
+      "name": "concerts",
+      "totalCount": 1,
+      "sampleAnalysis": [
+        {
+          "id": "con-1748990135303-bpsi21",
+          "fieldsCount": 38,
+          "relationFields": {
+            "formSubmissionId": {
+              "field": "formSubmissionId",
+              "type": "string",
+              "value": "JkZKq2B32HRJ3mmJjAVJ",
+              "isEmpty": false,
+              "count": 1
+            },
+            "lieuId": {
+              "field": "lieuId",
+              "type": "string",
+              "value": "qE4eyuhpCEKFkHPOEelG",
+              "isEmpty": false,
+              "count": 1
+            },
+            "lastFormSubmissionId": {
+              "field": "lastFormSubmissionId",
+              "type": "string",
+              "value": "JkZKq2B32HRJ3mmJjAVJ",
+              "isEmpty": false,
+              "count": 1
+            },
+            "contacts": {
+              "field": "contacts",
+              "type": "array",
+              "value": [],
+              "isEmpty": true,
+              "count": 0
+            },
+            "contactId": {
+              "field": "contactId",
+              "type": "string",
+              "value": "c4DCrvyiXdlxAK4T17hk",
+              "isEmpty": false,
+              "count": 1
+            },
+            "structureId": {
+              "field": "structureId",
+              "type": "string",
+              "value": "44171749300023",
+              "isEmpty": false,
+              "count": 1
+            },
+            "formLinkId": {
+              "field": "formLinkId",
+              "type": "string",
+              "value": "KxsMaoF4ystvNljcDFy5",
+              "isEmpty": false,
+              "count": 1
+            },
+            "programmateurId": {
+              "field": "programmateurId",
+              "type": "string",
+              "value": "hO9vvuFFQEGFL2a80otG",
+              "isEmpty": false,
+              "count": 1
+            },
+            "artisteId": {
+              "field": "artisteId",
+              "type": "string",
+              "value": "pKj4j7dXhtPrSi5zNu01",
+              "isEmpty": false,
+              "count": 1
+            }
+          },
+          "hasProblems": true,
+          "problems": [
+            "Champ contacts vide"
+          ]
+        }
+      ],
+      "relationFields": [
+        "formSubmissionId",
+        "lieuId",
+        "lastFormSubmissionId",
+        "contacts",
+        "contactId",
+        "structureId",
+        "formLinkId",
+        "programmateurId",
+        "artisteId"
+      ],
+      "fieldTypes": {
+        "structureRaisonSociale": {
+          "string": 1
+        },
+        "programmateurPrenom": {
+          "string": 1
+        },
+        "formSubmissionId": {
+          "string": 1
+        },
+        "lieuAdresse": {
+          "string": 1
+        },
+        "heure": {
+          "string": 1
+        },
+        "lieuCodePostal": {
+          "string": 1
+        },
+        "structureCodePostal": {
+          "string": 1
+        },
+        "prix": {
+          "number": 1
+        },
+        "lieuId": {
+          "string": 1
+        },
+        "programmateurFonction": {
+          "string": 1
+        },
+        "lieuNom": {
+          "string": 1
+        },
+        "structureAdresse": {
+          "string": 1
+        },
+        "lastFormSubmissionId": {
+          "string": 1
+        },
+        "hasFormSubmission": {
+          "boolean": 1
+        },
+        "montant": {
+          "string": 1
+        },
+        "formValidated": {
+          "boolean": 1
+        },
+        "ville": {
+          "string": 1
+        },
+        "contacts": {
+          "array": 1
+        },
+        "date": {
+          "string": 1
+        },
+        "contactId": {
+          "string": 1
+        },
+        "structureVille": {
+          "string": 1
+        },
+        "statut": {
+          "string": 1
+        },
+        "description": {
+          "string": 1
+        },
+        "structureSiret": {
+          "string": 1
+        },
+        "structureId": {
+          "string": 1
+        },
+        "programmateurNom": {
+          "string": 1
+        },
+        "updatedAt": {
+          "object": 1
+        },
+        "formLinkId": {
+          "string": 1
+        },
+        "titre": {
+          "string": 1
+        },
+        "isPublic": {
+          "boolean": 1
+        },
+        "structureNumeroIntracommunautaire": {
+          "string": 1
+        },
+        "formValidatedAt": {
+          "object": 1
+        },
+        "programmateurId": {
+          "string": 1
+        },
+        "artisteId": {
+          "string": 1
+        },
+        "createdAt": {
+          "object": 1
+        },
+        "capacité": {
+          "number": 1
+        },
+        "artisteNom": {
+          "string": 1
+        },
+        "lieuVille": {
+          "string": 1
+        }
+      },
+      "problems": [
+        {
+          "id": "con-1748990135303-bpsi21",
+          "problems": [
+            "Champ contacts vide"
+          ]
+        }
+      ]
+    },
+    "structures": {
+      "name": "structures",
+      "totalCount": 1,
+      "sampleAnalysis": [
+        {
+          "id": "44171749300023",
+          "fieldsCount": 10,
+          "relationFields": {
+            "contacts": {
+              "field": "contacts",
+              "type": "object",
+              "value": {},
+              "isEmpty": false,
+              "count": 1
+            },
+            "programmateursAssocies": {
+              "field": "programmateursAssocies",
+              "type": "array",
+              "value": [
+                {
+                  "id": "hO9vvuFFQEGFL2a80otG",
+                  "nom": "Thierry Lenculé",
+                  "dateAssociation": {
+                    "seconds": 1749050717,
+                    "nanoseconds": 394000000
+                  }
+                }
+              ],
+              "isEmpty": false,
+              "count": 1
+            }
+          },
+          "hasProblems": false,
+          "problems": []
+        }
+      ],
+      "relationFields": [
+        "contacts",
+        "programmateursAssocies"
+      ],
+      "fieldTypes": {
+        "numeroIntracommunautaire": {
+          "string": 1
+        },
+        "contacts": {
+          "object": 1
+        },
+        "siret": {
+          "string": 1
+        },
+        "createdAt": {
+          "object": 1
+        },
+        "adresse": {
+          "object": 1
+        },
+        "type": {
+          "string": 1
+        },
+        "tva": {
+          "string": 1
+        },
+        "programmateursAssocies": {
+          "array": 1
+        },
+        "updatedAt": {
+          "object": 1
+        },
+        "nom": {
+          "string": 1
+        }
+      },
+      "problems": []
+    },
+    "lieux": {
+      "name": "lieux",
+      "totalCount": 1,
+      "sampleAnalysis": [
+        {
+          "id": "qE4eyuhpCEKFkHPOEelG",
+          "fieldsCount": 9,
+          "relationFields": {
+            "programmateursAssocies": {
+              "field": "programmateursAssocies",
+              "type": "array",
+              "value": [
+                {
+                  "id": "hO9vvuFFQEGFL2a80otG",
+                  "nom": "Thierry Lenculé",
+                  "dateAssociation": {
+                    "seconds": 1749050717,
+                    "nanoseconds": 824000000
+                  }
+                }
+              ],
+              "isEmpty": false,
+              "count": 1
+            }
+          },
+          "hasProblems": false,
+          "problems": []
+        }
+      ],
+      "relationFields": [
+        "programmateursAssocies"
+      ],
+      "fieldTypes": {
+        "codePostal": {
+          "string": 1
+        },
+        "ville": {
+          "string": 1
+        },
+        "nomLowercase": {
+          "string": 1
+        },
+        "nom": {
+          "string": 1
+        },
+        "programmateursAssocies": {
+          "array": 1
+        },
+        "capacite": {
+          "string": 1
+        },
+        "updatedAt": {
+          "object": 1
+        },
+        "adresse": {
+          "string": 1
+        },
+        "createdAt": {
+          "object": 1
+        }
+      },
+      "problems": []
+    },
+    "contacts": {
+      "name": "contacts",
+      "totalCount": 3,
+      "sampleAnalysis": [
+        {
+          "id": "T58Xct7ehZx2YvVZu6Fb",
+          "fieldsCount": 6,
+          "relationFields": {
+            "lieuxIds": {
+              "field": "lieuxIds",
+              "type": "array",
+              "value": [],
+              "isEmpty": true,
+              "count": 0
+            },
+            "concertsIds": {
+              "field": "concertsIds",
+              "type": "array",
+              "value": [],
+              "isEmpty": true,
+              "count": 0
+            }
+          },
+          "hasProblems": true,
+          "problems": [
+            "Champ lieuxIds vide",
+            "Champ concertsIds vide"
+          ]
+        },
+        {
+          "id": "c4DCrvyiXdlxAK4T17hk",
+          "fieldsCount": 14,
+          "relationFields": {
+            "concertsAssocies": {
+              "field": "concertsAssocies",
+              "type": "array",
+              "value": [],
+              "isEmpty": true,
+              "count": 0
+            },
+            "structureId": {
+              "field": "structureId",
+              "type": "string",
+              "value": "44171749300023",
+              "isEmpty": false,
+              "count": 1
+            }
+          },
+          "hasProblems": true,
+          "problems": [
+            "Champ concertsAssocies vide"
+          ]
+        },
+        {
+          "id": "dABNKgDH1dgHv9PRyLyJ",
+          "fieldsCount": 6,
+          "relationFields": {
+            "concertsIds": {
+              "field": "concertsIds",
+              "type": "array",
+              "value": [],
+              "isEmpty": true,
+              "count": 0
+            },
+            "lieuxIds": {
+              "field": "lieuxIds",
+              "type": "array",
+              "value": [],
+              "isEmpty": true,
+              "count": 0
+            }
+          },
+          "hasProblems": true,
+          "problems": [
+            "Champ concertsIds vide",
+            "Champ lieuxIds vide"
+          ]
+        }
+      ],
+      "relationFields": [
+        "lieuxIds",
+        "concertsIds",
+        "concertsAssocies",
+        "structureId"
+      ],
+      "fieldTypes": {
+        "contact": {
+          "object": 2
+        },
+        "lieuxIds": {
+          "array": 2
+        },
+        "createdAt": {
+          "object": 3
+        },
+        "concertsIds": {
+          "array": 2
+        },
+        "structure": {
+          "object": 2,
+          "string": 1
+        },
+        "updatedAt": {
+          "object": 3
+        },
+        "concertsAssocies": {
+          "array": 1
+        },
+        "fonction": {
+          "string": 1
+        },
+        "nom": {
+          "string": 1
+        },
+        "email": {
+          "string": 1
+        },
+        "telephone": {
+          "string": 1
+        },
+        "structureId": {
+          "string": 1
+        },
+        "migratedAt": {
+          "object": 1
+        },
+        "nomLowercase": {
+          "string": 1
+        },
+        "migratedFrom": {
+          "string": 1
+        },
+        "structureNom": {
+          "string": 1
+        },
+        "prenom": {
+          "string": 1
+        }
+      },
+      "problems": [
+        {
+          "id": "T58Xct7ehZx2YvVZu6Fb",
+          "problems": [
+            "Champ lieuxIds vide",
+            "Champ concertsIds vide"
+          ]
+        },
+        {
+          "id": "c4DCrvyiXdlxAK4T17hk",
+          "problems": [
+            "Champ concertsAssocies vide"
+          ]
+        },
+        {
+          "id": "dABNKgDH1dgHv9PRyLyJ",
+          "problems": [
+            "Champ concertsIds vide",
+            "Champ lieuxIds vide"
+          ]
+        }
+      ]
+    },
+    "artistes": {
+      "name": "artistes",
+      "totalCount": 1,
+      "sampleAnalysis": [
+        {
+          "id": "pKj4j7dXhtPrSi5zNu01",
+          "fieldsCount": 8,
+          "relationFields": {
+            "contacts": {
+              "field": "contacts",
+              "type": "object",
+              "value": {
+                "facebook": "",
+                "instagram": "",
+                "telephone": "",
+                "siteWeb": "",
+                "email": ""
+              },
+              "isEmpty": false,
+              "count": 1
+            }
+          },
+          "hasProblems": false,
+          "problems": []
+        }
+      ],
+      "relationFields": [
+        "contacts"
+      ],
+      "fieldTypes": {
+        "updatedAt": {
+          "object": 1
+        },
+        "description": {
+          "string": 1
+        },
+        "contacts": {
+          "object": 1
+        },
+        "createdAt": {
+          "object": 1
+        },
+        "membres": {
+          "array": 1
+        },
+        "genre": {
+          "string": 1
+        },
+        "nom": {
+          "string": 1
+        },
+        "nomLowercase": {
+          "string": 1
+        }
+      },
+      "problems": []
+    }
+  },
+  "bidirectionalChecks": [
+    {
+      "sourceCollection": "concerts",
+      "sourceField": "lieuId",
+      "targetCollection": "lieux",
+      "targetField": "concertsIds",
+      "checkedDocuments": 1,
+      "inconsistencies": [
+        {
+          "source": "con-1748990135303-bpsi21",
+          "target": "qE4eyuhpCEKFkHPOEelG",
+          "problem": "Champ concertsIds manquant dans le document cible"
+        }
+      ]
+    },
+    {
+      "sourceCollection": "concerts",
+      "sourceField": "contactId",
+      "targetCollection": "contacts",
+      "targetField": "concertsIds",
+      "checkedDocuments": 1,
+      "inconsistencies": [
+        {
+          "source": "con-1748990135303-bpsi21",
+          "target": "c4DCrvyiXdlxAK4T17hk",
+          "problem": "Champ concertsIds manquant dans le document cible"
+        }
+      ]
+    },
+    {
+      "sourceCollection": "concerts",
+      "sourceField": "structureId",
+      "targetCollection": "structures",
+      "targetField": "concertsIds",
+      "checkedDocuments": 1,
+      "inconsistencies": [
+        {
+          "source": "con-1748990135303-bpsi21",
+          "target": "44171749300023",
+          "problem": "Champ concertsIds manquant dans le document cible"
+        }
+      ]
+    },
+    {
+      "sourceCollection": "contacts",
+      "sourceField": "structureId",
+      "targetCollection": "structures",
+      "targetField": "contactsIds",
+      "checkedDocuments": 3,
+      "inconsistencies": [
+        {
+          "source": "c4DCrvyiXdlxAK4T17hk",
+          "target": "44171749300023",
+          "problem": "Champ contactsIds manquant dans le document cible"
+        }
+      ]
+    },
+    {
+      "sourceCollection": "contacts",
+      "sourceField": "lieuxIds",
+      "targetCollection": "lieux",
+      "targetField": "contactIds",
+      "checkedDocuments": 3,
+      "inconsistencies": []
+    }
+  ],
+  "formatAnalysis": {
+    "concerts": {
+      "programmateurNom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Lenculé"
+        },
+        "totalDocuments": 1
+      },
+      "artisteId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "pKj4j7dXhtPrSi5zNu01"
+        },
+        "totalDocuments": 1
+      },
+      "ville": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "programmateurId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "hO9vvuFFQEGFL2a80otG"
+        },
+        "totalDocuments": 1
+      },
+      "artisteNom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "LNP"
+        },
+        "totalDocuments": 1
+      },
+      "structureVille": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "MONTAYRAL"
+        },
+        "totalDocuments": 1
+      },
+      "lastFormSubmissionId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "JkZKq2B32HRJ3mmJjAVJ"
+        },
+        "totalDocuments": 1
+      },
+      "formLinkId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "KxsMaoF4ystvNljcDFy5"
+        },
+        "totalDocuments": 1
+      },
+      "lieuAdresse": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "45 Avenue du Général de Gaulle"
+        },
+        "totalDocuments": 1
+      },
+      "heure": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "lieuNom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Nouveau lieu"
+        },
+        "totalDocuments": 1
+      },
+      "contactId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "c4DCrvyiXdlxAK4T17hk"
+        },
+        "totalDocuments": 1
+      },
+      "lieuCodePostal": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "92360"
+        },
+        "totalDocuments": 1
+      },
+      "hasFormSubmission": {
+        "formats": {
+          "boolean": 1
+        },
+        "examples": {
+          "boolean": true
+        },
+        "totalDocuments": 1
+      },
+      "description": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "statut": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "planifié"
+        },
+        "totalDocuments": 1
+      },
+      "formValidatedAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749050717,
+            "nanoseconds": 958000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "structureId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "44171749300023"
+        },
+        "totalDocuments": 1
+      },
+      "programmateurPrenom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Thierry"
+        },
+        "totalDocuments": 1
+      },
+      "isPublic": {
+        "formats": {
+          "boolean": 1
+        },
+        "examples": {
+          "boolean": true
+        },
+        "totalDocuments": 1
+      },
+      "updatedAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749050693,
+            "nanoseconds": 92000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "createdAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1748990167,
+            "nanoseconds": 262000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "structureRaisonSociale": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "LE RU"
+        },
+        "totalDocuments": 1
+      },
+      "structureCodePostal": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "47500"
+        },
+        "totalDocuments": 1
+      },
+      "structureNumeroIntracommunautaire": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "7890567890"
+        },
+        "totalDocuments": 1
+      },
+      "lieuVille": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Meudon"
+        },
+        "totalDocuments": 1
+      },
+      "formSubmissionId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "JkZKq2B32HRJ3mmJjAVJ"
+        },
+        "totalDocuments": 1
+      },
+      "structureAdresse": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "PELLERY EST"
+        },
+        "totalDocuments": 1
+      },
+      "montant": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "6789"
+        },
+        "totalDocuments": 1
+      },
+      "capacité": {
+        "formats": {
+          "number": 1
+        },
+        "examples": {
+          "number": 0
+        },
+        "totalDocuments": 1
+      },
+      "structureSiret": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "44171749300023"
+        },
+        "totalDocuments": 1
+      },
+      "date": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "2025-06-13"
+        },
+        "totalDocuments": 1
+      },
+      "programmateurFonction": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Directeur"
+        },
+        "totalDocuments": 1
+      },
+      "contacts": {
+        "formats": {
+          "empty_array": 1
+        },
+        "examples": {
+          "empty_array": []
+        },
+        "totalDocuments": 1
+      },
+      "lieuId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "qE4eyuhpCEKFkHPOEelG"
+        },
+        "totalDocuments": 1
+      },
+      "formValidated": {
+        "formats": {
+          "boolean": 1
+        },
+        "examples": {
+          "boolean": true
+        },
+        "totalDocuments": 1
+      },
+      "titre": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "concert test"
+        },
+        "totalDocuments": 1
+      },
+      "prix": {
+        "formats": {
+          "number": 1
+        },
+        "examples": {
+          "number": 6789
+        },
+        "totalDocuments": 1
+      }
+    },
+    "structures": {
+      "contacts": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {}
+        },
+        "totalDocuments": 1
+      },
+      "type": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "association"
+        },
+        "totalDocuments": 1
+      },
+      "programmateursAssocies": {
+        "formats": {
+          "array_of_objects_with_id": 1
+        },
+        "examples": {
+          "array_of_objects_with_id": [
+            {
+              "id": "hO9vvuFFQEGFL2a80otG",
+              "dateAssociation": {
+                "seconds": 1749050717,
+                "nanoseconds": 394000000
+              },
+              "nom": "Thierry Lenculé"
+            }
+          ]
+        },
+        "totalDocuments": 1
+      },
+      "createdAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749050716,
+            "nanoseconds": 804000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "tva": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "nom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "LE RU"
+        },
+        "totalDocuments": 1
+      },
+      "adresse": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "adresse": "PELLERY EST",
+            "codePostal": "47500",
+            "ville": "MONTAYRAL",
+            "pays": "France"
+          }
+        },
+        "totalDocuments": 1
+      },
+      "numeroIntracommunautaire": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "7890567890"
+        },
+        "totalDocuments": 1
+      },
+      "updatedAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749050717,
+            "nanoseconds": 394000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "siret": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "44171749300023"
+        },
+        "totalDocuments": 1
+      }
+    },
+    "lieux": {
+      "nom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Nouveau lieu"
+        },
+        "totalDocuments": 1
+      },
+      "createdAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1748990152,
+            "nanoseconds": 407000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "adresse": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "45 Avenue du Général de Gaulle"
+        },
+        "totalDocuments": 1
+      },
+      "codePostal": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "92360"
+        },
+        "totalDocuments": 1
+      },
+      "nomLowercase": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "nouveau lieu"
+        },
+        "totalDocuments": 1
+      },
+      "capacite": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "programmateursAssocies": {
+        "formats": {
+          "array_of_objects_with_id": 1
+        },
+        "examples": {
+          "array_of_objects_with_id": [
+            {
+              "dateAssociation": {
+                "seconds": 1749050717,
+                "nanoseconds": 824000000
+              },
+              "id": "hO9vvuFFQEGFL2a80otG",
+              "nom": "Thierry Lenculé"
+            }
+          ]
+        },
+        "totalDocuments": 1
+      },
+      "updatedAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749050717,
+            "nanoseconds": 536000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "ville": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Meudon"
+        },
+        "totalDocuments": 1
+      }
+    },
+    "contacts": {
+      "structure": {
+        "formats": {
+          "object": 2,
+          "string": 1
+        },
+        "examples": {
+          "object": {
+            "siteWeb": "",
+            "siret": "",
+            "type": "",
+            "raisonSociale": ""
+          },
+          "string": ""
+        },
+        "totalDocuments": 3
+      },
+      "updatedAt": {
+        "formats": {
+          "object": 3
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749070687,
+            "nanoseconds": 19000000
+          }
+        },
+        "totalDocuments": 3
+      },
+      "concertsIds": {
+        "formats": {
+          "empty_array": 2
+        },
+        "examples": {
+          "empty_array": []
+        },
+        "totalDocuments": 2
+      },
+      "createdAt": {
+        "formats": {
+          "object": 3
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749070687,
+            "nanoseconds": 19000000
+          }
+        },
+        "totalDocuments": 3
+      },
+      "contact": {
+        "formats": {
+          "object": 2
+        },
+        "examples": {
+          "object": {
+            "codePostal": "",
+            "prenom": "joj",
+            "nom": "koo",
+            "email": "e@g.com",
+            "ville": "",
+            "adresse": "",
+            "telephone": ""
+          }
+        },
+        "totalDocuments": 2
+      },
+      "lieuxIds": {
+        "formats": {
+          "empty_array": 2
+        },
+        "examples": {
+          "empty_array": []
+        },
+        "totalDocuments": 2
+      },
+      "concertsAssocies": {
+        "formats": {
+          "empty_array": 1
+        },
+        "examples": {
+          "empty_array": []
+        },
+        "totalDocuments": 1
+      },
+      "telephone": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "nomLowercase": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "thierry"
+        },
+        "totalDocuments": 1
+      },
+      "migratedFrom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "programmateurs"
+        },
+        "totalDocuments": 1
+      },
+      "nom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Lenculé"
+        },
+        "totalDocuments": 1
+      },
+      "structureId": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "44171749300023"
+        },
+        "totalDocuments": 1
+      },
+      "prenom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Thierry"
+        },
+        "totalDocuments": 1
+      },
+      "structureNom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "LE RU"
+        },
+        "totalDocuments": 1
+      },
+      "email": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "fonction": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "Directeur"
+        },
+        "totalDocuments": 1
+      },
+      "migratedAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1749071153,
+            "nanoseconds": 952000000
+          }
+        },
+        "totalDocuments": 1
+      }
+    },
+    "artistes": {
+      "genre": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "contacts": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "siteWeb": "",
+            "telephone": "",
+            "instagram": "",
+            "email": "",
+            "facebook": ""
+          }
+        },
+        "totalDocuments": 1
+      },
+      "description": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": ""
+        },
+        "totalDocuments": 1
+      },
+      "nomLowercase": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "lnp"
+        },
+        "totalDocuments": 1
+      },
+      "nom": {
+        "formats": {
+          "string": 1
+        },
+        "examples": {
+          "string": "LNP"
+        },
+        "totalDocuments": 1
+      },
+      "createdAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1748990164,
+            "nanoseconds": 346000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "updatedAt": {
+        "formats": {
+          "object": 1
+        },
+        "examples": {
+          "object": {
+            "seconds": 1748990164,
+            "nanoseconds": 346000000
+          }
+        },
+        "totalDocuments": 1
+      },
+      "membres": {
+        "formats": {
+          "empty_array": 1
+        },
+        "examples": {
+          "empty_array": []
+        },
+        "totalDocuments": 1
+      }
+    }
+  },
+  "summary": {
+    "totalProblems": 8,
+    "criticalIssues": [
+      "concerts: 1 documents avec problèmes",
+      "contacts: 3 documents avec problèmes",
+      "Relation concerts->lieux: 1 incohérences",
+      "Relation concerts->contacts: 1 incohérences",
+      "Relation concerts->structures: 1 incohérences",
+      "Relation contacts->structures: 1 incohérences"
+    ],
+    "recommendations": [
+      "Audit complet des relations bidirectionnelles requis",
+      "Implémentation de validations strictes pour les nouvelles données",
+      "Mise en place de tests automatisés pour les relations"
+    ]
+  }
+}

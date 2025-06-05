@@ -46,6 +46,7 @@ const useStructureDetails = (id) => {
     },
     
     // Configuration des entités liées avec requêtes personnalisées
+    // 🏗️ NIVEAU 1 (Structure) - Charge toutes ses relations sans restriction
     relatedEntities: [
       { 
         name: 'contacts', 
@@ -53,7 +54,8 @@ const useStructureDetails = (id) => {
         idField: 'contactsAssocies',
         alternativeIdFields: ['contactIds'], // Support de l'ancien et nouveau format
         type: 'custom', // Utiliser customQuery pour une logique robuste
-        essential: true // Les contacts sont essentiels pour l'affichage de la structure
+        essential: true, // Les contacts sont essentiels pour l'affichage de la structure
+        loadRelated: false // 🚫 Empêche les contacts de charger leurs relations (évite boucles)
       },
       {
         name: 'lieux',
@@ -61,19 +63,22 @@ const useStructureDetails = (id) => {
         idField: 'lieuxAssocies',
         alternativeIdFields: ['lieuxIds'],
         type: 'custom', // Utiliser customQuery pour logique de fallback
-        essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+        essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
+        loadRelated: false // 🚫 Empêche les lieux de charger leurs relations (évite boucles)
       },
       {
         name: 'concerts',
         collection: 'concerts',
         type: 'custom', // Utiliser la customQuery pour une logique plus complexe
-        essential: true // Les concerts sont importants pour l'affichage
+        essential: true, // Les concerts sont importants pour l'affichage
+        loadRelated: false // 🚫 Empêche les concerts de charger leurs relations (évite boucles)
       },
       {
         name: 'artistes',
         collection: 'artistes',
         type: 'custom', // Charger via les concerts ou directement
-        essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+        essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
+        loadRelated: false // 🚫 Empêche les artistes de charger leurs relations (évite boucles)
       }
     ],
     

@@ -22,9 +22,9 @@ const useContactDetailsModern = (id) => {
       if (!contactData) return null;
       
       try {
-        const { doc, getDoc, db } = await import('@/services/firebase-service');
+        const { doc, getDoc, collection, query, where, getDocs, db } = await import('@/services/firebase-service');
         
-        // Méthode: structureId direct dans le contact
+        // Méthode 1: structureId direct dans le contact
         if (contactData.structureId) {
           console.log('[useContactDetailsModern] Tentative chargement structure via structureId:', contactData.structureId);
           const structureDoc = await getDoc(doc(db, 'structures', contactData.structureId));
@@ -33,6 +33,31 @@ const useContactDetailsModern = (id) => {
             console.log('[useContactDetailsModern] ✅ Structure trouvée via structureId:', structure);
             return structure;
           }
+        }
+        
+        // Méthode 2: NOUVELLE - Recherche structure qui contient ce contact
+        console.log('[useContactDetailsModern] 🔍 Méthode 2: Recherche structure qui contient ce contact');
+        const structuresQuery = query(
+          collection(db, 'structures'),
+          where('contactIds', 'array-contains', contactData.id)
+        );
+        
+        let structuresSnapshot = await getDocs(structuresQuery);
+        
+        // Fallback: essayer avec contactsAssocies
+        if (structuresSnapshot.empty) {
+          const structuresQuery2 = query(
+            collection(db, 'structures'),
+            where('contactsAssocies', 'array-contains', contactData.id)
+          );
+          structuresSnapshot = await getDocs(structuresQuery2);
+        }
+        
+        if (!structuresSnapshot.empty) {
+          const premierStructure = structuresSnapshot.docs[0];
+          const structure = { id: premierStructure.id, ...premierStructure.data() };
+          console.log('[useContactDetailsModern] ✅ Structure trouvée via référence inverse:', structure);
+          return structure;
         }
         
         console.log('[useContactDetailsModern] ❌ Aucune structure trouvée pour ce contact');
@@ -294,6 +319,7 @@ const useContactDetailsModern = (id) => {
   });
 
   // Configuration stabilisée des entités liées avec useMemo
+  // 🏗️ NIVEAU 2 (Contact) - Charge concerts + lieux + artistes, ÉVITE structure (déjà chargée par structure parent)
   const relatedEntities = useMemo(() => [
     { 
       name: 'structure', 
@@ -301,25 +327,29 @@ const useContactDetailsModern = (id) => {
       idField: 'structureId',
       nameField: 'nom',
       type: 'custom', // Force l'utilisation de la customQuery
-      essential: true // Important pour l'affichage du contact
+      essential: false, // ⚠️ SÉCURITÉ: Réduire la priorité pour éviter boucles Structure ↔ Contact
+      loadRelated: false // 🚫 SÉCURITÉ: Empêche la structure de charger ses relations
     },
     {
       name: 'concerts',
       collection: 'concerts',
       type: 'custom', // Requête inverse pour trouver les concerts de ce contact
-      essential: true // Important pour l'affichage
+      essential: true, // Important pour l'affichage
+      loadRelated: false // 🚫 Empêche les concerts de charger leurs relations (évite boucles)
     },
     {
       name: 'lieux',
       collection: 'lieux',
       type: 'custom', // Charger via référence inverse
-      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      loadRelated: false // 🚫 Empêche les lieux de charger leurs relations (évite boucles)
     },
     {
       name: 'artistes',
       collection: 'artistes', 
       type: 'custom', // Charger via référence inverse
-      essential: true // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
+      loadRelated: false // 🚫 Empêche les artistes de charger leurs relations (évite boucles)
     }
   ], []); // Pas de dépendances car la configuration est statique
   

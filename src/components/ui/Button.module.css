@@ -24,13 +24,14 @@
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  border: none;
+  border: 1px solid transparent;
   padding: var(--tc-space-2) var(--tc-space-4);
   font-size: var(--tc-font-size-base);
   line-height: var(--tc-line-height-normal);
   border-radius: var(--tc-radius-base);
   transition: var(--tc-transition-base);
   cursor: pointer;
+  box-shadow: var(--tc-shadow-xs);
 }
 
 /* =============================
@@ -46,6 +47,8 @@
   background-color: var(--tc-color-primary-dark);
   border-color: var(--tc-color-primary-dark);
   text-decoration: none;
+  box-shadow: var(--tc-shadow-sm);
+  transform: translateY(-1px);
 }
 
 .btnSecondary {
@@ -58,6 +61,8 @@
   background-color: var(--tc-color-secondary-dark);
   border-color: var(--tc-color-secondary-dark);
   text-decoration: none;
+  box-shadow: var(--tc-shadow-sm);
+  transform: translateY(-1px);
 }
 
 .btnSuccess {
@@ -107,6 +112,43 @@
   background-color: var(--tc-color-info-dark);
   border-color: var(--tc-color-info-dark);
   text-decoration: none;
+}
+
+/* =============================
+   VARIANTES MODERNES (STYLE MAQUETTE)
+   ============================= */
+.btnModernPrimary {
+  background-color: var(--tc-primary);
+  border: 1px solid var(--tc-primary);
+  color: white;
+  padding: var(--tc-space-3) var(--tc-space-5);
+  border-radius: var(--tc-radius-md);
+  font-weight: var(--tc-font-weight-semibold);
+  gap: var(--tc-space-2);
+}
+
+.btnModernPrimary:hover {
+  background-color: var(--tc-primary-dark);
+  border-color: var(--tc-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--tc-shadow-md);
+}
+
+.btnModernSecondary {
+  background-color: var(--tc-bg-white);
+  border: 1px solid var(--tc-border-base);
+  color: var(--tc-text-primary);
+  padding: var(--tc-space-3) var(--tc-space-5);
+  border-radius: var(--tc-radius-md);
+  font-weight: var(--tc-font-weight-medium);
+  gap: var(--tc-space-2);
+}
+
+.btnModernSecondary:hover {
+  background-color: var(--tc-bg-light);
+  border-color: var(--tc-border-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--tc-shadow-md);
 }
 
 /* =============================

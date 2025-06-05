@@ -24,6 +24,11 @@ export default function useContactDetails(id) {
   const [loadingStructure, setLoadingStructure] = useState(false);
   const [errorStructure, setErrorStructure] = useState(null);
   
+  // État pour les artistes associés
+  const [artistes, setArtistes] = useState([]);
+  const [loadingArtistes, setLoadingArtistes] = useState(false);
+  const [errorArtistes, setErrorArtistes] = useState(null);
+  
   const details = useGenericEntityDetails({
     entityType: 'contact',
     collectionName: 'contacts',
@@ -180,6 +185,63 @@ export default function useContactDetails(id) {
     fetchConcertsAssocies();
   }, [id, details.entity]);
   
+  // Charger les artistes associés au contact
+  useEffect(() => {
+    const fetchArtistesAssocies = async () => {
+      if (!id || !details.entity) return;
+      
+      try {
+        setLoadingArtistes(true);
+        
+        // Chercher les artistes avec ce contact comme contactId
+        let artistesQuery = query(
+          collection(db, 'artistes'),
+          where('contactId', '==', id)
+        );
+        let querySnapshot = await getDocs(artistesQuery);
+        let artistesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        console.log(`[DEBUG] useContactDetails - Artistes avec contactId=${id}:`, artistesLoaded.length);
+        
+        // Si aucun résultat, essayer avec le champ contacts (array-contains)
+        if (artistesLoaded.length === 0) {
+          artistesQuery = query(
+            collection(db, 'artistes'),
+            where('contacts', 'array-contains', id)
+          );
+          querySnapshot = await getDocs(artistesQuery);
+          artistesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          console.log(`[DEBUG] useContactDetails - Artistes avec contacts array-contains ${id}:`, artistesLoaded.length);
+        }
+        
+        // Essayer aussi avec le champ 'contact' (au singulier) si pas de résultats
+        if (artistesLoaded.length === 0) {
+          artistesQuery = query(
+            collection(db, 'artistes'),
+            where('contact', '==', id)
+          );
+          querySnapshot = await getDocs(artistesQuery);
+          artistesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          console.log(`[DEBUG] useContactDetails - Artistes avec contact=${id}:`, artistesLoaded.length);
+        }
+        
+        console.log(`[DIAGNOSTIC] useContactDetails - ${artistesLoaded.length} artistes trouvés par référence inverse`, { 
+          artisteIds: artistesLoaded.map(artiste => artiste.id) 
+        });
+        
+        setArtistes(artistesLoaded);
+        
+      } catch (error) {
+        console.error('[ERROR] useContactDetails - Erreur lors du chargement des artistes:', error);
+        setErrorArtistes(error.message);
+      } finally {
+        setLoadingArtistes(false);
+      }
+    };
+    
+    fetchArtistesAssocies();
+  }, [id, details.entity]);
+  
   // Charger la structure associée au contact
   useEffect(() => {
     const fetchStructureAssociee = async () => {
@@ -231,6 +293,9 @@ export default function useContactDetails(id) {
     concerts,  // Ajouter les concerts au retour du hook
     loadingConcerts,
     errorConcerts,
+    artistes,  // Ajouter les artistes au retour du hook
+    loadingArtistes,
+    errorArtistes,
     // Pour compatibilité avec le composant existant
     concertsAssocies: concerts
   };
@@ -240,8 +305,10 @@ export default function useContactDetails(id) {
     structure: hookReturn.structure?.id,
     lieux: hookReturn.lieux?.length,
     concerts: hookReturn.concerts?.length,
+    artistes: hookReturn.artistes?.length,
     loadingStructure: hookReturn.loadingStructure,
     loadingLieux: hookReturn.loadingLieux,
+    loadingArtistes: hookReturn.loadingArtistes,
     loadingConcerts: hookReturn.loadingConcerts
   });
 

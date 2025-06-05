@@ -32,13 +32,13 @@
  * @param {string} concert.heure - Heure du concert
  * @param {number} concert.montant - Montant du concert
  * 
- * @param {Object} programmateur - Données du programmateur
- * @param {string} programmateur.nom - Nom du programmateur
- * @param {string} programmateur.prenom - Prénom du programmateur
- * @param {string} programmateur.adresse - Adresse du programmateur
- * @param {string} programmateur.email - Email du programmateur
- * @param {string} programmateur.telephone - Téléphone du programmateur
- * @param {string} programmateur.structure - Structure du programmateur
+ * @param {Object} contact - Données du contact
+ * @param {string} contact.nom - Nom du contact
+ * @param {string} contact.prenom - Prénom du contact
+ * @param {string} contact.adresse - Adresse du contact
+ * @param {string} contact.email - Email du contact
+ * @param {string} contact.telephone - Téléphone du contact
+ * @param {string} contact.structure - Structure du contact
  * 
  * @param {Object} artiste - Données de l'artiste
  * @param {string} artiste.nom - Nom de l'artiste
@@ -88,7 +88,7 @@
  *   saveGeneratedContract,
  *   showSuccess,
  *   errorMessage
- * } = useContratGenerator(concert, programmateur, artiste, lieu);
+ * } = useContratGenerator(concert, contact, artiste, lieu);
  * 
  * // Sélection de template
  * <select value={selectedTemplateId} onChange={handleTemplateChange}>
@@ -147,7 +147,7 @@
  * - Marges et hauteurs configurables
  * 
  * @variableMapping
- * - Programmateur: nom, prénom, adresse, email, téléphone, structure
+ * - contact: nom, prénom, adresse, email, téléphone, structure
  * - Lieu: nom, adresse, capacité, ville, codePostal
  * - Artiste: nom, genre, contact
  * - Concert: titre, date formatée, heure, montant formaté
@@ -286,7 +286,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           console.warn("Informations d'entreprise non trouvées");
         }
         
-        // Charger les données de structure du programmateur si disponible
+        // Charger les données de structure du contact si disponible
         if (programmateur?.structureId) {
           console.log("Chargement de la structure du programmateur:", programmateur.structureId);
           try {
@@ -481,7 +481,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       representant_entreprise: entrepriseInfo?.representant || 'Non spécifié',
       fonction_representant: entrepriseInfo?.fonctionRepresentant || 'Non spécifiée',
       
-      // Variables programmateur
+      // Variables contact
       programmateur_nom: programmateur?.nom || 'Non spécifié',
       programmateur_prenom: programmateur?.prenom || '',
       programmateur_structure: structureData?.nom || programmateur?.structure || 'Non spécifiée',
@@ -498,7 +498,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         else if (structureData?.adresse && typeof structureData.adresse === 'string') {
           return structureData.adresse;
         }
-        // Sinon utiliser l'adresse du programmateur
+        // Sinon utiliser l'adresse du contact
         return programmateur?.adresse || 'Non spécifiée';
       })(),
       programmateur_numero_intracommunautaire: structureData?.numeroIntracommunautaire || programmateur?.numeroIntracommunautaire || programmateur?.numero_intracommunautaire || 'Non spécifié',

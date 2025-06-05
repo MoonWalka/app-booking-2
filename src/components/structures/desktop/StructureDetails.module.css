@@ -270,13 +270,13 @@
   color: var(--tc-color-primary);
 }
 
-.programmateursList {
+.contactsList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.programmateurItem {
+.contactItem {
   display: flex;
   align-items: center;
   gap: var(--tc-space-2);
@@ -284,26 +284,26 @@
   border-bottom: var(--tc-border-width) solid var(--tc-border-default);
 }
 
-.programmateurItem:last-child {
+.contactItem:last-child {
   border-bottom: none;
 }
 
-.programmateurIcon {
+.contactIcon {
   color: var(--tc-color-primary);
   font-size: var(--tc-font-size-lg);
 }
 
-.programmateurDetails {
+.contactDetails {
   flex: 1;
 }
 
-.programmateurName {
+.contactName {
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-primary);
   margin-bottom: var(--tc-space-1);
 }
 
-.programmateurRole {
+.contactRole {
   font-size: var(--tc-font-size-sm);
   color: var(--tc-text-secondary);
 }

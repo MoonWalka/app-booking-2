@@ -116,8 +116,8 @@
     --tc-color-artiste-light: #f0e6ff;     /* Variante claire */
     --tc-color-concert: #5e72e4;           /* Bleu concerts */
     --tc-color-concert-light: #eef0fd;     /* Variante claire */
-    --tc-color-programmateur: #6f42c1;     /* Violet programmateurs */
-    --tc-color-programmateur-light: #f0e6fa; /* Variante claire */
+    --tc-color-contact: #6f42c1;     /* Violet contacts */
+    --tc-color-contact-light: #f0e6fa; /* Variante claire */
     --tc-color-orange: #ff6b35;            /* Orange */
 
     /* ===== VARIABLES RGB ESSENTIELLES ===== */
@@ -357,8 +357,8 @@
     --tc-color-artiste-light: #3b1f47;     /* Variante sombre */
     --tc-color-concert: #818cf8;           /* Bleu concerts plus clair */
     --tc-color-concert-light: #1e1b3a;     /* Variante sombre */
-    --tc-color-programmateur: #a855f7;     /* Violet programmateurs plus clair */
-    --tc-color-programmateur-light: #2d1b3d; /* Variante sombre */
+    --tc-color-contact: #a855f7;     /* Violet contacts plus clair */
+    --tc-color-contact-light: #2d1b3d; /* Variante sombre */
 
     /* ===== COULEURS ÉTENDUES (NUANCES) ===== */
     /* Primary shades */

@@ -85,7 +85,7 @@ const useLieuDetails = (id, locationParam) => {
       console.log('[useLieuDetails] Custom contact query - lieu data:', {
         id: lieuData.id,
         contactId: lieuData.contactId,
-        contactsAssocies: lieuData.contactsAssocies,
+        programmateursAssocies: lieuData.programmateursAssocies,
         allFields: Object.keys(lieuData)
       });
       
@@ -105,16 +105,16 @@ const useLieuDetails = (id, locationParam) => {
           }
         }
         
-        // Méthode 2: contactsAssocies array (compatibilité ancienne)
-        if (lieuData.contactsAssocies && Array.isArray(lieuData.contactsAssocies) && lieuData.contactsAssocies.length > 0) {
-          const premierContactId = lieuData.contactsAssocies[0];
+        // Méthode 2: programmateursAssocies array (compatibilité ancienne)
+        if (lieuData.programmateursAssocies && Array.isArray(lieuData.programmateursAssocies) && lieuData.programmateursAssocies.length > 0) {
+          const premierContactId = lieuData.programmateursAssocies[0];
           const contactId = typeof premierContactId === 'object' ? premierContactId.id : premierContactId;
           
           if (contactId && typeof contactId === 'string') {
             const contactDoc = await getDoc(doc(db, 'contacts', contactId));
             if (contactDoc.exists()) {
               const contact = { id: contactDoc.id, ...contactDoc.data() };
-              console.log('[useLieuDetails] ✅ Contact trouvé via contactsAssocies:', contact);
+              console.log('[useLieuDetails] ✅ Contact trouvé via programmateursAssocies:', contact);
               return contact;
             }
           }
@@ -359,7 +359,7 @@ const useLieuDetails = (id, locationParam) => {
       name: 'contact', 
       collection: 'contacts',
       idField: 'contactId',
-      alternativeIdFields: ['contactsAssocies'], // Champs alternatifs pour compatibilité
+      alternativeIdFields: ['programmateursAssocies'], // Champs alternatifs pour compatibilité
       nameField: 'nom',
       type: 'custom', // Force l'utilisation de la customQuery même sans contactId
       essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement

@@ -222,7 +222,7 @@ const prepareContractVariables = (safeData) => {
     'representant_entreprise': safeData.entreprise?.representant || 'Non spécifié',
     'fonction_representant': safeData.entreprise?.fonctionRepresentant || 'Non spécifiée',
     
-    // Variables contact (ex-programmateur) - Support rétrocompatibilité
+    // Variables contact (ex-contact) - Support rétrocompatibilité
     'contact_nom': safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
     'contact_prenom': safeData.contact?.prenom || safeData.programmateur?.prenom || '',
     'contact_structure': safeData.contact?.structure || safeData.programmateur?.structure || 'Non spécifiée',
@@ -234,7 +234,7 @@ const prepareContractVariables = (safeData) => {
     'contact_representant': safeData.contact?.representant || safeData.programmateur?.representant || safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
     'contact_qualite_representant': safeData.contact?.qualiteRepresentant || safeData.programmateur?.qualiteRepresentant || safeData.programmateur?.qualite_representant || safeData.contact?.fonction || safeData.programmateur?.fonction || 'Non spécifiée',
     
-    // Variables programmateur (DEPRECATED - pour rétrocompatibilité des anciens templates)
+    // Variables contact (DEPRECATED - pour rétrocompatibilité des anciens templates)
     'programmateur_nom': safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
     'programmateur_prenom': safeData.contact?.prenom || safeData.programmateur?.prenom || '',
     'programmateur_structure': safeData.contact?.structure || safeData.programmateur?.structure || 'Non spécifiée',
@@ -267,7 +267,7 @@ const prepareContractVariables = (safeData) => {
     'lieu_ville': safeData.lieu?.ville || 'Non spécifiée',
     'lieu_capacite': safeData.lieu?.capacite || 'Non spécifiée',
     
-    // Variables structure (utiliser les données du programmateur si pas de structure séparée)
+    // Variables structure (utiliser les données du contact si pas de structure séparée)
     'structure_nom': safeData.structure?.nom || safeData.structure?.raisonSociale || safeData.programmateur?.structure || 'Non spécifiée',
     'structure_siret': safeData.structure?.siret || safeData.programmateur?.siret || 'Non spécifié',
     'structure_adresse': (() => {

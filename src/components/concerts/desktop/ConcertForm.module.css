@@ -6,9 +6,9 @@
 
 /* Styles pour ConcertForm - optimisés pour une meilleure UX */
 
-/* Architecture harmonisée avec ProgrammateurFormMaquette */
+/* Architecture harmonisée avec contactFormMaquette */
 
-/* Wrapper pour l'ensemble de la page - comme programmateur */
+/* Wrapper pour l'ensemble de la page - comme contact */
 .pageWrapper {
   width: calc(100% - var(--tc-space-8));
   margin: var(--tc-space-4);
@@ -21,7 +21,7 @@
   min-height: 100vh;
 }
 
-/* Container principal - comme programmateur */
+/* Container principal - comme contact */
 .formContainer {
   width: 100%;
   margin: 0;
@@ -247,7 +247,7 @@
   color: var(--tc-color-secondary-600);
 }
 
-.cardHeader.programmateur i {
+.cardHeader.contact i {
   color: var(--tc-color-primary-600);
 }
 
@@ -421,9 +421,9 @@
   color: var(--tc-text-muted);
 }
 
-/* Recherche de lieu/programmateur/artiste améliorée */
+/* Recherche de lieu/contact/artiste améliorée */
 .lieuSearchContainer,
-.programmateurSearchContainer,
+.contactSearchContainer,
 .artisteSearchContainer {
   position: relative;
   margin-bottom: var(--tc-space-3);
@@ -431,7 +431,7 @@
 
 /* États de sélection avec style moderne - harmonisé avec ConcertView */
 .selectedLieu,
-.selectedProgrammateur,
+.selectedcontact,
 .selectedArtiste {
   background-color: var(--tc-bg-subtle);
   border: 1px solid var(--tc-border-light);
@@ -450,7 +450,7 @@
 }
 
 .selectedLieu:hover,
-.selectedProgrammateur:hover,
+.selectedcontact:hover,
 .selectedArtiste:hover {
   box-shadow: var(--tc-shadow-sm);
   border-color: var(--tc-color-primary);
@@ -458,7 +458,7 @@
 }
 
 .lieuCard,
-.programmateurCard,
+.contactCard,
 .artisteCard {
   display: flex;
   justify-content: space-between;
@@ -466,13 +466,13 @@
 }
 
 .lieuInfo,
-.programmateurInfo,
+.contactInfo,
 .artisteInfo {
   flex-grow: 1;
 }
 
 .lieuName,
-.programmateurName,
+.contactName,
 .artisteName {
   font-weight: var(--tc-font-weight-semibold);
   display: block;
@@ -493,25 +493,25 @@
   margin-right: var(--tc-space-1);
 }
 
-.programmateurStructure {
+.contactStructure {
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-space-1);
   color: var(--tc-color-gray-600);
 }
 
-.programmateurContacts {
+.contactContacts {
   margin-top: var(--tc-space-2);
 }
 
-.programmateurContactItem {
+.contactContactItem {
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
   margin-bottom: var(--tc-space-1);
 }
 
-.programmateurContactItem i {
+.contactContactItem i {
   margin-right: var(--tc-space-1);
   color: var(--tc-color-gray-600);
 }
@@ -530,7 +530,7 @@
 
 /* Items de dropdown */
 .lieuItem,
-.programmateurItem,
+.contactItem,
 .artisteItem {
   padding: var(--tc-space-4);
   cursor: pointer;
@@ -538,13 +538,13 @@
 }
 
 .lieuItem:hover,
-.programmateurItem:hover,
+.contactItem:hover,
 .artisteItem:hover {
   background-color: var(--tc-bg-default);
 }
 
 .lieuDetails,
-.programmateurDetails,
+.contactDetails,
 .artisteDetails {
   display: flex;
   flex-direction: column;

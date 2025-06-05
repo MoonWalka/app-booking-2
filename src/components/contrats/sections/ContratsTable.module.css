@@ -52,14 +52,14 @@
   margin-right: 0.5rem;
 }
 
-.programmateurInfo {
+.contactInfo {
   display: flex;
   align-items: center;
   color: #374151;
   font-size: 0.875rem;
 }
 
-.programmateurInfo i {
+.contactInfo i {
   color: #6b7280;
   margin-right: 0.5rem;
 }

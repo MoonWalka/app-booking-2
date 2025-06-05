@@ -74,7 +74,7 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
     );
   };
 
-  // Formatage du programmateur avec nom complet et structure
+  // Formatage du contact avec nom complet et structure
   const formatProgrammateur = () => {
     console.log('[DEBUG ContratInfoCard] formatProgrammateur - programmateur:', programmateur, 'concert?.programmateurNom:', concert?.programmateurNom);
     
@@ -82,7 +82,7 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
       return 'Non spécifié';
     }
 
-    // Si on a les données complètes du programmateur
+    // Si on a les données complètes du contact
     if (programmateur) {
       const nomComplet = programmateur.prenom && programmateur.nom 
         ? `${programmateur.prenom} ${programmateur.nom}`

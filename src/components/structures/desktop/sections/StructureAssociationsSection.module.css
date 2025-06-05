@@ -6,7 +6,7 @@
 
 /* 
  * Styles pour StructureAssociationsSection
- * Section d'associations d'une structure avec des programmateurs
+ * Section d'associations d'une structure avec des contacts
  * Dernière mise à jour: 04/05/2025
  */
 
@@ -43,13 +43,13 @@
   padding: var(--tc-space-4);
 }
 
-.programmateursList {
+.contactsList {
   display: flex;
   flex-direction: column;
   gap: var(--tc-space-4);
 }
 
-.programmateurCard {
+.contactCard {
   display: flex;
   align-items: center;
   padding: var(--tc-space-4);
@@ -58,16 +58,16 @@
   transition: all 0.2s ease;
 }
 
-.programmateurCard:hover {
+.contactCard:hover {
   box-shadow: var(--tc-box-shadow-md);
   border-color: var(--tc-primary-color-light);
 }
 
-.programmateurInfo {
+.contactInfo {
   flex: 1;
 }
 
-.programmateurName {
+.contactName {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   margin: 0 0 var(--tc-space-2) 0;
@@ -75,18 +75,18 @@
   align-items: center;
 }
 
-.programmateurName a {
+.contactName a {
   color: var(--tc-color-primary);
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.programmateurName a:hover {
+.contactName a:hover {
   color: var(--tc-primary-color-dark);
   text-decoration: underline;
 }
 
-.programmateurDetails {
+.contactDetails {
   display: flex;
   flex-wrap: wrap;
   gap: var(--tc-space-4);
@@ -154,7 +154,7 @@
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .programmateurDetails {
+  .contactDetails {
     flex-direction: column;
     gap: var(--tc-space-1);
   }

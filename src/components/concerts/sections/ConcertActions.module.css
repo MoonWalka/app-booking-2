@@ -129,7 +129,7 @@
   transform: translateY(-1px);
 }
 
-/* Bouton désactivé (pas de programmateur) */
+/* Bouton désactivé (pas de contact) */
 .formButton.disabled {
   background-color: rgba(108, 117, 125, 0.05);
   color: #adb5bd;
@@ -203,7 +203,7 @@
   transform: translateY(-1px);
 }
 
-/* Bouton désactivé (pas de programmateur) */
+/* Bouton désactivé (pas de contact) */
 .contractButton.disabled {
   background-color: rgba(108, 117, 125, 0.05);
   color: #adb5bd;

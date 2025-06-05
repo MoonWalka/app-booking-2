@@ -31,7 +31,7 @@ const LieuView = () => {
     loadingRelated
   } = useLieuDetails(lieuId);
 
-  // Récupérer le programmateur depuis les entités liées
+  // Récupérer le contact depuis les entités liées
   const programmateur = relatedData?.programmateur;
   const loadingProgrammateur = loadingRelated?.programmateur;
 

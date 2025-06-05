@@ -47,7 +47,7 @@ const useTemplateVariables = () => {
     { label: 'Lieu du concert', value: 'lieu_nom' },
     { label: 'Adresse du lieu', value: 'lieu_adresse' },
     
-    // Variables Programmateur
+    // Variables contact
     { label: 'Programmateur - Nom', value: 'programmateur_nom' },
     { label: 'Programmateur - Email', value: 'programmateur_email' },
     { label: 'Programmateur - Téléphone', value: 'programmateur_telephone' },

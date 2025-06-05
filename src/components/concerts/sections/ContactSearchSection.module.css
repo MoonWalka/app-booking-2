@@ -1,5 +1,5 @@
 /*
- * Styles pour ProgrammateurSearchSection
+ * Styles pour contactSearchSection
  * Standardisé selon le Guide de Style CSS de TourCraft
  * Dernière mise à jour: 5 mai 2025
  */
@@ -50,7 +50,7 @@
   }
 }
 
-/* Styles pour la liste des programmateurs */
+/* Styles pour la liste des contacts */
 .contactsList {
   display: flex;
   flex-direction: column;

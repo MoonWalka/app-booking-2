@@ -55,7 +55,7 @@ import useGenericEntityDetails from '@/hooks/common/useGenericEntityDetails';
  *     <h2>Validation de soumission</h2>
  *     <p>Concert: {concert?.titre}</p>
  *     <p>Lieu: {lieu?.nom}</p>
- *     <p>Programmateur: {formData.programmateur?.nom}</p>
+ *     <p>contact: {formData.contact?.nom}</p>
  *   </div>
  * );
  * ```

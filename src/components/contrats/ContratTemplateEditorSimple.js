@@ -195,7 +195,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     { category: 'Entreprise', label: 'Représentant de l\'entreprise', value: '{representant_entreprise}' },
     { category: 'Entreprise', label: 'Fonction du représentant', value: '{fonction_representant}' },
 
-    // Variables Programmateur
+    // Variables contact
     { category: 'Programmateur', label: 'Nom du programmateur', value: '{programmateur_nom}' },
     { category: 'Programmateur', label: 'Prénom du programmateur', value: '{programmateur_prenom}' },
     { category: 'Programmateur', label: 'Structure du programmateur', value: '{programmateur_structure}' },

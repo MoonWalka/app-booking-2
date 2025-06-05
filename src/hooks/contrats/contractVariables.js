@@ -17,7 +17,7 @@ export const CONTRACT_VARIABLES = {
   'representant_entreprise': { label: 'Représentant de votre entreprise', category: 'entreprise', source: 'entreprise.representant' },
   'fonction_representant': { label: 'Fonction du représentant', category: 'entreprise', source: 'entreprise.fonctionRepresentant' },
   
-  // Variables programmateur  
+  // Variables contact  
   'programmateur_nom': { label: 'Nom du programmateur', category: 'programmateur', source: 'programmateur.nom' },
   'programmateur_prenom': { label: 'Prénom du programmateur', category: 'programmateur', source: 'programmateur.prenom' },
   'programmateur_structure': { label: 'Structure du programmateur', category: 'programmateur', source: 'programmateur.structure' },
@@ -111,8 +111,8 @@ export const mapStructureDataToVariables = (structureData) => {
 };
 
 /**
- * Mapper les données du programmateur pour inclure les infos de structure
- * @param {Object} programmateurData - Les données du programmateur
+ * Mapper les données du contact pour inclure les infos de structure
+ * @param {Object} contactData - Les données du contact
  * @param {Object} structureData - Les données de la structure associée
  * @returns {Object} Les variables mappées pour le contrat
  */

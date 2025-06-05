@@ -162,15 +162,15 @@
   text-decoration: underline;
 }
 
-/* Recherche de lieu/programmateur/artiste */
+/* Recherche de lieu/contact/artiste */
 .lieuSearchContainer,
-.programmateurSearchContainer,
+.contactSearchContainer,
 .artisteSearchContainer {
   position: relative;
 }
 
 .selectedLieu,
-.selectedProgrammateur,
+.selectedcontact,
 .selectedArtiste {
   border: var(--tc-border-width) solid var(--tc-border-default);
   border-radius: var(--tc-radius-base);
@@ -179,7 +179,7 @@
 }
 
 .lieuCard,
-.programmateurCard,
+.contactCard,
 .artisteCard {
   display: flex;
   justify-content: space-between;
@@ -187,13 +187,13 @@
 }
 
 .lieuInfo,
-.programmateurInfo,
+.contactInfo,
 .artisteInfo {
   flex-grow: 1;
 }
 
 .lieuName,
-.programmateurName,
+.contactName,
 .artisteName {
   font-weight: var(--tc-font-weight-semibold);
   display: block;
@@ -214,25 +214,25 @@
   margin-right: var(--tc-space-1);
 }
 
-.programmateurStructure {
+.contactStructure {
   font-size: var(--tc-font-size-sm);
   display: block;
   margin-bottom: var(--tc-space-1);
   color: var(--tc-text-secondary);
 }
 
-.programmateurContacts {
+.contactContacts {
   margin-top: var(--tc-space-2);
 }
 
-.programmateurContactItem {
+.contactContactItem {
   display: flex;
   align-items: center;
   font-size: var(--tc-font-size-sm);
   margin-bottom: var(--tc-space-1);
 }
 
-.programmateurContactItem i {
+.contactContactItem i {
   margin-right: var(--tc-space-1);
   color: var(--tc-text-secondary);
 }

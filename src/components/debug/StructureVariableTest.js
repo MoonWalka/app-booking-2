@@ -78,9 +78,9 @@ const StructureVariableTest = () => {
   const testStructureVariables = async (structure) => {
     console.log('🧪 Test des variables de structure avec:', structure);
     
-    // Mettre à jour le programmateur de test avec l'ID de structure
-    // const testProgrammateur = {
-    //   ...mockProgrammateur,
+    // Mettre à jour le contact de test avec l'ID de structure
+    // const testcontact = {
+    //   ...mockcontact,
     //   structureId: structure.id
     // };
     

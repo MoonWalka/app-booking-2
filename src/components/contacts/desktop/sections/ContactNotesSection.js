@@ -5,7 +5,7 @@ import FormField from '@/components/ui/FormField';
 import Alert from '@/components/ui/Alert';
 
 /**
- * Section Notes du contact - Version V2
+ * Section Notes du contact
  */
 const ContactNotesSection = ({ 
   notes, 

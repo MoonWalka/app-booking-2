@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 import FlexContainer from '@/components/ui/FlexContainer';
 import { toast } from 'react-toastify';
-// MIGRATION: Utilisation du hook optimisé au lieu du hook V2
+// MIGRATION: Utilisation du hook optimisé
 import { useLieuDetails } from '@/hooks/lieux';
 
 // Import styles

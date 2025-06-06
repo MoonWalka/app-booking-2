@@ -226,9 +226,12 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     let q = collection(db, entityType);
     const constraints = [];
     
-    // Ajouter le filtre organisation si disponible
+    // ⚠️ IMPORTANT: Toujours filtrer par organisation si disponible
     if (currentOrganization?.id) {
+      console.log(`[useGenericDataFetcher] Filtrage par organizationId: ${currentOrganization.id} pour ${entityType}`);
       constraints.push(where('organizationId', '==', currentOrganization.id));
+    } else {
+      console.warn(`[useGenericDataFetcher] ⚠️ Pas d'organisation courante pour filtrer ${entityType}`);
     }
     
     // Filtres
@@ -308,7 +311,14 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
       if (stableFetchConfig.mode === 'single') {
         const docSnap = await getDoc(q);
         if (docSnap.exists()) {
-          result = { id: docSnap.id, ...docSnap.data() };
+          const docData = docSnap.data();
+          // Vérifier l'organisation pour le mode single
+          if (currentOrganization?.id && docData.organizationId !== currentOrganization.id) {
+            console.warn(`[useGenericDataFetcher] Document ${docSnap.id} n'appartient pas à l'organisation ${currentOrganization.id}`);
+            result = null;
+          } else {
+            result = { id: docSnap.id, ...docData };
+          }
         } else {
           result = null;
         }

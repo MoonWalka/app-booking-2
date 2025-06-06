@@ -14,6 +14,7 @@ import {
 } from '@/services/firebase-service';
 import logger from '@/services/loggerService';
 import cacheService from '@/services/cacheService';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook to fetch concerts, form data, and contracts
@@ -25,6 +26,9 @@ export const useConcertListData = () => {
   // Mesurer le temps d'initialisation du hook
   const hookStartTime = performance.now();
   logger.log('🔄 Initialisation du hook useConcertListData');
+  
+  // Organisation context
+  const { currentOrganization } = useOrganization();
   
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -264,11 +268,32 @@ export const useConcertListData = () => {
       
       // Récupérer les concerts avec seulement les champs nécessaires
       const concertsRef = collection(db, 'concerts');
-      let q = query(concertsRef, orderBy('date', 'desc'), limit(pageSize));
+      
+      // Vérifier qu'on a une organisation
+      if (!currentOrganization?.id) {
+        logger.warn('Pas d\'organisation courante - impossible de charger les concerts');
+        setError('Aucune organisation sélectionnée');
+        setLoading(false);
+        setLoadingMore(false);
+        return;
+      }
+      
+      let q = query(
+        concertsRef, 
+        where('organizationId', '==', currentOrganization.id),
+        orderBy('date', 'desc'), 
+        limit(pageSize)
+      );
       
       // Ajouter la pagination si nécessaire
       if (loadMore && lastVisibleRef.current) {
-        q = query(concertsRef, orderBy('date', 'desc'), startAfter(lastVisibleRef.current), limit(pageSize));
+        q = query(
+          concertsRef, 
+          where('organizationId', '==', currentOrganization.id),
+          orderBy('date', 'desc'), 
+          startAfter(lastVisibleRef.current), 
+          limit(pageSize)
+        );
       } else if (loadMore && !lastVisibleRef.current) {
         logger.warn('Impossible de charger plus - pas de référence au dernier document');
         setLoadingMore(false);
@@ -330,7 +355,11 @@ export const useConcertListData = () => {
           
           // 1. Récupération des formulaires UNIQUEMENT pour les concerts actuels
           const formsRef = collection(db, 'formulaires');
-          const formsQuery = query(formsRef, where('concertId', 'in', concertIds));
+          const formsQuery = query(
+            formsRef, 
+            where('organizationId', '==', currentOrganization.id),
+            where('concertId', 'in', concertIds)
+          );
           const formsSnapshot = await getDocs(formsQuery);
           
           const formsData = formsSnapshot.docs.map(doc => ({
@@ -358,7 +387,11 @@ export const useConcertListData = () => {
           
           // 2. Récupération des contrats UNIQUEMENT pour les concerts actuels
           const contractsRef = collection(db, 'contrats');
-          const contractsQuery = query(contractsRef, where('concertId', 'in', concertIds));
+          const contractsQuery = query(
+            contractsRef, 
+            where('organizationId', '==', currentOrganization.id),
+            where('concertId', 'in', concertIds)
+          );
           const contractsSnapshot = await getDocs(contractsQuery);
           
           const contractsMap = {};

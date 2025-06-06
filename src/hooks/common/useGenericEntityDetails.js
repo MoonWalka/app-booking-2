@@ -9,6 +9,7 @@ import { debugLog } from '@/utils/logUtils';
 import useCache from './useCache';
 import useFirestoreSubscription from './useFirestoreSubscription';
 import InstanceTracker from '@/services/InstanceTracker';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook générique pour la gestion des détails d'une entité
@@ -60,6 +61,9 @@ const useGenericEntityDetails = ({
   cacheEnabled = true,       // Activer le cache pour ce hook
   cacheTTL                   // TTL personnalisé pour ce hook (en ms)
 }) => {
+  // Organisation context
+  const { currentOrganization } = useOrganization();
+  
   // DEBUG: Vérifier la réception des customQueries avec style distinctif
   console.log('🎯🎯🎯 RECEPTION useGenericEntityDetails 🎯🎯🎯');
   console.log('CustomQueries reçues:', customQueries);
@@ -371,6 +375,15 @@ const useGenericEntityDetails = ({
         debugLog(`✅ FETCH_ENTITY: Document existe, traitement des données`, 'info', 'useGenericEntityDetails');
         const entityData = { [idField]: entityDoc.id, ...entityDoc.data() };
         debugLog(`📊 FETCH_ENTITY: Données brutes: ${JSON.stringify(entityData)}`, 'debug', 'useGenericEntityDetails');
+        
+        // Vérifier l'organisation
+        if (currentOrganization?.id && entityData.organizationId !== currentOrganization.id) {
+          debugLog(`❌ FETCH_ENTITY: Document ${entityDoc.id} n'appartient pas à l'organisation ${currentOrganization.id}`, 'warn', 'useGenericEntityDetails');
+          safeSetState(setError, { message: `${entityType} non trouvé(e) ou accès non autorisé` });
+          safeSetState(setLoading, false);
+          instanceRef.current.currentlyFetching = false;
+          return;
+        }
         
         // Transformer les données si une fonction de transformation est fournie
         const transformedData = transformData ? transformData(entityData) : entityData;

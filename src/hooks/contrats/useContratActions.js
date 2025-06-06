@@ -1,8 +1,9 @@
 // src/hooks/contrats/useContratActions.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, updateDoc, deleteDoc, Timestamp } from '@/services/firebase-service';
+import { doc, updateDoc, deleteDoc, getDoc, Timestamp } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook to manage contract actions (mark as sent, signed, deletion)
@@ -11,12 +12,35 @@ export const useContratActions = (contratId, contrat, setContrat) => {
   const [actionError, setActionError] = useState('');
   const [isActionLoading, setIsActionLoading] = useState(false);
   const navigate = useNavigate();
+  const { currentOrganization } = useOrganization();
+
+  // Vérifier l'appartenance du contrat à l'organisation
+  const verifyContratOwnership = async () => {
+    if (!currentOrganization?.id) {
+      throw new Error('Aucune organisation sélectionnée');
+    }
+    
+    const contratDoc = await getDoc(doc(db, 'contrats', contratId));
+    if (!contratDoc.exists()) {
+      throw new Error('Contrat introuvable');
+    }
+    
+    const contratData = contratDoc.data();
+    if (contratData.organizationId !== currentOrganization.id) {
+      throw new Error('Accès non autorisé à ce contrat');
+    }
+    
+    return contratData;
+  };
 
   // Marquer le contrat comme envoyé
   const handleSendContrat = async () => {
     try {
       setIsActionLoading(true);
       setActionError('');
+      
+      // Vérifier l'appartenance du contrat
+      await verifyContratOwnership();
       
       // Mettre à jour le statut du contrat
       await updateDoc(doc(db, 'contrats', contratId), {
@@ -46,6 +70,9 @@ export const useContratActions = (contratId, contrat, setContrat) => {
       setIsActionLoading(true);
       setActionError('');
       
+      // Vérifier l'appartenance du contrat
+      await verifyContratOwnership();
+      
       // Mettre à jour le statut du contrat
       await updateDoc(doc(db, 'contrats', contratId), {
         status: 'signed'
@@ -72,6 +99,9 @@ export const useContratActions = (contratId, contrat, setContrat) => {
       try {
         setIsActionLoading(true);
         setActionError('');
+        
+        // Vérifier l'appartenance du contrat
+        await verifyContratOwnership();
         
         // Supprimer le contrat de la base de données
         await deleteDoc(doc(db, 'contrats', contratId));

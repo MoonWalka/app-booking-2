@@ -18,6 +18,8 @@ import { utilityCache } from '@/utils/networkStabilizer';
 import ContactAssociationsDebug from './ContactAssociationsDebug';
 import AssociationsAudit from './AssociationsAudit';
 import RelancesAutomatiquesTest from './RelancesAutomatiquesTest';
+import { useOrganization } from '@/context/OrganizationContext';
+import { collection, query, where, getDocs, db } from '@/services/firebase-service';
 
 const UnifiedDebugDashboard = () => {
   // États principaux
@@ -57,6 +59,11 @@ const UnifiedDebugDashboard = () => {
   const [componentTree, setComponentTree] = useState([]);
   const [performanceMetrics, setPerformanceMetrics] = useState({});
   const [errorPatterns, setErrorPatterns] = useState([]);
+  
+  // États pour Multi-Org Isolation Test
+  const [multiOrgTestResults, setMultiOrgTestResults] = useState(null);
+  const [isTestingMultiOrg, setIsTestingMultiOrg] = useState(false);
+  const { currentOrganization } = useOrganization();
   
   const navRenderCountRef = useRef(0);
   const navAuthRenderCountRef = useRef(0);
@@ -865,6 +872,158 @@ const UnifiedDebugDashboard = () => {
     analyzeErrorPatterns();
   }, [analyzeHooks, analyzeComponentTree, analyzePerformance, analyzeErrorPatterns]);
 
+  // 🔒 Test d'isolation multi-organisation
+  const runMultiOrgIsolationTest = useCallback(async () => {
+    setIsTestingMultiOrg(true);
+    setMultiOrgTestResults(null);
+    
+    try {
+      const results = {
+        timestamp: new Date().toISOString(),
+        currentOrganization: currentOrganization ? {
+          id: currentOrganization.id,
+          name: currentOrganization.name
+        } : null,
+        tests: [],
+        issues: [],
+        summary: {
+          totalDocuments: 0,
+          organizationDocuments: 0,
+          leakedDocuments: 0,
+          missingOrgIdDocuments: 0
+        }
+      };
+      
+      if (!currentOrganization?.id) {
+        results.issues.push({
+          type: 'error',
+          message: 'Aucune organisation sélectionnée',
+          severity: 'critical'
+        });
+        setMultiOrgTestResults(results);
+        return;
+      }
+      
+      // Collections à tester
+      const collectionsToTest = [
+        'concerts',
+        'contacts',
+        'artistes',
+        'lieux',
+        'structures',
+        'contrats',
+        'formulaires',
+        'relances'
+      ];
+      
+      for (const collectionName of collectionsToTest) {
+        try {
+          // Test 1: Requête sans filtre
+          const allQuery = query(collection(db, collectionName));
+          const allDocs = await getDocs(allQuery);
+          
+          // Test 2: Requête avec filtre organizationId
+          const orgQuery = query(
+            collection(db, collectionName),
+            where('organizationId', '==', currentOrganization.id)
+          );
+          const orgDocs = await getDocs(orgQuery);
+          
+          // Analyser les résultats
+          const organizations = new Set();
+          let missingOrgId = 0;
+          
+          allDocs.forEach(doc => {
+            const data = doc.data();
+            if (data.organizationId) {
+              organizations.add(data.organizationId);
+            } else {
+              missingOrgId++;
+            }
+          });
+          
+          const testResult = {
+            collection: collectionName,
+            totalDocuments: allDocs.size,
+            organizationDocuments: orgDocs.size,
+            leakedDocuments: allDocs.size - orgDocs.size,
+            missingOrgId: missingOrgId,
+            organizationsFound: Array.from(organizations),
+            status: allDocs.size === orgDocs.size ? 'success' : 'warning'
+          };
+          
+          results.tests.push(testResult);
+          results.summary.totalDocuments += allDocs.size;
+          results.summary.organizationDocuments += orgDocs.size;
+          results.summary.leakedDocuments += testResult.leakedDocuments;
+          results.summary.missingOrgIdDocuments += missingOrgId;
+          
+          // Détecter les problèmes
+          if (testResult.leakedDocuments > 0) {
+            results.issues.push({
+              type: 'warning',
+              collection: collectionName,
+              message: `${testResult.leakedDocuments} documents d'autres organisations sont accessibles`,
+              severity: 'high'
+            });
+          }
+          
+          if (missingOrgId > 0) {
+            results.issues.push({
+              type: 'info',
+              collection: collectionName,
+              message: `${missingOrgId} documents sans organizationId`,
+              severity: 'medium'
+            });
+          }
+          
+          if (organizations.size > 1) {
+            results.issues.push({
+              type: 'error',
+              collection: collectionName,
+              message: `Plusieurs organisations détectées (${organizations.size})`,
+              severity: 'critical',
+              organizations: Array.from(organizations)
+            });
+          }
+          
+        } catch (error) {
+          results.tests.push({
+            collection: collectionName,
+            error: error.message,
+            status: 'error'
+          });
+          
+          results.issues.push({
+            type: 'error',
+            collection: collectionName,
+            message: `Erreur lors du test: ${error.message}`,
+            severity: 'medium'
+          });
+        }
+      }
+      
+      // Calculer le score de sécurité
+      const securityScore = results.summary.organizationDocuments > 0 
+        ? Math.round((results.summary.organizationDocuments / results.summary.totalDocuments) * 100)
+        : 100;
+      
+      results.securityScore = securityScore;
+      results.status = securityScore === 100 ? 'secure' : securityScore >= 90 ? 'warning' : 'critical';
+      
+      setMultiOrgTestResults(results);
+      
+    } catch (error) {
+      console.error('Erreur lors du test multi-org:', error);
+      setMultiOrgTestResults({
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    } finally {
+      setIsTestingMultiOrg(false);
+    }
+  }, [currentOrganization]);
+
   if (process.env.NODE_ENV === 'production') {
     return null;
   }
@@ -924,7 +1083,8 @@ const UnifiedDebugDashboard = () => {
           { id: 'navigation', label: '🧭 Navigation', shortLabel: '🧭' },
           { id: 'navtests', label: '🧪 Nav Tests', shortLabel: '🧪²' },
           { id: 'relances', label: '🤖 Relances Auto', shortLabel: '🤖' },
-          { id: 'deepanalysis', label: '🔬 Deep Analysis', shortLabel: '🔬' }
+          { id: 'deepanalysis', label: '🔬 Deep Analysis', shortLabel: '🔬' },
+          { id: 'multiorg', label: '🔒 Multi-Org', shortLabel: '🔒' }
         ].map(tab => (
           <div
             key={tab.id}
@@ -1433,6 +1593,190 @@ const UnifiedDebugDashboard = () => {
              Object.keys(performanceMetrics).length === 0 && errorPatterns.length === 0 && (
               <div style={{...styles.card, textAlign: 'center', color: '#666'}}>
                 <p>Aucune analyse effectuée. Cliquez sur "🔬 Lancer l'analyse approfondie" pour commencer.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Onglet Multi-Org Isolation */}
+        {activeTab === 'multiorg' && (
+          <div>
+            <div style={{ marginBottom: '16px' }}>
+              <button 
+                onClick={runMultiOrgIsolationTest} 
+                disabled={isTestingMultiOrg}
+                style={styles.button}
+              >
+                {isTestingMultiOrg ? '⏳ Test en cours...' : '🔒 Lancer le test d\'isolation'}
+              </button>
+              <button 
+                onClick={() => setMultiOrgTestResults(null)} 
+                style={{...styles.button, marginLeft: '8px', backgroundColor: '#6c757d'}}
+              >
+                🧹 Clear
+              </button>
+            </div>
+
+            {/* État de l'organisation */}
+            <div style={styles.card}>
+              <h4 style={styles.cardTitle}>🏢 Organisation Courante</h4>
+              {currentOrganization ? (
+                <>
+                  <div style={styles.stat}>
+                    <span style={styles.label}>Nom:</span>
+                    <span style={styles.value}>{currentOrganization.name}</span>
+                  </div>
+                  <div style={styles.stat}>
+                    <span style={styles.label}>ID:</span>
+                    <span style={styles.value}>{currentOrganization.id}</span>
+                  </div>
+                </>
+              ) : (
+                <div style={{ color: '#dc3545' }}>❌ Aucune organisation sélectionnée</div>
+              )}
+            </div>
+
+            {/* Résultats du test */}
+            {multiOrgTestResults && (
+              <>
+                {/* Score de sécurité */}
+                <div style={{
+                  ...styles.card, 
+                  marginTop: '16px',
+                  backgroundColor: multiOrgTestResults.status === 'secure' ? '#d4edda' :
+                                 multiOrgTestResults.status === 'warning' ? '#fff3cd' : '#f8d7da'
+                }}>
+                  <h4 style={styles.cardTitle}>
+                    {multiOrgTestResults.status === 'secure' ? '🛡️' :
+                     multiOrgTestResults.status === 'warning' ? '⚠️' : '🚨'} 
+                    Score de Sécurité
+                  </h4>
+                  <div style={{ fontSize: '48px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px' }}>
+                    {multiOrgTestResults.securityScore || 0}%
+                  </div>
+                  <div style={styles.grid}>
+                    <div style={styles.stat}>
+                      <span style={styles.label}>Documents totaux:</span>
+                      <span style={styles.value}>{multiOrgTestResults.summary?.totalDocuments || 0}</span>
+                    </div>
+                    <div style={styles.stat}>
+                      <span style={styles.label}>Documents de l'org:</span>
+                      <span style={styles.value}>{multiOrgTestResults.summary?.organizationDocuments || 0}</span>
+                    </div>
+                    <div style={styles.stat}>
+                      <span style={styles.label}>Documents exposés:</span>
+                      <span style={{...styles.value, color: multiOrgTestResults.summary?.leakedDocuments > 0 ? '#dc3545' : '#28a745'}}>
+                        {multiOrgTestResults.summary?.leakedDocuments || 0}
+                      </span>
+                    </div>
+                    <div style={styles.stat}>
+                      <span style={styles.label}>Sans organizationId:</span>
+                      <span style={{...styles.value, color: multiOrgTestResults.summary?.missingOrgIdDocuments > 0 ? '#ffc107' : '#28a745'}}>
+                        {multiOrgTestResults.summary?.missingOrgIdDocuments || 0}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Résultats par collection */}
+                {multiOrgTestResults.tests && multiOrgTestResults.tests.length > 0 && (
+                  <div style={{...styles.card, marginTop: '16px'}}>
+                    <h4 style={styles.cardTitle}>📊 Résultats par Collection</h4>
+                    <table style={styles.table}>
+                      <thead>
+                        <tr>
+                          <th style={styles.th}>Collection</th>
+                          <th style={styles.th}>Total</th>
+                          <th style={styles.th}>Organisation</th>
+                          <th style={styles.th}>Exposés</th>
+                          <th style={styles.th}>Sans Org ID</th>
+                          <th style={styles.th}>Statut</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {multiOrgTestResults.tests.map((test, index) => (
+                          <tr key={index} style={{
+                            backgroundColor: test.status === 'error' ? '#fff3f3' :
+                                           test.status === 'warning' ? '#fff8e1' :
+                                           test.status === 'success' ? '#f3fff3' : 'transparent'
+                          }}>
+                            <td style={styles.td}>{test.collection}</td>
+                            <td style={styles.td}>{test.totalDocuments || '-'}</td>
+                            <td style={styles.td}>{test.organizationDocuments || '-'}</td>
+                            <td style={{...styles.td, color: test.leakedDocuments > 0 ? '#dc3545' : '#28a745'}}>
+                              {test.leakedDocuments || 0}
+                            </td>
+                            <td style={{...styles.td, color: test.missingOrgId > 0 ? '#ffc107' : '#28a745'}}>
+                              {test.missingOrgId || 0}
+                            </td>
+                            <td style={styles.td}>
+                              {test.error ? (
+                                <span style={{ color: '#dc3545' }}>❌ {test.error}</span>
+                              ) : (
+                                <span style={{ color: getStatusColor(test.status) }}>
+                                  {getStatusIcon(test.status)}
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* Problèmes détectés */}
+                {multiOrgTestResults.issues && multiOrgTestResults.issues.length > 0 && (
+                  <div style={{...styles.card, marginTop: '16px', backgroundColor: '#fff3f3'}}>
+                    <h4 style={styles.cardTitle}>🚨 Problèmes Détectés</h4>
+                    {multiOrgTestResults.issues.map((issue, index) => (
+                      <div key={index} style={{
+                        padding: '8px',
+                        marginBottom: '8px',
+                        borderRadius: '4px',
+                        backgroundColor: issue.severity === 'critical' ? '#f8d7da' :
+                                       issue.severity === 'high' ? '#fff3cd' :
+                                       issue.severity === 'medium' ? '#cce5ff' : '#d1ecf1',
+                        color: issue.severity === 'critical' ? '#721c24' :
+                               issue.severity === 'high' ? '#856404' :
+                               issue.severity === 'medium' ? '#004085' : '#0c5460'
+                      }}>
+                        <strong>{getStatusIcon(issue.type)} {issue.collection || 'Général'}:</strong> {issue.message}
+                        {issue.organizations && (
+                          <div style={{ fontSize: '12px', marginTop: '4px' }}>
+                            Organisations: {issue.organizations.join(', ')}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Recommandations */}
+                {multiOrgTestResults.status !== 'secure' && (
+                  <div style={{...styles.card, marginTop: '16px', backgroundColor: '#d1ecf1'}}>
+                    <h4 style={styles.cardTitle}>💡 Recommandations</h4>
+                    <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                      {multiOrgTestResults.summary?.leakedDocuments > 0 && (
+                        <li>Vérifier que tous les hooks filtrent correctement par organizationId</li>
+                      )}
+                      {multiOrgTestResults.summary?.missingOrgIdDocuments > 0 && (
+                        <li>Migrer les documents sans organizationId vers l'organisation appropriée</li>
+                      )}
+                      <li>Tester régulièrement l'isolation des données</li>
+                      <li>Former l'équipe sur les bonnes pratiques multi-organisation</li>
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
+
+            {!multiOrgTestResults && !isTestingMultiOrg && (
+              <div style={{...styles.card, marginTop: '16px', textAlign: 'center', color: '#666'}}>
+                <p>Cliquez sur "🔒 Lancer le test d'isolation" pour vérifier la sécurité multi-organisation.</p>
+                <p style={{ fontSize: '12px', marginTop: '8px' }}>
+                  Ce test vérifie que chaque utilisateur ne peut accéder qu'aux données de son organisation.
+                </p>
               </div>
             )}
           </div>

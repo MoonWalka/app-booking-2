@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Alert, ProgressBar } from 'react-bootstrap';
 import styles from './ParametresExport.module.css';
 import { useParametres } from '@/context/ParametresContext';
-import { db, collection, getDocs, query } from '@/services/firebase-service';
+import { db, collection, getDocs, query, where } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 const ParametresExport = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
+  const { currentOrganization } = useOrganization();
   const [localState, setLocalState] = useState(parametres.export || {
     formatParDefaut: 'json',
     sauvegardeAuto: true,
@@ -44,8 +46,17 @@ const ParametresExport = () => {
     setExportStatus(`Export des ${collectionName} en cours...`);
     setError('');
     
+    if (!currentOrganization?.id) {
+      setError('Aucune organisation sélectionnée');
+      return;
+    }
+    
     try {
-      const q = query(collection(db, collectionName));
+      // Filtrer par organizationId pour n'exporter que les données de l'organisation courante
+      const q = query(
+        collection(db, collectionName),
+        where('organizationId', '==', currentOrganization.id)
+      );
       const querySnapshot = await getDocs(q);
       const data = [];
       let progress = 0;

@@ -1,58 +1,71 @@
-# 🧪 Scripts de Test et Utilitaires - TourCraft
+# Scripts TourCraft
 
-Ce dossier contient tous les scripts de test, diagnostic et utilitaires du projet TourCraft.
+Ce dossier contient tous les scripts utilitaires du projet, organisés par catégorie.
 
-## 📋 **Scripts Disponibles**
+## 📂 Structure
 
-### 🔬 **Scripts de Test Principal**
-- [**test-edition-concert.js**](./test-edition-concert.js) - Test complet de l'édition des concerts
-- [**test-edition-simple.js**](./test-edition-simple.js) - Tests simplifiés d'édition
-- [**test-verification-fix.js**](./test-verification-fix.js) - Vérification des corrections appliquées
+### 📁 analyses/
+Scripts d'analyse du code et des données
+- `analyze-contact-duplicates.js` - Analyse des doublons de contacts
+- `analyze-hooks-differences.js` - Analyse des différences entre hooks
+- `diagnostic-contact-associations.js` - Diagnostic des associations de contacts
 
-### 📊 **Profiling & Diagnostic**
-- [**test-profiler-concert.js**](./test-profiler-concert.js) - Profiling spécifique aux concerts
-- [**test-profiler-diagnostic.js**](./test-profiler-diagnostic.js) - Diagnostic de performance général
-- [**test-simple-rerenders.js**](./test-simple-rerenders.js) - Test des re-renders non désirés
+### 📁 audits/
+Scripts d'audit et leurs rapports
+- `audit-associations-bidirectionnelles.js` - Audit des relations bidirectionnelles
+- `audit-cleanup-migration.js` - Audit post-migration
+- `audit-firebase-organizationid.js` - Audit Firebase pour organizationId
+- `audit-relations-system.js` - Audit du système de relations
 
-### 🔥 **Tests Firestore**
-- [**test-firestore.js**](./test-firestore.js) - Tests de connectivité et opérations Firestore
-- [**test-interactions.js**](./test-interactions.js) - Tests d'interactions utilisateur
+### 📁 cleanup/
+Scripts de nettoyage
+- `cleanup-contact-duplicates.js` - Nettoyage des doublons de contacts
+- `cleanup-migration-safe.js` - Nettoyage sécurisé post-migration
+- `cleanup-remaining-references.js` - Nettoyage des références restantes
 
-### 🛠️ **Scripts Utilitaires**
-- [**audit_hooks_usage.sh**](./audit_hooks_usage.sh) - Audit de l'utilisation des hooks
-- [**test_corrections.sh**](./test_corrections.sh) - Script de validation des corrections
+### 📁 firebase-migration/
+Scripts de migration Firebase (voir README dans le dossier)
 
----
+### 📁 migration/
+Scripts de migration de composants
 
-## 🚀 **Utilisation**
+### 📁 standardization/
+Scripts de standardisation du code
 
-### **Exécution des scripts JS :**
+### 📁 archived-*
+Scripts archivés des versions précédentes
+
+## 🚀 Scripts Importants
+
+### Multi-Organisation
+- `migrate-missing-organizationid.js` - Migration des documents sans organizationId
+- `check-organization-ids.js` - Vérification des organizationId
+
+### Audits
+- `audit-*.js` - Tous les scripts d'audit
+- `audit_hooks_usage.sh` - Audit de l'utilisation des hooks
+
+### Migration CSS
+- `migrate-css-*.sh` - Scripts de migration CSS par phases
+
+### Nettoyage
+- `cleanup-*.js` - Scripts de nettoyage divers
+- `clean_debug_logs.js` - Nettoyage des logs de debug
+
+## 📝 Utilisation
+
+La plupart des scripts s'exécutent avec Node.js :
 ```bash
-node scripts/nom-du-script.js
+node scripts/[nom-du-script].js
 ```
 
-### **Exécution des scripts Shell :**
+Les scripts shell s'exécutent avec :
 ```bash
-./scripts/nom-du-script.sh
+./scripts/[nom-du-script].sh
 ```
 
----
+## ⚠️ Précautions
 
-## 🎯 **Objectifs des Scripts**
-
-- **Tests automatisés** : Validation du comportement de l'application
-- **Diagnostic** : Identification des problèmes de performance
-- **Profiling** : Mesure des performances React
-- **Utilitaires** : Automatisation des tâches de maintenance
-
----
-
-## ⚠️ **Notes Importantes**
-
-- Tous les scripts sont **destinés au développement**
-- **Ne pas exécuter en production** sans validation
-- Consulter la documentation de chaque script avant utilisation
-
----
-
-*Scripts développés par l'équipe technique TourCraft* 
+- Toujours faire un backup avant d'exécuter des scripts de migration ou de nettoyage
+- Certains scripts nécessitent Firebase Admin SDK
+- Lire les commentaires en début de fichier pour les instructions spécifiques

@@ -9,7 +9,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Configuration des champs de contact du contact
@@ -131,7 +130,6 @@ const lieuFields = [
  * - Erreurs génériques : "Impossible de charger les données du formulaire: {error}"
  */
 const useFormValidationData = (concertId) => {
-  const { currentOrganization } = useOrganization();
   const [formData, setFormData] = useState(null);
   const [formId, setFormId] = useState(null);
   const [concert, setConcert] = useState(null);
@@ -337,7 +335,7 @@ const useFormValidationData = (concertId) => {
       setError(`Impossible de charger les données du formulaire: ${err.message}`);
       setLoading(false);
     }
-  }, [concertId, currentOrganization?.id]);
+  }, [concertId]);
 
   useEffect(() => {
     if (concertId) {

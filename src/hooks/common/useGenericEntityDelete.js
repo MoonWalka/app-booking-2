@@ -4,6 +4,7 @@ import { doc, deleteDoc, getDoc, collection, query, where, getDocs } from '@/ser
 import { db } from '@/services/firebase-service';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { debugLog } from '@/utils/logUtils';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook générique pour gérer la suppression d'entités
@@ -31,6 +32,7 @@ const useGenericEntityDelete = (options) => {
     relatedEntities = []
   } = options || {};
 
+  const { currentOrganization } = useOrganization();
   const [isDeleting, setIsDeleting] = useState(false);
   const [hasRelatedEntities, setHasRelatedEntities] = useState(false);
   const [relatedEntitiesDetails, setRelatedEntitiesDetails] = useState(null);
@@ -103,16 +105,26 @@ const useGenericEntityDelete = (options) => {
           
           // Cas 1: Champ direct contenant l'ID (ex: { lieuId: 'abc123' })
           if (relation.referenceType === 'direct' || !relation.referenceType) {
+            const constraints = [where(field, '==', entityId)];
+            // Ajouter le filtre organizationId si l'organisation est définie
+            if (currentOrganization?.id) {
+              constraints.push(where('organizationId', '==', currentOrganization.id));
+            }
             queryToExecute = query(
               collection(db, relatedCollection),
-              where(field, '==', entityId)
+              ...constraints
             );
           } 
           // Cas 2: Champ dans un tableau (ex: { artistes: ['abc123', 'def456'] })
           else if (relation.referenceType === 'array') {
+            const constraints = [where(field, 'array-contains', entityId)];
+            // Ajouter le filtre organizationId si l'organisation est définie
+            if (currentOrganization?.id) {
+              constraints.push(where('organizationId', '==', currentOrganization.id));
+            }
             queryToExecute = query(
               collection(db, relatedCollection),
-              where(field, 'array-contains', entityId)
+              ...constraints
             );
           }
           // Cas 3: Champ dans un objet (ex: { lieu: { id: 'abc123', nom: 'Nom' } })
@@ -224,6 +236,21 @@ const useGenericEntityDelete = (options) => {
     
     try {
       debugLog(`Suppression du ${entityType} avec ID: ${entityId}`, 'info', 'useGenericEntityDelete');
+      
+      // Vérifier que l'entité appartient à l'organisation courante avant suppression
+      if (currentOrganization?.id) {
+        const entityRef = doc(db, collectionName, entityId);
+        const entityDoc = await getDoc(entityRef);
+        
+        if (entityDoc.exists()) {
+          const entityData = entityDoc.data();
+          if (entityData.organizationId && entityData.organizationId !== currentOrganization.id) {
+            showErrorToast(`Vous n'avez pas l'autorisation de supprimer cet ${entityType}`);
+            debugLog(`Tentative de suppression non autorisée: ${entityType} appartient à une autre organisation`, 'warn', 'useGenericEntityDelete');
+            return false;
+          }
+        }
+      }
       
       // Supprimer l'entité de Firestore
       const entityRef = doc(db, collectionName, entityId);

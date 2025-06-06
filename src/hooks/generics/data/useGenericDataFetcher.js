@@ -378,7 +378,8 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     stableOptions.enableRetry,
     stableOptions.maxRetries,
     stableOptions.retryDelay,
-    retryCount
+    retryCount,
+    currentOrganization?.id
   ]);
   
   // ✅ CORRECTION 9: Configuration de l'écoute en temps réel stable

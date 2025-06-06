@@ -433,7 +433,7 @@ export const useConcertListData = () => {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [fetchEntitiesBatch]);
+  }, [fetchEntitiesBatch, currentOrganization?.id]);
 
   // Effet initial pour charger les données - STABILISATION DES DÉPENDANCES
   const stableFetchRef = useRef();

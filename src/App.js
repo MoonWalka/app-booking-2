@@ -36,6 +36,8 @@ import LoginPage from '@/pages/LoginPage';
 import MigrationPage from '@/pages/admin/MigrationPage';
 import DebugRelancesPage from '@/pages/DebugRelancesPage';
 import { OnboardingFlow } from '@/components/organization';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -368,6 +370,18 @@ function App() {
               </OrganizationProvider>
             </AuthProvider>
           </Router>
+          <ToastContainer 
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </ErrorBoundary>
       </>
     );

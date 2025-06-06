@@ -7,6 +7,7 @@ import ErrorMessage from '@/components/ui/ErrorMessage';
 import Button from '@/components/ui/Button';
 import FormHeader from '@/components/ui/FormHeader';
 import EntityCard from '@/components/ui/EntityCard';
+import HistoriqueEchanges from '../HistoriqueEchanges';
 import styles from './ContactView.module.css';
 
 /**
@@ -232,6 +233,9 @@ function ContactView({ id: propId }) {
           </p>
         </div>
       )}
+
+      {/* Historique des échanges */}
+      <HistoriqueEchanges contactId={id} concerts={concerts} />
     </div>
   );
 }

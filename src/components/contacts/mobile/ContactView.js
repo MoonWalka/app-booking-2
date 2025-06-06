@@ -5,6 +5,7 @@ import { Button, Badge, Spinner } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Card from '@/components/ui/Card';
 import { useContactDetails } from '@/hooks/contacts';
+import HistoriqueEchanges from '../HistoriqueEchanges';
 
 /**
  * Composant d'affichage des détails d'un contact - Version Mobile
@@ -209,6 +210,15 @@ const ContactView = ({ id: propId }) => {
             Aucun concert associé à ce contact
           </div>
         )}
+      </Card>
+      
+      {/* Historique des échanges */}
+      <Card 
+        className="mb-3"
+        title="Historique des échanges"
+        icon={<i className="bi bi-chat-left-text"></i>}
+      >
+        <HistoriqueEchanges contactId={id} concerts={contact.concertsAssocies || []} />
       </Card>
       
       {/* Informations supplémentaires */}

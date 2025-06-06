@@ -6,9 +6,16 @@
  * @since 2025
  */
 
-import { relancesAutomatiquesService } from '@/services/relancesAutomatiquesService';
+import { 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  doc, 
+  getDoc 
+} from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { collection, query, where, getDocs, doc, getDoc } from '@/services/firebase-service';
+import { relancesAutomatiquesService } from '@/services/relancesAutomatiquesService';
 
 /**
  * Corrige les relances automatiques pour un concert spécifique
@@ -151,7 +158,9 @@ fixAllRelances('tTvA6fzQpi6u3kx8wZO8')
   `);
 }
 
-export default {
+const fixUtils = {
   fixRelancesConcert,
   fixAllRelances
 };
+
+export default fixUtils;

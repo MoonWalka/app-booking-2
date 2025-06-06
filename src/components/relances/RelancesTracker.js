@@ -16,6 +16,7 @@ import styles from './RelancesTracker.module.css';
  */
 const RelancesTracker = () => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedRelance, setSelectedRelance] = useState(null);
   const [filter, setFilter] = useState('all'); // all, pending, overdue, completed
   
@@ -145,7 +146,14 @@ const RelancesTracker = () => {
         const isCompleted = relance.status === 'completed';
         return (
           <div className={isCompleted ? styles.completedText : ''}>
-            <strong>{relance.titre}</strong>
+            <strong>
+              {relance.titre || relance.nom}
+              {relance.automatique && (
+                <Badge variant="info" size="sm" className={styles.autoBadge}>
+                  Auto
+                </Badge>
+              )}
+            </strong>
             {relance.description && (
               <div className={styles.descriptionText}>{relance.description}</div>
             )}
@@ -247,28 +255,32 @@ const RelancesTracker = () => {
             <i className="bi bi-check-lg"></i>
           </button>
         )}
-        <button
-          className={`${styles.actionButton} ${styles.secondary}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleEditRelance(relance);
-          }}
-          title="Modifier"
-        >
-          <i className="bi bi-pencil"></i>
-        </button>
-        <button
-          className={`${styles.actionButton} ${styles.danger}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (window.confirm('Êtes-vous sûr de vouloir supprimer cette relance ?')) {
-              deleteRelance(relance.id);
-            }
-          }}
-          title="Supprimer"
-        >
-          <i className="bi bi-trash"></i>
-        </button>
+        {!relance.automatique && (
+          <button
+            className={`${styles.actionButton} ${styles.secondary}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditRelance(relance);
+            }}
+            title="Modifier"
+          >
+            <i className="bi bi-pencil"></i>
+          </button>
+        )}
+        {!relance.automatique && (
+          <button
+            className={`${styles.actionButton} ${styles.danger}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (window.confirm('Êtes-vous sûr de vouloir supprimer cette relance ?')) {
+                deleteRelance(relance.id);
+              }
+            }}
+            title="Supprimer"
+          >
+            <i className="bi bi-trash"></i>
+          </button>
+        )}
       </div>
     );
   };
@@ -337,6 +349,18 @@ const RelancesTracker = () => {
           renderActions={renderActions}
           sortField="dateEcheance"
           sortDirection="asc"
+          onRowClick={(relance) => {
+            // Ouvrir la modale appropriée selon le type de relance
+            if (relance.automatique) {
+              // Pour les relances automatiques, ouvrir en lecture seule
+              setSelectedRelance(relance);
+              setShowDetailModal(true);
+            } else {
+              // Pour les relances manuelles, ouvrir en édition
+              handleEditRelance(relance);
+            }
+          }}
+          rowClassName={(relance) => relance.automatique ? styles.automaticRelance : ''}
         />
       </div>
 
@@ -354,6 +378,79 @@ const RelancesTracker = () => {
           setFormData={setFormData}
           isEditing={!!selectedRelance}
         />
+      )}
+
+      {/* Modal de détails pour les relances automatiques */}
+      {showDetailModal && selectedRelance && (
+        <Modal
+          isOpen={showDetailModal}
+          onClose={() => {
+            setShowDetailModal(false);
+            setSelectedRelance(null);
+          }}
+          title={`Détails de la relance automatique`}
+        >
+          <div className={styles.relanceDetails}>
+            <div className={styles.detailGroup}>
+              <label className={styles.detailLabel}>Titre</label>
+              <div className={styles.detailValue}>
+                {selectedRelance.nom || selectedRelance.titre}
+              </div>
+            </div>
+
+            <div className={styles.detailGroup}>
+              <label className={styles.detailLabel}>Description</label>
+              <div className={styles.detailValue}>
+                {selectedRelance.description || 'Aucune description'}
+              </div>
+            </div>
+
+            <div className={styles.detailRow}>
+              <div className={styles.detailGroup}>
+                <label className={styles.detailLabel}>Date d'échéance</label>
+                <div className={styles.detailValue}>
+                  {new Date(selectedRelance.dateEcheance).toLocaleDateString('fr-FR')}
+                </div>
+              </div>
+
+              <div className={styles.detailGroup}>
+                <label className={styles.detailLabel}>Priorité</label>
+                <div className={styles.detailValue}>
+                  <Badge variant={
+                    selectedRelance.priorite === 'high' ? 'danger' :
+                    selectedRelance.priorite === 'medium' ? 'warning' : 'info'
+                  }>
+                    {selectedRelance.priorite === 'high' ? 'Haute' :
+                     selectedRelance.priorite === 'medium' ? 'Moyenne' : 'Basse'}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.detailGroup}>
+              <label className={styles.detailLabel}>Liée à</label>
+              <div className={styles.detailValue}>
+                {selectedRelance.entityName} ({selectedRelance.entityType})
+              </div>
+            </div>
+
+            <div className={styles.detailGroup}>
+              <label className={styles.detailLabel}>Type de relance</label>
+              <div className={styles.detailValue}>
+                <Badge variant="info">Automatique - {selectedRelance.type}</Badge>
+              </div>
+            </div>
+
+            <div className={styles.modalActions}>
+              <Button variant="secondary" onClick={() => {
+                setShowDetailModal(false);
+                setSelectedRelance(null);
+              }}>
+                Fermer
+              </Button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

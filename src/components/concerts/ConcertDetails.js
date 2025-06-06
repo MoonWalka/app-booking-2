@@ -5,7 +5,7 @@ import { useResponsive } from '@/hooks/common';
 import { useConcertWatcher } from '@/hooks/concerts/useConcertWatcher';
 
 // Imports directs des composants
-import ConcertsDesktopView from './desktop/ConcertView';
+import ConcertsDesktopView from './desktop/ConcertViewWithRelances';
 import ConcertsMobileView from './mobile/ConcertView';
 
 /**

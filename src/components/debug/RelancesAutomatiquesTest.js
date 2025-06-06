@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
-import { relancesAutomatiquesService, RELANCE_TYPES } from '@/services/relancesAutomatiquesService';
+import { RELANCE_TYPES } from '@/services/relancesAutomatiquesService';
 import { useOrganization } from '@/context/OrganizationContext';
 import { diagnosticRelancesAutomatiques, testerCreationRelanceManuelle, afficherRapportDiagnostic } from '@/utils/debugRelancesAutomatiques';
 import { fixRelancesConcert } from '@/utils/fixRelancesAutomatiques';
@@ -29,7 +29,6 @@ const RelancesAutomatiquesTest = () => {
   const [testResults, setTestResults] = useState([]);
   const [testing, setTesting] = useState(false);
   const [concertIdTest, setConcertIdTest] = useState('');
-  const [diagnosticRapport, setDiagnosticRapport] = useState(null);
   
   // Concert de test simulé
   const concertTest = {
@@ -166,7 +165,6 @@ const RelancesAutomatiquesTest = () => {
     
     try {
       const rapport = await diagnosticRelancesAutomatiques(concertIdTest, currentOrganization.id);
-      setDiagnosticRapport(rapport);
       afficherRapportDiagnostic(rapport);
       
       if (rapport.erreurs.length > 0) {
@@ -282,8 +280,13 @@ const RelancesAutomatiquesTest = () => {
    * Nettoyage global des doublons
    */
   const nettoyerTousLesDoublons = async () => {
+    if (!currentOrganization?.id) {
+      addTestResult('❌ Aucune organisation sélectionnée', 'error');
+      return;
+    }
+    
     setTesting(true);
-    addTestResult(`🧹 Nettoyage global des doublons pour l'organisation: ${currentOrganization.nom}`, 'info');
+    addTestResult(`🧹 Nettoyage global des doublons pour l'organisation: ${currentOrganization?.nom || 'Organisation'}`, 'info');
     
     try {
       const resultat = await cleanupAllRelancesDoublons(currentOrganization.id);
@@ -392,15 +395,17 @@ const RelancesAutomatiquesTest = () => {
       {/* Section Diagnostic */}
       <div className="mb-4 p-3 border rounded">
         <h6>🔍 Diagnostic d'un concert existant</h6>
-        <div className="d-flex gap-2 mb-3">
+        <div className="mb-3">
           <input
             type="text"
-            className="form-control"
+            className="form-control mb-2"
             placeholder="ID du concert à analyser"
             value={concertIdTest}
             onChange={(e) => setConcertIdTest(e.target.value)}
             disabled={testing}
           />
+        </div>
+        <div className="d-flex flex-wrap gap-2">
           <Button 
             variant="info" 
             onClick={diagnostiquerConcert}

@@ -6,8 +6,17 @@
  * @since 2025
  */
 
+import { 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  deleteDoc, 
+  doc, 
+  updateDoc, 
+  serverTimestamp 
+} from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { collection, query, where, getDocs, deleteDoc, doc, updateDoc, serverTimestamp } from '@/services/firebase-service';
 
 /**
  * Nettoie les relances en doublon pour un concert spécifique
@@ -125,11 +134,12 @@ export const updateConcertRelancesList = async (concertId, organizationId) => {
     const snapshot = await getDocs(q);
     const relanceIds = snapshot.docs.map(doc => doc.id);
 
-    // Mettre à jour le concert
+    // Mettre à jour le concert avec le flag pour éviter les boucles
     const concertRef = doc(db, 'concerts', concertId);
     await updateDoc(concertRef, {
       relances: relanceIds,
-      updatedAt: serverTimestamp()
+      updatedAt: serverTimestamp(),
+      _lastUpdateType: 'relance_cleanup'
     });
 
     console.log(`✅ Liste des relances mise à jour: ${relanceIds.length} relances`);
@@ -222,8 +232,10 @@ cleanupAllRelancesDoublons('tTvA6fzQpi6u3kx8wZO8')
   `);
 }
 
-export default {
+const cleanupUtils = {
   cleanupRelancesDoublons,
   cleanupAllRelancesDoublons,
   updateConcertRelancesList
 };
+
+export default cleanupUtils;

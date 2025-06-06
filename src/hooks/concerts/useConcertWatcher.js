@@ -103,6 +103,14 @@ function detectSignificantChange(previousState, newState) {
     return true; // Premier chargement
   }
 
+  // Ignorer les changements causés par les opérations automatiques
+  const autoUpdateTypes = ['relance_auto_added', 'relance_cleanup'];
+  if (autoUpdateTypes.includes(newState._lastUpdateType) && 
+      newState._lastUpdateType !== previousState._lastUpdateType) {
+    console.log(`⏩ Ignorer changement causé par: ${newState._lastUpdateType}`);
+    return false;
+  }
+
   // Champs à surveiller pour les changements significatifs
   const significantFields = [
     'formValidated',

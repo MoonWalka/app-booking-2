@@ -256,6 +256,11 @@ class RelancesAutomatiquesService {
       const relanceData = {
         nom: typeConfig.nom,
         description: typeConfig.description,
+        // Champs pour la compatibilité avec les relances manuelles
+        entityType: 'concert',
+        entityId: concert.id,
+        entityName: concert.titre || 'Concert sans titre',
+        // Champs spécifiques aux concerts (pour rétrocompatibilité)
         concertId: concert.id,
         concertTitre: concert.titre || 'Concert sans titre',
         priorite: typeConfig.priorite,
@@ -277,7 +282,7 @@ class RelancesAutomatiquesService {
       console.log(`✅ Relance automatique créée: ${docRef.id}`);
       
       // Ajouter la relance à la liste des relances du concert
-      await this._ajouterRelanceAuConcert(concert.id, docRef.id, organizationId);
+      await this._ajouterRelanceAuConcert(concert.id, docRef.id);
       return docRef.id;
       
     } catch (error) {
@@ -341,6 +346,9 @@ class RelancesAutomatiquesService {
       case 'envoyer_facture':
         delaiJours = 14; // Moins urgent : 2 semaines
         break;
+      default:
+        delaiJours = 7; // Par défaut : 1 semaine
+        break;
     }
     
     // Si on a la date du concert, ajuster en fonction
@@ -372,10 +380,9 @@ class RelancesAutomatiquesService {
    * @private
    * @param {string} concertId - ID du concert
    * @param {string} relanceId - ID de la relance
-   * @param {string} organizationId - ID de l'organisation
    * @returns {Promise<void>}
    */
-  async _ajouterRelanceAuConcert(concertId, relanceId, organizationId) {
+  async _ajouterRelanceAuConcert(concertId, relanceId) {
     try {
       console.log(`🔗 Ajout de la relance ${relanceId} au concert ${concertId}`);
       
@@ -390,9 +397,12 @@ class RelancesAutomatiquesService {
         if (!relancesActuelles.includes(relanceId)) {
           const nouvellesRelances = [...relancesActuelles, relanceId];
           
+          // Mise à jour avec un flag pour éviter les boucles infinies
           await updateDoc(concertRef, {
             relances: nouvellesRelances,
-            updatedAt: serverTimestamp()
+            updatedAt: serverTimestamp(),
+            // Flag pour indiquer que c'est une mise à jour automatique
+            _lastUpdateType: 'relance_auto_added'
           });
           
           console.log(`✅ Relance ${relanceId} ajoutée au concert ${concertId}`);

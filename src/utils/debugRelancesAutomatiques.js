@@ -302,8 +302,10 @@ export const afficherRapportDiagnostic = (rapport) => {
   console.groupEnd();
 };
 
-export default {
+const debugUtils = {
   diagnosticRelancesAutomatiques,
   testerCreationRelanceManuelle,
   afficherRapportDiagnostic
 };
+
+export default debugUtils;

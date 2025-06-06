@@ -1,0 +1,22 @@
+{
+  "extends": ["react-app"],
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "globals": {
+    "console": "readonly",
+    "window": "readonly",
+    "document": "readonly",
+    "process": "readonly"
+  },
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": ["warn", { 
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_"
+    }],
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}

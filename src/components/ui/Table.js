@@ -10,17 +10,17 @@ import styles from './Table.module.css';
  * @param {String} sortDirection - 'asc' ou 'desc'
  * @param {Function} onRowClick - Callback au clic sur une ligne (optionnel)
  */
-const Table = ({ columns, data, renderActions, sortField, sortDirection, onSort, onRowClick }) => {
+const Table = ({ columns, data, renderActions, sortField, sortDirection, onSort, onRowClick, rowClassName }) => {
   
   // 🔧 FIX: Gérer le clic sur une ligne en évitant les conflits
-  const handleRowClick = (rowId, event) => {
+  const handleRowClick = (row, event) => {
     // Vérifier si le clic provient d'un bouton d'action ou d'un lien
     if (event.target.closest('button') || event.target.closest('a')) {
       return; // Ne pas déclencher la navigation si c'est un bouton ou un lien
     }
     
     if (onRowClick) {
-      onRowClick(rowId);
+      onRowClick(row);
     }
   };
 
@@ -59,11 +59,13 @@ const Table = ({ columns, data, renderActions, sortField, sortDirection, onSort,
       </thead>
       <tbody>
         {data.length > 0 ? (
-          data.map((row, idx) => (
+          data.map((row, idx) => {
+            const additionalClassName = rowClassName ? rowClassName(row) : '';
+            return (
             <tr 
               key={row.id || idx} 
-              className={onRowClick ? styles.clickableRow : ''} 
-              onClick={onRowClick ? (e) => handleRowClick(row.id, e) : undefined}
+              className={`${onRowClick ? styles.clickableRow : ''} ${additionalClassName}`} 
+              onClick={onRowClick ? (e) => handleRowClick(row, e) : undefined}
             >
               {columns.map(col => (
                 <td key={col.key}>{col.render ? col.render(row) : row[col.key]}</td>
@@ -74,7 +76,8 @@ const Table = ({ columns, data, renderActions, sortField, sortDirection, onSort,
                 </td>
               )}
             </tr>
-          ))
+            );
+          })
         ) : (
           <tr>
             <td colSpan={columns.length + (renderActions ? 1 : 0)} className="text-center py-4">

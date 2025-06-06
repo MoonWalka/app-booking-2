@@ -56,9 +56,19 @@
   transition: all 0.2s ease;
 }
 
-.relanceItem:hover {
+.relanceItem.clickable {
+  cursor: pointer;
+}
+
+.relanceItem.clickable:hover {
   background-color: var(--color-background-secondary);
   border-color: var(--color-primary);
+  transform: translateX(2px);
+}
+
+.relanceItem.clickable:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .overdueItem {
@@ -118,5 +128,57 @@
 
   .relanceTitle {
     font-size: var(--font-size-xs);
+  }
+}
+
+/* Badge automatique */
+.autoBadge {
+  margin-left: var(--spacing-xs);
+  vertical-align: middle;
+}
+
+/* Styles pour la modale de détails */
+.relanceDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.detailGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.detailLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.detailValue {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  min-height: 1.5em;
+}
+
+.detailRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .detailRow {
+    grid-template-columns: 1fr;
   }
 }

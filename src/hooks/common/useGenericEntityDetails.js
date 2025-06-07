@@ -454,7 +454,7 @@ const useGenericEntityDetails = ({
     }
     
     // Pour les types custom, on peut ne pas avoir d'ID et utiliser la customQuery
-    const isCustomType = type === 'custom';
+    const isCustomType = type === 'custom' || type === 'custom-query';
     
     // Si l'identifiant de l'entité liée n'existe pas dans l'entité principale ET qu'il n'y a pas de customQuery, retourner null
     if (!entityId && (!isCustomType || !customQueries || !customQueries[name])) {

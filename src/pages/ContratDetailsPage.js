@@ -60,6 +60,17 @@ const ContratDetailsPage = () => {
     error
   });
   
+  // Log spécifique quand toutes les données sont chargées
+  if (contrat && concert && template && !loading) {
+    console.log('[DEBUG ContratDetailsPage] TOUTES LES DONNÉES CHARGÉES:', {
+      contact,
+      lieu,
+      artiste,
+      structure,
+      entreprise
+    });
+  }
+  
   // Hook for handling contract actions (mark as sent, signed, delete)
   const {
     handleSendContrat,
@@ -146,6 +157,11 @@ const ContratDetailsPage = () => {
 
   // Handle downloading PDF with Puppeteer
   const handleDownload = () => {
+    // Vérifier que les données essentielles sont chargées
+    if (!concert || !template) {
+      alert('Les données du contrat sont encore en cours de chargement. Veuillez réessayer dans un instant.');
+      return;
+    }
     handleDownloadPdf(ContratPDFWrapper, pdfData);
   };
 

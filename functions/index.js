@@ -133,6 +133,17 @@ exports.generatePdf = onRequest({
                 display: none !important;
               }
               
+              /* Styles spécifiques pour les divs Quill avec saut de page */
+              div[data-page-break="true"] {
+                page-break-after: always !important;
+                break-after: page !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                visibility: hidden !important;
+                clear: both !important;
+              }
+              
               /* Éviter la coupure des tableaux entre les pages */
               table {
                 page-break-inside: avoid;

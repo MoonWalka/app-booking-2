@@ -390,11 +390,22 @@ const replaceVariables = (content, variables) => {
  * Traite les sauts de page dans l'aperçu HTML
  */
 const processPageBreaks = (htmlContent) => {
-  // Remplacer les balises de saut de page par des div avec classe spéciale
-  return htmlContent.replace(
+  let content = htmlContent;
+  
+  // 1. Remplacer les balises hr avec classe page-break (ancien format)
+  content = content.replace(
     /<hr\s+class=["|']page-break["|'][^>]*>/gi,
     '<div class="page-break"></div>'
   );
+  
+  // 2. Traiter les divs créés par Quill avec data-page-break="true"
+  // Remplacer tout le contenu interne par un div vide avec la bonne classe
+  content = content.replace(
+    /<div[^>]*data-page-break=["|']true["|'][^>]*>[\s\S]*?<\/div>/gi,
+    '<div class="page-break"></div>'
+  );
+  
+  return content;
 };
 
 /**
@@ -619,8 +630,8 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
   // Remplacer les variables dans le contenu unifié
   const processedContent = replaceVariables(content, variables);
   
-  // Traitement des sauts de page pour l'aperçu
-  const finalContent = forPreview ? processPageBreaks(processedContent) : processedContent;
+  // Traitement des sauts de page - toujours appliquer pour gérer les divs Quill
+  const finalContent = processPageBreaks(processedContent);
   
   // Construire le HTML complet avec le contenu unifié
   let htmlContent = `

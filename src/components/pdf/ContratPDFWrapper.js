@@ -329,11 +329,27 @@ const replaceVariables = (content, variables) => {
   let processedContent = content;
   let replacementCount = 0;
   
-  // D'abord remplacer les sauts de page [SAUT_DE_PAGE]
-  const pageBreakRegex = /\[SAUT_DE_PAGE\]/g;
-  const pageBreakCount = (processedContent.match(pageBreakRegex) || []).length;
+  // D'abord remplacer les sauts de page - Support des deux formats pour compatibilité
+  const pageBreakRegexBrackets = /\[SAUT_DE_PAGE\]/g;
+  const pageBreakRegexCurly = /\{SAUT_DE_PAGE\}/g;
+  
+  let pageBreakCount = 0;
+  
+  // Remplacer le format avec crochets [SAUT_DE_PAGE]
+  const bracketMatches = (processedContent.match(pageBreakRegexBrackets) || []).length;
+  if (bracketMatches > 0) {
+    processedContent = processedContent.replace(pageBreakRegexBrackets, '<div class="page-break"></div>');
+    pageBreakCount += bracketMatches;
+  }
+  
+  // Remplacer le format avec accolades {SAUT_DE_PAGE}
+  const curlyMatches = (processedContent.match(pageBreakRegexCurly) || []).length;
+  if (curlyMatches > 0) {
+    processedContent = processedContent.replace(pageBreakRegexCurly, '<div class="page-break"></div>');
+    pageBreakCount += curlyMatches;
+  }
+  
   if (pageBreakCount > 0) {
-    processedContent = processedContent.replace(pageBreakRegex, '<div class="page-break"></div>');
     console.log(`🔄 [PDF] ${pageBreakCount} saut(s) de page remplacé(s)`);
   }
   

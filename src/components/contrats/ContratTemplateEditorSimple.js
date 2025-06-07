@@ -270,7 +270,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     { category: 'Signature', label: 'Fonction programmateur', value: '{programmateur_fonction}' },
 
     // Variables Spéciales
-    { category: 'Spécial', label: 'Saut de page', value: '[SAUT_DE_PAGE]' },
+    { category: 'Spécial', label: 'Saut de page', value: '{SAUT_DE_PAGE}' },
     { category: 'Spécial', label: 'Numéro de page', value: '{page}' },
     { category: 'Spécial', label: 'Total pages', value: '{total}' }
   ];

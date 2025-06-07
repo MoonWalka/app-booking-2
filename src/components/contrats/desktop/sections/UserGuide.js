@@ -56,9 +56,10 @@ const UserGuide = ({ onClose }) => (
         <h4>4. Gestion des sauts de page</h4>
         <p>Pour éviter qu'un article soit coupé entre deux pages :</p>
         <ul>
-          <li>Insérez la balise <strong>[SAUT_DE_PAGE]</strong> là où vous voulez forcer un saut de page</li>
+          <li>Insérez la variable <strong>{'{SAUT_DE_PAGE}'}</strong> là où vous voulez forcer un saut de page</li>
           <li>Placez les sauts de page entre vos articles ou sections principales</li>
           <li>Vérifiez le rendu dans l'aperçu avant de finaliser votre modèle</li>
+          <li><em>Note : L'ancien format [SAUT_DE_PAGE] fonctionne toujours pour compatibilité</em></li>
         </ul>
         <p><strong>Astuce</strong> : Dans l'aperçu, les sauts de page sont représentés par une ligne pointillée.</p>
       </div>

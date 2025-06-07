@@ -13,7 +13,7 @@ Ce flux de travail couvre le cycle de vie complet d'un concert, de la création 
 Ce flux décrit le processus de création, personnalisation, envoi et suivi des contrats pour les concerts.
 
 ### [Associations entre entités](ASSOCIATION_WORKFLOW.md)
-Ce flux explique comment les différentes entités (artistes, lieux, programmateurs) sont liées entre elles et comment gérer ces associations.
+Ce flux explique comment les différentes entités (artistes, lieux, contacts) sont liées entre elles et comment gérer ces associations.
 
 ## Statuts et transitions
 
@@ -25,7 +25,7 @@ Chaque entité principale (concert, contrat) possède un cycle de vie représent
 - **Option** : Date réservée provisoirement
 - **Confirmé** : Concert confirmé par toutes les parties
 - **En attente de contrat** : Contrat en cours de préparation
-- **Contrat envoyé** : Contrat envoyé au programmateur
+- **Contrat envoyé** : Contrat envoyé au contact
 - **Contrat signé** : Contrat signé par toutes les parties
 - **Terminé** : Concert passé et toutes les obligations remplies
 - **Annulé** : Concert annulé
@@ -34,8 +34,8 @@ Chaque entité principale (concert, contrat) possède un cycle de vie représent
 - **Brouillon** : Contrat en cours de rédaction
 - **À valider** : Contrat prêt pour validation interne
 - **À envoyer** : Contrat validé, prêt à être envoyé
-- **Envoyé** : Contrat envoyé au programmateur
-- **Signé par programmateur** : Contrat signé par le programmateur
+- **Envoyé** : Contrat envoyé au contact
+- **Signé par contact** : Contrat signé par le contact
 - **Signé** : Contrat signé par toutes les parties
 - **Annulé** : Contrat annulé
 

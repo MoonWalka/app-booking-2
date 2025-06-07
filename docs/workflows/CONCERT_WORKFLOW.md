@@ -13,7 +13,7 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 **Actions utilisateur :**
 - Accéder à la page "Concerts"
 - Cliquer sur "Nouveau concert"
-- Remplir les informations de base (date, artiste, lieu et/ou programmateur)
+- Remplir les informations de base (date, artiste, lieu et/ou contact)
 - Enregistrer le concert
 
 **Composants impliqués :**
@@ -23,7 +23,7 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 
 **Données créées :**
 - Nouveau document dans la collection `concerts` avec un statut "initial"
-- Associations avec les entités liées (artiste, lieu, programmateur)
+- Associations avec les entités liées (artiste, lieu, contact)
 
 ### 1.5. Édition du concert
 
@@ -46,7 +46,7 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 
 ### 2. Négociation et suivi
 
-**Description :** Échanges avec le programmateur pour finaliser les détails et conditions du concert.
+**Description :** Échanges avec le contact pour finaliser les détails et conditions du concert.
 
 **Actions utilisateur :**
 - Consulter la fiche du concert
@@ -65,10 +65,10 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 
 ### 3. Collecte d'informations
 
-**Description :** Obtention des informations nécessaires de la part du programmateur pour finaliser le contrat.
+**Description :** Obtention des informations nécessaires de la part du contact pour finaliser le contrat.
 
 **Actions utilisateur :**
-- Générer un formulaire personnalisé pour le programmateur
+- Générer un formulaire personnalisé pour le contact
 - Envoyer le lien du formulaire par email
 - Suivre les réponses au formulaire
 
@@ -109,7 +109,7 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 **Description :** Envoi, suivi de la signature et finalisation du contrat.
 
 **Actions utilisateur :**
-- Envoyer le contrat PDF au programmateur
+- Envoyer le contrat PDF au contact
 - Suivre l'état de la signature
 - Mettre à jour le statut du contrat et du concert
 
@@ -139,7 +139,7 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 
 ```
 ┌─────────────┐           ┌───────────────┐          ┌──────────────┐         ┌───────────────┐
-│ Utilisateur │           │ Concert       │          │ Programmateur│         │ Contrat       │
+│ Utilisateur │           │ Concert       │          │ Contact      │         │ Contrat       │
 └─────┬───────┘           └───────┬───────┘          └──────┬───────┘         └───────┬───────┘
       │                          │                          │                         │
       │  Crée concert            │                          │                         │
@@ -178,7 +178,7 @@ Le flux de travail de gestion des concerts représente le cœur du métier de bo
 ### Validations
 - Une date doit être spécifiée pour la création d'un concert
 - Un concert doit être associé à au moins un artiste
-- Un lieu ou un programmateur doit être spécifié (ou les deux)
+- Un lieu ou un contact doit être spécifié (ou les deux)
 - Les informations financières sont requises avant l'état "Confirmé"
 
 ### Règles de transition de statut

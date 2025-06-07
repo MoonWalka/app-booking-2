@@ -18,9 +18,11 @@ const ContratPdfViewer = ({
     template: pdfData.template,
     contratData: pdfData.contrat,
     concertData: pdfData.concert,
-    programmateurData: pdfData.programmateur,
+    contactData: pdfData.contact, // Nouveau format
+    programmateurData: pdfData.programmateur, // Rétrocompatibilité
     artisteData: pdfData.artiste,
     lieuData: pdfData.lieu,
+    structureData: pdfData.structure,
     entrepriseInfo: pdfData.entreprise
   };
 

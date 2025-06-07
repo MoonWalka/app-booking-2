@@ -132,8 +132,8 @@ const ContratDetailsPage = () => {
     }
   }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, concert, template, contact, programmateur, lieu, artiste, entreprise, structure]);
 
-  // Prepare data for PDF generation
-  const pdfData = {
+  // Prepare data for PDF generation - utiliser useMemo pour s'assurer que les données sont à jour
+  const pdfData = React.useMemo(() => ({
     contrat,
     concert,
     template,
@@ -143,7 +143,7 @@ const ContratDetailsPage = () => {
     artiste,
     entreprise,
     structure
-  };
+  }), [contrat, concert, template, contact, programmateur, lieu, artiste, entreprise, structure]);
 
   // Handle navigation back to contracts list
   const handleNavigateBack = () => {
@@ -162,6 +162,11 @@ const ContratDetailsPage = () => {
       alert('Les données du contrat sont encore en cours de chargement. Veuillez réessayer dans un instant.');
       return;
     }
+    
+    // Log pour déboguer
+    console.log('[DEBUG handleDownload] pdfData au moment du téléchargement:', pdfData);
+    console.log('[DEBUG handleDownload] structure disponible:', structure);
+    
     handleDownloadPdf(ContratPDFWrapper, pdfData);
   };
 

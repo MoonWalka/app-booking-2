@@ -2,33 +2,33 @@
 
 ## Introduction
 
-L'application TourCraft maintient des relations bidirectionnelles entre plusieurs entités pour faciliter la navigation et assurer la cohérence des données. Ces relations sont particulièrement importantes dans la gestion des programmateurs, structures, lieux et concerts.
+L'application TourCraft maintient des relations bidirectionnelles entre plusieurs entités pour faciliter la navigation et assurer la cohérence des données. Ces relations sont particulièrement importantes dans la gestion des contacts, structures, lieux et concerts.
 
 ## Types d'associations
 
-### Association Programmateurs - Structures
+### Association Contacts - Structures
 
-Les programmateurs peuvent être associés à une structure (salle, association, collectivité, etc.) selon les règles suivantes:
+Les contacts peuvent être associés à une structure (salle, association, collectivité, etc.) selon les règles suivantes:
 
 #### Modèle de données
-- Un programmateur stocke l'ID de sa structure associée dans le champ `structureId`
-- Une structure stocke les IDs des programmateurs associés dans un tableau `programmateurs`
+- Un contact stocke l'ID de sa structure associée dans le champ `structureId`
+- Une structure stocke les IDs des contacts associés dans un tableau `contacts`
 - Cette relation bidirectionnelle permet une navigation facile entre les entités
 
 #### Interface utilisateur
-- Dans le formulaire de programmateur, l'utilisateur peut rechercher et sélectionner une structure existante ou créer une nouvelle structure
-- Sur la page de détails d'un programmateur, la structure associée est visible dans l'onglet "Structure"
-- Sur la page de détails d'une structure, les programmateurs associés sont listés dans l'onglet "Programmateurs"
+- Dans le formulaire de contact, l'utilisateur peut rechercher et sélectionner une structure existante ou créer une nouvelle structure
+- Sur la page de détails d'un contact, la structure associée est visible dans l'onglet "Structure"
+- Sur la page de détails d'une structure, les contacts associés sont listés dans l'onglet "Contacts"
 
 #### Fonctionnement
-- Lorsqu'un programmateur est créé ou modifié avec une structure associée, les références sont automatiquement mises à jour dans les deux entités
-- Lorsqu'un programmateur est supprimé, la référence est retirée de la structure associée
-- Lorsqu'une structure est supprimée, les programmateurs associés sont mis à jour en conséquence
+- Lorsqu'un contact est créé ou modifié avec une structure associée, les références sont automatiquement mises à jour dans les deux entités
+- Lorsqu'un contact est supprimé, la référence est retirée de la structure associée
+- Lorsqu'une structure est supprimée, les contacts associés sont mis à jour en conséquence
 
 #### Composants impliqués
-- `ProgrammateurStructuresSection`: Affiche la structure associée à un programmateur
+- `ContactStructuresSection`: Affiche la structure associée à un contact
 - `StructureInfoSection`: Permet la recherche et la sélection d'une structure existante
-- `useProgrammateurDetails`: Gère la relation bidirectionnelle et les mises à jour des références
+- `useContactDetails`: Gère la relation bidirectionnelle et les mises à jour des références
 
 ### Association Concerts - Artistes
 
@@ -67,23 +67,23 @@ Les concerts sont associés à des lieux spécifiques:
 - Possibilité de filtrer les concerts par lieu
 - Gestion des disponibilités du lieu (éviter les doubles réservations)
 
-### Association Concerts - Programmateurs
+### Association Concerts - Contacts
 
-Les concerts sont associés à des programmateurs:
+Les concerts sont associés à des contacts:
 
 #### Modèle de données
-- Un concert stocke l'ID du programmateur dans le champ `programmateurId`
-- Un programmateur stocke les IDs des concerts qu'il a programmés dans un tableau `concerts`
+- Un concert stocke l'ID du contact dans le champ `contactId`
+- Un contact stocke les IDs des concerts qu'il a programmés dans un tableau `concerts`
 
 #### Interface utilisateur
-- Dans le formulaire de concert, l'utilisateur peut rechercher et sélectionner un programmateur existant ou créer un nouveau programmateur
-- Sur la page de détails d'un concert, le programmateur est affiché avec ses coordonnées
-- Sur la page de détails d'un programmateur, tous les concerts qu'il a programmés sont listés
+- Dans le formulaire de concert, l'utilisateur peut rechercher et sélectionner un contact existant ou créer un nouveau contact
+- Sur la page de détails d'un concert, le contact est affiché avec ses coordonnées
+- Sur la page de détails d'un contact, tous les concerts qu'il a programmés sont listés
 
 #### Fonctionnement
 - Mise à jour automatique des références croisées
-- Possibilité de filtrer les concerts par programmateur
-- Suivi des interactions avec un programmateur au fil du temps
+- Possibilité de filtrer les concerts par contact
+- Suivi des interactions avec un contact au fil du temps
 
 ## Gestion des associations
 
@@ -92,13 +92,13 @@ Les concerts sont associés à des programmateurs:
 Les associations entre entités peuvent être créées de plusieurs façons:
 
 1. **Lors de la création d'une entité**
-   - Exemple: Création d'un concert avec sélection simultanée d'un artiste, d'un lieu et d'un programmateur
+   - Exemple: Création d'un concert avec sélection simultanée d'un artiste, d'un lieu et d'un contact
 
 2. **Par modification d'une entité existante**
-   - Exemple: Ajout d'un programmateur à un concert existant
+   - Exemple: Ajout d'un contact à un concert existant
 
 3. **Par interface dédiée**
-   - Exemple: Interface de gestion des structures associées à un programmateur
+   - Exemple: Interface de gestion des structures associées à un contact
 
 ### Mise à jour des associations
 
@@ -112,8 +112,8 @@ Les associations sont mises à jour automatiquement grâce à des hooks spécifi
    - Gère les associations entre artistes et leurs concerts
    - Maintient la cohérence des données
 
-3. **useProgrammateurStructureAssociations**
-   - Gère la relation entre programmateurs et structures
+3. **useContactStructureAssociations**
+   - Gère la relation entre contacts et structures
    - Assure la mise à jour des références dans les deux entités
 
 ### Suppression d'associations
@@ -144,7 +144,7 @@ La suppression d'associations suit ces principes:
 
 4. **Analyses et statistiques**
    - Possibilité de générer des statistiques basées sur les associations
-   - Exemple: nombre de concerts par lieu, programmateur le plus actif, etc.
+   - Exemple: nombre de concerts par lieu, contact le plus actif, etc.
 
 ## Navigation
 - [Retour à la documentation principale](../README.md)

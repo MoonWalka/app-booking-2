@@ -1,5 +1,7 @@
 # 🎯 Rapport Phase 3 - Migration Complète
 
+> ⚠️ **NOTE IMPORTANTE** : Cette phase 3 décrit une migration qui a été planifiée mais jamais exécutée. L'architecture décrite n'existe pas dans le code actuel. Ce document est conservé pour référence historique et guide potentiel.
+
 ## 📊 Vue d'ensemble
 
 La Phase 3 du refactoring TourCraft est **complétée avec succès**. Tous les composants de détails ont été migrés vers le système GenericDetailView.

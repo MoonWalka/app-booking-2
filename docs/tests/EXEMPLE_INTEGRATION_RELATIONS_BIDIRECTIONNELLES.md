@@ -1,22 +1,22 @@
 # Exemple d'Intégration des Relations Bidirectionnelles
 
-## 1. Dans un formulaire de Programmateur
+## 1. Dans un formulaire de Contact
 
 ```javascript
-// ProgrammateurForm.js
+// ContactForm.js
 import { useBidirectionalRelations } from '@/hooks/common/useBidirectionalRelations';
 
-const ProgrammateurForm = () => {
-  const { programmateur, handleSubmit, ... } = useProgrammateurForm(id);
+const ContactForm = () => {
+  const { contact, handleSubmit, ... } = useContactForm(id);
   
   // Hook pour gérer les relations bidirectionnelles
-  const { updateRelation } = useBidirectionalRelations('programmateur', id);
+  const { updateRelation } = useBidirectionalRelations('contact', id);
   
   // Lors de l'ajout d'un lieu
   const handleAddLieu = async (lieuId) => {
     try {
       // Ajouter le lieu aux données du formulaire
-      const updatedLieuxIds = [...(programmateur.lieuxIds || []), lieuId];
+      const updatedLieuxIds = [...(contact.lieuxIds || []), lieuId];
       setFormData(prev => ({ ...prev, lieuxIds: updatedLieuxIds }));
       
       // Mettre à jour la relation bidirectionnelle
@@ -32,7 +32,7 @@ const ProgrammateurForm = () => {
   const handleRemoveLieu = async (lieuId) => {
     try {
       // Retirer le lieu des données du formulaire
-      const updatedLieuxIds = programmateur.lieuxIds.filter(id => id !== lieuId);
+      const updatedLieuxIds = contact.lieuxIds.filter(id => id !== lieuId);
       setFormData(prev => ({ ...prev, lieuxIds: updatedLieuxIds }));
       
       // Mettre à jour la relation bidirectionnelle
@@ -105,7 +105,7 @@ import { checkAndFixBidirectionalRelations } from '../src/services/bidirectional
 async function migrateAllRelations() {
   console.log('🚀 Début de la migration des relations bidirectionnelles');
   
-  const entityTypes = ['programmateurs', 'lieux', 'concerts', 'artistes', 'structures'];
+  const entityTypes = ['contacts', 'lieux', 'concerts', 'artistes', 'structures'];
   const report = {};
   
   for (const collectionName of entityTypes) {
@@ -180,27 +180,27 @@ import { updateBidirectionalRelation } from '@/services/bidirectionalRelationsSe
 import { doc, getDoc } from 'firebase/firestore';
 
 describe('Bidirectional Relations Service', () => {
-  test('should add bidirectional relation between lieu and programmateur', async () => {
+  test('should add bidirectional relation between lieu and contact', async () => {
     // Arrange
     const lieuId = 'lieu1';
-    const programmateurId = 'prog1';
+    const contactId = 'contact1';
     
     // Act
     await updateBidirectionalRelation({
       sourceType: 'lieu',
       sourceId: lieuId,
-      targetType: 'programmateur',
-      targetId: programmateurId,
-      relationName: 'programmateurs',
+      targetType: 'contact',
+      targetId: contactId,
+      relationName: 'contacts',
       action: 'add'
     });
     
     // Assert
     const lieuDoc = await getDoc(doc(db, 'lieux', lieuId));
-    const progDoc = await getDoc(doc(db, 'programmateurs', programmateurId));
+    const contactDoc = await getDoc(doc(db, 'contacts', contactId));
     
-    expect(lieuDoc.data().programmateurIds).toContain(programmateurId);
-    expect(progDoc.data().lieuxIds).toContain(lieuId);
+    expect(lieuDoc.data().contactIds).toContain(contactId);
+    expect(contactDoc.data().lieuxIds).toContain(lieuId);
   });
   
   test('should remove bidirectional relation', async () => {

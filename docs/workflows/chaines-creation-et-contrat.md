@@ -18,7 +18,7 @@
   - **Desktop** : [`src/components/concerts/desktop/ConcertForm.js`](../src/components/concerts/desktop/ConcertForm.js) *(module CSS : oui)*
   - **Mobile** : [`src/components/concerts/mobile/ConcertForm.js`](../src/components/concerts/mobile/ConcertForm.js) *(module CSS : à vérifier)*
 - **Doublons/obsolètes** : Pas de doublon fonctionnel, attention à bien modifier la version desktop ou mobile selon le besoin.
-- **Rôle** : Affiche le formulaire complet pour créer un nouveau concert (infos, lieu, programmateur, artiste, notes, etc).
+- **Rôle** : Affiche le formulaire complet pour créer un nouveau concert (infos, lieu, contact, artiste, notes, etc).
 
 ### c. Détail d'un concert
 - **Nom** : Détail d'un concert
@@ -35,41 +35,9 @@
 
 ---
 
-## 2. Création d'un programmateur
-
-### a. Liste des programmateurs
-- **Nom** : Liste des programmateurs
-- **URL** : `/programmateurs`
-- **Composant** : [`src/components/programmateurs/ProgrammateursList.js`](../src/components/programmateurs/ProgrammateursList.js) *(wrapper responsive)*
-  - **Desktop** : [`src/components/programmateurs/desktop/ProgrammateursList.js`](../src/components/programmateurs/desktop/ProgrammateursList.js) *(module CSS : oui)*
-  - **Mobile** : [`src/components/programmateurs/mobile/ProgrammateursList.js`](../src/components/programmateurs/mobile/ProgrammateursList.js) *(module CSS : oui)*
-- **Doublons/obsolètes** : Pas de doublon fonctionnel.
-- **Rôle** : Affiche tous les programmateurs, accès à la création ou à la fiche détaillée.
-
-### b. Création d'un programmateur
-- **Nom** : Formulaire de création de programmateur
-- **URL** : `/programmateurs/nouveau`
-- **Composant** : [`src/components/programmateurs/desktop/ProgrammateurFormMaquette.js`](../src/components/programmateurs/desktop/ProgrammateurFormMaquette.js)
-  - **Module CSS** : [`src/components/programmateurs/desktop/ProgrammateurFormMaquette.module.css`](../src/components/programmateurs/desktop/ProgrammateurFormMaquette.module.css) *(présent)*
-- **Doublons/obsolètes** : Pas de doublon, c'est le composant principal utilisé.
-- **Rôle** : Formulaire complet pour créer un nouveau programmateur (infos, structure, contacts, etc).
-
-### c. Détail d'un programmateur
-- **Nom** : Détail d'un programmateur
-- **URL** : `/programmateurs/:id`
-- **Composant** : [`src/components/programmateurs/ProgrammateurDetails.js`](../src/components/programmateurs/ProgrammateurDetails.js)
-  - **Module CSS** : [`src/components/programmateurs/ProgrammateurDetails.module.css`](../src/components/programmateurs/ProgrammateurDetails.module.css) *(présent)*
-- **Doublons/obsolètes** : Il existe une version mobile, mais le routeur utilise bien ce fichier.
-- **Rôle** : Affiche toutes les informations du programmateur.
-
-### d. Édition d'un programmateur
-- **Nom** : Formulaire d'édition de programmateur
-- **URL** : `/programmateurs/:id/edit`
-- **Composant** : [`src/components/programmateurs/desktop/ProgrammateurFormMaquette.js`](../src/components/programmateurs/desktop/ProgrammateurFormMaquette.js) *(voir section création)*
-
 ---
 
-## 3. Création d'un lieu
+## 2. Création d'un lieu
 
 ### a. Liste des lieux
 - **Nom** : Liste des lieux
@@ -105,7 +73,7 @@
 
 ---
 
-## 4. Création d'une structure
+## 3. Création d'une structure
 
 ### a. Liste des structures
 - **Nom** : Liste des structures
@@ -138,7 +106,7 @@
 
 ---
 
-## 5. Génération d'un contrat
+## 4. Génération d'un contrat
 
 ### a. Accès à la génération
 - **Nom** : Génération de contrat pour un concert

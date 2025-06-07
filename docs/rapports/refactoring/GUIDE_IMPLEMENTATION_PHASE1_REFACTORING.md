@@ -1,5 +1,7 @@
 # 📚 Guide d'Implémentation Phase 1 - Refactoring Anti-Boucles
 
+> ⚠️ **NOTE IMPORTANTE** : Cette architecture a été conçue et documentée mais n'a jamais été déployée en production. Les composants "Refactored" mentionnés n'existent pas dans le code actuel. Ce document est conservé comme référence pour un futur refactoring potentiel.
+
 ## 🎯 Vue d'ensemble
 
 Ce guide documente l'implémentation de la Phase 1 du plan de refactoring TourCraft, qui vise à éliminer les boucles infinies dans l'affichage des relations bidirectionnelles.

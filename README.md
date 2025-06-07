@@ -79,7 +79,7 @@ Depuis Mai 2025, une standardisation complète du composant Card a été réalis
 
 ### Hooks standardisés
 
-Depuis Mai 2025, une standardisation complète des hooks a été mise en place. Tous les hooks sont maintenant organisés dans le dossier `/src/hooks/` avec une structure cohérente par entité. Consultez la [documentation de standardisation des hooks](/docs/hooks/STANDARDISATION_HOOKS.md) pour les détails complets.
+Depuis Mai 2025, une standardisation complète des hooks a été mise en place. Tous les hooks sont maintenant organisés dans le dossier `/src/hooks/` avec une structure cohérente par entité. Consultez la [documentation de standardisation des hooks](/src/docs/hooks/StandardisationHooks.md) pour les détails complets.
 
 #### Principes clés :
 
@@ -95,7 +95,7 @@ Depuis Mai 2025, une standardisation complète des hooks a été mise en place. 
 
 ### Refactorisation des composants
 
-Une séparation claire entre les composants de vue et d'édition a été implémentée. Voir la [documentation de refactorisation](/docs/CONCERT_REFACTORING.md) pour plus de détails.
+Une séparation claire entre les composants de vue et d'édition a été implémentée. Voir la [documentation de refactorisation](/docs/components/CONCERT_REFACTORING.md) pour plus de détails.
 
 ### Composants UI
 
@@ -106,8 +106,8 @@ Les composants UI réutilisables se trouvent dans `/components/ui/`.
 - [Architecture du projet](/docs/ARCHITECTURE.md)
 - [Standardisation des composants](/docs/standards/components-standardises.md)
 - [Documentation du composant Card](/docs/components/Card.md)
-- [Standardisation des hooks](/docs/hooks/STANDARDISATION_HOOKS.md)
-- [Refactorisation des composants](/docs/CONCERT_REFACTORING.md)
+- [Standardisation des hooks](/src/docs/hooks/StandardisationHooks.md)
+- [Refactorisation des composants](/docs/components/CONCERT_REFACTORING.md)
 - [Documentation des composants communs](/docs/components/COMMON_COMPONENTS.md)
 - [Documentation des hooks](/docs/hooks/HOOKS.md)
 - [Workflows fonctionnels](/docs/workflows/WORKFLOWS.md)

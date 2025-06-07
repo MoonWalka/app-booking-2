@@ -18,8 +18,11 @@
 .env.test.local
 .env.production.local
 
-//a moi
+# a moi
 env.localnew
+
+# Ignore ALL node_modules directories
+**/node_modules/
 
 npm-debug.log*
 yarn-debug.log*

@@ -16,7 +16,9 @@ import ContratDebugPanel from './sections/ContratDebugPanel';
 import ContratLoadingSpinner from './sections/ContratLoadingSpinner';
 import ContratNoTemplates from './sections/ContratNoTemplates';
 
-const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
+const ContratGenerator = ({ concert, contact, artiste, lieu }) => {
+  // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
+  const programmateur = contact;
   const {
     // États
     templates,
@@ -41,7 +43,7 @@ const ContratGenerator = ({ concert, programmateur, artiste, lieu }) => {
     showSuccess,
     setPdfUrl,
     prepareContractVariables
-  } = useContratGenerator(concert, programmateur, artiste, lieu);
+  } = useContratGenerator(concert, contact, artiste, lieu);
 
   if (loading) {
     return <ContratLoadingSpinner />;

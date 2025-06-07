@@ -268,14 +268,14 @@ const prepareContractVariables = (safeData) => {
     'lieu_capacite': safeData.lieu?.capacite || 'Non spécifiée',
     
     // Variables structure (utiliser les données du contact si pas de structure séparée)
-    'structure_nom': safeData.structure?.nom || safeData.structure?.raisonSociale || safeData.programmateur?.structure || 'Non spécifiée',
-    'structure_siret': safeData.structure?.siret || safeData.programmateur?.siret || 'Non spécifié',
+    'structure_nom': safeData.structure?.nom || safeData.structure?.raisonSociale || safeData.contact?.structure || safeData.programmateur?.structure || 'Non spécifiée',
+    'structure_siret': safeData.structure?.siret || safeData.contact?.siret || safeData.programmateur?.siret || 'Non spécifié',
     'structure_adresse': (() => {
       // L'adresse peut être un objet avec {adresse, codePostal, ville, pays}
       if (safeData.structure?.adresse && typeof safeData.structure.adresse === 'object') {
         return safeData.structure.adresse.adresse || 'Non spécifiée';
       }
-      return safeData.structure?.adresse || safeData.programmateur?.adresse || 'Non spécifiée';
+      return safeData.structure?.adresse || safeData.contact?.adresse || safeData.programmateur?.adresse || 'Non spécifiée';
     })(),
     'structure_code_postal': (() => {
       if (safeData.structure?.adresse && typeof safeData.structure.adresse === 'object') {

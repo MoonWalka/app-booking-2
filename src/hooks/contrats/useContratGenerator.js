@@ -32,7 +32,7 @@
  * @param {string} concert.heure - Heure du concert
  * @param {number} concert.montant - Montant du concert
  * 
- * @param {Object} contact - Données du contact
+ * @param {Object} contact - Données du contact (anciennement programmateur)
  * @param {string} contact.nom - Nom du contact
  * @param {string} contact.prenom - Prénom du contact
  * @param {string} contact.adresse - Adresse du contact
@@ -199,7 +199,9 @@ import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 
-export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
+export const useContratGenerator = (concert, contact, artiste, lieu) => {
+  // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
+  const programmateur = contact;
   const { currentOrganization } = useOrganization();
   const relancesAuto = useRelancesAutomatiques();
   const [templates, setTemplates] = useState([]);
@@ -301,10 +303,10 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         }
         
         // Charger les données de structure du contact si disponible
-        if (programmateur?.structureId) {
-          console.log("Chargement de la structure du programmateur:", programmateur.structureId);
+        if (contact?.structureId) {
+          console.log("Chargement de la structure du contact:", contact.structureId);
           try {
-            const structureDoc = await getDoc(doc(db, 'structures', programmateur.structureId));
+            const structureDoc = await getDoc(doc(db, 'structures', contact.structureId));
             if (structureDoc.exists()) {
               const data = structureDoc.data();
               console.log("Structure trouvée, données complètes:", data);
@@ -322,7 +324,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
               });
               setStructureData(data);
             } else {
-              console.warn("Structure non trouvée avec l'ID:", programmateur.structureId);
+              console.warn("Structure non trouvée avec l'ID:", contact.structureId);
             }
           } catch (structureError) {
             console.error("Erreur lors du chargement de la structure:", structureError);
@@ -386,7 +388,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
     };
 
     fetchData();
-  }, [concert?.id, programmateur?.structureId, currentOrganization?.id]);
+  }, [concert?.id, contact?.structureId, currentOrganization?.id]);
   
   // Mettre à jour le modèle sélectionné quand l'ID change
   useEffect(() => {
@@ -417,7 +419,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
   const prepareContractVariables = useCallback(() => {
     console.log("Préparation des variables du contrat");
     console.log("🔍 État actuel de structureData:", structureData);
-    console.log("🔍 programmateur.structureId:", programmateur?.structureId);
+    console.log("🔍 contact.structureId:", contact?.structureId);
     
     // Log de débogage pour vérifier ce qui est transmis
     if (structureData) {
@@ -430,10 +432,10 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
         numeroIntracommunautaire: structureData.numeroIntracommunautaire
       });
     } else {
-      console.log("⚠️ Structure non chargée, utilisation des données du programmateur:", {
-        structure: programmateur?.structure,
-        siret: programmateur?.siret,
-        adresse: programmateur?.adresse
+      console.log("⚠️ Structure non chargée, utilisation des données du contact:", {
+        structure: contact?.structure,
+        siret: contact?.siret,
+        adresse: contact?.adresse
       });
     }
     
@@ -526,21 +528,21 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       representant_entreprise: entrepriseInfo?.representant || 'Non spécifié',
       fonction_representant: entrepriseInfo?.fonctionRepresentant || 'Non spécifiée',
       
-      // Variables contact
-      programmateur_nom: programmateur?.nom || 'Non spécifié',
-      programmateur_prenom: programmateur?.prenom || '',
-      programmateur_structure: structureData?.nom || programmateur?.structure || 'Non spécifiée',
-      programmateur_email: programmateur?.email || 'Non spécifié',
-      programmateur_telephone: programmateur?.telephone || 'Non spécifié',
-      programmateur_siret: structureData?.siret || programmateur?.siret || 'Non spécifié',
+      // Variables contact (nouvelle nomenclature)
+      contact_nom: contact?.nom || 'Non spécifié',
+      contact_prenom: contact?.prenom || '',
+      contact_structure: structureData?.nom || contact?.structure || 'Non spécifiée',
+      contact_email: contact?.email || 'Non spécifié',
+      contact_telephone: contact?.telephone || 'Non spécifié',
+      contact_siret: structureData?.siret || contact?.siret || 'Non spécifié',
       
-      // Variables contact (alias pour compatibilité avec les anciens templates)
-      contact_nom: programmateur?.nom || 'Non spécifié',
-      contact_prenom: programmateur?.prenom || '',
-      contact_structure: structureData?.nom || programmateur?.structure || 'Non spécifiée',
-      contact_email: programmateur?.email || 'Non spécifié',
-      contact_telephone: programmateur?.telephone || 'Non spécifié',
-      contact_siret: structureData?.siret || programmateur?.siret || 'Non spécifié',
+      // Variables contact (compatibilité rétrograde - ancienne nomenclature programmateur)
+      programmateur_nom: contact?.nom || 'Non spécifié',
+      programmateur_prenom: contact?.prenom || '',
+      programmateur_structure: structureData?.nom || contact?.structure || 'Non spécifiée',
+      programmateur_email: contact?.email || 'Non spécifié',
+      programmateur_telephone: contact?.telephone || 'Non spécifié',
+      programmateur_siret: structureData?.siret || contact?.siret || 'Non spécifié',
       contact_adresse: (() => {
         // Si on a une structure avec des données d'adresse
         if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
@@ -552,8 +554,11 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           return structureData.adresse;
         }
         // Sinon utiliser l'adresse du contact
-        return programmateur?.adresse || 'Non spécifiée';
+        return contact?.adresse || 'Non spécifiée';
       })(),
+      contact_numero_intracommunautaire: structureData?.numeroIntracommunautaire || contact?.numeroIntracommunautaire || contact?.numero_intracommunautaire || 'Non spécifié',
+      contact_representant: contact?.representant || contact?.nom || 'Non spécifié',
+      contact_qualite_representant: contact?.qualiteRepresentant || contact?.qualite_representant || contact?.fonction || 'Non spécifiée',
       programmateur_adresse: (() => {
         // Si on a une structure avec des données d'adresse
         if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
@@ -565,11 +570,11 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
           return structureData.adresse;
         }
         // Sinon utiliser l'adresse du contact
-        return programmateur?.adresse || 'Non spécifiée';
+        return contact?.adresse || 'Non spécifiée';
       })(),
-      programmateur_numero_intracommunautaire: structureData?.numeroIntracommunautaire || programmateur?.numeroIntracommunautaire || programmateur?.numero_intracommunautaire || 'Non spécifié',
-      programmateur_representant: programmateur?.representant || programmateur?.nom || 'Non spécifié',
-      programmateur_qualite_representant: programmateur?.qualiteRepresentant || programmateur?.qualite_representant || programmateur?.fonction || 'Non spécifiée',
+      programmateur_numero_intracommunautaire: structureData?.numeroIntracommunautaire || contact?.numeroIntracommunautaire || contact?.numero_intracommunautaire || 'Non spécifié',
+      programmateur_representant: contact?.representant || contact?.nom || 'Non spécifié',
+      programmateur_qualite_representant: contact?.qualiteRepresentant || contact?.qualite_representant || contact?.fonction || 'Non spécifiée',
       
       // Variables artiste
       artiste_nom: artiste?.nom || 'Non spécifié',
@@ -624,7 +629,7 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       lieu_capacite: lieu?.capacite || 'Non spécifiée',
       
       // Variables structure
-      structure_nom: safeStringValue(structureData?.nom || structureData?.raisonSociale || programmateur?.structure, 'Non spécifiée'),
+      structure_nom: safeStringValue(structureData?.nom || structureData?.raisonSociale || contact?.structure, 'Non spécifiée'),
       structure_siret: safeStringValue(structureData?.siret, 'Non spécifié'),
       structure_adresse: (() => {
         // L'adresse est un objet avec {adresse, codePostal, ville, pays}
@@ -666,11 +671,11 @@ export const useContratGenerator = (concert, programmateur, artiste, lieu) => {
       }),
       
       // Variables anciennes pour compatibilité (à supprimer plus tard)
-      nomProgrammateur: programmateur?.nom || 'Non spécifié',
-      prenomProgrammateur: programmateur?.prenom || '',
-      adresseProgrammateur: programmateur?.adresse || 'Non spécifiée',
-      emailProgrammateur: programmateur?.email || 'Non spécifié',
-      telephoneProgrammateur: programmateur?.telephone || 'Non spécifié',
+      nomProgrammateur: contact?.nom || 'Non spécifié',
+      prenomProgrammateur: contact?.prenom || '',
+      adresseProgrammateur: contact?.adresse || 'Non spécifiée',
+      emailProgrammateur: contact?.email || 'Non spécifié',
+      telephoneProgrammateur: contact?.telephone || 'Non spécifié',
       structureProgrammateur: programmateur?.structure || 'Non spécifiée',
       nomLieu: lieu?.nom || 'Non spécifié',
       adresseLieu: lieu?.adresse || 'Non spécifiée',

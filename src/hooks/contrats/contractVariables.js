@@ -29,6 +29,18 @@ export const CONTRACT_VARIABLES = {
   'contact_representant': { label: 'Représentant légal', category: 'contact', source: 'contact.representant' },
   'contact_qualite_representant': { label: 'Qualité du représentant', category: 'contact', source: 'contact.qualiteRepresentant' },
   
+  // Variables programmateur (compatibilité rétrograde)
+  'programmateur_nom': { label: 'Nom du programmateur', category: 'programmateur', source: 'programmateur.nom' },
+  'programmateur_prenom': { label: 'Prénom du programmateur', category: 'programmateur', source: 'programmateur.prenom' },
+  'programmateur_structure': { label: 'Structure du programmateur', category: 'programmateur', source: 'programmateur.structure' },
+  'programmateur_email': { label: 'Email du programmateur', category: 'programmateur', source: 'programmateur.email' },
+  'programmateur_telephone': { label: 'Téléphone du programmateur', category: 'programmateur', source: 'programmateur.telephone' },
+  'programmateur_adresse': { label: 'Adresse du programmateur', category: 'programmateur', source: 'programmateur.adresse' },
+  'programmateur_siret': { label: 'SIRET du programmateur', category: 'programmateur', source: 'programmateur.siret' },
+  'programmateur_numero_intracommunautaire': { label: 'N° TVA du programmateur', category: 'programmateur', source: 'programmateur.numeroIntracommunautaire' },
+  'programmateur_representant': { label: 'Représentant légal', category: 'programmateur', source: 'programmateur.representant' },
+  'programmateur_qualite_representant': { label: 'Qualité du représentant', category: 'programmateur', source: 'programmateur.qualiteRepresentant' },
+  
   // Variables structure (ajout des variables manquantes)
   'structure_nom': { label: 'Nom de la structure', category: 'structure', source: 'structure.nom' },
   'structure_siret': { label: 'SIRET de la structure', category: 'structure', source: 'structure.siret' },
@@ -111,19 +123,46 @@ export const mapStructureDataToVariables = (structureData) => {
 };
 
 /**
- * Mapper les données du contact pour inclure les infos de structure
+ * Mapper les données du contact pour inclure les infos de structure (nouvelle nomenclature)
  * @param {Object} contactData - Les données du contact
  * @param {Object} structureData - Les données de la structure associée
  * @returns {Object} Les variables mappées pour le contrat
  */
-export const mapProgrammateurWithStructure = (programmateurData, structureData) => {
+export const mapContactWithStructure = (contactData, structureData) => {
+  const contact = {
+    'contact_nom': contactData?.nom || '',
+    'contact_prenom': contactData?.prenom || '',
+    'contact_email': contactData?.email || '',
+    'contact_telephone': contactData?.telephone || '',
+    'contact_representant': `${contactData?.prenom || ''} ${contactData?.nom || ''}`.trim(),
+    'contact_qualite_representant': contactData?.fonction || ''
+  };
+  
+  // Si la structure est fournie, utiliser ses données pour l'adresse et le SIRET
+  if (structureData) {
+    contact['contact_structure'] = structureData.nom || '';
+    contact['contact_siret'] = structureData.siret || '';
+    contact['contact_adresse'] = structureData.adresse || '';
+    contact['contact_numero_intracommunautaire'] = structureData.numeroIntracommunautaire || '';
+  }
+  
+  return contact;
+};
+
+/**
+ * Mapper les données du contact pour inclure les infos de structure (compatibilité rétrograde)
+ * @param {Object} contactData - Les données du contact (anciennement programmateurData)
+ * @param {Object} structureData - Les données de la structure associée
+ * @returns {Object} Les variables mappées pour le contrat
+ */
+export const mapProgrammateurWithStructure = (contactData, structureData) => {
   const programmateur = {
-    'programmateur_nom': programmateurData?.nom || '',
-    'programmateur_prenom': programmateurData?.prenom || '',
-    'programmateur_email': programmateurData?.email || '',
-    'programmateur_telephone': programmateurData?.telephone || '',
-    'programmateur_representant': `${programmateurData?.prenom || ''} ${programmateurData?.nom || ''}`.trim(),
-    'programmateur_qualite_representant': programmateurData?.fonction || ''
+    'programmateur_nom': contactData?.nom || '',
+    'programmateur_prenom': contactData?.prenom || '',
+    'programmateur_email': contactData?.email || '',
+    'programmateur_telephone': contactData?.telephone || '',
+    'programmateur_representant': `${contactData?.prenom || ''} ${contactData?.nom || ''}`.trim(),
+    'programmateur_qualite_representant': contactData?.fonction || ''
   };
   
   // Si la structure est fournie, utiliser ses données pour l'adresse et le SIRET

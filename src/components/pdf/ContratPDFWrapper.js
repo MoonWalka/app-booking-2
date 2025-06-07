@@ -57,7 +57,8 @@ const createSafeData = (data) => {
     contact,  // Nouveau format
     programmateur,  // Rétrocompatibilité
     artiste, 
-    lieu, 
+    lieu,
+    structure,
     entreprise,
     
     // Format 2 : Ancien format
@@ -66,7 +67,8 @@ const createSafeData = (data) => {
     contactData,  // Nouveau format
     programmateurData,  // Rétrocompatibilité
     artisteData, 
-    lieuData, 
+    lieuData,
+    structureData,
     entrepriseInfo 
   } = data;
 
@@ -81,6 +83,7 @@ const createSafeData = (data) => {
     programmateur: programmateur || programmateurData || {},  // Rétrocompatibilité
     artiste: artiste || artisteData || {},
     lieu: lieu || lieuData || {},
+    structure: structure || structureData || {},
     entreprise: entreprise || entrepriseInfo || {}
   };
 

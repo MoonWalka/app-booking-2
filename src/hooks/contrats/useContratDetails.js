@@ -59,6 +59,13 @@ const useContratDetails = (contratId) => {
       idField: 'entrepriseId',
       type: 'custom-query',
       essential: true
+    },
+    { 
+      name: 'structure', 
+      collection: 'structures', 
+      idField: 'structureId',
+      type: 'custom-query',
+      essential: false
     }
   ];
   
@@ -207,6 +214,67 @@ const useContratDetails = (contratId) => {
         console.error('Erreur lors du chargement des paramètres d\'entreprise:', err);
         return null;
       }
+    },
+    
+    // Requête personnalisée pour charger la structure via le contact
+    structure: async (contratData) => {
+      console.log('[DEBUG] Chargement structure pour contrat:', contratData);
+      
+      if (!contratData.concertId) {
+        console.log('[DEBUG] Pas de concertId dans le contrat');
+        return null;
+      }
+      
+      try {
+        // Récupérer d'abord le concert
+        const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
+        
+        if (!concertDoc.exists()) {
+          console.log('[DEBUG] Concert non trouvé pour structure');
+          return null;
+        }
+        
+        const concertData = concertDoc.data();
+        console.log('[DEBUG] Données du concert pour structure:', concertData);
+        
+        if (!concertData.contactId) {
+          console.log('[DEBUG] Pas de contactId dans le concert');
+          return null;
+        }
+        
+        // Récupérer le contact
+        const contactDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
+        
+        if (!contactDoc.exists()) {
+          console.log('[DEBUG] Contact non trouvé pour structure');
+          return null;
+        }
+        
+        const contactData = contactDoc.data();
+        console.log('[DEBUG] Données du contact pour structure:', contactData);
+        
+        if (!contactData.structureId) {
+          console.log('[DEBUG] Pas de structureId dans le contact');
+          return null;
+        }
+        
+        // Récupérer enfin la structure
+        console.log('[DEBUG] Récupération de la structure:', contactData.structureId);
+        const structureDoc = await getDoc(doc(db, 'structures', contactData.structureId));
+        
+        if (!structureDoc.exists()) {
+          console.log('[DEBUG] Structure non trouvée');
+          return null;
+        }
+        
+        const structureData = { id: structureDoc.id, ...structureDoc.data() };
+        console.log('[DEBUG] Données de la structure:', structureData);
+        
+        return structureData;
+      } catch (err) {
+        console.error('[DEBUG] Erreur lors du chargement de la structure:', err);
+        return null;
+      }
     }
   };
 
@@ -289,6 +357,7 @@ const useContratDetails = (contratId) => {
     lieu: genericDetails.relatedData.lieu || null,
     artiste: genericDetails.relatedData.artiste || null,
     entreprise: genericDetails.relatedData.entreprise || null,
+    structure: genericDetails.relatedData.structure || null,
     loading: genericDetails.loading,
     error: genericDetails.error
   };

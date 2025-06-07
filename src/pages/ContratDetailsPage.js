@@ -33,7 +33,8 @@ const ContratDetailsPage = () => {
     programmateur, // Rétrocompatibilité
     lieu, 
     artiste, 
-    entreprise, 
+    entreprise,
+    structure, 
     loading, 
     error,
     setContrat,
@@ -54,6 +55,7 @@ const ContratDetailsPage = () => {
     lieu,
     artiste,
     entreprise,
+    structure,
     loading,
     error
   });
@@ -108,7 +110,8 @@ const ContratDetailsPage = () => {
             programmateur: contact || programmateur, // Rétrocompatibilité
             lieu,
             artiste,
-            entreprise
+            entreprise,
+            structure
           });
         }, 500);
       }
@@ -116,7 +119,7 @@ const ContratDetailsPage = () => {
       // Nettoyer l'URL après traitement
       navigate(`/contrats/${contratId}`, { replace: true });
     }
-  }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, concert, template, contact, programmateur, lieu, artiste, entreprise]);
+  }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, concert, template, contact, programmateur, lieu, artiste, entreprise, structure]);
 
   // Prepare data for PDF generation
   const pdfData = {
@@ -127,7 +130,8 @@ const ContratDetailsPage = () => {
     programmateur: contact || programmateur, // Rétrocompatibilité
     lieu,
     artiste,
-    entreprise
+    entreprise,
+    structure
   };
 
   // Handle navigation back to contracts list

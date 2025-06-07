@@ -29,17 +29,17 @@ export const CONTRACT_VARIABLES = {
   'contact_representant': { label: 'Représentant légal', category: 'contact', source: 'contact.representant' },
   'contact_qualite_representant': { label: 'Qualité du représentant', category: 'contact', source: 'contact.qualiteRepresentant' },
   
-  // Variables programmateur (compatibilité rétrograde)
-  'programmateur_nom': { label: 'Nom du programmateur', category: 'programmateur', source: 'programmateur.nom' },
-  'programmateur_prenom': { label: 'Prénom du programmateur', category: 'programmateur', source: 'programmateur.prenom' },
-  'programmateur_structure': { label: 'Structure du programmateur', category: 'programmateur', source: 'programmateur.structure' },
-  'programmateur_email': { label: 'Email du programmateur', category: 'programmateur', source: 'programmateur.email' },
-  'programmateur_telephone': { label: 'Téléphone du programmateur', category: 'programmateur', source: 'programmateur.telephone' },
-  'programmateur_adresse': { label: 'Adresse du programmateur', category: 'programmateur', source: 'programmateur.adresse' },
-  'programmateur_siret': { label: 'SIRET du programmateur', category: 'programmateur', source: 'programmateur.siret' },
-  'programmateur_numero_intracommunautaire': { label: 'N° TVA du programmateur', category: 'programmateur', source: 'programmateur.numeroIntracommunautaire' },
-  'programmateur_representant': { label: 'Représentant légal', category: 'programmateur', source: 'programmateur.representant' },
-  'programmateur_qualite_representant': { label: 'Qualité du représentant', category: 'programmateur', source: 'programmateur.qualiteRepresentant' },
+  // Variables programmateur (compatibilité rétrograde - maintenant équivalent aux variables contact)
+  'programmateur_nom': { label: 'Nom du contact', category: 'contact', source: 'programmateur.nom' },
+  'programmateur_prenom': { label: 'Prénom du contact', category: 'contact', source: 'programmateur.prenom' },
+  'programmateur_structure': { label: 'Structure du contact', category: 'contact', source: 'programmateur.structure' },
+  'programmateur_email': { label: 'Email du contact', category: 'contact', source: 'programmateur.email' },
+  'programmateur_telephone': { label: 'Téléphone du contact', category: 'contact', source: 'programmateur.telephone' },
+  'programmateur_adresse': { label: 'Adresse du contact', category: 'contact', source: 'programmateur.adresse' },
+  'programmateur_siret': { label: 'SIRET du contact', category: 'contact', source: 'programmateur.siret' },
+  'programmateur_numero_intracommunautaire': { label: 'N° TVA du contact', category: 'contact', source: 'programmateur.numeroIntracommunautaire' },
+  'programmateur_representant': { label: 'Représentant légal', category: 'contact', source: 'programmateur.representant' },
+  'programmateur_qualite_representant': { label: 'Qualité du représentant', category: 'contact', source: 'programmateur.qualiteRepresentant' },
   
   // Variables structure (ajout des variables manquantes)
   'structure_nom': { label: 'Nom de la structure', category: 'structure', source: 'structure.nom' },

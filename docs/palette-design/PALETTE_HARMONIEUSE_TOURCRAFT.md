@@ -109,12 +109,14 @@ Les gris sont légèrement teintés avec la couleur principale pour une cohéren
 --tc-color-concert-light: hsl(222, 36%, 89%);  /* #e6eaf2 - Bleu très clair */
 ```
 
-### Programmateurs
-**Teinte : 282°** - Violet programmateur
+### Contacts
+**Teinte : 282°** - Violet contact
 ```css
---tc-color-programmateur: hsl(282, 36%, 45%);  /* #9162b1 - Violet programmateur */
---tc-color-programmateur-light: hsl(282, 36%, 89%); /* #f0e6f2 - Violet très clair */
+--tc-color-contact: hsl(282, 36%, 45%);  /* #9162b1 - Violet contact */
+--tc-color-contact-light: hsl(282, 36%, 89%); /* #f0e6f2 - Violet très clair */
 ```
+
+> **Note technique :** Les variables CSS `--tc-color-programmateur` sont maintenues pour la rétrocompatibilité
 
 ## 🌓 Mode Sombre Harmonisé
 

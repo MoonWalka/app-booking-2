@@ -28,27 +28,31 @@ APRÈS V2 : 7 architectures génériques → 61 composants spécialisés
 // Contact unifié pour toutes entités
 <ContactSectionV2
   entity={entity}
-  entityType="structure|programmateur|artiste"
+  entityType="structure|contact|artiste"
   mode="detail|edit"
   showCardWrapper={true}
   onSave={handleSave}
 />
 ```
 
-**Entités couvertes :** Structure, Programmateur, Artiste, Concert, Lieu  
+**Entités couvertes :** Structure, Contact, Artiste, Concert, Lieu  
 **Fonctionnalités :** Email, téléphone, site web, réseaux sociaux
+
+> **Note technique :** L'entityType supporte toujours `programmateur` pour la rétrocompatibilité API
 
 ### **2. EntityHeaderV2**
 ```javascript
 // En-tête unifié avec breadcrumb et badges
 <EntityHeaderV2
   entity={entity}
-  entityType="concert|lieu|structure|programmateur|artiste"
+  entityType="concert|lieu|structure|contact|artiste"
   showBreadcrumb={true}
   showBadges={true}
   actions={headerActions}
 />
 ```
+
+> **Note technique :** L'entityType supporte toujours `programmateur` pour la rétrocompatibilité API
 
 **Entités couvertes :** Toutes les entités principales (5)  
 **Fonctionnalités :** Titre, breadcrumb, badges statut, actions contextuelles
@@ -58,15 +62,17 @@ APRÈS V2 : 7 architectures génériques → 61 composants spécialisés
 // Adresse avec géolocalisation
 <AddressSectionV2
   entity={entity}
-  entityType="lieu|structure|programmateur"
+  entityType="lieu|structure|contact"
   mode="detail|edit"
   showMap={true}
   enableGeolocation={true}
 />
 ```
 
-**Entités couvertes :** Lieu, Structure, Programmateur  
+**Entités couvertes :** Lieu, Structure, Contact  
 **Fonctionnalités :** Adresse complète, coordonnées GPS, carte interactive
+
+> **Note technique :** L'entityType supporte toujours `programmateur` pour la rétrocompatibilité API
 
 ### **4. RelationsSectionV2** 🆕
 ```javascript
@@ -89,12 +95,14 @@ APRÈS V2 : 7 architectures génériques → 61 composants spécialisés
 // Notes avec auto-save
 <NotesSectionV2
   entity={entity}
-  entityType="concert|structure|artiste|lieu|programmateur"
+  entityType="concert|structure|artiste|lieu|contact"
   mode="detail|edit"
   autoSave={true}
   characterLimit={2000}
 />
 ```
+
+> **Note technique :** L'entityType supporte toujours `programmateur` pour la rétrocompatibilité API
 
 **Entités couvertes :** Toutes les entités principales (5)  
 **Fonctionnalités :** Auto-save, validation temps réel, compteur caractères
@@ -119,7 +127,7 @@ APRÈS V2 : 7 architectures génériques → 61 composants spécialisés
 // Actions contextuelles unifiées
 <ActionsSectionV2
   entity={entity}
-  entityType="concert|structure|artiste|lieu|programmateur"
+  entityType="concert|structure|artiste|lieu|contact"
   permissions={userPermissions}
   onAction={handleAction}
   groupBy="category"
@@ -128,6 +136,8 @@ APRÈS V2 : 7 architectures génériques → 61 composants spécialisés
 
 **Entités couvertes :** Toutes les entités principales (5)  
 **Fonctionnalités :** CRUD, Export, Communication, Navigation (25+ actions)
+
+> **Note technique :** L'entityType supporte toujours `programmateur` pour la rétrocompatibilité API
 
 ---
 

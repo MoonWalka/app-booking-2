@@ -38,7 +38,7 @@ Cette réorganisation a été effectuée le 7 juin 2025 pour améliorer la lisib
 
 #### **📱 Maquettes** → `maquettes/`
 - `FONCTIONNALITES_IMPLEMENTEES_MAQUETTE.md`
-- `FORMULAIRE_PROGRAMMATEUR_MAQUETTE.md`
+- `FORMULAIRE_CONTACT_MAQUETTE.md`
 - `TEST_FORMULAIRE_MAQUETTE.md`
 
 #### **🔗 Intégration** → `integration/`

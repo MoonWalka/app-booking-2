@@ -28,7 +28,7 @@ const StructureVariableTest = () => {
     montant: 800
   };
   
-  const mockProgrammateur = {
+  const mockContact = {
     nom: 'Dupont',
     prenom: 'Jean',
     email: 'jean.dupont@test.fr',
@@ -36,6 +36,9 @@ const StructureVariableTest = () => {
     structure: 'Structure de Test',
     structureId: null // Sera défini dynamiquement
   };
+  
+  // Alias pour rétrocompatibilité
+  const mockProgrammateur = mockContact;
   
   const mockArtiste = {
     nom: 'Les Artistes de Test',
@@ -233,7 +236,8 @@ const StructureVariableTest = () => {
         },
         structure: structure,
         concert: mockConcert,
-        programmateur: { ...mockProgrammateur, structureId: structure.id },
+        contact: { ...mockContact, structureId: structure.id },
+        programmateur: { ...mockProgrammateur, structureId: structure.id }, // Rétrocompatibilité
         artiste: mockArtiste,
         lieu: mockLieu
       };

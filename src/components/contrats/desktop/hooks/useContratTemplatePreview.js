@@ -44,10 +44,14 @@ export const useContratTemplatePreview = (
     if (!content) return '';
     
     return content
-      .replace(/{programmateur_nom}/g, 'Jean Dupont')
-      .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ')
-      .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr')
-      .replace(/{programmateur_siret}/g, '123 456 789 00012')
+      .replace(/{programmateur_nom}/g, 'Jean Dupont') // Rétrocompatibilité
+      .replace(/{contact_nom}/g, 'Jean Dupont') // Version moderne
+      .replace(/{programmateur_structure}/g, 'Association Culturelle XYZ') // Rétrocompatibilité
+      .replace(/{contact_structure}/g, 'Association Culturelle XYZ') // Version moderne
+      .replace(/{programmateur_email}/g, 'contact@asso-xyz.fr') // Rétrocompatibilité
+      .replace(/{contact_email}/g, 'contact@asso-xyz.fr') // Version moderne
+      .replace(/{programmateur_siret}/g, '123 456 789 00012') // Rétrocompatibilité
+      .replace(/{contact_siret}/g, '123 456 789 00012') // Version moderne
       .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
       .replace(/{artiste_genre}/g, 'Rock Alternatif')
       .replace(/{concert_titre}/g, 'Concert de printemps')

@@ -28,7 +28,7 @@ export const RELANCE_TYPES = {
   ENVOYER_FORMULAIRE: {
     id: 'envoyer_formulaire',
     nom: 'Envoyer le formulaire',
-    description: 'Envoyer le formulaire de validation au programmateur',
+    description: 'Envoyer le formulaire de validation au contact',
     priorite: 'haute',
     couleur: 'warning',
     conditions: {
@@ -50,7 +50,7 @@ export const RELANCE_TYPES = {
   ENVOYER_CONTRAT: {
     id: 'envoyer_contrat',
     nom: 'Envoyer le contrat',
-    description: 'Générer et envoyer le contrat au programmateur',
+    description: 'Générer et envoyer le contrat au contact',
     priorite: 'haute',
     couleur: 'primary',
     conditions: {

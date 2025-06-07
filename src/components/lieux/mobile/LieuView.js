@@ -32,8 +32,8 @@ const LieuView = () => {
   } = useLieuDetails(lieuId);
 
   // Récupérer le contact depuis les entités liées
-  const programmateur = relatedData?.programmateur;
-  const loadingProgrammateur = loadingRelated?.programmateur;
+  const contact = relatedData?.programmateur; // Rétrocompatibilité - données mappées depuis programmateur
+  const loadingContact = loadingRelated?.programmateur; // Rétrocompatibilité
 
   // Handlers mobiles avec notifications - NOUVEAU: Finalisation intelligente
   const handleEditWithNotification = () => {
@@ -182,32 +182,32 @@ const LieuView = () => {
       <div className={styles?.section || "mobile-section mb-4 p-3 border rounded"}>
         <h2 className="h6 mb-3">Contact</h2>
         
-        {loadingProgrammateur ? (
+        {loadingContact ? (
           <div className="text-center">
             <Spinner variant="primary" size="sm" />
           </div>
-        ) : programmateur ? (
+        ) : contact ? (
           <div>
-            <div className="mb-2">{programmateur.nom}</div>
-            {programmateur.email && (
+            <div className="mb-2">{contact.nom}</div>
+            {contact.email && (
               <div className="mb-2">
-                <a href={`mailto:${programmateur.email}`}>
+                <a href={`mailto:${contact.email}`}>
                   <i className="bi bi-envelope me-2"></i>
-                  {programmateur.email}
+                  {contact.email}
                 </a>
               </div>
             )}
-            {programmateur.telephone && (
+            {contact.telephone && (
               <div>
-                <a href={`tel:${programmateur.telephone}`}>
+                <a href={`tel:${contact.telephone}`}>
                   <i className="bi bi-telephone me-2"></i>
-                  {programmateur.telephone}
+                  {contact.telephone}
                 </a>
               </div>
             )}
           </div>
         ) : (
-          <div className="text-muted">Aucun programmateur associé</div>
+          <div className="text-muted">Aucun contact associé</div>
         )}
       </div>
 

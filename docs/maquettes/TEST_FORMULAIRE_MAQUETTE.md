@@ -1,13 +1,13 @@
-# Test Formulaire Programmateur Maquette - Guide Rapide
+# Test Formulaire Contact Maquette - Guide Rapide
 
 ## Vérifications d'Affichage
 
 ### 1. Navigation vers le Formulaire
-✅ **URL de test** : `http://localhost:3000/programmateurs/qW2CefuRsX7xjUB6MFSW/edit`
+✅ **URL de test** : `http://localhost:3000/contacts/qW2CefuRsX7xjUB6MFSW/edit`
 
 **Ce qui doit s'afficher** :
 - Header avec dégradé bleu TourCraft
-- Titre "Modifier Programmateur" avec icône
+- Titre "Modifier Contact" avec icône
 - 3 boutons : Enregistrer (vert), Annuler (gris), Supprimer (rouge)
 - Fond de page gris clair
 

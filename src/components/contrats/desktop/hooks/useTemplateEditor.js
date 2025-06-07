@@ -96,7 +96,8 @@ const useTemplateEditor = (initialTemplate, onSave) => {
       // Exemples de valeurs pour les variables courantes
       const exampleValues = {
         artiste_nom: 'Les Fabuleux Troubadours',
-        programmateur_nom: 'Jean Dupont',
+        programmateur_nom: 'Jean Dupont', // Maintenu pour rétrocompatibilité
+        contact_nom: 'Jean Dupont', // Version moderne
         structure_nom: 'Salle de Concert Le Zénith',
         concert_date: '15/06/2025',
         concert_heure: '20h30',

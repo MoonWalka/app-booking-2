@@ -151,7 +151,7 @@ const ContratTemplatesPage = () => {
       signatureTemplate: `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
         <div style="width: 45%;">
           <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>
-          <div>{programmateur_nom}</div>
+          <div>{contact_nom}</div>
           <div style="border-top: 1px solid #000; margin-top: 5px;"></div>
         </div>
         <div style="width: 45%;">

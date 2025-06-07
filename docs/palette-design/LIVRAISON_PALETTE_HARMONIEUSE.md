@@ -56,7 +56,7 @@
 ```css
 --tc-color-artiste:       hsl(262, 36%, 45%);  /* Violet harmonisé */
 --tc-color-concert:       hsl(222, 36%, 45%);  /* Bleu harmonisé */
---tc-color-programmateur: hsl(282, 36%, 45%);  /* Violet harmonisé */
+--tc-color-contact: hsl(282, 36%, 45%);  /* Violet harmonisé contact */
 ```
 
 ## ✨ Avantages de la Nouvelle Palette

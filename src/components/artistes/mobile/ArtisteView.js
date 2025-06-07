@@ -230,7 +230,7 @@ const ArtisteView = ({ id }) => {
                       </div>
                       <div className={styles.concertDetails}>
                         <div className={styles.concertLieu}>{concert.lieu || 'Lieu non spécifié'}</div>
-                        <div className={styles.concertProgrammateur}>{concert.programmateurNom || '-'}</div>
+                        <div className={styles.concertProgrammateur}>{concert.contactNom || concert.programmateurNom || '-'}</div>
                       </div>
                       <div className={styles.concertMontant}>
                         {concert.montant ? 

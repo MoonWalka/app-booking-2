@@ -316,7 +316,7 @@ const FormValidationInterface = () => {
         onClose={() => setShowConfirmModal(false)}
         onConfirm={handleConfirmValidation}
         title="Confirmer la validation"
-        message="Êtes-vous sûr de vouloir valider ce formulaire ? Les données validées seront enregistrées dans la fiche du concert, du lieu et du programmateur."
+        message="Êtes-vous sûr de vouloir valider ce formulaire ? Les données validées seront enregistrées dans la fiche du concert, du lieu et du contact."
         isProcessing={validationInProgress}
         isMobile={isMobile}
         // ✅ CORRECTION: Utiliser des valeurs calculées localement au lieu du hook générique

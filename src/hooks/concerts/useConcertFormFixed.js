@@ -14,7 +14,8 @@ const useConcertFormFixed = (concertId = null) => {
   
   // États locaux pour les entités sélectionnées (affichage immédiat)
   const [localLieu, setLocalLieu] = useState(null);
-  const [localProgrammateur, setLocalProgrammateur] = useState(null);
+  const [localContact, setLocalContact] = useState(null);
+  const [localProgrammateur, setLocalProgrammateur] = useState(null); // Alias rétrocompatibilité
   const [localArtiste, setLocalArtiste] = useState(null);
   const [localStructure, setLocalStructure] = useState(null);
   
@@ -34,7 +35,8 @@ const useConcertFormFixed = (concertId = null) => {
       lieuNom: '',
       lieuVille: '',
       contactId: '',
-      programmateurNom: '',
+      contactNom: '', // Nouveau format
+      programmateurNom: '', // Rétrocompatibilité
       artisteId: '',
       artisteNom: '',
       structureId: '',
@@ -54,7 +56,7 @@ const useConcertFormFixed = (concertId = null) => {
   
   // Synchroniser les entités locales avec les données du formulaire au chargement
   useEffect(() => {
-    if (genericFormHook.formData && !localLieu && !localProgrammateur && !localArtiste) {
+    if (genericFormHook.formData && !localLieu && !localContact && !localArtiste) {
       const { formData } = genericFormHook;
       
       // Reconstruire les objets entités à partir des données du formulaire
@@ -66,12 +68,15 @@ const useConcertFormFixed = (concertId = null) => {
         });
       }
       
-      if (formData.contactId && formData.programmateurNom) {
-        setLocalProgrammateur({
+      // Contact/Programmateur
+      if (formData.contactId && (formData.contactNom || formData.programmateurNom)) {
+        const contact = {
           id: formData.contactId,
-          nom: formData.programmateurNom,
-          prenom: formData.programmateurPrenom || ''
-        });
+          nom: formData.contactNom || formData.programmateurNom,
+          prenom: formData.contactPrenom || formData.programmateurPrenom || ''
+        };
+        setLocalContact(contact);
+        setLocalProgrammateur(contact); // Rétrocompatibilité
       }
       
       if (formData.artisteId && formData.artisteNom) {
@@ -128,34 +133,49 @@ const useConcertFormFixed = (concertId = null) => {
     genericFormHook.handleChange({ target: { name: 'lieuVille', value: '' } });
   }, [genericFormHook]);
   
-  const handleSelectProgrammateur = useCallback((programmateur) => {
-    debugLog('[useConcertFormFixed] Programmateur sélectionné:', programmateur);
+  const handleSelectContact = useCallback((contact) => {
+    debugLog('[useConcertFormFixed] Contact sélectionné:', contact);
     
     // Mettre à jour l'état local immédiatement
-    setLocalProgrammateur(programmateur);
+    setLocalContact(contact);
+    setLocalProgrammateur(contact); // Rétrocompatibilité
     
     // Mettre à jour les données du formulaire
-    if (programmateur) {
+    if (contact) {
       genericFormHook.handleChange({
         target: {
           name: 'contactId',
-          value: programmateur.id
+          value: contact.id
         }
       });
       genericFormHook.handleChange({
         target: {
-          name: 'programmateurNom',
-          value: `${programmateur.prenom || ''} ${programmateur.nom || ''}`.trim()
+          name: 'contactNom',
+          value: `${contact.prenom || ''} ${contact.nom || ''}`.trim()
+        }
+      });
+      genericFormHook.handleChange({
+        target: {
+          name: 'programmateurNom', // Rétrocompatibilité
+          value: `${contact.prenom || ''} ${contact.nom || ''}`.trim()
         }
       });
     }
   }, [genericFormHook]);
   
-  const handleRemoveProgrammateur = useCallback(() => {
-    setLocalProgrammateur(null);
+  // Alias pour rétrocompatibilité
+  const handleSelectProgrammateur = handleSelectContact;
+  
+  const handleRemoveContact = useCallback(() => {
+    setLocalContact(null);
+    setLocalProgrammateur(null); // Rétrocompatibilité
     genericFormHook.handleChange({ target: { name: 'contactId', value: '' } });
-    genericFormHook.handleChange({ target: { name: 'programmateurNom', value: '' } });
+    genericFormHook.handleChange({ target: { name: 'contactNom', value: '' } });
+    genericFormHook.handleChange({ target: { name: 'programmateurNom', value: '' } }); // Rétrocompatibilité
   }, [genericFormHook]);
+  
+  // Alias pour rétrocompatibilité
+  const handleRemoveProgrammateur = handleRemoveContact;
   
   const handleSelectArtiste = useCallback((artiste) => {
     debugLog('[useConcertFormFixed] Artiste sélectionné:', artiste);
@@ -227,35 +247,46 @@ const useConcertFormFixed = (concertId = null) => {
     isSubmitting: genericFormHook.isSubmitting,
     error: genericFormHook.error,
     
-    // Entités locales pour affichage immédiat
+    // Entités locales pour affichage immédiat (nouvelle API)
     lieu: localLieu,
-    programmateur: localProgrammateur,
+    contact: localContact,
     artiste: localArtiste,
     structure: localStructure,
     
-    // Handlers de sélection
+    // Entités locales (rétrocompatibilité)
+    programmateur: localProgrammateur,
+    
+    // Handlers de sélection (nouvelle API)
     handleSelectLieu,
     handleRemoveLieu,
-    handleSelectProgrammateur,
-    handleRemoveProgrammateur,
+    handleSelectContact,
+    handleRemoveContact,
     handleSelectArtiste,
     handleRemoveArtiste,
     handleSelectStructure,
     handleRemoveStructure,
     
+    // Handlers de sélection (rétrocompatibilité)
+    handleSelectProgrammateur,
+    handleRemoveProgrammateur,
+    
     // Alias pour compatibilité
     setLieu: handleSelectLieu,
+    setContact: handleSelectContact,
     setProgrammateur: handleSelectProgrammateur,
     setArtiste: handleSelectArtiste,
     setStructure: handleSelectStructure
   }), [
     genericFormHook,
     localLieu,
+    localContact,
     localProgrammateur,
     localArtiste,
     localStructure,
     handleSelectLieu,
     handleRemoveLieu,
+    handleSelectContact,
+    handleRemoveContact,
     handleSelectProgrammateur,
     handleRemoveProgrammateur,
     handleSelectArtiste,

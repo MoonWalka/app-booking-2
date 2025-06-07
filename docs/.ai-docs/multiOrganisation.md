@@ -7,7 +7,7 @@ Parfait ! Maintenant que j'ai analysé votre application, je peux vous donner un
 D'après mon analyse, votre app a actuellement :
 - Un seul espace de données partagé
 - Pas de séparation organisationnelle
-- Données dupliquées entre collections (programmateurs, concerts, lieux, etc.)
+- Données dupliquées entre collections (contacts, concerts, lieux, etc.)
 - Authentification simple sans notion d'organisation
 
 ### **2. Modifications Nécessaires**

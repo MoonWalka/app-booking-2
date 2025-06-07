@@ -85,10 +85,12 @@ module.exports = {
 
 ### Conventions spécifiques au domaine métier
 
-- **Entités métier** : Noms singuliers et descriptifs (ex: `Programmateur`, `Lieu`, `Concert`)
-- **Collections Firestore** : Noms pluriels (ex: `programmateurs`, `lieux`, `concerts`)
+- **Entités métier** : Noms singuliers et descriptifs (ex: `Contact`, `Lieu`, `Concert`)
+- **Collections Firestore** : Noms pluriels (ex: `contacts`, `lieux`, `concerts`)
 - **Hooks spécifiques aux entités** : Préfixés par "use" suivi du nom de l'entité (ex: `useConcert`, `useLieuDetails`)
-- **Composants de l'entité** : Préfixés par le nom de l'entité (ex: `ConcertForm`, `ProgrammateurList`)
+- **Composants de l'entité** : Préfixés par le nom de l'entité (ex: `ConcertForm`, `ContactList`)
+
+> **Note de migration** : L'entité métier "Programmateur" a été modernisée vers "Contact" pour améliorer la clarté terminologique. Les références techniques héritées (collections Firestore, interfaces) maintiennent la compatibilité descendante avec des alias appropriés.
 
 ## Standards CSS
 
@@ -361,8 +363,8 @@ export const useGenericEntityList = (config = {}) => {
 Toutes les entités métier doivent être définies avec une interface TypeScript :
 
 ```typescript
-// src/models/Programmateur.ts
-export interface IProgrammateur {
+// src/models/Contact.ts (anciennement Programmateur.ts - rétrocompatibilité maintenue)
+export interface IContact {
   id?: string;
   nom: string;
   prenom: string;
@@ -370,13 +372,16 @@ export interface IProgrammateur {
   telephone?: string;
   structureId?: string;
   structureNom?: string;
-  contacts?: IContact[];
+  contactsAssocies?: IContactAssocie[];
   notes?: string;
   createdAt: Date | number;
   updatedAt: Date | number;
 }
 
-export interface IContact {
+// Rétrocompatibilité - Alias pour l'interface héritée
+export interface IProgrammateur extends IContact {}
+
+export interface IContactAssocie {
   id: string;
   nom: string;
   prenom: string;
@@ -391,19 +396,22 @@ export interface IContact {
 Chaque entité doit avoir un objet de valeurs par défaut :
 
 ```typescript
-// src/models/defaults/ProgrammateurDefaults.ts
-import { IProgrammateur } from '../Programmateur';
+// src/models/defaults/ContactDefaults.ts (anciennement ProgrammateurDefaults.ts)
+import { IContact } from '../Contact';
 
-export const DEFAULT_PROGRAMMATEUR: IProgrammateur = {
+export const DEFAULT_CONTACT: IContact = {
   nom: '',
   prenom: '',
   email: '',
   telephone: '',
-  contacts: [],
+  contactsAssocies: [],
   notes: '',
   createdAt: Date.now(),
   updatedAt: Date.now()
 };
+
+// Rétrocompatibilité - Alias pour les valeurs par défaut héritées
+export const DEFAULT_PROGRAMMATEUR = DEFAULT_CONTACT;
 ```
 
 ## Validation des données
@@ -413,10 +421,10 @@ export const DEFAULT_PROGRAMMATEUR: IProgrammateur = {
 Chaque entité doit avoir un schéma de validation Yup :
 
 ```javascript
-// src/validations/programmateur.schema.js
+// src/validations/contact.schema.js (anciennement programmateur.schema.js)
 import * as Yup from 'yup';
 
-export const contactSchema = Yup.object().shape({
+export const contactAssocieSchema = Yup.object().shape({
   nom: Yup.string().required('Le nom est obligatoire'),
   prenom: Yup.string().required('Le prénom est obligatoire'),
   email: Yup.string().email('Email invalide').required('Email obligatoire'),
@@ -424,7 +432,7 @@ export const contactSchema = Yup.object().shape({
   poste: Yup.string().nullable()
 });
 
-export const programmateurSchema = Yup.object().shape({
+export const contactSchema = Yup.object().shape({
   nom: Yup.string().required('Le nom est obligatoire'),
   prenom: Yup.string().required('Le prénom est obligatoire'),
   email: Yup.string().email('Email invalide').required('Email obligatoire'),
@@ -433,9 +441,12 @@ export const programmateurSchema = Yup.object().shape({
     .matches(/^(\+\d{1,3}|0)\s?[1-9](\s?\d{2}){4}$/, 'Format de téléphone invalide'),
   structureId: Yup.string().nullable(),
   structureNom: Yup.string().nullable(),
-  contacts: Yup.array().of(contactSchema).nullable(),
+  contactsAssocies: Yup.array().of(contactAssocieSchema).nullable(),
   notes: Yup.string().nullable()
 });
+
+// Rétrocompatibilité - Alias pour le schéma hérité
+export const programmateurSchema = contactSchema;
 ```
 
 ### Integration avec Formik
@@ -444,14 +455,14 @@ Exemple d'utilisation avec Formik :
 
 ```jsx
 import { Formik, Form, Field } from 'formik';
-import { programmateurSchema } from '../validations/programmateur.schema';
-import { DEFAULT_PROGRAMMATEUR } from '../models/defaults/ProgrammateurDefaults';
+import { contactSchema } from '../validations/contact.schema';
+import { DEFAULT_CONTACT } from '../models/defaults/ContactDefaults';
 
-const ProgrammateurForm = ({ initialData = DEFAULT_PROGRAMMATEUR, onSubmit }) => {
+const ContactForm = ({ initialData = DEFAULT_CONTACT, onSubmit }) => {
   return (
     <Formik
       initialValues={initialData}
-      validationSchema={programmateurSchema}
+      validationSchema={contactSchema}
       onSubmit={onSubmit}
     >
       {({ errors, touched, isSubmitting }) => (
@@ -462,6 +473,9 @@ const ProgrammateurForm = ({ initialData = DEFAULT_PROGRAMMATEUR, onSubmit }) =>
     </Formik>
   );
 };
+
+// Rétrocompatibilité - Alias pour le composant hérité
+export const ProgrammateurForm = ContactForm;
 ```
 
 ## Documentation

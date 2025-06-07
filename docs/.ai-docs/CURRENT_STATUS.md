@@ -21,7 +21,9 @@ Ce document présente l'état actuel des principales initiatives du projet TourC
 - Document d'analyse: `/docs/hooks/ANALYSE_HOOKS_RECHERCHE.md`
 - Spécification d'API: `/docs/hooks/SPEC_API_GENERIC_ENTITY_SEARCH.md`
 - Hook implémenté: `/src/hooks/common/useGenericEntitySearch.js`
-- Hooks migrés: `useArtisteSearch`, `useLieuSearch`, `useProgrammateurSearch`, `useStructureSearch`
+- Hooks migrés: `useArtisteSearch`, `useLieuSearch`, `useContactSearch`, `useStructureSearch`
+
+> **Note technique :** Le hook `useProgrammateurSearch` est maintenu pour la rétrocompatibilité API
 
 #### Phase 2: Migration vers useGenericEntityList
 **État**: ⏳ Presque terminée (Mise en œuvre achevée)
@@ -55,7 +57,9 @@ Ce document présente l'état actuel des principales initiatives du projet TourC
 **Livrables produits**:
 - Spécification d'API: `/docs/hooks/SPEC_API_GENERIC_ENTITY_FORM.md`
 - Hook implémenté: `/src/hooks/common/useGenericEntityForm.js`
-- Hooks migrés: `useConcertForm`, `useLieuForm`, `useProgrammateurForm`, `useStructureForm`, `useEntrepriseForm`
+- Hooks migrés: `useConcertForm`, `useLieuForm`, `useContactForm`, `useStructureForm`, `useEntrepriseForm`
+
+> **Note technique :** Le hook `useProgrammateurForm` est maintenu pour la rétrocompatibilité API
 
 ### Progrès des tests
 

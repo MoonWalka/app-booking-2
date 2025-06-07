@@ -1,8 +1,8 @@
-# Formulaire Programmateur - Style Maquette TourCraft
+# Formulaire Contact - Style Maquette TourCraft
 
 ## Vue d'ensemble
 
-Le composant `ProgrammateurFormMaquette` est une nouvelle implémentation du formulaire de programmateur basée sur la maquette `prog form.md`. Il offre une interface moderne et intuitive pour la création et modification des programmateurs, tout en respectant les conventions de design TourCraft.
+Le composant `ContactFormMaquette` est une nouvelle implémentation du formulaire de contact basée sur la maquette `prog form.md`. Il offre une interface moderne et intuitive pour la création et modification des contacts, tout en respectant les conventions de design TourCraft.
 
 ## Caractéristiques
 
@@ -37,10 +37,10 @@ Le composant `ProgrammateurFormMaquette` est une nouvelle implémentation du for
 - **Base TourCraft** : Recherche dans lieux existants
 - **Critères multiples** : Nom, adresse, capacité, ville
 - **Aperçu rapide** : Informations essentielles dans les résultats
-- **Association directe** : Ajout lieu au programmateur en un clic
+- **Association directe** : Ajout lieu au contact en un clic
 
 #### Section Concerts Associés
-- **Tableau dynamique** : Liste concerts liés au programmateur
+- **Tableau dynamique** : Liste concerts liés au contact
 - **Informations complètes** : Titre, date, lieu, montant, statut
 - **Actions rapides** : Bouton visualisation concert
 - **Badges statut** : Codes couleur pour statuts (Confirmé/En attente)
@@ -49,17 +49,17 @@ Le composant `ProgrammateurFormMaquette` est une nouvelle implémentation du for
 
 ### Structure de Fichiers
 ```
-src/components/programmateurs/desktop/
-├── ProgrammateurFormMaquette.js        # Composant principal
-├── ProgrammateurFormMaquette.module.css # Styles maquette
+src/components/contacts/desktop/
+├── ContactFormMaquette.js        # Composant principal  
+├── ContactFormMaquette.module.css # Styles maquette
 └── [sections existantes]               # Réutilisation sections
 ```
 
 ### Hooks Utilisés
-- `useProgrammateurForm` : Gestion état formulaire principal
+- `useContactForm` : Gestion état formulaire principal
 - `useCompanySearch` : Recherche entreprises API gouvernementale
 - `useLieuSearch` : Recherche lieux base TourCraft
-- `useDeleteProgrammateur` : Suppression sécurisée
+- `useDeleteContact` : Suppression sécurisée
 - Hooks de validation et navigation
 
 ### Variables CSS Principales
@@ -88,23 +88,23 @@ src/components/programmateurs/desktop/
 Le composant peut être intégré dans le système de routage existant :
 
 ```javascript
-// Remplacer ou ajouter à côté du ProgrammateurForm existant
-import ProgrammateurFormMaquette from '@/components/programmateurs/desktop/ProgrammateurFormMaquette';
+// Remplacer ou ajouter à côté du ContactForm existant
+import ContactFormMaquette from '@/components/contacts/desktop/ContactFormMaquette';
 
 // Route pour édition style maquette
 <Route 
-  path="/programmateurs/:id/edit-maquette" 
-  element={<ProgrammateurFormMaquette />} 
+  path="/contacts/:id/edit-maquette" 
+  element={<ContactFormMaquette />} 
 />
 ```
 
 ### Utilisation
 ```javascript
 // Navigation vers le formulaire maquette
-navigate(`/programmateurs/${id}/edit-maquette`);
+navigate(`/contacts/${id}/edit-maquette`);
 
-// Pour création nouveau programmateur
-navigate('/programmateurs/nouveau-maquette');
+// Pour création nouveau contact
+navigate('/contacts/nouveau-maquette');
 ```
 
 ## Fonctionnalités Avancées
@@ -116,13 +116,13 @@ navigate('/programmateurs/nouveau-maquette');
 2. **Appel API** : Service gouvernemental entreprises
 3. **Affichage résultats** : Liste avec nom, SIRET, ville
 4. **Sélection** : Pré-remplissage automatique champs structure
-5. **Association** : Liaison programmateur-structure en base
+5. **Association** : Liaison contact-structure en base
 
 #### Lieu de Concert
 1. **Recherche base** : Lieux existants TourCraft
 2. **Critères multiples** : Nom, adresse, capacité
 3. **Prévisualisation** : Informations détaillées
-4. **Association** : Ajout à la liste lieux programmateur
+4. **Association** : Ajout à la liste lieux contact
 
 ### Validation et Sauvegarde
 

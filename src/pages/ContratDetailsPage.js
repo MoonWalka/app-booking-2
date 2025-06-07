@@ -29,7 +29,8 @@ const ContratDetailsPage = () => {
     contrat, 
     concert, 
     template, 
-    programmateur, 
+    contact,
+    programmateur, // Rétrocompatibilité
     lieu, 
     artiste, 
     entreprise, 
@@ -48,6 +49,7 @@ const ContratDetailsPage = () => {
     contrat,
     concert,
     template,
+    contact,
     programmateur,
     lieu,
     artiste,
@@ -102,7 +104,8 @@ const ContratDetailsPage = () => {
             contrat,
             concert,
             template,
-            programmateur,
+            contact: contact || programmateur, // Priorité au contact, fallback programmateur
+            programmateur: contact || programmateur, // Rétrocompatibilité
             lieu,
             artiste,
             entreprise
@@ -113,14 +116,15 @@ const ContratDetailsPage = () => {
       // Nettoyer l'URL après traitement
       navigate(`/contrats/${contratId}`, { replace: true });
     }
-  }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, concert, template, programmateur, lieu, artiste, entreprise]);
+  }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, concert, template, contact, programmateur, lieu, artiste, entreprise]);
 
   // Prepare data for PDF generation
   const pdfData = {
     contrat,
     concert,
     template,
-    programmateur,
+    contact: contact || programmateur, // Priorité au contact, fallback programmateur
+    programmateur: contact || programmateur, // Rétrocompatibilité
     lieu,
     artiste,
     entreprise
@@ -213,7 +217,8 @@ const ContratDetailsPage = () => {
         template={template}
         lieu={lieu}
         artiste={artiste}
-        programmateur={programmateur}
+        contact={contact || programmateur}
+        programmateur={contact || programmateur} // Rétrocompatibilité
       />
 
       {/* Variables card - collapsible */}

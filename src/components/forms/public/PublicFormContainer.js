@@ -78,7 +78,7 @@ const PublicFormContainer = ({
   return (
     <div className={styles.formContainer}>
       <FormPageHeader 
-        title="Formulaire programmateur" 
+        title="Formulaire contact" 
       />
       
       {concert && (

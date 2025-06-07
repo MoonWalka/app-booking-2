@@ -26,11 +26,14 @@ Certains hooks fournissent des fonctionnalités génériques qui peuvent être s
 
 ### 3. Hooks Spécifiques à un Domaine (`/hooks/[entity]/`)
 
-Les hooks spécifiques à un domaine sont des hooks qui contiennent une logique métier spécifique à une entité particulière (programmateurs, structures, concerts, etc.). Ces hooks devraient utiliser les hooks communs ou utilitaires comme base.
+Les hooks spécifiques à un domaine sont des hooks qui contiennent une logique métier spécifique à une entité particulière (contacts, structures, concerts, etc.). Ces hooks devraient utiliser les hooks communs ou utilitaires comme base.
+
+> **Note technique :** Les hooks historiques `useProgrammateurSearch` et similaires sont maintenus pour la rétrocompatibilité API.
 
 Exemples :
 - `/hooks/concerts/useConcertSubmission` - Utilise useFormSubmission avec logique spécifique aux concerts
 - `/hooks/artistes/useArtisteSearch` - Utilise useSearchAndFilter avec filtres spécifiques aux artistes
+- `/hooks/contacts/useContactSearch` - Utilise useSearchAndFilter avec filtres spécifiques aux contacts
 
 ## Comment utiliser les hooks standardisés
 

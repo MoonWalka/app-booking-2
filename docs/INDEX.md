@@ -46,7 +46,7 @@ Documentation exhaustive des composants React
 ### 📂 [corrections/](corrections/)
 Solutions et corrections appliquées au projet
 - Solutions finales pour boucles infinies et re-renders
-- Corrections de bugs spécifiques (artistes, programmateurs)
+- Corrections de bugs spécifiques (artistes, contacts)
 - Fixes Google Docs et copier-coller
 - Corrections décisives et ultimes avec logs
 
@@ -94,7 +94,7 @@ Documents d'intégration et implémentation avancée
 ### 📂 [maquettes/](maquettes/)
 Maquettes HTML et prototypes fonctionnels
 - Fonctionnalités implémentées et testées
-- Formulaire programmateur complet
+- Formulaire contact complet
 - Tests de maquettes et validation
 
 ### 📂 [migration/](migration/)
@@ -131,7 +131,7 @@ Analyses approfondies des composants
 - Analyses détaillées des composants
 - Comparaisons ConcertDetails avant/après
 - Audits système relations bidirectionnelles
-- Rapports finaux programmateur
+- Rapports finaux contact
 
 #### 📂 [rapports/multi-organisation/](rapports/multi-organisation/)
 Documentation système multi-organisation

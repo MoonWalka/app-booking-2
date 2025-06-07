@@ -5,12 +5,13 @@ import AddressInput from '@/components/ui/AddressInput';
 import Card from '@/components/ui/Card';
 import styles from '@/pages/FormResponsePage.module.css';
 
-const PublicProgrammateurForm = ({ 
+const PublicContactForm = ({ 
   token, 
   concertId, 
   formLinkId, 
   onSubmitSuccess,
-  programmateurEmail // Email du programmateur passé si disponible
+  contactEmail, // Email du contact passé si disponible
+  programmateurEmail // Rétrocompatibilité
 }) => {
   // États du formulaire restructuré
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const PublicProgrammateurForm = ({
     signataireNom: '',
     signatairePrenom: '',
     signataireFonction: '', // Qualité/fonction du signataire
-    signataireEmail: programmateurEmail || '', // Prérempli si disponible
+    signataireEmail: contactEmail || programmateurEmail || '', // Prérempli si disponible
     signataireTelephone: '' // Facultatif
   });
 
@@ -61,10 +62,10 @@ const PublicProgrammateurForm = ({
           const formLinkData = formLinkDoc.data();
           
           // Préremplir l'email si disponible dans les données du lien
-          if (formLinkData.programmateurEmail) {
+          if (formLinkData.contactEmail || formLinkData.programmateurEmail) {
             setFormData(prev => ({
               ...prev,
-              signataireEmail: prev.signataireEmail || formLinkData.programmateurEmail
+              signataireEmail: prev.signataireEmail || formLinkData.contactEmail || formLinkData.programmateurEmail
             }));
           }
           
@@ -96,7 +97,7 @@ const PublicProgrammateurForm = ({
                   signataireNom: submissionData.signataireData?.nom || '',
                   signatairePrenom: submissionData.signataireData?.prenom || '',
                   signataireFonction: submissionData.signataireData?.fonction || '',
-                  signataireEmail: submissionData.signataireData?.email || formLinkData.programmateurEmail || '',
+                  signataireEmail: submissionData.signataireData?.email || formLinkData.contactEmail || formLinkData.programmateurEmail || '',
                   signataireTelephone: submissionData.signataireData?.telephone || ''
                 });
 
@@ -665,4 +666,7 @@ const PublicProgrammateurForm = ({
   );
 };
 
-export default PublicProgrammateurForm; 
+export default PublicContactForm;
+
+// Alias pour rétrocompatibilité
+export const PublicProgrammateurForm = PublicContactForm; 

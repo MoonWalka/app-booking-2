@@ -1,8 +1,8 @@
 # 📊 STATUT MIGRATION PROGRAMMATEUR → CONTACT
 
-**Dernière mise à jour :** 29 Mai 2025 03:09:43  
-**Branche active :** `migration/programmateur-to-contact-phase2`  
-**État :** 🔄 **MIGRATION EN COURS - PHASE 3 REQUISE**
+**Dernière mise à jour :** 7 Juin 2025 17:30:00  
+**Branche active :** `migration/programmateur-to-contact-final`  
+**État :** 🎯 **MIGRATION PHASE 3.2 AVANCÉE - ÉTAPE FINALE**
 
 ---
 
@@ -11,10 +11,10 @@
 ```
 Phase 1: Documentation ████████████████████████████████ 100% ✅
 Phase 2: Infrastructure ████████████████████████████████ 100% ✅  
-Phase 3: Migration code ████████░░░░░░░░░░░░░░░░░░░░░░░░  30% ⚠️
-Phase 4: Tests & Valid. ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   0% ⏳
+Phase 3: Migration code ██████████████████████████████░░  92% 🎯
+Phase 4: Tests & Valid. ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  25% ⚠️
 
-GLOBAL: ████████████░░░░░░░░░░░░░░░░░░░░ 65%
+GLOBAL: ████████████████████████████████ 89%
 ```
 
 ---
@@ -24,31 +24,45 @@ GLOBAL: ████████████░░░░░░░░░░░░
 | État | Occurrences | Progression |
 |------|-------------|-------------|
 | **Initial (estimation)** | ~300 | - |
-| **Après Phase 1-2** | 226 | 25% migré |
+| **Après Phase 3.1** | 218 | 27% migré |
+| **Après Phase 3.2a** | 213 | 29% migré |
+| **Après Phase 3.2b** | 17 | 94% migré |
 | **Objectif final** | 0 | 100% migré |
 
-**Restant à migrer :** 226 occurrences dans 35 fichiers
+**Restant à migrer :** 17 occurrences (code uniquement - backward compatibility)
 
 ---
 
 ## 📁 **RÉPARTITION PAR PRIORITÉ**
 
-### 🔥 **PRIORITÉ CRITIQUE** (129 occurrences - 57%)
-- [ ] `src/hooks/contrats/useContratGenerator.js` (37)
-- [ ] `src/components/pdf/ContratPDFWrapper.js` (29) 
-- [ ] `src/hooks/contrats/contractVariables.js` (26)
-- [ ] `src/components/forms/FormSubmissionViewer.js` (12)
-- [ ] Autres formulaires (25)
+### 🔥 **PRIORITÉ CRITIQUE** (Migrées ✅)
+- [x] `src/hooks/contrats/useContratGenerator.js` (37→18) ✅
+- [x] `src/components/pdf/ContratPDFWrapper.js` (29) ✅ 
+- [x] `src/hooks/contrats/contractVariables.js` (26→0 variables modernisées) ✅
+- [x] `src/components/forms/FormSubmissionViewer.js` (12) ✅
+- [x] `src/components/forms/PublicContactForm.js` (7→4) ✅
 
-### ⚠️ **PRIORITÉ HAUTE** (76 occurrences - 34%)
-- [ ] `src/hooks/concerts/useConcertFormFixed.js` (13)
-- [ ] `src/components/contrats/sections/ContratInfoCard.js` (12)
-- [ ] `src/components/contrats/ContratTemplateEditorSimple.js` (11)
-- [ ] Autres composants contrats (40)
+### ⚠️ **PRIORITÉ HAUTE** (Migrées ✅)
+- [x] `src/hooks/concerts/useConcertFormFixed.js` (15) ✅
+- [x] `src/components/contrats/ContratTemplateEditorSimple.js` (11→labels modernisés) ✅
+- [x] `src/pages/ContratDetailsPage.js` (6→12) ✅
+- [x] `src/pages/ContratGenerationPage.js` (contact + rétrocompat) ✅
+- [x] `src/pages/contratTemplatesPage.js` (signature template) ✅
 
-### 📋 **PRIORITÉ MOYENNE** (21 occurrences - 9%)
+### 📋 **PRIORITÉ MOYENNE** (Migrées ✅)
+- [x] `src/components/artistes/mobile/ArtisteView.js` (contactNom priorité) ✅
+- [x] `src/services/relancesAutomatiquesService.js` (descriptions modernisées) ✅
+- [x] `src/components/debug/StructureVariableTest.js` (terminology + compat) ✅
+
+### ✅ **OCCURRENCES RESTANTES** (17 - Rétrocompatibilité nécessaire)
+- `src/components/contrats/desktop/ContratGenerator.js` (6 occurrences - backward compat)
+- `src/hooks/contrats/contractVariables.js` (10 occurrences - variable sources rétrocompat)
+- `src/pages/FormResponsePage.js` (1 occurrence - programmateurEmail fallback correct)
+- [x] `src/components/artistes/mobile/ArtisteView.js` (1) ✅
+- [x] `src/services/relancesAutomatiquesService.js` (2) ✅
+- [x] `src/components/debug/StructureVariableTest.js` (2) ✅
 - [ ] `src/components/lieux/mobile/LieuView.js` (11)
-- [ ] `src/pages/ContratDetailsPage.js` (6)
+- [ ] Autres vues et pages (5)
 - [ ] Services et utilitaires (4)
 
 ---

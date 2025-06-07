@@ -58,7 +58,7 @@ const AdminFormValidation = ({
         className="mb-4"
         footerContent={footerContent}
       >
-        <p>Cette interface vous permet de valider les informations soumises par le programmateur.</p>
+        <p>Cette interface vous permet de valider les informations soumises par le contact.</p>
         
         {formData && (
           <div className={styles.formDataPreview}>

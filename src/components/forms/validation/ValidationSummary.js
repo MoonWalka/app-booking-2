@@ -10,7 +10,7 @@ const ValidationSummary = () => {
         </div>
         <h3 className={styles.title}>Formulaire validé avec succès</h3>
         <p className={styles.message}>
-          Les informations validées ont été intégrées à la fiche du programmateur et du lieu.
+          Les informations validées ont été intégrées à la fiche du contact et du lieu.
         </p>
       </div>
     </div>

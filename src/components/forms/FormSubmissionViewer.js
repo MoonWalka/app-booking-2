@@ -105,38 +105,38 @@ const FormSubmissionViewer = ({ submissionId, onValidate }) => {
             </div>
           </div>
         ) : (
-          // Rétrocompatibilité avec l'ancienne structure
-          submission.programmateurData?.contact && (
+          // Rétrocompatibilité avec l'ancienne structure (programmateur → contact)
+          submission.contactData?.contact || submission.programmateurData?.contact && (
             <div className="row">
               <div className="col-md-6">
                 <h5>Contact</h5>
                 <dl>
                   <dt>Nom</dt>
-                  <dd>{submission.programmateurData.contact.nom || 'N/A'}</dd>
+                  <dd>{submission.contactData?.contact?.nom || submission.programmateurData?.contact?.nom || 'N/A'}</dd>
                   <dt>Prénom</dt>
-                  <dd>{submission.programmateurData.contact.prenom || 'N/A'}</dd>
+                  <dd>{submission.contactData?.contact?.prenom || submission.programmateurData?.contact?.prenom || 'N/A'}</dd>
                   <dt>Email</dt>
-                  <dd>{submission.programmateurData.contact.email || 'N/A'}</dd>
+                  <dd>{submission.contactData?.contact?.email || submission.programmateurData?.contact?.email || 'N/A'}</dd>
                   <dt>Téléphone</dt>
-                  <dd>{submission.programmateurData.contact.telephone || 'N/A'}</dd>
+                  <dd>{submission.contactData?.contact?.telephone || submission.programmateurData?.contact?.telephone || 'N/A'}</dd>
                   <dt>Fonction</dt>
-                  <dd>{submission.programmateurData.contact.fonction || 'N/A'}</dd>
+                  <dd>{submission.contactData?.contact?.fonction || submission.programmateurData?.contact?.fonction || 'N/A'}</dd>
                 </dl>
               </div>
               <div className="col-md-6">
                 <h5>Structure</h5>
-                {submission.programmateurData?.structure && (
+                {(submission.contactData?.structure || submission.programmateurData?.structure) && (
                   <dl>
                     <dt>Raison sociale</dt>
-                    <dd>{submission.programmateurData.structure.raisonSociale || submission.programmateurData.structure.nom || 'N/A'}</dd>
+                    <dd>{submission.contactData?.structure?.raisonSociale || submission.contactData?.structure?.nom || submission.programmateurData?.structure?.raisonSociale || submission.programmateurData?.structure?.nom || 'N/A'}</dd>
                     <dt>SIRET</dt>
-                    <dd>{submission.programmateurData.structure.siret || 'N/A'}</dd>
+                    <dd>{submission.contactData?.structure?.siret || submission.programmateurData?.structure?.siret || 'N/A'}</dd>
                     <dt>Type</dt>
-                    <dd>{submission.programmateurData.structure.type || 'N/A'}</dd>
+                    <dd>{submission.contactData?.structure?.type || submission.programmateurData?.structure?.type || 'N/A'}</dd>
                     <dt>Adresse</dt>
                     <dd>
-                      {submission.programmateurData.structure.adresse || ''}<br />
-                      {submission.programmateurData.structure.codePostal} {submission.programmateurData.structure.ville}
+                      {submission.contactData?.structure?.adresse || submission.programmateurData?.structure?.adresse || ''}<br />
+                      {submission.contactData?.structure?.codePostal || submission.programmateurData?.structure?.codePostal} {submission.contactData?.structure?.ville || submission.programmateurData?.structure?.ville}
                     </dd>
                   </dl>
                 )}

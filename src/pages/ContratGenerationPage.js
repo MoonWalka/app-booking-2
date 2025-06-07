@@ -124,7 +124,8 @@ const ContratGenerationPage = () => {
           
           <ContratGenerator 
             concert={concert}
-            programmateur={contact}
+            contact={contact}
+            programmateur={contact} // Rétrocompatibilité
             artiste={artiste}
             lieu={lieu}
           />

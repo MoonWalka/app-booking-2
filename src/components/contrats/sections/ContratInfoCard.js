@@ -6,7 +6,9 @@ import { formatDateFr } from '@/utils/dateUtils';
 /**
  * Component displaying contract and concert information
  */
-const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmateur }) => {
+const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact }) => {
+  // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
+  const programmateur = contact;
   // Logs de debug pour voir les données reçues
   console.log('[DEBUG ContratInfoCard] Props reçues:', {
     contrat,
@@ -14,7 +16,8 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
     template,
     lieu,
     artiste,
-    programmateur
+    contact,
+    programmateur // Rétrocompatibilité
   });
 
   // Obtenir le montant formaté
@@ -75,8 +78,8 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
   };
 
   // Formatage du contact avec nom complet et structure
-  const formatProgrammateur = () => {
-    console.log('[DEBUG ContratInfoCard] formatProgrammateur - programmateur:', programmateur, 'concert?.programmateurNom:', concert?.programmateurNom);
+  const formatContact = () => {
+    console.log('[DEBUG ContratInfoCard] formatContact - contact:', programmateur, 'concert?.programmateurNom:', concert?.programmateurNom);
     
     if (!programmateur && !concert?.programmateurNom) {
       return 'Non spécifié';
@@ -136,8 +139,8 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, programmat
             <div className={styles.infoValue}>{artiste?.nom || concert?.artisteNom || 'Non spécifié'}</div>
           </div>
           <div className={styles.infoItem}>
-            <div className={styles.infoLabel}>Programmateur</div>
-            <div className={styles.infoValue}>{formatProgrammateur()}</div>
+            <div className={styles.infoLabel}>Contact</div>
+            <div className={styles.infoValue}>{formatContact()}</div>
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Montant</div>

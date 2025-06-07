@@ -124,8 +124,8 @@
 --tc-color-artiste-light: #f0e6ff;     /* Variante claire */
 --tc-color-concert: #5e72e4;           /* Bleu concerts */
 --tc-color-concert-light: #eef0fd;     /* Variante claire */
---tc-color-programmateur: #6f42c1;     /* Violet programmateurs */
---tc-color-programmateur-light: #f0e6fa; /* Variante claire */
+--tc-color-contact: #6f42c1;     /* Violet contacts */
+--tc-color-contact-light: #f0e6fa; /* Variante claire */
 ```
 
 ### **Alias de compatibilité (5 variables) :**

@@ -47,8 +47,8 @@ const UserGuide = ({ onClose }) => (
         <p>Les variables sont remplacées par les vraies données lors de la génération du contrat :</p>
         <ul>
           <li>Cliquez sur une variable dans la liste pour l'insérer à l'endroit du curseur</li>
-          <li>Les variables sont indiquées entre accolades, par exemple {'{programmateur_nom}'}</li>
-          <li>Lors de la génération, {'{programmateur_nom}'} sera remplacé par le nom du programmateur</li>
+          <li>Les variables sont indiquées entre accolades, par exemple {'{contact_nom}'}</li>
+          <li>Lors de la génération, {'{contact_nom}'} sera remplacé par le nom du contact</li>
         </ul>
       </div>
       

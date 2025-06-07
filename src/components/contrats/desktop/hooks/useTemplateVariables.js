@@ -23,8 +23,8 @@ const useTemplateVariables = () => {
 
   // Listes des variables disponibles par catégories
   const titleVariables = [
-    { label: 'Programmateur', value: 'programmateur_nom' },
-    { label: 'Structure du programmateur', value: 'programmateur_structure_nom' },
+    { label: 'Contact', value: 'programmateur_nom' }, // Variable rétrocompatible
+    { label: 'Structure du contact', value: 'programmateur_structure_nom' }, // Variable rétrocompatible
     { label: 'Artiste', value: 'artiste_nom' },
     { label: 'Structure de l\'artiste', value: 'artiste_structure_nom' },
     { label: 'Type d\'événement', value: 'concert_type' }
@@ -47,11 +47,11 @@ const useTemplateVariables = () => {
     { label: 'Lieu du concert', value: 'lieu_nom' },
     { label: 'Adresse du lieu', value: 'lieu_adresse' },
     
-    // Variables contact
-    { label: 'Programmateur - Nom', value: 'programmateur_nom' },
-    { label: 'Programmateur - Email', value: 'programmateur_email' },
-    { label: 'Programmateur - Téléphone', value: 'programmateur_telephone' },
-    { label: 'Programmateur - Structure', value: 'programmateur_structure_nom' },
+    // Variables contact (rétrocompatibilité - utilisent les variables programmateur_*)
+    { label: 'Contact - Nom', value: 'programmateur_nom' },
+    { label: 'Contact - Email', value: 'programmateur_email' },
+    { label: 'Contact - Téléphone', value: 'programmateur_telephone' },
+    { label: 'Contact - Structure', value: 'programmateur_structure_nom' },
     
     // Variables Artiste
     { label: 'Artiste - Nom', value: 'artiste_nom' },
@@ -69,9 +69,9 @@ const useTemplateVariables = () => {
   const signatureVariables = [
     { label: 'Lieu de signature', value: 'lieu_nom' },
     { label: 'Date de signature', value: 'date_signature' },
-    { label: 'Programmateur - Nom', value: 'programmateur_nom' },
-    { label: 'Programmateur - Fonction', value: 'programmateur_fonction' },
-    { label: 'Programmateur - Structure', value: 'programmateur_structure_nom' },
+    { label: 'Contact - Nom', value: 'programmateur_nom' }, // Variable rétrocompatible
+    { label: 'Contact - Fonction', value: 'programmateur_fonction' }, // Variable rétrocompatible
+    { label: 'Contact - Structure', value: 'programmateur_structure_nom' }, // Variable rétrocompatible
     { label: 'Artiste - Nom', value: 'artiste_nom' },
     { label: 'Artiste - Représentant', value: 'artiste_representant' },
     { label: 'Artiste - Fonction du représentant', value: 'artiste_representant_fonction' },

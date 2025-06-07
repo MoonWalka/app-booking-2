@@ -195,17 +195,29 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     { category: 'Entreprise', label: 'Représentant de l\'entreprise', value: '{representant_entreprise}' },
     { category: 'Entreprise', label: 'Fonction du représentant', value: '{fonction_representant}' },
 
-    // Variables contact
-    { category: 'Programmateur', label: 'Nom du programmateur', value: '{programmateur_nom}' },
-    { category: 'Programmateur', label: 'Prénom du programmateur', value: '{programmateur_prenom}' },
-    { category: 'Programmateur', label: 'Structure du programmateur', value: '{programmateur_structure}' },
-    { category: 'Programmateur', label: 'Email du programmateur', value: '{programmateur_email}' },
-    { category: 'Programmateur', label: 'Téléphone du programmateur', value: '{programmateur_telephone}' },
-    { category: 'Programmateur', label: 'Adresse du programmateur', value: '{programmateur_adresse}' },
-    { category: 'Programmateur', label: 'SIRET du programmateur', value: '{programmateur_siret}' },
-    { category: 'Programmateur', label: 'N° TVA du programmateur', value: '{programmateur_numero_intracommunautaire}' },
-    { category: 'Programmateur', label: 'Représentant légal', value: '{programmateur_representant}' },
-    { category: 'Programmateur', label: 'Qualité du représentant', value: '{programmateur_qualite_representant}' },
+    // Variables contact (nouvelle API)
+    { category: 'Contact', label: 'Nom du contact', value: '{contact_nom}' },
+    { category: 'Contact', label: 'Prénom du contact', value: '{contact_prenom}' },
+    { category: 'Contact', label: 'Structure du contact', value: '{contact_structure}' },
+    { category: 'Contact', label: 'Email du contact', value: '{contact_email}' },
+    { category: 'Contact', label: 'Téléphone du contact', value: '{contact_telephone}' },
+    { category: 'Contact', label: 'Adresse du contact', value: '{contact_adresse}' },
+    { category: 'Contact', label: 'SIRET du contact', value: '{contact_siret}' },
+    { category: 'Contact', label: 'N° TVA du contact', value: '{contact_numero_intracommunautaire}' },
+    { category: 'Contact', label: 'Représentant légal', value: '{contact_representant}' },
+    { category: 'Contact', label: 'Qualité du représentant', value: '{contact_qualite_representant}' },
+
+    // Variables programmateur (rétrocompatibilité - maintenant équivalent aux variables contact)
+    { category: 'Contact (Compat.)', label: 'Nom du contact', value: '{programmateur_nom}' },
+    { category: 'Contact (Compat.)', label: 'Prénom du contact', value: '{programmateur_prenom}' },
+    { category: 'Contact (Compat.)', label: 'Structure du contact', value: '{programmateur_structure}' },
+    { category: 'Contact (Compat.)', label: 'Email du contact', value: '{programmateur_email}' },
+    { category: 'Contact (Compat.)', label: 'Téléphone du contact', value: '{programmateur_telephone}' },
+    { category: 'Contact (Compat.)', label: 'Adresse du contact', value: '{programmateur_adresse}' },
+    { category: 'Contact (Compat.)', label: 'SIRET du contact', value: '{programmateur_siret}' },
+    { category: 'Contact (Compat.)', label: 'N° TVA du contact', value: '{programmateur_numero_intracommunautaire}' },
+    { category: 'Contact (Compat.)', label: 'Représentant légal', value: '{programmateur_representant}' },
+    { category: 'Contact (Compat.)', label: 'Qualité du représentant', value: '{programmateur_qualite_representant}' },
 
     // Variables Structure
     { category: 'Structure', label: 'Nom de la structure', value: '{structure_nom}' },

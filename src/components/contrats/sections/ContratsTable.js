@@ -80,13 +80,13 @@ const ContratsTable = ({ contrats }) => {
       )
     },
     {
-      label: 'Programmateur',
+      label: 'Contact',
       key: 'concert.programmateurNom',
       sortable: true,
       render: (contrat) => (
         <div className={styles.programmateurInfo}>
           <i className="bi bi-person me-2"></i>
-          {contrat.concert?.programmateurNom || 'N/A'}
+          {contrat.concert?.contactNom || contrat.concert?.programmateurNom || 'N/A'}
         </div>
       )
     },

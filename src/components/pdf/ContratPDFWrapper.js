@@ -329,6 +329,14 @@ const replaceVariables = (content, variables) => {
   let processedContent = content;
   let replacementCount = 0;
   
+  // D'abord remplacer les sauts de page [SAUT_DE_PAGE]
+  const pageBreakRegex = /\[SAUT_DE_PAGE\]/g;
+  const pageBreakCount = (processedContent.match(pageBreakRegex) || []).length;
+  if (pageBreakCount > 0) {
+    processedContent = processedContent.replace(pageBreakRegex, '<div class="page-break"></div>');
+    console.log(`🔄 [PDF] ${pageBreakCount} saut(s) de page remplacé(s)`);
+  }
+  
   // Remplacer toutes les variables possibles
   Object.entries(variables).forEach(([key, value]) => {
     // Support des deux formats : {variable} et [variable]
@@ -352,6 +360,13 @@ const replaceVariables = (content, variables) => {
   });
   
   console.log(`📊 [PDF] Total remplacements: ${replacementCount}`);
+  
+  // Traiter spécifiquement les sauts de page
+  // Remplacer [SAUT_DE_PAGE] par une balise HTML de saut de page
+  processedContent = processedContent.replace(
+    /\[SAUT_DE_PAGE\]/gi,
+    '<div class="page-break" style="page-break-after: always; height: 0; margin: 0; padding: 0;"></div>'
+  );
   
   return processedContent;
 };
@@ -438,6 +453,31 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
             font-weight: bold;
           }
           
+          /* Styles pour les sauts de page dans l'aperçu */
+          .contrat-print-mode .page-break {
+            page-break-after: always;
+            break-after: page;
+            display: block;
+            height: 0;
+            margin: 20px 0;
+            border-bottom: 2px dashed #999;
+            position: relative;
+          }
+          
+          /* Indicateur visuel pour l'aperçu web */
+          .contrat-print-mode .page-break::after {
+            content: "--- Saut de page ---";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 10px;
+            color: #999;
+            font-size: 10pt;
+            font-style: italic;
+          }
+          
           /* Support des tailles personnalisées dans les PDF */
           .contrat-print-mode .ql-size-8pt { font-size: 8pt !important; }
           .contrat-print-mode .ql-size-9pt { font-size: 9pt !important; }
@@ -469,6 +509,40 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
           .contrat-print-mode [style*="line-height: 2.2"] { line-height: 2.2 !important; }
           .contrat-print-mode [style*="line-height: 2.5"] { line-height: 2.5 !important; }
           .contrat-print-mode [style*="line-height: 3.0"] { line-height: 3.0 !important; }
+          
+          /* Support des sauts de page */
+          .contrat-print-mode .page-break {
+            page-break-after: always;
+            break-after: page;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            visibility: hidden;
+          }
+          
+          /* Pour l'aperçu web - afficher une ligne visuelle */
+          @media screen {
+            .contrat-print-mode .page-break {
+              border-top: 2px dashed #ccc;
+              margin: 20px 0;
+              padding-top: 20px;
+              visibility: visible;
+              position: relative;
+            }
+            
+            .contrat-print-mode .page-break::before {
+              content: "--- Saut de page ---";
+              position: absolute;
+              top: -10px;
+              left: 50%;
+              transform: translateX(-50%);
+              background: white;
+              padding: 0 10px;
+              color: #999;
+              font-size: 12px;
+              font-style: italic;
+            }
+          }
           
           @media print {
             .contrat-print-mode .preview-note {
@@ -600,6 +674,40 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
         .contrat-print-mode [style*="line-height: 2.2"] { line-height: 2.2 !important; }
         .contrat-print-mode [style*="line-height: 2.5"] { line-height: 2.5 !important; }
         .contrat-print-mode [style*="line-height: 3.0"] { line-height: 3.0 !important; }
+        
+        /* Support des sauts de page */
+        .contrat-print-mode .page-break {
+          page-break-after: always;
+          break-after: page;
+          height: 0;
+          margin: 0;
+          padding: 0;
+          visibility: hidden;
+        }
+        
+        /* Pour l'aperçu web - afficher une ligne visuelle */
+        @media screen {
+          .contrat-print-mode .page-break {
+            border-top: 2px dashed #ccc;
+            margin: 20px 0;
+            padding-top: 20px;
+            visibility: visible;
+            position: relative;
+          }
+          
+          .contrat-print-mode .page-break::before {
+            content: "--- Saut de page ---";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 10px;
+            color: #999;
+            font-size: 12px;
+            font-style: italic;
+          }
+        }
         
         @media print {
           .contrat-print-mode .preview-note {

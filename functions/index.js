@@ -99,7 +99,24 @@ exports.generatePdf = onRequest({
               /* Améliorer la gestion des sauts de page */
               .page-break {
                 page-break-after: always;
+                break-after: page; /* Version moderne de page-break-after */
+                page-break-before: auto;
+                break-before: auto;
+                display: block;
+                height: 0;
+                margin: 0;
+                padding: 0;
+                visibility: hidden;
+                clear: both;
               }
+              
+              /* S'assurer que le saut de page fonctionne même dans un div */
+              div.page-break {
+                page-break-after: always !important;
+                break-after: page !important;
+              }
+              
+              /* Éviter la coupure des tableaux entre les pages */
               table {
                 page-break-inside: avoid;
               }

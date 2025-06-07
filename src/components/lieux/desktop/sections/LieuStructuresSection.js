@@ -294,10 +294,10 @@ export const LieuStructuresSection = ({ lieu, isEditing = false }) => {
                                 {structure.adresse}
                               </div>
                             )}
-                            {structure.programmateur && (
+                            {(structure.contact || structure.programmateur) && (
                               <div className={styles.structureDetail}>
                                 <i className="bi bi-person me-1"></i>
-                                Programmateur: {structure.programmateur}
+                                Contact: {structure.contact || structure.programmateur}
                               </div>
                             )}
                           </div>

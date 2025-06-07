@@ -376,8 +376,8 @@ const useGenericEntityDetails = ({
         const entityData = { [idField]: entityDoc.id, ...entityDoc.data() };
         debugLog(`📊 FETCH_ENTITY: Données brutes: ${JSON.stringify(entityData)}`, 'debug', 'useGenericEntityDetails');
         
-        // Vérifier l'organisation
-        if (currentOrganization?.id && entityData.organizationId !== currentOrganization.id) {
+        // Vérifier l'organisation (seulement si l'entité a un organizationId)
+        if (currentOrganization?.id && entityData.organizationId && entityData.organizationId !== currentOrganization.id) {
           debugLog(`❌ FETCH_ENTITY: Document ${entityDoc.id} n'appartient pas à l'organisation ${currentOrganization.id}`, 'warn', 'useGenericEntityDetails');
           safeSetState(setError, { message: `${entityType} non trouvé(e) ou accès non autorisé` });
           safeSetState(setLoading, false);

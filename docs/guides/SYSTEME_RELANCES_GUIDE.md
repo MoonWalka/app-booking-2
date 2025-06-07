@@ -199,6 +199,86 @@ Le fichier `/src/components/concerts/desktop/ConcertViewWithRelances.js` montre 
 
 4. **Dates** : Les dates sont stockées en format ISO string pour faciliter le tri et la comparaison.
 
+## Plan d'implémentation des relances automatiques
+
+### 🎯 Phase 1 : Préparation (Priorité haute)
+
+1. **Vérifier l'intégration avec les hooks de concerts**
+   - Identifier les points d'appel dans `useConcertForm`, `useConcertDetails`
+   - Ajouter un flag pour éviter les boucles infinies : `_isAutoUpdate`
+   
+2. **Valider la gestion de l'organizationId**
+   - S'assurer que `currentOrganization` est disponible dans tous les contextes
+   - Ajouter des logs pour tracer le flux
+
+3. **Créer un toggle d'activation**
+   ```javascript
+   // Dans ParametresContext ou config
+   relancesAutomatiquesEnabled: false // Par défaut désactivé
+   ```
+
+### 🎯 Phase 2 : Intégration sécurisée
+
+1. **Points d'intégration à ajouter :**
+   - `useConcertForm` : Après création/mise à jour d'un concert
+   - `useFormValidationData` : Après validation d'un formulaire
+   - `useContratGenerator` : Après génération d'un contrat
+   
+2. **Protection contre les boucles :**
+   ```javascript
+   // Dans la mise à jour du concert
+   if (!updateData._isAutoUpdate && relancesAutomatiquesEnabled) {
+     await relancesAutomatiquesService.evaluerEtMettreAJourRelances(
+       concert, formulaire, contrat, organizationId
+     );
+   }
+   ```
+
+3. **Gestion d'erreurs robuste :**
+   ```javascript
+   try {
+     await relancesAutomatiquesService.evaluerEtMettreAJourRelances(...);
+   } catch (error) {
+     console.error('Erreur relances auto:', error);
+     // Ne pas faire échouer l'opération principale
+   }
+   ```
+
+### 🎯 Phase 3 : Tests progressifs
+
+1. **Environnement de test isolé**
+   - Créer une organisation de test
+   - Activer uniquement pour cette organisation
+   
+2. **Monitoring détaillé**
+   - Logger tous les appels au service
+   - Tracker les performances
+   - Vérifier l'absence de boucles
+
+3. **Tests par type de relance**
+   - Tester chaque type individuellement
+   - Valider les transitions d'état
+   - Vérifier les dates d'échéance
+
+### 🎯 Phase 4 : Déploiement progressif
+
+1. **Rollout par organisation**
+   - Activer pour les organisations pilotes
+   - Collecter les retours
+   - Ajuster les paramètres
+
+2. **UI/UX améliorations**
+   - Indicateur visuel pour les relances auto vs manuelles
+   - Possibilité de désactiver par concert
+   - Dashboard de suivi des relances auto
+
+### ⚠️ Points d'attention critiques
+
+1. **Performance** : Impact sur les saves de concerts
+2. **Cohérence** : Synchronisation avec les relances manuelles
+3. **Permissions** : Qui peut voir/modifier les relances auto
+4. **Historique** : Tracer qui/quoi a créé chaque relance
+
 ## Évolutions futures possibles
 
 1. **Notifications push** : Envoyer des notifications pour les relances urgentes

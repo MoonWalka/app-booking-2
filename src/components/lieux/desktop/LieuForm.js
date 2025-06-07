@@ -34,7 +34,7 @@ const LieuForm = () => {
     handleChange,
     handleSubmit,
     addressSearch,
-    programmateurSearch,
+    contactSearch: programmateurSearch, // Alias pour rétrocompatibilité
     submitting
   } = useLieuForm(id);
 
@@ -102,10 +102,12 @@ const LieuForm = () => {
               {/* Organizer section - Même nom que dans LieuDetails */}
               <LieuOrganizerSection
                 isEditMode={true}
+                contact={programmateurSearch?.selectedEntity}
                 programmateur={programmateurSearch?.selectedEntity}
                 lieu={lieu}
                 formData={lieu}
                 onChange={handleChange}
+                onContactChange={programmateurSearch?.setSelectedEntity}
                 onProgrammateurChange={programmateurSearch?.setSelectedEntity}
               />
 

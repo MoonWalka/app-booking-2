@@ -30,7 +30,8 @@ const FormValidationInterface = () => {
     setValidated,
     validatedFields,
     setValidatedFields,
-    contact: programmateur,  // Alias pour compatibilité
+    contact,
+    programmateur, // Rétrocompatibilité
     lieu,
     contactFields,
     structureFields,
@@ -194,8 +195,8 @@ const FormValidationInterface = () => {
         headerClass="bg-secondary"
         fields={contactFields}
         category="contact"
-        existingData={programmateur}
-        formData={formData.signataireData || formData.programmateurData || formData.data}
+        existingData={contact || programmateur}
+        formData={formData.signataireData || formData.programmateurData || formData.contactData || formData.data}
         validatedFields={validatedFields}
         onValidateField={handleValidateField}
         onCopyValue={copyFormValueToFinal}
@@ -208,8 +209,8 @@ const FormValidationInterface = () => {
         headerClass="bg-secondary"
         fields={structureFields}
         category="structure"
-        existingData={programmateur}
-        formData={formData.structureData || formData.programmateurData || formData.data}
+        existingData={contact || programmateur}
+        formData={formData.structureData || formData.programmateurData || formData.contactData || formData.data}
         validatedFields={validatedFields}
         onValidateField={handleValidateField}
         onCopyValue={copyFormValueToFinal}

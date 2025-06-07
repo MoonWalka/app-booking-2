@@ -11,7 +11,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { db, doc, getDoc, collection, query, where, getDocs, updateDoc } from '@/services/firebase-service';
 
 /**
- * Configuration des champs de contact du contact
+ * Configuration des champs de contact
  * @type {Array<{id: string, label: string}>}
  */
 const contactFields = [
@@ -23,7 +23,7 @@ const contactFields = [
 ];
 
 /**
- * Configuration des champs de structure du contact
+ * Configuration des champs de structure
  * @type {Array<{id: string, label: string}>}
  */
 const structureFields = [
@@ -76,7 +76,7 @@ const lieuFields = [
  * @returns {Function} returns.setValidated - Fonction pour modifier l'état de validation
  * @returns {Object} returns.validatedFields - Champs validés avec leurs valeurs
  * @returns {Function} returns.setValidatedFields - Fonction pour modifier les champs validés
- * @returns {Object|null} returns.contact - Données du contact existant
+ * @returns {Object|null} returns.contact - Données du contact existant (rétrocompatibilité avec programmateur)
  * @returns {Object|null} returns.lieu - Données du lieu de concert
  * @returns {Array} returns.contactFields - Configuration des champs de contact
  * @returns {Array} returns.structureFields - Configuration des champs de structure
@@ -288,20 +288,20 @@ const useFormValidationData = (concertId) => {
         }
         
         // Récupérer les données existantes du contact (s'il existe)
-        // D'abord essayer avec programmId de la soumission, sinon utiliser contactId du concert
-        const contactIdToUse = formDocData.programmId || concertData.contactId;
+        // D'abord essayer avec programmId de la soumission (rétrocompatibilité), sinon utiliser contactId du concert
+        const contactIdToUse = formDocData.programmId || concertData.contactId || concertData.programmateurId;
         
         if (contactIdToUse) {
           try {
-            const progDoc = await getDoc(doc(db, 'contacts', contactIdToUse));
-            if (progDoc.exists()) {
+            const contactDoc = await getDoc(doc(db, 'contacts', contactIdToUse));
+            if (contactDoc.exists()) {
               // Définir les données existantes du contact
-              const programmData = {
-                id: progDoc.id,
-                ...progDoc.data()
+              const contactData = {
+                id: contactDoc.id,
+                ...contactDoc.data()
               };
-              setContact(programmData);
-              console.log("Contact trouvé:", programmData);
+              setContact(contactData);
+              console.log("Contact trouvé:", contactData);
               
               // NE PAS initialiser automatiquement les champs validés
               // Les données existantes seront affichées dans "Valeur existante"
@@ -354,6 +354,7 @@ const useFormValidationData = (concertId) => {
     validatedFields,
     setValidatedFields,
     contact,
+    programmateur: contact, // Rétrocompatibilité
     lieu,
     contactFields,
     structureFields,

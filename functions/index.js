@@ -97,11 +97,12 @@ exports.generatePdf = onRequest({
                 height: auto;
               }
               /* Améliorer la gestion des sauts de page */
-              .page-break {
-                page-break-after: always;
-                break-after: page; /* Version moderne de page-break-after */
-                page-break-before: auto;
-                break-before: auto;
+              .page-break,
+              div[data-page-break="true"] {
+                page-break-after: always !important;
+                page-break-before: avoid !important;
+                break-after: page !important;
+                break-before: avoid !important;
                 display: block;
                 height: 0;
                 margin: 0;
@@ -114,6 +115,22 @@ exports.generatePdf = onRequest({
               div.page-break {
                 page-break-after: always !important;
                 break-after: page !important;
+                page-break-before: avoid !important;
+                break-before: avoid !important;
+              }
+              
+              /* Forcer un nouveau contexte de formatage pour les sauts de page */
+              .page-break::before,
+              .page-break::after {
+                content: "";
+                display: table;
+                clear: both;
+              }
+              
+              /* Masquer le contenu interne des sauts de page (texte de l'éditeur) */
+              .page-break > *,
+              div[data-page-break="true"] > * {
+                display: none !important;
               }
               
               /* Éviter la coupure des tableaux entre les pages */
@@ -234,6 +251,10 @@ exports.generatePdf = onRequest({
       });
       
       console.log('Configuration du contenu HTML...');
+      
+      // Émuler le média print pour s'assurer que les styles CSS print sont appliqués
+      await page.emulateMediaType('print');
+      
       // Définir le contenu HTML avec un timeout plus long
       await page.setContent(fullHtmlContent, {
         waitUntil: 'networkidle0',
@@ -257,7 +278,11 @@ exports.generatePdf = onRequest({
         timeout: 180000, // 3 minutes maximum pour la génération PDF
         ...options,
         // S'assurer que ces options sont toujours appliquées même si options les écrase
-        preferCSSPageSize: true
+        preferCSSPageSize: true,
+        // Activer l'impression des backgrounds et des styles CSS
+        '-webkit-print-color-adjust': 'exact',
+        // S'assurer que les media queries print sont respectées
+        emulateMediaType: 'print'
       };
 
       console.log('Génération du PDF...');

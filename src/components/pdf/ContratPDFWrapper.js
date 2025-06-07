@@ -330,22 +330,25 @@ const replaceVariables = (content, variables) => {
   let replacementCount = 0;
   
   // D'abord remplacer les sauts de page - Support des deux formats pour compatibilité
-  const pageBreakRegexBrackets = /\[SAUT_DE_PAGE\]/g;
-  const pageBreakRegexCurly = /\{SAUT_DE_PAGE\}/g;
+  const pageBreakRegexBrackets = /\[SAUT_DE_PAGE\]/gi;
+  const pageBreakRegexCurly = /\{SAUT_DE_PAGE\}/gi;
+  
+  // Balise HTML optimisée pour Puppeteer avec tous les styles nécessaires
+  const pageBreakHtml = '<div class="page-break" style="page-break-after: always !important; break-after: page !important; page-break-before: avoid !important; break-before: avoid !important; height: 0; margin: 0; padding: 0; visibility: hidden; clear: both; display: block;"></div>';
   
   let pageBreakCount = 0;
   
   // Remplacer le format avec crochets [SAUT_DE_PAGE]
   const bracketMatches = (processedContent.match(pageBreakRegexBrackets) || []).length;
   if (bracketMatches > 0) {
-    processedContent = processedContent.replace(pageBreakRegexBrackets, '<div class="page-break"></div>');
+    processedContent = processedContent.replace(pageBreakRegexBrackets, pageBreakHtml);
     pageBreakCount += bracketMatches;
   }
   
   // Remplacer le format avec accolades {SAUT_DE_PAGE}
   const curlyMatches = (processedContent.match(pageBreakRegexCurly) || []).length;
   if (curlyMatches > 0) {
-    processedContent = processedContent.replace(pageBreakRegexCurly, '<div class="page-break"></div>');
+    processedContent = processedContent.replace(pageBreakRegexCurly, pageBreakHtml);
     pageBreakCount += curlyMatches;
   }
   
@@ -377,12 +380,8 @@ const replaceVariables = (content, variables) => {
   
   console.log(`📊 [PDF] Total remplacements: ${replacementCount}`);
   
-  // Traiter spécifiquement les sauts de page
-  // Remplacer [SAUT_DE_PAGE] par une balise HTML de saut de page
-  processedContent = processedContent.replace(
-    /\[SAUT_DE_PAGE\]/gi,
-    '<div class="page-break" style="page-break-after: always; height: 0; margin: 0; padding: 0;"></div>'
-  );
+  // Note: Les sauts de page ont déjà été traités au début de la fonction
+  // avec tous les styles nécessaires pour Puppeteer
   
   return processedContent;
 };
@@ -526,14 +525,34 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
           .contrat-print-mode [style*="line-height: 2.5"] { line-height: 2.5 !important; }
           .contrat-print-mode [style*="line-height: 3.0"] { line-height: 3.0 !important; }
           
-          /* Support des sauts de page */
+          /* Support des sauts de page - Configuration complète pour Puppeteer */
           .contrat-print-mode .page-break {
-            page-break-after: always;
-            break-after: page;
+            page-break-after: always !important;
+            page-break-before: avoid !important;
+            break-after: page !important;
+            break-before: avoid !important;
+            display: block;
             height: 0;
             margin: 0;
             padding: 0;
             visibility: hidden;
+            clear: both;
+          }
+          
+          /* Forcer un nouveau contexte de formatage pour les sauts de page */
+          .contrat-print-mode .page-break::before,
+          .contrat-print-mode .page-break::after {
+            content: "";
+            display: table;
+            clear: both;
+          }
+          
+          /* Configuration spécifique pour Puppeteer */
+          .contrat-print-mode div.page-break {
+            page-break-after: always !important;
+            break-after: page !important;
+            page-break-before: avoid !important;
+            break-before: avoid !important;
           }
           
           /* Pour l'aperçu web - afficher une ligne visuelle */

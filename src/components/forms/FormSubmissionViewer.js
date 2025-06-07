@@ -106,7 +106,7 @@ const FormSubmissionViewer = ({ submissionId, onValidate }) => {
           </div>
         ) : (
           // Rétrocompatibilité avec l'ancienne structure (programmateur → contact)
-          submission.contactData?.contact || submission.programmateurData?.contact && (
+          (submission.contactData?.contact || submission.programmateurData?.contact) && (
             <div className="row">
               <div className="col-md-6">
                 <h5>Contact</h5>

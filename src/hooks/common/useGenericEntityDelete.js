@@ -198,7 +198,7 @@ const useGenericEntityDelete = (options) => {
       showErrorToast(`Erreur lors de la vérification des dépendances: ${error.message}`);
       return false;
     }
-  }, [relatedEntities, entityType, collectionName, onError]);
+  }, [relatedEntities, entityType, collectionName, onError, currentOrganization?.id]);
 
   /**
    * Gérer la suppression d'une entité
@@ -287,6 +287,7 @@ const useGenericEntityDelete = (options) => {
     validateDelete,
     relatedEntities,
     showConfirmation,
+    currentOrganization?.id,
     confirmMessage,
     onSuccess,
     onError,

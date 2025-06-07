@@ -723,6 +723,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu) => {
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
         : 'Non spécifié',
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [structureData, programmateur, artiste, lieu, concert, entrepriseInfo]);
   
   // Fonction pour sauvegarder le contrat généré

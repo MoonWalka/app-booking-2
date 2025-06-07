@@ -360,12 +360,25 @@ body.contrat-print-mode {
 }
 
 /* ===== GESTION DES SAUTS DE PAGE ===== */
-.contrat-print-mode .page-break {
-  page-break-after: always;
+.contrat-print-mode .page-break,
+.contrat-print-mode div[data-page-break="true"] {
+  page-break-after: always !important;
+  page-break-before: avoid !important;
+  break-after: page !important;
+  break-before: avoid !important;
   border: none;
   height: 0;
   margin: 0;
   padding: 0;
+  visibility: hidden;
+  clear: both;
+  display: block;
+}
+
+/* Forcer le saut de page même avec du contenu interne */
+.contrat-print-mode .page-break > *,
+.contrat-print-mode div[data-page-break="true"] > * {
+  display: none !important;
 }
 
 /* Éviter les sauts au milieu des éléments importants */

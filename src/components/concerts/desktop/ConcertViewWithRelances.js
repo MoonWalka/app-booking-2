@@ -172,27 +172,32 @@ function ConcertViewWithRelances({ id: propId }) {
       <FormHeader
         title={concertData.titre}
         subtitle={concertData.date}
-        onBack={() => navigate('/concerts')}
-        actions={
-          <div className={styles.headerActions}>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => navigate(`/concerts/${id}/edit`)}
-              icon={<i className={styles.iconEdit}></i>}
-            >
-              Modifier
-            </Button>
-            <Button
-              variant="outline-danger"
-              size="sm"
-              onClick={() => console.log('[ConcertViewWithRelances] TODO: Implémenter modal de suppression')}
-              icon={<i className={styles.iconTrash}></i>}
-            >
-              Supprimer
-            </Button>
-          </div>
-        }
+        actions={[
+          <Button
+            key="back"
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate('/concerts')}
+          >
+            ← Retour
+          </Button>,
+          <Button
+            key="edit"
+            variant="primary"
+            size="sm"
+            onClick={() => navigate(`/concerts/${id}/edit`)}
+          >
+            Modifier
+          </Button>,
+          <Button
+            key="delete"
+            variant="outline-danger"
+            size="sm"
+            onClick={() => console.log('[ConcertViewWithRelances] TODO: Implémenter modal de suppression')}
+          >
+            Supprimer
+          </Button>
+        ]}
       />
 
       {/* Section principale avec 2 colonnes */}

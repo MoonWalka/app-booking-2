@@ -135,6 +135,7 @@ const formatSafeDate = (dateValue, formatString = "dd/MM/yyyy") => {
  */
 const prepareContractVariables = (safeData) => {
   console.log('[DEBUG ContratPDFWrapper] prepareContractVariables input:', safeData);
+  console.log('[DEBUG ContratPDFWrapper] Structure data:', safeData.structure);
   
   // Fonction helper pour convertir un montant en lettres
   const montantEnLettres = (montant) => {
@@ -422,6 +423,7 @@ const processPageBreaks = (htmlContent) => {
  * @returns {String} - Le HTML complet du contrat
  */
 const getContratHTML = (data, title = '', forPreview = false, editedContent = null) => {
+  console.log('[DEBUG ContratPDFWrapper] getContratHTML data:', data);
   const safeData = createSafeData(data);
 
   // Si on a du contenu édité, l'utiliser directement
@@ -911,9 +913,11 @@ const ContratPDFWrapper = ({
   template, 
   contratData, 
   concertData, 
-  programmateurData, 
+  programmateurData,
+  contactData, // Nouveau format
   artisteData, 
-  lieuData, 
+  lieuData,
+  structureData, 
   entrepriseInfo,
   editedContent 
 }) => {
@@ -926,9 +930,11 @@ const ContratPDFWrapper = ({
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
     concert: concertData || {},
+    contact: contactData || {},
     programmateur: programmateurData || {},
     artiste: artisteData || {},
     lieu: lieuData || {},
+    structure: structureData || {},
     entreprise: entrepriseInfo || {}
   };
   

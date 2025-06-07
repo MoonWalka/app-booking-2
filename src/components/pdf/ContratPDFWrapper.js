@@ -426,9 +426,18 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
   console.log('[DEBUG ContratPDFWrapper] getContratHTML data:', data);
   const safeData = createSafeData(data);
 
-  // Si on a du contenu édité, l'utiliser directement
+  // Si on a du contenu édité, l'utiliser mais remplacer les variables
   if (editedContent) {
-    // Construire le HTML avec le contenu édité
+    // Préparer les variables pour le remplacement
+    const variables = prepareContractVariables(safeData);
+    
+    // Remplacer les variables dans le contenu édité
+    const processedContent = replaceVariables(editedContent, variables);
+    
+    // Traiter les sauts de page
+    const finalContent = processPageBreaks(processedContent);
+    
+    // Construire le HTML avec le contenu édité et traité
     let htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -610,8 +619,8 @@ const getContratHTML = (data, title = '', forPreview = false, editedContent = nu
       htmlContent += `<div class="preview-note">Aperçu du contrat - La mise en page sera identique au téléchargement PDF final</div>`;
     }
 
-    // Ajouter directement le contenu édité (sans titre ajouté)
-    htmlContent += editedContent;
+    // Ajouter le contenu traité (avec variables remplacées et sauts de page)
+    htmlContent += finalContent;
 
     if (forPreview) {
       htmlContent += `</div>`; // Fermer .contrat-container

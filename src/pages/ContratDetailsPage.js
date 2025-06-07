@@ -226,6 +226,8 @@ const ContratDetailsPage = () => {
         onDownloadPdf={handleDownload}
         onDeleteContrat={handleDelete}
         onNavigateBack={handleNavigateBack}
+        // Désactiver le téléchargement si les données ne sont pas prêtes
+        isDownloadDisabled={!contact && !lieu && !artiste}
       />
 
       {/* Display action errors if any */}

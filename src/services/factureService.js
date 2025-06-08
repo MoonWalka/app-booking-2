@@ -22,140 +22,152 @@ class FactureService {
       isDefault: true,
       isSystemTemplate: true,
       content: `
-<div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 15px; font-size: 13px; line-height: 1.4;">
-  <!-- En-tête avec logo et informations entreprise -->
-  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 25px; border-bottom: 2px solid #333; padding-bottom: 15px;">
-    <div style="flex: 1;">
-      {{#if logo_entreprise}}
-        <img src="{{logo_entreprise}}" alt="Logo" style="max-height: 60px; margin-bottom: 8px;">
-      {{/if}}
-      <div style="font-size: 12px; color: #333; line-height: 1.3;">
-        <strong style="font-size: 16px;">{{nom_entreprise}}</strong><br>
-        {{adresse_entreprise}}<br>
-        {{ville_entreprise}}<br>
-        {{#if telephone_entreprise}}Tél : {{telephone_entreprise}}<br>{{/if}}
-        {{#if email_entreprise}}Email : {{email_entreprise}}<br>{{/if}}
-        {{#if site_web_entreprise}}Web : {{site_web_entreprise}}{{/if}}
+<div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; font-size: 13px; line-height: 1.4; position: relative; min-height: calc(297mm - 21.2mm); box-sizing: border-box;">
+  <!-- Conteneur principal -->
+  <div style="padding: 0; padding-bottom: 60px;">
+    <!-- En-tête avec logo et informations entreprise -->
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 25px; border-bottom: 2px solid #333; padding-bottom: 15px;">
+      <div style="flex: 1;">
+        {{#if logo_entreprise}}
+          <img src="{{logo_entreprise}}" alt="Logo" style="max-height: 60px; margin-bottom: 8px;">
+        {{/if}}
+        <div style="font-size: 12px; color: #333; line-height: 1.3;">
+          <strong style="font-size: 16px;">{{nom_entreprise}}</strong><br>
+          {{adresse_entreprise}}<br>
+          {{ville_entreprise}}<br>
+          {{#if telephone_entreprise}}Tél : {{telephone_entreprise}}<br>{{/if}}
+          {{#if email_entreprise}}Email : {{email_entreprise}}<br>{{/if}}
+          {{#if site_web_entreprise}}Web : {{site_web_entreprise}}{{/if}}
+        </div>
       </div>
-    </div>
-    <div style="text-align: right;">
-      <h1 style="color: #333; margin: 0; font-size: 28px;">FACTURE</h1>
-      <div style="font-size: 14px; color: #666; margin-top: 8px;">
-        <strong>N° {{numero_facture}}</strong><br>
-        Date : {{date_facture}}
-      </div>
-    </div>
-  </div>
-
-  <!-- Informations client -->
-  <div style="background-color: #f5f5f5; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-    <h3 style="margin: 0 0 8px 0; color: #333; font-size: 14px;">FACTURER À :</h3>
-    <div style="font-size: 12px; line-height: 1.4;">
-      <strong>{{nom_structure}}</strong><br>
-      {{adresse_structure}}<br>
-      {{ville_structure}}<br>
-      {{#if siret_structure}}SIRET : {{siret_structure}}<br>{{/if}}
-      {{#if tva_structure}}TVA : {{tva_structure}}<br>{{/if}}
-      {{#if contact_nom}}À l'attention de : {{contact_nom}}{{/if}}
-      {{#if contact_telephone}}<br>Tél : {{contact_telephone}}{{/if}}
-      {{#if contact_email}}<br>Email : {{contact_email}}{{/if}}
-    </div>
-  </div>
-
-  <!-- Détails de la prestation -->
-  <div style="margin-bottom: 20px;">
-    <h3 style="color: #333; font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 6px; margin-bottom: 12px;">DÉTAILS DE LA PRESTATION</h3>
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead>
-        <tr style="background-color: #f8f8f8;">
-          <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd; font-size: 12px;">Description</th>
-          <th style="padding: 8px; text-align: right; border-bottom: 2px solid #ddd; width: 120px; font-size: 12px;">Montant HT</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">
-            <strong style="font-size: 13px;">{{titre_concert}}</strong><br>
-            <span style="color: #666; font-size: 11px; line-height: 1.3;">
-              Artiste : {{artiste_nom}}<br>
-              Date : {{date_concert}}<br>
-              Lieu : {{lieu_nom}}, {{lieu_ville}}<br>
-              {{#if mention_acompte}}{{mention_acompte}}{{/if}}
-            </span>
-          </td>
-          <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee; font-weight: bold; font-size: 13px;">
-            {{montant_ht}} €
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Totaux et informations de paiement dans une même ligne -->
-  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
-    <!-- Montant en lettres et conditions de paiement -->
-    <div style="flex: 1;">
-      <!-- Montant en lettres -->
-      <div style="background-color: #f9f9f9; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
-        <strong style="font-size: 12px;">Montant en lettres :</strong><br>
-        <span style="font-size: 12px;">{{montant_lettres}}</span>
-      </div>
-
-      <!-- Conditions de paiement -->
-      <div>
-        <h4 style="color: #333; font-size: 13px; margin: 0 0 6px 0;">CONDITIONS DE PAIEMENT</h4>
-        <p style="font-size: 11px; line-height: 1.4; color: #666; margin: 0;">
-          {{#if date_echeance}}Date d'échéance : {{date_echeance}}<br>{{/if}}
-          Mode de paiement : Virement bancaire<br>
-          {{#if delai_paiement}}Délai de paiement : {{delai_paiement}} jours{{/if}}
-        </p>
+      <div style="text-align: right;">
+        <h1 style="color: #333; margin: 0; font-size: 28px;">FACTURE</h1>
+        <div style="font-size: 14px; color: #666; margin-top: 8px;">
+          <strong>N° {{numero_facture}}</strong><br>
+          Date : {{date_facture}}
+        </div>
       </div>
     </div>
 
-    <!-- Totaux à droite -->
-    <div style="max-width: 280px; margin-left: 20px;">
+    <!-- Informations client -->
+    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+      <h3 style="margin: 0 0 8px 0; color: #333; font-size: 14px;">FACTURER À :</h3>
+      <div style="font-size: 12px; line-height: 1.4;">
+        <strong>{{nom_structure}}</strong><br>
+        {{adresse_structure}}<br>
+        {{ville_structure}}<br>
+        {{#if siret_structure}}SIRET : {{siret_structure}}<br>{{/if}}
+        {{#if tva_structure}}TVA : {{tva_structure}}<br>{{/if}}
+        {{#if contact_nom}}À l'attention de : {{contact_nom}}{{/if}}
+        {{#if contact_telephone}}<br>Tél : {{contact_telephone}}{{/if}}
+        {{#if contact_email}}<br>Email : {{contact_email}}{{/if}}
+      </div>
+    </div>
+
+    <!-- Détails de la prestation -->
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: #333; font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 6px; margin-bottom: 12px;">DÉTAILS DE LA PRESTATION</h3>
       <table style="width: 100%; border-collapse: collapse;">
-        <tr>
-          <td style="padding: 6px 8px; text-align: right; font-size: 12px;">Montant HT :</td>
-          <td style="padding: 6px 8px; text-align: right; width: 100px; font-weight: bold; font-size: 12px;">{{montant_ht}} €</td>
-        </tr>
-        <tr>
-          <td style="padding: 6px 8px; text-align: right; font-size: 12px;">TVA ({{taux_tva}}%) :</td>
-          <td style="padding: 6px 8px; text-align: right; font-weight: bold; font-size: 12px;">{{montant_tva}} €</td>
-        </tr>
-        <tr style="background-color: #333; color: white;">
-          <td style="padding: 10px 8px; text-align: right; font-size: 15px; font-weight: bold;">TOTAL TTC :</td>
-          <td style="padding: 10px 8px; text-align: right; font-size: 15px; font-weight: bold;">{{montant_ttc}} €</td>
-        </tr>
+        <thead>
+          <tr style="background-color: #f8f8f8;">
+            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #ddd; font-size: 12px;">Description</th>
+            <th style="padding: 8px; text-align: right; border-bottom: 2px solid #ddd; width: 120px; font-size: 12px;">Montant HT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">
+              <strong style="font-size: 13px;">{{titre_concert}}</strong><br>
+              <span style="color: #666; font-size: 11px; line-height: 1.3;">
+                Artiste : {{artiste_nom}}<br>
+                Date : {{date_concert}}<br>
+                Lieu : {{lieu_nom}}, {{lieu_ville}}<br>
+                {{#if mention_acompte}}{{mention_acompte}}{{/if}}
+              </span>
+            </td>
+            <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee; font-weight: bold; font-size: 13px;">
+              {{montant_concert}} €
+            </td>
+          </tr>
+          {{lignes_supplementaires}}
+          {{#if has_lignes_supplementaires}}
+          <tr>
+            <td style="padding: 8px; text-align: right; font-weight: bold; font-size: 12px;">Sous-total :</td>
+            <td style="padding: 8px; text-align: right; font-weight: bold; font-size: 13px;">{{montant_ht}} €</td>
+          </tr>
+          {{/if}}
+        </tbody>
       </table>
     </div>
-  </div>
 
-  <!-- Informations bancaires -->
-  {{#if iban_entreprise}}
-  <div style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-    <h4 style="color: #333; font-size: 13px; margin: 0 0 6px 0;">COORDONNÉES BANCAIRES</h4>
-    <div style="font-size: 11px; line-height: 1.4;">
-      {{#if banque_entreprise}}<strong>Banque :</strong> {{banque_entreprise}}<br>{{/if}}
-      <strong>IBAN :</strong> {{iban_entreprise}}<br>
-      {{#if bic_entreprise}}<strong>BIC :</strong> {{bic_entreprise}}{{/if}}
+    <!-- Totaux et informations de paiement dans une même ligne -->
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+      <!-- Montant en lettres et conditions de paiement -->
+      <div style="flex: 1;">
+        <!-- Montant en lettres -->
+        <div style="background-color: #f9f9f9; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+          <strong style="font-size: 12px;">Montant en lettres :</strong><br>
+          <span style="font-size: 12px;">{{montant_lettres}}</span>
+        </div>
+
+        <!-- Conditions de paiement -->
+        <div>
+          <h4 style="color: #333; font-size: 13px; margin: 0 0 6px 0;">CONDITIONS DE PAIEMENT</h4>
+          <p style="font-size: 11px; line-height: 1.4; color: #666; margin: 0;">
+            {{#if date_echeance}}Date d'échéance : {{date_echeance}}<br>{{/if}}
+            Mode de paiement : Virement bancaire<br>
+            {{#if delai_paiement}}Délai de paiement : {{delai_paiement}} jours{{/if}}
+          </p>
+        </div>
+      </div>
+
+      <!-- Totaux à droite -->
+      <div style="max-width: 280px; margin-left: 20px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 6px 8px; text-align: right; font-size: 12px;">Montant HT :</td>
+            <td style="padding: 6px 8px; text-align: right; width: 100px; font-weight: bold; font-size: 12px;">{{montant_ht}} €</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 8px; text-align: right; font-size: 12px;">TVA ({{taux_tva}}%) :</td>
+            <td style="padding: 6px 8px; text-align: right; font-weight: bold; font-size: 12px;">{{montant_tva}} €</td>
+          </tr>
+          <tr style="background-color: #333; color: white;">
+            <td style="padding: 10px 8px; text-align: right; font-size: 15px; font-weight: bold;">TOTAL TTC :</td>
+            <td style="padding: 10px 8px; text-align: right; font-size: 15px; font-weight: bold;">{{montant_ttc}} €</td>
+          </tr>
+        </table>
+      </div>
     </div>
-  </div>
-  {{/if}}
 
-  <!-- Pied de page personnalisé -->
-  {{#if show_pied_de_page}}
-  {{#if texte_pied_de_page}}
-  <div style="margin-top: 20px; padding: 12px; background-color: #f9f9f9; border-radius: 4px; text-align: center;">
-    <p style="font-size: 12px; color: #333; margin: 0; line-height: 1.4;">{{texte_pied_de_page}}</p>
-  </div>
-  {{/if}}
-  {{/if}}
+    <!-- Informations bancaires -->
+    {{#if iban_entreprise}}
+    <div style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+      <h4 style="color: #333; font-size: 13px; margin: 0 0 6px 0;">COORDONNÉES BANCAIRES</h4>
+      <div style="font-size: 11px; line-height: 1.4;">
+        {{#if banque_entreprise}}<strong>Banque :</strong> {{banque_entreprise}}<br>{{/if}}
+        <strong>IBAN :</strong> {{iban_entreprise}}<br>
+        {{#if bic_entreprise}}<strong>BIC :</strong> {{bic_entreprise}}{{/if}}
+      </div>
+    </div>
+    {{/if}}
 
-  <!-- Mentions légales -->
-  <div style="margin-top: 20px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 10px; color: #666; text-align: center;">
-    {{#if show_siret}}{{#if siret_entreprise}}<p style="margin: 0;">SIRET : {{siret_entreprise}} {{#if show_numero_tva}}{{#if numero_tva_entreprise}}- TVA : {{numero_tva_entreprise}}{{/if}}{{/if}}</p>{{/if}}{{/if}}
-    {{#if mentions_legales}}<p style="margin: 6px 0 0 0;">{{mentions_legales}}</p>{{/if}}
+    <!-- Pied de page personnalisé -->
+    {{#if show_pied_de_page}}
+    {{#if texte_pied_de_page}}
+    <div style="margin-top: 20px; padding: 12px; background-color: #f9f9f9; border-radius: 4px; text-align: center;">
+      <p style="font-size: 12px; color: #333; margin: 0; line-height: 1.4;">{{texte_pied_de_page}}</p>
+    </div>
+    {{/if}}
+    {{/if}}
+  </div>
+
+  <!-- Mentions légales - positionnement absolu en bas de page -->
+  <div style="position: absolute; bottom: 0; left: 0; right: 0;">
+    <div style="padding: 12px 0; border-top: 1px solid #ddd; font-size: 10px; color: #666; text-align: center;">
+      {{#if show_siret}}{{#if siret_entreprise}}<p style="margin: 0;">SIRET : {{siret_entreprise}} {{#if show_numero_tva}}{{#if numero_tva_entreprise}}- TVA : {{numero_tva_entreprise}}{{/if}}{{/if}}</p>{{/if}}{{/if}}
+      {{#if mentions_legales}}<p style="margin: 6px 0 0 0;">{{mentions_legales}}</p>{{/if}}
+    </div>
   </div>
 </div>
       `
@@ -309,7 +321,8 @@ class FactureService {
       structure,
       montantHT,
       tauxTVA = parameters.tauxTva || 20,
-      dateEcheance
+      dateEcheance,
+      lignesSupplementaires = []
     } = factureData;
 
     // Calculer les montants (s'assurer que montantHT est un nombre valide)
@@ -318,6 +331,38 @@ class FactureService {
 
     // Générer le numéro de facture
     const numeroFacture = await this.generateFactureNumber(organizationId);
+    
+    // Calculer le montant du concert (sans les lignes supplémentaires)
+    let montantConcert = factureData.montantTotal || parseFloat(factureData.montantHT) || 0;
+    if (lignesSupplementaires && lignesSupplementaires.length > 0) {
+      // Soustraire les montants supplémentaires pour obtenir le montant du concert seul
+      const totalSupplements = lignesSupplementaires.reduce((sum, ligne) => sum + (parseFloat(ligne.montant) || 0), 0);
+      montantConcert = montantConcert - totalSupplements;
+    }
+    
+    // Générer le HTML des lignes supplémentaires
+    let lignesSupplementairesHTML = '';
+    if (lignesSupplementaires && lignesSupplementaires.length > 0) {
+      lignesSupplementaires.forEach(ligne => {
+        if (ligne.description && ligne.montant) {
+          // Ajouter le pourcentage dans la description si c'est une ligne de pourcentage
+          let description = ligne.description;
+          if (ligne.type === 'pourcentage' && ligne.pourcentage) {
+            description += ` (${ligne.pourcentage}%)`;
+          }
+          
+          lignesSupplementairesHTML += `
+          <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">
+              <span style="font-size: 12px;">${description}</span>
+            </td>
+            <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee; font-size: 13px;">
+              ${new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parseFloat(ligne.montant) || 0)} €
+            </td>
+          </tr>`;
+        }
+      });
+    }
 
     // Préparer les variables
     const variables = {
@@ -399,6 +444,7 @@ class FactureService {
       })(),
 
       // Montants - Formatter sans le symbole € car il est déjà dans le template
+      montant_concert: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantConcert),
       montant_ht: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantHTNum),
       montant_ht_lettres: toWords(montantHTNum),
       taux_tva: parameters.afficherTva ? tauxTVA : 0,
@@ -409,6 +455,10 @@ class FactureService {
         new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantTTC) : 
         new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantHTNum),
       montant_lettres: parameters.afficherTva ? toWords(Math.round(montantTTC)) : toWords(Math.round(montantHTNum)),
+      
+      // Lignes supplémentaires
+      lignes_supplementaires: lignesSupplementairesHTML,
+      has_lignes_supplementaires: lignesSupplementaires && lignesSupplementaires.length > 0,
 
       // Paiement
       mode_paiement: 'Virement bancaire',

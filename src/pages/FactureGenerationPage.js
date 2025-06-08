@@ -36,6 +36,7 @@ const FactureGenerationPage = () => {
   const [pourcentageAcompte, setPourcentageAcompte] = useState(30);
   const [factureAcompteId, setFactureAcompteId] = useState(null); // Pour lier la facture de solde
   const [montantAcompte, setMontantAcompte] = useState(0);
+  const [lignesSupplementaires, setLignesSupplementaires] = useState([]); // Lignes supplémentaires
 
   // Charger les données nécessaires
   useEffect(() => {
@@ -118,14 +119,71 @@ const FactureGenerationPage = () => {
     loadData();
   }, [concertId, user, currentOrganization]);
 
+  // Ajouter une ligne supplémentaire
+  const ajouterLigneSupplementaire = () => {
+    setLignesSupplementaires([
+      ...lignesSupplementaires,
+      { id: Date.now(), description: '', montant: 0, type: 'montant' }
+    ]);
+  };
+  
+  // Ajouter une ligne de pourcentage
+  const ajouterLignePourcentage = () => {
+    setLignesSupplementaires([
+      ...lignesSupplementaires,
+      { id: Date.now(), description: '', montant: 0, type: 'pourcentage', pourcentage: 0 }
+    ]);
+  };
+
+  // Mettre à jour une ligne supplémentaire
+  const updateLigneSupplementaire = (id, field, value) => {
+    setLignesSupplementaires(
+      lignesSupplementaires.map(ligne =>
+        ligne.id === id ? { ...ligne, [field]: value } : ligne
+      )
+    );
+  };
+
+  // Supprimer une ligne supplémentaire
+  const supprimerLigneSupplementaire = (id) => {
+    setLignesSupplementaires(
+      lignesSupplementaires.filter(ligne => ligne.id !== id)
+    );
+  };
+
+  // Calculer le montant total avec les lignes supplémentaires
+  const calculerMontantTotal = () => {
+    let montantBase = parseFloat(montantHT) || 0;
+    let total = montantBase;
+    
+    // Traiter chaque ligne supplémentaire
+    lignesSupplementaires.forEach(ligne => {
+      if (ligne.type === 'montant') {
+        // Ligne avec montant fixe
+        total += parseFloat(ligne.montant) || 0;
+      } else if (ligne.type === 'pourcentage') {
+        // Ligne avec pourcentage (calculé sur le montant de base)
+        const pourcentage = parseFloat(ligne.pourcentage) || 0;
+        const montantCalcule = (montantBase * pourcentage) / 100;
+        ligne.montant = montantCalcule; // Stocker le montant calculé
+        total += montantCalcule;
+      }
+    });
+    
+    return total;
+  };
+
   // Générer l'aperçu de la facture
   useEffect(() => {
     const generatePreview = async () => {
       if (!selectedTemplate || !concert || !montantHT) return;
       
       try {
+        // Calculer le montant total avec lignes supplémentaires
+        const montantTotalAvecSupplements = calculerMontantTotal();
+        
         // Calculer le montant en fonction du type de facture
-        let montantFacture = parseFloat(montantHT) || 0;
+        let montantFacture = montantTotalAvecSupplements;
         if (typeFacture === 'acompte') {
           montantFacture = montantFacture * pourcentageAcompte / 100;
         } else if (typeFacture === 'solde' && factureAcompteId) {
@@ -138,12 +196,13 @@ const FactureGenerationPage = () => {
           structure,
           entreprise: parametres?.entreprise || {},
           montantHT: montantFacture,
-          montantTotal: parseFloat(montantHT) || 0,
+          montantTotal: montantTotalAvecSupplements,
           tauxTVA,
           templateType: selectedTemplate.templateType,
           typeFacture,
           pourcentageAcompte: typeFacture === 'acompte' ? pourcentageAcompte : null,
-          montantAcompte: typeFacture === 'solde' ? montantAcompte : null
+          montantAcompte: typeFacture === 'solde' ? montantAcompte : null,
+          lignesSupplementaires: lignesSupplementaires
         }, currentOrganization.id);
         
         // Remplacer les variables dans le template
@@ -159,7 +218,7 @@ const FactureGenerationPage = () => {
     };
 
     generatePreview();
-  }, [selectedTemplate, concert, structure, montantHT, tauxTVA, parametres, currentOrganization, typeFacture, pourcentageAcompte, montantAcompte, factureAcompteId]);
+  }, [selectedTemplate, concert, structure, montantHT, tauxTVA, parametres, currentOrganization, typeFacture, pourcentageAcompte, montantAcompte, factureAcompteId, lignesSupplementaires]);
 
   // Générer la facture PDF
   const handleGenerateFacture = async () => {
@@ -172,8 +231,11 @@ const FactureGenerationPage = () => {
     setError(null);
     
     try {
+      // Calculer le montant total avec lignes supplémentaires
+      const montantTotalAvecSupplements = calculerMontantTotal();
+      
       // Calculer le montant en fonction du type de facture
-      let montantFacture = parseFloat(montantHT);
+      let montantFacture = montantTotalAvecSupplements;
       if (typeFacture === 'acompte') {
         montantFacture = montantFacture * pourcentageAcompte / 100;
       } else if (typeFacture === 'solde' && factureAcompteId) {
@@ -186,13 +248,14 @@ const FactureGenerationPage = () => {
         structure,
         entreprise: parametres?.entreprise || {},
         montantHT: montantFacture,
-        montantTotal: parseFloat(montantHT), // Montant total du concert
+        montantTotal: montantTotalAvecSupplements, // Montant total du concert avec suppléments
         tauxTVA,
         templateType: selectedTemplate.templateType,
         typeFacture,
         pourcentageAcompte: typeFacture === 'acompte' ? pourcentageAcompte : null,
         montantAcompte: typeFacture === 'solde' ? montantAcompte : null,
-        factureAcompteId: typeFacture === 'solde' ? factureAcompteId : null
+        factureAcompteId: typeFacture === 'solde' ? factureAcompteId : null,
+        lignesSupplementaires: lignesSupplementaires
       }, currentOrganization.id);
       
       // 2. Créer la facture dans Firebase
@@ -203,7 +266,7 @@ const FactureGenerationPage = () => {
         templateName: selectedTemplate.name || 'Modèle Standard',
         numeroFacture: variables.numero_facture,
         montantHT: montantFacture,
-        montantTotal: parseFloat(montantHT),
+        montantTotal: montantTotalAvecSupplements,
         tauxTVA,
         montantTVA: variables.montantTVA,
         montantTTC: variables.montantTTC,
@@ -212,7 +275,8 @@ const FactureGenerationPage = () => {
         status: 'generated',
         typeFacture,
         pourcentageAcompte: typeFacture === 'acompte' ? pourcentageAcompte : null,
-        factureAcompteId: typeFacture === 'solde' ? factureAcompteId : null
+        factureAcompteId: typeFacture === 'solde' ? factureAcompteId : null,
+        lignesSupplementaires: lignesSupplementaires
       }, currentOrganization.id, user.uid);
       
       // 3. Générer le PDF
@@ -232,7 +296,7 @@ const FactureGenerationPage = () => {
           <style>
             @page {
               size: A4;
-              margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+              margin: 30px;
             }
             html, body {
               font-family: Arial, sans-serif;
@@ -246,12 +310,14 @@ const FactureGenerationPage = () => {
             }
             /* Conteneur principal avec contraintes A4 */
             .pdf-container {
-              max-width: 210mm;
-              min-height: 297mm;
-              margin: 0 auto;
+              width: 100%;
+              height: 100%;
+              margin: 0;
+              padding: 0;
               background: white;
               box-sizing: border-box;
               overflow: hidden;
+              position: relative;
             }
             /* Styles pour assurer la compatibilité avec l'aperçu */
             table {
@@ -270,16 +336,17 @@ const FactureGenerationPage = () => {
             /* Ajustements pour l'impression */
             @media print {
               html, body {
-                width: 210mm;
-                height: 297mm;
-              }
-              .pdf-container {
+                width: 100%;
+                height: 100%;
                 margin: 0;
                 padding: 0;
-                max-width: none;
-                min-height: none;
-                height: 100%;
+              }
+              .pdf-container {
                 width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
               }
             }
           </style>
@@ -299,13 +366,13 @@ const FactureGenerationPage = () => {
         {
           format: 'A4',
           margin: {
-            top: '1.5cm',
-            right: '1.5cm',
-            bottom: '1.5cm',
-            left: '1.5cm'
+            top: '30px',
+            right: '30px',
+            bottom: '30px',
+            left: '30px'
           },
           printBackground: true,
-          preferCSSPageSize: true
+          preferCSSPageSize: false
         }
       );
       
@@ -598,6 +665,86 @@ const FactureGenerationPage = () => {
                 ) : (
                   <div className="alert alert-info">
                     Aucun modèle de facture disponible.
+                  </div>
+                )}
+              </div>
+
+              {/* Lignes supplémentaires */}
+              <div className="mb-3">
+                <label className="form-label">Lignes supplémentaires</label>
+                {lignesSupplementaires.map((ligne) => (
+                  <div key={ligne.id} className="input-group mb-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder={ligne.type === 'pourcentage' ? "Description (ex: Commission)" : "Description (ex: Frais de route)"}
+                      value={ligne.description}
+                      onChange={(e) => updateLigneSupplementaire(ligne.id, 'description', e.target.value)}
+                    />
+                    {ligne.type === 'montant' ? (
+                      <>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Montant HT"
+                          value={ligne.montant}
+                          onChange={(e) => updateLigneSupplementaire(ligne.id, 'montant', e.target.value)}
+                          step="0.01"
+                          style={{ maxWidth: '150px' }}
+                        />
+                        <span className="input-group-text">€</span>
+                      </>
+                    ) : (
+                      <>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Pourcentage"
+                          value={ligne.pourcentage}
+                          onChange={(e) => updateLigneSupplementaire(ligne.id, 'pourcentage', e.target.value)}
+                          step="0.1"
+                          style={{ maxWidth: '100px' }}
+                        />
+                        <span className="input-group-text">%</span>
+                        <span className="input-group-text" style={{ minWidth: '100px' }}>
+                          = {((parseFloat(montantHT) || 0) * (parseFloat(ligne.pourcentage) || 0) / 100).toFixed(2)} €
+                        </span>
+                      </>
+                    )}
+                    <button
+                      className="btn btn-outline-danger"
+                      type="button"
+                      onClick={() => supprimerLigneSupplementaire(ligne.id)}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </div>
+                ))}
+                <div className="d-flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={ajouterLigneSupplementaire}
+                  >
+                    <i className="bi bi-plus-lg me-2"></i>
+                    Ajouter un montant
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={ajouterLignePourcentage}
+                  >
+                    <i className="bi bi-percent me-2"></i>
+                    Ajouter un pourcentage
+                  </Button>
+                </div>
+                
+                {lignesSupplementaires.length > 0 && (
+                  <div className="mt-2">
+                    <small className="text-muted">
+                      Montant total : {calculerMontantTotal().toFixed(2)} € HT
+                      {typeFacture === 'acompte' && ` (Acompte : ${(calculerMontantTotal() * pourcentageAcompte / 100).toFixed(2)} € HT)`}
+                    </small>
                   </div>
                 )}
               </div>

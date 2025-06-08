@@ -168,7 +168,8 @@ const FactureDetailsPage = () => {
         tauxTVA: facture.tauxTVA,
         typeFacture: facture.typeFacture,
         pourcentageAcompte: facture.pourcentageAcompte,
-        montantAcompte: facture.montantAcompte
+        montantAcompte: facture.montantAcompte,
+        lignesSupplementaires: facture.lignesSupplementaires || []
       }, currentOrganization.id);
       
       // Remplacer les variables dans le template
@@ -188,7 +189,7 @@ const FactureDetailsPage = () => {
           <style>
             @page {
               size: A4;
-              margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+              margin: 30px;
             }
             html, body {
               font-family: Arial, sans-serif;
@@ -202,12 +203,14 @@ const FactureDetailsPage = () => {
             }
             /* Conteneur principal avec contraintes A4 */
             .pdf-container {
-              max-width: 210mm;
-              min-height: 297mm;
-              margin: 0 auto;
+              width: 100%;
+              height: 100%;
+              margin: 0;
+              padding: 0;
               background: white;
               box-sizing: border-box;
               overflow: hidden;
+              position: relative;
             }
             /* Styles pour assurer la compatibilité avec l'aperçu */
             table {
@@ -241,16 +244,17 @@ const FactureDetailsPage = () => {
             /* Ajustements pour l'impression */
             @media print {
               html, body {
-                width: 210mm;
-                height: 297mm;
-              }
-              .pdf-container {
+                width: 100%;
+                height: 100%;
                 margin: 0;
                 padding: 0;
-                max-width: none;
-                min-height: none;
-                height: 100%;
+              }
+              .pdf-container {
                 width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
               }
             }
           </style>
@@ -270,13 +274,13 @@ const FactureDetailsPage = () => {
         {
           format: 'A4',
           margin: {
-            top: '1.5cm',
-            right: '1.5cm',
-            bottom: '1.5cm',
-            left: '1.5cm'
+            top: '30px',
+            right: '30px',
+            bottom: '30px',
+            left: '30px'
           },
           printBackground: true,
-          preferCSSPageSize: true
+          preferCSSPageSize: false
         }
       );
       

@@ -280,7 +280,9 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           ...lieuFields,
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
-          contactsAssocies: []
+          contactsAssocies: [],
+          // ✅ FIX: Ajouter automatiquement l'organizationId
+          ...(currentOrganization?.id && { organizationId: currentOrganization.id })
         };
         
         // Ajouter les coordonnées si disponibles

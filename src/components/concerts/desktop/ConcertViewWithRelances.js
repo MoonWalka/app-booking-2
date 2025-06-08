@@ -171,31 +171,17 @@ function ConcertViewWithRelances({ id: propId }) {
     <div className={styles.concertDetailsContainer}>
       <FormHeader
         title={concertData.titre}
-        subtitle={concertData.date}
+        subtitle={`Créé le ${formatDate(concert.dateCreation)}`}
+        icon={<i className="bi bi-music-note-beamed"></i>}
+        roundedTop={true}
         actions={[
-          <Button
-            key="back"
-            variant="secondary"
-            size="sm"
-            onClick={() => navigate('/concerts')}
-          >
-            ← Retour
-          </Button>,
-          <Button
+          <Button 
             key="edit"
-            variant="primary"
-            size="sm"
+            variant="primary" 
             onClick={() => navigate(`/concerts/${id}/edit`)}
+            icon={<i className="bi bi-pencil"></i>}
           >
             Modifier
-          </Button>,
-          <Button
-            key="delete"
-            variant="outline-danger"
-            size="sm"
-            onClick={() => console.log('[ConcertViewWithRelances] TODO: Implémenter modal de suppression')}
-          >
-            Supprimer
           </Button>
         ]}
       />

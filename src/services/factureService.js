@@ -154,7 +154,7 @@ class FactureService {
 
   <!-- Mentions légales -->
   <div style="margin-top: 20px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 10px; color: #666; text-align: center;">
-    {{#if siret_entreprise}}<p style="margin: 0;">SIRET : {{siret_entreprise}} {{#if numero_tva_entreprise}}- TVA : {{numero_tva_entreprise}}{{/if}}</p>{{/if}}
+    {{#if show_siret}}{{#if siret_entreprise}}<p style="margin: 0;">SIRET : {{siret_entreprise}} {{#if show_numero_tva}}{{#if numero_tva_entreprise}}- TVA : {{numero_tva_entreprise}}{{/if}}{{/if}}</p>{{/if}}{{/if}}
     {{#if mentions_legales}}<p style="margin: 6px 0 0 0;">{{mentions_legales}}</p>{{/if}}
   </div>
 </div>
@@ -266,6 +266,7 @@ class FactureService {
       penalitesRetard: 'En cas de retard de paiement, des pénalités de retard sont exigibles (taux légal en vigueur).',
       escompte: 'Pas d\'escompte pour paiement anticipé',
       afficherNumeroTva: true,
+      afficherSiret: true,
       afficherMentionsLegales: true,
       afficherIban: true,
       afficherBic: true,
@@ -432,6 +433,7 @@ class FactureService {
       show_logo: parameters.showLogo,
       show_tva: parameters.afficherTva,
       show_numero_tva: parameters.afficherNumeroTva,
+      show_siret: parameters.afficherSiret,
       show_mentions_legales: parameters.afficherMentionsLegales,
       show_iban: parameters.afficherIban,
       show_bic: parameters.afficherBic,

@@ -9,6 +9,7 @@ import ParametresEmail from '../components/parametres/ParametresEmail';
 import ParametresApparence from '../components/parametres/ParametresApparence';
 import ParametresExport from '../components/parametres/ParametresExport';
 import ParametresOrganisations from '../components/parametres/ParametresOrganisations';
+import ParametresFactures from '../components/parametres/ParametresFactures';
 import SyncManager from '../components/parametres/sync/SyncManager';
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
@@ -32,6 +33,8 @@ const ParametresPage = () => {
     
     if (path.includes('/parametres/contrats')) {
       newActiveTab = 'contrats';
+    } else if (path.includes('/parametres/factures-modeles')) {
+      newActiveTab = 'factures-modeles';
     } else if (path.includes('/parametres/factures')) {
       newActiveTab = 'factures';
     } else if (path.includes('/parametres/compte')) {
@@ -73,6 +76,9 @@ const ParametresPage = () => {
       case 'factures':
         navigate('/parametres/factures');
         break;
+      case 'factures-modeles':
+        navigate('/parametres/factures-modeles');
+        break;
       case 'compte':
         navigate('/parametres/compte');
         break;
@@ -113,7 +119,7 @@ const ParametresPage = () => {
     }
     
     // Si l'URL contient un ID de facture, c'est l'édition d'un modèle de facture
-    if (location.pathname.match(/\/parametres\/factures\/[^/]+$/)) {
+    if (location.pathname.match(/\/parametres\/factures-modeles\/[^/]+$/)) {
       return <FactureTemplatesEditPage />;
     }
     
@@ -140,6 +146,8 @@ const ParametresPage = () => {
       case 'contrats':
         return <ContratTemplatesPage />;
       case 'factures':
+        return <ParametresFactures />;
+      case 'factures-modeles':
         return <FactureTemplatesPage />;
       default:
         return <ParametresEntreprise />;
@@ -156,7 +164,8 @@ const ParametresPage = () => {
     { label: 'Configuration Email', key: 'email' },
     { label: 'Apparence', key: 'apparence' },
     { label: 'Modèles de contrats', key: 'contrats' },
-    { label: 'Modèles de factures', key: 'factures' },
+    { label: 'Paramètres de factures', key: 'factures' },
+    { label: 'Modèles de factures', key: 'factures-modeles' },
     { label: 'Export et sauvegarde', key: 'export' },
     { label: 'Synchronisation des données', key: 'sync' }
   ], []);

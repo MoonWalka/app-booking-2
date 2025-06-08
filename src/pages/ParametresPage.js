@@ -11,6 +11,8 @@ import ParametresExport from '../components/parametres/ParametresExport';
 import ParametresOrganisations from '../components/parametres/ParametresOrganisations';
 import ParametresFactures from '../components/parametres/ParametresFactures';
 import SyncManager from '../components/parametres/sync/SyncManager';
+import OrganizationIdDebug from '../components/debug/OrganizationIdDebug';
+import OrganizationIdTest from '../components/debug/OrganizationIdTest';
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
 
@@ -51,6 +53,10 @@ const ParametresPage = () => {
       newActiveTab = 'organisations';
     } else if (path.includes('/parametres/sync')) {
       newActiveTab = 'sync';
+    } else if (path.includes('/parametres/debug')) {
+      newActiveTab = 'debug';
+    } else if (path.includes('/parametres/test-organizationid')) {
+      newActiveTab = 'test-organizationid';
     } else if (path.includes('/parametres/generaux')) {
       newActiveTab = 'generaux';
     } else if (path.includes('/parametres/entreprise') || path === '/parametres') {
@@ -100,6 +106,12 @@ const ParametresPage = () => {
       case 'sync':
         navigate('/parametres/sync');
         break;
+      case 'debug':
+        navigate('/parametres/debug');
+        break;
+      case 'test-organizationid':
+        navigate('/parametres/test-organizationid');
+        break;
       case 'generaux':
         navigate('/parametres/generaux');
         break;
@@ -143,6 +155,10 @@ const ParametresPage = () => {
         return <ParametresOrganisations />;
       case 'sync':
         return <SyncManager />;
+      case 'debug':
+        return <OrganizationIdDebug />;
+      case 'test-organizationid':
+        return <OrganizationIdTest />;
       case 'contrats':
         return <ContratTemplatesPage />;
       case 'factures':
@@ -167,7 +183,9 @@ const ParametresPage = () => {
     { label: 'Paramètres de factures', key: 'factures' },
     { label: 'Modèles de factures', key: 'factures-modeles' },
     { label: 'Export et sauvegarde', key: 'export' },
-    { label: 'Synchronisation des données', key: 'sync' }
+    { label: 'Synchronisation des données', key: 'sync' },
+    { label: '🔧 Debug OrganizationId', key: 'debug' },
+    { label: '🧪 Test OrganizationId', key: 'test-organizationid' }
   ], []);
   
   const tabIndex = useMemo(() => tabList.findIndex(tab => tab.key === activeTab), [tabList, activeTab]);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, updateDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import AddressInput from '@/components/ui/AddressInput';
 import Card from '@/components/ui/Card';
 import styles from '@/pages/FormResponsePage.module.css';
@@ -13,6 +14,8 @@ const PublicContactForm = ({
   contactEmail, // Email du contact passé si disponible
   programmateurEmail // Rétrocompatibilité
 }) => {
+  const { currentOrganization } = useOrganization();
+  
   // États du formulaire restructuré
   const [formData, setFormData] = useState({
     // Adresse du lieu (prioritaire)
@@ -294,6 +297,8 @@ const PublicContactForm = ({
         token,
         submittedAt: serverTimestamp(),
         status: 'pending',
+        // ✅ FIX: Ajouter automatiquement l'organizationId
+        ...(currentOrganization?.id && { organizationId: currentOrganization.id }),
         
         // DONNÉES DU LIEU (prioritaire)
         lieuData: {

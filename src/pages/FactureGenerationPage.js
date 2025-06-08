@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -152,7 +152,7 @@ const FactureGenerationPage = () => {
   };
 
   // Calculer le montant total avec les lignes supplémentaires
-  const calculerMontantTotal = () => {
+  const calculerMontantTotal = useCallback(() => {
     let montantBase = parseFloat(montantHT) || 0;
     let total = montantBase;
     
@@ -171,7 +171,7 @@ const FactureGenerationPage = () => {
     });
     
     return total;
-  };
+  }, [montantHT, lignesSupplementaires]);
 
   // Générer l'aperçu de la facture
   useEffect(() => {
@@ -218,7 +218,7 @@ const FactureGenerationPage = () => {
     };
 
     generatePreview();
-  }, [selectedTemplate, concert, structure, montantHT, tauxTVA, parametres, currentOrganization, typeFacture, pourcentageAcompte, montantAcompte, factureAcompteId, lignesSupplementaires]);
+  }, [selectedTemplate, concert, structure, montantHT, tauxTVA, parametres, currentOrganization, typeFacture, pourcentageAcompte, montantAcompte, factureAcompteId, lignesSupplementaires, calculerMontantTotal]);
 
   // Générer la facture PDF
   const handleGenerateFacture = async () => {

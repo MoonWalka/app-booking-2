@@ -3,8 +3,7 @@ import { Form, Button, Card, Alert, Modal } from 'react-bootstrap';
 import styles from './ParametresCompte.module.css';
 import { useAuth } from '@/context/AuthContext';
 import { updateEmail, updatePassword, updateProfile, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
-import { auth, db } from '@/services/firebase-service';
-import { doc, deleteDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { auth } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useNavigate } from 'react-router-dom';
 

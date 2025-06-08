@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { doc, getDoc, updateDoc, addDoc, collection, deleteDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
@@ -20,6 +21,7 @@ const ContactFormMaquette = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentOrganization } = useOrganization();
   
   // États locaux
   const [loading, setLoading] = useState(true);
@@ -385,6 +387,10 @@ const ContactFormMaquette = () => {
 
       if (isNewFromUrl) {
         contact.createdAt = new Date();
+        // ✅ FIX: Ajouter automatiquement l'organizationId
+        if (currentOrganization?.id) {
+          contact.organizationId = currentOrganization.id;
+        }
         const docRef = await addDoc(collection(db, 'contacts'), contact);
         toast.success('Contact créé avec succès !');
         navigate(`/contacts/${docRef.id}`);

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {  collection, doc, getDoc, setDoc, serverTimestamp  } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import { useLocationIQ } from '@/hooks/common';
 import StepNavigation from '../../common/steps/StepNavigation.js';
 import Button from '@ui/Button';
@@ -322,6 +323,7 @@ const ContactFormMobile = ({
 }) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { currentOrganization } = useOrganization();
   
   // Détecter le mode public vs normal
   const isPublicMode = !!(token && concertId);
@@ -380,6 +382,10 @@ const ContactFormMobile = ({
         } else {
           // Création d'un nouveau contact
           contact.createdAt = serverTimestamp();
+          // ✅ FIX: Ajouter automatiquement l'organizationId
+          if (currentOrganization?.id) {
+            contact.organizationId = currentOrganization.id;
+          }
           const newProgRef = doc(collection(db, 'contacts'));
           await setDoc(newProgRef, contact);
         }

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
 import { useResponsive } from '@/hooks/common';
+import { useOrganization } from '@/context/OrganizationContext';
 import StatsCards from './StatsCards';
 import styles from './ListWithFilters.module.css';
 
 /**
- * Version simplifiée de ListWithFilters qui utilise les collections standard Firebase
- * (pas de système multi-organisation)
+ * Version améliorée de ListWithFilters qui filtre automatiquement par organizationId
+ * pour garantir la séparation des données entre organisations
  */
 const ListWithFilters = ({
   entityType,
@@ -33,6 +34,7 @@ const ListWithFilters = ({
   onRefresh: externalOnRefresh = null,
 }) => {
   const { isMobile } = useResponsive();
+  const { currentOrganization } = useOrganization();
   const [items, setItems] = useState(initialData || []);
 
   // Fonction utilitaire pour déterminer la classe CSS selon le type de données
@@ -158,20 +160,31 @@ const ListWithFilters = ({
       
       const collectionRef = collection(db, collectionName);
       
-      // Construction de la requête
-      let q = collectionRef;
+      // Construction de la requête avec les filtres
+      const queryConditions = [];
       
-      // Ajout des filtres
+      // IMPORTANT: Toujours filtrer par organizationId pour la sécurité
+      if (currentOrganization?.id) {
+        queryConditions.push(where('organizationId', '==', currentOrganization.id));
+      } else {
+        console.warn('⚠️ Pas d\'organisation courante - impossible de filtrer les données');
+        setItems([]);
+        setLoading(false);
+        return;
+      }
+      
+      // Ajout des filtres additionnels
       const filterEntries = Object.entries(filters);
       if (filterEntries.length > 0) {
         const filterConditions = filterEntries
           .filter(([field, value]) => value !== undefined && value !== '')
           .map(([field, value]) => where(field, '==', value));
         
-        if (filterConditions.length > 0) {
-          q = query(q, ...filterConditions);
-        }
+        queryConditions.push(...filterConditions);
       }
+      
+      // Construire la requête initiale avec les conditions
+      let q = queryConditions.length > 0 ? query(collectionRef, ...queryConditions) : collectionRef;
       
       // Tri avec gestion d'erreur
       try {
@@ -222,7 +235,7 @@ const ListWithFilters = ({
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entityType, filters, sort, pageSize]);
+  }, [entityType, filters, sort, pageSize, currentOrganization?.id]);
 
   // Recharger les données quand les paramètres changent
   useEffect(() => {

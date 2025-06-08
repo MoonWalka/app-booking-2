@@ -1,0 +1,114 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Fonction pour vérifier si l'utilisateur appartient à l'organisation
+    function belongsToOrganization(orgId) {
+      return request.auth != null && 
+             request.auth.uid in get(/databases/$(database)/documents/organizations/$(orgId)).data.members;
+    }
+    
+    // Fonction pour vérifier si le document appartient à l'organisation de l'utilisateur
+    function isInUserOrganization(resource) {
+      return resource.data.organizationId != null &&
+             belongsToOrganization(resource.data.organizationId);
+    }
+    
+    // Règles pour les concerts
+    match /concerts/{concertId} {
+      allow read: if request.auth != null && isInUserOrganization(resource);
+      allow create: if request.auth != null && 
+                       belongsToOrganization(request.resource.data.organizationId) &&
+                       request.resource.data.organizationId != null;
+      allow update: if request.auth != null && 
+                       isInUserOrganization(resource) &&
+                       request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if request.auth != null && isInUserOrganization(resource);
+    }
+    
+    // Règles pour les contacts
+    match /contacts/{contactId} {
+      allow read: if request.auth != null && isInUserOrganization(resource);
+      allow create: if request.auth != null && 
+                       belongsToOrganization(request.resource.data.organizationId) &&
+                       request.resource.data.organizationId != null;
+      allow update: if request.auth != null && 
+                       isInUserOrganization(resource) &&
+                       request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if request.auth != null && isInUserOrganization(resource);
+    }
+    
+    // Règles pour les lieux
+    match /lieux/{lieuId} {
+      allow read: if request.auth != null && isInUserOrganization(resource);
+      allow create: if request.auth != null && 
+                       belongsToOrganization(request.resource.data.organizationId) &&
+                       request.resource.data.organizationId != null;
+      allow update: if request.auth != null && 
+                       isInUserOrganization(resource) &&
+                       request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if request.auth != null && isInUserOrganization(resource);
+    }
+    
+    // Règles pour les artistes
+    match /artistes/{artisteId} {
+      allow read: if request.auth != null && isInUserOrganization(resource);
+      allow create: if request.auth != null && 
+                       belongsToOrganization(request.resource.data.organizationId) &&
+                       request.resource.data.organizationId != null;
+      allow update: if request.auth != null && 
+                       isInUserOrganization(resource) &&
+                       request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if request.auth != null && isInUserOrganization(resource);
+    }
+    
+    // Règles pour les structures
+    match /structures/{structureId} {
+      allow read: if request.auth != null && isInUserOrganization(resource);
+      allow create: if request.auth != null && 
+                       belongsToOrganization(request.resource.data.organizationId) &&
+                       request.resource.data.organizationId != null;
+      allow update: if request.auth != null && 
+                       isInUserOrganization(resource) &&
+                       request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if request.auth != null && isInUserOrganization(resource);
+    }
+    
+    // Règles pour les formulaires
+    match /formulaires/{formulaireId} {
+      allow read: if request.auth != null && isInUserOrganization(resource);
+      allow create: if request.auth != null && 
+                       belongsToOrganization(request.resource.data.organizationId) &&
+                       request.resource.data.organizationId != null;
+      allow update: if request.auth != null && 
+                       isInUserOrganization(resource) &&
+                       request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if request.auth != null && isInUserOrganization(resource);
+    }
+    
+    // Règles pour les contrats
+    match /contrats/{contratId} {
+      allow read: if request.auth != null && isInUserOrganization(resource);
+      allow create: if request.auth != null && 
+                       belongsToOrganization(request.resource.data.organizationId) &&
+                       request.resource.data.organizationId != null;
+      allow update: if request.auth != null && 
+                       isInUserOrganization(resource) &&
+                       request.resource.data.organizationId == resource.data.organizationId;
+      allow delete: if request.auth != null && isInUserOrganization(resource);
+    }
+    
+    // Règles pour les organisations (lecture seule pour les membres)
+    match /organizations/{orgId} {
+      allow read: if request.auth != null && belongsToOrganization(orgId);
+      allow update: if request.auth != null && 
+                       request.auth.uid in resource.data.admins &&
+                       request.resource.data.members.hasAll(resource.data.members);
+    }
+    
+    // Collections spécifiques aux organisations
+    match /organizations/{orgId}/{document=**} {
+      allow read, write: if request.auth != null && belongsToOrganization(orgId);
+    }
+  }
+}

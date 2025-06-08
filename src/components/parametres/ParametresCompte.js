@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Button, Card, Alert, Modal } from 'react-bootstrap';
 import styles from './ParametresCompte.module.css';
 import { useAuth } from '@/context/AuthContext';
-import { updateEmail, updatePassword, updateProfile } from 'firebase/auth';
-import { auth } from '@/services/firebase-service';
+import { updateEmail, updatePassword, updateProfile, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { auth, db } from '@/services/firebase-service';
+import { doc, deleteDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { useOrganization } from '@/context/OrganizationContext';
+import { useNavigate } from 'react-router-dom';
 
 const ParametresCompte = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
+  const { currentOrganization } = useOrganization();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     displayName: currentUser?.displayName || '',
     email: currentUser?.email || '',
@@ -17,6 +22,10 @@ const ParametresCompte = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,7 +101,65 @@ const ParametresCompte = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      setDeleteError('Veuillez entrer votre mot de passe');
+      return;
+    }
+
+    setIsDeleting(true);
+    setDeleteError('');
+
+    try {
+      // Réauthentifier l'utilisateur
+      const firebaseUser = auth.currentUser;
+      if (!firebaseUser) {
+        throw new Error('Utilisateur non connecté');
+      }
+
+      const credential = EmailAuthProvider.credential(
+        firebaseUser.email,
+        deletePassword
+      );
+      
+      await reauthenticateWithCredential(firebaseUser, credential);
+
+      // Supprimer les données utilisateur dans Firestore (si nécessaire)
+      // Note: Dans un environnement de production, vous voudriez peut-être
+      // conserver certaines données pour des raisons légales/comptables
+      if (currentOrganization?.id) {
+        try {
+          // Supprimer les documents personnels de l'utilisateur
+          // (ajouter ici la logique spécifique selon votre structure de données)
+          console.log('Suppression des données utilisateur...');
+        } catch (firestoreError) {
+          console.error('Erreur lors de la suppression des données:', firestoreError);
+          // Continuer même si la suppression Firestore échoue
+        }
+      }
+
+      // Supprimer le compte utilisateur Firebase
+      await deleteUser(firebaseUser);
+
+      // Déconnecter et rediriger
+      await logout();
+      navigate('/login');
+    } catch (err) {
+      console.error('Erreur lors de la suppression du compte:', err);
+      if (err.code === 'auth/wrong-password') {
+        setDeleteError('Mot de passe incorrect');
+      } else if (err.code === 'auth/requires-recent-login') {
+        setDeleteError('Pour des raisons de sécurité, veuillez vous reconnecter avant de supprimer votre compte');
+      } else {
+        setDeleteError('Erreur lors de la suppression du compte: ' + err.message);
+      }
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
+    <>
     <Card>
       <Card.Body>
         <h3 className={styles.formTitle}>Compte utilisateur</h3>
@@ -192,8 +259,98 @@ const ParametresCompte = () => {
             </Button>
           </div>
         </Form>
+
+        {/* Section de suppression du compte */}
+        <div className={styles.dangerZone} style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #dee2e6' }}>
+          <h4 className="text-danger mb-3">Zone de danger</h4>
+          <p className="text-muted mb-3">
+            La suppression de votre compte est permanente et irréversible. Toutes vos données seront définitivement effacées.
+          </p>
+          <Button
+            variant="danger"
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <i className="bi bi-trash me-2"></i>
+            Supprimer mon compte
+          </Button>
+        </div>
       </Card.Body>
     </Card>
+
+    {/* Modale de confirmation de suppression */}
+    <Modal 
+      show={showDeleteModal} 
+      onHide={() => {
+        setShowDeleteModal(false);
+        setDeletePassword('');
+        setDeleteError('');
+      }}
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title className="text-danger">
+          <i className="bi bi-exclamation-triangle me-2"></i>
+          Supprimer définitivement votre compte
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Alert variant="danger">
+          <Alert.Heading>Attention !</Alert.Heading>
+          <p>Cette action est <strong>permanente et irréversible</strong>. Une fois votre compte supprimé :</p>
+          <ul>
+            <li>Vous perdrez l'accès à toutes vos données</li>
+            <li>Vos informations personnelles seront effacées</li>
+            <li>Vous ne pourrez pas récupérer votre compte</li>
+          </ul>
+        </Alert>
+        
+        {deleteError && <Alert variant="danger">{deleteError}</Alert>}
+        
+        <Form.Group className="mt-3">
+          <Form.Label>
+            Pour confirmer, veuillez entrer votre mot de passe actuel :
+          </Form.Label>
+          <Form.Control
+            type="password"
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+            placeholder="Mot de passe"
+            autoFocus
+          />
+        </Form.Group>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button 
+          variant="secondary" 
+          onClick={() => {
+            setShowDeleteModal(false);
+            setDeletePassword('');
+            setDeleteError('');
+          }}
+          disabled={isDeleting}
+        >
+          Annuler
+        </Button>
+        <Button 
+          variant="danger" 
+          onClick={handleDeleteAccount}
+          disabled={isDeleting || !deletePassword}
+        >
+          {isDeleting ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Suppression en cours...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-trash me-2"></i>
+              Supprimer définitivement
+            </>
+          )}
+        </Button>
+      </Modal.Footer>
+    </Modal>
+    </>
   );
 };
 

@@ -10,6 +10,16 @@ const cors = require('cors')({
   maxAge: 86400 // Durée de mise en cache en secondes (24 heures)
 });
 
+// Import du service d'email
+const { sendMail, sendTemplatedMail } = require('./sendMail');
+
+// Définition des paramètres SMTP
+const smtpHost = defineString('SMTP_HOST');
+const smtpPort = defineString('SMTP_PORT');
+const smtpUser = defineString('SMTP_USER');
+const smtpPass = defineString('SMTP_PASS');
+const smtpFrom = defineString('SMTP_FROM');
+
 admin.initializeApp();
 
 // Fonction utilitaire pour formater la taille du fichier
@@ -370,6 +380,94 @@ exports.generatePdf = onRequest({
         error: 'Erreur lors de la génération du PDF',
         message: error.message,
         details: errorDetails
+      });
+    }
+  });
+});
+
+/**
+ * Fonction Cloud pour l'envoi d'emails via SMTP
+ * Utilise nodemailer pour envoyer des emails transactionnels
+ */
+exports.sendEmail = onRequest({
+  timeoutSeconds: 60,
+  memory: '256MiB',
+  cors: true
+}, (request, response) => {
+  // Gérer la requête preflight CORS
+  if (request.method === 'OPTIONS') {
+    response.set('Access-Control-Allow-Origin', '*');
+    response.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    response.set('Access-Control-Max-Age', '86400');
+    response.status(204).send('');
+    return;
+  }
+
+  cors(request, response, async () => {
+    try {
+      console.log('Début de l\'envoi d\'email');
+      
+      // Vérifier la méthode HTTP
+      if (request.method !== 'POST') {
+        return response.status(405).json({ error: 'Méthode non autorisée' });
+      }
+
+      const { to, subject, html, text, from, attachments, template, templateData, userId, organizationId } = request.body;
+
+      // Si un template est spécifié, utiliser sendTemplatedMail
+      if (template) {
+        if (!to || !templateData) {
+          return response.status(400).json({ 
+            error: 'Paramètres manquants pour l\'envoi avec template' 
+          });
+        }
+
+        console.log(`Envoi d'email avec template: ${template} à ${to}`);
+        const result = await sendTemplatedMail(template, templateData, to, userId, organizationId);
+        
+        response.set('Access-Control-Allow-Origin', '*');
+        return response.status(200).json({
+          success: true,
+          message: 'Email envoyé avec succès',
+          messageId: result.messageId
+        });
+      }
+
+      // Sinon, utiliser sendMail standard
+      if (!to || !subject || (!html && !text)) {
+        return response.status(400).json({ 
+          error: 'Paramètres manquants: to, subject et html/text sont requis' 
+        });
+      }
+
+      console.log(`Envoi d'email standard à ${to}`);
+      const result = await sendMail({
+        to,
+        subject,
+        html,
+        text,
+        from,
+        attachments,
+        userId,
+        organizationId
+      });
+
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(200).json({
+        success: true,
+        message: 'Email envoyé avec succès',
+        messageId: result.messageId
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email:', error);
+      
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(500).json({
+        error: 'Erreur lors de l\'envoi de l\'email',
+        message: error.message,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
   });

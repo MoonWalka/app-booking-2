@@ -5,6 +5,7 @@ import ParametresEntreprise from '../components/parametres/ParametresEntreprise'
 import ParametresGeneraux from '../components/parametres/ParametresGeneraux';
 import ParametresCompte from '../components/parametres/ParametresCompte';
 import ParametresNotifications from '../components/parametres/ParametresNotifications';
+import ParametresEmail from '../components/parametres/ParametresEmail';
 import ParametresApparence from '../components/parametres/ParametresApparence';
 import ParametresExport from '../components/parametres/ParametresExport';
 import ParametresOrganisations from '../components/parametres/ParametresOrganisations';
@@ -32,6 +33,8 @@ const ParametresPage = () => {
       newActiveTab = 'compte';
     } else if (path.includes('/parametres/notifications')) {
       newActiveTab = 'notifications';
+    } else if (path.includes('/parametres/email')) {
+      newActiveTab = 'email';
     } else if (path.includes('/parametres/apparence')) {
       newActiveTab = 'apparence';
     } else if (path.includes('/parametres/export')) {
@@ -67,6 +70,9 @@ const ParametresPage = () => {
         break;
       case 'notifications':
         navigate('/parametres/notifications');
+        break;
+      case 'email':
+        navigate('/parametres/email');
         break;
       case 'apparence':
         navigate('/parametres/apparence');
@@ -108,6 +114,8 @@ const ParametresPage = () => {
         return <ParametresCompte />;
       case 'notifications':
         return <ParametresNotifications />;
+      case 'email':
+        return <ParametresEmail />;
       case 'apparence':
         return <ParametresApparence />;
       case 'export':
@@ -130,6 +138,7 @@ const ParametresPage = () => {
     { label: 'Compte utilisateur', key: 'compte' },
     { label: 'Organisations', key: 'organisations' },
     { label: 'Notifications', key: 'notifications' },
+    { label: 'Configuration Email', key: 'email' },
     { label: 'Apparence', key: 'apparence' },
     { label: 'Modèles de contrats', key: 'contrats' },
     { label: 'Export et sauvegarde', key: 'export' },

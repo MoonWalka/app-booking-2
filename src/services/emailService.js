@@ -1,0 +1,282 @@
+/**
+ * Service d'envoi d'emails
+ * Utilise une Cloud Function pour envoyer des emails via SMTP
+ */
+
+import { httpsCallable } from 'firebase/functions';
+import { functions, auth } from './firebase-service';
+import { debugLog } from '@/utils/logUtils';
+
+// Référence à la fonction Cloud
+const sendEmailFunction = httpsCallable(functions, 'sendEmail');
+
+/**
+ * Service principal pour l'envoi d'emails
+ */
+class EmailService {
+  /**
+   * Récupère l'ID de l'utilisateur courant et son organisation
+   * @returns {Object} - { userId, organizationId }
+   */
+  getCurrentUserInfo() {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('Utilisateur non authentifié');
+    }
+
+    // Récupérer l'organization ID depuis localStorage ou le contexte
+    const organizationId = localStorage.getItem('currentOrganizationId') || 
+                          user.organizationId || 
+                          'default';
+
+    return {
+      userId: user.uid,
+      organizationId
+    };
+  }
+
+  /**
+   * Envoie un email simple
+   * @param {Object} emailData - Données de l'email
+   * @param {string} emailData.to - Adresse email du destinataire
+   * @param {string} emailData.subject - Sujet de l'email
+   * @param {string} emailData.html - Contenu HTML de l'email
+   * @param {string} [emailData.text] - Contenu texte de l'email (fallback)
+   * @param {string} [emailData.from] - Expéditeur (optionnel)
+   * @param {Array} [emailData.attachments] - Pièces jointes (optionnel)
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendMail(emailData) {
+    try {
+      const { userId, organizationId } = this.getCurrentUserInfo();
+
+      debugLog('[EmailService] Envoi d\'email:', {
+        to: emailData.to,
+        subject: emailData.subject,
+        userId,
+        organizationId
+      }, 'info');
+
+      const result = await sendEmailFunction({
+        ...emailData,
+        userId,
+        organizationId
+      });
+      
+      debugLog('[EmailService] Email envoyé avec succès:', result.data, 'success');
+      
+      return {
+        success: true,
+        ...result.data
+      };
+    } catch (error) {
+      debugLog('[EmailService] Erreur lors de l\'envoi:', error, 'error');
+      
+      throw new Error(
+        error.message || 'Erreur lors de l\'envoi de l\'email'
+      );
+    }
+  }
+
+  /**
+   * Envoie un email avec un template prédéfini
+   * @param {string} template - Nom du template ('formulaire', 'contrat', 'relance')
+   * @param {Object} templateData - Données pour le template
+   * @param {string} to - Email du destinataire
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendTemplatedMail(template, templateData, to) {
+    try {
+      const { userId, organizationId } = this.getCurrentUserInfo();
+
+      debugLog('[EmailService] Envoi d\'email avec template:', {
+        template,
+        to,
+        templateData,
+        userId,
+        organizationId
+      }, 'info');
+
+      const result = await sendEmailFunction({
+        template,
+        templateData,
+        to,
+        userId,
+        organizationId
+      });
+      
+      debugLog('[EmailService] Email avec template envoyé:', result.data, 'success');
+      
+      return {
+        success: true,
+        ...result.data
+      };
+    } catch (error) {
+      debugLog('[EmailService] Erreur lors de l\'envoi avec template:', error, 'error');
+      
+      throw new Error(
+        error.message || 'Erreur lors de l\'envoi de l\'email avec template'
+      );
+    }
+  }
+
+  /**
+   * Envoie un email de contrat
+   * @param {Object} contratData - Données du contrat
+   * @param {string} contratData.to - Email du destinataire
+   * @param {string} contratData.nomContact - Nom du contact
+   * @param {string} contratData.nomConcert - Nom du concert
+   * @param {string} [contratData.dateSignature] - Date limite de signature
+   * @param {Object} [contratData.attachment] - PDF du contrat en pièce jointe
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendContractEmail(contratData) {
+    try {
+      const { to, nomContact, nomConcert, dateSignature, attachment } = contratData;
+
+      // Utiliser le template 'contrat'
+      const templateData = {
+        nomContact,
+        nomConcert,
+        dateSignature
+      };
+
+      // Si on a un PDF en pièce jointe
+      const emailData = {
+        template: 'contrat',
+        templateData,
+        to
+      };
+
+      if (attachment) {
+        // Ajouter la pièce jointe
+        emailData.attachments = [{
+          filename: `Contrat_${nomConcert.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+          content: attachment.content,
+          encoding: 'base64'
+        }];
+      }
+
+      return await this.sendTemplatedMail('contrat', templateData, to);
+    } catch (error) {
+      debugLog('[EmailService] Erreur envoi contrat:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
+   * Envoie un email avec lien vers formulaire
+   * @param {Object} formData - Données du formulaire
+   * @param {string} formData.to - Email du destinataire
+   * @param {string} formData.nomContact - Nom du contact
+   * @param {string} formData.nomConcert - Nom du concert
+   * @param {string} formData.lienFormulaire - URL du formulaire
+   * @param {string} [formData.dateEcheance] - Date limite
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendFormEmail(formData) {
+    try {
+      const { to, nomContact, nomConcert, lienFormulaire, dateEcheance } = formData;
+
+      const templateData = {
+        nomContact,
+        nomConcert,
+        lienFormulaire,
+        dateEcheance
+      };
+
+      return await this.sendTemplatedMail('formulaire', templateData, to);
+    } catch (error) {
+      debugLog('[EmailService] Erreur envoi formulaire:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
+   * Envoie un email de relance
+   * @param {Object} relanceData - Données de la relance
+   * @param {string} relanceData.to - Email du destinataire
+   * @param {string} relanceData.nomContact - Nom du contact
+   * @param {string} relanceData.sujet - Sujet de la relance
+   * @param {string} relanceData.message - Message de relance
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendRelanceEmail(relanceData) {
+    try {
+      const { to, nomContact, sujet, message } = relanceData;
+
+      const templateData = {
+        nomContact,
+        sujet,
+        message
+      };
+
+      return await this.sendTemplatedMail('relance', templateData, to);
+    } catch (error) {
+      debugLog('[EmailService] Erreur envoi relance:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
+   * Envoie un email de test
+   * @param {string} to - Email du destinataire
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendTestEmail(to) {
+    try {
+      return await this.sendMail({
+        to,
+        subject: 'TourCraft - Email de test',
+        html: `
+          <h2>Test du service d'email</h2>
+          <p>Ceci est un email de test envoyé depuis TourCraft.</p>
+          <p>Si vous recevez cet email, le service fonctionne correctement !</p>
+          <hr>
+          <p><small>Envoyé le ${new Date().toLocaleString('fr-FR')}</small></p>
+        `
+      });
+    } catch (error) {
+      debugLog('[EmailService] Erreur envoi test:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
+   * Valide une adresse email
+   * @param {string} email - Adresse à valider
+   * @returns {boolean} - True si valide
+   */
+  validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  /**
+   * Formate un nom de fichier pour pièce jointe
+   * @param {string} filename - Nom original
+   * @returns {string} - Nom formaté
+   */
+  sanitizeFilename(filename) {
+    return filename
+      .replace(/[^a-zA-Z0-9.\-_]/g, '_')
+      .replace(/_{2,}/g, '_')
+      .substring(0, 255);
+  }
+}
+
+// Export d'une instance unique
+const emailService = new EmailService();
+export default emailService;
+
+// Export des méthodes individuelles pour plus de flexibilité
+export const {
+  sendMail,
+  sendTemplatedMail,
+  sendContractEmail,
+  sendFormEmail,
+  sendRelanceEmail,
+  sendTestEmail,
+  validateEmail,
+  sanitizeFilename
+} = emailService;

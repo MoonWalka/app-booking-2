@@ -35,6 +35,7 @@ import {
 } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getRemoteConfig } from 'firebase/remote-config';
+import { getFunctions } from 'firebase/functions';
 
 // Détection directe du mode sans Factory
 const IS_LOCAL_MODE = (process.env.REACT_APP_MODE || 'production') === 'local';
@@ -71,7 +72,7 @@ const firebaseConfig = {
 };
 
 // Variables pour les services Firebase ou leurs mocks
-let app, db, auth, storage, remoteConfig;
+let app, db, auth, storage, remoteConfig, functions;
 
 // Gestion améliorée des erreurs Firestore
 const handleFirestoreError = (error) => {
@@ -110,6 +111,11 @@ if (IS_LOCAL_MODE) {
   remoteConfig = {
     // Implémenter au besoin
   };
+  
+  // Mock de functions
+  functions = {
+    // Implémenter au besoin pour le mode local
+  };
 } else {
   // Initialisation normale de Firebase pour la production
   app = initializeApp(firebaseConfig);
@@ -120,6 +126,7 @@ if (IS_LOCAL_MODE) {
   auth = getAuth(app);
   storage = getStorage(app);
   remoteConfig = getRemoteConfig(app);
+  functions = getFunctions(app);
 }
 
 // Mock pour getCountFromServer si en mode local
@@ -209,7 +216,8 @@ export {
   db,
   auth,
   storage,
-  remoteConfig
+  remoteConfig,
+  functions
 };
 
 // Exports directs sans proxies intermédiaires

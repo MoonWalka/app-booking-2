@@ -8,6 +8,8 @@ Ce dossier contient la documentation des services et couches métier du projet T
 
 ### Documentation Principale
 - [📋 **SERVICES.md**](./SERVICES.md) - Documentation complète de tous les services
+- [💾 **persistenceService-guide.md**](./persistenceService-guide.md) - Guide du service de persistance
+- [📧 **emailService.md**](./emailService.md) - Service d'envoi d'emails via SMTP
 
 ## 🎯 Architecture des Services
 
@@ -41,6 +43,7 @@ Ce dossier contient la documentation des services et couches métier du projet T
 - **Date Service** : Manipulation des dates
 - **Format Service** : Formatage des données
 - **Export Service** : Génération de documents
+- **Email Service** : Envoi d'emails transactionnels via SMTP
 - **Notification Service** : Gestion des notifications
 
 ## 📊 Patterns et Conventions

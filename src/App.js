@@ -34,7 +34,6 @@ import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
 import MigrationPage from '@/pages/admin/MigrationPage';
-import DebugRelancesPage from '@/pages/DebugRelancesPage';
 import { OnboardingFlow } from '@/components/organization';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -342,23 +341,6 @@ function App() {
                         </PrivateRoute>
                       } />
                       
-                      {/* Route de debug pour les relances automatiques */}
-                      <Route path="/debug-relances" element={
-                        <PrivateRoute>
-                          <Suspense fallback={
-                            <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                              <div className="text-center">
-                                <div className="spinner-border text-primary" role="status">
-                                  <span className="visually-hidden">Chargement de la page...</span>
-                                </div>
-                                <p className="mt-2">Chargement de la page...</p>
-                              </div>
-                            </FlexContainer>
-                          }>
-                            <DebugRelancesPage />
-                          </Suspense>
-                        </PrivateRoute>
-                      } />
                           
                           <Route path="*" element={<Navigate to="/concerts" replace />} />
                         </Route>

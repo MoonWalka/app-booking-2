@@ -13,18 +13,25 @@ const ConcertRow = memo(({
   hasContract, 
   getContractStatus,
   getContractData, // Nouvelle prop pour obtenir les données du contrat
+  hasFacture,
+  getFactureStatus,
+  getFactureData, // Nouvelle prop pour obtenir les données de la facture
   isDatePassed,
   handleViewConcert,
   handleSendForm,
   handleViewForm,
   handleGenerateContract,
-  handleViewContract
+  handleViewContract,
+  handleGenerateFacture,
+  handleViewFacture
 }) => {
   if (!concert) return null;
   
   const statusDetails = getStatusDetails(concert.statut);
   const contractStatus = getContractStatus ? getContractStatus(concert.id) : null;
   const contractData = getContractData ? getContractData(concert.id) : null; // Récupérer les données du contrat
+  const factureStatus = getFactureStatus ? getFactureStatus(concert.id) : null;
+  const factureData = getFactureData ? getFactureData(concert.id) : null; // Récupérer les données de la facture
   const displayDate = formatDateFr(concert.date);
   const isPastDate = isDatePassed(concert.date);
   
@@ -87,11 +94,16 @@ const ConcertRow = memo(({
           hasContract={hasContract}
           contractStatus={contractStatus}
           contractData={contractData} // Passer les données du contrat
+          hasFacture={hasFacture}
+          factureStatus={factureStatus}
+          factureData={factureData} // Passer les données de la facture
           handleViewConcert={handleViewConcert}
           handleSendForm={handleSendForm}
           handleViewForm={handleViewForm}
           handleGenerateContract={handleGenerateContract}
           handleViewContract={handleViewContract}
+          handleGenerateFacture={handleGenerateFacture}
+          handleViewFacture={handleViewFacture}
         />
       </td>
     </tr>

@@ -51,6 +51,7 @@ function DesktopLayout({ children }) {
     { to: "/lieux", icon: "bi-geo-alt", label: "Lieux" },
     { to: "/structures", icon: "bi-building", label: "Structures" },
     { to: "/contrats", icon: "bi-file-earmark-text", label: "Contrats" },
+    { to: "/factures", icon: "bi-receipt", label: "Factures" },
     { to: "/artistes", icon: "bi-music-note-beamed", label: "Artistes" },
     { to: "/parametres", icon: "bi-gear", label: "Paramètres" }
   ];

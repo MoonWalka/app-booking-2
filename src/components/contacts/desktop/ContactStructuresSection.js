@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { db, getDoc, doc } from '@/services/firebase-service';
 import Button from '@ui/Button';
 import styles from './ContactStructuresSection.module.css';
-import Card from '../../../components/ui/Card';
+import Card from '@ui/Card';
 
 /**
  * Composant pour afficher la structure associée à un contact

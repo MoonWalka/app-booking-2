@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import Button from '@ui/Button';
-import { useAuth } from '../../../context/AuthContext.js';
-import { APP_NAME } from '../../../config.js';
+import { useAuth } from '@context/AuthContext.js';
+import { APP_NAME } from '@/config.js';
 import { mapTerm } from '@/utils/terminologyMapping';
 // Import redondant supprimé - les styles sont déjà chargés dans App.js
 
@@ -96,6 +96,12 @@ function MobileLayout() {
               <NavLink to="/contrats" onClick={closeMenu}>
                 <i className="bi bi-file-earmark-text"></i>
                 <span>Contrats</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/factures" onClick={closeMenu}>
+                <i className="bi bi-receipt"></i>
+                <span>Factures</span>
               </NavLink>
             </li>
             <li>

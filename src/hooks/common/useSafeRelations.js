@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../../services/firebase-service';
+import { db } from '@services/firebase-service';
 
 /**
  * Hook sécurisé pour charger les relations sans créer de boucles infinies

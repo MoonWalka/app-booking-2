@@ -1,4 +1,4 @@
-import { db, doc, deleteDoc } from '../../../../services/firebase-service';
+import { db, doc, deleteDoc } from '@services/firebase-service';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**

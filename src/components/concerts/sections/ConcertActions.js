@@ -8,10 +8,15 @@ const ConcertActions = ({
   hasContract,
   contractStatus,
   contractData,
+  hasFacture,
+  factureStatus,
+  factureData,
   handleSendForm,
   handleViewForm,
   handleGenerateContract,
-  handleViewContract
+  handleViewContract,
+  handleGenerateFacture,
+  handleViewFacture
 }) => {
   
   // Fonction pour déterminer le statut du formulaire
@@ -65,6 +70,33 @@ const ConcertActions = ({
   };
   
   const contractStatusInfo = getContractStatus();
+  
+  // Fonction pour déterminer le statut de la facture
+  const getFactureStatus = () => {
+    if (!hasFacture) {
+      // Vérifier si on peut générer une facture (besoin d'un contact et d'une structure au minimum)
+      if (!concert.contactId) {
+        return { status: 'no_contact', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun contact associé' };
+      }
+      if (!concert.structureId) {
+        return { status: 'no_structure', icon: 'bi-building-x', class: 'disabled', tooltip: 'Aucune structure associée' };
+      }
+      return { status: 'not_generated', icon: 'bi-receipt', class: 'notGenerated', tooltip: 'Générer facture' };
+    }
+    
+    // Si on a une facture, vérifier son statut
+    switch (factureStatus) {
+      case 'paid':
+        return { status: 'paid', icon: 'bi-receipt-cutoff', class: 'paid', tooltip: 'Facture payée' };
+      case 'sent':
+        return { status: 'sent', icon: 'bi-receipt', class: 'sent', tooltip: 'Facture envoyée' };
+      case 'generated':
+      default:
+        return { status: 'generated', icon: 'bi-receipt', class: 'generated', tooltip: 'Facture générée' };
+    }
+  };
+  
+  const factureStatusInfo = getFactureStatus();
   
   // Fonction pour gérer le clic sur le bouton formulaire
   const handleFormClick = (e) => {
@@ -121,6 +153,34 @@ const ConcertActions = ({
     }
   };
   
+  // Fonction pour gérer le clic sur le bouton facture
+  const handleFactureClick = (e) => {
+    e.stopPropagation();
+    
+    switch (factureStatusInfo.status) {
+      case 'not_generated':
+        handleGenerateFacture(concert.id);
+        break;
+      case 'generated':
+      case 'sent':
+      case 'paid':
+        // Utiliser l'ID de la facture depuis factureData
+        if (factureData && factureData.id) {
+          handleViewFacture(factureData.id);
+        } else {
+          // Fallback si pas d'ID de facture (ne devrait pas arriver)
+          console.error('ID de la facture non trouvé pour le concert:', concert.id);
+        }
+        break;
+      case 'no_contact':
+      case 'no_structure':
+      default:
+        // Rediriger vers l'édition du concert pour ajouter un contact/structure
+        window.location.href = `/concerts/${concert.id}/edit`;
+        break;
+    }
+  };
+  
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
       {/* Form Button - Toujours affiché avec statut différent */}
@@ -141,6 +201,16 @@ const ConcertActions = ({
         disabled={contractStatusInfo.status === 'no_contact'}
       >
         <i className={contractStatusInfo.icon}></i>
+      </button>
+      
+      {/* Facture Button - Toujours affiché avec statut différent */}
+      <button 
+        className={`${styles.actionButton} ${styles.factureButton} ${styles[factureStatusInfo.class]}`}
+        onClick={handleFactureClick}
+        title={factureStatusInfo.tooltip}
+        disabled={factureStatusInfo.status === 'no_contact' || factureStatusInfo.status === 'no_structure'}
+      >
+        <i className={factureStatusInfo.icon}></i>
       </button>
     </div>
   );

@@ -9,7 +9,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import useGenericValidation from '../validation/useGenericValidation';
-import { utilityCache } from '../../../utils/networkStabilizer';
+import { utilityCache } from '@utils/networkStabilizer';
 
 /**
  * Hook générique pour les formulaires multi-étapes (wizard)

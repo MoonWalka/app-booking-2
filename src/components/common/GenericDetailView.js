@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useSafeRelations from '../../hooks/common/useSafeRelations';
-import { getEntityConfig, getNestedValue } from '../../config/entityConfigurations';
+import { getEntityConfig, getNestedValue } from '@/config/entityConfigurations';
 import Card from '../ui/Card';
 import FormHeader from '../ui/FormHeader';
 import LoadingSpinner from '../ui/LoadingSpinner';

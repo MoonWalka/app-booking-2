@@ -31,6 +31,9 @@ function ConcertsList() {
     hasContract,
     getContractStatus: getContractStatusFromHook,
     getContractData,
+    hasFacture,
+    getFactureStatus,
+    getFactureData,
     refreshData
   } = useConcertListData();
   
@@ -39,7 +42,9 @@ function ConcertsList() {
     handleViewForm,
     handleSendForm,
     handleViewContract,
-    handleGenerateContract
+    handleGenerateContract,
+    handleViewFacture,
+    handleGenerateFacture
   } = useConcertActions();
   
   const {
@@ -443,8 +448,114 @@ function ConcertsList() {
       }
     };
 
+    // Logique métier des factures
+    const getFactureStatusForButton = () => {
+      if (!concert.contactId) {
+        return { 
+          status: 'no_contact', 
+          icon: 'bi-person-x', 
+          color: '#6c757d', 
+          tooltip: 'Aucun contact associé',
+          disabled: true,
+          action: null
+        };
+      }
+      
+      if (!concert.structureId) {
+        return { 
+          status: 'no_structure', 
+          icon: 'bi-building-x', 
+          color: '#6c757d', 
+          tooltip: 'Aucune structure associée',
+          disabled: true,
+          action: null
+        };
+      }
+      
+      if (hasFacture(concert.id)) {
+        const factureStatusValue = getFactureStatus(concert.id);
+        
+        switch (factureStatusValue) {
+          case 'generated':
+            return {
+              status: 'generated',
+              icon: 'bi-receipt',
+              color: '#17a2b8',
+              tooltip: 'Facture générée',
+              disabled: false,
+              action: () => {
+                const factureData = getFactureData(concert.id);
+                if (factureData && factureData.id) {
+                  handleViewFacture(factureData.id);
+                } else {
+                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                }
+              }
+            };
+          case 'sent':
+            return {
+              status: 'sent',
+              icon: 'bi-send',
+              color: '#ffc107',
+              tooltip: 'Facture envoyée',
+              disabled: false,
+              action: () => {
+                const factureData = getFactureData(concert.id);
+                if (factureData && factureData.id) {
+                  handleViewFacture(factureData.id);
+                } else {
+                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                }
+              }
+            };
+          case 'paid':
+            return {
+              status: 'paid',
+              icon: 'bi-check-circle',
+              color: '#28a745',
+              tooltip: 'Facture payée',
+              disabled: false,
+              action: () => {
+                const factureData = getFactureData(concert.id);
+                if (factureData && factureData.id) {
+                  handleViewFacture(factureData.id);
+                } else {
+                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                }
+              }
+            };
+          default:
+            return {
+              status: 'view',
+              icon: 'bi-eye',
+              color: '#6c757d',
+              tooltip: 'Voir facture',
+              disabled: false,
+              action: () => {
+                const factureData = getFactureData(concert.id);
+                if (factureData && factureData.id) {
+                  handleViewFacture(factureData.id);
+                } else {
+                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                }
+              }
+            };
+        }
+      } else {
+        return {
+          status: 'not_generated',
+          icon: 'bi-receipt',
+          color: '#6c757d',
+          tooltip: 'Générer facture',
+          disabled: false,
+          action: () => handleGenerateFacture(concert.id)
+        };
+      }
+    };
+
     const formStatus = getFormStatus();
     const contractStatus = getContractStatus();
+    const factureStatus = getFactureStatusForButton();
 
     const handleFormClick = (e) => {
       e.stopPropagation();
@@ -457,6 +568,13 @@ function ConcertsList() {
       e.stopPropagation();
       if (contractStatus.action && !contractStatus.disabled) {
         contractStatus.action();
+      }
+    };
+
+    const handleFactureClick = (e) => {
+      e.stopPropagation();
+      if (factureStatus.action && !factureStatus.disabled) {
+        factureStatus.action();
       }
     };
 
@@ -498,6 +616,25 @@ function ConcertsList() {
           disabled={contractStatus.disabled}
         >
           <i className={contractStatus.icon}></i> Contrat
+        </button>
+        
+        {/* Bouton Facture */}
+        <button 
+          style={{
+            padding: '6px 12px',
+            border: 'none', 
+            borderRadius: '4px',
+            cursor: factureStatus.disabled ? 'not-allowed' : 'pointer',
+            backgroundColor: factureStatus.color,
+            color: 'white',
+            fontSize: '12px',
+            opacity: factureStatus.disabled ? 0.6 : 1
+          }}
+          onClick={handleFactureClick}
+          title={factureStatus.tooltip}
+          disabled={factureStatus.disabled}
+        >
+          <i className={factureStatus.icon}></i> Facture
         </button>
       </div>
     );

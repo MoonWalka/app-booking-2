@@ -25,6 +25,9 @@ import FormResponsePage from '@/pages/FormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
+import FactureGenerationPage from '@/pages/FactureGenerationPage';
+import FactureDetailsPage from '@/pages/FactureDetailsPage';
+import FacturesPage from '@/pages/FacturesPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 import ContactsList from '@/components/contacts/ContactsList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
@@ -300,6 +303,57 @@ function App() {
                                 </FlexContainer>
                               }>
                                 <ArtistesPage />
+                              </Suspense>
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/factures" element={
+                            <PrivateRoute>
+                              <Suspense fallback={
+                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                                  <div className="text-center">
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Chargement de la page...</span>
+                                    </div>
+                                    <p className="mt-2">Chargement de la page...</p>
+                                  </div>
+                                </FlexContainer>
+                              }>
+                                <FacturesPage />
+                              </Suspense>
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/factures/generate/:concertId" element={
+                            <PrivateRoute>
+                              <Suspense fallback={
+                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                                  <div className="text-center">
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Chargement de la page...</span>
+                                    </div>
+                                    <p className="mt-2">Chargement de la page...</p>
+                                  </div>
+                                </FlexContainer>
+                              }>
+                                <FactureGenerationPage />
+                              </Suspense>
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/factures/:factureId" element={
+                            <PrivateRoute>
+                              <Suspense fallback={
+                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                                  <div className="text-center">
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Chargement de la page...</span>
+                                    </div>
+                                    <p className="mt-2">Chargement de la page...</p>
+                                  </div>
+                                </FlexContainer>
+                              }>
+                                <FactureDetailsPage />
                               </Suspense>
                             </PrivateRoute>
                           } />

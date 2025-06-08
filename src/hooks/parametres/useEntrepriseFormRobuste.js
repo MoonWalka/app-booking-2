@@ -8,7 +8,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useParametres } from '../../context/ParametresContext';
+import { useParametres } from '@context/ParametresContext';
 
 /**
  * Hook autonome pour le formulaire d'entreprise

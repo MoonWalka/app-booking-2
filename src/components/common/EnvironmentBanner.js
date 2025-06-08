@@ -1,5 +1,5 @@
 import React from 'react';
-import { CURRENT_MODE } from '../../services/firebase-service';
+import { CURRENT_MODE } from '@services/firebase-service';
 import './EnvironmentBanner.css';
 
 /**

@@ -1,0 +1,118 @@
+/* ParametresFactures.module.css */
+
+/* Styles pour les paramètres de factures */
+.parametersCard {
+  background-color: var(--tc-bg-default, #ffffff);
+  border: 1px solid var(--tc-border-default, #e5e7eb);
+  border-radius: var(--tc-radius-lg, 0.5rem);
+  padding: var(--tc-space-6, 1.5rem);
+  margin-top: var(--tc-space-4, 1rem);
+}
+
+.parameterSection {
+  margin-bottom: var(--tc-space-6, 1.5rem);
+  padding-bottom: var(--tc-space-4, 1rem);
+  border-bottom: 1px solid var(--tc-border-subtle, #e5e7eb);
+}
+
+.parameterSection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.parameterTitle {
+  font-size: var(--tc-font-size-lg, 1.125rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  color: var(--tc-text-default, #1f2937);
+  margin: 0 0 var(--tc-space-3, 0.75rem) 0;
+  display: flex;
+  align-items: center;
+}
+
+.parameterTitle i {
+  color: var(--tc-color-primary, #3b82f6);
+}
+
+.parameterValue {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  font-size: var(--tc-font-size-lg, 1.125rem);
+  color: var(--tc-color-primary, #3b82f6);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  margin: 0;
+}
+
+.parameterList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.parameterList li {
+  padding: var(--tc-space-2, 0.5rem) 0;
+  color: var(--tc-text-secondary, #6b7280);
+}
+
+.parameterList li strong {
+  color: var(--tc-text-default, #1f2937);
+}
+
+.optionsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-2, 0.5rem);
+}
+
+.optionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1, 0.25rem);
+  padding: var(--tc-space-2, 0.5rem) var(--tc-space-3, 0.75rem);
+  background-color: var(--tc-bg-subtle, #f9fafb);
+  border: 1px solid var(--tc-border-subtle, #e5e7eb);
+  border-radius: var(--tc-radius-full, 9999px);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-muted, #9ca3af);
+}
+
+.optionBadge.optionActive {
+  background-color: var(--tc-color-primary-50, #eff6ff);
+  border-color: var(--tc-color-primary-200, #bfdbfe);
+  color: var(--tc-color-primary-700, #1d4ed8);
+}
+
+.optionBadge i {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+}
+
+.colorPreview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-3, 0.75rem);
+}
+
+.colorItem {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3, 0.75rem);
+}
+
+.colorLabel {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-secondary, #6b7280);
+  min-width: 150px;
+}
+
+.colorSwatch {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--tc-radius-md, 0.375rem);
+  border: 1px solid var(--tc-border-default, #d1d5db);
+  box-shadow: var(--tc-shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+}
+
+.colorCode {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-default, #1f2937);
+}

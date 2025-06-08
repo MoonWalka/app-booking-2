@@ -3,8 +3,8 @@ import { Card, Button, Alert, Form, ProgressBar, Badge, ListGroup, Tab, Tabs } f
 import { FaSync, FaCloudUploadAlt, FaCloudDownloadAlt, FaSave, FaUpload, FaClock } from 'react-icons/fa';
 import FlexContainer from '@/components/ui/FlexContainer';
 import { toast } from 'react-toastify';
-import * as syncService from '../../../services/syncService';
-import { IS_LOCAL_MODE, CURRENT_MODE } from '../../../services/firebase-service';
+import * as syncService from '@services/syncService';
+import { IS_LOCAL_MODE, CURRENT_MODE } from '@services/firebase-service';
 import styles from './SyncManager.module.css';
 
 /**

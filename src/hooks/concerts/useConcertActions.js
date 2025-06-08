@@ -31,12 +31,24 @@ export const useConcertActions = () => {
     navigate(`/contrats/generate/${concertId}`);
   };
   
+  // Function to navigate to facture page
+  const handleViewFacture = (factureId) => {
+    navigate(`/factures/${factureId}`);
+  };
+  
+  // Function to generate a new facture
+  const handleGenerateFacture = (concertId) => {
+    navigate(`/factures/generate/${concertId}`);
+  };
+  
   return {
     handleViewConcert,
     handleViewForm,
     handleSendForm,
     handleViewContract,
-    handleGenerateContract
+    handleGenerateContract,
+    handleViewFacture,
+    handleGenerateFacture
   };
 };
 

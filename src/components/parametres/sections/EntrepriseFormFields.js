@@ -45,6 +45,9 @@ const EntrepriseFormFields = ({ formData, handleChange, addressSearch }) => {
               onChange={handleChange}
               placeholder="https://example.com/logo.png"
             />
+            <Form.Text className="text-muted">
+              L'URL de votre logo sera utilisée dans les factures
+            </Form.Text>
           </Form.Group>
         </Col>
       </Row>

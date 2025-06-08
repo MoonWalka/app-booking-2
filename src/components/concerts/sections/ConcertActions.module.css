@@ -48,6 +48,14 @@
   background-color: rgba(var(--tc-color-secondary-rgb), 0.1);
 }
 
+.factureButton {
+  color: var(--tc-color-info);
+}
+
+.factureButton:hover {
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+}
+
 /* Styles responsive standardisés */
 @media (max-width: 576px) {
   .actionsContainer {
@@ -306,4 +314,65 @@
 
 .contractButton .text-danger {
   color: var(--tc-color-error) !important;
+}
+
+/* =============================
+   STATUTS DU BOUTON FACTURE
+   ============================= */
+
+/* Facture non générée */
+.factureButton.notGenerated {
+  background-color: rgba(108, 117, 125, 0.1);
+  color: #6c757d;
+}
+
+.factureButton.notGenerated:hover {
+  background-color: rgba(108, 117, 125, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Facture générée */
+.factureButton.generated {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.factureButton.generated:hover {
+  background-color: rgba(255, 193, 7, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Facture envoyée */
+.factureButton.sent {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.factureButton.sent:hover {
+  background-color: rgba(13, 110, 253, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Facture payée */
+.factureButton.paid {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.factureButton.paid:hover {
+  background-color: rgba(25, 135, 84, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Bouton désactivé (pas de contact ou structure) */
+.factureButton.disabled {
+  background-color: rgba(108, 117, 125, 0.05);
+  color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.factureButton.disabled:hover {
+  background-color: rgba(108, 117, 125, 0.05);
+  transform: none;
 }

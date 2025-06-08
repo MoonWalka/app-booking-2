@@ -1,0 +1,463 @@
+/* FactureTemplateEditor.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--tc-bg-default, #ffffff);
+}
+
+/* =============================
+   HEADER
+   ============================= */
+.header {
+  border-bottom: 1px solid var(--tc-border-default, #e5e7eb);
+  background-color: var(--tc-bg-subtle, #f9fafb);
+  padding: var(--tc-space-4, 1rem);
+  flex-shrink: 0;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: var(--tc-font-size-xl, 1.25rem);
+  font-weight: var(--tc-font-weight-bold, 700);
+  color: var(--tc-text-default, #1f2937);
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--tc-space-3, 0.75rem);
+}
+
+/* =============================
+   HEADER MODAL COMPACT
+   ============================= */
+.modalContainer {
+  height: 100%;
+}
+
+.modalHeader {
+  border-bottom: 1px solid var(--tc-border-default, #e5e7eb);
+  background-color: var(--tc-bg-default, #ffffff);
+  padding: var(--tc-space-3, 0.75rem) var(--tc-space-4, 1rem);
+  flex-shrink: 0;
+}
+
+.modalHeaderContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: none;
+  margin: 0;
+}
+
+.modalTitle {
+  font-size: var(--tc-font-size-lg, 1.125rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  color: var(--tc-text-default, #1f2937);
+  margin: 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--tc-space-2, 0.5rem);
+}
+
+/* =============================
+   FORMULAIRE
+   ============================= */
+.form {
+  flex: 1;
+  padding: var(--tc-space-6, 1.5rem);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.formSection {
+  margin-bottom: var(--tc-space-6, 1.5rem);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: var(--tc-space-4, 1rem);
+  align-items: end;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-2, 0.5rem);
+}
+
+.label {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+  color: var(--tc-text-secondary, #6b7280);
+}
+
+.input,
+.select {
+  padding: var(--tc-space-3, 0.75rem);
+  border: 1px solid var(--tc-border-default, #d1d5db);
+  border-radius: var(--tc-radius-md, 0.375rem);
+  font-size: var(--tc-font-size-base, 1rem);
+  color: var(--tc-text-default, #1f2937);
+  background-color: var(--tc-bg-default, #ffffff);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--tc-color-primary, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* =============================
+   VARIABLES
+   ============================= */
+.variablesSection {
+  margin-bottom: var(--tc-space-4, 1rem);
+  background-color: var(--tc-bg-subtle, #f9fafb);
+  border-radius: var(--tc-radius-lg, 0.5rem);
+  border: 1px solid var(--tc-border-subtle, #e5e7eb);
+  overflow: hidden;
+}
+
+.variablesToggle {
+  border-bottom: 1px solid var(--tc-border-subtle, #e5e7eb);
+}
+
+.variablesToggleButton {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--tc-space-4, 1rem);
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3, 0.75rem);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+}
+
+.variablesToggleButton:hover {
+  background-color: var(--tc-bg-hover, #f3f4f6);
+}
+
+.variablesToggleButton i {
+  color: var(--tc-color-primary, #3b82f6);
+  font-size: var(--tc-font-size-lg, 1.125rem);
+  flex-shrink: 0;
+}
+
+.variablesHint {
+  margin-left: auto;
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-text-muted, #9ca3af);
+}
+
+.variablesContent {
+  padding: var(--tc-space-4, 1rem);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.variablesTitle {
+  font-size: var(--tc-font-size-base, 1rem);
+  font-weight: var(--tc-font-weight-semibold, 600);
+  color: var(--tc-text-default, #1f2937);
+  margin: 0;
+}
+
+.variablesCategories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--tc-space-4, 1rem);
+}
+
+.variableCategory {
+  background-color: var(--tc-bg-default, #ffffff);
+  border: 1px solid var(--tc-border-default, #d1d5db);
+  border-radius: var(--tc-radius-md, 0.375rem);
+  padding: var(--tc-space-3, 0.75rem);
+}
+
+.categoryTitle {
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+  color: var(--tc-color-primary, #3b82f6);
+  margin: 0 0 var(--tc-space-2, 0.5rem) 0;
+  padding-bottom: var(--tc-space-1, 0.25rem);
+  border-bottom: 1px solid var(--tc-border-subtle, #e5e7eb);
+}
+
+.variablesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-1, 0.25rem);
+}
+
+.variableButton {
+  background-color: var(--tc-bg-default, #ffffff);
+  border: 1px solid var(--tc-border-default, #d1d5db);
+  border-radius: var(--tc-radius-md, 0.375rem);
+  padding: var(--tc-space-1, 0.25rem) var(--tc-space-2, 0.5rem);
+  font-size: var(--tc-font-size-xs, 0.75rem);
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  color: var(--tc-color-primary, #3b82f6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.variableButton:hover {
+  background-color: var(--tc-color-primary-50, #eff6ff);
+  border-color: var(--tc-color-primary, #3b82f6);
+  transform: translateY(-1px);
+}
+
+.variableButton:active {
+  transform: translateY(0);
+}
+
+/* =============================
+   ÉDITEUR
+   ============================= */
+.editorSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-3, 0.75rem);
+  flex: 1;
+}
+
+.editorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tc-space-2, 0.5rem);
+}
+
+.cleanButton {
+  background-color: var(--tc-color-primary-50, #eff6ff);
+  border: 1px solid var(--tc-color-primary-200, #bfdbfe);
+  border-radius: var(--tc-radius-md, 0.375rem);
+  padding: var(--tc-space-2, 0.5rem) var(--tc-space-3, 0.75rem);
+  font-size: var(--tc-font-size-sm, 0.875rem);
+  color: var(--tc-color-primary-700, #1d4ed8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1, 0.25rem);
+  font-weight: var(--tc-font-weight-medium, 500);
+}
+
+.cleanButton:hover {
+  background-color: var(--tc-color-primary-100, #dbeafe);
+  border-color: var(--tc-color-primary-300, #93c5fd);
+  transform: translateY(-1px);
+}
+
+.cleanButton:active {
+  transform: translateY(0);
+}
+
+.cleanButton i {
+  color: var(--tc-color-primary-600, #2563eb);
+}
+
+.editorContainer {
+  flex: 1;
+  min-height: 400px;
+  border-radius: var(--tc-radius-lg, 0.5rem);
+  overflow: hidden;
+  border: 1px solid var(--tc-border-default, #d1d5db);
+}
+
+.editor {
+  height: 100% !important;
+  min-height: 400px;
+}
+
+/* Personnalisation de l'éditeur Quill */
+.editor :global(.ql-toolbar) {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid var(--tc-border-default, #d1d5db);
+  background-color: var(--tc-bg-subtle, #f9fafb);
+}
+
+.editor :global(.ql-container) {
+  border: none;
+  font-size: var(--tc-font-size-base, 1rem);
+  line-height: 1.6;
+}
+
+.editor :global(.ql-editor) {
+  padding: var(--tc-space-4, 1rem);
+  min-height: 350px;
+  font-family: var(--tc-font-family, system-ui);
+}
+
+.editor :global(.ql-editor.ql-blank::before) {
+  color: var(--tc-text-muted, #9ca3af);
+  font-style: italic;
+}
+
+/* =============================
+   RESPONSIVE
+   ============================= */
+@media (max-width: 768px) {
+  .headerContent {
+    flex-direction: column;
+    gap: var(--tc-space-3, 0.75rem);
+    align-items: stretch;
+  }
+
+  .headerActions {
+    justify-content: stretch;
+  }
+
+  .modalHeader {
+    padding: var(--tc-space-2, 0.5rem) var(--tc-space-3, 0.75rem);
+  }
+
+  .modalHeaderContent {
+    flex-direction: column;
+    gap: var(--tc-space-2, 0.5rem);
+    align-items: stretch;
+  }
+
+  .modalTitle {
+    font-size: var(--tc-font-size-base, 1rem);
+    text-align: center;
+  }
+
+  .modalActions {
+    justify-content: stretch;
+  }
+
+  .form {
+    padding: var(--tc-space-4, 1rem);
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: var(--tc-space-3, 0.75rem);
+  }
+
+  .typeDescription {
+    font-size: var(--tc-font-size-2xs, 0.625rem);
+    padding: var(--tc-space-1, 0.25rem) var(--tc-space-2, 0.5rem);
+  }
+
+  .variablesToggleButton {
+    padding: var(--tc-space-3, 0.75rem);
+    gap: var(--tc-space-2, 0.5rem);
+  }
+
+  .variablesContent {
+    padding: var(--tc-space-3, 0.75rem);
+  }
+
+  .variablesCategories {
+    grid-template-columns: 1fr;
+    gap: var(--tc-space-3, 0.75rem);
+  }
+
+  .variableCategory {
+    padding: var(--tc-space-2, 0.5rem);
+  }
+
+  .categoryTitle {
+    font-size: var(--tc-font-size-xs, 0.75rem);
+  }
+
+  .variablesList {
+    gap: var(--tc-space-1, 0.25rem);
+  }
+
+  .variableButton {
+    font-size: var(--tc-font-size-2xs, 0.625rem);
+    padding: var(--tc-space-1, 0.25rem);
+  }
+
+  .editorContainer {
+    min-height: 300px;
+  }
+
+  .editor {
+    min-height: 300px;
+  }
+
+  .editor :global(.ql-editor) {
+    min-height: 250px;
+    padding: var(--tc-space-3, 0.75rem);
+  }
+}
+
+/* =============================
+   ÉTATS
+   ============================= */
+.input:invalid,
+.select:invalid {
+  border-color: var(--tc-color-error, #ef4444);
+}
+
+.input[disabled],
+.select[disabled] {
+  background-color: var(--tc-bg-muted, #f3f4f6);
+  color: var(--tc-text-muted, #9ca3af);
+  cursor: not-allowed;
+}
+
+.typeDescription {
+  margin-top: var(--tc-space-2, 0.5rem);
+  padding: var(--tc-space-2, 0.5rem);
+  background-color: var(--tc-color-primary-50, #eff6ff);
+  border: 1px solid var(--tc-color-primary-200, #bfdbfe);
+  border-radius: var(--tc-radius-md, 0.375rem);
+  font-size: var(--tc-font-size-xs, 0.75rem);
+  color: var(--tc-color-primary-700, #1d4ed8);
+  line-height: 1.4;
+}
+
+/* Amélioration de la lisibilité */
+.editor :global(.ql-editor h1),
+.editor :global(.ql-editor h2),
+.editor :global(.ql-editor h3) {
+  color: var(--tc-text-default, #1f2937);
+  margin-top: var(--tc-space-4, 1rem);
+  margin-bottom: var(--tc-space-2, 0.5rem);
+}
+
+.editor :global(.ql-editor p) {
+  margin-bottom: var(--tc-space-3, 0.75rem);
+  color: var(--tc-text-default, #374151);
+}
+
+.editor :global(.ql-editor strong) {
+  font-weight: var(--tc-font-weight-bold, 700);
+}

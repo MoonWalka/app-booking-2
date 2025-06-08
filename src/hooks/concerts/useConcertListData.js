@@ -37,6 +37,7 @@ export const useConcertListData = () => {
   const [concertsWithForms, setConcertsWithForms] = useState([]);
   const [unvalidatedForms, setUnvalidatedForms] = useState([]);
   const [concertsWithContracts, setConcertsWithContracts] = useState({});
+  const [concertsWithFactures, setConcertsWithFactures] = useState({});
   const [lastUpdate, setLastUpdate] = useState(Date.now());
   const [hasMore, setHasMore] = useState(true);
   
@@ -405,19 +406,39 @@ export const useConcertListData = () => {
           
           setConcertsWithContracts(contractsMap);
           
-          // Log de performance pour le chargement des formulaires et contrats
+          // 3. Récupération des factures UNIQUEMENT pour les concerts actuels
+          const facturesRef = collection(db, 'organizations', currentOrganization.id, 'factures');
+          const facturesQuery = query(
+            facturesRef, 
+            where('concertId', 'in', concertIds)
+          );
+          const facturesSnapshot = await getDocs(facturesQuery);
+          
+          const facturesMap = {};
+          
+          facturesSnapshot.docs.forEach(doc => {
+            const facture = { id: doc.id, ...doc.data() };
+            if (facture.concertId) {
+              facturesMap[facture.concertId] = facture;
+            }
+          });
+          
+          setConcertsWithFactures(facturesMap);
+          
+          // Log de performance pour le chargement des formulaires, contrats et factures
           const formsEndTime = performance.now();
-          logger.performance("Requête formulaires et contrats", formsEndTime - formsStartTime);
+          logger.performance("Requête formulaires, contrats et factures", formsEndTime - formsStartTime);
           
         } catch (err) {
           logger.error('Erreur lors du chargement des formulaires et contrats:', err);
           // Ne pas bloquer le chargement des concerts en cas d'erreur sur les formulaires/contrats
         }
       } else {
-        // Pas de concerts, donc pas de formulaires ni de contrats
+        // Pas de concerts, donc pas de formulaires, contrats ni factures
         setConcertsWithForms([]);
         setUnvalidatedForms([]);
         setConcertsWithContracts({});
+        setConcertsWithFactures({});
       }
       
       // Mettre à jour la dernière date de mise à jour
@@ -515,6 +536,22 @@ export const useConcertListData = () => {
     return concertsWithContracts[concertId] || null;
   }, [concertsWithContracts]);
 
+  // Fonction pour vérifier si un concert a une facture associée
+  const hasFacture = useCallback((concertId) => {
+    return concertsWithFactures[concertId] !== undefined;
+  }, [concertsWithFactures]);
+
+  // Fonction pour obtenir le statut d'une facture
+  const getFactureStatus = useCallback((concertId) => {
+    const facture = concertsWithFactures[concertId];
+    return facture ? facture.status : null;
+  }, [concertsWithFactures]);
+
+  // Fonction pour obtenir les données complètes d'une facture
+  const getFactureData = useCallback((concertId) => {
+    return concertsWithFactures[concertId] || null;
+  }, [concertsWithFactures]);
+
   return {
     concerts,
     loading,
@@ -523,6 +560,7 @@ export const useConcertListData = () => {
     concertsWithForms,
     unvalidatedForms,
     concertsWithContracts,
+    concertsWithFactures,
     lastUpdate,
     hasMore,
     loadMore: () => {
@@ -537,6 +575,9 @@ export const useConcertListData = () => {
     hasContract,
     getContractStatus,
     getContractData, // Nouvelle fonction pour obtenir les données du contrat
+    hasFacture,
+    getFactureStatus,
+    getFactureData, // Nouvelle fonction pour obtenir les données de la facture
     // NOUVEAU: Fonctions du cache hybride
     getCacheStats,
     clearCache,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, limit  } from '@/services/firebase-service';
-import { db } from '../../services/firebase-service';
+import { db } from '@services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import styles from './EntitySelector.module.css';
 

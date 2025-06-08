@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { APP_NAME } from '../../config.js';
+import { APP_NAME } from '@/config.js';
 // import { mapTerm } from '@/utils/terminologyMapping'; // Non utilisé dans ce composant
 import styles from './Sidebar.module.css';
-import UnifiedDebugDashboard from '@/components/debug/UnifiedDebugDashboard';
 
 const Sidebar = () => {
-  const [showDebug, setShowDebug] = useState(false);
   console.log("Le composant Sidebar est rendu"); // Ce log devrait apparaître dans la console
   return (
     <div className={styles.sidebar}>
@@ -58,28 +56,19 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/factures" className={window.location.pathname.includes('/factures') && !window.location.pathname.includes('/generate') ? styles.active : ''}>
+              <i className="bi bi-receipt"></i>
+              Factures
+            </Link>
+          </li>
+          <li>
             <Link to="/parametres" className={window.location.pathname.includes('/parametres') ? styles.active : ''}>
               <i className="bi bi-gear"></i>
               Paramètres
             </Link>
           </li>
         </ul>
-        
-        {/* Section Debug */}
-        <div className={styles.debugSection}>
-          <button 
-            className={styles.debugButton}
-            onClick={() => setShowDebug(!showDebug)}
-            title="Outils de debug et tests"
-          >
-            <i className="bi bi-bug"></i>
-            Debug & Tests
-          </button>
-        </div>
       </div>
-      
-      {/* Dashboard de debug */}
-      {showDebug && <UnifiedDebugDashboard />}
     </div>
   );
 };

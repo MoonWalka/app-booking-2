@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { formatDate } from '@/utils/dateUtils';
 import Button from '@ui/Button';
 import styles from './ContactConcertsSection.module.css';
-import Card from '../../../components/ui/Card';
+import Card from '@ui/Card';
 
 /**
  * Composant pour afficher les concerts associés à un contact

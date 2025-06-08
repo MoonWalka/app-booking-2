@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { APP_NAME } from '../../config.js';
+import { APP_NAME } from '@/config.js';
 import { mapTerm } from '@/utils/terminologyMapping';
 import RelancesNotification from '@/components/relances/RelancesNotification';
 import styles from './Navbar.module.css';

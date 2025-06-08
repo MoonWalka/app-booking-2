@@ -22,12 +22,12 @@ const EntrepriseSubmitActions = ({ handleSubmit, loading }) => {
         {loading ? (
           <>
             <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            Saving...
+            Enregistrement...
           </>
         ) : (
           <>
             <i className="bi bi-check-circle me-2"></i>
-            Save Company Information
+            Enregistrer les informations
           </>
         )}
       </Button>

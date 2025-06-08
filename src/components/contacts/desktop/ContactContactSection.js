@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ContactSection.module.css';
-import Card from '../../../components/ui/Card';
+import Card from '@ui/Card';
 
 const ContactSection = ({ 
   contact, 

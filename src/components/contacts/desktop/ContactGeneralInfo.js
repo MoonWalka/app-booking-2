@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ContactGeneralInfo.module.css';
-import Card from '../../../components/ui/Card';
+import Card from '@ui/Card';
 
 const ContactGeneralInfo = ({ contact }) => {
   // Contenu des informations générales

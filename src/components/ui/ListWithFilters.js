@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/services/firebase-service';
-import { db } from '../../services/firebase-service';
+import { db } from '@services/firebase-service';
 import { useResponsive } from '@/hooks/common';
 import StatsCards from './StatsCards';
 import styles from './ListWithFilters.module.css';

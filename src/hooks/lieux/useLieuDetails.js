@@ -121,18 +121,32 @@ const useLieuDetails = (id, locationParam) => {
         
         // Méthode 2bis: NOUVELLE - Recherche contact qui contient ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 2bis: Recherche contact qui contient ce lieu');
+        
+        // Récupérer l'organizationId depuis l'organisation courante
+        const { useOrganization } = await import('@/context/OrganizationContext');
+        const orgContext = useOrganization();
+        const currentOrganization = orgContext?.currentOrganization;
+        
+        const contactsConstraints = [where('lieuxIds', 'array-contains', lieuData.id)];
+        if (currentOrganization?.id) {
+          contactsConstraints.push(where('organizationId', '==', currentOrganization.id));
+        }
         const contactsQuery = query(
           collection(db, 'contacts'),
-          where('lieuxIds', 'array-contains', lieuData.id)
+          ...contactsConstraints
         );
         
         let contactsSnapshot = await getDocs(contactsQuery);
         
         // Fallback: essayer avec lieuxAssocies
         if (contactsSnapshot.empty) {
+          const contactsConstraints2 = [where('lieuxAssocies', 'array-contains', lieuData.id)];
+          if (currentOrganization?.id) {
+            contactsConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          }
           const contactsQuery2 = query(
             collection(db, 'contacts'),
-            where('lieuxAssocies', 'array-contains', lieuData.id)
+            ...contactsConstraints2
           );
           contactsSnapshot = await getDocs(contactsQuery2);
         }
@@ -146,9 +160,13 @@ const useLieuDetails = (id, locationParam) => {
         
         // Méthode 3: NOUVELLE - Trouver le contact via les concerts de ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 3: Recherche contact via concerts du lieu');
+        const concertsConstraints = [where('lieuId', '==', lieuData.id)];
+        if (currentOrganization?.id) {
+          concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
+        }
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('lieuId', '==', lieuData.id)
+          ...concertsConstraints
         );
         
         const concertsSnapshot = await getDocs(concertsQuery);
@@ -215,9 +233,19 @@ const useLieuDetails = (id, locationParam) => {
         
         // Méthode 3: NOUVELLE - Via le contact des concerts de ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 3: Recherche structure via contact des concerts');
+        
+        // Récupérer l'organizationId depuis l'organisation courante
+        const { useOrganization } = await import('@/context/OrganizationContext');
+        const orgContext = useOrganization();
+        const currentOrganization = orgContext?.currentOrganization;
+        
+        const concertsConstraints = [where('lieuId', '==', lieuData.id)];
+        if (currentOrganization?.id) {
+          concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
+        }
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('lieuId', '==', lieuData.id)
+          ...concertsConstraints
         );
         
         const concertsSnapshot = await getDocs(concertsQuery);

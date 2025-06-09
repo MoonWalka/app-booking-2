@@ -11,7 +11,6 @@ import ParametresExport from '../components/parametres/ParametresExport';
 import ParametresOrganisations from '../components/parametres/ParametresOrganisations';
 import ParametresFactures from '../components/parametres/ParametresFactures';
 import SyncManager from '../components/parametres/sync/SyncManager';
-import OrganizationIdDebug from '../components/debug/OrganizationIdDebug';
 import OrganizationIdTest from '../components/debug/OrganizationIdTest';
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
@@ -156,7 +155,10 @@ const ParametresPage = () => {
       case 'sync':
         return <SyncManager />;
       case 'debug':
-        return <OrganizationIdDebug />;
+        return <div className="alert alert-info">
+          <h5>🔍 Panneau de debug déplacé</h5>
+          <p>Le panneau de debug OrganizationId est maintenant disponible via le bouton flottant en bas à droite de l'écran (mode développement uniquement).</p>
+        </div>;
       case 'test-organizationid':
         return <OrganizationIdTest />;
       case 'contrats':

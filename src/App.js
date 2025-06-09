@@ -42,6 +42,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { installGlobalFixer } from '@/utils/fixOrganizationIds';
 import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
+import DebugController from '@/components/debug/DebugController';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -413,9 +414,13 @@ function App() {
                   </Suspense>
                   </ModalProvider>
                 </ParametresProvider>
+                
+                {/* 🔍 Panneau de debug flottant - UNIQUEMENT EN DÉVELOPPEMENT */}
+                {process.env.NODE_ENV === 'development' && <DebugController />}
               </OrganizationProvider>
             </AuthProvider>
           </Router>
+          
           <ToastContainer 
             position="top-right"
             autoClose={3000}

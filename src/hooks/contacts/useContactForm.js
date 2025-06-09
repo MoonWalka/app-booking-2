@@ -9,7 +9,7 @@
  * spécifiques d'ici novembre 2025.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
@@ -41,6 +41,7 @@ export const useContactForm = (contactId) => {
   const validateContactForm = useCallback((data) => {
     const errors = {};
     
+    // Validation sur les champs imbriqués pour la compatibilité avec le formulaire
     if (!data.contact?.nom) {
       errors['contact.nom'] = 'Le nom du contact est obligatoire';
     }
@@ -64,26 +65,34 @@ export const useContactForm = (contactId) => {
 
   // Fonction de transformation des données avant sauvegarde
   const transformContactData = useCallback((data) => {
-    // S'assurer que les objets imbriqués existent toujours
+    // Aplatir la structure pour éviter l'imbrication
     const transformedData = {
-      ...data,
-      contact: data.contact || {
-        nom: '',
-        prenom: '',
-        fonction: '',
-        email: '',
-        telephone: ''
-      },
-      structure: data.structure || {
-        raisonSociale: '',
-        type: '',
-        adresse: '',
-        codePostal: '',
-        ville: '',
-        pays: 'France',
-        siret: '',
-        tva: ''
-      },
+      // Extraire les champs du contact au niveau racine
+      nom: data.contact?.nom || '',
+      prenom: data.contact?.prenom || '',
+      fonction: data.contact?.fonction || '',
+      email: data.contact?.email || '',
+      telephone: data.contact?.telephone || '',
+      
+      // Conserver les informations de structure
+      structureId: data.structureId || '',
+      structureNom: data.structureNom || data.structure?.raisonSociale || '',
+      
+      // Informations de structure si pas de structureId (nouvelle structure)
+      ...((!data.structureId && data.structure) ? {
+        structureInfo: {
+          raisonSociale: data.structure.raisonSociale || '',
+          type: data.structure.type || '',
+          adresse: data.structure.adresse || '',
+          codePostal: data.structure.codePostal || '',
+          ville: data.structure.ville || '',
+          pays: data.structure.pays || 'France',
+          siret: data.structure.siret || '',
+          tva: data.structure.tva || ''
+        }
+      } : {}),
+      
+      // Autres champs
       concertsAssocies: data.concertsAssocies || [],
       // Ajout de la date de mise à jour
       updatedAt: new Date()
@@ -94,12 +103,17 @@ export const useContactForm = (contactId) => {
   }, []);
   
   // Callbacks pour les opérations réussies ou en erreur
-  const onSuccessCallback = useCallback((savedId, savedData) => {
+  const onSuccessCallback = useCallback((savedData) => {
+    // savedData contient maintenant les champs aplatis
+    const contactName = savedData.nom || '';
     const message = isNewContact
-      ? `Le contact ${savedData.contact?.nom || ''} a été créé avec succès`
-      : `Le contact ${savedData.contact?.nom || ''} a été mis à jour avec succès`;
+      ? `Le contact ${contactName} a été créé avec succès`
+      : `Le contact ${contactName} a été mis à jour avec succès`;
     
     showSuccessToast(message);
+    
+    // Récupérer l'ID depuis savedData
+    const savedId = savedData.id;
     
     // Éviter la boucle infinie : ne pas naviguer si savedId est "nouveau"
     if (savedId && savedId !== 'nouveau') {
@@ -120,6 +134,43 @@ export const useContactForm = (contactId) => {
     
     showErrorToast(message);
   }, [isNewContact]);
+  
+  // Fonction pour transformer les données aplaties en structure imbriquée pour le formulaire
+  const transformLoadedData = useCallback((data) => {
+    if (!data) return null;
+    
+    // Si les données sont déjà dans la structure imbriquée, les retourner telles quelles
+    if (data.contact && typeof data.contact === 'object') {
+      return data;
+    }
+    
+    // Transformer les données aplaties en structure imbriquée
+    return {
+      contact: {
+        nom: data.nom || '',
+        prenom: data.prenom || '',
+        fonction: data.fonction || '',
+        email: data.email || '',
+        telephone: data.telephone || ''
+      },
+      structure: data.structureInfo || {
+        raisonSociale: '',
+        type: '',
+        adresse: '',
+        codePostal: '',
+        ville: '',
+        pays: 'France',
+        siret: '',
+        tva: ''
+      },
+      structureId: data.structureId || '',
+      structureNom: data.structureNom || '',
+      concertsAssocies: data.concertsAssocies || [],
+      // Conserver l'ID et l'organizationId
+      id: data.id,
+      organizationId: data.organizationId
+    };
+  }, []);
   
   // Utilisation directe du hook générique avec configuration spécifique aux contacts
   const formHook = useGenericEntityForm({
@@ -163,6 +214,17 @@ export const useContactForm = (contactId) => {
   });
   
   // Extension du hook avec des fonctionnalités spécifiques aux contacts
+  
+  // Effet pour transformer les données chargées
+  useEffect(() => {
+    if (formHook.formData && formHook.formData.id && !formHook.formData.contact) {
+      // Les données sont aplaties, les transformer
+      const transformedData = transformLoadedData(formHook.formData);
+      if (transformedData) {
+        formHook.setFormData(transformedData);
+      }
+    }
+  }, [formHook.formData?.id]); // Ne déclencher que quand l'ID change
   
   // Fonction pour sélectionner/désélectionner la structure
   const handleSelectStructure = useCallback((structure) => {

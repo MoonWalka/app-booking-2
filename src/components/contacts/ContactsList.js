@@ -51,14 +51,20 @@ function ContactsList() {
       field: 'telephone',
       sortable: false,
       width: '15%',
+      render: (contact) => contact.telephone || '—',
     },
     {
-      id: 'organisation',
-      label: 'Organisation',
-      field: 'organisation',
+      id: 'createdAt',
+      label: 'Créé le',
+      field: 'createdAt',
       sortable: true,
       width: '20%',
-      render: (contact) => contact.organisation || '-',
+      render: (contact) => {
+        if (contact.createdAt?.toDate) {
+          return contact.createdAt.toDate().toLocaleDateString('fr-FR');
+        }
+        return '-';
+      },
     },
   ];
 

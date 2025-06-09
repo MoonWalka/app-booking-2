@@ -164,10 +164,19 @@ const ListWithFilters = ({
       const queryConditions = [];
       
       // IMPORTANT: Toujours filtrer par organizationId pour la sécurité
+      console.log('🔍 DEBUG ListWithFilters:', {
+        entityType: entityType,
+        currentOrganization: currentOrganization,
+        currentOrganizationId: currentOrganization?.id,
+        localStorageId: localStorage.getItem('currentOrganizationId')
+      });
+      
       if (currentOrganization?.id) {
         queryConditions.push(where('organizationId', '==', currentOrganization.id));
+        console.log('✅ Filtre organizationId appliqué:', currentOrganization.id);
       } else {
         console.warn('⚠️ Pas d\'organisation courante - impossible de filtrer les données');
+        console.log('🔍 DEBUG: currentOrganization complet:', currentOrganization);
         setItems([]);
         setLoading(false);
         return;
@@ -215,6 +224,44 @@ const ListWithFilters = ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      // 🔍 DEBUG: Voir la structure des données
+      if (loadedItems.length > 0) {
+        console.log('🔍 DEBUG Structure du premier élément:', {
+          entityType: entityType,
+          firstItem: loadedItems[0],
+          itemKeys: Object.keys(loadedItems[0])
+        });
+        
+        // 🔍 DEBUG DÉTAILLÉ: Afficher les données directement
+        console.log('📋 DONNÉES COMPLÈTES:', {
+          entityType: entityType,
+          totalItems: loadedItems.length,
+          querySnapshot: querySnapshot.docs.length,
+          firstItemData: {
+            id: loadedItems[0].id,
+            nom: loadedItems[0].nom,
+            prenom: loadedItems[0].prenom, 
+            email: loadedItems[0].email,
+            telephone: loadedItems[0].telephone,
+            organisation: loadedItems[0].organisation,
+            organizationId: loadedItems[0].organizationId,
+            structureId: loadedItems[0].structureId,
+            allFields: Object.keys(loadedItems[0]),
+            fullData: loadedItems[0]
+          }
+        });
+        
+        // DEBUG SPÉCIAL: Comparer concerts vs contacts
+        if (entityType === 'contacts') {
+          console.log('🎯 DEBUG CONTACTS vs CONCERTS:', {
+            contactsCount: loadedItems.length,
+            organizationId: currentOrganization?.id,
+            sampleContact: loadedItems[0],
+            queryUsed: 'where(organizationId, ==, ' + currentOrganization?.id + ')'
+          });
+        }
+      }
       
       if (isLoadMore) {
         setItems(prev => [...prev, ...loadedItems]);
@@ -280,56 +327,79 @@ const ListWithFilters = ({
   };
 
   // Rendu du tableau desktop
-  const renderDesktopTable = () => (
-    <div className={styles.tableWrapper}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {columns.map(column => (
-              <th
-                key={column.id}
-                className={`${column.sortable ? styles.sortable : ''} ${getHeaderClass(column)}`}
-                onClick={column.sortable ? () => handleSort(column.field) : undefined}
-                style={{ width: column.width }}
-              >
-                <div className={styles.headerContent}>
-                  <span>{column.label}</span>
-                  {column.sortable && sort.field === column.field && (
-                    <i className={`bi bi-arrow-${sort.direction === 'asc' ? 'up' : 'down'} ${styles.sortIcon}`}></i>
-                  )}
-                </div>
-              </th>
-            ))}
-            {renderActions && <th className={styles.headerActions} style={{ width: '120px' }}>Actions</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {items.map(item => (
-            <tr
-              key={item.id}
-              className={styles.tableRow}
-              onClick={onRowClick ? () => onRowClick(item) : undefined}
-              style={{ cursor: onRowClick ? 'pointer' : 'default' }}
-            >
-              {columns.map(column => {
-                const value = item[column.field];
-                return (
-                  <td key={column.id} className={getCellClass(column, value)}>
-                    {column.render ? column.render(item) : value || '-'}
-                  </td>
-                );
-              })}
-              {renderActions && (
-                <td className={`${styles.tableCell} ${styles.cellActions}`}>
-                  {renderActions(item)}
-                </td>
-              )}
+  const renderDesktopTable = () => {
+    console.log('🖥️ DEBUG renderDesktopTable appelé:', { 
+      itemsCount: items.length, 
+      columnsCount: columns.length,
+      firstItemFields: items.length > 0 ? Object.keys(items[0]) : []
+    });
+    
+    return (
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              {columns.map(column => (
+                <th
+                  key={column.id}
+                  className={`${column.sortable ? styles.sortable : ''} ${getHeaderClass(column)}`}
+                  onClick={column.sortable ? () => handleSort(column.field) : undefined}
+                  style={{ width: column.width }}
+                >
+                  <div className={styles.headerContent}>
+                    <span>{column.label}</span>
+                    {column.sortable && sort.field === column.field && (
+                      <i className={`bi bi-arrow-${sort.direction === 'asc' ? 'up' : 'down'} ${styles.sortIcon}`}></i>
+                    )}
+                  </div>
+                </th>
+              ))}
+              {renderActions && <th className={styles.headerActions} style={{ width: '120px' }}>Actions</th>}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+          </thead>
+          <tbody>
+            {items.map((item, index) => {
+              console.log(`🔍 DEBUG Rendu ligne ${index}:`, {
+                itemId: item.id,
+                itemData: item,
+                columnsCount: columns.length
+              });
+              
+              return (
+                <tr 
+                  key={item.id} 
+                  className={styles.tableRow}
+                  onClick={onRowClick ? () => onRowClick(item) : undefined}
+                  style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                >
+                  {columns.map(column => {
+                    const value = item[column.field];
+                    console.log(`🔍 DEBUG Cellule ${column.field}:`, {
+                      columnField: column.field,
+                      rawValue: value,
+                      renderedValue: column.render ? column.render(item) : value || '-',
+                      itemId: item.id
+                    });
+                    
+                    return (
+                      <td key={column.id} className={getCellClass(column, value)}>
+                        {column.render ? column.render(item) : value || '-'}
+                      </td>
+                    );
+                  })}
+                  {renderActions && (
+                    <td className={`${styles.tableCell} ${styles.cellActions}`}>
+                      {renderActions(item)}
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   // Rendu des cartes mobiles
   const renderMobileCards = () => (
@@ -373,6 +443,7 @@ const ListWithFilters = ({
   );
 
   if (loading && items.length === 0) {
+    console.log('🔄 DEBUG ListWithFilters - État loading:', { loading, itemsLength: items.length });
     return (
       <div className={styles.container}>
         <div className={styles.loading}>
@@ -384,6 +455,7 @@ const ListWithFilters = ({
   }
 
   if (error) {
+    console.log('❌ DEBUG ListWithFilters - État error:', { error, itemsLength: items.length });
     return (
       <div className={styles.container}>
         <div className={styles.error}>
@@ -396,6 +468,15 @@ const ListWithFilters = ({
       </div>
     );
   }
+
+  console.log('🎯 DEBUG ListWithFilters - Rendu principal:', { 
+    entityType,
+    itemsLength: items.length, 
+    loading, 
+    error, 
+    isMobile,
+    items: items.length > 0 ? items.slice(0, 2) : []
+  });
 
   return (
     <div className={styles.container}>

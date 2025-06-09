@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useGenericEntityDetails } from '@/hooks/common';
+import { useOrganization } from '@/context/OrganizationContext';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**
@@ -17,6 +18,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 const useLieuDetails = (id, locationParam) => {
   const navigate = useNavigate();
   const locationData = useLocation();
+  const { currentOrganization } = useOrganization();
   
   // Support du paramètre locationParam optionnel (pour compatibilité future)
   // eslint-disable-next-line no-unused-vars
@@ -122,14 +124,23 @@ const useLieuDetails = (id, locationParam) => {
         // Méthode 2bis: NOUVELLE - Recherche contact qui contient ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 2bis: Recherche contact qui contient ce lieu');
         
-        // Récupérer l'organizationId depuis l'organisation courante
-        const { useOrganization } = await import('@/context/OrganizationContext');
-        const orgContext = useOrganization();
-        const currentOrganization = orgContext?.currentOrganization;
+        // Récupérer l'organizationId depuis le localStorage ou sessionStorage
+        // qui est géré par le contexte OrganizationContext
+        let organizationId = null;
+        try {
+          // Récupérer l'organisation courante depuis le stockage local de l'application
+          const storedOrg = localStorage.getItem('currentOrganization');
+          if (storedOrg) {
+            const orgData = JSON.parse(storedOrg);
+            organizationId = orgData?.id;
+          }
+        } catch (error) {
+          console.warn('[useLieuDetails] Impossible de récupérer l\'organizationId depuis localStorage:', error);
+        }
         
         const contactsConstraints = [where('lieuxIds', 'array-contains', lieuData.id)];
-        if (currentOrganization?.id) {
-          contactsConstraints.push(where('organizationId', '==', currentOrganization.id));
+        if (organizationId) {
+          contactsConstraints.push(where('organizationId', '==', organizationId));
         }
         const contactsQuery = query(
           collection(db, 'contacts'),
@@ -141,8 +152,8 @@ const useLieuDetails = (id, locationParam) => {
         // Fallback: essayer avec lieuxAssocies
         if (contactsSnapshot.empty) {
           const contactsConstraints2 = [where('lieuxAssocies', 'array-contains', lieuData.id)];
-          if (currentOrganization?.id) {
-            contactsConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          if (organizationId) {
+            contactsConstraints2.push(where('organizationId', '==', organizationId));
           }
           const contactsQuery2 = query(
             collection(db, 'contacts'),
@@ -161,8 +172,8 @@ const useLieuDetails = (id, locationParam) => {
         // Méthode 3: NOUVELLE - Trouver le contact via les concerts de ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 3: Recherche contact via concerts du lieu');
         const concertsConstraints = [where('lieuId', '==', lieuData.id)];
-        if (currentOrganization?.id) {
-          concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
+        if (organizationId) {
+          concertsConstraints.push(where('organizationId', '==', organizationId));
         }
         const concertsQuery = query(
           collection(db, 'concerts'),
@@ -234,14 +245,21 @@ const useLieuDetails = (id, locationParam) => {
         // Méthode 3: NOUVELLE - Via le contact des concerts de ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 3: Recherche structure via contact des concerts');
         
-        // Récupérer l'organizationId depuis l'organisation courante
-        const { useOrganization } = await import('@/context/OrganizationContext');
-        const orgContext = useOrganization();
-        const currentOrganization = orgContext?.currentOrganization;
+        // Récupérer l'organizationId depuis le localStorage
+        let organizationId = null;
+        try {
+          const storedOrg = localStorage.getItem('currentOrganization');
+          if (storedOrg) {
+            const orgData = JSON.parse(storedOrg);
+            organizationId = orgData?.id;
+          }
+        } catch (error) {
+          console.warn('[useLieuDetails] Impossible de récupérer l\'organizationId depuis localStorage:', error);
+        }
         
         const concertsConstraints = [where('lieuId', '==', lieuData.id)];
-        if (currentOrganization?.id) {
-          concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
+        if (organizationId) {
+          concertsConstraints.push(where('organizationId', '==', organizationId));
         }
         const concertsQuery = query(
           collection(db, 'concerts'),

@@ -310,10 +310,17 @@ const useLieuDetails = (id, locationParam) => {
         const { collection, query, where, getDocs } = await import('@/services/firebase-service');
         const { db } = await import('@/services/firebase-service');
         
+        // 🔒 CORRECTION CRITIQUE: Ajouter le filtre organizationId
+        const organizationId = localStorage.getItem('currentOrganizationId');
+        const constraints = [where('lieuId', '==', lieuData.id)];
+        if (organizationId) {
+          constraints.push(where('organizationId', '==', organizationId));
+        }
+        
         // Rechercher tous les concerts qui ont ce lieu
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('lieuId', '==', lieuData.id)
+          ...constraints
         );
         
         const querySnapshot = await getDocs(concertsQuery);
@@ -344,10 +351,17 @@ const useLieuDetails = (id, locationParam) => {
         const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
         const { db } = await import('@/services/firebase-service');
         
+        // 🔒 CORRECTION CRITIQUE: Ajouter le filtre organizationId pour les artistes
+        const organizationId = localStorage.getItem('currentOrganizationId');
+        const constraints = [where('lieuId', '==', lieuData.id)];
+        if (organizationId) {
+          constraints.push(where('organizationId', '==', organizationId));
+        }
+        
         // D'abord récupérer tous les concerts de ce lieu
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('lieuId', '==', lieuData.id)
+          ...constraints
         );
         
         const concertsSnapshot = await getDocs(concertsQuery);

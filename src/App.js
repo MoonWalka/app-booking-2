@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import '@styles/index.css';
 import { 
   BrowserRouter as Router, 
@@ -40,6 +40,8 @@ import MigrationPage from '@/pages/admin/MigrationPage';
 import { OnboardingFlow } from '@/components/organization';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { installGlobalFixer } from '@/utils/fixOrganizationIds';
+import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -118,6 +120,14 @@ class ErrorBoundary extends React.Component {
 }
 
 function App() {
+  // ✅ AJOUT: Installer les outils de debug en développement
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      installGlobalFixer();
+      initializeFirebaseInterceptor();
+    }
+  }, []);
+
   window.REACT_ROUTER_FUTURE = {
     v7_startTransition: true,
     v7_relativeSplatPath: true

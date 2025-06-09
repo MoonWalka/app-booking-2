@@ -315,7 +315,8 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         orderByField = null,
         orderDirection = 'asc',
         limitCount = null,
-        startAfterDoc = null
+        startAfterDoc = null,
+        skipOrganizationFilter = false
       } = queryConfig;
       
       if (enableLogging) {
@@ -324,6 +325,17 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       // Construction de la requête
       let q = collection(db, entityType);
       const constraints = [];
+      
+      // 🔒 CORRECTION CRITIQUE: Ajouter automatiquement le filtre organizationId
+      if (!skipOrganizationFilter) {
+        const currentOrgId = localStorage.getItem('currentOrganizationId');
+        if (currentOrgId) {
+          constraints.push(where('organizationId', '==', currentOrgId));
+          if (enableLogging) {
+            console.log(`🔒 [useGenericAction] Filtre organizationId ajouté: ${currentOrgId} pour ${entityType}`);
+          }
+        }
+      }
       
       // Ajout des filtres
       Object.entries(filters).forEach(([field, value]) => {

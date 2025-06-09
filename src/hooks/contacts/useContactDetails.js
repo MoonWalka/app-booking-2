@@ -1,6 +1,7 @@
 import { useGenericEntityDetails } from '@/hooks/common';
 import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook pour gérer les détails d'un contact en utilisant le hook générique
@@ -8,6 +9,8 @@ import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/f
 export default function useContactDetails(id) {
   // 🔍 DEBUG: Log du hook
   console.log('[DEBUG useContactDetails] Hook appelé avec ID:', id);
+  
+  const { currentOrganization } = useOrganization();
   
   // État pour les lieux associés
   const [lieux, setLieux] = useState([]);
@@ -80,18 +83,26 @@ export default function useContactDetails(id) {
           // Si pas de référence directe, chercher par référence inverse
           
           // Méthode 1: Chercher les lieux avec ce contact dans 'contacts'
+          const lieuxConstraints = [where('contacts', 'array-contains', id)];
+          if (currentOrganization?.id) {
+            lieuxConstraints.push(where('organizationId', '==', currentOrganization.id));
+          }
           let lieuxQuery = query(
             collection(db, 'lieux'),
-            where('contacts', 'array-contains', id)
+            ...lieuxConstraints
           );
           let querySnapshot = await getDocs(lieuxQuery);
           lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           
           // Méthode 2: Si rien trouvé, chercher par contactId
           if (lieuxLoaded.length === 0) {
+            const lieuxConstraints2 = [where('contactId', '==', id)];
+            if (currentOrganization?.id) {
+              lieuxConstraints2.push(where('organizationId', '==', currentOrganization.id));
+            }
             lieuxQuery = query(
               collection(db, 'lieux'),
-              where('contactId', '==', id)
+              ...lieuxConstraints2
             );
             querySnapshot = await getDocs(lieuxQuery);
             lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -192,18 +203,26 @@ export default function useContactDetails(id) {
           // Méthode 2: Chercher par référence inverse dans la collection concerts
           
           // Chercher les concerts avec ce contact comme contactId
+          const concertsConstraints = [where('contactId', '==', id)];
+          if (currentOrganization?.id) {
+            concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
+          }
           let concertsQuery = query(
             collection(db, 'concerts'),
-            where('contactId', '==', id)
+            ...concertsConstraints
           );
           let querySnapshot = await getDocs(concertsQuery);
           let concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           
           // Si aucun résultat, essayer avec le champ contacts (array-contains)
           if (concertsLoaded.length === 0) {
+            const concertsConstraints2 = [where('contacts', 'array-contains', id)];
+            if (currentOrganization?.id) {
+              concertsConstraints2.push(where('organizationId', '==', currentOrganization.id));
+            }
             concertsQuery = query(
               collection(db, 'concerts'),
-              where('contacts', 'array-contains', id)
+              ...concertsConstraints2
             );
             querySnapshot = await getDocs(concertsQuery);
             concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -236,9 +255,13 @@ export default function useContactDetails(id) {
         setLoadingArtistes(true);
         
         // Chercher les artistes avec ce contact comme contactId
+        const artistesConstraints = [where('contactId', '==', id)];
+        if (currentOrganization?.id) {
+          artistesConstraints.push(where('organizationId', '==', currentOrganization.id));
+        }
         let artistesQuery = query(
           collection(db, 'artistes'),
-          where('contactId', '==', id)
+          ...artistesConstraints
         );
         let querySnapshot = await getDocs(artistesQuery);
         let artistesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -247,9 +270,13 @@ export default function useContactDetails(id) {
         
         // Si aucun résultat, essayer avec le champ contacts (array-contains)
         if (artistesLoaded.length === 0) {
+          const artistesConstraints2 = [where('contacts', 'array-contains', id)];
+          if (currentOrganization?.id) {
+            artistesConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          }
           artistesQuery = query(
             collection(db, 'artistes'),
-            where('contacts', 'array-contains', id)
+            ...artistesConstraints2
           );
           querySnapshot = await getDocs(artistesQuery);
           artistesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -258,9 +285,13 @@ export default function useContactDetails(id) {
         
         // Essayer aussi avec le champ 'contact' (au singulier) si pas de résultats
         if (artistesLoaded.length === 0) {
+          const artistesConstraints3 = [where('contact', '==', id)];
+          if (currentOrganization?.id) {
+            artistesConstraints3.push(where('organizationId', '==', currentOrganization.id));
+          }
           artistesQuery = query(
             collection(db, 'artistes'),
-            where('contact', '==', id)
+            ...artistesConstraints3
           );
           querySnapshot = await getDocs(artistesQuery);
           artistesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

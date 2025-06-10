@@ -6,6 +6,7 @@ import {
   getUserOrganizations,
   clearCurrentOrganization 
 } from '@/services/firebase-service';
+import { autoMigrateRIB } from '@/utils/autoMigrateRIB';
 
 // Créer le contexte
 const OrganizationContext = createContext(null);
@@ -80,6 +81,11 @@ export const OrganizationProvider = ({ children }) => {
         setCurrentOrganization(defaultOrg.id);
         setCurrentOrg(defaultOrg);
         
+        // Lancer la migration RIB automatique
+        autoMigrateRIB(defaultOrg.id).catch(err => 
+          console.error('Erreur lors de la migration RIB:', err)
+        );
+        
         // Émettre l'événement
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('organizationChanged', { 
@@ -113,6 +119,11 @@ export const OrganizationProvider = ({ children }) => {
     
     setCurrentOrganization(orgId);
     setCurrentOrg(org);
+    
+    // Lancer la migration RIB automatique pour la nouvelle organisation
+    autoMigrateRIB(orgId).catch(err => 
+      console.error('Erreur lors de la migration RIB:', err)
+    );
     
     // Émettre un événement personnalisé pour notifier le changement
     if (typeof window !== 'undefined') {

@@ -9,11 +9,12 @@
  * spécifiques d'ici novembre 2025.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
 import { debugLog } from '@/utils/logUtils';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
+import { updateBidirectionalRelation } from '@/services/bidirectionalRelationsService';
 
 /**
  * Hook optimisé pour gérer les formulaires de structures
@@ -25,6 +26,10 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 export const useStructureForm = (structureId) => {
   const navigate = useNavigate();
   const isNewStructure = !structureId || structureId === 'nouveau';
+  
+  // Références pour stocker les anciens contactsIds
+  const previousContactsIdsRef = useRef([]);
+  const isFirstLoadRef = useRef(true);
   
   debugLog(`Initialisation du formulaire de structure optimisé: ${isNewStructure ? 'nouvelle structure' : `structure ${structureId}`}`, 'info', 'useStructureForm');
   
@@ -91,12 +96,83 @@ export const useStructureForm = (structureId) => {
   };
   
   // Callbacks pour les opérations réussies ou en erreur
-  const onSuccessCallback = useCallback((savedId, savedData) => {
+  const onSuccessCallback = useCallback(async (savedData, action) => {
+    debugLog(`[useStructureForm] onSuccess appelé:`, 'info', 'useStructureForm', {
+      savedData,
+      action,
+      contactsIds: savedData?.contactsIds,
+      previousContactsIds: previousContactsIdsRef.current
+    });
+    
+    // Si c'est un chargement initial, stocker les contactsIds pour référence future
+    if (action === 'getById' || action === 'load') {
+      if (savedData && savedData.contactsIds) {
+        previousContactsIdsRef.current = savedData.contactsIds || [];
+      }
+      return;
+    }
+    
+    const savedId = savedData?.id;
+    if (!savedId) {
+      debugLog('[useStructureForm] Pas d\'ID dans les données sauvegardées', 'error', 'useStructureForm');
+      return;
+    }
+    
     const message = isNewStructure
       ? `La structure ${savedData.nom || ''} a été créée avec succès`
       : `La structure ${savedData.nom || ''} a été mise à jour avec succès`;
     
     showSuccessToast(message);
+    
+    // Gérer les relations bidirectionnelles pour les contacts
+    if (savedData.contactsIds || previousContactsIdsRef.current.length > 0) {
+      try {
+        debugLog('[useStructureForm] Gestion des relations bidirectionnelles structure-contacts', 'info', 'useStructureForm');
+        
+        const currentContactsIds = savedData.contactsIds || [];
+        const previousContactsIds = previousContactsIdsRef.current || [];
+        
+        // Trouver les contacts supprimés
+        const removedContacts = previousContactsIds.filter(id => !currentContactsIds.includes(id));
+        
+        // Trouver les nouveaux contacts
+        const addedContacts = currentContactsIds.filter(id => !previousContactsIds.includes(id));
+        
+        // Supprimer les relations avec les contacts supprimés
+        for (const contactId of removedContacts) {
+          debugLog(`[useStructureForm] Suppression de la relation avec le contact: ${contactId}`, 'info', 'useStructureForm');
+          await updateBidirectionalRelation({
+            sourceType: 'structure',
+            sourceId: savedId,
+            targetType: 'contact',
+            targetId: contactId,
+            relationName: 'contacts',
+            action: 'remove'
+          });
+        }
+        
+        // Ajouter les relations avec les nouveaux contacts
+        for (const contactId of addedContacts) {
+          debugLog(`[useStructureForm] Ajout de la relation avec le contact: ${contactId}`, 'info', 'useStructureForm');
+          await updateBidirectionalRelation({
+            sourceType: 'structure',
+            sourceId: savedId,
+            targetType: 'contact',
+            targetId: contactId,
+            relationName: 'contacts',
+            action: 'add'
+          });
+        }
+        
+        // Mettre à jour la référence pour les prochaines modifications
+        previousContactsIdsRef.current = currentContactsIds;
+        
+      } catch (error) {
+        debugLog('[useStructureForm] Erreur lors de la mise à jour des relations bidirectionnelles:', 'error', 'useStructureForm', error);
+        // Ne pas bloquer le flux principal si la mise à jour échoue
+      }
+    }
+    
     navigate(`/structures/${savedId}`);
   }, [isNewStructure, navigate]);
 
@@ -133,7 +209,9 @@ export const useStructureForm = (structureId) => {
       contactNom: '',
       contactTelephone: '',
       contactEmail: '',
-      contactFonction: ''
+      contactFonction: '',
+      // Relations bidirectionnelles
+      contactsIds: []
     },
     validateForm: validateStructureForm,
     transformData: transformStructureData,
@@ -185,6 +263,15 @@ export const useStructureForm = (structureId) => {
     if (data.pays && data.pays !== 'France') parts.push(data.pays);
     
     return parts.join(', ');
+  }, [formHook.formData]);
+  
+  // Capturer les contactsIds existants lors du premier chargement
+  useEffect(() => {
+    if (isFirstLoadRef.current && formHook.formData && formHook.formData.contactsIds) {
+      debugLog('[useStructureForm] Capture des contactsIds existants:', 'info', 'useStructureForm', formHook.formData.contactsIds);
+      previousContactsIdsRef.current = formHook.formData.contactsIds || [];
+      isFirstLoadRef.current = false;
+    }
   }, [formHook.formData]);
   
   // Retourner le hook générique enrichi de fonctionnalités spécifiques

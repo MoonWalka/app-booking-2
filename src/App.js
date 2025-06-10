@@ -45,6 +45,7 @@ import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
 import DebugController from '@/components/debug/DebugController';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 import DebugButton from '@/components/common/DebugButton';
+import ConcertLieuDebug from '@/components/debug/ConcertLieuDebug';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -197,6 +198,7 @@ function App() {
                       }>
                         <Route index element={<ConcertsList />} />
                         <Route path=":id" element={<ConcertDetails />} />
+                        <Route path=":id/debug" element={<ConcertLieuDebug />} />
                         <Route path=":id/edit" element={<ConcertFormWrapper />} />
                       </Route>
                       

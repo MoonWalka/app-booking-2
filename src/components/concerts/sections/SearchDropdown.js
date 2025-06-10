@@ -53,7 +53,16 @@ const SearchDropdown = ({
           type="button"
           variant="outline-secondary"
           className={styles.createButton}
-          onClick={onCreate}
+          onClick={() => {
+            console.log('[SearchDropdown] Create button clicked:', {
+              entityType,
+              onCreateExists: !!onCreate,
+              onCreateType: typeof onCreate
+            });
+            if (onCreate) {
+              onCreate();
+            }
+          }}
           aria-label={`Créer un nouveau ${entityType}`}
         >
           <i className="bi bi-plus-lg"></i>
@@ -102,10 +111,12 @@ const SearchDropdown = ({
                   className={styles.resultItem}
                   onClick={() => onSelect(item)}
                 >
-                  <div className={styles.itemName}>{item.nom}</div>
+                  <div className={styles.itemName}>{item.nom || item.raisonSociale || 'Sans nom'}</div>
                   {item.structure && <div className={styles.itemDetail}>{item.structure}</div>}
                   {item.email && <div className={styles.itemDetail}>{item.email}</div>}
                   {item.genre && <div className={styles.itemDetail}>{item.genre}</div>}
+                  {item.type && <div className={styles.itemDetail}>Type: {item.type}</div>}
+                  {item.siret && <div className={styles.itemDetail}>SIRET: {item.siret}</div>}
                   {item.adresse && (
                     <div className={styles.itemDetail}>
                       {item.adresse}
@@ -113,6 +124,9 @@ const SearchDropdown = ({
                         <span>, {item.codePostal} {item.ville}</span>
                       )}
                     </div>
+                  )}
+                  {!item.adresse && item.ville && (
+                    <div className={styles.itemDetail}>{item.ville}</div>
                   )}
                 </div>
               ))}
@@ -129,7 +143,16 @@ const SearchDropdown = ({
                 type="button"
                 variant="primary"
                 size="sm"
-                onClick={onCreate}
+                onClick={() => {
+                  console.log('[SearchDropdown] No results create button clicked:', {
+                    entityType,
+                    onCreateExists: !!onCreate,
+                    onCreateType: typeof onCreate
+                  });
+                  if (onCreate) {
+                    onCreate();
+                  }
+                }}
               >
                 <i className="bi bi-plus-circle me-1"></i>
                 {createButtonText || `Créer un nouveau ${entityType}`}

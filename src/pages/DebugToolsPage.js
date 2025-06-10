@@ -3,6 +3,11 @@ import { Tabs, Tab } from 'react-bootstrap';
 import DataStructureFixer from '@/components/debug/DataStructureFixer';
 import OrganizationIdDebug from '@/components/debug/OrganizationIdDebug';
 import ListDebugger from '@/components/debug/ListDebugger';
+import ContactCreationTester from '@/components/debug/ContactCreationTester';
+import EntityCreationTester from '@/components/debug/EntityCreationTester';
+import LieuMapDebug from '@/components/debug/LieuMapDebug';
+import RIBDebugger from '@/components/debug/RIBDebugger';
+import RelancesAuditTool from '@/components/debug/RelancesAuditTool';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -51,6 +56,26 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="organization" title="Organisation ID">
           <OrganizationIdDebug />
+        </Tab>
+        
+        <Tab eventKey="contacts" title="Test Contacts">
+          <ContactCreationTester />
+        </Tab>
+        
+        <Tab eventKey="entities" title="Test Entités Complètes">
+          <EntityCreationTester />
+        </Tab>
+        
+        <Tab eventKey="lieu-map" title="Debug Cartes Lieux">
+          <LieuMapDebug />
+        </Tab>
+        
+        <Tab eventKey="rib" title="Debug RIB">
+          <RIBDebugger />
+        </Tab>
+        
+        <Tab eventKey="relances" title="Audit Relances">
+          <RelancesAuditTool />
         </Tab>
       </Tabs>
     </div>

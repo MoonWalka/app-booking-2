@@ -30,7 +30,11 @@ export const useEntrepriseForm = () => {
     logo: '',
     mentionsLegales: '',
     latitude: null,
-    longitude: null
+    longitude: null,
+    // Informations bancaires
+    iban: '',
+    bic: '',
+    banque: ''
   });
   
   const [loading, setLoading] = useState(false);

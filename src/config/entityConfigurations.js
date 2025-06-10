@@ -234,7 +234,9 @@ export const entityConfigurations = {
         collection: 'structures', 
         field: 'structureId', 
         isArray: false,
-        displayName: 'Structure'
+        displayName: 'Structure',
+        bidirectional: true,
+        inverseField: 'contactsIds'
       },
       lieux: { 
         collection: 'lieux', 
@@ -421,7 +423,7 @@ export const entityConfigurations = {
         field: 'contactsIds', 
         isArray: true,
         displayName: 'Contacts',
-        reverseField: 'structureId',
+        inverseField: 'structureId',
         bidirectional: true
       },
       concerts: {
@@ -429,7 +431,7 @@ export const entityConfigurations = {
         field: 'concertsIds',
         isArray: true,
         displayName: 'Concerts',
-        reverseField: 'structureId',
+        inverseField: 'structureId',
         bidirectional: true
       }
     }

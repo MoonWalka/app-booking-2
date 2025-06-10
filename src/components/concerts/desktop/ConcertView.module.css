@@ -261,3 +261,36 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+/* Styles pour les contacts avec rôles */
+.contactsSection {
+  margin-bottom: var(--tc-space-4);
+}
+
+.entitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--tc-space-4);
+}
+
+.lieuSection,
+.artisteSection,
+.structureSection {
+  margin-bottom: var(--tc-space-4);
+}
+
+.lieuSection:last-child,
+.artisteSection:last-child,
+.structureSection:last-child,
+.contactsSection:last-child {
+  margin-bottom: 0;
+}
+
+/* Badge pour contact principal */
+.principalBadge {
+  background-color: var(--tc-color-primary);
+  color: white;
+  font-size: var(--tc-font-size-xs);
+  padding: 2px 8px;
+  border-radius: var(--tc-border-radius-sm);
+  margin-left: var(--tc-space-2);
+}

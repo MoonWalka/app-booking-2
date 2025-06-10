@@ -61,8 +61,8 @@ const useDeleteStructure = (onDeleteSuccess) => {
       showErrorToast(`Erreur lors de la suppression: ${error.message}`);
     },
     
-    // Configuration avancée - Désactiver la confirmation automatique car on utilise le modal
-    showConfirmation: false,  // On gère la confirmation via le modal
+    // Configuration avancée - Activer la confirmation native temporairement
+    showConfirmation: true,  // Utiliser la confirmation native pour l'instant
     validateBeforeDelete: true,
     cacheResults: false
   });

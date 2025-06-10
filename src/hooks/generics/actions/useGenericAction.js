@@ -96,6 +96,9 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
   
   // ✅ CORRECTION: Fonction de création stabilisée
   const create = useCallback(async (data, customId = null) => {
+    console.log('🟣🟣🟣 DÉBUT CREATE dans useGenericAction pour', entityType);
+    console.log('🟣 Données reçues:', data);
+    
     setLoading(true);
     setError(null);
     
@@ -104,13 +107,78 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         throw new Error('Données manquantes pour la création');
       }
       
-      const entityData = {
+      let entityData = {
         ...data,
         createdAt: new Date(),
         updatedAt: new Date(),
         // Ajouter l'organizationId si disponible
         ...(currentOrganization?.id && { organizationId: currentOrganization.id })
       };
+      
+      console.log('💾💾💾 useGenericAction.js - CREATE', entityType);
+      console.log('💾 DONNÉES REÇUES:', JSON.stringify(entityData, null, 2));
+      
+      // VÉRIFICATION CRITIQUE pour les contacts
+      if (entityType === 'contacts') {
+        // Si structure imbriquée détectée, BLOQUER
+        if (entityData.contact || entityData.structure) {
+          console.error('🚨🚨🚨 STRUCTURE IMBRIQUÉE DÉTECTÉE - CORRECTION FORCÉE');
+        console.log('🔴 Avant aplatissement:', entityData);
+        
+        // Aplatir les données tout en préservant TOUS les champs pour la bidirectionnalité
+        entityData = {
+          // Champs contact PLATS
+          nom: entityData.contact.nom || '',
+          prenom: entityData.contact.prenom || '',
+          email: entityData.contact.email || '',
+          telephone: entityData.contact.telephone || '',
+          fonction: entityData.contact.fonction || '',
+          adresse: entityData.contact.adresse || '',
+          codePostal: entityData.contact.codePostal || '',
+          ville: entityData.contact.ville || '',
+          
+          // Champs structure - IMPORTANT pour les relations
+          structureId: entityData.structureId || '',
+          structureNom: entityData.structureNom || entityData.structure?.nom || entityData.structure?.raisonSociale || '',
+          
+          // Si une structure complète est fournie, aplatir ses champs
+          ...(entityData.structure ? {
+            structureRaisonSociale: entityData.structure.raisonSociale || '',
+            structureSiret: entityData.structure.siret || '',
+            structureType: entityData.structure.type || '',
+            structureAdresse: entityData.structure.adresse || '',
+            structureCodePostal: entityData.structure.codePostal || '',
+            structureVille: entityData.structure.ville || '',
+            structurePays: entityData.structure.pays || 'France',
+            structureTva: entityData.structure.tva || '',
+            structureNumeroIntracommunautaire: entityData.structure.numeroIntracommunautaire || ''
+          } : {}),
+          
+          // Champs obligatoires
+          organizationId: entityData.organizationId || currentOrganization?.id,
+          createdAt: entityData.createdAt || new Date(),
+          updatedAt: new Date(),
+          
+          // IMPORTANT : Préserver TOUTES les relations bidirectionnelles ✅
+          concertsIds: entityData.concertsIds || [],
+          concertsAssocies: entityData.concertsAssocies || [],
+          lieuxIds: entityData.lieuxIds || [],
+          artistesIds: entityData.artistesIds || [],
+          
+          // Autres champs
+          notes: entityData.notes || '',
+          tags: entityData.tags || [],
+          statut: entityData.statut || 'actif'
+        };
+        
+        console.log('✅ Après aplatissement:', entityData);
+        }
+        
+        // VALIDATION FINALE - organizationId OBLIGATOIRE
+        if (!entityData.organizationId) {
+          throw new Error('❌ organizationId OBLIGATOIRE pour les contacts');
+        }
+      }
       
       let result;
       if (customId) {
@@ -119,8 +187,11 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         result = { id: customId, ...entityData };
       } else {
         // Création avec ID auto-généré
+        console.log('💾 SAUVEGARDE FINALE dans Firebase:', entityType);
+        console.log('💾 Structure à sauvegarder:', JSON.stringify(entityData, null, 2));
         const docRef = await addDoc(collection(db, entityType), entityData);
         result = { id: docRef.id, ...entityData };
+        console.log('✅ Document créé avec ID:', docRef.id);
       }
       
       if (onSuccessRef.current) {
@@ -161,12 +232,90 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         throw new Error('ID manquant pour la mise à jour');
       }
       
-      const updateData = {
+      let updateData = {
         ...data,
         updatedAt: new Date(),
         // Préserver l'organizationId existant si non fourni
         ...(currentOrganization?.id && !data.organizationId && { organizationId: currentOrganization.id })
       };
+      
+      console.log('💾💾💾 useGenericAction.js - UPDATE', entityType);
+      console.log('💾 DONNÉES REÇUES POUR UPDATE:', JSON.stringify(updateData, null, 2));
+      
+      // LOG SPÉCIFIQUE POUR LIEUX
+      if (entityType === 'lieux') {
+        console.log('🏢🏢🏢 UPDATE LIEU DÉTECTÉ');
+        console.log('🏢 contactIds présent ?', updateData.contactIds);
+        console.log('🏢 Toutes les clés:', Object.keys(updateData));
+      }
+      
+      // VÉRIFICATION CRITIQUE pour les contacts
+      if (entityType === 'contacts') {
+        // Si structure imbriquée détectée, BLOQUER
+        if (updateData.contact || updateData.structure) {
+          console.error('🚨🚨🚨 STRUCTURE IMBRIQUÉE DÉTECTÉE (UPDATE) - CORRECTION FORCÉE');
+        console.log('🔴 Avant aplatissement UPDATE:', updateData);
+        
+        // Aplatir les données tout en préservant TOUS les champs pour la bidirectionnalité
+        updateData = {
+          // Champs contact PLATS
+          nom: updateData.contact.nom || updateData.nom || '',
+          prenom: updateData.contact.prenom || updateData.prenom || '',
+          email: updateData.contact.email || updateData.email || '',
+          telephone: updateData.contact.telephone || updateData.telephone || '',
+          fonction: updateData.contact.fonction || updateData.fonction || '',
+          adresse: updateData.contact.adresse || updateData.adresse || '',
+          codePostal: updateData.contact.codePostal || updateData.codePostal || '',
+          ville: updateData.contact.ville || updateData.ville || '',
+          
+          // Champs structure - IMPORTANT pour les relations
+          structureId: updateData.structureId || '',
+          structureNom: updateData.structureNom || updateData.structure?.nom || updateData.structure?.raisonSociale || '',
+          
+          // Si une structure complète est fournie, aplatir ses champs
+          ...(updateData.structure ? {
+            structureRaisonSociale: updateData.structure.raisonSociale || '',
+            structureSiret: updateData.structure.siret || '',
+            structureType: updateData.structure.type || '',
+            structureAdresse: updateData.structure.adresse || '',
+            structureCodePostal: updateData.structure.codePostal || '',
+            structureVille: updateData.structure.ville || '',
+            structurePays: updateData.structure.pays || 'France',
+            structureTva: updateData.structure.tva || '',
+            structureNumeroIntracommunautaire: updateData.structure.numeroIntracommunautaire || ''
+          } : {}),
+          
+          // Champs obligatoires
+          organizationId: updateData.organizationId || currentOrganization?.id,
+          updatedAt: new Date(),
+          
+          // IMPORTANT : Préserver TOUTES les relations bidirectionnelles ✅
+          concertsIds: updateData.concertsIds || [],
+          concertsAssocies: updateData.concertsAssocies || [],
+          lieuxIds: updateData.lieuxIds || [],
+          artistesIds: updateData.artistesIds || [],
+          
+          // Autres champs
+          notes: updateData.notes || '',
+          tags: updateData.tags || [],
+          statut: updateData.statut || 'actif',
+          
+          // Préserver les champs existants non modifiés
+          createdAt: updateData.createdAt
+        };
+        
+        console.log('✅ Après aplatissement UPDATE:', updateData);
+        }
+        
+        // VALIDATION FINALE - organizationId OBLIGATOIRE
+        if (!updateData.organizationId) {
+          console.error('⚠️ organizationId manquant lors de l\'UPDATE - Ajout depuis le contexte');
+          updateData.organizationId = currentOrganization?.id;
+          if (!updateData.organizationId) {
+            throw new Error('❌ organizationId OBLIGATOIRE pour les contacts');
+          }
+        }
+      }
       
       await updateDoc(doc(db, entityType, id), updateData);
       const result = { id, ...updateData };

@@ -142,12 +142,72 @@ const ListWithFilters = ({
     setFilterValues(initialValues);
   }, [filterOptions, filters]);
 
+  // Fonction de sanitisation des données imbriquées
+  const sanitizeNestedData = (data, organizationId) => {
+    return data.map(item => {
+      // Détecter et aplatir les structures imbriquées
+      if (entityType === 'contacts' && item.contact && typeof item.contact === 'object') {
+        console.warn(`⚠️ Structure imbriquée détectée pour contact ${item.id}`);
+        return {
+          ...item.contact,
+          id: item.id,
+          organizationId: item.organizationId || organizationId,
+          // Préserver les relations
+          structures: item.structures || item.contact.structures || [],
+          lieux: item.lieux || item.contact.lieux || [],
+          concerts: item.concerts || item.contact.concerts || []
+        };
+      }
+      
+      if (entityType === 'lieux' && item.lieu && typeof item.lieu === 'object') {
+        console.warn(`⚠️ Structure imbriquée détectée pour lieu ${item.id}`);
+        return {
+          ...item.lieu,
+          id: item.id,
+          organizationId: item.organizationId || organizationId,
+          // Préserver les relations
+          contacts: item.contacts || item.lieu.contacts || [],
+          structures: item.structures || item.lieu.structures || [],
+          concerts: item.concerts || item.lieu.concerts || []
+        };
+      }
+      
+      if (entityType === 'artistes' && item.artiste && typeof item.artiste === 'object') {
+        console.warn(`⚠️ Structure imbriquée détectée pour artiste ${item.id}`);
+        return {
+          ...item.artiste,
+          id: item.id,
+          organizationId: item.organizationId || organizationId,
+          concerts: item.concerts || item.artiste.concerts || []
+        };
+      }
+      
+      if (entityType === 'structures' && item.structure && typeof item.structure === 'object') {
+        console.warn(`⚠️ Structure imbriquée détectée pour structure ${item.id}`);
+        return {
+          ...item.structure,
+          id: item.id,
+          organizationId: item.organizationId || organizationId,
+          contacts: item.contacts || item.structure.contacts || [],
+          lieux: item.lieux || item.structure.lieux || []
+        };
+      }
+      
+      return item;
+    });
+  };
+
   // Chargement des données - VERSION SIMPLIFIÉE
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadData = useCallback(async (isLoadMore = false) => {
     // Si des données externes sont fournies, ne pas charger depuis Firebase
     if (initialData !== null) {
       console.log('📦 Utilisation des données externes (hooks spécialisés)');
+      // Appliquer la sanitisation même sur les données externes
+      if (currentOrganization?.id) {
+        const sanitizedData = sanitizeNestedData(initialData, currentOrganization.id);
+        setItems(sanitizedData);
+      }
       return;
     }
 
@@ -220,10 +280,15 @@ const ListWithFilters = ({
       
       console.log(`✅ Données chargées: ${querySnapshot.docs.length} éléments`);
       
-      const loadedItems = querySnapshot.docs.map(doc => ({
+      let loadedItems = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      // Appliquer la sanitisation des données imbriquées
+      if (currentOrganization?.id) {
+        loadedItems = sanitizeNestedData(loadedItems, currentOrganization.id);
+      }
       
       // 🔍 DEBUG: Voir la structure des données
       if (loadedItems.length > 0) {

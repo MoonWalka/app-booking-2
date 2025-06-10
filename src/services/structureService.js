@@ -166,11 +166,10 @@ export async function syncStructureToAssociatedContacts(structureId) {
       try {
         const progRef = doc(db, 'contacts', progId);
         await updateDoc(progRef, {
-          structure: {
-            id: structureId,
-            nom: structureData.nom,
-            type: structureData.type
-          },
+          // Données de structure plates avec préfixe
+          structureId: structureId,
+          structureNom: structureData.nom,
+          structureType: structureData.type,
           updatedAt: Timestamp.now()
         });
       } catch (error) {

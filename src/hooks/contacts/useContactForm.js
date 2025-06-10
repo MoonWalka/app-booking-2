@@ -14,6 +14,8 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import useGenericEntityForm from '@/hooks/generics/forms/useGenericEntityForm';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { debugLog } from '@/utils/logUtils';
+import { useDataValidation } from '@/services/dataValidationService';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook optimisé pour gérer les formulaires de contacts
@@ -26,6 +28,8 @@ export const useContactForm = (contactId) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
+  const { currentOrganization } = useOrganization();
+  const { validateAndPrepare } = useDataValidation();
   
   // Détecter le mode "nouveau" via l'URL plutôt que via les paramètres
   const isNewFromUrl = location.pathname.endsWith('/nouveau');
@@ -41,19 +45,19 @@ export const useContactForm = (contactId) => {
   const validateContactForm = useCallback((data) => {
     const errors = {};
     
-    // Validation sur les champs imbriqués pour la compatibilité avec le formulaire
-    if (!data.contact?.nom) {
-      errors['contact.nom'] = 'Le nom du contact est obligatoire';
+    // Validation sur les champs PLATS (pas imbriqués)
+    if (!data.nom) {
+      errors['nom'] = 'Le nom du contact est obligatoire';
     }
     
     // Email facultatif, mais si fourni, doit être valide
-    if (data.contact?.email && !/^\S+@\S+\.\S+$/.test(data.contact.email)) {
-      errors['contact.email'] = 'Format d\'email invalide';
+    if (data.email && !/^\S+@\S+\.\S+$/.test(data.email)) {
+      errors['email'] = 'Format d\'email invalide';
     }
     
     // Validation de la structure si nécessaire
-    if (!data.structureId && !data.structure?.raisonSociale) {
-      errors['structure.raisonSociale'] = 'La raison sociale est requise si aucune structure n\'est sélectionnée';
+    if (!data.structureId && !data.structureRaisonSociale) {
+      errors['structureRaisonSociale'] = 'La raison sociale est requise si aucune structure n\'est sélectionnée';
     }
     
     return {
@@ -65,42 +69,68 @@ export const useContactForm = (contactId) => {
 
   // Fonction de transformation des données avant sauvegarde
   const transformContactData = useCallback((data) => {
-    // Aplatir la structure pour éviter l'imbrication
-    const transformedData = {
-      // Extraire les champs du contact au niveau racine
-      nom: data.contact?.nom || '',
-      prenom: data.contact?.prenom || '',
-      fonction: data.contact?.fonction || '',
-      email: data.contact?.email || '',
-      telephone: data.contact?.telephone || '',
+    console.log('💾 PRÉPARATION SAUVEGARDE CONTACT - INPUT:', JSON.stringify(data, null, 2));
+    
+    // STRUCTURE DÉFINITIVE - AUCUN OBJET IMBRIQUÉ
+    const contactData = {
+      // Identité (TOUT au niveau racine)
+      nom: data.nom || data.contact?.nom || '',
+      prenom: data.prenom || data.contact?.prenom || '',
+      email: data.email || data.contact?.email || '',
+      telephone: data.telephone || data.contact?.telephone || '',
+      fonction: data.fonction || data.contact?.fonction || '',
       
-      // Conserver les informations de structure
+      // Structure (avec préfixe, PAS dans un objet)
       structureId: data.structureId || '',
-      structureNom: data.structureNom || data.structure?.raisonSociale || '',
+      structureNom: data.structureNom || data.structure?.nom || data.structureRaisonSociale || '',
+      structureRaisonSociale: data.structureRaisonSociale || data.structure?.raisonSociale || '',
+      structureSiret: data.structureSiret || data.structure?.siret || '',
+      structureAdresse: data.structureAdresse || data.structure?.adresse || '',
+      structureCodePostal: data.structureCodePostal || data.structure?.codePostal || '',
+      structureVille: data.structureVille || data.structure?.ville || '',
+      structurePays: data.structurePays || data.structure?.pays || 'France',
+      structureTva: data.structureTva || data.structure?.tva || '',
+      structureType: data.structureType || data.structure?.type || '',
+      structureNumeroIntracommunautaire: data.structureNumeroIntracommunautaire || data.structure?.numeroIntracommunautaire || '',
       
-      // Informations de structure si pas de structureId (nouvelle structure)
-      ...((!data.structureId && data.structure) ? {
-        structureInfo: {
-          raisonSociale: data.structure.raisonSociale || '',
-          type: data.structure.type || '',
-          adresse: data.structure.adresse || '',
-          codePostal: data.structure.codePostal || '',
-          ville: data.structure.ville || '',
-          pays: data.structure.pays || 'France',
-          siret: data.structure.siret || '',
-          tva: data.structure.tva || ''
-        }
-      } : {}),
+      // Bidirectionnalité
+      concertsIds: data.concertsIds || [],
+      lieuxIds: data.lieuxIds || [],
+      artistesIds: data.artistesIds || [],
+      concertsAssocies: data.concertsAssocies || [], // Pour compatibilité
       
       // Autres champs
-      concertsAssocies: data.concertsAssocies || [],
-      // Ajout de la date de mise à jour
+      notes: data.notes || '',
+      tags: data.tags || [],
+      statut: data.statut || 'actif',
+      
+      // Métadonnées
       updatedAt: new Date()
     };
     
-    // debugLog('Données transformées avant sauvegarde', 'debug', 'useContactForm', transformedData);
-    return transformedData;
-  }, []);
+    // VÉRIFICATION CRITIQUE - organizationId OBLIGATOIRE
+    if (!currentOrganization?.id) {
+      throw new Error('organizationId OBLIGATOIRE - Aucune organisation sélectionnée');
+    }
+    
+    // Multi-org (CRITIQUE)
+    contactData.organizationId = currentOrganization.id;
+    
+    // LOG POUR VÉRIFIER
+    console.log('💾 SAUVEGARDE CONTACT - STRUCTURE FINALE:', contactData);
+    console.log('✅ PAS de contact: {} ou structure: {} !');
+    
+    // Validation finale via le service
+    try {
+      const validatedData = validateAndPrepare(contactData, 'contacts');
+      console.log('✅ Contact validé et prêt:', validatedData);
+      return validatedData;
+    } catch (error) {
+      console.error('❌ Erreur de validation:', error);
+      // En cas d'erreur, on retourne quand même les données avec organizationId
+      return contactData;
+    }
+  }, [validateAndPrepare, currentOrganization]);
   
   // Callbacks pour les opérations réussies ou en erreur
   const onSuccessCallback = useCallback((savedData) => {
@@ -136,41 +166,48 @@ export const useContactForm = (contactId) => {
   }, [isNewContact]);
   
   // Fonction pour transformer les données aplaties en structure imbriquée pour le formulaire
+  // NOTE: Cette fonction n'est plus utilisée mais conservée pour la compatibilité
+  // eslint-disable-next-line no-unused-vars
   const transformLoadedData = useCallback((data) => {
     if (!data) return null;
     
-    // Si les données sont déjà dans la structure imbriquée, les retourner telles quelles
-    if (data.contact && typeof data.contact === 'object') {
-      return data;
-    }
-    
-    // Transformer les données aplaties en structure imbriquée
+    // IMPORTANT: Ne plus créer de structures imbriquées
+    // Retourner les données plates directement
     return {
-      contact: {
-        nom: data.nom || '',
-        prenom: data.prenom || '',
-        fonction: data.fonction || '',
-        email: data.email || '',
-        telephone: data.telephone || ''
-      },
-      structure: data.structureInfo || {
-        raisonSociale: '',
-        type: '',
-        adresse: '',
-        codePostal: '',
-        ville: '',
-        pays: 'France',
-        siret: '',
-        tva: ''
-      },
+      // Données du contact à la racine
+      nom: data.nom || '',
+      prenom: data.prenom || '',
+      fonction: data.fonction || '',
+      email: data.email || '',
+      telephone: data.telephone || '',
+      
+      // Données de la structure avec préfixe
+      structureRaisonSociale: data.structureRaisonSociale || data.structureInfo?.raisonSociale || '',
+      structureType: data.structureType || data.structureInfo?.type || '',
+      structureAdresse: data.structureAdresse || data.structureInfo?.adresse || '',
+      structureCodePostal: data.structureCodePostal || data.structureInfo?.codePostal || '',
+      structureVille: data.structureVille || data.structureInfo?.ville || '',
+      structurePays: data.structurePays || data.structureInfo?.pays || 'France',
+      structureSiret: data.structureSiret || data.structureInfo?.siret || '',
+      structureTva: data.structureTva || data.structureInfo?.tva || '',
+      
+      // Autres données
       structureId: data.structureId || '',
       structureNom: data.structureNom || '',
       concertsAssocies: data.concertsAssocies || [],
+      
       // Conserver l'ID et l'organizationId
       id: data.id,
       organizationId: data.organizationId
     };
   }, []);
+  
+  // DEBUG: Log pour voir ce qui se passe
+  console.log('🔵 [useContactForm] Initialisation:', {
+    isNewContact,
+    actualContactId,
+    currentOrganization: currentOrganization?.id
+  });
   
   // Utilisation directe du hook générique avec configuration spécifique aux contacts
   const formHook = useGenericEntityForm({
@@ -178,26 +215,31 @@ export const useContactForm = (contactId) => {
     entityId: isNewContact ? null : actualContactId,
     collectionName: 'contacts',
     initialData: useMemo(() => ({
-      // Valeurs par défaut pour un nouveau contact
-      contact: {
-        nom: '',
-        prenom: '',
-        fonction: '',
-        email: '',
-        telephone: ''
-      },
-      structure: {
-        raisonSociale: '',
-        type: '',
-        adresse: '',
-        codePostal: '',
-        ville: '',
-        pays: 'France',
-        siret: '',
-        tva: ''
-      },
+      // Valeurs par défaut pour un nouveau contact - structure plate
+      nom: '',
+      prenom: '',
+      fonction: '',
+      email: '',
+      telephone: '',
       structureId: '',
-      concertsAssocies: []
+      structureNom: '',
+      structureRaisonSociale: '',
+      structureType: '',
+      structureAdresse: '',
+      structureCodePostal: '',
+      structureVille: '',
+      structurePays: 'France',
+      structureSiret: '',
+      structureTva: '',
+      structureNumeroIntracommunautaire: '',
+      // BIDIRECTIONNALITÉ - Initialisation correcte
+      lieuxIds: [],
+      concertsIds: [],
+      artistesIds: [],
+      concertsAssocies: [], // Pour compatibilité
+      notes: '',
+      tags: [],
+      statut: 'actif'
     }), []),
     validateForm: validateContactForm,
     transformData: transformContactData,
@@ -215,16 +257,22 @@ export const useContactForm = (contactId) => {
   
   // Extension du hook avec des fonctionnalités spécifiques aux contacts
   
-  // Effet pour transformer les données chargées
+  // Effet pour vérifier et CORRIGER les données chargées
   useEffect(() => {
-    if (formHook.formData && formHook.formData.id && !formHook.formData.contact) {
-      // Les données sont aplaties, les transformer
-      const transformedData = transformLoadedData(formHook.formData);
-      if (transformedData) {
-        formHook.setFormData(transformedData);
-      }
+    console.log('🔵 formData actuel:', formHook.formData);
+    if (formHook.formData && (formHook.formData.contact || formHook.formData.structure)) {
+      console.error('⚠️ STRUCTURE IMBRIQUÉE DÉTECTÉE - CORRECTION AUTOMATIQUE !');
+      
+      // Aplatir automatiquement les données imbriquées
+      const flatData = transformContactData(formHook.formData);
+      
+      // Mettre à jour formData avec la structure plate
+      formHook.setFormData(flatData);
+      
+      console.log('✅ Données corrigées (plates):', flatData);
     }
-  }, [formHook.formData?.id]); // Ne déclencher que quand l'ID change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formHook.formData.id]); // Surveiller uniquement l'ID pour éviter les boucles
   
   // Fonction pour sélectionner/désélectionner la structure
   const handleSelectStructure = useCallback((structure) => {
@@ -276,61 +324,38 @@ export const useContactForm = (contactId) => {
     }
   }, [navigate, isNewContact, actualContactId]);
   
-  // Méthode pour mettre à jour les champs imbriqués du contact
-  const updateContact = useCallback((field, value) => {
-    formHook.setFormData(prev => ({
-      ...prev,
-      contact: {
-        ...prev.contact,
-        [field]: value
-      }
-    }));
-  }, [formHook]);
-  
-  // Méthode pour mettre à jour les champs imbriqués de la structure
-  const updateStructure = useCallback((field, value) => {
-    formHook.setFormData(prev => ({
-      ...prev,
-      structure: {
-        ...prev.structure,
-        [field]: value
-      }
-    }));
-  }, [formHook]);
+  // Plus besoin de méthodes pour mettre à jour les champs imbriqués
+  // Les champs sont maintenant plats et gérés directement par handleChange
   
   // Fonction pour gérer les changements de structure principale (utilisée par useCompanySearch)
   const handleStructureChange = useCallback((company) => {
     if (company) {
-      const structureData = {
-        raisonSociale: company.nom || company.raisonSociale || '',
-        siret: company.siret || '',
-        adresse: company.adresse || '',
-        codePostal: company.codePostal || '',
-        ville: company.ville || '',
-        type: company.statutJuridique || ''
-      };
-      
+      // Utiliser des champs PLATS avec le préfixe "structure"
       formHook.setFormData(prev => ({
         ...prev,
         structureId: company.id || '',
-        structure: {
-          ...prev.structure,
-          ...structureData
-        }
+        structureNom: company.nom || company.raisonSociale || '',
+        structureRaisonSociale: company.nom || company.raisonSociale || '',
+        structureSiret: company.siret || '',
+        structureAdresse: company.adresse || '',
+        structureCodePostal: company.codePostal || '',
+        structureVille: company.ville || '',
+        structureType: company.statutJuridique || '',
+        structurePays: company.pays || 'France'
       }));
     } else {
+      // Réinitialiser les champs structure
       formHook.setFormData(prev => ({
         ...prev,
         structureId: '',
-        structure: {
-          ...prev.structure,
-          raisonSociale: '',
-          siret: '',
-          adresse: '',
-          codePostal: '',
-          ville: '',
-          type: ''
-        }
+        structureNom: '',
+        structureRaisonSociale: '',
+        structureSiret: '',
+        structureAdresse: '',
+        structureCodePostal: '',
+        structureVille: '',
+        structureType: '',
+        structurePays: 'France'
       }));
     }
   }, [formHook]);
@@ -346,12 +371,9 @@ export const useContactForm = (contactId) => {
     handleSelectStructure,
     sectionsVisibility,
     toggleSection,
-    updateContact,
-    updateStructure,
     handleCancel, // Ajout de la fonction handleCancel
     // Raccourcis pour une meilleure DX
     contact: contactDataWithId,
-    contactFormData: formHook.formData?.contact || {},
     // TODO: Gérer les entités liées différemment car relatedData n'existe pas dans useGenericEntityForm
     structure: null,
     selectedStructure: null,

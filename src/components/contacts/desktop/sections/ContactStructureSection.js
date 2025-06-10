@@ -27,40 +27,42 @@ const ContactStructureSection = ({
 
   // Dériver selectedCompany directement des données du formulaire
   const selectedCompany = useMemo(() => {
-    const hasStructureData = formData?.structure?.siret && formData?.structure?.raisonSociale;
+    // Utiliser les champs PLATS au lieu de la structure imbriquée
+    const hasStructureData = formData?.structureSiret && formData?.structureRaisonSociale;
     
     // Si l'utilisateur a manuellement effacé ou si pas de données, retourner null
     if (hasManuallyCleared || !hasStructureData) {
       return null;
     }
     
-    // Sinon, créer l'objet company depuis les données du formulaire
+    // Sinon, créer l'objet company depuis les données du formulaire (champs PLATS)
     return {
       id: formData.structureId || '',
-      nom: formData.structure.raisonSociale,
-      siret: formData.structure.siret,
-      adresse: formData.structure.adresse || '',
-      codePostal: formData.structure.codePostal || '',
-      ville: formData.structure.ville || '',
-      statutJuridique: formData.structure.type || ''
+      nom: formData.structureRaisonSociale,
+      siret: formData.structureSiret,
+      adresse: formData.structureAdresse || '',
+      codePostal: formData.structureCodePostal || '',
+      ville: formData.structureVille || '',
+      statutJuridique: formData.structureType || ''
     };
   }, [
-    formData?.structure?.siret, 
-    formData?.structure?.raisonSociale, 
-    formData?.structure?.adresse,
-    formData?.structure?.codePostal,
-    formData?.structure?.ville,
-    formData?.structure?.type,
+    formData?.structureSiret, 
+    formData?.structureRaisonSociale, 
+    formData?.structureAdresse,
+    formData?.structureCodePostal,
+    formData?.structureVille,
+    formData?.structureType,
     formData?.structureId,
     hasManuallyCleared
   ]);
 
   // Réinitialiser hasManuallyCleared quand les données changent
   useEffect(() => {
-    if (formData?.structure?.siret && formData?.structure?.raisonSociale) {
+    // Utiliser les champs PLATS au lieu de la structure imbriquée
+    if (formData?.structureSiret && formData?.structureRaisonSociale) {
       setHasManuallyCleared(false);
     }
-  }, [formData?.structure?.siret, formData?.structure?.raisonSociale]);
+  }, [formData?.structureSiret, formData?.structureRaisonSociale]);
 
   // Handler pour changer de mode
   const handleInputModeChange = (mode) => {
@@ -139,24 +141,24 @@ const ContactStructureSection = ({
       <div className={styles.field}>
         <label className={styles.label}>Nom de la structure</label>
         <div className={styles.value}>
-          {structure?.nom || 'Non renseigné'}
+          {structure?.nom || structure?.raisonSociale || contact?.structureNom || contact?.structureRaisonSociale || 'Non renseigné'}
         </div>
       </div>
       
       <div className={styles.field}>
         <label className={styles.label}>SIRET</label>
         <div className={styles.value}>
-          {structure?.siret || 'Non renseigné'}
+          {structure?.siret || contact?.structureSiret || 'Non renseigné'}
         </div>
       </div>
       
       <div className={styles.field}>
         <label className={styles.label}>Adresse</label>
         <div className={styles.value}>
-          {structure?.adresse ? (
+          {(structure?.adresse || contact?.structureAdresse) ? (
             <>
-              {structure.adresse}<br />
-              {structure.codePostal} {structure.ville}
+              {structure?.adresse || contact?.structureAdresse}<br />
+              {structure?.codePostal || contact?.structureCodePostal} {structure?.ville || contact?.structureVille}
             </>
           ) : (
             'Non renseignée'

@@ -28,13 +28,13 @@ const ContactSection = ({
           <div className="row g-3 mb-3">
             <div className="col-md-6">
               <div className={styles.formGroup}>
-                <label htmlFor="contact.nom" className={styles.cardLabel}>Nom <span className="text-danger">*</span></label>
+                <label htmlFor="nom" className={styles.cardLabel}>Nom <span className="text-danger">*</span></label>
                 <input
                   type="text"
                   className={styles.formField}
-                  id="contact.nom"
-                  name="contact.nom"
-                  value={formData.contact.nom}
+                  id="nom"
+                  name="nom"
+                  value={formData.nom || ''}
                   onChange={handleChange}
                   required
                   placeholder="Ex: Dupont"
@@ -43,13 +43,13 @@ const ContactSection = ({
             </div>
             <div className="col-md-6">
               <div className={styles.formGroup}>
-                <label htmlFor="contact.prenom" className={styles.cardLabel}>Prénom</label>
+                <label htmlFor="prenom" className={styles.cardLabel}>Prénom</label>
                 <input
                   type="text"
                   className={styles.formField}
-                  id="contact.prenom"
-                  name="contact.prenom"
-                  value={formData.contact.prenom}
+                  id="prenom"
+                  name="prenom"
+                  value={formData.prenom || ''}
                   onChange={handleChange}
                   placeholder="Ex: Jean"
                 />
@@ -58,13 +58,13 @@ const ContactSection = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="contact.fonction" className={styles.cardLabel}>Fonction</label>
+            <label htmlFor="fonction" className={styles.cardLabel}>Fonction</label>
             <input
               type="text"
               className={styles.formField}
-              id="contact.fonction"
-              name="contact.fonction"
-              value={formData.contact.fonction}
+              id="fonction"
+              name="fonction"
+              value={formData.fonction || ''}
               onChange={handleChange}
               placeholder="Ex: Directeur artistique"
             />
@@ -73,15 +73,15 @@ const ContactSection = ({
           <div className="row g-3">
             <div className="col-md-6">
               <div className={styles.formGroup}>
-                <label htmlFor="contact.email" className={styles.cardLabel}>Email</label>
+                <label htmlFor="email" className={styles.cardLabel}>Email</label>
                 <div className="input-group">
                   <span className="input-group-text"><i className="bi bi-envelope"></i></span>
                   <input
                     type="email"
                     className={styles.formField}
-                    id="contact.email"
-                    name="contact.email"
-                    value={formData.contact.email}
+                    id="email"
+                    name="email"
+                    value={formData.email || ''}
                     onChange={handleChange}
                     placeholder="Ex: jean.dupont@example.com"
                   />
@@ -90,15 +90,15 @@ const ContactSection = ({
             </div>
             <div className="col-md-6">
               <div className={styles.formGroup}>
-                <label htmlFor="contact.telephone" className={styles.cardLabel}>Téléphone</label>
+                <label htmlFor="telephone" className={styles.cardLabel}>Téléphone</label>
                 <div className="input-group">
                   <span className="input-group-text"><i className="bi bi-telephone"></i></span>
                   <input
                     type="tel"
                     className={styles.formField}
-                    id="contact.telephone"
-                    name="contact.telephone"
-                    value={formData.contact.telephone}
+                    id="telephone"
+                    name="telephone"
+                    value={formData.telephone || ''}
                     onChange={handleChange}
                     placeholder="Ex: 01 23 45 67 89"
                   />

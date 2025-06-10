@@ -118,11 +118,70 @@ const useFormSubmission = (options) => {
       }
       
       // Transformer les données si nécessaire
-      const processedData = transformData({
+      let processedData = transformData({
         ...data,
         updatedAt: serverTimestamp(),
         ...(id ? {} : { createdAt: serverTimestamp() })
       });
+      
+      // APLATISSEMENT FORCÉ pour les contacts avec structure imbriquée
+      let dataToSave = processedData;
+      
+      if (collection === 'contacts' && processedData.contact) {
+        console.log('🔵🔵🔵 useFormSubmission.js UTILISÉ');
+        console.log('🔴 CONTACT IMBRIQUÉ DÉTECTÉ DANS useFormSubmission - APLATISSEMENT FORCÉ');
+        console.log('🔴 Données imbriquées:', processedData);
+        
+        dataToSave = {
+          // Champs contact
+          nom: processedData.contact.nom || processedData.nom || '',
+          prenom: processedData.contact.prenom || processedData.prenom || '',
+          email: processedData.contact.email || processedData.email || '',
+          telephone: processedData.contact.telephone || processedData.telephone || '',
+          fonction: processedData.contact.fonction || processedData.fonction || '',
+          adresse: processedData.contact.adresse || processedData.adresse || '',
+          codePostal: processedData.contact.codePostal || processedData.codePostal || '',
+          ville: processedData.contact.ville || processedData.ville || '',
+          
+          // Champs structure si présents
+          ...(processedData.structure ? {
+            structureRaisonSociale: processedData.structure.raisonSociale || '',
+            structureSiret: processedData.structure.siret || '',
+            structureType: processedData.structure.type || '',
+            structureAdresse: processedData.structure.adresse || '',
+            structureCodePostal: processedData.structure.codePostal || '',
+            structureVille: processedData.structure.ville || '',
+            structurePays: processedData.structure.pays || 'France',
+            structureTva: processedData.structure.tva || '',
+            structureNumeroIntracommunautaire: processedData.structure.numeroIntracommunautaire || ''
+          } : {
+            structureId: processedData.structureId || '',
+            structureNom: processedData.structureNom || '',
+            structureRaisonSociale: processedData.structureRaisonSociale || '',
+            structureSiret: processedData.structureSiret || '',
+            structureType: processedData.structureType || '',
+            structureAdresse: processedData.structureAdresse || '',
+            structureCodePostal: processedData.structureCodePostal || '',
+            structureVille: processedData.structureVille || '',
+            structurePays: processedData.structurePays || 'France',
+            structureTva: processedData.structureTva || '',
+            structureNumeroIntracommunautaire: processedData.structureNumeroIntracommunautaire || ''
+          }),
+          
+          // Autres champs
+          organizationId: processedData.organizationId,
+          structureId: processedData.structureId || '',
+          lieuxIds: processedData.lieuxIds || [],
+          concertsAssocies: processedData.concertsAssocies || [],
+          notes: processedData.notes || '',
+          tags: processedData.tags || [],
+          statut: processedData.statut || 'actif',
+          createdAt: processedData.createdAt || serverTimestamp(),
+          updatedAt: processedData.updatedAt || serverTimestamp()
+        };
+        
+        console.log('🟢 DONNÉES APLATIES:', dataToSave);
+      }
       
       // Créer ou mettre à jour le document
       const docRef = id 
@@ -131,7 +190,7 @@ const useFormSubmission = (options) => {
       
       const documentId = id || docRef.id;
       
-      await setDoc(docRef, processedData, { merge });
+      await setDoc(docRef, dataToSave, { merge });
       
       // Mettre à jour les associations si configurées
       if (Object.keys(associations).length > 0) {

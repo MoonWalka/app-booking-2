@@ -11,6 +11,7 @@ import {
   serverTimestamp,
   db
 } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook générique pour la recherche d'entités (lieux, contacts, artistes, concerts, etc.)
@@ -38,6 +39,8 @@ export const useEntitySearch = (options) => {
     allowCreate = true,
     customSearchFunction = null
   } = options;
+  
+  const { currentOrganization } = useOrganization();
 
   // console.log('Parsed options:', { entityType, searchField, onSelect: !!onSelect });
 
@@ -78,20 +81,36 @@ export const useEntitySearch = (options) => {
       const isDateFormat = /^\d{4}-\d{2}-\d{2}$/.test(String(searchTerm));
       
       if (isDateFormat && entityType === 'concerts') {
-        // Recherche exacte sur le champ date
-        searchQuery = query(
-          entitiesRef,
-          where('date', '==', searchTerm),
-          limit(maxResults)
-        );
+        // Recherche exacte sur le champ date avec filtre organisation
+        if (currentOrganization?.id) {
+          searchQuery = query(
+            entitiesRef,
+            where('organizationId', '==', currentOrganization.id),
+            where('date', '==', searchTerm),
+            limit(maxResults)
+          );
+        } else {
+          // Sans organisation, pas de résultats
+          setResults([]);
+          setIsSearching(false);
+          return;
+        }
       } else {
         // Pour une recherche plus large, récupérer plus de résultats et filtrer localement
         // Cela permet de trouver "chez tutu" même en tapant "tutu"
-        searchQuery = query(
-          entitiesRef,
-          orderBy('createdAt', 'desc'),
-          limit(maxResults * 5) // Récupérer 5x plus pour permettre un bon filtrage
-        );
+        if (currentOrganization?.id) {
+          searchQuery = query(
+            entitiesRef,
+            where('organizationId', '==', currentOrganization.id),
+            orderBy('createdAt', 'desc'),
+            limit(maxResults * 5) // Récupérer 5x plus pour permettre un bon filtrage
+          );
+        } else {
+          // Sans organisation, pas de résultats
+          setResults([]);
+          setIsSearching(false);
+          return;
+        }
       }
       
       const snapshot = await getDocs(searchQuery);
@@ -148,7 +167,7 @@ export const useEntitySearch = (options) => {
     } finally {
       setIsSearching(false);
     }
-  }, [searchTerm, entityType, customSearchFunction, maxResults, additionalSearchFields, filterResults]);
+  }, [searchTerm, entityType, customSearchFunction, maxResults, additionalSearchFields, filterResults, currentOrganization?.id]);
 
   // Référence stable pour performSearch
   const performSearchRef = useRef();
@@ -254,10 +273,18 @@ export const useEntitySearch = (options) => {
     
     try {
       
+      // VÉRIFICATION CRITIQUE - organizationId OBLIGATOIRE
+      if (!currentOrganization?.id) {
+        console.error('❌ organizationId manquant lors de la création');
+        alert('Erreur : Aucune organisation sélectionnée. Veuillez vous reconnecter.');
+        return null;
+      }
+      
       // Données de base pour chaque type d'entité
       let entityData = {
         nom: searchTermString.trim(),
         nomLowercase: searchTermString.trim().toLowerCase(),
+        organizationId: currentOrganization.id, // CRITIQUE pour multi-org
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         ...entityAdditionalData
@@ -281,8 +308,26 @@ export const useEntitySearch = (options) => {
             ...entityData,
             email: '',
             telephone: '',
-            structure: '',
-            concertsAssocies: [],
+            fonction: '',
+            // Structure (avec préfixe pour éviter imbrication)
+            structureId: '',
+            structureNom: '',
+            structureRaisonSociale: '',
+            structureSiret: '',
+            structureAdresse: '',
+            structureCodePostal: '',
+            structureVille: '',
+            structurePays: 'France',
+            structureTva: '',
+            structureType: '',
+            structureNumeroIntracommunautaire: '',
+            // Relations bidirectionnelles
+            concertsIds: [],
+            lieuxIds: [],
+            artistesIds: [],
+            // Autres
+            tags: [],
+            statut: 'actif',
             ...entityAdditionalData
           };
           break;

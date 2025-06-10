@@ -13,10 +13,8 @@ import useLieuDelete from '@/hooks/lieux/useLieuDelete';
 // Import sections
 import LieuFormHeader from './sections/LieuFormHeader';
 import LieuGeneralInfo from './sections/LieuGeneralInfo';
-import LieuAddressSection from './sections/LieuAddressSection';
-import LieuOrganizerSection from './sections/LieuOrganizerSection';
-import LieuContactSection from './sections/LieuContactSection';
-import LieuInfoSection from './sections/LieuInfoSection';
+import LieuAddressInputSection from './sections/LieuAddressInputSection';
+import LieuContactSearchSection from './sections/LieuContactSearchSection';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 const LieuForm = () => {
@@ -33,8 +31,6 @@ const LieuForm = () => {
     error,
     handleChange,
     handleSubmit,
-    addressSearch,
-    contactSearch: programmateurSearch, // Alias pour rétrocompatibilité
     submitting
   } = useLieuForm(id);
 
@@ -66,7 +62,11 @@ const LieuForm = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        console.log('Form submit - Données actuelles:', lieu);
+        handleSubmit(e);
+      }}>
         <div className={styles.formContainer}>
           {/* Header avec le style qui te plaisait */}
           <LieuFormHeader 
@@ -75,7 +75,10 @@ const LieuForm = () => {
             lieu={lieu}
             navigate={navigate}
             isSubmitting={submitting || loading || isDeleting}
-            onSave={handleSubmit}
+            onSave={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
             onDelete={id !== 'nouveau' ? handleOpenDeleteModal : undefined}
             canSave={true}
             roundedTop={true}
@@ -91,40 +94,23 @@ const LieuForm = () => {
                 onChange={handleChange}
               />
 
-              {/* Address section */}
-              <LieuAddressSection 
-                lieu={lieu}
-                isEditing={true}
-                handleChange={handleChange}
-                addressSearch={addressSearch}
-              />
-
-              {/* Organizer section - Même nom que dans LieuDetails */}
-              <LieuOrganizerSection
-                isEditMode={true}
-                contact={programmateurSearch?.selectedEntity}
-                programmateur={programmateurSearch?.selectedEntity}
-                lieu={lieu}
-                formData={lieu}
-                onChange={handleChange}
-                onContactChange={programmateurSearch?.setSelectedEntity}
-                onProgrammateurChange={programmateurSearch?.setSelectedEntity}
-              />
-
-              {/* Contact section - Déplacé vers le bas comme dans LieuDetails */}
-              <LieuContactSection 
-                lieu={lieu}
-                contact={lieu.contact} 
-                isEditing={true}
-                handleChange={handleChange} 
-              />
-
-              {/* Additional information section - En bas comme dans LieuDetails */}
-              <LieuInfoSection 
+              {/* Address section avec AddressInput */}
+              <LieuAddressInputSection 
                 lieu={lieu}
                 isEditing={true}
                 handleChange={handleChange}
               />
+
+              {/* Contact section avec recherche bidirectionnelle */}
+              <LieuContactSearchSection 
+                lieu={lieu}
+                isEditing={true}
+                onContactsChange={(contactIds) => {
+                  console.log('[LieuForm] onContactsChange appelé avec:', contactIds);
+                  handleChange({ target: { name: 'contactIds', value: contactIds } });
+                }}
+              />
+
 
               {error && (
                 <Alert variant="danger" className="shadow-sm rounded-3 mb-4">

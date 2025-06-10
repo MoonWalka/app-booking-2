@@ -209,6 +209,18 @@ export const entityConfigurations = {
         maxItems: 10
       },
       {
+        id: 'concerts',
+        title: 'Concerts organisés',
+        icon: 'bi-calendar-event',
+        type: 'relations',
+        relation: 'concerts',
+        displayType: 'list',
+        maxItems: 20,
+        sortBy: 'date',
+        sortOrder: 'desc',
+        emptyMessage: 'Aucun concert associé'
+      },
+      {
         id: 'notes',
         title: 'Notes',
         icon: 'bi-journal-text',
@@ -231,6 +243,14 @@ export const entityConfigurations = {
         displayName: 'Lieux',
         bidirectional: true,
         inverseField: 'contactIds'
+      },
+      concerts: { 
+        collection: 'concerts', 
+        field: 'concertsIds', 
+        isArray: true,
+        displayName: 'Concerts',
+        bidirectional: true,
+        inverseField: 'contactId'
       }
     }
   },
@@ -311,7 +331,9 @@ export const entityConfigurations = {
         collection: 'contacts', 
         field: 'contactId', 
         isArray: false,
-        displayName: 'Organisateur'
+        displayName: 'Organisateur',
+        bidirectional: true,
+        inverseField: 'concertsIds'
       },
       structure: {
         collection: 'structures',

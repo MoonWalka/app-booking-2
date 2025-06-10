@@ -12,7 +12,12 @@ const ContactAddressSection = ({
 }) => {
   const [showValidation, setShowValidation] = useState(false);
   const adresseData = isEditing 
-    ? formData.structure 
+    ? {
+        adresse: formData.structureAdresse || '',
+        codePostal: formData.structureCodePostal || '',
+        ville: formData.structureVille || '',
+        pays: formData.structurePays || 'France'
+      } 
     : {
         adresse: contact?.structureAdresse || '',
         codePostal: contact?.structureCodePostal || '',
@@ -32,10 +37,10 @@ const ContactAddressSection = ({
   const handleValidateAddress = async () => {
     setShowValidation(true);
     await validateAdresse(
-      formData.structure.adresse,
-      formData.structure.codePostal,
-      formData.structure.ville,
-      formData.structure.pays
+      formData.structureAdresse,
+      formData.structureCodePostal,
+      formData.structureVille,
+      formData.structurePays || 'France'
     );
   };
 
@@ -47,10 +52,10 @@ const ContactAddressSection = ({
     if (handleChange) {
       const syntheticEvent = (name, value) => ({ target: { name, value } });
       
-      handleChange(syntheticEvent('structure.adresse', addressComponents.adresse));
-      handleChange(syntheticEvent('structure.codePostal', addressComponents.codePostal));
-      handleChange(syntheticEvent('structure.ville', addressComponents.ville));
-      handleChange(syntheticEvent('structure.pays', addressComponents.pays));
+      handleChange(syntheticEvent('structureAdresse', addressComponents.adresse));
+      handleChange(syntheticEvent('structureCodePostal', addressComponents.codePostal));
+      handleChange(syntheticEvent('structureVille', addressComponents.ville));
+      handleChange(syntheticEvent('structurePays', addressComponents.pays));
     }
     
     setShowValidation(false);
@@ -85,14 +90,14 @@ const ContactAddressSection = ({
       {isEditing ? (
         <>
           <div className={styles.formGroup}>
-            <label htmlFor="structure.adresse" className={styles.cardLabel}>Adresse complète</label>
+            <label htmlFor="structureAdresse" className={styles.cardLabel}>Adresse complète</label>
             <div className="input-group">
               <input
                 type="text"
                 className={styles.formField}
-                id="structure.adresse"
-                name="structure.adresse"
-                value={formData.structure.adresse}
+                id="structureAdresse"
+                name="structureAdresse"
+                value={formData.structureAdresse || ''}
                 onChange={handleChange}
                 placeholder="Numéro et nom de rue"
               />
@@ -100,7 +105,7 @@ const ContactAddressSection = ({
                 variant="outline-secondary"
                 type="button"
                 onClick={handleValidateAddress}
-                disabled={!formData.structure.adresse || isValidating}
+                disabled={!formData.structureAdresse || isValidating}
               >
                 {isValidating ? (
                   <>
@@ -120,13 +125,13 @@ const ContactAddressSection = ({
           <div className="row mb-3">
             <div className="col-md-4">
               <div className={styles.formGroup}>
-                <label htmlFor="structure.codePostal" className={styles.cardLabel}>Code postal</label>
+                <label htmlFor="structureCodePostal" className={styles.cardLabel}>Code postal</label>
                 <input
                   type="text"
                   className={styles.formField}
-                  id="structure.codePostal"
-                  name="structure.codePostal"
-                  value={formData.structure.codePostal}
+                  id="structureCodePostal"
+                  name="structureCodePostal"
+                  value={formData.structureCodePostal || ''}
                   onChange={handleChange}
                   placeholder="Ex: 75001"
                 />
@@ -134,13 +139,13 @@ const ContactAddressSection = ({
             </div>
             <div className="col-md-8">
               <div className={styles.formGroup}>
-                <label htmlFor="structure.ville" className={styles.cardLabel}>Ville</label>
+                <label htmlFor="structureVille" className={styles.cardLabel}>Ville</label>
                 <input
                   type="text"
                   className={styles.formField}
-                  id="structure.ville"
-                  name="structure.ville"
-                  value={formData.structure.ville}
+                  id="structureVille"
+                  name="structureVille"
+                  value={formData.structureVille || ''}
                   onChange={handleChange}
                   placeholder="Ex: Paris"
                 />
@@ -149,13 +154,13 @@ const ContactAddressSection = ({
           </div>
           
           <div className={styles.formGroup}>
-            <label htmlFor="structure.pays" className={styles.cardLabel}>Pays</label>
+            <label htmlFor="structurePays" className={styles.cardLabel}>Pays</label>
             <input
               type="text"
               className={styles.formField}
-              id="structure.pays"
-              name="structure.pays"
-              value={formData.structure.pays}
+              id="structurePays"
+              name="structurePays"
+              value={formData.structurePays || 'France'}
               onChange={handleChange}
               placeholder="Ex: France"
             />

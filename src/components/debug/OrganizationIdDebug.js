@@ -2,10 +2,10 @@
  * Composant de debug pour diagnostiquer les organizationId manquants
  * Version panneau flottant et déplaçable
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { collection, getDocs, db, updateDoc, doc } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
-import Card from '@/components/ui/Card';
+// import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 import styles from './OrganizationIdDebug.module.css';
@@ -37,7 +37,7 @@ const OrganizationIdDebug = ({ isVisible, onClose, initialPosition = { x: 20, y:
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     if (!isDragging) return;
     
     const newX = e.clientX - dragStart.x;
@@ -51,7 +51,7 @@ const OrganizationIdDebug = ({ isVisible, onClose, initialPosition = { x: 20, y:
       x: Math.max(0, Math.min(newX, maxX)),
       y: Math.max(0, Math.min(newY, maxY))
     });
-  };
+  }, [isDragging, dragStart.x, dragStart.y]);
 
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -66,7 +66,7 @@ const OrganizationIdDebug = ({ isVisible, onClose, initialPosition = { x: 20, y:
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDragging, dragStart, position]);
+  }, [isDragging, dragStart.x, dragStart.y, handleMouseMove]);
 
   const checkOrganizationIds = async () => {
     setLoading(true);
@@ -207,6 +207,7 @@ const OrganizationIdDebug = ({ isVisible, onClose, initialPosition = { x: 20, y:
     if (currentOrganization?.id && isVisible) {
       checkOrganizationIds();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentOrganization, isVisible]);
 
   if (!isVisible) return null;

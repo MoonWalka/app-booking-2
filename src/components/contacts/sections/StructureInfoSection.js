@@ -20,8 +20,8 @@ const StructureInfoSection = ({
   
   // Valeurs selon le mode
   const values = isFormikMode 
-    ? (formik.values || { structure: {}, structureId: '' })
-    : (formData || { structure: {}, structureId: '' });
+    ? (formik.values || { structureId: '' })
+    : (formData || { structureId: '' });
     
   // Handler selon le mode  
   const onChange = isFormikMode 
@@ -33,9 +33,18 @@ const StructureInfoSection = ({
     : (() => {});
 
   // Accéder aux valeurs de structure de manière sécurisée
-  const structureValues = values.structure || {};
-  const touchedStructure = touched?.structure || {};
-  const errorsStructure = errors?.structure || {};
+  const structureValues = {
+    raisonSociale: values.structureRaisonSociale || '',
+    type: values.structureType || '',
+    adresse: values.structureAdresse || '',
+    codePostal: values.structureCodePostal || '',
+    ville: values.structureVille || '',
+    siret: values.structureSiret || '',
+    tva: values.structureTva || '',
+    numeroIntracommunautaire: values.structureNumeroIntracommunautaire || ''
+  };
+  const touchedStructure = touched || {};
+  const errorsStructure = errors || {};
 
   // Contenu du formulaire réutilisable
   const formContent = (
@@ -46,9 +55,9 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureRaisonSociale">Raison sociale *</Form.Label>
             <Form.Control
               id="structureRaisonSociale"
-              name="structure.raisonSociale"
+              name="structureRaisonSociale"
               type="text"
-              value={structureValues.raisonSociale || ''}
+              value={structureValues.raisonSociale || values.structureRaisonSociale || ''}
               onChange={onChange}
               onBlur={onBlur}
               isInvalid={touchedStructure.raisonSociale && errorsStructure.raisonSociale}
@@ -67,8 +76,8 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureType">Type de structure</Form.Label>
             <Form.Select
               id="structureType"
-              name="structure.type"
-              value={structureValues.type || ''}
+              name="structureType"
+              value={structureValues.type || values.structureType || ''}
               onChange={onChange}
               onBlur={onBlur}
               disabled={isReadOnly}
@@ -92,9 +101,9 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureAdresse">Adresse</Form.Label>
             <Form.Control
               id="structureAdresse"
-              name="structure.adresse"
+              name="structureAdresse"
               type="text"
-              value={structureValues.adresse || ''}
+              value={structureValues.adresse || values.structureAdresse || ''}
               onChange={onChange}
               onBlur={onBlur}
               disabled={isReadOnly}
@@ -111,9 +120,9 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureCodePostal">Code postal</Form.Label>
             <Form.Control
               id="structureCodePostal"
-              name="structure.codePostal"
+              name="structureCodePostal"
               type="text"
-              value={structureValues.codePostal || ''}
+              value={structureValues.codePostal || values.structureCodePostal || ''}
               onChange={onChange}
               onBlur={onBlur}
               disabled={isReadOnly}
@@ -128,9 +137,9 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureVille">Ville</Form.Label>
             <Form.Control
               id="structureVille"
-              name="structure.ville"
+              name="structureVille"
               type="text"
-              value={structureValues.ville || ''}
+              value={structureValues.ville || values.structureVille || ''}
               onChange={onChange}
               onBlur={onBlur}
               disabled={isReadOnly}
@@ -147,9 +156,9 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureSiret">SIRET</Form.Label>
             <Form.Control
               id="structureSiret"
-              name="structure.siret"
+              name="structureSiret"
               type="text"
-              value={structureValues.siret || ''}
+              value={structureValues.siret || values.structureSiret || ''}
               onChange={onChange}
               onBlur={onBlur}
               disabled={isReadOnly}
@@ -164,9 +173,9 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureTva">TVA Intracommunautaire</Form.Label>
             <Form.Control
               id="structureTva"
-              name="structure.tva"
+              name="structureTva"
               type="text"
-              value={structureValues.tva || ''}
+              value={structureValues.tva || values.structureTva || ''}
               onChange={onChange}
               onBlur={onBlur}
               disabled={isReadOnly}
@@ -183,9 +192,9 @@ const StructureInfoSection = ({
             <Form.Label htmlFor="structureNumeroIntracommunautaire">N° TVA Intracommunautaire</Form.Label>
             <Form.Control
               id="structureNumeroIntracommunautaire"
-              name="structure.numeroIntracommunautaire"
+              name="structureNumeroIntracommunautaire"
               type="text"
-              value={structureValues.numeroIntracommunautaire || ''}
+              value={structureValues.numeroIntracommunautaire || values.structureNumeroIntracommunautaire || ''}
               onChange={onChange}
               onBlur={onBlur}
               disabled={isReadOnly}

@@ -1,6 +1,9 @@
 // src/components/lieux/LieuxList.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { collection, query, where, onSnapshot } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
@@ -14,6 +17,10 @@ import { useLieuDelete } from '@/hooks/lieux';
  */
 function LieuxList() {
   const navigate = useNavigate();
+  const { currentOrganization } = useOrganization();
+  const [lieux, setLieux] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   
   // Callback appelé après suppression réussie pour actualiser la liste
@@ -22,6 +29,43 @@ function LieuxList() {
   };
   
   const { handleDeleteLieu } = useLieuDelete(onDeleteSuccess);
+
+  // Chargement des données des lieux
+  useEffect(() => {
+    if (!currentOrganization?.id) {
+      setLoading(false);
+      return;
+    }
+
+    const q = query(
+      collection(db, 'lieux'),
+      where('organizationId', '==', currentOrganization.id)
+    );
+
+    const unsubscribe = onSnapshot(q, 
+      (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setLieux(data);
+        setLoading(false);
+        setError(null);
+      },
+      (err) => {
+        console.error('Erreur chargement lieux:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [currentOrganization?.id, refreshKey]);
+
+  // Fonction de rafraîchissement
+  const refreshData = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   // Fonction de calcul des statistiques pour les lieux
   const calculateStats = (items) => {
@@ -203,6 +247,11 @@ function LieuxList() {
       showRefresh={true}
       showStats={true}
       calculateStats={calculateStats}
+      // Données et état depuis le chargement local
+      initialData={lieux}
+      loading={loading}
+      error={error}
+      onRefresh={refreshData}
     />
   );
 }

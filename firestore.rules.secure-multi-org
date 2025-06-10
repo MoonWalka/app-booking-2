@@ -1,0 +1,193 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Fonction helper pour vérifier l'appartenance à l'organisation
+    function belongsToOrganization(resource) {
+      return resource.data.organizationId == request.auth.token.organizationId;
+    }
+    
+    // Fonction pour vérifier que les données entrantes ont le bon organizationId
+    function hasCorrectOrganizationId() {
+      return request.resource.data.organizationId == request.auth.token.organizationId;
+    }
+    
+    // Fonction pour détecter les structures imbriquées interdites
+    function hasNoNestedStructure(entityType) {
+      return (entityType == 'contacts' && !('contact' in request.resource.data)) ||
+             (entityType == 'lieux' && !('lieu' in request.resource.data)) ||
+             (entityType == 'artistes' && !('artiste' in request.resource.data)) ||
+             (entityType == 'structures' && !('structure' in request.resource.data)) ||
+             (entityType == 'concerts' && !('concert' in request.resource.data));
+    }
+    
+    // Fonction pour valider les relations (doivent être des tableaux de strings)
+    function hasValidRelations() {
+      return (!('contacts' in request.resource.data) || request.resource.data.contacts is list) &&
+             (!('lieux' in request.resource.data) || request.resource.data.lieux is list) &&
+             (!('artistes' in request.resource.data) || request.resource.data.artistes is list) &&
+             (!('structures' in request.resource.data) || request.resource.data.structures is list) &&
+             (!('concerts' in request.resource.data) || request.resource.data.concerts is list);
+    }
+    
+    // Règles pour les contacts
+    match /contacts/{contact} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('contacts')
+        && hasValidRelations()
+        && request.resource.data.keys().hasAll(['organizationId', 'nom']);
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('contacts')
+        && hasValidRelations();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règles pour les lieux
+    match /lieux/{lieu} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('lieux')
+        && hasValidRelations()
+        && request.resource.data.keys().hasAll(['organizationId', 'nom']);
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('lieux')
+        && hasValidRelations();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règles pour les artistes
+    match /artistes/{artiste} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('artistes')
+        && hasValidRelations()
+        && request.resource.data.keys().hasAll(['organizationId', 'nom']);
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('artistes')
+        && hasValidRelations();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règles pour les structures
+    match /structures/{structure} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('structures')
+        && hasValidRelations()
+        && request.resource.data.keys().hasAll(['organizationId', 'nom']);
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('structures')
+        && hasValidRelations();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règles pour les concerts
+    match /concerts/{concert} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('concerts')
+        && hasValidRelations()
+        && request.resource.data.keys().hasAll(['organizationId', 'titre']);
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId()
+        && hasNoNestedStructure('concerts')
+        && hasValidRelations();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règles pour les organisations (lecture seule pour les membres)
+    match /organizations/{organization} {
+      allow read: if request.auth != null 
+        && (organization == request.auth.token.organizationId ||
+            request.auth.uid in resource.data.members);
+      allow write: if false; // Géré par des fonctions Cloud
+    }
+    
+    // Règles pour les utilisateurs
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.organizationId == request.auth.token.organizationId;
+    }
+    
+    // Règles pour les templates (contrats, factures)
+    match /templates/{template} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId();
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règles pour les contrats
+    match /contrats/{contrat} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId()
+        && hasValidRelations();
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId()
+        && hasValidRelations();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règles pour les factures
+    match /factures/{facture} {
+      allow read: if request.auth != null && belongsToOrganization(resource);
+      
+      allow create: if request.auth != null 
+        && hasCorrectOrganizationId()
+        && hasValidRelations();
+        
+      allow update: if request.auth != null 
+        && belongsToOrganization(resource)
+        && hasCorrectOrganizationId()
+        && hasValidRelations();
+        
+      allow delete: if request.auth != null && belongsToOrganization(resource);
+    }
+    
+    // Règle par défaut : tout refuser
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

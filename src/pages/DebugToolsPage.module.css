@@ -1,0 +1,82 @@
+/* Styles pour DebugToolsPage */
+.container {
+  padding: var(--tc-space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--tc-space-8);
+}
+
+.header h1 {
+  color: var(--tc-color-gray-800);
+  font-size: var(--tc-font-size-2xl);
+  margin-bottom: var(--tc-space-2);
+  display: flex;
+  align-items: center;
+}
+
+.description {
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-base);
+}
+
+.tabs {
+  margin-bottom: var(--tc-space-6);
+  border-bottom: 2px solid var(--tc-border-default);
+}
+
+.tabs .nav-link {
+  color: var(--tc-text-secondary);
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: var(--tc-space-3) var(--tc-space-4);
+  font-weight: var(--tc-font-weight-medium);
+  transition: all 0.2s ease;
+}
+
+.tabs .nav-link:hover {
+  color: var(--tc-color-primary-600);
+  background-color: var(--tc-bg-light);
+}
+
+.tabs .nav-link.active {
+  color: var(--tc-color-primary-600);
+  border-bottom-color: var(--tc-color-primary-600);
+  background-color: transparent;
+}
+
+.notAvailable {
+  text-align: center;
+  padding: var(--tc-space-12);
+  color: var(--tc-text-secondary);
+}
+
+.notAvailable i {
+  font-size: 3rem;
+  color: var(--tc-color-gray-400);
+  margin-bottom: var(--tc-space-4);
+  display: block;
+}
+
+.notAvailable h3 {
+  color: var(--tc-color-gray-700);
+  margin-bottom: var(--tc-space-2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--tc-space-4);
+  }
+  
+  .header h1 {
+    font-size: var(--tc-font-size-xl);
+  }
+  
+  .tabs .nav-link {
+    padding: var(--tc-space-2) var(--tc-space-3);
+    font-size: var(--tc-font-size-sm);
+  }
+}

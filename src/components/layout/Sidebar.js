@@ -67,6 +67,13 @@ const Sidebar = () => {
               Paramètres
             </Link>
           </li>
+          {/* Temporairement visible pour tous les environnements */}
+          <li>
+            <Link to="/debug-tools" className={window.location.pathname.includes('/debug-tools') ? styles.active : ''}>
+              <i className="bi bi-tools"></i>
+              Debug
+            </Link>
+          </li>
         </ul>
       </div>
     </div>

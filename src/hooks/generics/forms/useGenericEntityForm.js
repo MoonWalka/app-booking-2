@@ -190,7 +190,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
       processed = transformDataRef.current(processed);
     }
     return processed;
-  }, [currentOrganization?.id]); // Dépendance stable car l'id ne change pas souvent
+  }, [currentOrganization]); // Dépendance complète sur currentOrganization
   
   // ✅ CORRECTION 12: Auto-save simplifié
   const triggerAutoSave = useCallback(() => {
@@ -221,23 +221,13 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   // ✅ CORRECTION 13: Changement de champ stabilisé avec support des champs imbriqués
   const handleFieldChange = useCallback((fieldName, value) => {
     if (!isMountedRef.current) return;
+    console.log('🟡 HANDLE FIELD CHANGE:', fieldName, '=', value);
+    
     setFormData(prev => {
       let newData;
       
-      // Gérer les champs imbriqués (par exemple: contact.email)
-      if (fieldName.includes('.')) {
-        const [parent, child] = fieldName.split('.');
-        newData = {
-          ...prev,
-          [parent]: {
-            ...prev[parent],
-            [child]: value
-          }
-        };
-      } else {
-        // Champ simple
-        newData = { ...prev, [fieldName]: value };
-      }
+      // Champ simple (plus de gestion des champs imbriqués)
+      newData = { ...prev, [fieldName]: value };
       
       if (enableDirtyTracking) setIsDirty(true);
       
@@ -257,8 +247,11 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   // ✅ CORRECTION 14: Changement d'input stabilisé
   const handleInputChange = useCallback((event) => {
     const { name, value, type, checked } = event.target;
+    console.log('🟡 HANDLE INPUT CHANGE:', name, '=', value);
+    console.log('🟡 TYPE:', entityType);
+    console.log('🟡 formData actuel:', formData);
     handleFieldChange(name, type === 'checkbox' ? checked : value);
-  }, [handleFieldChange]);
+  }, [handleFieldChange, entityType, formData]);
   
   // ✅ CORRECTION 15: Blur handler stabilisé
   const handleFieldBlur = useCallback((fieldName) => {
@@ -276,6 +269,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     if (event) event.preventDefault();
     if (!isMountedRef.current) return false;
     
+    console.log('🟢🟢🟢 useGenericEntityForm.js UTILISÉ');
     console.log("[useGenericEntityForm] handleSubmit appelé");
     console.log("[useGenericEntityForm] formData:", formData);
     console.log("[useGenericEntityForm] entityId:", entityId);

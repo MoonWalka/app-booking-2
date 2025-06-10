@@ -39,7 +39,10 @@ function ContactView({ id: propId }) {
       id: contact.id, 
       nom: contact.nom, 
       prenom: contact.prenom,
-      structureId: contact.structureId
+      email: contact.email,
+      structureId: contact.structureId,
+      // Afficher toutes les clés de l'objet contact pour déboguer
+      allKeys: Object.keys(contact)
     } : null,
     structure: structure ? { 
       id: structure.id, 
@@ -48,6 +51,11 @@ function ContactView({ id: propId }) {
     lieuxCount: lieux?.length || 0,
     concertsCount: concerts?.length || 0
   });
+  
+  // Debug - Affichage complet du contact pour voir la structure
+  if (contact) {
+    console.log('[ContactView] Contact complet:', contact);
+  }
 
   // Formatage des données pour l'affichage
   const contactData = useMemo(() => {
@@ -66,7 +74,14 @@ function ContactView({ id: propId }) {
       }
     };
 
-    return {
+    // Debug - Vérifier la valeur de l'email avant formatage
+    console.log('[ContactView] Email du contact avant formatage:', {
+      'contact.email': contact.email,
+      'typeof contact.email': typeof contact.email,
+      'email exists': !!contact.email
+    });
+
+    const formattedData = {
       id: contact.id,
       nom: contact.nom || "Nom non renseigné",
       prenom: contact.prenom || "Prénom non renseigné",
@@ -83,6 +98,14 @@ function ContactView({ id: propId }) {
         .join(' ') || "Adresse non renseignée",
       notes: contact.notes || ""
     };
+    
+    // Debug - Vérifier la valeur après formatage
+    console.log('[ContactView] ContactData formaté:', {
+      email: formattedData.email,
+      emailIsDefault: formattedData.email === "Email non renseigné"
+    });
+    
+    return formattedData;
   }, [contact]);
 
   // Handlers

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useAddressSearch } from '@/hooks/common';
 import styles from './AddressInput.module.css';
@@ -26,6 +26,10 @@ const AddressInput = ({
   onAddressSelected = null,
   className = '',
 }) => {
+  // État local pour bloquer temporairement l'affichage des résultats après sélection
+  const [isSelecting, setIsSelecting] = useState(false);
+  const blockTimeoutRef = useRef(null);
+  
   // Utiliser le hook pour la recherche d'adresse
   const {
     searchTerm,
@@ -35,7 +39,6 @@ const AddressInput = ({
     setShowResults,
     isSearching,
     dropdownRef,
-    handleSelectAddress,
   } = useAddressSearch();
 
   // Mettre à jour le terme de recherche quand la valeur externe change
@@ -44,10 +47,28 @@ const AddressInput = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]); // setSearchTerm est stable (useState) - l'ajouter créerait une boucle infinie
 
+  // Nettoyer le timeout au démontage
+  useEffect(() => {
+    return () => {
+      if (blockTimeoutRef.current) {
+        clearTimeout(blockTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Gérer la sélection d'une adresse
   const handleSelect = (address) => {
-    // Fermer le dropdown IMMÉDIATEMENT
+    // Bloquer l'affichage des résultats pendant 500ms
+    setIsSelecting(true);
     setShowResults(false);
+    
+    if (blockTimeoutRef.current) {
+      clearTimeout(blockTimeoutRef.current);
+    }
+    
+    blockTimeoutRef.current = setTimeout(() => {
+      setIsSelecting(false);
+    }, 500);
     
     // Extraire les informations d'adresse
     let street = '';
@@ -67,7 +88,7 @@ const AddressInput = ({
     // Adresse complète à afficher
     const fullAddress = street || address.display_name.split(',')[0];
 
-    // Mettre à jour l'input avec la rue AVANT d'appeler handleSelectAddress
+    // Mettre à jour l'input avec la rue
     if (onChange) {
       onChange({
         target: {
@@ -80,20 +101,23 @@ const AddressInput = ({
     // Mettre à jour le terme de recherche local
     setSearchTerm(fullAddress);
 
-    // Appeler handleSelectAddress du hook (qui fermera aussi le dropdown)
-    handleSelectAddress(address);
+    // Ne PAS appeler handleSelectAddress qui pourrait rouvrir le dropdown
+    // handleSelectAddress(address);
 
     // Si un callback est fourni, l'appeler avec toutes les informations d'adresse
     if (onAddressSelected) {
-      onAddressSelected({
-        adresse: fullAddress,
-        codePostal: postalCode,
-        ville: city,
-        pays: country,
-        latitude: address.lat,
-        longitude: address.lon,
-        display_name: address.display_name
-      });
+      // Utiliser setTimeout pour s'assurer que le dropdown est fermé avant le callback
+      setTimeout(() => {
+        onAddressSelected({
+          adresse: fullAddress,
+          codePostal: postalCode,
+          ville: city,
+          pays: country,
+          latitude: address.lat,
+          longitude: address.lon,
+          display_name: address.display_name
+        });
+      }, 0);
     }
   };
 
@@ -130,13 +154,21 @@ const AddressInput = ({
       </div>
       
       {/* Suggestions d'adresse */}
-      {showResults && addressResults.length > 0 && (
+      {showResults && addressResults.length > 0 && !isSelecting && (
         <div className={styles.suggestions} ref={dropdownRef}>
           {addressResults.map((suggestion, index) => (
             <div
               key={index}
               className={styles.suggestionItem}
-              onClick={() => handleSelect(suggestion)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSelect(suggestion);
+              }}
+              onMouseDown={(e) => {
+                // Empêcher le blur de l'input qui pourrait fermer le dropdown prématurément
+                e.preventDefault();
+              }}
             >
               <div className={styles.suggestionIcon}>
                 <i className="bi bi-geo-alt-fill"></i>

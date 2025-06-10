@@ -12,17 +12,19 @@ const PublicContactForm = ({
   formLinkId, 
   onSubmitSuccess,
   contactEmail, // Email du contact passé si disponible
-  programmateurEmail // Rétrocompatibilité
+  programmateurEmail, // Rétrocompatibilité
+  lieu // Données du lieu depuis le concert
 }) => {
   const { currentOrganization } = useOrganization();
   
   // États du formulaire restructuré
   const [formData, setFormData] = useState({
-    // Adresse du lieu (prioritaire)
-    lieuAdresse: '',
-    lieuCodePostal: '',
-    lieuVille: '',
-    lieuPays: 'France',
+    // Adresse du lieu (prioritaire) - pré-rempli si lieu disponible
+    lieuNom: lieu?.nom || '',
+    lieuAdresse: lieu?.adresse || '',
+    lieuCodePostal: lieu?.codePostal || '',
+    lieuVille: lieu?.ville || '',
+    lieuPays: lieu?.pays || 'France',
     
     // Informations de la structure (optionnel)
     structureNom: '',
@@ -51,6 +53,20 @@ const PublicContactForm = ({
   // États de soumission
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  // Mettre à jour les données du lieu quand le prop lieu change
+  useEffect(() => {
+    if (lieu) {
+      setFormData(prev => ({
+        ...prev,
+        lieuNom: lieu.nom || prev.lieuNom,
+        lieuAdresse: lieu.adresse || prev.lieuAdresse,
+        lieuCodePostal: lieu.codePostal || prev.lieuCodePostal,
+        lieuVille: lieu.ville || prev.lieuVille,
+        lieuPays: lieu.pays || prev.lieuPays || 'France'
+      }));
+    }
+  }, [lieu]);
 
   // Charger les données existantes si le formulaire a déjà été soumis
   useEffect(() => {
@@ -83,6 +99,7 @@ const PublicContactForm = ({
               if (submissionData.lieuData || submissionData.signataireData || submissionData.structureData) {
                 setFormData({
                   // Données du lieu
+                  lieuNom: submissionData.lieuData?.nom || '',
                   lieuAdresse: submissionData.lieuData?.adresse || '',
                   lieuCodePostal: submissionData.lieuData?.codePostal || '',
                   lieuVille: submissionData.lieuData?.ville || '',
@@ -248,6 +265,7 @@ const PublicContactForm = ({
     const errors = [];
     
     // Validation adresse du lieu
+    if (!formData.lieuNom.trim()) errors.push('Le nom du lieu est obligatoire');
     if (!formData.lieuAdresse.trim()) errors.push('L\'adresse du lieu est obligatoire');
     if (!formData.lieuCodePostal.trim()) errors.push('Le code postal du lieu est obligatoire');
     if (!formData.lieuVille.trim()) errors.push('La ville du lieu est obligatoire');
@@ -302,6 +320,7 @@ const PublicContactForm = ({
         
         // DONNÉES DU LIEU (prioritaire)
         lieuData: {
+          nom: formData.lieuNom,
           adresse: formData.lieuAdresse,
           codePostal: formData.lieuCodePostal,
           ville: formData.lieuVille,
@@ -373,8 +392,22 @@ const PublicContactForm = ({
         icon={<i className="bi bi-geo-alt"></i>}
       >
           <p className={styles.formSubtitle}>
-            Veuillez indiquer l'adresse exacte où se déroulera l'événement.
+            Veuillez indiquer le nom et l'adresse exacte où se déroulera l'événement.
           </p>
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="lieuNom" className={styles.formLabel}>Nom du lieu *</label>
+            <input
+              type="text"
+              id="lieuNom"
+              name="lieuNom"
+              className={styles.formControl}
+              placeholder="Ex: Salle des fêtes, Théâtre municipal, Bar Le Central..."
+              value={formData.lieuNom}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
           
           <div className={styles.formGroup}>
             <AddressInput

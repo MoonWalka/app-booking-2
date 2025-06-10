@@ -135,7 +135,7 @@
     "resolve-url-loader": {
       "postcss": "^8.4.31"
     },
-    "webpack-dev-server": "^5.2.1",
+    "webpack-dev-server": "^4.15.1",
     "semver": "^7.5.2",
     "http-proxy-middleware": "^2.0.8",
     "quill": "^2.0.0",

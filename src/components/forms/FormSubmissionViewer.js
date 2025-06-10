@@ -150,6 +150,8 @@ const FormSubmissionViewer = ({ submissionId, onValidate }) => {
       <Card title="Adresse du lieu de l'événement" className="mb-4">
         {submission.lieuData && (
           <dl>
+            <dt>Nom du lieu</dt>
+            <dd>{submission.lieuData.nom || 'N/A'}</dd>
             <dt>Adresse</dt>
             <dd>
               {submission.lieuData.adresse || 'N/A'}<br />

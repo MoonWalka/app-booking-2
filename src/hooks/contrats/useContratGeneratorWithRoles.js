@@ -9,15 +9,10 @@ import {
   collection, 
   doc, 
   getDoc, 
-  getDocs, 
-  query, 
-  where, 
-  orderBy,
   addDoc,
   updateDoc,
   serverTimestamp
 } from '@/services/firebase-service';
-import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
 import { useOrganization } from '@/context/OrganizationContext';
 
 /**
@@ -59,9 +54,11 @@ const useContratGeneratorWithRoles = (concertId) => {
   const [isLoading, setIsLoading] = useState(true);
   const [concertData, setConcertData] = useState(null);
   const [contactsWithRoles, setContactsWithRoles] = useState([]);
-  const [templates, setTemplates] = useState([]);
+  const [templates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [variables, setVariables] = useState({});
+  // Variables conservées pour future utilisation
+  // eslint-disable-next-line no-unused-vars
+  const [variables] = useState({});
   const [error, setError] = useState(null);
   const { currentOrganization } = useOrganization();
 

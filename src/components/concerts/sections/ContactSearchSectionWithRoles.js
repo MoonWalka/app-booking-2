@@ -116,6 +116,8 @@ const ContactSearchSectionWithRoles = React.memo(({
   };
 
   // Fonction spéciale pour créer un contact signataire depuis le formulaire public
+  // TODO: Implémenter cette fonction quand nécessaire
+  // eslint-disable-next-line no-unused-vars
   const createSignataireFromPublicForm = (signataireData) => {
     const newContact = {
       id: `temp-${Date.now()}`, // ID temporaire, sera remplacé après création

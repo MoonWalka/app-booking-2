@@ -85,7 +85,7 @@ function ConcertLieuDebug() {
     };
 
     loadDebugData();
-  }, [id, hookResult?.concert?.id]); // Re-run si les données du hook changent
+  }, [id, hookResult?.concert?.id, hookResult]); // Re-run si les données du hook changent
 
   if (debugData.loading || hookResult?.loading) {
     return <div className={styles.debugContainer}>Chargement du debug...</div>;

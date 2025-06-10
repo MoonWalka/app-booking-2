@@ -52,6 +52,15 @@ export default function useContactDetails(id) {
     error: details.error?.message || 'NULL'
   });
   
+  // 🔍 DEBUG: Log spécifique pour l'email
+  if (details.entity) {
+    console.log('[DEBUG useContactDetails] Email du contact:', {
+      'entity.email': details.entity.email,
+      'entity.contact?.email': details.entity.contact?.email,
+      'toutes les clés': Object.keys(details.entity)
+    });
+  }
+  
   // Charger les lieux associés au contact
   useEffect(() => {
     const fetchLieuxAssocies = async () => {

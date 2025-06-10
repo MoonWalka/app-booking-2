@@ -80,11 +80,15 @@ Les overrides suivants ont été ajoutés pour forcer les versions sécurisées 
 ## Résultats
 
 - **Avant** : 5 vulnérabilités (4 moderate, 1 critical)
-- **Après** : 4 vulnérabilités moderate
+- **Après** : 6 vulnérabilités moderate (après ajustement de compatibilité)
+
+### Ajustement de compatibilité
+
+Pour maintenir la compatibilité avec `react-scripts` 5.0.1 et `@craco/craco` 7.1.0, nous avons dû utiliser `webpack-dev-server` 4.15.1 au lieu de 5.2.1. Cela introduit 2 vulnérabilités modérées supplémentaires mais permet à l'application de fonctionner correctement.
 
 ### Vulnérabilités restantes
 
-Les 4 vulnérabilités restantes sont liées à `resolve-url-loader` qui dépend d'une ancienne version de postcss. Ces vulnérabilités nécessiteraient une mise à jour majeure de `react-scripts` (breaking change).
+Les vulnérabilités restantes sont toutes de sévérité modérée et sont principalement dans des dépendances de développement. Elles nécessiteraient une mise à jour majeure de `react-scripts` ou une migration vers un système de build moderne.
 
 ## Recommandations
 

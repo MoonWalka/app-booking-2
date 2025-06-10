@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './ContactWithRoleSelector.module.css';
-import Button from '@/components/ui/Button';
 
 /**
  * Composant pour sélectionner le rôle d'un contact

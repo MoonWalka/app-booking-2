@@ -292,6 +292,7 @@ const FormResponsePage = () => {
               concertId={concertId} 
               formLinkId={formLinkId} 
               contactEmail={contactEmail}
+              lieu={lieu}
               onSubmitSuccess={() => setCompleted(true)}
             />
         </Card>

@@ -1,6 +1,5 @@
 // src/hooks/concerts/useConcertDetailsWithRoles.js
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, db } from '@/services/firebase-service';
 
 // Import du hook générique
@@ -8,13 +7,6 @@ import { useGenericEntityDetails } from '@/hooks/common';
 
 // Import des hooks personnalisés spécifiques aux concerts
 import useConcertDetails from '@/hooks/concerts/useConcertDetails';
-import useConcertStatus from '@/hooks/concerts/useConcertStatus';
-import useConcertFormsManagement from '@/hooks/concerts/useConcertFormsManagement';
-import useConcertAssociations from '@/hooks/concerts/useConcertAssociations';
-
-// Import des utilitaires
-import { formatDate, formatMontant, isDatePassed, copyToClipboard, getCacheKey } from '@/utils/formatters';
-import { debugLog } from '@/utils/logUtils';
 
 /**
  * Version améliorée de useConcertDetails qui gère les contacts avec rôles
@@ -31,7 +23,8 @@ const useConcertDetailsWithRoles = (id, locationParam) => {
   // Utiliser le hook original
   const originalHookResult = useConcertDetails(id, locationParam);
   
-  // Références stables
+  // Références stables (conservée pour future utilisation)
+  // eslint-disable-next-line no-unused-vars
   const loadingContactsRef = useRef(false);
   
   // Configuration étendue pour les relations

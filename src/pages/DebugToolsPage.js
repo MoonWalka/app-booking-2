@@ -8,6 +8,7 @@ import EntityCreationTester from '@/components/debug/EntityCreationTester';
 import LieuMapDebug from '@/components/debug/LieuMapDebug';
 import RIBDebugger from '@/components/debug/RIBDebugger';
 import RelancesAuditTool from '@/components/debug/RelancesAuditTool';
+import ContactEmailDebug from '@/components/debug/ContactEmailDebug';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -76,6 +77,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="relances" title="Audit Relances">
           <RelancesAuditTool />
+        </Tab>
+        
+        <Tab eventKey="contact-email" title="Debug Email Contact">
+          <ContactEmailDebug />
         </Tab>
       </Tabs>
     </div>

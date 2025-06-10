@@ -18,15 +18,7 @@ const RelancesAuditTool = () => {
   const [progress, setProgress] = useState('');
   const [fixResult, setFixResult] = useState(null);
   
-  // Protection contre les erreurs de rendu
-  const safeRender = (fn) => {
-    try {
-      return fn();
-    } catch (err) {
-      console.error('Erreur de rendu dans RelancesAuditTool:', err);
-      return <span className="text-danger">Erreur d'affichage</span>;
-    }
-  };
+  // Fonction safeRender supprimée car non utilisée
 
   // Corriger le problème de boucle
   const fixLoop = async () => {

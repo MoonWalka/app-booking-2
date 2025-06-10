@@ -73,8 +73,8 @@ const ContactSection = ({
             </Form.Label>
             <Form.Control
               type="text"
-              name="contact.nom"
-              value={formData.contact?.nom || ''}
+              name="nom"
+              value={formData.nom || ''}
               onChange={onChange}
               isInvalid={!!errors.nom}
               required
@@ -91,8 +91,8 @@ const ContactSection = ({
             </Form.Label>
             <Form.Control
               type="text"
-              name="contact.prenom"
-              value={formData.contact?.prenom || ''}
+              name="prenom"
+              value={formData.prenom || ''}
               onChange={onChange}
               isInvalid={!!errors.prenom}
               required
@@ -110,8 +110,8 @@ const ContactSection = ({
         </Form.Label>
         <Form.Control
           type="text"
-          name="contact.fonction"
-          value={formData.contact?.fonction || ''}
+          name="fonction"
+          value={formData.fonction || ''}
           onChange={onChange}
           placeholder="Ex: Directeur artistique, Responsable programmation..."
         />
@@ -125,8 +125,8 @@ const ContactSection = ({
             </Form.Label>
             <Form.Control
               type="email"
-              name="contact.email"
-              value={formData.contact?.email || ''}
+              name="email"
+              value={formData.email || ''}
               onChange={onChange}
               isInvalid={!!errors.email}
             />
@@ -143,8 +143,8 @@ const ContactSection = ({
             <Form.Label className={styles.formLabel}>Téléphone</Form.Label>
             <Form.Control
               type="tel"
-              name="contact.telephone"
-              value={formData.contact?.telephone || ''}
+              name="telephone"
+              value={formData.telephone || ''}
               onChange={onChange}
             />
           </Form.Group>

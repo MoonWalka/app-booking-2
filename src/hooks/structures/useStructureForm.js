@@ -129,12 +129,11 @@ export const useStructureForm = (structureId) => {
       email: '',
       siteWeb: '',
       notes: '',
-      contact: {
-        nom: '',
-        telephone: '',
-        email: '',
-        fonction: ''
-      }
+      // Données du contact directement à la racine avec préfixe
+      contactNom: '',
+      contactTelephone: '',
+      contactEmail: '',
+      contactFonction: ''
     },
     validateForm: validateStructureForm,
     transformData: transformStructureData,
@@ -153,10 +152,8 @@ export const useStructureForm = (structureId) => {
   const updateContactInfo = useCallback((field, value) => {
     formHook.setFormData(prev => ({
       ...prev,
-      contact: {
-        ...prev.contact,
-        [field]: value
-      }
+      // Utiliser des champs plats avec préfixe
+      [`contact${field.charAt(0).toUpperCase() + field.slice(1)}`]: value
     }));
   }, [formHook]);
   

@@ -8,7 +8,7 @@
  * 4. Générer des alertes pour le debugging
  */
 
-import { useOrganization } from '@/context/OrganizationContext';
+// import { useOrganization } from '@/context/OrganizationContext';
 
 class FirebaseInterceptor {
   constructor() {

@@ -36,6 +36,13 @@ export async function updateBidirectionalRelation({
       relationName,
       action
     });
+    
+    // LOG DÉTAILLÉ POUR DÉBUG LIEU-CONTACT
+    if (sourceType === 'lieu' && targetType === 'contact') {
+      console.log('🔗🔗🔗 RELATION LIEU-CONTACT DÉTECTÉE');
+      console.log('🔗 Configuration complète:', entityConfigurations[sourceType]);
+      console.log('🔗 Relations disponibles:', Object.keys(entityConfigurations[sourceType].relations || {}));
+    }
 
     // Récupérer la configuration de la relation
     const sourceConfig = entityConfigurations[sourceType];

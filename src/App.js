@@ -43,6 +43,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { installGlobalFixer } from '@/utils/fixOrganizationIds';
 import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
 import DebugController from '@/components/debug/DebugController';
+import DebugToolsPage from '@/pages/DebugToolsPage';
+import DebugButton from '@/components/common/DebugButton';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -143,6 +145,8 @@ function App() {
               <ParametresProvider>
                 <ModalProvider>
                   <RouterStabilizer />
+                  {/* Bouton de debug temporaire */}
+                  <DebugButton />
                   <Suspense fallback={
                   <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
                     <div className="text-center">
@@ -382,6 +386,23 @@ function App() {
                                 </FlexContainer>
                               }>
                                 <ParametresPage />
+                              </Suspense>
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/debug-tools" element={
+                            <PrivateRoute>
+                              <Suspense fallback={
+                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                                  <div className="text-center">
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Chargement de la page...</span>
+                                    </div>
+                                    <p className="mt-2">Chargement de la page...</p>
+                                  </div>
+                                </FlexContainer>
+                              }>
+                                <DebugToolsPage />
                               </Suspense>
                             </PrivateRoute>
                           } />

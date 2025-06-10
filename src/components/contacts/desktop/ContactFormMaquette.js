@@ -363,22 +363,21 @@ const ContactFormMaquette = () => {
     setIsSubmitting(true);
 
     try {
+      // Structure plate pour éviter les objets imbriqués
       const contact = {
-        contact: {
-          prenom: formData.prenom.trim(),
-          nom: formData.nom.trim(),
-          email: formData.email.trim(),
-          telephone: formData.telephone.trim(),
-          adresse: formData.adresse.trim(),
-          codePostal: formData.codePostal.trim(),
-          ville: formData.ville.trim()
-        },
-        structure: {
-          raisonSociale: formData.structureNom.trim(),
-          type: formData.structureType,
-          siret: formData.structureSiret.trim(),
-          siteWeb: formData.structureSiteWeb.trim()
-        },
+        // Données du contact directement à la racine
+        prenom: formData.prenom.trim(),
+        nom: formData.nom.trim(),
+        email: formData.email.trim(),
+        telephone: formData.telephone.trim(),
+        adresse: formData.adresse.trim(),
+        codePostal: formData.codePostal.trim(),
+        ville: formData.ville.trim(),
+        // Données de la structure directement à la racine avec préfixe
+        structureRaisonSociale: formData.structureNom.trim(),
+        structureType: formData.structureType,
+        structureSiret: formData.structureSiret.trim(),
+        structureSiteWeb: formData.structureSiteWeb.trim(),
         // Associations
         lieuxIds: lieuxAssocies.map(lieu => lieu.id),
         concertsIds: concertsAssocies.map(concert => concert.id),

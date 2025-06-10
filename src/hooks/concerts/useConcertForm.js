@@ -17,6 +17,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { generateConcertId } from '@/utils/idGenerators';
 import { debugLog } from '@/utils/logUtils';
 import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
+import { updateBidirectionalRelation } from '@/services/bidirectionalRelationsService';
 
 /**
  * Hook optimisé pour gérer les formulaires de concerts
@@ -64,6 +65,9 @@ export const useConcertForm = (concertId) => {
     return transformedData;
   }, []);
   
+  // Référence pour stocker l'ancien contactId
+  const previousContactIdRef = useRef(null);
+
   // Callbacks pour les opérations réussies ou en erreur
   const onSuccessCallback = useCallback(async (data, action) => {
     console.log("[useConcertForm] onSuccessCallback appelé", { data, action });
@@ -71,6 +75,10 @@ export const useConcertForm = (concertId) => {
     // Si c'est un chargement initial (getById), on ne fait rien
     if (action === 'getById' || action === 'load') {
       console.log("[useConcertForm] Action de chargement, on ignore");
+      // Stocker le contactId initial pour détecter les changements futurs
+      if (data && data.contactId) {
+        previousContactIdRef.current = data.contactId;
+      }
       return;
     }
     
@@ -82,6 +90,46 @@ export const useConcertForm = (concertId) => {
       
       console.log("[useConcertForm] Affichage du message de succès:", message);
       showSuccessToast(message);
+      
+      // Gérer les relations bidirectionnelles pour le contact
+      if (data.contactId || previousContactIdRef.current) {
+        try {
+          console.log("[useConcertForm] Gestion des relations bidirectionnelles contact-concert");
+          
+          // Si le contact a changé, supprimer la relation avec l'ancien contact
+          if (previousContactIdRef.current && previousContactIdRef.current !== data.contactId) {
+            console.log("[useConcertForm] Suppression de la relation avec l'ancien contact:", previousContactIdRef.current);
+            await updateBidirectionalRelation({
+              sourceType: 'concert',
+              sourceId: data.id,
+              targetType: 'contact',
+              targetId: previousContactIdRef.current,
+              relationName: 'contact',
+              action: 'remove'
+            });
+          }
+          
+          // Ajouter la relation avec le nouveau contact
+          if (data.contactId) {
+            console.log("[useConcertForm] Ajout de la relation avec le nouveau contact:", data.contactId);
+            await updateBidirectionalRelation({
+              sourceType: 'concert',
+              sourceId: data.id,
+              targetType: 'contact',
+              targetId: data.contactId,
+              relationName: 'contact',
+              action: 'add'
+            });
+          }
+          
+          // Mettre à jour la référence pour les prochaines modifications
+          previousContactIdRef.current = data.contactId;
+          
+        } catch (error) {
+          console.error("[useConcertForm] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
+          // Ne pas bloquer le flux principal si la mise à jour échoue
+        }
+      }
       
       // Déclencher les relances automatiques
       try {

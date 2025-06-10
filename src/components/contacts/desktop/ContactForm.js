@@ -145,11 +145,26 @@ const ContactForm = ({
         submittedAt: serverTimestamp(),
         status: 'pending', // pending, validated, rejected
         
-        // Données du contact
+        // Données du contact (structure PLATE)
         contactData: {
-          contact: formData.contact || {},
-          structure: formData.structure || {},
-          structureId: formData.structureId || null
+          // Champs du contact
+          nom: formData.nom || '',
+          prenom: formData.prenom || '',
+          fonction: formData.fonction || '',
+          email: formData.email || '',
+          telephone: formData.telephone || '',
+          
+          // Champs de la structure
+          structureId: formData.structureId || null,
+          structureNom: formData.structureNom || '',
+          structureRaisonSociale: formData.structureRaisonSociale || '',
+          structureAdresse: formData.structureAdresse || '',
+          structureCodePostal: formData.structureCodePostal || '',
+          structureVille: formData.structureVille || '',
+          structurePays: formData.structurePays || 'France',
+          structureSiret: formData.structureSiret || '',
+          structureTva: formData.structureTva || '',
+          structureType: formData.structureType || ''
         },
         
         // Données du lieu si modifiées

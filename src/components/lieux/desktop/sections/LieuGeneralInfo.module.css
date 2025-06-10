@@ -109,6 +109,56 @@
 }
 
 /* =============================
+   CHAMPS DE FORMULAIRE
+   ============================= */
+.formField {
+  width: 100%;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border: 1px solid var(--tc-color-gray-300);
+  border-radius: var(--tc-radius-base);
+  font-size: var(--tc-font-size-base);
+  background-color: var(--tc-bg-default);
+  color: var(--tc-text-default);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.formField:focus {
+  outline: none;
+  border-color: var(--tc-color-primary);
+  box-shadow: 0 0 0 3px var(--tc-color-primary-light);
+}
+
+.formField::placeholder {
+  color: var(--tc-color-gray-500);
+}
+
+.formSelect {
+  width: 100%;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border: 1px solid var(--tc-color-gray-300);
+  border-radius: var(--tc-radius-base);
+  font-size: var(--tc-font-size-base);
+  background-color: var(--tc-bg-default);
+  color: var(--tc-text-default);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.formSelect:focus {
+  outline: none;
+  border-color: var(--tc-color-primary);
+  box-shadow: 0 0 0 3px var(--tc-color-primary-light);
+}
+
+/* Texte d'aide */
+.helpText {
+  display: block;
+  margin-top: var(--tc-space-1);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-gray-600);
+}
+
+/* =============================
    RESPONSIVE DESIGN
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {

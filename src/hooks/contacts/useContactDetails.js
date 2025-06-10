@@ -165,7 +165,7 @@ export default function useContactDetails(id) {
     };
     
     fetchLieuxAssocies();
-  }, [id, details.entity, concerts]); // Ajouter concerts comme dépendance
+  }, [id, details.entity, concerts, currentOrganization]); // Ajouter concerts et currentOrganization comme dépendances
   
   // Charger les concerts associés au contact
   useEffect(() => {
@@ -244,7 +244,7 @@ export default function useContactDetails(id) {
     };
     
     fetchConcertsAssocies();
-  }, [id, details.entity]);
+  }, [id, details.entity, currentOrganization]);
   
   // Charger les artistes associés au contact
   useEffect(() => {
@@ -360,7 +360,7 @@ export default function useContactDetails(id) {
     };
     
     fetchArtistesAssocies();
-  }, [id, details.entity, concerts]);
+  }, [id, details.entity, concerts, currentOrganization]);
   
   // Charger la structure associée au contact
   useEffect(() => {
@@ -399,7 +399,7 @@ export default function useContactDetails(id) {
     };
     
     fetchStructureAssociee();
-  }, [id, details.entity]);
+  }, [id, details.entity, currentOrganization]);
   
   const hookReturn = {
     ...details,

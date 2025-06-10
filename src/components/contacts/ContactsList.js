@@ -1,6 +1,9 @@
 // src/components/contacts/ContactsList.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { collection, query, where, onSnapshot } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
@@ -13,6 +16,10 @@ import { mapTerm } from '@/utils/terminologyMapping';
  */
 function ContactsList() {
   const navigate = useNavigate();
+  const { currentOrganization } = useOrganization();
+  const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   
   // Callback appelé après suppression réussie pour actualiser la liste
@@ -21,6 +28,43 @@ function ContactsList() {
   };
   
   const { handleDelete } = useDeleteContact(onDeleteSuccess);
+
+  // Chargement des données des contacts
+  useEffect(() => {
+    if (!currentOrganization?.id) {
+      setLoading(false);
+      return;
+    }
+
+    const q = query(
+      collection(db, 'contacts'),
+      where('organizationId', '==', currentOrganization.id)
+    );
+
+    const unsubscribe = onSnapshot(q, 
+      (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setContacts(data);
+        setLoading(false);
+        setError(null);
+      },
+      (err) => {
+        console.error('Erreur chargement contacts:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [currentOrganization?.id, refreshKey]);
+
+  // Fonction de rafraîchissement
+  const refreshData = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   // Configuration des colonnes pour les contacts
   const columns = [
@@ -222,6 +266,11 @@ function ContactsList() {
       calculateStats={calculateStats}
       showAdvancedFilters={true}
       advancedFilterOptions={advancedFilterOptions}
+      // Données et état depuis le chargement local
+      initialData={contacts}
+      loading={loading}
+      error={error}
+      onRefresh={refreshData}
     />
   );
 }

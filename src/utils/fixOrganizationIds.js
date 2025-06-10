@@ -1,4 +1,4 @@
-import { collection, getDocs, updateDoc, doc, writeBatch, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 
 /**
@@ -25,10 +25,10 @@ export async function fixMissingOrganizationIds(collectionName, organizationId) 
     
     // Filtrer ceux qui n'ont pas d'organizationId
     const docsToFix = [];
-    allDocsSnapshot.forEach(doc => {
-      const data = doc.data();
+    allDocsSnapshot.forEach(docSnapshot => {
+      const data = docSnapshot.data();
       if (!data.organizationId) {
-        docsToFix.push({ id: doc.id, data });
+        docsToFix.push({ id: docSnapshot.id, data });
       }
     });
 
@@ -39,14 +39,14 @@ export async function fixMissingOrganizationIds(collectionName, organizationId) 
     }
 
     // Utiliser batch writes pour de meilleures performances
-    const batchSize = 500; // Limite Firestore
+    const maxBatchSize = 500; // Limite Firestore
     const batches = [];
     const errors = [];
     let successCount = 0;
 
-    for (let i = 0; i < docsToFix.length; i += batchSize) {
+    for (let i = 0; i < docsToFix.length; i += maxBatchSize) {
       const batch = writeBatch(db);
-      const currentBatch = docsToFix.slice(i, i + batchSize);
+      const currentBatch = docsToFix.slice(i, i + maxBatchSize);
 
       currentBatch.forEach(({ id }) => {
         const docRef = doc(db, collectionName, id);
@@ -64,9 +64,9 @@ export async function fixMissingOrganizationIds(collectionName, organizationId) 
     for (let i = 0; i < batches.length; i++) {
       try {
         await batches[i].commit();
-        const batchSize = Math.min(batchSize, docsToFix.length - i * batchSize);
-        successCount += batchSize;
-        console.log(`✅ Batch ${i + 1}/${batches.length} completé (${batchSize} documents)`);
+        const currentBatchSize = Math.min(maxBatchSize, docsToFix.length - i * maxBatchSize);
+        successCount += currentBatchSize;
+        console.log(`✅ Batch ${i + 1}/${batches.length} completé (${currentBatchSize} documents)`);
       } catch (error) {
         console.error(`❌ Erreur batch ${i + 1}:`, error);
         errors.push(error);

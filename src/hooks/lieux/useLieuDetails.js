@@ -18,6 +18,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 const useLieuDetails = (id, locationParam) => {
   const navigate = useNavigate();
   const locationData = useLocation();
+  // eslint-disable-next-line no-unused-vars
   const { currentOrganization } = useOrganization();
   
   // Support du paramètre locationParam optionnel (pour compatibilité future)
@@ -116,6 +117,21 @@ const useLieuDetails = (id, locationParam) => {
             if (contactDoc.exists()) {
               const contact = { id: contactDoc.id, ...contactDoc.data() };
               console.log('[useLieuDetails] ✅ Contact trouvé via contactsAssocies:', contact);
+              return contact;
+            }
+          }
+        }
+        
+        // Méthode 1bis: contactIds array (nouvelle méthode)
+        if (lieuData.contactIds && Array.isArray(lieuData.contactIds) && lieuData.contactIds.length > 0) {
+          console.log('[useLieuDetails] Tentative chargement contact via contactIds:', lieuData.contactIds);
+          const premierContactId = lieuData.contactIds[0];
+          
+          if (premierContactId && typeof premierContactId === 'string') {
+            const contactDoc = await getDoc(doc(db, 'contacts', premierContactId));
+            if (contactDoc.exists()) {
+              const contact = { id: contactDoc.id, ...contactDoc.data() };
+              console.log('[useLieuDetails] ✅ Contact trouvé via contactIds:', contact);
               return contact;
             }
           }
@@ -571,17 +587,19 @@ const useLieuDetails = (id, locationParam) => {
       detailsHook.setFormData(prev => ({
         ...prev,
         contactId: newContact.id,
-        contact: {
-          id: newContact.id,
-          nom: newContact.nom,
-          prenom: newContact.prenom
-        }
+        // Données du contact directement à la racine avec préfixe
+        contactNom: newContact.nom,
+        contactPrenom: newContact.prenom,
+        contactFullName: `${newContact.prenom} ${newContact.nom}`.trim()
       }));
     } else {
       detailsHook.setFormData(prev => ({
         ...prev,
         contactId: null,
-        contact: null
+        // Réinitialiser les données du contact
+        contactNom: null,
+        contactPrenom: null,
+        contactFullName: null
       }));
     }
   }, [detailsHook]);

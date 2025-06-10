@@ -82,3 +82,77 @@
   font-style: italic;
   margin-top: var(--tc-space-1);
 }
+
+/* Nouveaux styles pour la gestion de liste */
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-3);
+}
+
+.formLabel {
+  font-weight: 500;
+  color: var(--tc-text-primary);
+  margin-bottom: var(--tc-space-2);
+}
+
+.structuresList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-2);
+}
+
+.structureItem {
+  position: relative;
+}
+
+.principalBadge {
+  position: absolute;
+  top: var(--tc-space-2);
+  right: var(--tc-space-2);
+  background-color: var(--tc-color-primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: var(--tc-border-radius-sm);
+  font-size: var(--tc-font-size-xs);
+  font-weight: 500;
+}
+
+.addAnotherButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  background-color: transparent;
+  border: 1px dashed var(--tc-border-color);
+  border-radius: var(--tc-border-radius);
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-sm);
+  cursor: pointer;
+  transition: var(--tc-transition-short);
+  width: 100%;
+  justify-content: center;
+}
+
+.addAnotherButton:hover {
+  background-color: var(--tc-bg-light);
+  border-color: var(--tc-color-primary);
+}
+
+.addAnotherButton i {
+  font-size: 1.1em;
+}
+
+.raisonSociale {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-secondary);
+  font-style: italic;
+}
+
+.tva {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-secondary);
+}

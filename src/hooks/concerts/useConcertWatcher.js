@@ -11,6 +11,7 @@ import { doc, onSnapshot } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 import { useOrganization } from '@/context/OrganizationContext';
+import { isWatcherEnabled, debugLog } from '@/config/relancesAutomatiquesConfig';
 
 /**
  * Hook pour surveiller les changements d'un concert et déclencher les relances automatiques
@@ -29,6 +30,12 @@ export const useConcertWatcher = (concertId, options = {}) => {
 
   useEffect(() => {
     if (!enabled || !concertId || !currentOrganization?.id) {
+      return;
+    }
+    
+    // Vérifier si le watcher est activé dans la configuration
+    if (!isWatcherEnabled()) {
+      debugLog('👁️ Watcher désactivé par la configuration');
       return;
     }
 

@@ -119,3 +119,56 @@
 .cancelAddButton:hover {
   background-color: rgba(220, 53, 69, 0.1);
 }
+
+/* Nouveaux styles pour la gestion des rôles */
+.contactItemWithRole {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-2);
+}
+
+.contactRole {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  padding-left: var(--tc-space-3);
+}
+
+.publicFormBadge {
+  background-color: var(--tc-color-info);
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.publicFormBadge i {
+  font-size: 0.8rem;
+}
+
+.helpSection {
+  margin-top: var(--tc-space-3);
+  padding: var(--tc-space-2);
+  background-color: var(--tc-bg-light);
+  border-radius: var(--tc-border-radius-sm);
+}
+
+.helpText {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tc-space-1);
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.5;
+}
+
+.helpText i {
+  color: var(--tc-color-info);
+  flex-shrink: 0;
+  margin-top: 2px;
+}

@@ -20,6 +20,13 @@ import {
   serverTimestamp 
 } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
+import { areAutomaticRelancesDisabled } from '@/utils/fixRelancesLoop';
+import { 
+  areRelancesEnabled, 
+  shouldIgnoreUpdate, 
+  debugLog,
+  RELANCES_CONFIG 
+} from '@/config/relancesAutomatiquesConfig';
 
 /**
  * Types de relances automatiques avec leurs conditions de déclenchement
@@ -76,6 +83,22 @@ export const RELANCE_TYPES = {
  * Service principal de gestion des relances automatiques
  */
 class RelancesAutomatiquesService {
+  constructor() {
+    // Map pour stocker les dernières évaluations et éviter les doublons
+    this._lastEvaluations = new Map();
+    
+    // Nettoyer la map toutes les 10 minutes
+    setInterval(() => {
+      const now = Date.now();
+      const tenMinutesAgo = now - 10 * 60 * 1000;
+      
+      for (const [key, timestamp] of this._lastEvaluations.entries()) {
+        if (timestamp < tenMinutesAgo) {
+          this._lastEvaluations.delete(key);
+        }
+      }
+    }, 10 * 60 * 1000);
+  }
   
   /**
    * Évalue l'état actuel d'un concert et détermine quelles relances automatiques
@@ -89,7 +112,37 @@ class RelancesAutomatiquesService {
    */
   async evaluerEtMettreAJourRelances(concert, formulaireData = null, contratData = null, organizationId) {
     try {
-      console.log('🔄 Évaluation des relances automatiques pour le concert:', concert.id);
+      debugLog('🔄 Évaluation des relances automatiques pour le concert:', concert.id);
+      
+      // Vérifier si les relances sont activées
+      if (!areRelancesEnabled()) {
+        debugLog('⏸️ Relances automatiques désactivées globalement');
+        return;
+      }
+      
+      // Vérifier si les relances automatiques sont temporairement désactivées
+      if (areAutomaticRelancesDisabled(organizationId)) {
+        debugLog('⏸️ Relances automatiques temporairement désactivées');
+        return;
+      }
+      
+      // Protection contre les appels multiples rapprochés
+      const evaluationKey = `relance_eval_${concert.id}`;
+      const lastEvaluation = this._lastEvaluations.get(evaluationKey);
+      const now = Date.now();
+      
+      if (lastEvaluation && (now - lastEvaluation) < RELANCES_CONFIG.evaluationCooldown) {
+        debugLog(`⏩ Évaluation ignorée (cooldown de ${RELANCES_CONFIG.evaluationCooldown}ms non écoulé)`);
+        return;
+      }
+      
+      this._lastEvaluations.set(evaluationKey, now);
+      
+      // Ignorer si c'est une mise à jour automatique
+      if (shouldIgnoreUpdate(concert._lastUpdateType)) {
+        debugLog('⏩ Évaluation ignorée (type de mise à jour ignoré):', concert._lastUpdateType);
+        return;
+      }
       
       // Évaluer l'état actuel du concert
       const etatConcert = this._evaluerEtatConcert(concert, formulaireData, contratData);
@@ -383,6 +436,12 @@ class RelancesAutomatiquesService {
    * @returns {Promise<void>}
    */
   async _ajouterRelanceAuConcert(concertId, relanceId) {
+    // DÉSACTIVÉ : Ne plus modifier le concert pour éviter les boucles
+    // Les relances peuvent être retrouvées via une requête sur concertId
+    debugLog(`🔗 Relation concert-relance créée (sans modification du concert)`);
+    return;
+    
+    /* Code désactivé pour éviter les boucles
     try {
       console.log(`🔗 Ajout de la relance ${relanceId} au concert ${concertId}`);
       
@@ -414,6 +473,7 @@ class RelancesAutomatiquesService {
       console.error('Erreur lors de l\'ajout de la relance au concert:', error);
       // Ne pas faire échouer toute l'opération pour cette erreur
     }
+    */
   }
   
   /**

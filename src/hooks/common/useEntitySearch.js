@@ -274,7 +274,15 @@ export const useEntitySearch = (options) => {
     try {
       
       // VÉRIFICATION CRITIQUE - organizationId OBLIGATOIRE
-      if (!currentOrganization?.id) {
+      let organizationId = currentOrganization?.id;
+      
+      if (!organizationId) {
+        // Fallback : essayer de récupérer depuis localStorage
+        organizationId = localStorage.getItem('currentOrganizationId');
+        console.warn('⚠️ organizationId manquant dans le contexte, utilisation du localStorage:', organizationId);
+      }
+      
+      if (!organizationId) {
         console.error('❌ organizationId manquant lors de la création');
         alert('Erreur : Aucune organisation sélectionnée. Veuillez vous reconnecter.');
         return null;
@@ -284,7 +292,7 @@ export const useEntitySearch = (options) => {
       let entityData = {
         nom: searchTermString.trim(),
         nomLowercase: searchTermString.trim().toLowerCase(),
-        organizationId: currentOrganization.id, // CRITIQUE pour multi-org
+        organizationId: organizationId, // CRITIQUE pour multi-org
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         ...entityAdditionalData
@@ -363,11 +371,22 @@ export const useEntitySearch = (options) => {
         case 'structures':
           entityData = {
             ...entityData,
+            raisonSociale: searchTermString.trim(), // Ajouter la raison sociale par défaut
+            type: 'association', // Type par défaut
             adresse: '',
             codePostal: '',
             ville: '',
+            pays: 'France',
             siren: '',
             siret: '',
+            tva: '',
+            telephone: '',
+            email: '',
+            siteWeb: '',
+            notes: '',
+            // Relations
+            contactsIds: [],
+            concertsIds: [],
             ...entityAdditionalData
           };
           break;

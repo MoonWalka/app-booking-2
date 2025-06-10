@@ -10,6 +10,7 @@ import EntrepriseSearchOptions from './sections/EntrepriseSearchOptions';
 import EntrepriseSearchResults from './sections/EntrepriseSearchResults';
 import EntrepriseFormFields from './sections/EntrepriseFormFields';
 import EntrepriseContactFields from './sections/EntrepriseContactFields';
+import EntrepriseBankingFields from './sections/EntrepriseBankingFields';
 import StructureLegalSection from '@/components/structures/desktop/StructureLegalSection';
 import EntrepriseSubmitActions from './sections/EntrepriseSubmitActions';
 
@@ -92,6 +93,11 @@ const ParametresEntreprise = () => {
             />
 
             <EntrepriseContactFields 
+              formData={formData} 
+              handleChange={handleChange} 
+            />
+
+            <EntrepriseBankingFields 
               formData={formData} 
               handleChange={handleChange} 
             />

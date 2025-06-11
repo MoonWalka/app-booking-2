@@ -16,6 +16,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 import { debugLog } from '@/utils/logUtils';
 import { useDataValidation } from '@/services/dataValidationService';
 import { useOrganization } from '@/context/OrganizationContext';
+import { updateBidirectionalRelation } from '@/services/bidirectionalRelationsService';
 
 /**
  * Hook optimisé pour gérer les formulaires de contacts
@@ -133,7 +134,7 @@ export const useContactForm = (contactId) => {
   }, [validateAndPrepare, currentOrganization]);
   
   // Callbacks pour les opérations réussies ou en erreur
-  const onSuccessCallback = useCallback((savedData) => {
+  const onSuccessCallback = useCallback(async (savedData) => {
     // savedData contient maintenant les champs aplatis
     const contactName = savedData.nom || '';
     const message = isNewContact
@@ -145,6 +146,44 @@ export const useContactForm = (contactId) => {
     // Récupérer l'ID depuis savedData
     const savedId = savedData.id;
     
+    // Gérer les relations bidirectionnelles
+    try {
+      // Gestion des lieux associés
+      if (savedData.lieuxIds && savedData.lieuxIds.length > 0) {
+        console.log(`🔗 Création des relations bidirectionnelles pour ${savedData.lieuxIds.length} lieux`);
+        for (const lieuId of savedData.lieuxIds) {
+          await updateBidirectionalRelation({
+            sourceType: 'contacts',
+            sourceId: savedId,
+            targetType: 'lieux',
+            targetId: lieuId,
+            relationName: 'lieux',
+            action: 'add'
+          });
+        }
+      }
+      
+      // Gestion de la structure associée
+      if (savedData.structureId) {
+        console.log(`🔗 Création de la relation bidirectionnelle avec la structure`);
+        await updateBidirectionalRelation({
+          sourceType: 'contacts',
+          sourceId: savedId,
+          targetType: 'structures',
+          targetId: savedData.structureId,
+          relationName: 'structure',
+          action: 'add'
+        });
+      }
+      
+      // Note: Pour gérer les suppressions de relations, il faudrait comparer avec les données originales
+      // Actuellement, on ne gère que l'ajout car on n'a pas accès aux données originales
+      // Les suppressions devront être gérées dans une future amélioration
+    } catch (error) {
+      console.error('Erreur lors de la création des relations bidirectionnelles:', error);
+      // On ne bloque pas la navigation même si les relations échouent
+    }
+    
     // Éviter la boucle infinie : ne pas naviguer si savedId est "nouveau"
     if (savedId && savedId !== 'nouveau') {
       navigate(`/contacts/${savedId}`);
@@ -152,9 +191,6 @@ export const useContactForm = (contactId) => {
       // Pour un nouveau contact, rediriger vers la liste
       navigate('/contacts');
     }
-    
-    // Si une structure a été créée en même temps, on pourrait gérer ici la sauvegarde de la structure
-    // et la mise à jour de la relation entre la structure et le contact
   }, [isNewContact, navigate]);
 
   const onErrorCallback = useCallback((error) => {

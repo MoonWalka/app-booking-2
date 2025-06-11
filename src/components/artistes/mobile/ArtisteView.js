@@ -36,8 +36,6 @@ const ArtisteView = ({ id }) => {
             ...doc.data()
           }));
           
-          console.log(`🎵 Trouvé ${artisteData.concertsAssocies.length} concerts pour l'artiste ${artisteData.nom}`);
-          
           setArtiste(artisteData);
         } else {
           navigate('/artistes');

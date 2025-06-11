@@ -16,10 +16,8 @@ const OrganizationContextDiagnostic = () => {
   
   // Hook de recherche pour test
   const {
-    searchTerm,
     setSearchTerm,
-    results,
-    isSearching
+    results
   } = useEntitySearch({
     entityType: 'artistes',
     searchField: 'nom',

@@ -14,6 +14,9 @@ const LieuContactSearchSection = ({
   isEditing = false,
   onContactsChange
 }) => {
+  console.log('🎯 [LieuContactSearchSection] Props reçues:', { lieu, isEditing });
+  console.log('🎯 [LieuContactSearchSection] lieu.contactIds initial:', lieu?.contactIds);
+  
   // État local pour gérer la liste des contacts
   const [contactsList, setContactsList] = React.useState([]);
   const [showAddContact, setShowAddContact] = React.useState(true);

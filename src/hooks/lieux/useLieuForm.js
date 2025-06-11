@@ -90,7 +90,11 @@ export const useLieuForm = (lieuId) => {
       
       // Si c'est un chargement initial, stocker les contactIds pour référence future
       if (action === 'getById' || action === 'load') {
-        if (savedData && savedData.contactIds) {
+        if (savedData) {
+          // S'assurer que contactIds est toujours un tableau
+          if (!savedData.contactIds) {
+            savedData.contactIds = [];
+          }
           previousContactIdsRef.current = savedData.contactIds || [];
         }
         return;

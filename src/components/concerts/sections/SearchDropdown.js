@@ -53,12 +53,9 @@ const SearchDropdown = ({
           type="button"
           variant="outline-secondary"
           className={styles.createButton}
-          onClick={() => {
-            console.log('[SearchDropdown] Create button clicked:', {
-              entityType,
-              onCreateExists: !!onCreate,
-              onCreateType: typeof onCreate
-            });
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (onCreate) {
               onCreate();
             }
@@ -109,7 +106,11 @@ const SearchDropdown = ({
                 <div 
                   key={item.id} 
                   className={styles.resultItem}
-                  onClick={() => onSelect(item)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onSelect(item);
+                  }}
                 >
                   <div className={styles.itemName}>{item.nom || item.raisonSociale || 'Sans nom'}</div>
                   {item.structure && <div className={styles.itemDetail}>{item.structure}</div>}

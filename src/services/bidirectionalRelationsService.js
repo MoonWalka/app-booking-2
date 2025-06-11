@@ -40,14 +40,16 @@ export async function updateBidirectionalRelation({
     // LOG DÉTAILLÉ POUR DÉBUG LIEU-CONTACT
     if (sourceType === 'lieu' && targetType === 'contact') {
       console.log('🔗🔗🔗 RELATION LIEU-CONTACT DÉTECTÉE');
-      console.log('🔗 Configuration complète:', entityConfigurations[sourceType]);
-      console.log('🔗 Relations disponibles:', Object.keys(entityConfigurations[sourceType].relations || {}));
+      const debugConfigKey = sourceType.endsWith('s') ? sourceType.slice(0, -1) : sourceType;
+      console.log('🔗 Configuration complète:', entityConfigurations[debugConfigKey]);
+      console.log('🔗 Relations disponibles:', Object.keys(entityConfigurations[debugConfigKey]?.relations || {}));
     }
 
-    // Récupérer la configuration de la relation
-    const sourceConfig = entityConfigurations[sourceType];
+    // Récupérer la configuration de la relation (convertir le type pluriel en singulier)
+    const sourceConfigKey = sourceType.endsWith('s') ? sourceType.slice(0, -1) : sourceType;
+    const sourceConfig = entityConfigurations[sourceConfigKey];
     if (!sourceConfig || !sourceConfig.relations || !sourceConfig.relations[relationName]) {
-      console.error(`[BidirectionalRelations] Configuration manquante pour ${sourceType}.${relationName}`);
+      console.error(`[BidirectionalRelations] Configuration manquante pour ${sourceConfigKey}.${relationName}`);
       return;
     }
 
@@ -88,7 +90,8 @@ export async function updateBidirectionalRelation({
       }
 
       // Mettre à jour l'inverse
-      const targetConfig = entityConfigurations[targetType];
+      const targetConfigKey = targetType.endsWith('s') ? targetType.slice(0, -1) : targetType;
+      const targetConfig = entityConfigurations[targetConfigKey];
       const inverseRelation = findInverseRelation(targetConfig, inverseField);
       
       if (inverseRelation && inverseRelation.isArray) {
@@ -117,7 +120,8 @@ export async function updateBidirectionalRelation({
       }
 
       // Supprimer l'inverse
-      const targetConfig = entityConfigurations[targetType];
+      const targetConfigKey = targetType.endsWith('s') ? targetType.slice(0, -1) : targetType;
+      const targetConfig = entityConfigurations[targetConfigKey];
       const inverseRelation = findInverseRelation(targetConfig, inverseField);
       
       if (inverseRelation && inverseRelation.isArray) {

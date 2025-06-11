@@ -15,10 +15,13 @@ import ArtisteOrganizationMatcher from '@/components/debug/ArtisteOrganizationMa
 import OrphanArtistesDebug from '@/components/debug/OrphanArtistesDebug';
 import OrganizationContextDiagnostic from '@/components/debug/OrganizationContextDiagnostic';
 import ArtisteFirestoreDiagnostic from '@/components/debug/ArtisteFirestoreDiagnostic';
+import SystemAuditTool from '@/components/debug/SystemAuditTool';
+import EntityRelationsDebugger from '@/components/debug/EntityRelationsDebugger';
+import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelationsFixer';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
-  const [activeTab, setActiveTab] = useState('lists');
+  const [activeTab, setActiveTab] = useState('system-audit');
 
   // Temporairement accessible en production pour corriger les problèmes
   // À retirer une fois les corrections appliquées
@@ -53,6 +56,18 @@ const DebugToolsPage = () => {
         onSelect={(k) => setActiveTab(k)}
         className={styles.tabs}
       >
+        <Tab eventKey="system-audit" title="🔬 Audit Système">
+          <SystemAuditTool />
+        </Tab>
+        
+        <Tab eventKey="entity-relations" title="🔗 Relations d'Entité">
+          <EntityRelationsDebugger />
+        </Tab>
+        
+        <Tab eventKey="relations-fixer" title="🔧 Réparation Relations">
+          <BidirectionalRelationsFixer />
+        </Tab>
+        
         <Tab eventKey="lists" title="Diagnostic des listes">
           <ListDebugger />
         </Tab>

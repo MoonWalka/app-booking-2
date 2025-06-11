@@ -39,4 +39,58 @@
     bottom: 15px;
     right: 15px;
   }
+}
+
+/* Carte debug générique */
+.debugCard {
+  margin-bottom: 20px;
+}
+
+.debugCard h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.warning {
+  background-color: #fff8dc;
+  border-left: 4px solid #ffc107;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 0 4px 4px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.alert {
+  margin-top: 20px;
+}
+
+.alert h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.alert ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.alert li {
+  margin-bottom: 5px;
 } 

@@ -15,8 +15,6 @@ import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
 import ContactsPage from '@/pages/ContactsPage';
-import ContactDetails from '@/components/contacts/ContactDetails';
-import ContactForm from '@/components/contacts/ContactForm';
 import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ArtistesPage from '@/pages/ArtistesPage';
@@ -29,7 +27,6 @@ import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-import ContactsList from '@/components/contacts/ContactsList';
 import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import ConcertDetails from '@/components/concerts/ConcertDetails';
@@ -220,10 +217,7 @@ function App() {
                           </Suspense>
                         </PrivateRoute>
                       }>
-                        <Route index element={<ContactsList />} />
-                        <Route path="nouveau" element={<ContactForm />} />
-                        <Route path=":id/edit" element={<ContactForm />} />
-                        <Route path=":id" element={<ContactDetails />} />
+                        {/* Routes gérées en interne par ContactsPage */}
                       </Route>
                       
                       <Route path="/lieux/*" element={

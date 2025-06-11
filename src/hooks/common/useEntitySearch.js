@@ -99,12 +99,22 @@ export const useEntitySearch = (options) => {
         // Pour une recherche plus large, récupérer plus de résultats et filtrer localement
         // Cela permet de trouver "chez tutu" même en tapant "tutu"
         if (currentOrganization?.id) {
+          // TEMPORAIRE: Requête sans orderBy jusqu'à ce que l'index soit créé
+          // TODO: Réactiver orderBy une fois l'index créé
+          searchQuery = query(
+            entitiesRef,
+            where('organizationId', '==', currentOrganization.id),
+            limit(maxResults * 10) // Récupérer plus pour compenser l'absence de tri
+          );
+          
+          /* Version avec orderBy - à réactiver après création de l'index:
           searchQuery = query(
             entitiesRef,
             where('organizationId', '==', currentOrganization.id),
             orderBy('createdAt', 'desc'),
-            limit(maxResults * 5) // Récupérer 5x plus pour permettre un bon filtrage
+            limit(maxResults * 5)
           );
+          */
         } else {
           // Sans organisation, pas de résultats
           setResults([]);

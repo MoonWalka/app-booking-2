@@ -38,6 +38,20 @@ const ArtisteSearchSection = ({
   const [artistesList, setArtistesList] = React.useState([]);
   const [showAddArtiste, setShowAddArtiste] = React.useState(true);
   
+  // Synchroniser la liste avec l'artiste sélectionné
+  React.useEffect(() => {
+    if (selectedArtiste && selectedArtiste.id) {
+      // Si un artiste est sélectionné et qu'il n'est pas déjà dans la liste
+      if (!artistesList.find(a => a.id === selectedArtiste.id)) {
+        setArtistesList([selectedArtiste]);
+        setShowAddArtiste(false);
+      }
+    } else if (!selectedArtiste && artistesList.length === 0) {
+      // Si aucun artiste n'est sélectionné et que la liste est vide
+      setShowAddArtiste(true);
+    }
+  }, [selectedArtiste]); // Retirer artistesList de la dépendance pour éviter une boucle infinie
+  
   // Fonction pour ajouter un artiste à la liste
   const handleAddArtisteToList = (artiste) => {
     if (artiste && !artistesList.find(a => a.id === artiste.id)) {

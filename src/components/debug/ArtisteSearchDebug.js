@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy, limit, writeBatch, doc, deleteDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
@@ -36,6 +36,15 @@ const ArtisteSearchDebug = () => {
     maxResults: 10
   });
 
+  // Log de debug pour identifier le problème
+  useEffect(() => {
+    console.log('[ArtisteSearchDebug] Organization Context:', {
+      currentOrganization,
+      organizationId: currentOrganization?.id,
+      organizationName: currentOrganization?.name
+    });
+  }, [currentOrganization]);
+
   // Recherche directe dans Firestore
   const searchDirectly = async () => {
     setLoading(true);
@@ -43,7 +52,7 @@ const ArtisteSearchDebug = () => {
 
     try {
       const info = {
-        organizationId: currentOrganization?.id,
+        organizationId: currentOrganization?.id || 'AUCUNE',
         searchTerm,
         timestamp: new Date().toISOString()
       };

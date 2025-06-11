@@ -15,6 +15,7 @@ import ConcertInfoSection from '../sections/ConcertInfoSection';
 import LieuSearchSection from '../sections/LieuSearchSection';
 import ContactSearchSection from '../sections/ContactSearchSection';
 import ArtisteSearchSection from '../sections/ArtisteSearchSection';
+// import ArtisteSearchSectionWithFallback from '../sections/ArtisteSearchSectionWithFallback';
 import StructureSearchSection from '../sections/StructureSearchSection';
 import NotesSection from '../sections/NotesSection';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
@@ -222,19 +223,19 @@ const ConcertFormDesktop = () => {
               handleCreateContact={handleCreateContact}
             />
           
-          <ArtisteSearchSection 
-              artisteSearchTerm={artisteSearchTerm}
-              setArtisteSearchTerm={setArtisteSearchTerm}
-              artisteResults={artisteResults}
-              showArtisteResults={showArtisteResults}
-              setShowArtisteResults={setShowArtisteResults}
-              isSearchingArtistes={isSearchingArtistes}
-              artisteDropdownRef={artisteDropdownRef}
-              selectedArtiste={artiste || (formData.artisteId ? { id: formData.artisteId, nom: formData.artisteNom || 'Artiste sélectionné' } : null)}
-              handleSelectArtiste={handleArtisteChange}
-              handleRemoveArtiste={handleRemoveArtisteCallback}
-              handleCreateArtiste={handleCreateArtiste}
-            />
+                      <ArtisteSearchSection 
+                artisteSearchTerm={artisteSearchTerm}
+                setArtisteSearchTerm={setArtisteSearchTerm}
+                artisteResults={artisteResults}
+                showArtisteResults={showArtisteResults}
+                setShowArtisteResults={setShowArtisteResults}
+                isSearchingArtistes={isSearchingArtistes}
+                artisteDropdownRef={artisteDropdownRef}
+                selectedArtiste={artiste || (formData.artisteId ? { id: formData.artisteId, nom: formData.artisteNom || 'Artiste sélectionné' } : null)}
+                handleSelectArtiste={handleArtisteChange}
+                handleRemoveArtiste={handleRemoveArtisteCallback}
+                handleCreateArtiste={handleCreateArtiste}
+              />
           
           <StructureSearchSection 
               structureSearchTerm={structureSearchTerm}

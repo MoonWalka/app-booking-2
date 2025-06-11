@@ -163,6 +163,12 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
           setFormData(data);
           setOriginalData(data);
           setIsDirty(false);
+          
+          // Appeler onSuccess pour le chargement initial
+          if (onSuccessRef.current) {
+            console.log('[useGenericEntityForm] Appel onSuccess pour chargement initial');
+            onSuccessRef.current(data, 'getById');
+          }
         } else {
           setFormData(stableInitialData);
           setOriginalData(stableInitialData); 
@@ -179,7 +185,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
       setOriginalData(stableInitialData);
       initialLoadDoneRef.current = true;
     }
-  }, [entityId, stableInitialData]); // Dépendances stables uniquement
+  }, [entityId, stableInitialData, entityType]); // Dépendances stables uniquement
   
   // ✅ CORRECTION 11: Fonction de traitement des données stabilisée
   const processFormData = useCallback((dataToProcess) => {
@@ -357,7 +363,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
     } finally {
       if (isMountedRef.current) setIsSubmitting(false);
     }
-  }, [enableValidation, processFormData, formData, entityId, configGenerateId]);
+  }, [enableValidation, processFormData, formData, entityId, configGenerateId, setFieldError]);
   
   // ✅ CORRECTION 17: Reset stabilisé avec référence
   const handleReset = useCallback(() => {

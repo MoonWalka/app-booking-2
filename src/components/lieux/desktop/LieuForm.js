@@ -108,6 +108,14 @@ const LieuForm = () => {
                   handleChange({ target: { name: 'contactIds', value: contactIds } });
                 }}
               />
+              
+              {/* DEBUG: Afficher les données du lieu */}
+              {process.env.NODE_ENV === 'development' && (
+                <div style={{ background: '#f0f0f0', padding: '10px', margin: '10px 0', fontSize: '12px' }}>
+                  <strong>DEBUG - Données du lieu:</strong>
+                  <pre>{JSON.stringify({ id: lieu.id, contactIds: lieu.contactIds }, null, 2)}</pre>
+                </div>
+              )}
 
 
               {/* Affichage des erreurs de validation */}

@@ -75,10 +75,7 @@ const LieuForm = () => {
             lieu={lieu}
             navigate={navigate}
             isSubmitting={submitting || loading || isDeleting}
-            onSave={(e) => {
-              e.preventDefault();
-              handleSubmit(e);
-            }}
+            onSave={handleSubmit}
             onDelete={id !== 'nouveau' ? handleOpenDeleteModal : undefined}
             canSave={true}
             roundedTop={true}

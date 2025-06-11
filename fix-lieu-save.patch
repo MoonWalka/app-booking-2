@@ -1,0 +1,84 @@
+--- Patch pour corriger le problème de sauvegarde des lieux ---
+
+PROBLÈME IDENTIFIÉ:
+Le flux de sauvegarde semble correct, mais il pourrait y avoir un problème avec:
+1. La promesse qui n'est pas correctement retournée
+2. Une erreur silencieuse dans la validation ou la sauvegarde
+
+SOLUTION:
+
+1. Dans src/components/lieux/desktop/LieuForm.js, modifier le onSave pour mieux capturer les erreurs:
+
+Remplacer (lignes 78-81):
+```javascript
+onSave={(e) => {
+  e.preventDefault();
+  handleSubmit(e);
+}}
+```
+
+Par:
+```javascript
+onSave={async (e) => {
+  e.preventDefault();
+  console.log('🔵 Bouton Save cliqué');
+  try {
+    const result = await handleSubmit(e);
+    console.log('🟢 handleSubmit succès:', result);
+    if (!result) {
+      console.warn('⚠️ handleSubmit a retourné une valeur falsy');
+    }
+  } catch (error) {
+    console.error('🔴 handleSubmit erreur:', error);
+  }
+}}
+```
+
+2. Dans src/hooks/generics/forms/useGenericEntityForm.js, s'assurer que la promesse est retournée:
+
+Ligne 337, changer:
+```javascript
+console.log("[useGenericEntityForm] Résultat final:", result);
+return result;
+```
+
+Par:
+```javascript
+console.log("[useGenericEntityForm] Résultat final:", result);
+if (result && onSuccessRef.current) {
+  console.log("[useGenericEntityForm] Appel manuel de onSuccess après succès");
+  await onSuccessRef.current(result, entityId ? 'update' : 'create');
+}
+return result;
+```
+
+3. Dans src/hooks/lieux/useLieuForm.js, ajouter un log au début du onSuccess:
+
+Ligne 77, ajouter:
+```javascript
+onSuccess: async (savedData, action) => {
+  console.log('🎯🎯🎯 useLieuForm onSuccess APPELÉ !', { savedData, action });
+  // reste du code...
+```
+
+4. Pour tester rapidement, vous pouvez aussi essayer de forcer la navigation dans LieuForm.js:
+
+Après handleSubmit, ajouter:
+```javascript
+.then((result) => {
+  if (result && result.id) {
+    console.log('🚀 Navigation forcée vers /lieux');
+    navigate('/lieux');
+  }
+})
+```
+
+COMMANDES À EXÉCUTER:
+
+1. Appliquer les logs de debug
+2. Tester la création d'un nouveau lieu
+3. Tester la modification d'un lieu existant
+4. Vérifier la console pour voir où ça bloque
+
+Le problème le plus probable est que onSuccess n'est pas appelé car le résultat 
+n'est pas correctement propagé depuis useGenericAction vers useGenericEntityForm.

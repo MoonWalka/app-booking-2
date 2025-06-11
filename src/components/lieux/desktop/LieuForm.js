@@ -31,7 +31,8 @@ const LieuForm = () => {
     error,
     handleChange,
     handleSubmit,
-    submitting
+    submitting,
+    validationErrors
   } = useLieuForm(id);
 
   // Ajout du hook de suppression optimisé
@@ -109,6 +110,19 @@ const LieuForm = () => {
               />
 
 
+              {/* Affichage des erreurs de validation */}
+              {validationErrors && Object.keys(validationErrors).length > 0 && (
+                <Alert variant="danger" className="shadow-sm rounded-3 mb-4">
+                  <FlexContainer direction="column" gap="sm">
+                    <div><strong>Veuillez corriger les erreurs suivantes :</strong></div>
+                    {Object.entries(validationErrors).map(([field, errorMsg]) => (
+                      <div key={field}>• {errorMsg}</div>
+                    ))}
+                  </FlexContainer>
+                </Alert>
+              )}
+              
+              {/* Affichage des erreurs générales */}
               {error && (
                 <Alert variant="danger" className="shadow-sm rounded-3 mb-4">
                   <FlexContainer align="center" gap="sm">

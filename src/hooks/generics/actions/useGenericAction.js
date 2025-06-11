@@ -320,8 +320,14 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       await updateDoc(doc(db, entityType, id), updateData);
       const result = { id, ...updateData };
       
+      console.log('🚀 UPDATE SUCCESS - Calling onSuccess callback');
+      console.log('🚀 onSuccessRef.current exists?', !!onSuccessRef.current);
+      console.log('🚀 Result:', result);
+      
       if (onSuccessRef.current) {
-        onSuccessRef.current(result, 'update');
+        console.log('🚀 Executing onSuccessRef.current');
+        await onSuccessRef.current(result, 'update');
+        console.log('🚀 onSuccessRef.current completed');
       }
       
       return result;

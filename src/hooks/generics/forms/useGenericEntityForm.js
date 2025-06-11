@@ -335,6 +335,10 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
         result = await createRef.current(processedData, idToCreate);
       }
       console.log("[useGenericEntityForm] Résultat final:", result);
+      
+      // Ne pas appeler onSuccess ici car useGenericAction l'a déjà fait
+      // Cela évite les doubles appels
+      
       return result;
     } catch (error) {
       console.error('[useGenericEntityForm] Erreur soumission:', error);

@@ -21,6 +21,7 @@ export const useLieuForm = (lieuId) => {
   
   // Configuration spécifique pour les lieux
   const validateLieuForm = (data) => {
+    console.log('🔍 Validation lieu avec données:', data);
     const errors = {};
     
     // Validation spécifique aux lieux
@@ -30,11 +31,14 @@ export const useLieuForm = (lieuId) => {
       errors.capacite = 'La capacité doit être un nombre positif';
     }
     
-    return {
+    const result = {
       isValid: Object.keys(errors).length === 0,
       errors,
       message: Object.keys(errors).length > 0 ? 'Veuillez corriger les erreurs du formulaire.' : null
     };
+    
+    console.log('🔍 Résultat validation:', result);
+    return result;
   };
   
   const transformLieuData = (data) => {
@@ -75,6 +79,7 @@ export const useLieuForm = (lieuId) => {
     validateForm: validateLieuForm,
     transformData: transformLieuData,
     onSuccess: async (savedData, action) => {
+      console.log('🎯🎯🎯 useLieuForm onSuccess APPELÉ !', { savedData, action });
       // Actions spécifiques après sauvegarde
       console.log(`[useLieuForm] onSuccess appelé:`, {
         savedData,
@@ -153,7 +158,9 @@ export const useLieuForm = (lieuId) => {
       }
       
       // Redirection vers la liste des lieux
+      console.log('🏃 Navigation vers /lieux');
       navigate('/lieux');
+      console.log('🏃 Navigation lancée');
     },
     relatedEntities: [
       {

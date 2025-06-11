@@ -130,7 +130,7 @@ const OrganizationIdTest = () => {
       <div className={styles.info}>
         <h4>📋 Ce qui a été corrigé :</h4>
         <ul>
-          <li>✅ <code>ContactFormMaquette.js</code> : Ajoute organizationId lors de la création</li>
+          <li>✅ <code>ContactForm.js</code> (desktop) : Ajoute organizationId lors de la création</li>
           <li>✅ <code>ContactForm.js</code> (mobile) : Ajoute organizationId lors de la création</li>
           <li>✅ <code>PublicContactForm.js</code> : Ajoute organizationId aux soumissions</li>
           <li>✅ <code>useGenericAction</code> : Ajoute automatiquement organizationId</li>

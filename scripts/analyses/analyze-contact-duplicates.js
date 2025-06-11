@@ -111,7 +111,7 @@ console.log('\n3. 📝 Analyse ContactForm...');
 const contactFormFiles = [
   './src/components/contacts/ContactForm.js',
   './src/components/contacts/desktop/ContactForm.js',
-  './src/components/contacts/desktop/ContactFormMaquette.js',
+  './src/components/contacts/desktop/ContactForm.js',
   './src/components/contacts/mobile/ContactForm.js',
   './src/hooks/contacts/useContactForm.js'
 ];
@@ -219,7 +219,7 @@ ${usages.length > 0 ? `**Utilisé dans:**\n${usages.slice(0, 5).map(u => `- \`${
    - \`./src/components/contacts/desktop/ContactView.js\` (déjà utilisé dans ContactsPage)
    
 2. **ContactForm** - Utiliser comme version principale:
-   - \`./src/components/contacts/desktop/ContactFormMaquette.js\` (déjà utilisé dans ContactsPage)
+   - \`./src/components/contacts/desktop/ContactForm.js\` (déjà utilisé dans ContactsPage)
 
 3. **Fichiers à supprimer (après vérification):**
    - Versions non utilisées ou obsolètes

@@ -192,7 +192,7 @@ ${logActions.map(action => `- **${action.action}** [${action.status}] ${action.d
 
 ### Fichiers principaux (conservés):
 - \`./src/components/contacts/desktop/ContactView.js\` - ✅ Version principale
-- \`./src/components/contacts/desktop/ContactFormMaquette.js\` - ✅ Formulaire principal
+- \`./src/components/contacts/desktop/ContactForm.js\` - ✅ Formulaire principal
 - \`./src/hooks/contacts/useContactDetails.js\` - ✅ Hook principal
 
 ### Fichiers mobiles (conservés):

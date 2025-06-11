@@ -181,7 +181,7 @@ console.log('\nPhase 6: ✅ Validation des modifications...');
 // Vérifier que les nouveaux imports fonctionnent
 const requiredFiles = [
   './src/components/contacts/desktop/ContactView.js',
-  './src/components/contacts/desktop/ContactFormMaquette.js'
+  './src/components/contacts/desktop/ContactForm.js'
 ];
 
 let validationPassed = true;

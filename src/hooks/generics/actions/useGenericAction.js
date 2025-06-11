@@ -585,6 +585,11 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       
       const result = { id, ...docSnap.data() };
       
+      console.log(`[useGenericAction] getById ${entityType}:`, result);
+      if (entityType === 'lieux') {
+        console.log('[useGenericAction] contactIds dans le lieu:', result.contactIds);
+      }
+      
       if (enableLogging) {
       }
       

@@ -37,13 +37,41 @@ const LieuContactSearchSection = ({
   
   // Initialiser la liste avec les contacts existants du lieu
   React.useEffect(() => {
+    console.log('[LieuContactSearchSection] lieu reçu:', lieu);
+    console.log('[LieuContactSearchSection] lieu.contactIds:', lieu.contactIds);
+    
     const loadExistingContacts = async () => {
-      if (lieu.contactIds && lieu.contactIds.length > 0 && contactsList.length === 0) {
-        console.log('[LieuContactSearchSection] Chargement des contacts existants:', lieu.contactIds);
+      // Vérifier aussi via les relations bidirectionnelles
+      const contactIdsToLoad = lieu.contactIds && lieu.contactIds.length > 0 ? lieu.contactIds : [];
+      
+      // Si pas de contactIds, chercher via la relation inverse
+      if (contactIdsToLoad.length === 0 && lieu.id) {
+        console.log('[LieuContactSearchSection] Pas de contactIds, recherche via lieuxIds...');
+        try {
+          const { collection, query, where, getDocs, db } = await import('@/services/firebase-service');
+          const contactsQuery = query(
+            collection(db, 'contacts'),
+            where('lieuxIds', 'array-contains', lieu.id)
+          );
+          const contactsSnapshot = await getDocs(contactsQuery);
+          
+          if (!contactsSnapshot.empty) {
+            contactsSnapshot.forEach(doc => {
+              contactIdsToLoad.push(doc.id);
+            });
+            console.log('[LieuContactSearchSection] Contacts trouvés via lieuxIds:', contactIdsToLoad);
+          }
+        } catch (error) {
+          console.error('[LieuContactSearchSection] Erreur recherche contacts via lieuxIds:', error);
+        }
+      }
+      
+      if (contactIdsToLoad.length > 0 && contactsList.length === 0) {
+        console.log('[LieuContactSearchSection] Chargement des contacts:', contactIdsToLoad);
         try {
           const { doc, getDoc, db } = await import('@/services/firebase-service');
           
-          const contactPromises = lieu.contactIds.map(async (contactId) => {
+          const contactPromises = contactIdsToLoad.map(async (contactId) => {
             const contactDoc = await getDoc(doc(db, 'contacts', contactId));
             if (contactDoc.exists()) {
               return { id: contactDoc.id, ...contactDoc.data() };
@@ -62,7 +90,7 @@ const LieuContactSearchSection = ({
     
     loadExistingContacts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lieu.contactIds]); // Retirer contactsList.length pour éviter les boucles infinies
+  }, [lieu.id, lieu.contactIds]); // Surveiller l'id et contactIds du lieu
   
   // Fonction pour ajouter un contact à la liste
   const handleAddContactToList = (contact) => {
@@ -74,7 +102,9 @@ const LieuContactSearchSection = ({
       
       // Notifier le parent avec les IDs des contacts
       if (onContactsChange) {
-        onContactsChange(newList.map(c => c.id));
+        const contactIds = newList.map(c => c.id);
+        console.log('[LieuContactSearchSection] Notification parent - nouveaux contactIds:', contactIds);
+        onContactsChange(contactIds);
       }
     }
   };

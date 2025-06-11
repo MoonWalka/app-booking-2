@@ -156,6 +156,10 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
       getByIdRef.current(entityId).then(data => {
         if (!isMountedRef.current) return;
         if (data) {
+          console.log(`[useGenericEntityForm] Données chargées pour ${entityType}:`, data);
+          if (entityType === 'lieux') {
+            console.log('[useGenericEntityForm] contactIds:', data.contactIds);
+          }
           setFormData(data);
           setOriginalData(data);
           setIsDirty(false);

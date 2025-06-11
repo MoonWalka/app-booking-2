@@ -13,6 +13,8 @@ import ArtisteSearchDebug from '@/components/debug/ArtisteSearchDebug';
 import ArtisteSearchLiveDebug from '@/components/debug/ArtisteSearchLiveDebug';
 import ArtisteOrganizationMatcher from '@/components/debug/ArtisteOrganizationMatcher';
 import OrphanArtistesDebug from '@/components/debug/OrphanArtistesDebug';
+import OrganizationContextDiagnostic from '@/components/debug/OrganizationContextDiagnostic';
+import ArtisteFirestoreDiagnostic from '@/components/debug/ArtisteFirestoreDiagnostic';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -85,6 +87,14 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="contact-email" title="Debug Email Contact">
           <ContactEmailDebug />
+        </Tab>
+        
+        <Tab eventKey="org-context" title="Diagnostic Organisation">
+          <OrganizationContextDiagnostic />
+        </Tab>
+        
+        <Tab eventKey="firestore-diag" title="Diagnostic Firestore">
+          <ArtisteFirestoreDiagnostic />
         </Tab>
         
         <Tab eventKey="artiste-search" title="Debug Recherche Artistes">

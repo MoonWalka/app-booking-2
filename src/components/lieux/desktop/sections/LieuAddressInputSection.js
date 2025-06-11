@@ -38,11 +38,12 @@ const LieuAddressInputSection = ({ lieu, isEditing = false, handleChange }) => {
           {/* Utilisation du composant AddressInput commun */}
           <div className={styles.formGroup}>
             <AddressInput
-              label="Adresse"
+              label="Adresse *"
               value={lieu?.adresse || ''}
               onChange={(e) => handleChange({ target: { name: 'adresse', value: e.target.value } })}
               onAddressSelected={handleAddressSelected}
               placeholder="Commencez à taper pour rechercher une adresse..."
+              required
             />
           </div>
           

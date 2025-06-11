@@ -307,6 +307,12 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
         console.log("[useGenericEntityForm] Résultat validation:", validationResult);
         if (!validationResult.isValid) {
           console.log("[useGenericEntityForm] Validation échouée, erreurs:", validationResult.errors);
+          // Mettre à jour les erreurs de validation pour l'affichage
+          if (validationResult.errors && setFieldError) {
+            Object.entries(validationResult.errors).forEach(([field, error]) => {
+              setFieldError(field, error);
+            });
+          }
           if (isMountedRef.current) setIsSubmitting(false);
           return false;
         }

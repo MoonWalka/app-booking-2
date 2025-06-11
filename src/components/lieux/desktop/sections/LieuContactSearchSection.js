@@ -40,15 +40,23 @@ const LieuContactSearchSection = ({
   
   // Initialiser la liste avec les contacts existants du lieu
   React.useEffect(() => {
+    console.log('[LieuContactSearchSection] useEffect déclenché');
     console.log('[LieuContactSearchSection] lieu reçu:', lieu);
     console.log('[LieuContactSearchSection] lieu.contactIds:', lieu.contactIds);
+    console.log('[LieuContactSearchSection] contactsList actuel:', contactsList);
     
     const loadExistingContacts = async () => {
+      // Vérifier que le lieu a un ID avant de continuer
+      if (!lieu.id) {
+        console.log('[LieuContactSearchSection] Pas d\'ID de lieu, abandon du chargement');
+        return;
+      }
+      
       // Vérifier aussi via les relations bidirectionnelles
       const contactIdsToLoad = lieu.contactIds && lieu.contactIds.length > 0 ? lieu.contactIds : [];
       
       // Si pas de contactIds, chercher via la relation inverse
-      if (contactIdsToLoad.length === 0 && lieu.id) {
+      if (contactIdsToLoad.length === 0 && contactsList.length === 0) {
         console.log('[LieuContactSearchSection] Pas de contactIds, recherche via lieuxIds...');
         try {
           const { collection, query, where, getDocs, db } = await import('@/services/firebase-service');

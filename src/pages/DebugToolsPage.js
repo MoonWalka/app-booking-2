@@ -9,6 +9,10 @@ import LieuMapDebug from '@/components/debug/LieuMapDebug';
 import RIBDebugger from '@/components/debug/RIBDebugger';
 import RelancesAuditTool from '@/components/debug/RelancesAuditTool';
 import ContactEmailDebug from '@/components/debug/ContactEmailDebug';
+import ArtisteSearchDebug from '@/components/debug/ArtisteSearchDebug';
+import ArtisteSearchLiveDebug from '@/components/debug/ArtisteSearchLiveDebug';
+import ArtisteOrganizationMatcher from '@/components/debug/ArtisteOrganizationMatcher';
+import OrphanArtistesDebug from '@/components/debug/OrphanArtistesDebug';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -81,6 +85,22 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="contact-email" title="Debug Email Contact">
           <ContactEmailDebug />
+        </Tab>
+        
+        <Tab eventKey="artiste-search" title="Debug Recherche Artistes">
+          <ArtisteSearchDebug />
+        </Tab>
+        
+        <Tab eventKey="artiste-live" title="Test Recherche Live">
+          <ArtisteSearchLiveDebug />
+        </Tab>
+        
+        <Tab eventKey="artiste-org" title="Organisation d'Artiste">
+          <ArtisteOrganizationMatcher />
+        </Tab>
+        
+        <Tab eventKey="orphan-artistes" title="Artistes Orphelins">
+          <OrphanArtistesDebug />
         </Tab>
       </Tabs>
     </div>

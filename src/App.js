@@ -41,6 +41,7 @@ import { OnboardingFlow } from '@/components/organization';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { installGlobalFixer } from '@/utils/fixOrganizationIds';
+import { installArtistesFixers } from '@/utils/fixArtistesOrganizationIds';
 import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
 import DebugController from '@/components/debug/DebugController';
 import DebugToolsPage from '@/pages/DebugToolsPage';
@@ -128,6 +129,7 @@ function App() {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       installGlobalFixer();
+      installArtistesFixers();
       initializeFirebaseInterceptor();
     }
   }, []);

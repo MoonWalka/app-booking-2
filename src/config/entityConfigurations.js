@@ -319,15 +319,19 @@ export const entityConfigurations = {
     relations: {
       artistes: { 
         collection: 'artistes', 
-        field: 'artistesIds', 
-        isArray: true,
-        displayName: 'Artistes'
+        field: 'artisteId',  // Changé de artistesIds à artisteId car un concert n'a qu'un artiste principal
+        isArray: false,
+        displayName: 'Artiste',
+        bidirectional: true,
+        inverseField: 'concertsIds'
       },
       lieu: { 
         collection: 'lieux', 
         field: 'lieuId', 
         isArray: false,
-        displayName: 'Lieu'
+        displayName: 'Lieu',
+        bidirectional: true,
+        inverseField: 'concertsIds'
       },
       contact: { 
         collection: 'contacts', 

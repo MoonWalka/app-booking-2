@@ -42,28 +42,36 @@ const ArtisteSearchSection = ({
   React.useEffect(() => {
     if (selectedArtiste && selectedArtiste.id) {
       // Si un artiste est sélectionné et qu'il n'est pas déjà dans la liste
-      if (!artistesList.find(a => a.id === selectedArtiste.id)) {
-        setArtistesList([selectedArtiste]);
-        setShowAddArtiste(false);
+      const artisteExisteDansListe = artistesList.some(a => a.id === selectedArtiste.id);
+      if (!artisteExisteDansListe) {
+        // Utiliser une transition pour une mise à jour fluide
+        React.startTransition(() => {
+          setArtistesList([selectedArtiste]);
+          setShowAddArtiste(false);
+        });
       }
     } else if (!selectedArtiste && artistesList.length === 0) {
       // Si aucun artiste n'est sélectionné et que la liste est vide
       setShowAddArtiste(true);
     }
-  }, [selectedArtiste]); // Retirer artistesList de la dépendance pour éviter une boucle infinie
+  }, [selectedArtiste, artistesList.length]); // Utiliser artistesList.length pour éviter les re-rendus inutiles
   
   // Fonction pour ajouter un artiste à la liste
-  const handleAddArtisteToList = (artiste) => {
+  const handleAddArtisteToList = React.useCallback((artiste) => {
     if (artiste && !artistesList.find(a => a.id === artiste.id)) {
-      setArtistesList([...artistesList, artiste]);
-      setArtisteSearchTerm('');
-      setShowAddArtiste(false);
+      // Utiliser une transition pour une mise à jour fluide
+      React.startTransition(() => {
+        setArtistesList([...artistesList, artiste]);
+        setArtisteSearchTerm('');
+        setShowAddArtiste(false);
+      });
+      
       // Toujours garder le premier artiste comme selectedArtiste pour la compatibilité
       if (artistesList.length === 0) {
         handleSelectArtiste(artiste);
       }
     }
-  };
+  }, [artistesList, setArtisteSearchTerm, handleSelectArtiste]);
   
   // Fonction pour retirer un artiste de la liste
   const handleRemoveArtisteFromList = (artisteId) => {
@@ -157,7 +165,11 @@ const ArtisteSearchSection = ({
               isSearching={isSearchingArtistes}
               placeholder="Rechercher un artiste par nom..."
               onSelect={handleAddArtisteToList}
-              onCreate={() => handleCreateArtiste(handleAddArtisteToList)}
+              onCreate={() => {
+                handleCreateArtiste((newArtiste) => {
+                  handleAddArtisteToList(newArtiste);
+                });
+              }}
               createButtonText="Nouvel artiste"
               emptyResultsText="Aucun artiste trouvé"
               entityType="artiste"

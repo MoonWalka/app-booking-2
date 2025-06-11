@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '@/services/firebase-service';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import FormHeader from '@/components/ui/FormHeader';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -22,10 +22,24 @@ const ArtisteView = ({ id }) => {
       try {
         const artisteDoc = await getDoc(doc(db, 'artistes', id));
         if (artisteDoc.exists()) {
-          setArtiste({
+          const artisteData = {
             id: artisteDoc.id,
             ...artisteDoc.data()
-          });
+          };
+          
+          // Charger les concerts liés via la relation bidirectionnelle
+          const concertsRef = collection(db, 'concerts');
+          const q = query(concertsRef, where('artisteId', '==', id));
+          const concertsSnapshot = await getDocs(q);
+          
+          artisteData.concertsAssocies = concertsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          
+          console.log(`🎵 Trouvé ${artisteData.concertsAssocies.length} concerts pour l'artiste ${artisteData.nom}`);
+          
+          setArtiste(artisteData);
         } else {
           navigate('/artistes');
         }

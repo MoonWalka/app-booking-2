@@ -36,6 +36,11 @@ export const useConcertForm = (concertId) => {
   
   // Pour un nouveau concert, générer l'ID une seule fois pour éviter les boucles de render
   const generatedIdRef = useRef(isNewConcert ? generateConcertId() : null);
+  
+  // Références pour stocker les valeurs précédentes des relations
+  const previousArtisteIdRef = useRef(null);
+  const previousLieuIdRef = useRef(null);
+  const previousContactIdRef = useRef(null);
 
 
   // Nettoyer les logs pour éviter la confusion (supprimer références à useConcertFormMigrated)
@@ -65,8 +70,6 @@ export const useConcertForm = (concertId) => {
     return transformedData;
   }, []);
   
-  // Référence pour stocker l'ancien contactId
-  const previousContactIdRef = useRef(null);
 
   // Callbacks pour les opérations réussies ou en erreur
   const onSuccessCallback = useCallback(async (data, action) => {
@@ -75,9 +78,11 @@ export const useConcertForm = (concertId) => {
     // Si c'est un chargement initial (getById), on ne fait rien
     if (action === 'getById' || action === 'load') {
       console.log("[useConcertForm] Action de chargement, on ignore");
-      // Stocker le contactId initial pour détecter les changements futurs
-      if (data && data.contactId) {
-        previousContactIdRef.current = data.contactId;
+      // Stocker les IDs initiaux pour détecter les changements futurs
+      if (data) {
+        previousArtisteIdRef.current = data.artisteId || null;
+        previousLieuIdRef.current = data.lieuId || null;
+        previousContactIdRef.current = data.contactId || null;
       }
       return;
     }
@@ -91,6 +96,84 @@ export const useConcertForm = (concertId) => {
       console.log("[useConcertForm] Affichage du message de succès:", message);
       showSuccessToast(message);
       
+      // Gérer les relations bidirectionnelles pour l'artiste
+      if (data.artisteId || previousArtisteIdRef.current) {
+        try {
+          console.log("[useConcertForm] Gestion des relations bidirectionnelles artiste-concert");
+          
+          // Si l'artiste a changé, supprimer la relation avec l'ancien artiste
+          if (previousArtisteIdRef.current && previousArtisteIdRef.current !== data.artisteId) {
+            console.log("[useConcertForm] Suppression de la relation avec l'ancien artiste:", previousArtisteIdRef.current);
+            await updateBidirectionalRelation({
+              sourceType: 'concerts',
+              sourceId: data.id,
+              targetType: 'artistes',
+              targetId: previousArtisteIdRef.current,
+              relationName: 'artistes',
+              action: 'remove'
+            });
+          }
+          
+          // Ajouter la relation avec le nouvel artiste
+          if (data.artisteId) {
+            console.log("[useConcertForm] Ajout de la relation avec le nouvel artiste:", data.artisteId);
+            await updateBidirectionalRelation({
+              sourceType: 'concerts',
+              sourceId: data.id,
+              targetType: 'artistes',
+              targetId: data.artisteId,
+              relationName: 'artistes',
+              action: 'add'
+            });
+          }
+          
+          // Mettre à jour la référence pour les prochaines modifications
+          previousArtisteIdRef.current = data.artisteId;
+          
+        } catch (error) {
+          console.error("[useConcertForm] Erreur lors de la mise à jour des relations bidirectionnelles artiste:", error);
+        }
+      }
+      
+      // Gérer les relations bidirectionnelles pour le lieu
+      if (data.lieuId || previousLieuIdRef.current) {
+        try {
+          console.log("[useConcertForm] Gestion des relations bidirectionnelles lieu-concert");
+          
+          // Si le lieu a changé, supprimer la relation avec l'ancien lieu
+          if (previousLieuIdRef.current && previousLieuIdRef.current !== data.lieuId) {
+            console.log("[useConcertForm] Suppression de la relation avec l'ancien lieu:", previousLieuIdRef.current);
+            await updateBidirectionalRelation({
+              sourceType: 'concerts',
+              sourceId: data.id,
+              targetType: 'lieux',
+              targetId: previousLieuIdRef.current,
+              relationName: 'lieu',
+              action: 'remove'
+            });
+          }
+          
+          // Ajouter la relation avec le nouveau lieu
+          if (data.lieuId) {
+            console.log("[useConcertForm] Ajout de la relation avec le nouveau lieu:", data.lieuId);
+            await updateBidirectionalRelation({
+              sourceType: 'concerts',
+              sourceId: data.id,
+              targetType: 'lieux',
+              targetId: data.lieuId,
+              relationName: 'lieu',
+              action: 'add'
+            });
+          }
+          
+          // Mettre à jour la référence pour les prochaines modifications
+          previousLieuIdRef.current = data.lieuId;
+          
+        } catch (error) {
+          console.error("[useConcertForm] Erreur lors de la mise à jour des relations bidirectionnelles lieu:", error);
+        }
+      }
+      
       // Gérer les relations bidirectionnelles pour le contact
       if (data.contactId || previousContactIdRef.current) {
         try {
@@ -100,9 +183,9 @@ export const useConcertForm = (concertId) => {
           if (previousContactIdRef.current && previousContactIdRef.current !== data.contactId) {
             console.log("[useConcertForm] Suppression de la relation avec l'ancien contact:", previousContactIdRef.current);
             await updateBidirectionalRelation({
-              sourceType: 'concert',
+              sourceType: 'concerts',
               sourceId: data.id,
-              targetType: 'contact',
+              targetType: 'contacts',
               targetId: previousContactIdRef.current,
               relationName: 'contact',
               action: 'remove'
@@ -113,9 +196,9 @@ export const useConcertForm = (concertId) => {
           if (data.contactId) {
             console.log("[useConcertForm] Ajout de la relation avec le nouveau contact:", data.contactId);
             await updateBidirectionalRelation({
-              sourceType: 'concert',
+              sourceType: 'concerts',
               sourceId: data.id,
-              targetType: 'contact',
+              targetType: 'contacts',
               targetId: data.contactId,
               relationName: 'contact',
               action: 'add'

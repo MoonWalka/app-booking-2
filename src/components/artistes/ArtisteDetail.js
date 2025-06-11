@@ -1,6 +1,5 @@
 // src/components/artistes/ArtisteDetail.js
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
 
 // Imports directs des composants
@@ -12,14 +11,13 @@ import ArtistesMobileView from './mobile/ArtisteView';
  * Utilise le hook useResponsive pour afficher soit la version desktop, soit la version mobile
  */
 const ArtisteDetail = () => {
-  const { id } = useParams();
   const { isMobile } = useResponsive();
   
   // Rendu conditionnel simple
   return isMobile ? (
-    <ArtistesMobileView id={id} />
+    <ArtistesMobileView />
   ) : (
-    <ArtistesDesktopView id={id} />
+    <ArtistesDesktopView />
   );
 };
 

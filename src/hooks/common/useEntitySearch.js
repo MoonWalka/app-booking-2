@@ -7,7 +7,6 @@ import {
   getDocs,
   doc,
   setDoc,
-  orderBy,
   serverTimestamp,
   db
 } from '@/services/firebase-service';

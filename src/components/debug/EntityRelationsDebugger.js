@@ -16,7 +16,6 @@ import Button from '@/components/ui/Button';
  * Debugger spécifique pour analyser les relations d'une entité
  */
 const EntityRelationsDebugger = () => {
-  const { currentOrganization } = useOrganization();
   const [loading, setLoading] = useState(false);
   const [entityType, setEntityType] = useState('artistes');
   const [entityId, setEntityId] = useState('');

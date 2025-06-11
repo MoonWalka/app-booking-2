@@ -329,15 +329,15 @@ const SystemAuditTool = () => {
                               <ul className="small mb-0">
                                 {data.data.slice(0, 3).map(item => (
                                   <li key={item.id}>
-                                    <a 
-                                      href="#" 
+                                    <button 
+                                      className="link-button"
                                       onClick={(e) => {
                                         e.preventDefault();
                                         loadEntityDetails(entityType, item.id);
                                       }}
                                     >
                                       {item.nom}
-                                    </a>
+                                    </button>
                                   </li>
                                 ))}
                               </ul>

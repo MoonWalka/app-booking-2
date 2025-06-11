@@ -37,8 +37,6 @@ const ArtisteView = ({ id }) => {
             ...doc.data()
           }));
           
-          console.log(`🎵 Trouvé ${artisteData.concertsAssocies.length} concerts pour l'artiste ${artisteData.nom}`);
-          
           setArtiste(artisteData);
         } else {
           navigate('/artistes');
@@ -81,16 +79,17 @@ const ArtisteView = ({ id }) => {
         <FormHeader 
           title={artiste.nom || 'Artiste'}
           icon={<i className="bi bi-music-note-beamed"></i>}
-          subtitle={
-            <>
-              {artiste.genre && <span>{artiste.genre}</span>}
-              <span style={{ cursor: 'pointer', marginLeft: '16px' }} onClick={() => navigate('/artistes')}>
-                ← Retour aux artistes
-              </span>
-            </>
-          }
+          subtitle={artiste.genre || ''}
           roundedTop={true}
           actions={[
+            <Button 
+              key="back"
+              onClick={() => navigate('/artistes')}
+              variant="secondary"
+              icon={<i className="bi bi-arrow-left"></i>}
+            >
+              Retour
+            </Button>,
             <Button 
               key="edit"
               onClick={() => navigate(`/artistes/${id}/modifier`)} 

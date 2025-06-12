@@ -13,7 +13,7 @@ import ConcertFormHeader from '../sections/ConcertFormHeader';
 import ConcertFormActions from '../sections/ConcertFormActions';
 import ConcertInfoSection from '../sections/ConcertInfoSection';
 import LieuSearchSection from '../sections/LieuSearchSection';
-import ContactSearchSection from '../sections/ContactSearchSection';
+import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
 import ArtisteSearchSection from '../sections/ArtisteSearchSection';
 // import ArtisteSearchSectionWithFallback from '../sections/ArtisteSearchSectionWithFallback';
 import StructureSearchSection from '../sections/StructureSearchSection';
@@ -48,11 +48,13 @@ const ConcertFormDesktop = () => {
     isSubmitting,
     lieu,
     artiste,
-    contact,
+    contacts,         // Array de contacts
+    contact,          // Premier contact (rétrocompat)
     structure,
     handleLieuChange,
     handleArtisteChange,
-    handleContactChange,
+    handleContactsChange,  // Pour multi-contacts
+    handleContactChange,   // Gardé pour rétrocompat
     handleStructureChange
   } = formHook;
 
@@ -77,22 +79,7 @@ const ConcertFormDesktop = () => {
     maxResults: 10
   });
 
-  // Recherche de contacts
-  const {
-    searchTerm: progSearchTerm,
-    setSearchTerm: setProgSearchTerm,
-    results: progResults,
-    showResults: showProgResults,
-    setShowResults: setShowProgResults,
-    isSearching: isSearchingProgs,
-    dropdownRef: progDropdownRef,
-    handleCreate: handleCreateContact
-  } = useEntitySearch({
-    entityType: 'contacts',
-    searchField: 'nom',
-    additionalSearchFields: ['raisonSociale'],
-    maxResults: 10
-  });
+  // La recherche de contacts est maintenant gérée par UnifiedContactSelector
 
   // Recherche d'artistes
   const {
@@ -137,9 +124,7 @@ const ConcertFormDesktop = () => {
   }, [handleChange]);
 
   // DÉFINIR LES CALLBACKS DE SUPPRESSION ICI
-  const handleRemoveContactCallback = useCallback(() => {
-    handleContactChange(null);
-  }, [handleContactChange]);
+  // Le callback de suppression n'est plus nécessaire car UnifiedContactSelector gère cela en interne
 
   const handleRemoveArtisteCallback = useCallback(() => {
     handleArtisteChange(null);
@@ -209,19 +194,16 @@ const ConcertFormDesktop = () => {
               handleCreateLieu={handleCreateLieu}
             />
           
-          <ContactSearchSection 
-              progSearchTerm={progSearchTerm}
-              setProgSearchTerm={setProgSearchTerm}
-              progResults={progResults}
-              showProgResults={showProgResults}
-              setShowProgResults={setShowProgResults}
-              isSearchingProgs={isSearchingProgs}
-              progDropdownRef={progDropdownRef}
-              selectedContact={contact || (formData.contactId ? { id: formData.contactId, nom: formData.contactNom || 'Contact sélectionné' } : null)}
-              handleSelectContact={handleContactChange}
-              handleRemoveContact={handleRemoveContactCallback}
-              handleCreateContact={handleCreateContact}
-            />
+          <UnifiedContactSelector
+            multiple={true}  // Activer le mode multi-contacts
+            value={formData.contactIds || (formData.contactId ? [formData.contactId] : [])}
+            onChange={handleContactsChange}
+            isEditing={true}
+            entityId={formData.id}
+            entityType="concert"
+            label="Organisateurs"
+            required={false}
+          />
           
                       <ArtisteSearchSection 
                 artisteSearchTerm={artisteSearchTerm}

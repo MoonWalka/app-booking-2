@@ -222,20 +222,32 @@
   - [x] Ajouter méthode `extractContactEmails(contacts)` ✅
   - [x] Support `to` comme string ou array partout ✅
 
-### Phase 6 : Script de Migration des Données (Jour 10)
+### Phase 6 : Script de Migration des Données (Jour 10) ✅
 
-- [ ] Créer `/scripts/migrate-contact-to-contacts.js` :
-  ```javascript
-  // Pour chaque concert :
-  // 1. Si contactId existe et pas contactIds
-  // 2. Créer contactIds = [contactId]
-  // 3. Supprimer contactId
-  // 4. Vérifier les relations bidirectionnelles
-  ```
+- [x] **migrate-contact-to-contacts.js** :
+  - [x] Script principal de migration avec options `--dry-run` et `--verbose` ✅
+  - [x] Migration par lots pour éviter les timeouts ✅
+  - [x] Gestion des relations bidirectionnelles ✅
+  - [x] Sauvegarde des données originales (`contactId_migrated`) ✅
+  - [x] Validation et vérification post-migration ✅
 
-- [ ] Tester le script sur un échantillon
-- [ ] Créer un script de rollback
-- [ ] Documenter la procédure de migration
+- [x] **test-migration.js** :
+  - [x] Script de test et validation ✅
+  - [x] Tests du format de données ✅
+  - [x] Tests des relations bidirectionnelles ✅
+  - [x] Validation du processus de rollback ✅
+
+- [x] **rollback-contact-migration.js** :
+  - [x] Script de rollback sécurisé ✅
+  - [x] Restauration depuis `contactId_migrated` ✅
+  - [x] Gestion des relations bidirectionnelles inverses ✅
+  - [x] Confirmation et délai de sécurité ✅
+
+- [x] **Documentation complète** :
+  - [x] Guide de migration détaillé (`PHASE6_DATA_MIGRATION_GUIDE.md`) ✅
+  - [x] Procédure step-by-step ✅
+  - [x] Plan de rollback ✅
+  - [x] Diagnostic et débogage ✅
 
 ### Phase 7 : Exécution de la Migration (Jour 11)
 

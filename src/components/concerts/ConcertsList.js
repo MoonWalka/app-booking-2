@@ -296,7 +296,8 @@ function ConcertsList() {
   const renderActions = (concert) => {
     // Logique métier des formulaires
     const getFormStatus = () => {
-      if (!concert.contactId) {
+      const hasContact = (concert.contactIds && concert.contactIds.length > 0) || concert.contactId;
+      if (!hasContact) {
         return { 
           status: 'no_contact', 
           icon: 'bi-person-x', 
@@ -341,7 +342,8 @@ function ConcertsList() {
 
     // Logique métier des contrats
     const getContractStatus = () => {
-      if (!concert.contactId) {
+      const hasContact = (concert.contactIds && concert.contactIds.length > 0) || concert.contactId;
+      if (!hasContact) {
         return { 
           status: 'no_contact', 
           icon: 'bi-person-x', 
@@ -450,7 +452,8 @@ function ConcertsList() {
 
     // Logique métier des factures
     const getFactureStatusForButton = () => {
-      if (!concert.contactId) {
+      const hasContact = (concert.contactIds && concert.contactIds.length > 0) || concert.contactId;
+      if (!hasContact) {
         return { 
           status: 'no_contact', 
           icon: 'bi-person-x', 

@@ -97,8 +97,19 @@ const useContratGeneratorWithRoles = (concertId) => {
           
           const loadedContacts = (await Promise.all(contactsPromises)).filter(Boolean);
           setContactsWithRoles(loadedContacts);
+        } else if (concert.contactIds && concert.contactIds.length > 0) {
+          // Nouveau format : tableau de contacts (prendre le premier comme coordinateur)
+          const contactDoc = await getDoc(doc(db, 'contacts', concert.contactIds[0]));
+          if (contactDoc.exists()) {
+            setContactsWithRoles([{
+              id: contactDoc.id,
+              ...contactDoc.data(),
+              role: 'coordinateur',
+              isPrincipal: true
+            }]);
+          }
         } else if (concert.contactId) {
-          // Ancien système : un seul contact
+          // Ancien système : un seul contact (rétrocompatibilité)
           const contactDoc = await getDoc(doc(db, 'contacts', concert.contactId));
           if (contactDoc.exists()) {
             setContactsWithRoles([{

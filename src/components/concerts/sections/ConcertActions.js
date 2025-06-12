@@ -21,7 +21,9 @@ const ConcertActions = ({
   
   // Fonction pour déterminer le statut du formulaire
   const getFormStatus = () => {
-    if (!concert.contactId) {
+    // Vérifier les contacts (nouveau format contactIds ou ancien format contactId)
+    const hasContact = (concert.contactIds && concert.contactIds.length > 0) || concert.contactId;
+    if (!hasContact) {
       return { status: 'no_contact', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun contact associé' };
     }
     
@@ -51,7 +53,8 @@ const ConcertActions = ({
   const getContractStatus = () => {
     if (!hasContract) {
       // Vérifier si on peut générer un contrat (besoin d'un contact au minimum)
-      if (!concert.contactId) {
+      const hasContact = (concert.contactIds && concert.contactIds.length > 0) || concert.contactId;
+      if (!hasContact) {
         return { status: 'no_contact', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun contact associé' };
       }
       return { status: 'not_generated', icon: 'bi-file-earmark-plus', class: 'notGenerated', tooltip: 'Générer contrat' };
@@ -75,7 +78,8 @@ const ConcertActions = ({
   const getFactureStatus = () => {
     if (!hasFacture) {
       // Vérifier si on peut générer une facture (besoin d'un contact et d'une structure au minimum)
-      if (!concert.contactId) {
+      const hasContact = (concert.contactIds && concert.contactIds.length > 0) || concert.contactId;
+      if (!hasContact) {
         return { status: 'no_contact', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun contact associé' };
       }
       if (!concert.structureId) {

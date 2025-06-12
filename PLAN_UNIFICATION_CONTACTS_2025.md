@@ -115,7 +115,7 @@
 
 ### Phase 2 : Adaptation de la Configuration (Jour 4)
 
-- [ ] Modifier `/src/config/entityConfigurations.js` :
+- [x] Modifier `/src/config/entityConfigurations.js` :
   ```javascript
   // Concert : changer contactId → contactIds
   contact: {
@@ -127,9 +127,19 @@
     inverseField: 'concertsIds'
   }
   ```
+  - [x] Configuration Concert adaptée pour multi-contacts
+  - [x] Section d'affichage mise à jour (cards au pluriel)
 
-- [ ] Vérifier toutes les configurations d'entités
-- [ ] Harmoniser `contactsIds` → `contactIds` pour Structure
+- [x] Vérifier toutes les configurations d'entités
+  - [x] Concert : `contactId` → `contactIds` ✅
+  - [x] Lieu : déjà `contactIds` ✅
+  - [x] Structure : `contactsIds` → `contactIds` ✅
+  - [x] Contact : relation inverse mise à jour ✅
+  
+- [x] Harmoniser `contactsIds` → `contactIds` pour Structure
+  - [x] Champ principal harmonisé
+  - [x] Relation inverse dans Contact mise à jour
+  - [x] Documentation des changements créée
 
 ### Phase 3 : Migration des Hooks (Jours 5-6)
 

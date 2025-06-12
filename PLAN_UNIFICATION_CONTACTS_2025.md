@@ -178,23 +178,32 @@
 
 #### Formulaires
 
-- [ ] **ConcertForm.js** :
-  - [ ] Remplacer ContactSearchSection par UnifiedContactSelector
-  - [ ] Passer `multiple={true}` au sélecteur
-  - [ ] Adapter handleContactChange
+- [x] **ConcertForm.js** :
+  - [x] Remplacer ContactSearchSection par UnifiedContactSelector
+  - [x] Passer `multiple={true}` au sélecteur
+  - [x] Adapter handleContactChange
+  - [x] Supprimer la logique de recherche de contacts
+  - [x] Utiliser handleContactsChange du hook
 
-- [ ] **LieuForm.js** :
-  - [ ] Remplacer LieuContactSearchSection par UnifiedContactSelector
-  - [ ] Vérifier que tout fonctionne encore
+- [x] **LieuForm.js** :
+  - [x] Remplacer LieuContactSearchSection par UnifiedContactSelector
+  - [x] Vérifier que tout fonctionne encore
+  - [x] Configuration pour multi-contacts
 
 #### Affichage
 
-- [ ] **ConcertDetails.js** :
-  - [ ] Afficher tous les contacts (pas juste le premier)
-  - [ ] Adapter la section contacts
+- [x] **ConcertDetails.js** :
+  - [x] Wrapper qui délègue à ConcertViewWithRelances
+  - [x] Pas de modification nécessaire
 
-- [ ] **ConcertInfoSection.js** :
-  - [ ] Gérer l'affichage de plusieurs organisateurs
+- [x] **ConcertViewWithRelances.js** :
+  - [x] Afficher tous les contacts (pas juste le premier)
+  - [x] Adapter la section contacts avec map()
+  - [x] Gérer les labels "Organisateur 1, 2, etc."
+  - [x] Rétrocompatibilité avec contact singulier
+
+- [x] **ConcertInfoSection.js** :
+  - [x] Ne gère pas les contacts, pas de modification nécessaire
 
 ### Phase 5 : Migration des Services (Jour 9)
 

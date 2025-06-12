@@ -34,7 +34,8 @@ function ConcertViewWithRelances({ id: propId }) {
   const {
     concert,
     lieu,
-    contact,
+    contacts,      // Array de contacts
+    contact,       // Premier contact (rétrocompat)
     artiste,
     structure,
     loading,
@@ -236,19 +237,37 @@ function ConcertViewWithRelances({ id: propId }) {
                   />
                 )}
 
-                {/* Contact/Organisateur */}
-                {contact && (
-                  <EntityCard
-                    entityType="contact"
-                    name={contact.nom || contact.prenom || 'Contact'}
-                    subtitle="Organisateur"
-                    onClick={() => {
-                      console.log('[ConcertViewWithRelances] Clic sur contact:', contact);
-                      const contactId = contact.id || contact.contactId;
-                      console.log('[ConcertViewWithRelances] ID contact trouvé:', contactId);
-                      navigateToEntity('contact', contactId);
-                    }}
-                  />
+                {/* Contacts/Organisateurs */}
+                {contacts && contacts.length > 0 ? (
+                  contacts.map((contact, index) => (
+                    <EntityCard
+                      key={contact.id || `contact-${index}`}
+                      entityType="contact"
+                      name={contact.nom || contact.prenom || 'Contact'}
+                      subtitle={contacts.length > 1 ? `Organisateur ${index + 1}` : 'Organisateur'}
+                      onClick={() => {
+                        console.log('[ConcertViewWithRelances] Clic sur contact:', contact);
+                        const contactId = contact.id || contact.contactId;
+                        console.log('[ConcertViewWithRelances] ID contact trouvé:', contactId);
+                        navigateToEntity('contact', contactId);
+                      }}
+                    />
+                  ))
+                ) : (
+                  // Affichage de compatibilité si on n'a que contact (singulier)
+                  contact && (
+                    <EntityCard
+                      entityType="contact"
+                      name={contact.nom || contact.prenom || 'Contact'}
+                      subtitle="Organisateur"
+                      onClick={() => {
+                        console.log('[ConcertViewWithRelances] Clic sur contact:', contact);
+                        const contactId = contact.id || contact.contactId;
+                        console.log('[ConcertViewWithRelances] ID contact trouvé:', contactId);
+                        navigateToEntity('contact', contactId);
+                      }}
+                    />
+                  )
                 )}
 
                 {/* Structure */}

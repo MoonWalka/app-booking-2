@@ -14,7 +14,7 @@ import useLieuDelete from '@/hooks/lieux/useLieuDelete';
 import LieuFormHeader from './sections/LieuFormHeader';
 import LieuGeneralInfo from './sections/LieuGeneralInfo';
 import LieuAddressInputSection from './sections/LieuAddressInputSection';
-import LieuContactSearchSection from './sections/LieuContactSearchSection';
+import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 const LieuForm = () => {
@@ -99,14 +99,19 @@ const LieuForm = () => {
                 handleChange={handleChange}
               />
 
-              {/* Contact section avec recherche bidirectionnelle */}
-              <LieuContactSearchSection 
-                lieu={lieu}
-                isEditing={true}
-                onContactsChange={(contactIds) => {
-                  console.log('[LieuForm] onContactsChange appelé avec:', contactIds);
+              {/* Contact section avec UnifiedContactSelector */}
+              <UnifiedContactSelector
+                multiple={true}
+                value={lieu.contactIds || []}
+                onChange={(contactIds) => {
+                  console.log('[LieuForm] onChange appelé avec:', contactIds);
                   handleChange({ target: { name: 'contactIds', value: contactIds } });
                 }}
+                isEditing={true}
+                entityId={lieu.id}
+                entityType="lieu"
+                label="Contacts du lieu"
+                required={false}
               />
               
               {/* DEBUG: Afficher les données du lieu */}

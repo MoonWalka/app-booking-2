@@ -38,7 +38,7 @@ class EmailService {
   /**
    * Envoie un email simple
    * @param {Object} emailData - Données de l'email
-   * @param {string} emailData.to - Adresse email du destinataire
+   * @param {string|Array<string>} emailData.to - Adresse email du/des destinataire(s)
    * @param {string} emailData.subject - Sujet de l'email
    * @param {string} emailData.html - Contenu HTML de l'email
    * @param {string} [emailData.text] - Contenu texte de l'email (fallback)
@@ -82,7 +82,7 @@ class EmailService {
    * Envoie un email avec un template prédéfini
    * @param {string} template - Nom du template ('formulaire', 'contrat', 'relance')
    * @param {Object} templateData - Données pour le template
-   * @param {string} to - Email du destinataire
+   * @param {string|Array<string>} to - Email du/des destinataire(s)
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
   async sendTemplatedMail(template, templateData, to) {
@@ -123,7 +123,7 @@ class EmailService {
   /**
    * Envoie un email de contrat
    * @param {Object} contratData - Données du contrat
-   * @param {string} contratData.to - Email du destinataire
+   * @param {string|Array<string>} contratData.to - Email du/des destinataire(s)
    * @param {string} contratData.nomContact - Nom du contact
    * @param {string} contratData.nomConcert - Nom du concert
    * @param {string} [contratData.dateSignature] - Date limite de signature
@@ -167,7 +167,7 @@ class EmailService {
   /**
    * Envoie un email avec lien vers formulaire
    * @param {Object} formData - Données du formulaire
-   * @param {string} formData.to - Email du destinataire
+   * @param {string|Array<string>} formData.to - Email du/des destinataire(s)
    * @param {string} formData.nomContact - Nom du contact
    * @param {string} formData.nomConcert - Nom du concert
    * @param {string} formData.lienFormulaire - URL du formulaire
@@ -195,7 +195,7 @@ class EmailService {
   /**
    * Envoie un email de relance
    * @param {Object} relanceData - Données de la relance
-   * @param {string} relanceData.to - Email du destinataire
+   * @param {string|Array<string>} relanceData.to - Email du/des destinataire(s)
    * @param {string} relanceData.nomContact - Nom du contact
    * @param {string} relanceData.sujet - Sujet de la relance
    * @param {string} relanceData.message - Message de relance
@@ -243,6 +243,51 @@ class EmailService {
   }
 
   /**
+   * Extrait les emails des contacts d'un concert
+   * @param {Array<Object>} contacts - Liste des contacts
+   * @returns {Array<string>} - Liste des emails valides
+   */
+  extractContactEmails(contacts) {
+    if (!Array.isArray(contacts)) {
+      return [];
+    }
+
+    return contacts
+      .filter(contact => contact && contact.email && this.validateEmail(contact.email))
+      .map(contact => contact.email);
+  }
+
+  /**
+   * Envoie un email à tous les contacts d'un concert
+   * @param {Array<Object>} contacts - Liste des contacts du concert
+   * @param {Object} emailData - Données de l'email (sans le champ 'to')
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendToConcertContacts(contacts, emailData) {
+    try {
+      const emails = this.extractContactEmails(contacts);
+      
+      if (emails.length === 0) {
+        throw new Error('Aucun email valide trouvé dans les contacts');
+      }
+
+      debugLog('[EmailService] Envoi à plusieurs contacts:', {
+        numberOfContacts: contacts.length,
+        validEmails: emails.length,
+        emails
+      }, 'info');
+
+      return await this.sendMail({
+        ...emailData,
+        to: emails
+      });
+    } catch (error) {
+      debugLog('[EmailService] Erreur envoi multi-contacts:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
    * Valide une adresse email
    * @param {string} email - Adresse à valider
    * @returns {boolean} - True si valide
@@ -277,6 +322,8 @@ export const {
   sendFormEmail,
   sendRelanceEmail,
   sendTestEmail,
+  sendToConcertContacts,
+  extractContactEmails,
   validateEmail,
   sanitizeFilename
 } = emailService;

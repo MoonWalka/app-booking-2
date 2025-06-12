@@ -1,0 +1,181 @@
+/* Styles pour UnifiedContactSelector */
+
+/* Mode lecture */
+.readOnlyList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contactItem {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--tc-border-light);
+}
+
+.contactItem:last-child {
+  border-bottom: none;
+}
+
+.contactInfo {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.structure {
+  color: var(--tc-text-secondary);
+  font-weight: normal;
+}
+
+.contactDetails {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.contactLink {
+  color: var(--tc-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s;
+}
+
+.contactLink:hover {
+  color: var(--tc-primary-dark);
+  text-decoration: underline;
+}
+
+.contactLink i {
+  font-size: 0.875rem;
+}
+
+.noContact {
+  color: var(--tc-text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Mode édition */
+.selectedLabel {
+  display: block;
+  font-weight: 500;
+  color: var(--tc-text-primary);
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.searchLabel {
+  display: block;
+  font-weight: 500;
+  color: var(--tc-text-primary);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.selectedList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.selectedItem {
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.addAnotherButton {
+  background: none;
+  border: 1px dashed var(--tc-border);
+  color: var(--tc-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--tc-border-radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+
+.addAnotherButton:hover {
+  background-color: var(--tc-bg-hover);
+  border-color: var(--tc-primary);
+}
+
+.addAnotherButton i {
+  font-size: 1rem;
+}
+
+.helpText {
+  display: block;
+  color: var(--tc-text-secondary);
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.cancelButton {
+  background: none;
+  border: none;
+  color: var(--tc-text-secondary);
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+  transition: color 0.2s;
+}
+
+.cancelButton:hover {
+  color: var(--tc-text-primary);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--tc-text-secondary);
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+.loading i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contactDetails {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .addAnotherButton {
+    font-size: 0.813rem;
+  }
+}

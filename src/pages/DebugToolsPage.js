@@ -18,6 +18,9 @@ import ArtisteFirestoreDiagnostic from '@/components/debug/ArtisteFirestoreDiagn
 import SystemAuditTool from '@/components/debug/SystemAuditTool';
 import EntityRelationsDebugger from '@/components/debug/EntityRelationsDebugger';
 import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelationsFixer';
+import ConcertContactsDebug from '@/components/debug/ConcertContactsDebug';
+import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic';
+import UnifiedContactSelectorTest from '@/components/debug/UnifiedContactSelectorTest';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -66,6 +69,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="relations-fixer" title="🔧 Réparation Relations">
           <BidirectionalRelationsFixer />
+        </Tab>
+        
+        <Tab eventKey="concert-contacts" title="👥 Contacts Concerts">
+          <ConcertContactsDebug />
         </Tab>
         
         <Tab eventKey="lists" title="Diagnostic des listes">
@@ -126,6 +133,14 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="orphan-artistes" title="Artistes Orphelins">
           <OrphanArtistesDebug />
+        </Tab>
+        
+        <Tab eventKey="contacts-migration" title="🔄 Migration Contacts">
+          <ContactsMigrationDiagnostic />
+        </Tab>
+        
+        <Tab eventKey="unified-selector-test" title="🧪 Test UnifiedContactSelector">
+          <UnifiedContactSelectorTest />
         </Tab>
       </Tabs>
     </div>

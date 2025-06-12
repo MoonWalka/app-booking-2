@@ -301,12 +301,13 @@
   - [ ] Les URLs ne sont pas cassées
   - [ ] Les PDF se génèrent correctement
 
-- [ ] **UnifiedContactSelector** :
-  - [ ] Mode mono-contact (Structures)
-  - [ ] Mode multi-contacts (Concerts, Lieux)
-  - [ ] Recherche et sélection
-  - [ ] Ajout/suppression de contacts
-  - [ ] Affichage en mode lecture
+- [x] **UnifiedContactSelector** :
+  - [x] Mode mono-contact (Structures)
+  - [x] Mode multi-contacts (Concerts, Lieux)
+  - [x] Recherche et sélection
+  - [x] Ajout/suppression de contacts
+  - [x] Affichage en mode lecture
+  - [x] Interface harmonisée avec CardSection
 
 #### Tests de Performance
 

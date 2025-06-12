@@ -57,8 +57,12 @@
   margin: 0;
 }
 
-/* Mode édition */
-.selectedLabel {
+/* Mode édition - Compatible avec CardSection */
+.cardBody {
+  padding: 0;
+}
+
+.formLabel {
   display: block;
   font-weight: 500;
   color: var(--tc-text-primary);
@@ -66,23 +70,38 @@
   font-size: 0.875rem;
 }
 
-.searchLabel {
-  display: block;
-  font-weight: 500;
-  color: var(--tc-text-primary);
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.selectedList {
+.contactsList {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
-.selectedItem {
+.contactItem {
   animation: slideIn 0.2s ease-out;
+}
+
+.formHelpText {
+  display: block;
+  color: var(--tc-text-secondary);
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.cancelAddButton {
+  background: none;
+  border: none;
+  color: var(--tc-text-secondary);
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+  transition: color 0.2s;
+}
+
+.cancelAddButton:hover {
+  color: var(--tc-text-primary);
 }
 
 @keyframes slideIn {
@@ -122,28 +141,7 @@
   font-size: 1rem;
 }
 
-.helpText {
-  display: block;
-  color: var(--tc-text-secondary);
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-}
 
-.cancelButton {
-  background: none;
-  border: none;
-  color: var(--tc-text-secondary);
-  padding: 0.5rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-top: 0.5rem;
-  transition: color 0.2s;
-}
-
-.cancelButton:hover {
-  color: var(--tc-text-primary);
-}
 
 .loading {
   display: flex;

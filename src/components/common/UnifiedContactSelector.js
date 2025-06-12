@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import Card from '@/components/ui/Card';
+import CardSection from '@/components/ui/CardSection';
 import SearchDropdown from '@/components/concerts/sections/SearchDropdown';
 import SelectedEntityCard from '@/components/concerts/sections/SelectedEntityCard';
 import { useEntitySearch } from '@/hooks/common';
@@ -151,10 +151,10 @@ const UnifiedContactSelector = ({
   // Affichage en mode lecture
   if (!isEditing) {
     return (
-      <Card
+      <CardSection
         title={label}
         icon={<i className="bi bi-person"></i>}
-        isHoverable={true}
+        isEditing={false}
         className={className}
       >
         {contactsList.length > 0 ? (
@@ -187,31 +187,33 @@ const UnifiedContactSelector = ({
         ) : (
           <p className={styles.noContact}>Aucun contact associé</p>
         )}
-      </Card>
+      </CardSection>
     );
   }
 
   // Affichage en mode édition
   return (
-    <Card
+    <CardSection
       title={label}
       icon={<i className="bi bi-person"></i>}
       isEditing={true}
-      className={className}
+      hasDropdown={true}
+      className={`contact-section ${className}`}
+      headerClassName={required ? "contact required" : "contact"}
     >
-      <div ref={dropdownRef}>
+      <div className={styles.cardBody} ref={dropdownRef}>
         {/* Liste des contacts sélectionnés */}
         {contactsList.length > 0 && (
           <>
-            <label className={styles.selectedLabel}>
+            <label className={styles.formLabel}>
               {multiple 
                 ? `${contactsList.length} contact${contactsList.length > 1 ? 's' : ''} sélectionné${contactsList.length > 1 ? 's' : ''}`
                 : 'Contact sélectionné'
               }
             </label>
-            <div className={styles.selectedList}>
+            <div className={styles.contactsList}>
               {contactsList.map((contact) => (
-                <div key={contact.id} className={styles.selectedItem}>
+                <div key={contact.id} className={styles.contactItem}>
                   <SelectedEntityCard
                     entity={contact}
                     entityType="contact"
@@ -253,7 +255,7 @@ const UnifiedContactSelector = ({
         {/* Formulaire de recherche/ajout */}
         {(contactsList.length === 0 || (multiple && showAddContact)) && (
           <>
-            <label className={styles.searchLabel}>
+            <label className={styles.formLabel}>
               {contactsList.length === 0 
                 ? `Rechercher un contact${required ? ' *' : ''}`
                 : 'Ajouter un autre contact'
@@ -273,7 +275,7 @@ const UnifiedContactSelector = ({
               emptyResultsText="Aucun contact trouvé"
               entityType="contact"
             />
-            <small className={styles.helpText}>
+            <small className={styles.formHelpText}>
               Tapez au moins 2 caractères pour rechercher un contact par nom.
             </small>
 
@@ -281,7 +283,7 @@ const UnifiedContactSelector = ({
             {multiple && showAddContact && contactsList.length > 0 && (
               <button
                 type="button"
-                className={styles.cancelButton}
+                className={styles.cancelAddButton}
                 onClick={() => {
                   setShowAddContact(false);
                   setSearchTerm('');
@@ -300,7 +302,7 @@ const UnifiedContactSelector = ({
           </div>
         )}
       </div>
-    </Card>
+    </CardSection>
   );
 };
 

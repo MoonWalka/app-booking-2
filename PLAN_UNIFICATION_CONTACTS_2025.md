@@ -280,7 +280,7 @@
   - [x] Aucune donnée à migrer nécessaire
   - [x] Relations bidirectionnelles intactes
 
-### Phase 8 : Tests et Validation (Jours 12-13)
+### Phase 8 : Tests et Validation (Jours 12-13) 🧪
 
 #### Tests Fonctionnels
 
@@ -300,6 +300,13 @@
   - [ ] Les anciens concerts s'affichent correctement
   - [ ] Les URLs ne sont pas cassées
   - [ ] Les PDF se génèrent correctement
+
+- [ ] **UnifiedContactSelector** :
+  - [ ] Mode mono-contact (Structures)
+  - [ ] Mode multi-contacts (Concerts, Lieux)
+  - [ ] Recherche et sélection
+  - [ ] Ajout/suppression de contacts
+  - [ ] Affichage en mode lecture
 
 #### Tests de Performance
 

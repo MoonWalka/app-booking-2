@@ -244,6 +244,12 @@ const ContactsMigrationDiagnostic = () => {
           message: 'Ces concerts ont à la fois contactId et contactIds, ce qui peut créer des incohérences.'
         };
         break;
+      default:
+        details = {
+          title: 'Information non disponible',
+          message: 'Type de détail non reconnu.'
+        };
+        break;
     }
     
     setDetailedInfo(details);

@@ -48,13 +48,10 @@ const ConcertFormDesktop = () => {
     isSubmitting,
     lieu,
     artiste,
-    contacts,         // Array de contacts
-    contact,          // Premier contact (rétrocompat)
     structure,
     handleLieuChange,
     handleArtisteChange,
     handleContactsChange,  // Pour multi-contacts
-    handleContactChange,   // Gardé pour rétrocompat
     handleStructureChange
   } = formHook;
 

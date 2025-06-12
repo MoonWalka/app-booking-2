@@ -4,7 +4,7 @@ import Card from '@/components/ui/Card';
 import SearchDropdown from '@/components/concerts/sections/SearchDropdown';
 import SelectedEntityCard from '@/components/concerts/sections/SelectedEntityCard';
 import { useEntitySearch } from '@/hooks/common';
-import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
+import { doc, getDoc, db } from '@/services/firebase-service';
 import styles from './UnifiedContactSelector.module.css';
 
 /**
@@ -54,14 +54,14 @@ const UnifiedContactSelector = ({
     maxResults: 10
   });
 
-  // Normaliser la valeur en tableau pour simplifier la logique
-  const normalizedValue = Array.isArray(value) 
-    ? value 
-    : (value ? [value] : []);
-
   // Charger les contacts existants au montage
   useEffect(() => {
     const loadExistingContacts = async () => {
+      // Normaliser la valeur en tableau pour simplifier la logique
+      const normalizedValue = Array.isArray(value) 
+        ? value 
+        : (value ? [value] : []);
+
       if (normalizedValue.length === 0) {
         setContactsList([]);
         return;
@@ -93,7 +93,7 @@ const UnifiedContactSelector = ({
     };
 
     loadExistingContacts();
-  }, [normalizedValue, multiple]);
+  }, [value, multiple]);
 
   // Gérer l'ajout d'un contact
   const handleAddContact = useCallback((contact) => {
@@ -119,7 +119,7 @@ const UnifiedContactSelector = ({
       : newList[0]?.id || null;
     
     onChange(newValue);
-  }, [contactsList, multiple, onChange]);
+  }, [contactsList, multiple, onChange, setSearchTerm]);
 
   // Gérer la suppression d'un contact
   const handleRemoveContact = useCallback((contactId) => {

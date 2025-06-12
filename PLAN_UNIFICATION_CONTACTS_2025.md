@@ -205,19 +205,22 @@
 - [x] **ConcertInfoSection.js** :
   - [x] Ne gère pas les contacts, pas de modification nécessaire
 
-### Phase 5 : Migration des Services (Jour 9)
+### Phase 5 : Migration des Services (Jour 9) ✅
 
-- [ ] **bidirectionalRelationsService.js** :
-  - [ ] Vérifier la compatibilité avec le nouveau format
-  - [ ] Tester les relations Concert ↔ Contact
+- [x] **bidirectionalRelationsService.js** :
+  - [x] Vérifier la compatibilité avec le nouveau format ✅ **Déjà compatible !**
+  - [x] Le service gère parfaitement `isArray: true` avec `arrayUnion()`
+  - [x] Relations bidirectionnelles multiples fonctionnelles
 
-- [ ] **concertService.js** :
-  - [ ] Adapter les requêtes utilisant contactId
-  - [ ] Mettre à jour les fonctions de création/modification
+- [x] **concertService.js** :
+  - [x] Fichier vide, pas d'adaptation nécessaire ✅
+  - [x] Les opérations CRUD passent par les hooks génériques
 
-- [ ] **emailService.js** :
-  - [ ] Adapter les templates pour plusieurs contacts
-  - [ ] Gérer l'envoi à plusieurs destinataires
+- [x] **emailService.js** :
+  - [x] Adapter la documentation pour plusieurs destinataires ✅
+  - [x] Ajouter méthode `sendToConcertContacts(contacts, emailData)` ✅
+  - [x] Ajouter méthode `extractContactEmails(contacts)` ✅
+  - [x] Support `to` comme string ou array partout ✅
 
 ### Phase 6 : Script de Migration des Données (Jour 10)
 

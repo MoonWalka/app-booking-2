@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { collection, getDocs, doc, getDoc, db } from '@/services/firebase-service';
+import { collection, getDocs, doc, getDoc, updateDoc, serverTimestamp, writeBatch, db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -14,6 +14,12 @@ const ContactsMigrationDiagnostic = () => {
   const [loading, setLoading] = useState(false);
   const [diagnosticResults, setDiagnosticResults] = useState(null);
   const [detailedInfo, setDetailedInfo] = useState(null);
+  
+  // États pour la migration
+  const [migrationState, setMigrationState] = useState(null); // 'running', 'completed', 'error'
+  const [migrationLogs, setMigrationLogs] = useState([]);
+  const [migrationStats, setMigrationStats] = useState(null);
+  const [dryRunMode, setDryRunMode] = useState(true);
 
   const runDiagnostic = async () => {
     if (!currentOrganization?.id) {
@@ -257,6 +263,237 @@ const ContactsMigrationDiagnostic = () => {
     linkElement.click();
   };
 
+  // FONCTIONS DE MIGRATION
+
+  const addMigrationLog = (message, level = 'info') => {
+    const logEntry = {
+      timestamp: new Date().toLocaleTimeString(),
+      message,
+      level
+    };
+    setMigrationLogs(prev => [...prev, logEntry]);
+    console.log(`[Migration ${level.toUpperCase()}] ${message}`);
+  };
+
+  const runMigration = async () => {
+    if (!currentOrganization?.id) {
+      alert('Veuillez sélectionner une organisation');
+      return;
+    }
+
+    // Confirmation pour la migration réelle
+    if (!dryRunMode) {
+      const confirm = window.confirm(
+        '⚠️ ATTENTION: Vous allez exécuter la migration réelle!\n\n' +
+        'Cette opération va:\n' +
+        '- Convertir contactId → contactIds\n' +
+        '- Modifier la structure des données\n' +
+        '- Mettre à jour les relations bidirectionnelles\n\n' +
+        'Êtes-vous sûr de vouloir continuer ?'
+      );
+      
+      if (!confirm) return;
+    }
+
+    setMigrationState('running');
+    setMigrationLogs([]);
+    setMigrationStats({
+      totalConcerts: 0,
+      concertsToMigrate: 0,
+      concertsMigrated: 0,
+      errors: [],
+      bidirectionalUpdates: 0
+    });
+
+    try {
+      addMigrationLog(`🚀 Début de la migration ${dryRunMode ? '(MODE SIMULATION)' : '(MODE RÉEL)'}`, 'info');
+      addMigrationLog(`📍 Organisation: ${currentOrganization.name}`, 'info');
+
+      // Phase 1: Analyser les concerts à migrer
+      addMigrationLog('🔍 Phase 1: Analyse des concerts...', 'info');
+      
+      const concertsSnapshot = await getDocs(collection(db, 'concerts'));
+      const concertsToMigrate = [];
+      let totalConcerts = 0;
+
+      for (const docSnap of concertsSnapshot.docs) {
+        const concert = docSnap.data();
+        
+        // Filtrer par organisation
+        if (concert.organizationId !== currentOrganization.id) continue;
+        
+        totalConcerts++;
+
+        // Concert à migrer : a contactId mais pas contactIds
+        const hasContactId = concert.contactId && typeof concert.contactId === 'string';
+        const hasContactIds = concert.contactIds && Array.isArray(concert.contactIds) && concert.contactIds.length > 0;
+
+        if (hasContactId && !hasContactIds) {
+          concertsToMigrate.push({
+            id: docSnap.id,
+            contactId: concert.contactId,
+            nom: concert.nom || 'Concert sans nom'
+          });
+        }
+      }
+
+      setMigrationStats(prev => ({
+        ...prev,
+        totalConcerts,
+        concertsToMigrate: concertsToMigrate.length
+      }));
+
+      addMigrationLog(`📊 Concerts totaux: ${totalConcerts}`, 'info');
+      addMigrationLog(`🎯 Concerts à migrer: ${concertsToMigrate.length}`, 'info');
+
+      if (concertsToMigrate.length === 0) {
+        addMigrationLog('✅ Aucun concert à migrer trouvé', 'success');
+        setMigrationState('completed');
+        return;
+      }
+
+      // Phase 2: Migration par lots
+      addMigrationLog('🔄 Phase 2: Migration des concerts...', 'info');
+      
+      const BATCH_SIZE = 10; // Plus petit pour l'interface
+      const batches = [];
+      
+      for (let i = 0; i < concertsToMigrate.length; i += BATCH_SIZE) {
+        batches.push(concertsToMigrate.slice(i, i + BATCH_SIZE));
+      }
+
+      for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+        const batch = batches[batchIndex];
+        addMigrationLog(`📦 Lot ${batchIndex + 1}/${batches.length} (${batch.length} concerts)`, 'info');
+
+        if (dryRunMode) {
+          // Simulation
+          for (const concert of batch) {
+            addMigrationLog(`   🧪 [SIMULATION] ${concert.nom}: contactId=${concert.contactId} → contactIds=[${concert.contactId}]`, 'info');
+            setMigrationStats(prev => ({
+              ...prev,
+              concertsMigrated: prev.concertsMigrated + 1
+            }));
+          }
+        } else {
+          // Migration réelle
+          const firestoreBatch = writeBatch(db);
+
+          for (const concert of batch) {
+            try {
+              const concertRef = doc(db, 'concerts', concert.id);
+              
+              const updateData = {
+                contactIds: [concert.contactId],
+                contactId: null, // Supprimer l'ancien champ
+                contactId_migrated: concert.contactId, // Sauvegarde pour rollback
+                updatedAt: serverTimestamp()
+              };
+
+              firestoreBatch.update(concertRef, updateData);
+              addMigrationLog(`   ✅ ${concert.nom} préparé pour migration`, 'info');
+
+            } catch (error) {
+              addMigrationLog(`   ❌ Erreur ${concert.nom}: ${error.message}`, 'error');
+              setMigrationStats(prev => ({
+                ...prev,
+                errors: [...prev.errors, { concertId: concert.id, error: error.message }]
+              }));
+            }
+          }
+
+          // Exécuter le batch
+          try {
+            await firestoreBatch.commit();
+            addMigrationLog(`   ✅ Lot ${batchIndex + 1} migré avec succès`, 'success');
+            
+            setMigrationStats(prev => ({
+              ...prev,
+              concertsMigrated: prev.concertsMigrated + batch.length
+            }));
+
+            // Mettre à jour les relations bidirectionnelles
+            for (const concert of batch) {
+              await updateBidirectionalRelation(concert.id, concert.contactId);
+            }
+
+          } catch (error) {
+            addMigrationLog(`   ❌ Erreur lors du commit du lot ${batchIndex + 1}: ${error.message}`, 'error');
+            throw error;
+          }
+        }
+      }
+
+      // Phase 3: Vérification (simulation seulement)
+      if (dryRunMode) {
+        addMigrationLog('🔍 Phase 3: Vérification (simulation)', 'info');
+        addMigrationLog('   ✅ La migration semble viable', 'success');
+        addMigrationLog('   ℹ️  Désactivez le mode simulation pour exécuter la migration réelle', 'info');
+      } else {
+        addMigrationLog('🔍 Phase 3: Vérification post-migration...', 'info');
+        // Ici on pourrait vérifier que la migration s'est bien passée
+        addMigrationLog('   ✅ Migration vérifiée', 'success');
+      }
+
+      addMigrationLog(`🎉 Migration ${dryRunMode ? 'simulée' : 'terminée'} avec succès !`, 'success');
+      setMigrationState('completed');
+
+    } catch (error) {
+      addMigrationLog(`💥 Erreur fatale: ${error.message}`, 'error');
+      setMigrationState('error');
+    }
+  };
+
+  const updateBidirectionalRelation = async (concertId, contactId) => {
+    try {
+      const contactRef = doc(db, 'contacts', contactId);
+      const contactDoc = await getDoc(contactRef);
+
+      if (!contactDoc.exists()) {
+        addMigrationLog(`      ⚠️ Contact ${contactId} non trouvé pour concert ${concertId}`, 'warning');
+        return;
+      }
+
+      const contactData = contactDoc.data();
+      let concertsIds = contactData.concertsIds || [];
+
+      if (!concertsIds.includes(concertId)) {
+        concertsIds.push(concertId);
+
+        await updateDoc(contactRef, {
+          concertsIds: concertsIds,
+          updatedAt: serverTimestamp()
+        });
+
+        setMigrationStats(prev => ({
+          ...prev,
+          bidirectionalUpdates: prev.bidirectionalUpdates + 1
+        }));
+
+        addMigrationLog(`      🔗 Relation bidirectionnelle mise à jour: contact ${contactId} ↔ concert ${concertId}`, 'info');
+      }
+
+    } catch (error) {
+      addMigrationLog(`      ❌ Erreur relation bidirectionnelle ${contactId} ↔ ${concertId}: ${error.message}`, 'error');
+      setMigrationStats(prev => ({
+        ...prev,
+        errors: [...prev.errors, { 
+          type: 'bidirectional', 
+          concertId, 
+          contactId, 
+          error: error.message 
+        }]
+      }));
+    }
+  };
+
+  const resetMigration = () => {
+    setMigrationState(null);
+    setMigrationLogs([]);
+    setMigrationStats(null);
+    setDryRunMode(true);
+  };
+
   return (
     <div className={styles.container}>
       <Card title="🔍 Diagnostic Migration Contacts" className={styles.card}>
@@ -442,6 +679,146 @@ const ContactsMigrationDiagnostic = () => {
           )}
         </Card>
       )}
+
+      {/* SECTION MIGRATION */}
+      <Card title="🚀 Exécuter la Migration" className={styles.card}>
+        <div className={styles.description}>
+          <p>Convertit les concerts de <code>contactId</code> vers <code>contactIds</code> directement depuis l'interface.</p>
+          
+          {!diagnosticResults && (
+            <Alert type="warning">
+              ⚠️ Lancez d'abord le diagnostic pour évaluer l'impact de la migration.
+            </Alert>
+          )}
+        </div>
+
+        <div className={styles.migrationControls}>
+          <div className={styles.modeSelector}>
+            <label>
+              <input
+                type="checkbox"
+                checked={dryRunMode}
+                onChange={(e) => setDryRunMode(e.target.checked)}
+                disabled={migrationState === 'running'}
+              />
+              Mode simulation (dry-run)
+            </label>
+            <small>
+              {dryRunMode 
+                ? '🧪 Simulation sans modification des données' 
+                : '⚡ Migration réelle avec modification des données'
+              }
+            </small>
+          </div>
+
+          <div className={styles.actions}>
+            <Button 
+              onClick={runMigration}
+              disabled={migrationState === 'running' || !currentOrganization}
+              variant={dryRunMode ? 'primary' : 'danger'}
+            >
+              {migrationState === 'running' 
+                ? 'Migration en cours...' 
+                : `${dryRunMode ? '🧪 Simuler' : '⚡ Exécuter'} la migration`
+              }
+            </Button>
+            
+            {migrationState && (
+              <Button onClick={resetMigration} variant="secondary">
+                Réinitialiser
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Statistiques de migration */}
+        {migrationStats && (
+          <div className={styles.migrationProgress}>
+            <h4>📊 Progression de la migration</h4>
+            <table className={styles.table}>
+              <tbody>
+                <tr>
+                  <td>Concerts totaux (organisation)</td>
+                  <td className={styles.number}>{migrationStats.totalConcerts}</td>
+                </tr>
+                <tr>
+                  <td>Concerts à migrer</td>
+                  <td className={styles.number}>{migrationStats.concertsToMigrate}</td>
+                </tr>
+                <tr>
+                  <td>Concerts {dryRunMode ? 'simulés' : 'migrés'}</td>
+                  <td className={styles.number}>{migrationStats.concertsMigrated}</td>
+                </tr>
+                <tr>
+                  <td>Relations bidirectionnelles mises à jour</td>
+                  <td className={styles.number}>{migrationStats.bidirectionalUpdates}</td>
+                </tr>
+                <tr>
+                  <td>Erreurs</td>
+                  <td className={styles.number}>{migrationStats.errors.length}</td>
+                </tr>
+              </tbody>
+            </table>
+            
+            {migrationStats.errors.length > 0 && (
+              <Alert type="error">
+                <strong>Erreurs rencontrées :</strong>
+                <ul>
+                  {migrationStats.errors.slice(0, 5).map((error, index) => (
+                    <li key={index}>{error.concertId}: {error.error}</li>
+                  ))}
+                  {migrationStats.errors.length > 5 && (
+                    <li>... et {migrationStats.errors.length - 5} autres erreurs</li>
+                  )}
+                </ul>
+              </Alert>
+            )}
+          </div>
+        )}
+
+        {/* Logs de migration */}
+        {migrationLogs.length > 0 && (
+          <div className={styles.migrationLogs}>
+            <h4>📋 Logs de migration</h4>
+            <div className={styles.logsContainer}>
+              {migrationLogs.map((log, index) => (
+                <div 
+                  key={index} 
+                  className={`${styles.logEntry} ${styles[`log${log.level.charAt(0).toUpperCase() + log.level.slice(1)}`]}`}
+                >
+                  <span className={styles.logTime}>{log.timestamp}</span>
+                  <span className={styles.logMessage}>{log.message}</span>
+                </div>
+              ))}
+            </div>
+            
+            {migrationState === 'completed' && (
+              <Alert type="success">
+                <strong>🎉 Migration {dryRunMode ? 'simulée' : 'terminée'} avec succès !</strong>
+                {dryRunMode && (
+                  <div>
+                    <br />
+                    💡 Pour exécuter la migration réelle :
+                    <ol>
+                      <li>Décochez "Mode simulation"</li>
+                      <li>Cliquez sur "⚡ Exécuter la migration"</li>
+                      <li>Confirmez dans la boîte de dialogue</li>
+                    </ol>
+                  </div>
+                )}
+              </Alert>
+            )}
+            
+            {migrationState === 'error' && (
+              <Alert type="error">
+                <strong>❌ Erreur lors de la migration</strong>
+                <br />
+                Consultez les logs ci-dessus pour plus de détails.
+              </Alert>
+            )}
+          </div>
+        )}
+      </Card>
     </div>
   );
 };

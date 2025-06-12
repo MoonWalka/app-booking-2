@@ -236,7 +236,7 @@ export const entityConfigurations = {
         isArray: false,
         displayName: 'Structure',
         bidirectional: true,
-        inverseField: 'contactsIds'
+        inverseField: 'contactIds' // Harmonisé de contactsIds à contactIds
       },
       lieux: { 
         collection: 'lieux', 
@@ -300,12 +300,12 @@ export const entityConfigurations = {
       },
       {
         id: 'contact',
-        title: 'Organisateur',
+        title: 'Contacts', // Changé au pluriel pour cohérence future
         icon: 'bi-person',
         type: 'relations',
         relation: 'contact',
-        displayType: 'card',
-        single: true
+        displayType: 'cards', // Changé de 'card' à 'cards' pour multi-contacts
+        single: false        // Changé de true à false pour multi-contacts
       },
       {
         id: 'notes',
@@ -335,9 +335,9 @@ export const entityConfigurations = {
       },
       contact: { 
         collection: 'contacts', 
-        field: 'contactId', 
-        isArray: false,
-        displayName: 'Organisateur',
+        field: 'contactIds', // Changé de contactId à contactIds pour migration future
+        isArray: true,      // Changé à true pour supporter plusieurs contacts
+        displayName: 'Contacts',
         bidirectional: true,
         inverseField: 'concertsIds'
       },
@@ -424,7 +424,7 @@ export const entityConfigurations = {
     relations: {
       contacts: { 
         collection: 'contacts', 
-        field: 'contactsIds', 
+        field: 'contactIds', // Harmonisé de contactsIds à contactIds
         isArray: true,
         displayName: 'Contacts',
         inverseField: 'structureId',

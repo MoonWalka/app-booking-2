@@ -145,24 +145,34 @@
 
 #### Hooks de Formulaire
 
-- [ ] **useConcertForm.js** :
-  - [ ] Remplacer `contactId` par `contactIds`
-  - [ ] Adapter `handleContactChange` pour gérer un tableau
-  - [ ] Initialiser avec `contactIds: []` au lieu de `contactId: null`
+- [x] **useConcertForm.js** :
+  - [x] Remplacer `contactId` par `contactIds`
+  - [x] Adapter `handleContactChange` pour gérer un tableau
+  - [x] Initialiser avec `contactIds: []` au lieu de `contactId: null`
+  - [x] Ajouter `handleContactsChange` pour multi-contacts
+  - [x] Migration automatique dans `transformConcertData`
+  - [x] Gestion des relations bidirectionnelles pour arrays
 
-- [ ] **useConcertFormWithRelations.js** :
-  - [ ] Adapter le chargement des contacts (tableau)
-  - [ ] Modifier la logique de sauvegarde
+- [x] **useConcertFormWithRelations.js** :
+  - [x] Adapter le chargement des contacts (tableau)
+  - [x] Modifier la logique de sauvegarde
+  - [x] État `contacts` au lieu de `contact`
+  - [x] Rétrocompatibilité maintenue
 
-- [ ] **useGenericEntityForm.js** :
-  - [ ] Vérifier la gestion des tableaux
-  - [ ] S'assurer que handleFieldChange gère les arrays
+- [x] **useGenericEntityForm.js** :
+  - [x] Vérifier la gestion des tableaux ✅
+  - [x] S'assurer que handleFieldChange gère les arrays ✅
+  - [x] Hook déjà assez flexible, pas de modification nécessaire
 
 #### Hooks de Détails
 
-- [ ] **useConcertDetails.js** :
-  - [ ] Charger `contactIds` au lieu de `contactId`
-  - [ ] Adapter l'affichage pour plusieurs contacts
+- [x] **useConcertDetails.js** :
+  - [x] Charger `contactIds` au lieu de `contactId`
+  - [x] Adapter l'affichage pour plusieurs contacts
+  - [x] Configuration relation `one-to-many`
+  - [x] Fonction `normalizeIds` pour rétrocompatibilité
+  - [x] Gestion des relations bidirectionnelles multiples
+  - [x] Export de `contacts` (array) et `contact` (rétrocompat)
 
 ### Phase 4 : Migration des Composants (Jours 7-8)
 

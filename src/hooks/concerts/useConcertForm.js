@@ -40,7 +40,7 @@ export const useConcertForm = (concertId) => {
   // Références pour stocker les valeurs précédentes des relations
   const previousArtisteIdRef = useRef(null);
   const previousLieuIdRef = useRef(null);
-  const previousContactIdRef = useRef(null);
+  const previousContactIdsRef = useRef([]); // Changé en array pour multi-contacts
 
 
   // Nettoyer les logs pour éviter la confusion (supprimer références à useConcertFormMigrated)
@@ -66,6 +66,22 @@ export const useConcertForm = (concertId) => {
       updatedAt: new Date()
     };
     
+    // Migration contactId → contactIds si nécessaire
+    // Si on a un contactId mais pas de contactIds, migrer automatiquement
+    if (data.contactId && (!data.contactIds || data.contactIds.length === 0)) {
+      transformedData.contactIds = [data.contactId];
+      // Ne pas supprimer contactId pour la rétrocompatibilité temporaire
+      debugLog('Migration automatique contactId → contactIds', 'info', 'useConcertForm', {
+        contactId: data.contactId,
+        contactIds: transformedData.contactIds
+      });
+    }
+    
+    // S'assurer que contactIds est toujours un tableau
+    if (!Array.isArray(transformedData.contactIds)) {
+      transformedData.contactIds = [];
+    }
+    
     debugLog('Données transformées avant sauvegarde', 'debug', 'useConcertForm', transformedData);
     return transformedData;
   }, []);
@@ -82,7 +98,14 @@ export const useConcertForm = (concertId) => {
       if (data) {
         previousArtisteIdRef.current = data.artisteId || null;
         previousLieuIdRef.current = data.lieuId || null;
-        previousContactIdRef.current = data.contactId || null;
+        // Gérer la rétrocompatibilité : contactId (string) → contactIds (array)
+        if (data.contactIds && Array.isArray(data.contactIds)) {
+          previousContactIdsRef.current = data.contactIds;
+        } else if (data.contactId) {
+          previousContactIdsRef.current = [data.contactId];
+        } else {
+          previousContactIdsRef.current = [];
+        }
       }
       return;
     }
@@ -174,39 +197,54 @@ export const useConcertForm = (concertId) => {
         }
       }
       
-      // Gérer les relations bidirectionnelles pour le contact
-      if (data.contactId || previousContactIdRef.current) {
+      // Gérer les relations bidirectionnelles pour les contacts (multi-contacts)
+      // Normaliser les données pour gérer la rétrocompatibilité
+      const currentContactIds = data.contactIds && Array.isArray(data.contactIds) 
+        ? data.contactIds 
+        : (data.contactId ? [data.contactId] : []);
+      
+      const previousContactIds = previousContactIdsRef.current || [];
+      
+      if (currentContactIds.length > 0 || previousContactIds.length > 0) {
         try {
-          console.log("[useConcertForm] Gestion des relations bidirectionnelles contact-concert");
+          console.log("[useConcertForm] Gestion des relations bidirectionnelles contacts-concert");
+          console.log("[useConcertForm] Contacts précédents:", previousContactIds);
+          console.log("[useConcertForm] Contacts actuels:", currentContactIds);
           
-          // Si le contact a changé, supprimer la relation avec l'ancien contact
-          if (previousContactIdRef.current && previousContactIdRef.current !== data.contactId) {
-            console.log("[useConcertForm] Suppression de la relation avec l'ancien contact:", previousContactIdRef.current);
+          // Identifier les contacts à supprimer (présents avant mais plus maintenant)
+          const contactsToRemove = previousContactIds.filter(id => !currentContactIds.includes(id));
+          
+          // Identifier les contacts à ajouter (nouveaux contacts)
+          const contactsToAdd = currentContactIds.filter(id => !previousContactIds.includes(id));
+          
+          // Supprimer les anciennes relations
+          for (const contactId of contactsToRemove) {
+            console.log("[useConcertForm] Suppression de la relation avec le contact:", contactId);
             await updateBidirectionalRelation({
               sourceType: 'concerts',
               sourceId: data.id,
               targetType: 'contacts',
-              targetId: previousContactIdRef.current,
+              targetId: contactId,
               relationName: 'contact',
               action: 'remove'
             });
           }
           
-          // Ajouter la relation avec le nouveau contact
-          if (data.contactId) {
-            console.log("[useConcertForm] Ajout de la relation avec le nouveau contact:", data.contactId);
+          // Ajouter les nouvelles relations
+          for (const contactId of contactsToAdd) {
+            console.log("[useConcertForm] Ajout de la relation avec le contact:", contactId);
             await updateBidirectionalRelation({
               sourceType: 'concerts',
               sourceId: data.id,
               targetType: 'contacts',
-              targetId: data.contactId,
+              targetId: contactId,
               relationName: 'contact',
               action: 'add'
             });
           }
           
           // Mettre à jour la référence pour les prochaines modifications
-          previousContactIdRef.current = data.contactId;
+          previousContactIdsRef.current = currentContactIds;
           
         } catch (error) {
           console.error("[useConcertForm] Erreur lors de la mise à jour des relations bidirectionnelles:", error);
@@ -271,7 +309,8 @@ export const useConcertForm = (concertId) => {
       prix: '',
       capacité: '',
       isPublic: true,
-      contacts: []
+      contactIds: [], // Changé de contactId à contactIds (array)
+      contacts: []    // Garder pour la rétrocompatibilité temporaire
     },
     validateForm: validateConcertForm,
     transformData: (...args) => transformConcertDataRef.current(...args),
@@ -283,7 +322,7 @@ export const useConcertForm = (concertId) => {
     relatedEntities: [
       { name: 'lieu', collection: 'lieux', idField: 'lieuId' },
       { name: 'artiste', collection: 'artistes', idField: 'artisteId' },
-      { name: 'contact', collection: 'contacts', idField: 'contactId' }
+      { name: 'contacts', collection: 'contacts', idField: 'contactIds', isArray: true } // Changé pour multi-contacts
     ]
   }), [isNewConcert, concertId]);
   
@@ -357,22 +396,46 @@ export const useConcertForm = (concertId) => {
     }
   }, [formHook]);
 
-  // Gérer l'ajout d'un contact
-  const handleAddContact = useCallback((contact) => {
-    if (!contact.nom || !contact.email) return;
+  // Gérer le changement de contacts (multi-contacts)
+  const handleContactsChange = useCallback((contactIds) => {
+    debugLog('Changement de contacts', 'debug', 'useConcertForm', { contactIds });
     
     formHook.setFormData(prev => ({
       ...prev,
-      contacts: [...(prev.contacts || []), contact]
+      contactIds: Array.isArray(contactIds) ? contactIds : [],
+      // Garder contactId pour rétrocompatibilité (premier contact de la liste)
+      contactId: Array.isArray(contactIds) && contactIds.length > 0 ? contactIds[0] : null
     }));
   }, [formHook]);
 
+  // Gérer l'ajout d'un contact (pour la rétrocompatibilité)
+  const handleAddContact = useCallback((contact) => {
+    if (!contact || !contact.id) return;
+    
+    formHook.setFormData(prev => {
+      const currentIds = prev.contactIds || [];
+      if (!currentIds.includes(contact.id)) {
+        const newIds = [...currentIds, contact.id];
+        return {
+          ...prev,
+          contactIds: newIds,
+          contactId: newIds[0] || null // Garder le premier pour rétrocompatibilité
+        };
+      }
+      return prev;
+    });
+  }, [formHook]);
+
   // Gérer la suppression d'un contact
-  const handleRemoveContact = useCallback((index) => {
-    formHook.setFormData(prev => ({
-      ...prev,
-      contacts: prev.contacts.filter((_, i) => i !== index)
-    }));
+  const handleRemoveContact = useCallback((contactId) => {
+    formHook.setFormData(prev => {
+      const newIds = (prev.contactIds || []).filter(id => id !== contactId);
+      return {
+        ...prev,
+        contactIds: newIds,
+        contactId: newIds[0] || null // Garder le premier pour rétrocompatibilité
+      };
+    });
   }, [formHook]);
 
   // Fonction pour gérer l'annulation du formulaire
@@ -464,8 +527,9 @@ export const useConcertForm = (concertId) => {
     // Propriétés et méthodes spécifiques aux concerts
     handleArtisteChange,
     handleLieuChange,
-    handleAddContact,
-    handleRemoveContact,
+    handleContactsChange,    // Nouveau : pour gérer plusieurs contacts
+    handleAddContact,        // Gardé pour rétrocompatibilité
+    handleRemoveContact,     // Adapté pour gérer par ID
     handleCancel,
     isNewConcert,
     // Exposer les données du concert enrichies avec l'id pour la DX

@@ -296,10 +296,11 @@
   - [ ] Vérifier qu'un contact supprimé d'un concert disparaît du contact
   - [ ] Tester avec Lieux et Structures
 
-- [ ] **Rétrocompatibilité** :
-  - [ ] Les anciens concerts s'affichent correctement
-  - [ ] Les URLs ne sont pas cassées
-  - [ ] Les PDF se génèrent correctement
+- [x] **Rétrocompatibilité** :
+  - [x] Les anciens concerts s'affichent correctement
+  - [x] Les URLs ne sont pas cassées
+  - [x] Les PDF se génèrent correctement
+  - [x] Formulaires/contrats/factures restaurés
 
 - [x] **UnifiedContactSelector** :
   - [x] Mode mono-contact (Structures)

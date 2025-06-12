@@ -19,7 +19,7 @@ export const useConcertFormWithRelations = (concertId) => {
   // États pour les entités liées
   const [lieu, setLieu] = useState(null);
   const [artiste, setArtiste] = useState(null);
-  const [contact, setContact] = useState(null);
+  const [contacts, setContacts] = useState([]); // Changé en array pour multi-contacts
   const [structure, setStructure] = useState(null);
   const [loadingRelations, setLoadingRelations] = useState(false);
   
@@ -51,14 +51,29 @@ export const useConcertFormWithRelations = (concertId) => {
           setArtiste(null);
         }
         
-        // Charger le contact
-        if (baseHook.formData.contactId) {
-          const progDoc = await getDoc(doc(db, 'contacts', baseHook.formData.contactId));
-          if (progDoc.exists()) {
-            setContact({ id: progDoc.id, ...progDoc.data() });
-          }
+        // Charger les contacts (multi-contacts)
+        // Gérer la rétrocompatibilité : contactId (string) et contactIds (array)
+        let contactIdsToLoad = [];
+        
+        if (baseHook.formData.contactIds && Array.isArray(baseHook.formData.contactIds)) {
+          contactIdsToLoad = baseHook.formData.contactIds;
+        } else if (baseHook.formData.contactId) {
+          contactIdsToLoad = [baseHook.formData.contactId];
+        }
+        
+        if (contactIdsToLoad.length > 0) {
+          const contactPromises = contactIdsToLoad.map(async (contactId) => {
+            const contactDoc = await getDoc(doc(db, 'contacts', contactId));
+            if (contactDoc.exists()) {
+              return { id: contactDoc.id, ...contactDoc.data() };
+            }
+            return null;
+          });
+          
+          const loadedContacts = (await Promise.all(contactPromises)).filter(Boolean);
+          setContacts(loadedContacts);
         } else {
-          setContact(null);
+          setContacts([]);
         }
         
         // Charger la structure
@@ -85,6 +100,7 @@ export const useConcertFormWithRelations = (concertId) => {
     baseHook.formData?.lieuId, 
     baseHook.formData?.artisteId, 
     baseHook.formData?.contactId,
+    baseHook.formData?.contactIds,  // Ajout pour multi-contacts
     baseHook.formData?.structureId,
     baseHook.isNewConcert,
     baseHook.formData
@@ -101,18 +117,22 @@ export const useConcertFormWithRelations = (concertId) => {
     baseHook.handleArtisteChange(newArtiste);
   };
   
+  // Gérer le changement de contacts (multi-contacts)
+  const handleContactsChange = (contactIds) => {
+    // Utiliser la méthode du hook de base
+    baseHook.handleContactsChange(contactIds);
+    
+    // Mettre à jour l'état local des contacts si nécessaire
+    // (sera rechargé automatiquement par l'effet)
+  };
+  
+  // Garder handleContactChange pour rétrocompatibilité
   const handleContactChange = (newContact) => {
-    setContact(newContact);
-    // Appeler la méthode de base si elle existe
-    if (baseHook.handleContactChange) {
-      baseHook.handleContactChange(newContact);
+    if (newContact) {
+      // Convertir en array pour le nouveau système
+      handleContactsChange([newContact.id]);
     } else {
-      // Sinon, mettre à jour manuellement
-      baseHook.setFormData(prev => ({
-        ...prev,
-        contactId: newContact?.id || null,
-        contactNom: newContact?.nom || ''
-      }));
+      handleContactsChange([]);
     }
   };
   
@@ -137,12 +157,14 @@ export const useConcertFormWithRelations = (concertId) => {
     // Surcharger avec nos versions qui mettent à jour les états locaux
     handleLieuChange,
     handleArtisteChange,
-    handleContactChange,
+    handleContactsChange,     // Nouveau : pour multi-contacts
+    handleContactChange,      // Gardé pour rétrocompatibilité
     handleStructureChange,
     // Ajouter les entités liées
     lieu,
     artiste,
-    contact,
+    contacts,                 // Array de contacts
+    contact: contacts[0] || null,  // Rétrocompatibilité : premier contact
     structure,
     // Ajouter l'état de chargement des relations
     loading: baseHook.loading || loadingRelations

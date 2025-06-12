@@ -68,7 +68,7 @@ const useConcertDetails = (id, locationParam) => {
   
   // 🔒 STABILISATION: États spécifiques avec valeurs par défaut stables
   const [cacheKey, setCacheKey] = useState(() => getCacheKey(id));
-  const [initialContactId, setInitialContactId] = useState(null);
+  const [initialContactIds, setInitialContactIds] = useState([]); // Changé en array pour multi-contacts
   const [initialArtisteId, setInitialArtisteId] = useState(null);
   const [initialStructureId, setInitialStructureId] = useState(null);
   const [initialLieuId, setInitialLieuId] = useState(null);
@@ -95,14 +95,23 @@ const useConcertDetails = (id, locationParam) => {
       loadRelated: false // 🚫 SÉCURITÉ MAXIMALE: Empêche le lieu de charger ses relations
     },
     {
-      name: 'contact',
+      name: 'contacts',  // Changé au pluriel
       collection: 'contacts',
-      idField: 'contactId',  // Champ principal
-      alternativeIdFields: ['contact'], // Champs alternatifs pour compatibilité
+      idField: 'contactIds',  // Changé au pluriel pour multi-contacts
+      alternativeIdFields: ['contactId', 'contact'], // Rétrocompatibilité
       nameField: 'contactNom',
-      type: 'one-to-one',
-      essential: true, // Le contact est essentiel pour l'affichage du concert
-      loadRelated: false // 🚫 SÉCURITÉ MAXIMALE: Empêche le contact de charger ses relations
+      type: 'one-to-many',  // Changé pour multi-contacts
+      essential: true,
+      loadRelated: false,
+      // Fonction pour gérer la rétrocompatibilité
+      normalizeIds: (data) => {
+        if (data.contactIds && Array.isArray(data.contactIds)) {
+          return data.contactIds;
+        } else if (data.contactId) {
+          return [data.contactId];
+        }
+        return [];
+      }
     },
     {
       name: 'artiste',
@@ -136,8 +145,13 @@ const useConcertDetails = (id, locationParam) => {
   // Mettre à jour les références sans déclencher de re-renders
   transformConcertDataRef.current = useCallback((data) => {
     // Stocker les IDs initiaux pour la gestion des relations bidirectionnelles
-    if (data.contactId) {
-      setInitialContactId(data.contactId);
+    // Gérer la rétrocompatibilité pour les contacts
+    if (data.contactIds && Array.isArray(data.contactIds)) {
+      setInitialContactIds(data.contactIds);
+    } else if (data.contactId) {
+      setInitialContactIds([data.contactId]);
+    } else {
+      setInitialContactIds([]);
     }
     
     if (data.artisteId) {
@@ -177,7 +191,14 @@ const useConcertDetails = (id, locationParam) => {
   // ✅ CORRECTION: Stabiliser les callbacks de succès - SANS dépendances instables
   handleSaveSuccessRef.current = useCallback((data) => {
     // Mettre à jour les IDs initiaux pour la prochaine édition
-    setInitialContactId(data.contactId || null);
+    // Gérer la rétrocompatibilité pour les contacts
+    if (data.contactIds && Array.isArray(data.contactIds)) {
+      setInitialContactIds(data.contactIds);
+    } else if (data.contactId) {
+      setInitialContactIds([data.contactId]);
+    } else {
+      setInitialContactIds([]);
+    }
     setInitialArtisteId(data.artisteId || null);
     setInitialStructureId(data.structureId || null);
     setInitialLieuId(data.lieuId || null);
@@ -366,17 +387,38 @@ const useConcertDetails = (id, locationParam) => {
       // Créer un tableau de promesses pour exécuter les mises à jour en parallèle
       const updatePromises = [];
       
-      // Mise à jour des relations bidirectionnelles
-      if (relatedData.contact?.id || initialContactId) {
-        updatePromises.push(
-          stableAssociations.updateContactAssociation(
-            id,
-            entity,
-            relatedData.contact?.id || null,
-            initialContactId,
-            relatedData.lieu
-          )
-        );
+      // Mise à jour des relations bidirectionnelles pour les contacts (multi-contacts)
+      const currentContactIds = relatedData.contacts?.map(c => c.id) || [];
+      const hasContactChanges = currentContactIds.length > 0 || initialContactIds.length > 0;
+      
+      if (hasContactChanges) {
+        // Pour chaque contact à retirer
+        const contactsToRemove = initialContactIds.filter(id => !currentContactIds.includes(id));
+        for (const contactId of contactsToRemove) {
+          updatePromises.push(
+            stableAssociations.updateContactAssociation(
+              id,
+              entity,
+              null, // Retirer l'association
+              contactId,
+              relatedData.lieu
+            )
+          );
+        }
+        
+        // Pour chaque contact à ajouter
+        const contactsToAdd = currentContactIds.filter(id => !initialContactIds.includes(id));
+        for (const contactId of contactsToAdd) {
+          updatePromises.push(
+            stableAssociations.updateContactAssociation(
+              id,
+              entity,
+              contactId, // Ajouter l'association
+              null,
+              relatedData.lieu
+            )
+          );
+        }
       }
       
       if (relatedData.artiste?.id || initialArtisteId) {
@@ -421,7 +463,7 @@ const useConcertDetails = (id, locationParam) => {
       console.error("[useConcertDetails] Erreur lors des mises à jour bidirectionnelles:", error);
       throw error; // Propager l'erreur pour la gestion en amont
     }
-  }, [id, initialContactId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
+  }, [id, initialContactIds, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
   
   const handleBidirectionalUpdates = useCallback(async () => {
     return handleBidirectionalUpdatesRef.current();
@@ -439,23 +481,27 @@ const useConcertDetails = (id, locationParam) => {
     const promises = [];
     const results = {};
   
-    // Contact
-    if (relatedData.contact?.id || initialContactId) {
-      const progId = relatedData.contact?.id || initialContactId;
-      if (progId) {
-        promises.push(
-          (async () => {
-            try {
-              const docRef = doc(db, 'contacts', progId);
+    // Contacts (multi-contacts)
+    const contactIds = relatedData.contacts?.map(c => c.id) || initialContactIds || [];
+    if (contactIds.length > 0) {
+      promises.push(
+        (async () => {
+          try {
+            const contactPromises = contactIds.map(async (contactId) => {
+              const docRef = doc(db, 'contacts', contactId);
               const docSnap = await getDoc(docRef);
-              results.contact = docSnap.exists() ? { id: progId, ...docSnap.data() } : null;
-            } catch (error) {
-              console.error("Erreur lors du chargement du contact:", error);
-              results.contact = null;
-            }
-          })()
-        );
-      }
+              return docSnap.exists() ? { id: contactId, ...docSnap.data() } : null;
+            });
+            const contacts = (await Promise.all(contactPromises)).filter(Boolean);
+            results.contacts = contacts;
+            results.contact = contacts[0] || null; // Rétrocompatibilité
+          } catch (error) {
+            console.error("Erreur lors du chargement des contacts:", error);
+            results.contacts = [];
+            results.contact = null;
+          }
+        })()
+      );
     }
   
     // Artiste
@@ -518,7 +564,7 @@ const useConcertDetails = (id, locationParam) => {
     // Attendre que toutes les promesses se terminent
     await Promise.all(promises);
     return results;
-  }, [initialContactId, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
+  }, [initialContactIds, initialArtisteId, initialStructureId, initialLieuId, genericDetails?.relatedData]); // Dépendances réduites
   
 
   
@@ -926,13 +972,15 @@ const useConcertDetails = (id, locationParam) => {
   const returnData = useMemo(() => {
     const concert = genericDetails?.entity || null;
     const lieu = genericDetails?.relatedData?.lieu || null;
-    const contact = genericDetails?.relatedData?.contact || null;
+    const contacts = genericDetails?.relatedData?.contacts || [];
+    const contact = contacts[0] || genericDetails?.relatedData?.contact || null; // Rétrocompatibilité
     const loading = genericDetails?.loading || genericDetails?.isLoading || false;
     
     // Mettre à jour les références stables pour le diagnostic
     stableRefsRef.current = {
       concert,
       lieu,
+      contacts,
       contact,
       loading,
       genericDetails: !!genericDetails
@@ -942,7 +990,8 @@ const useConcertDetails = (id, locationParam) => {
       // Données principales du hook générique
       concert,
       lieu,
-      contact,
+      contacts,           // Array de contacts pour multi-contacts
+      contact,            // Premier contact pour rétrocompatibilité
       artiste: genericDetails?.relatedData?.artiste || null,
       structure: genericDetails?.relatedData?.structure || null,
       loading,
@@ -984,7 +1033,8 @@ const useConcertDetails = (id, locationParam) => {
       
       // Fonctions pour la gestion des entités liées
       setLieu: (lieu) => genericDetails?.setRelatedEntity('lieu', lieu),
-      setContact: (prog) => genericDetails?.setRelatedEntity('contact', prog),
+      setContacts: (contacts) => genericDetails?.setRelatedEntity('contacts', contacts), // Multi-contacts
+      setContact: (prog) => genericDetails?.setRelatedEntity('contacts', prog ? [prog] : []), // Rétrocompatibilité
       setArtiste: (artiste) => genericDetails?.setRelatedEntity('artiste', artiste),
       setStructure: (structure) => genericDetails?.setRelatedEntity('structure', structure),
       
@@ -995,8 +1045,13 @@ const useConcertDetails = (id, locationParam) => {
         setSearchTerm: () => {} // Stub pour compatibilité
       },
       contactSearch: {
-        selectedEntity: genericDetails?.relatedData?.contact || null,
-        setSelectedEntity: (prog) => genericDetails?.setRelatedEntity('contact', prog),
+        selectedEntity: genericDetails?.relatedData?.contact || contacts[0] || null, // Rétrocompatibilité
+        setSelectedEntity: (prog) => genericDetails?.setRelatedEntity('contacts', prog ? [prog] : []),
+        setSearchTerm: () => {} // Stub pour compatibilité
+      },
+      contactsSearch: { // Nouveau pour multi-contacts
+        selectedEntities: contacts,
+        setSelectedEntities: (contacts) => genericDetails?.setRelatedEntity('contacts', contacts),
         setSearchTerm: () => {} // Stub pour compatibilité
       },
       artisteSearch: {

@@ -42,31 +42,46 @@ Cet audit a été réalisé le 6 décembre 2025 pour analyser l'architecture des
 |--------|--------|--------------|-------------------|-------------------|--------------|
 | **Concert** | 270 | ✅ **MODULAIRE** | 7/21 | ConcertFormHeader, ConcertInfoSection, etc. | **33%** |
 | **Lieu** | 168 | ✅ **MODULAIRE** | 3/18 | LieuFormHeader, LieuGeneralInfo, etc. | **17%** |
-| **Structure** | 1,255 | ❌ **MONOLITHIQUE** | 0/11 | StructureFormHeader (inutilisé), etc. | **0%** |
+| **Structure** | 1,028 | 🔄 **EN TRANSITION** | 2/11 | StructureIdentitySection, StructureSignataireSection + UnifiedContactSelector | **27%** |
 | **Artiste** | 376 | 🔄 **MIXTE** | 0/7 | Étapes inline | **0%** |
 | **Contact** | 750 | ✅ **MODULAIRE** | 4/6 | ContactInfoSection, StructureSearchSection, LieuSearchSection, ContactConcertsSection | **67%** |
 
 ### 3. Composants Orphelins Massifs
 
 **Total : 37+ composants sections créés mais jamais utilisés**
-**🆕 ÉTAT POST-NETTOYAGE : 36 fichiers Contact supprimés, 0 orphelin Contact restant**
+**🆕 ÉTAT POST-NETTOYAGE : Nettoyage partiel effectué**
 
-#### Structure (11 sections orphelines)
+**Bilan nettoyage par entité :**
+- **Contact** : 9/12 fichiers orphelins supprimés (75% nettoyé) - 3 restants
+- **Structure** : 10/11 sections orphelines (91% orphelinage) - Aucun nettoyage
+- **Concert** : Quelques fichiers orphelins détectés
+
+#### Structure (10 sections orphelines sur 12)
 ```
-StructureFormHeader.js       ❌ 0 imports
-StructureGeneralInfo.js      ❌ 0 imports  
-StructureContactSection.js   ❌ 0 imports
-StructureAddressSection.js   ❌ 0 imports
-[...7 autres]
+✅ StructureIdentitySection.js    → INTÉGRÉ dans StructureForm
+✅ StructureSignataireSection.js  → INTÉGRÉ dans StructureForm (créé spécialement)
+
+❌ ORPHELINS RESTANTS (10) :
+StructureFormHeader.js         ❌ 0 imports (wrapper non utilisé)
+StructureGeneralInfo.js        ❌ 0 imports  
+StructureContactSection.js     ❌ 0 imports
+StructureAddressSection.js     ❌ 0 imports
+StructureBillingSection.js     ❌ 0 imports (prête à l'emploi!)
+StructureAssociationsSection.js ❌ 0 imports
+StructureConcertsSection.js    ❌ 0 imports
+StructureNotesSection.js       ❌ 0 imports
+StructureFormActions.js        ❌ 0 imports
+StructureHeader.js             ❌ 0 imports
 ```
 
-#### Contact (0 fichiers orphelins - Nettoyage complété)
+#### Contact (3 fichiers orphelins restants - Nettoyage partiel)
 ```
 ✅ ContactInfoSection.js        → INTÉGRÉ dans ContactForm
 ✅ StructureSearchSection.js    → INTÉGRÉ dans ContactForm
 ✅ LieuSearchSection.js         → RÉUTILISÉ depuis ConcertSections
+✅ ContactConcertsSection.js    → INTÉGRÉ dans ContactForm
 
-🗑️ SUPPRIMÉS (14 orphelins) :
+🗑️ SUPPRIMÉS (9 orphelins) :
 ContactFormHeader.js         🗑️ SUPPRIMÉ
 ContactFormActions.js        🗑️ SUPPRIMÉ
 ContactConcertsSectionV2.js  🗑️ SUPPRIMÉ
@@ -76,9 +91,11 @@ ContactLieuxSectionWrapper.js 🗑️ SUPPRIMÉ
 ContactConcertsSectionWrapper.js 🗑️ SUPPRIMÉ
 ContactStructuresSection.js  🗑️ SUPPRIMÉ
 ContactAddressSection.js     🗑️ SUPPRIMÉ
-ContactContactSection.js     🗑️ SUPPRIMÉ
-ContactGeneralInfo.js        🗑️ SUPPRIMÉ
-[...3 autres + CSS associés]
+
+❌ ORPHELINS RESTANTS (3) :
+ContactContactSection.js     ❌ 167 lignes non utilisées
+ContactGeneralInfo.js        ❌ 67 lignes non utilisées  
+LieuInfoSection.js           ❌ Orphelin dans sections/
 ```
 
 #### Concert (1 hook orphelin)
@@ -86,17 +103,25 @@ ContactGeneralInfo.js        🗑️ SUPPRIMÉ
 useConcertDetailsFixed.js    ❌ 0 imports (faux positif détecté)
 ```
 
-### 4. Incohérence des Headers
+### 4. État des Headers (Mise à jour Janvier 2025)
 
 **Situation actuelle :**
 - ✅ **FormHeader** : Composant UI commun excellent, bien conçu
-- ❌ **Usage incohérent** : 3 patterns différents coexistent
+- 🔄 **Standardisation en cours** : Majorité des entités convertie
 
-| Entité | Pattern Header | Problème |
-|--------|----------------|----------|
-| Concert/Lieu | Wrapper autour de FormHeader | ✅ Cohérent |
-| Structure/Contact | FormHeader direct | Headers spécifiques créés mais ignorés |
-| Artiste | Header inline custom | ❌ N'utilise pas FormHeader |
+| Entité | Pattern Header | État | Dernière modification |
+|--------|----------------|------|---------------------|
+| **Artiste** | FormHeader direct | ✅ Standardisé | 6 décembre 2025 |
+| **Contact** | FormHeader direct | ✅ Standardisé | Janvier 2025 |
+| **Structure** | FormHeader direct | ✅ Standardisé | Janvier 2025 |
+| **Concert** | Wrapper (ConcertFormHeader) | ⚠️ À standardiser | - |
+| **Lieu** | Wrapper (LieuFormHeader) | ⚠️ À standardiser | - |
+
+**Fichiers orphelins détectés :**
+- `StructureFormHeader.js` - Créé mais jamais utilisé
+- `ContactFormHeader.js` - Supprimé lors du nettoyage
+
+**Progression :** 3/5 entités (60%) utilisent FormHeader directement
 
 ## 📅 Chronologie du Refactoring Abandonné
 
@@ -184,6 +209,7 @@ import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
 ## 🔍 Méthodologie d'Audit Améliorée
 
 **Leçons apprises :**
+
 1. ❌ **Premier niveau d'import insuffisant** : Un fichier peut être importé par un autre fichier lui-même orphelin
 2. ✅ **Vérification chaîne complète** : Suivre les imports jusqu'aux points d'entrée (Pages, Routes)
 3. ⚠️ **Exemples de faux positifs** :

@@ -6,10 +6,14 @@ import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
-import useCompanySearch from '@/hooks/common/useCompanySearch';
-import useLieuSearchFixed from '@/hooks/lieux/useLieuSearchFixed';
+import { useEntitySearch } from '@/hooks/common';
+import { updateBidirectionalRelation } from '@/services/bidirectionalRelationsService';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import FormHeader from '@/components/ui/FormHeader';
+import ContactInfoSection from '@/components/contacts/sections/ContactInfoSection';
+import StructureSearchSection from '@/components/contacts/sections/StructureSearchSection';
+import LieuSearchSection from '@/components/concerts/sections/LieuSearchSection';
+import ContactConcertsSection from '@/components/contacts/sections/ContactConcertsSection';
 import { mapTerm } from '@/utils/terminologyMapping';
 import styles from './ContactForm.module.css';
 
@@ -42,9 +46,14 @@ const ContactForm = () => {
     adresse: '',
     codePostal: '',
     ville: '',
-    structureNom: '',
+    structureRaisonSociale: '',
     structureType: '',
     structureSiret: '',
+    structureAdresse: '',
+    structureCodePostal: '',
+    structureVille: '',
+    structureTva: '',
+    structureNumeroIntracommunautaire: '',
     structureSiteWeb: ''
   });
 
@@ -54,21 +63,38 @@ const ContactForm = () => {
   const [loadingAssociations, setLoadingAssociations] = useState(false);
 
   // Callback mémorisé pour la sélection de structure
-  const handleCompanySelect = useCallback((company) => {
-    if (company) {
+  const handleStructureSelect = useCallback((structure) => {
+    if (structure) {
+      setSelectedStructure(structure);
       setFormData(prev => ({
         ...prev,
-        structureNom: company.nom || '',
-        structureSiret: company.siret || '',
-        structureAdresse: company.adresse || '',
-        structureCodePostal: company.codePostal || '',
-        structureVille: company.ville || '',
-        structureType: company.statutJuridique || ''
+        structureId: structure.id,
+        structureRaisonSociale: structure.nom || '',
+        structureSiret: structure.siret || '',
+        structureAdresse: structure.adresse || '',
+        structureCodePostal: structure.codePostal || '',
+        structureVille: structure.ville || '',
+        structureType: structure.type || ''
       }));
     }
   }, []);
 
-  // Callback mémorisé pour la sélection de lieu
+  // Callback mémorisé pour supprimer la structure
+  const handleStructureRemove = useCallback(() => {
+    setSelectedStructure(null);
+    setFormData(prev => ({
+      ...prev,
+      structureId: '',
+      structureRaisonSociale: '',
+      structureSiret: '',
+      structureAdresse: '',
+      structureCodePostal: '',
+      structureVille: '',
+      structureType: ''
+    }));
+  }, []);
+
+  // Callback mémorisé pour la sélection de lieu (utilisé par LieuSearchSection)
   const handleLieuSelect = useCallback((lieu) => {
     if (lieu) {
       setLieuxAssocies(prev => {
@@ -82,21 +108,58 @@ const ContactForm = () => {
     }
   }, []);
 
-  // Hooks de recherche avec corrections appliquées
-  const companySearch = useCompanySearch({
-    onCompanySelect: handleCompanySelect
+  // Callback pour supprimer un lieu (utilisé par LieuSearchSection)
+  const handleRemoveLieuFromSection = useCallback((lieuId) => {
+    if (lieuId) {
+      // Supprimer un lieu spécifique par ID
+      setLieuxAssocies(prev => prev.filter(lieu => lieu.id !== lieuId));
+    } else {
+      // Supprimer tous les lieux si aucun ID fourni
+      setLieuxAssocies([]);
+    }
+  }, []);
+
+  // Hook de recherche pour les structures
+  const {
+    searchTerm: structureSearchTerm,
+    setSearchTerm: setStructureSearchTerm,
+    results: structureResults,
+    showResults: showStructureResults,
+    setShowResults: setShowStructureResults,
+    isSearching: isSearchingStructures,
+    dropdownRef: structureDropdownRef,
+    handleCreate: handleCreateStructure
+  } = useEntitySearch({
+    entityType: 'structures',
+    searchField: 'nom',
+    additionalSearchFields: ['type', 'siret'],
+    maxResults: 10
   });
 
-  // Hook de recherche de lieux optimisé sans boucles infinies
-  const lieuSearch = useLieuSearchFixed({
-    maxResults: 10,
-    onSelect: handleLieuSelect
+  // Hook de recherche pour les lieux
+  const {
+    searchTerm: lieuSearchTerm,
+    setSearchTerm: setLieuSearchTerm,
+    results: lieuResults,
+    showResults: showLieuResults,
+    setShowResults: setShowLieuResults,
+    isSearching: isSearchingLieux,
+    dropdownRef: lieuDropdownRef,
+    handleCreate: handleCreateLieu
+  } = useEntitySearch({
+    entityType: 'lieux',
+    searchField: 'nom',
+    additionalSearchFields: ['ville', 'codePostal'],
+    maxResults: 10
   });
   
   // États pour la recherche de concerts simples
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
   const [concertSearchResults, setConcertSearchResults] = useState([]);
   const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
+  
+  // État pour la structure sélectionnée
+  const [selectedStructure, setSelectedStructure] = useState(null);
   
   // Fonction pour charger les lieux et concerts associés
   const loadAssociations = useCallback(async (contact) => {
@@ -113,11 +176,31 @@ const ContactForm = () => {
         const lieux = (await Promise.all(lieuxPromises)).filter(lieu => lieu !== null);
         setLieuxAssocies(lieux);
       } else {
-        // Recherche par référence inverse
-        const lieuxQuery = query(collection(db, 'lieux'), where('contactId', '==', contact.id));
-        const lieuxSnapshot = await getDocs(lieuxQuery);
-        const lieux = lieuxSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setLieuxAssocies(lieux);
+        // Recherche par référence inverse - 3 méthodes comme dans useContactDetails
+        let lieuxLoaded = [];
+        
+        // Méthode 1: Chercher les lieux avec ce contact dans 'contactIds' (format migré)
+        const lieuxConstraints = [where('contactIds', 'array-contains', contact.id)];
+        if (currentOrganization?.id) {
+          lieuxConstraints.push(where('organizationId', '==', currentOrganization.id));
+        }
+        let lieuxQuery = query(collection(db, 'lieux'), ...lieuxConstraints);
+        let querySnapshot = await getDocs(lieuxQuery);
+        lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Méthode 2: Si rien trouvé, chercher par contactId (ancien format)
+        if (lieuxLoaded.length === 0) {
+          const lieuxConstraints2 = [where('contactId', '==', contact.id)];
+          if (currentOrganization?.id) {
+            lieuxConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          }
+          lieuxQuery = query(collection(db, 'lieux'), ...lieuxConstraints2);
+          querySnapshot = await getDocs(lieuxQuery);
+          lieuxLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+        
+        console.log(`[ContactForm] ${lieuxLoaded.length} lieux trouvés par référence inverse`);
+        setLieuxAssocies(lieuxLoaded);
       }
 
       // Charger les concerts associés
@@ -132,7 +215,7 @@ const ContactForm = () => {
         setConcertsAssocies(concerts);
       } else {
         // Recherche par référence inverse
-        const concertsQuery = query(collection(db, 'concerts'), where('contactId', '==', contact.id));
+        const concertsQuery = query(collection(db, 'concerts'), where('contactIds', 'array-contains', contact.id)); // Format migré
         const concertsSnapshot = await getDocs(concertsQuery);
         const concerts = concertsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setConcertsAssocies(concerts);
@@ -143,7 +226,7 @@ const ContactForm = () => {
     } finally {
       setLoadingAssociations(false);
     }
-  }, []);
+  }, [currentOrganization?.id]);
 
   // Chargement des données du contact
   useEffect(() => {
@@ -169,11 +252,31 @@ const ContactForm = () => {
             adresse: data.contact?.adresse || data.adresse || '',
             codePostal: data.contact?.codePostal || data.codePostal || '',
             ville: data.contact?.ville || data.ville || '',
-            structureNom: data.structure?.raisonSociale || data.structureNom || '',
+            structureId: data.structureId || '',
+            structureRaisonSociale: data.structure?.raisonSociale || data.structureRaisonSociale || data.structureNom || '',
             structureType: data.structure?.type || data.structureType || '',
             structureSiret: data.structure?.siret || data.structureSiret || '',
+            structureAdresse: data.structure?.adresse || data.structureAdresse || '',
+            structureCodePostal: data.structure?.codePostal || data.structureCodePostal || '',
+            structureVille: data.structure?.ville || data.structureVille || '',
+            structureTva: data.structure?.tva || data.structureTva || '',
+            structureNumeroIntracommunautaire: data.structure?.numeroIntracommunautaire || data.structureNumeroIntracommunautaire || '',
             structureSiteWeb: data.structure?.siteWeb || data.structureSiteWeb || ''
           });
+
+          // Charger la structure liée si un structureId existe
+          if (data.structureId) {
+            try {
+              const structureRef = doc(db, 'structures', data.structureId);
+              const structureSnap = await getDoc(structureRef);
+              if (structureSnap.exists()) {
+                const structureData = { id: structureSnap.id, ...structureSnap.data() };
+                setSelectedStructure(structureData);
+              }
+            } catch (structureError) {
+              console.error('Erreur lors du chargement de la structure:', structureError);
+            }
+          }
 
           // Charger les associations
           await loadAssociations(contact);
@@ -275,11 +378,6 @@ const ContactForm = () => {
     return cleanPhone.length === 10 && /^0[1-9]/.test(cleanPhone);
   };
 
-  // Fonctions de gestion des lieux associés
-  const handleRemoveLieu = useCallback((lieuId) => {
-    setLieuxAssocies(prev => prev.filter(lieu => lieu.id !== lieuId));
-    toast.info('Lieu retiré de la liste');
-  }, []);
 
   // Fonctions de gestion des concerts associés
   const handleRemoveConcert = useCallback((concertId) => {
@@ -374,16 +472,24 @@ const ContactForm = () => {
         codePostal: formData.codePostal.trim(),
         ville: formData.ville.trim(),
         // Données de la structure directement à la racine avec préfixe
-        structureRaisonSociale: formData.structureNom.trim(),
-        structureType: formData.structureType,
-        structureSiret: formData.structureSiret.trim(),
-        structureSiteWeb: formData.structureSiteWeb.trim(),
+        structureId: selectedStructure?.id || formData.structureId || '',
+        structureRaisonSociale: formData.structureRaisonSociale?.trim() || '',
+        structureType: formData.structureType || '',
+        structureSiret: formData.structureSiret?.trim() || '',
+        structureAdresse: formData.structureAdresse?.trim() || '',
+        structureCodePostal: formData.structureCodePostal?.trim() || '',
+        structureVille: formData.structureVille?.trim() || '',
+        structureTva: formData.structureTva?.trim() || '',
+        structureNumeroIntracommunautaire: formData.structureNumeroIntracommunautaire?.trim() || '',
+        structureSiteWeb: formData.structureSiteWeb?.trim() || '',
         // Associations
         lieuxIds: lieuxAssocies.map(lieu => lieu.id),
         concertsIds: concertsAssocies.map(concert => concert.id),
         updatedAt: new Date()
       };
 
+      let savedContactId;
+      
       if (isNewFromUrl) {
         contact.createdAt = new Date();
         // ✅ FIX: Ajouter automatiquement l'organizationId
@@ -391,14 +497,66 @@ const ContactForm = () => {
           contact.organizationId = currentOrganization.id;
         }
         const docRef = await addDoc(collection(db, 'contacts'), contact);
+        savedContactId = docRef.id;
         toast.success('Contact créé avec succès !');
-        navigate(`/contacts/${docRef.id}`);
       } else {
         const docRef = doc(db, 'contacts', id);
         await updateDoc(docRef, contact);
+        savedContactId = id;
         toast.success('Contact modifié avec succès !');
-        navigate(`/contacts/${id}`);
       }
+
+      // Gérer les relations bidirectionnelles
+      try {
+        // Relations avec les lieux
+        if (contact.lieuxIds && contact.lieuxIds.length > 0) {
+          console.log(`🔗 Création des relations bidirectionnelles pour ${contact.lieuxIds.length} lieux`);
+          for (const lieuId of contact.lieuxIds) {
+            await updateBidirectionalRelation({
+              sourceType: 'contacts',
+              sourceId: savedContactId,
+              targetType: 'lieux',
+              targetId: lieuId,
+              relationName: 'lieux',
+              action: 'add'
+            });
+          }
+        }
+
+        // Relations avec la structure
+        if (selectedStructure && selectedStructure.id) {
+          console.log(`🔗 Création de la relation bidirectionnelle avec la structure`);
+          await updateBidirectionalRelation({
+            sourceType: 'contacts',
+            sourceId: savedContactId,
+            targetType: 'structures',
+            targetId: selectedStructure.id,
+            relationName: 'structure',
+            action: 'add'
+          });
+        }
+
+        // Relations avec les concerts
+        if (contact.concertsIds && contact.concertsIds.length > 0) {
+          console.log(`🔗 Création des relations bidirectionnelles pour ${contact.concertsIds.length} concerts`);
+          for (const concertId of contact.concertsIds) {
+            await updateBidirectionalRelation({
+              sourceType: 'contacts',
+              sourceId: savedContactId,
+              targetType: 'concerts',
+              targetId: concertId,
+              relationName: 'concerts',
+              action: 'add'
+            });
+          }
+        }
+      } catch (relationError) {
+        console.error('Erreur lors de la création des relations bidirectionnelles:', relationError);
+        // On ne bloque pas la navigation même si les relations échouent
+      }
+
+      // Navigation après succès
+      navigate(`/contacts/${savedContactId}`);
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       toast.error('Erreur lors de l\'enregistrement');
@@ -518,514 +676,56 @@ const ContactForm = () => {
           />
 
           <div className={styles.sectionBody}>
-            {/* Section Contact */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-person-circle section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Informations de contact</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        Prénom <span className={styles.required}>*</span>
-                      </label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="prenom"
-                        value={formData.prenom}
-                        onChange={handleChange}
-                        required 
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        Nom <span className={styles.required}>*</span>
-                      </label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="nom"
-                        value={formData.nom}
-                        onChange={handleChange}
-                        required 
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        Email <span className={styles.optional}>(facultatif)</span>
-                      </label>
-                      <input 
-                        type="email" 
-                        className={styles.formControl}
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required 
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Téléphone</label>
-                      <input 
-                        type="tel" 
-                        className={styles.formControl}
-                        name="telephone"
-                        value={formData.telephone}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Adresse</label>
-                    <input 
-                      type="text" 
-                      className={styles.formControl}
-                      name="adresse"
-                      value={formData.adresse}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Code postal</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="codePostal"
-                        value={formData.codePostal}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Ville</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="ville"
-                        value={formData.ville}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Section Contact - Utilisation du composant modulaire */}
+            <ContactInfoSection 
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+            />
 
-            {/* Section Structure */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-building section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Structure</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Nom de la structure</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="structureNom"
-                        value={formData.structureNom}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Type de structure</label>
-                      <select 
-                        className={styles.formControl}
-                        name="structureType"
-                        value={formData.structureType}
-                        onChange={handleChange}
-                      >
-                        <option value="">Sélectionner un type</option>
-                        <option value="Association">Association</option>
-                        <option value="SAS">SAS</option>
-                        <option value="SARL">SARL</option>
-                        <option value="Entreprise individuelle">Entreprise individuelle</option>
-                        <option value="Autre">Autre</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>SIRET</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="structureSiret"
-                        value={formData.structureSiret}
-                        onChange={handleChange}
-                        placeholder="14 chiffres"
-                        maxLength="14"
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Site web</label>
-                      <input 
-                        type="url" 
-                        className={styles.formControl}
-                        name="structureSiteWeb"
-                        value={formData.structureSiteWeb}
-                        onChange={handleChange}
-                        placeholder="https://..."
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Section Structure - Composant unifié */}
+            <StructureSearchSection 
+              structureSearchTerm={structureSearchTerm}
+              setStructureSearchTerm={setStructureSearchTerm}
+              structureResults={structureResults}
+              showStructureResults={showStructureResults}
+              setShowStructureResults={setShowStructureResults}
+              isSearchingStructures={isSearchingStructures}
+              structureDropdownRef={structureDropdownRef}
+              selectedStructure={selectedStructure}
+              handleSelectStructure={handleStructureSelect}
+              handleRemoveStructure={handleStructureRemove}
+              handleCreateStructure={handleCreateStructure}
+            />
 
-            {/* Section Recherche de Structure - Fonctionnelle */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-building section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Rechercher une structure</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.searchBar}>
-                    <div className={styles.searchInputGroup}>
-                      <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="Rechercher par nom ou SIRET..."
-                        value={companySearch.searchTerm}
-                        onChange={(e) => companySearch.setSearchTerm(e.target.value)}
-                      />
-                      <button
-                        type="button"
-                        className={styles.searchBtn}
-                        onClick={companySearch.searchCompany}
-                        disabled={companySearch.isSearchingCompany}
-                      >
-                        {companySearch.isSearchingCompany ? (
-                          <>
-                            <div className={styles.loadingSpinner}></div>
-                            Recherche...
-                          </>
-                        ) : (
-                          <>
-                            <i className="bi bi-search"></i>
-                            Rechercher
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
+            {/* Section Lieux - Composant unifié */}
+            <LieuSearchSection 
+              lieuSearchTerm={lieuSearchTerm}
+              setLieuSearchTerm={setLieuSearchTerm}
+              lieuResults={lieuResults}
+              showLieuResults={showLieuResults}
+              setShowLieuResults={setShowLieuResults}
+              isSearchingLieux={isSearchingLieux}
+              lieuDropdownRef={lieuDropdownRef}
+              selectedLieu={lieuxAssocies.length > 0 ? lieuxAssocies[0] : null}
+              lieuxList={lieuxAssocies}
+              setLieuxList={setLieuxAssocies}
+              handleSelectLieu={handleLieuSelect}
+              handleRemoveLieu={handleRemoveLieuFromSection}
+              handleCreateLieu={handleCreateLieu}
+            />
 
-                  {/* Résultats de recherche */}
-                  {companySearch.searchResults.length > 0 && (
-                    <div className={styles.searchResults}>
-                      {companySearch.searchResults.map((company, index) => (
-                        <div
-                          key={index}
-                          className={styles.searchResultItem}
-                          onClick={() => companySearch.handleSelectCompany(company)}
-                        >
-                          <div className={styles.companyName}>{company.nom}</div>
-                          <div className={styles.companyDetails}>
-                            <span><i className="bi bi-building"></i> SIRET: {company.siret}</span>
-                            {company.ville && <span><i className="bi bi-geo-alt"></i> {company.ville}</span>}
-                            {company.statutJuridique && <span><i className="bi bi-tag"></i> {company.statutJuridique}</span>}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Message si aucun résultat */}
-                  {companySearch.searchTerm && companySearch.searchResults.length === 0 && !companySearch.isSearchingCompany && (
-                    <div className={styles.alert}>
-                      <i className="bi bi-info-circle"></i>
-                      Aucune structure trouvée pour cette recherche.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Section Recherche de Lieu - Fonctionnelle */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-geo-alt section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Ajouter un lieu</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.searchBar}>
-                    <div className={styles.searchInputGroup}>
-                      <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="Rechercher un lieu par nom ou ville..."
-                        value={lieuSearch.searchTerm || ''}
-                        onChange={(e) => lieuSearch.setSearchTerm(e.target.value)}
-                      />
-                      <button
-                        type="button"
-                        className={styles.searchBtn}
-                        onClick={() => lieuSearch.search()}
-                        disabled={lieuSearch.isSearching}
-                      >
-                        {lieuSearch.isSearching ? (
-                          <>
-                            <div className={styles.loadingSpinner}></div>
-                            Recherche...
-                          </>
-                        ) : (
-                          <>
-                            <i className="bi bi-search"></i>
-                            Rechercher
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Résultats de recherche */}
-                  {lieuSearch.showResults && lieuSearch.searchResults.length > 0 && (
-                    <div className={styles.searchResults}>
-                      {lieuSearch.searchResults.map((lieu) => (
-                        <div
-                          key={lieu.id}
-                          className={styles.searchResultItem}
-                          onClick={() => lieuSearch.setLieu(lieu)}
-                        >
-                          <div className={styles.lieuName}>{lieu.nom}</div>
-                          <div className={styles.lieuDetails}>
-                            {lieu.adresse && <span><i className="bi bi-geo-alt"></i> {lieu.adresse}</span>}
-                            {lieu.ville && <span><i className="bi bi-map"></i> {lieu.ville}</span>}
-                            {lieu.capacite && <span><i className="bi bi-people"></i> {lieu.capacite} places</span>}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Message si aucun résultat */}
-                  {lieuSearch.searchTerm && lieuSearch.showResults && lieuSearch.searchResults.length === 0 && !lieuSearch.isSearching && (
-                    <div className={styles.alert}>
-                      <i className="bi bi-info-circle"></i>
-                      Aucun lieu trouvé. 
-                      <button 
-                        type="button" 
-                        className={styles.tcBtn + ' ' + styles.tcBtnOutline}
-                        onClick={() => navigate('/lieux/nouveau')}
-                        style={{ marginLeft: '10px' }}
-                      >
-                        <i className="bi bi-plus"></i>
-                        Créer un nouveau lieu
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Section Lieux associés */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-geo-alt section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Lieux associés ({lieuxAssocies.length})</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  {loadingAssociations ? (
-                    <div className={styles.alert}>
-                      <div className={styles.loadingSpinner}></div>
-                      Chargement des lieux associés...
-                    </div>
-                  ) : lieuxAssocies.length > 0 ? (
-                    <div className={styles.tableResponsive}>
-                      <table className={styles.table}>
-                        <thead>
-                          <tr>
-                            <th>Nom du lieu</th>
-                            <th>Ville</th>
-                            <th>Capacité</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {lieuxAssocies.map((lieu) => (
-                            <tr key={lieu.id}>
-                              <td>
-                                <strong>{lieu.nom}</strong>
-                                {lieu.type && <div className={styles.badge}>{lieu.type}</div>}
-                              </td>
-                              <td>{lieu.ville || 'Non renseigné'}</td>
-                              <td>{lieu.capacite ? `${lieu.capacite} places` : 'Non renseigné'}</td>
-                              <td>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnSecondary}`}
-                                    onClick={() => navigate(`/lieux/${lieu.id}`)}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-eye"></i>
-                                    Voir
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnDanger}`}
-                                    onClick={() => handleRemoveLieu(lieu.id)}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-trash"></i>
-                                    Retirer
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className={styles.alert}>
-                      <i className="bi bi-info-circle"></i>
-                      Aucun lieu associé pour le moment. Utilisez la recherche ci-dessus pour ajouter des lieux.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Section Concerts associés */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-music-note section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Concerts associés ({concertsAssocies.length})</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  {/* Recherche de concerts */}
-                  <div className={styles.searchBar} style={{ marginBottom: '20px' }}>
-                    <div className={styles.searchInputGroup}>
-                      <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="Rechercher un concert à associer..."
-                        value={concertSearchTerm}
-                        onChange={(e) => setConcertSearchTerm(e.target.value)}
-                      />
-                      <button
-                        type="button"
-                        className={styles.searchBtn}
-                        onClick={() => navigate('/concerts/nouveau')}
-                      >
-                        <i className="bi bi-plus"></i>
-                        Nouveau concert
-                      </button>
-                    </div>
-
-                    {/* Résultats de recherche de concerts */}
-                    {filteredConcertResults.length > 0 && (
-                      <div className={styles.searchResults}>
-                        {filteredConcertResults.map((concert) => (
-                          <div
-                            key={concert.id}
-                            className={styles.searchResultItem}
-                            onClick={() => handleSelectConcertFromSearch(concert)}
-                          >
-                            <div className={styles.concertTitle}>{concert.titre || 'Concert sans titre'}</div>
-                            <div className={styles.concertDetails}>
-                              {concert.date && <span><i className="bi bi-calendar"></i> {new Date(concert.date).toLocaleDateString('fr-FR')}</span>}
-                              {concert.lieuNom && <span><i className="bi bi-geo-alt"></i> {concert.lieuNom}</span>}
-                              {concert.artisteNom && <span><i className="bi bi-person"></i> {concert.artisteNom}</span>}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {isSearchingConcerts && (
-                      <div className={styles.alert}>
-                        <div className={styles.loadingSpinner}></div>
-                        Recherche de concerts en cours...
-                      </div>
-                    )}
-                  </div>
-
-                  {loadingAssociations ? (
-                    <div className={styles.alert}>
-                      <div className={styles.loadingSpinner}></div>
-                      Chargement des concerts associés...
-                    </div>
-                  ) : concertsAssocies.length > 0 ? (
-                    <div className={styles.tableResponsive}>
-                      <table className={styles.table}>
-                        <thead>
-                          <tr>
-                            <th>Concert</th>
-                            <th>Date</th>
-                            <th>Lieu</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {concertsAssocies.map((concert) => (
-                            <tr key={concert.id}>
-                              <td>
-                                <strong>{concert.titre || 'Concert sans titre'}</strong>
-                                {concert.artisteNom && <div style={{ fontSize: '12px', color: '#666' }}>Artiste: {concert.artisteNom}</div>}
-                              </td>
-                              <td>
-                                {concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : 'Non définie'}
-                              </td>
-                              <td>{concert.lieuNom || concert.lieu || 'Non défini'}</td>
-                              <td>
-                                <div className={`${styles.badge} ${concert.statut === 'confirme' ? styles.bgSuccess : styles.bgWarning}`}>
-                                  {concert.statut || 'En négociation'}
-                                </div>
-                              </td>
-                              <td>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnSecondary}`}
-                                    onClick={() => navigate(`/concerts/${concert.id}`)}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-eye"></i>
-                                    Voir
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnDanger}`}
-                                    onClick={() => handleRemoveConcert(concert.id)}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-trash"></i>
-                                    Retirer
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className={styles.alert}>
-                      <i className="bi bi-info-circle"></i>
-                      Aucun concert associé pour le moment. Utilisez la recherche ci-dessus ou créez un nouveau concert.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            {/* Section Concerts associés - Composant modulaire */}
+            <ContactConcertsSection 
+              concertSearchTerm={concertSearchTerm}
+              setConcertSearchTerm={setConcertSearchTerm}
+              filteredConcertResults={filteredConcertResults}
+              isSearchingConcerts={isSearchingConcerts}
+              concertsAssocies={concertsAssocies}
+              loadingAssociations={loadingAssociations}
+              handleSelectConcertFromSearch={handleSelectConcertFromSearch}
+              handleRemoveConcert={handleRemoveConcert}
+            />
           </div>
         </div>
       </form>

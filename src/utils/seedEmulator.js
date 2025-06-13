@@ -10,7 +10,7 @@ const sampleConcerts = [
     statut: 'contact',
     lieuId: 'lieu-1',
     lieuNom: 'Salle de Test',
-    contactId: 'prog-1',
+    contactIds: ['prog-1'], // Nouveau format unifié (array)
     contactNom: 'Contact Test',
     artisteId: 'artiste-1',
     artisteNom: 'Artiste Test',
@@ -25,7 +25,7 @@ const sampleConcerts = [
     statut: 'preaccord',
     lieuId: 'lieu-2',
     lieuNom: 'Autre Salle',
-    contactId: 'prog-2',
+    contactIds: ['prog-2'], // Nouveau format unifié (array)
     contactNom: 'Autre Contact',
     artisteId: 'artiste-2',
     artisteNom: 'Autre Artiste',

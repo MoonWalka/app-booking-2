@@ -54,7 +54,7 @@ const ArtisteSearchSection = ({
       // Si aucun artiste n'est sélectionné et que la liste est vide
       setShowAddArtiste(true);
     }
-  }, [selectedArtiste, artistesList.length]); // Utiliser artistesList.length pour éviter les re-rendus inutiles
+  }, [selectedArtiste, artistesList]); // artistesList nécessaire pour .some()
   
   // Fonction pour ajouter un artiste à la liste
   const handleAddArtisteToList = React.useCallback((artiste) => {

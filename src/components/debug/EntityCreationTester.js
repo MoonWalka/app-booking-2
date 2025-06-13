@@ -255,7 +255,7 @@ const EntityCreationTester = () => {
         codePostal: '75004',
         email: 'structure.contact@test.com',
         telephone: '0111223344',
-        contactsIds: [],
+        contactIds: [],
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -281,7 +281,7 @@ const EntityCreationTester = () => {
       
       // Mettre à jour la structure pour ajouter le contact
       await updateDoc(doc(db, 'structures', structureId), {
-        contactsIds: [contactId],
+        contactIds: [contactId],
         updatedAt: new Date()
       });
 
@@ -308,7 +308,7 @@ const EntityCreationTester = () => {
         organizationId: currentOrganization.id,
         raisonSociale: 'SAS Complexe',
         siret: '98765432100001',
-        contactsIds: [],
+        contactIds: [],
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -362,7 +362,7 @@ const EntityCreationTester = () => {
 
       // Mettre à jour toutes les relations
       await updateDoc(doc(db, 'structures', structureId), {
-        contactsIds: [contactId],
+        contactIds: [contactId],
         updatedAt: new Date()
       });
       await updateDoc(doc(db, 'lieux', lieuId), {

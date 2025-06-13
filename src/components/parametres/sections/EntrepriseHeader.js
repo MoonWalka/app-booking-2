@@ -1,6 +1,6 @@
 import React from 'react';
+import FormHeader from '@/components/ui/FormHeader';
 import Alert from '@/components/ui/Alert';
-import styles from './EntrepriseHeader.module.css';
 
 /**
  * Header component for Enterprise settings page
@@ -8,17 +8,21 @@ import styles from './EntrepriseHeader.module.css';
  * @param {string} props.success - Success message to display
  */
 const EntrepriseHeader = ({ success }) => {
+  // Préparer les actions pour le header
+  const actions = success ? [
+    <Alert key="success" variant="success">
+      {success}
+    </Alert>
+  ] : [];
+
   return (
-    <>
-      <h3 className={styles.headerTitle}>Company Information</h3>
-      <p className={styles.headerDescription}>This information will appear in the headers and footers of generated contracts.</p>
-      
-      {success && (
-        <Alert variant="success" className={styles.successAlert}>
-          {success}
-        </Alert>
-      )}
-    </>
+    <FormHeader
+      title="Company Information"
+      subtitle="This information will appear in the headers and footers of generated contracts."
+      icon={<i className="bi bi-building"></i>}
+      actions={actions}
+      roundedTop={true}
+    />
   );
 };
 

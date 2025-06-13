@@ -52,7 +52,7 @@ const GenericDetailView = ({
     if (entity && entityType === 'structure') {
       console.log('🏢 Structure data:', {
         contacts: entity.contacts,
-        contactsIds: entity.contactsIds,
+        contactIds: entity.contactIds, // Format harmonisé
         concerts: entity.concerts,
         concertsIds: entity.concertsIds,
         allFields: Object.keys(entity),

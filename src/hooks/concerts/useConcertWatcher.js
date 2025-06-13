@@ -123,7 +123,7 @@ function detectSignificantChange(previousState, newState) {
     'formValidated',
     'formSubmissionId',
     'formValidatedAt',
-    'contactId',
+    'contactIds', // Nouveau format unifié (remplace contactId)
     'artisteId',
     'lieuId',
     'statut'

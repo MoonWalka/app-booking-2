@@ -17,22 +17,33 @@ const LieuSearchSection = React.memo(({
   isSearchingLieux,
   lieuDropdownRef,
   selectedLieu,
+  lieuxList: externalLieuxList,
+  setLieuxList: externalSetLieuxList,
   handleSelectLieu,
   handleRemoveLieu,
   handleCreateLieu
 }) => {
-  // État local pour gérer la liste des lieux
-  const [lieuxList, setLieuxList] = React.useState([]);
+  // État local pour gérer la liste des lieux (ou utiliser externe si fourni)
+  const [internalLieuxList, setInternalLieuxList] = React.useState([]);
   const [showAddLieu, setShowAddLieu] = React.useState(true);
   
-  // Synchroniser avec le lieu sélectionné passé en prop
+  // Utiliser la liste externe si fournie, sinon la liste interne
+  const lieuxList = externalLieuxList !== undefined ? externalLieuxList : internalLieuxList;
+  const setLieuxList = externalSetLieuxList || setInternalLieuxList;
+  
+  // Synchroniser avec le lieu sélectionné passé en prop (seulement si pas de liste externe)
   React.useEffect(() => {
-    if (selectedLieu && !lieuxList.find(l => l.id === selectedLieu.id)) {
-      setLieuxList([selectedLieu]);
+    if (externalLieuxList === undefined && selectedLieu && !internalLieuxList.find(l => l.id === selectedLieu.id)) {
+      setInternalLieuxList([selectedLieu]);
       setShowAddLieu(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedLieu?.id]);
+  }, [selectedLieu?.id, externalLieuxList]);
+  
+  // Gérer l'état d'affichage du formulaire d'ajout selon la liste active
+  React.useEffect(() => {
+    setShowAddLieu(lieuxList.length === 0);
+  }, [lieuxList.length]);
   
   // Fonction pour ajouter un lieu à la liste
   const handleAddLieuToList = (lieu) => {
@@ -56,8 +67,18 @@ const LieuSearchSection = React.memo(({
       if (updatedList.length > 0) {
         handleSelectLieu(updatedList[0]);
       } else {
-        handleRemoveLieu();
+        // Appeler handleRemoveLieu avec l'ID si la fonction le supporte
+        if (handleRemoveLieu.length > 0) {
+          handleRemoveLieu(lieuId);
+        } else {
+          handleRemoveLieu();
+        }
         setShowAddLieu(true);
+      }
+    } else {
+      // Si ce n'est pas le lieu principal, appeler directement avec l'ID
+      if (handleRemoveLieu.length > 0) {
+        handleRemoveLieu(lieuId);
       }
     }
   };

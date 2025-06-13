@@ -33,7 +33,7 @@ const useConcertDetailsWithRoles = (id, locationParam) => {
       {
         name: 'contact',
         collection: 'contacts',
-        idField: 'contactId',
+        idField: 'contactIds', // Format migré
         type: 'one-to-many',
         essential: true,
         loadRelated: false
@@ -74,29 +74,28 @@ const useConcertDetailsWithRoles = (id, locationParam) => {
         customQuery: async (concertData) => {
           console.log('👥 Chargement des contacts avec rôles');
           
-          if (!concertData.contactsWithRoles || !Array.isArray(concertData.contactsWithRoles)) {
-            // Fallback : utiliser le contact principal s'il existe
-            if (concertData.contactId) {
-              try {
-                const contactDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
-                if (contactDoc.exists()) {
-                  return [{
-                    ...contactDoc.data(),
-                    id: contactDoc.id,
-                    role: 'coordinateur',
-                    isPrincipal: true
-                  }];
-                }
-              } catch (err) {
-                console.error('Erreur chargement contact principal:', err);
-              }
+          // Nouveau: utiliser contactIds (format migré) avec fallback vers contactId
+          let contactsToLoad = [];
+          
+          if (concertData.contactIds && Array.isArray(concertData.contactIds)) {
+            // Nouveau format: charger tous les contacts de contactIds
+            contactsToLoad = concertData.contactIds.map(id => ({ contactId: id, role: 'contact', isPrincipal: false }));
+            if (contactsToLoad.length > 0) {
+              contactsToLoad[0].isPrincipal = true;
+              contactsToLoad[0].role = 'coordinateur';
             }
+          } else if (concertData.contactId) {
+            // Fallback: ancien format contactId
+            contactsToLoad = [{ contactId: concertData.contactId, role: 'coordinateur', isPrincipal: true }];
+          }
+          
+          if (contactsToLoad.length === 0) {
             return [];
           }
           
-          // Charger tous les contacts avec leurs rôles
+          // Charger tous les contacts
           const contacts = [];
-          for (const contactRef of concertData.contactsWithRoles) {
+          for (const contactRef of contactsToLoad) {
             try {
               const contactDoc = await getDoc(doc(db, 'contacts', contactRef.contactId));
               if (contactDoc.exists()) {

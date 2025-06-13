@@ -32,7 +32,7 @@ const useSafeRelations = (entityType, entityId, depth = 1, options = {}) => {
     concert: {
       artistes: { collection: 'artistes', field: 'artistesIds', isArray: true, reverseField: 'concertsIds' },
       lieu: { collection: 'lieux', field: 'lieuId', isArray: false },
-      contact: { collection: 'contacts', field: 'contactId', isArray: false },
+      contact: { collection: 'contacts', field: 'contactIds', isArray: true }, // Format harmonisé
       structure: { collection: 'structures', field: 'structureId', isArray: false, reverseField: 'concertsIds' }
     },
     artiste: {

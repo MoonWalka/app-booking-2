@@ -55,7 +55,7 @@ const useConcertDetailsFixed = (id, locationParam) => {
     {
       name: 'contact',
       collection: 'contacts',
-      idField: 'contactId',
+      idField: 'contactIds', // Format migré
       alternativeIdFields: ['contact'],
       nameField: 'contactNom',
       type: 'one-to-one',
@@ -121,8 +121,14 @@ const useConcertDetailsFixed = (id, locationParam) => {
             }
           }
           
-          // Sinon, charger via le contact
-          const contactId = concertData.contactId;
+          // Sinon, charger via le contact (support nouveau format)
+          let contactId = null;
+          if (concertData.contactIds && Array.isArray(concertData.contactIds) && concertData.contactIds.length > 0) {
+            contactId = concertData.contactIds[0]; // Prendre le premier contact
+          } else if (concertData.contactId) {
+            contactId = concertData.contactId; // Fallback ancien format
+          }
+          
           if (!contactId) {
             console.log('🏢 Pas de contact, pas de structure');
             debugLog('[useConcertDetailsFixed] Pas de contact, pas de structure', 'info', 'useConcertDetailsFixed');

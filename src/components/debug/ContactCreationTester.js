@@ -123,7 +123,7 @@ const ContactCreationTester = () => {
         titre: `Concert Test ${Date.now()}`,
         titreLowercase: `concert test ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
-        contactId: contactId,
+        contactIds: [contactId], // Nouveau format unifié (array)
         date: new Date().toISOString(),
         statut: 'En cours',
         createdAt: new Date(),
@@ -177,7 +177,7 @@ const ContactCreationTester = () => {
         nomLowercase: `structure test ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         raisonSociale: 'SARL Structure Test',
-        contactsIds: [contactId], // Association du contact
+        contactIds: [contactId], // Association du contact (nouveau format unifié)
         adresse: '456 Avenue Test',
         ville: 'Test City',
         codePostal: '75001',
@@ -247,7 +247,7 @@ const ContactCreationTester = () => {
         titre: `Concert Partagé ${Date.now()}`,
         titreLowercase: `concert partagé ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
-        contactId: contactId,
+        contactIds: [contactId], // Nouveau format unifié (array)
         date: new Date().toISOString(),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -261,7 +261,7 @@ const ContactCreationTester = () => {
         nomLowercase: `structure partagée ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         raisonSociale: 'EURL Structure Partagée',
-        contactsIds: [contactId],
+        contactIds: [contactId], // Nouveau format unifié
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -423,7 +423,7 @@ const ContactCreationTester = () => {
         const concertDoc = await getDoc(doc(db, 'concerts', entityId));
         const concertData = concertDoc.data();
 
-        if (concertData.contactId === contactId && contactData.concertsIds?.includes(entityId)) {
+        if (concertData.contactIds?.includes(contactId) && contactData.concertsIds?.includes(entityId)) {
           addTestResult('Vérification Bidirectionnelle', 'success', 
             'Relations concert ↔ contact correctement établies');
         } else {
@@ -436,7 +436,7 @@ const ContactCreationTester = () => {
         const structureDoc = await getDoc(doc(db, 'structures', entityId));
         const structureData = structureDoc.data();
 
-        if (structureData.contactsIds?.includes(contactId) && contactData.structureId === entityId) {
+        if (structureData.contactIds?.includes(contactId) && contactData.structureId === entityId) {
           addTestResult('Vérification Bidirectionnelle', 'success', 
             'Relations structure ↔ contact correctement établies');
         } else {

@@ -8,6 +8,9 @@ import ErrorMessage from '@components/ui/ErrorMessage';
 import AddressInput from '@components/ui/AddressInput';
 import FormHeader from '@/components/ui/FormHeader';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
+import StructureIdentitySection from './sections/StructureIdentitySection';
+import StructureSignataireSection from './sections/StructureSignataireSection';
+import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
 import styles from './StructureForm.module.css';
 
 /**
@@ -92,10 +95,6 @@ const StructureFormEnhanced = () => {
     onCompanySelect: handleCompanySelect
   });
 
-  // États pour la recherche de contacts
-  const [contactSearchTerm, setContactSearchTerm] = useState('');
-  const [contactSearchResults, setContactSearchResults] = useState([]);
-
   // États pour la recherche de concerts
   const [concertSearchTerm, setConcertSearchTerm] = useState('');
   const [concertSearchResults, setConcertSearchResults] = useState([]);
@@ -108,8 +107,8 @@ const StructureFormEnhanced = () => {
   const loadAssociations = useCallback(async (structure) => {
     try {
       // Charger les contacts associés
-      if (structure.contactsIds?.length > 0) {
-        const contactPromises = structure.contactsIds.map(async (id) => {
+      if (structure.contactIds?.length > 0) { // Format harmonisé
+        const contactPromises = structure.contactIds.map(async (id) => {
           const docSnap = await getDoc(doc(db, 'contacts', id));
           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
         });
@@ -328,32 +327,6 @@ const StructureFormEnhanced = () => {
   };
 
   // Fonctions de recherche
-  const searchContacts = useCallback(async (searchTerm) => {
-    if (!searchTerm || searchTerm.length < 2) {
-      setContactSearchResults([]);
-      return;
-    }
-
-    try {
-      const q = query(
-        collection(db, 'contacts'),
-        where('nom', '>=', searchTerm),
-        where('nom', '<=', searchTerm + '\uf8ff')
-      );
-      const querySnapshot = await getDocs(q);
-      const contacts = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      
-      setContactSearchResults(contacts.filter(p => 
-        !contactsAssocies.find(pa => pa.id === p.id)
-      ));
-    } catch (error) {
-      console.error('Erreur recherche contacts:', error);
-    }
-  }, [contactsAssocies]);
-
   const searchConcerts = useCallback(async (searchTerm) => {
     if (!searchTerm || searchTerm.length < 2) {
       setConcertSearchResults([]);
@@ -409,13 +382,6 @@ const StructureFormEnhanced = () => {
   // Effets pour la recherche avec debounce
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      searchContacts(contactSearchTerm);
-    }, 300);
-    return () => clearTimeout(timeoutId);
-  }, [contactSearchTerm, searchContacts]);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
       searchConcerts(concertSearchTerm);
     }, 300);
     return () => clearTimeout(timeoutId);
@@ -445,7 +411,7 @@ const StructureFormEnhanced = () => {
         ...formData,
         adresseLieu,
         signataire,
-        contactsIds: contactsAssocies.map(p => p.id),
+        contactIds: contactsAssocies.map(p => p.id), // Format harmonisé
         concertsIds: concertsAssocies.map(c => c.id),
         lieuxIds: lieuxAssocies.map(l => l.id),
         contratsIds: contratsAssocies.map(c => c.id),
@@ -595,96 +561,63 @@ const StructureFormEnhanced = () => {
 
             {/* Suite du formulaire dans la partie 2... */}
 
-            {/* Section Informations de base */}
+            {/* Section Informations de base - Composant modulaire */}
+            <StructureIdentitySection 
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+            />
+
+            {/* Section Adresse du lieu */}
             <div className={styles.formSection}>
               <div className={styles.sectionCard}>
                 <div className={styles.sectionHeader}>
-                  <i className="bi bi-info-circle section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Informations de base</h3>
+                  <i className="bi bi-geo-alt section-icon"></i>
+                  <h3 className={styles.sectionTitle}>Adresse du lieu</h3>
                 </div>
                 <div className={styles.sectionBody}>
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        Nom <span className={styles.required}>*</span>
-                      </label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="nom"
-                        value={formData.nom}
-                        onChange={handleChange}
-                        required 
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Raison sociale</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="raisonSociale"
-                        value={formData.raisonSociale}
-                        onChange={handleChange}
-                      />
-                    </div>
+                  <div className={styles.formGroup}>
+                    <AddressInput
+                      label="Adresse"
+                      value={adresseLieu.adresse}
+                      onChange={(e) => setAdresseLieu(prev => ({ ...prev, adresse: e.target.value }))}
+                      onAddressSelected={handleAddressSelected}
+                      placeholder="Commencez à taper pour rechercher une adresse..."
+                    />
                   </div>
                   
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        Type <span className={styles.required}>*</span>
-                      </label>
-                      <select 
-                        className={styles.formControl}
-                        name="type"
-                        value={formData.type}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option value="">Sélectionner un type</option>
-                        <option value="association">Association</option>
-                        <option value="entreprise">Entreprise</option>
-                        <option value="administration">Administration</option>
-                        <option value="collectivite">Collectivité</option>
-                        <option value="autre">Autre</option>
-                      </select>
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>SIRET</label>
+                      <label className={styles.formLabel}>Code postal</label>
                       <input 
                         type="text" 
                         className={styles.formControl}
-                        name="siret"
-                        value={formData.siret}
-                        onChange={handleChange}
-                        placeholder="14 chiffres"
-                        maxLength="14"
+                        name="codePostal"
+                        value={adresseLieu.codePostal}
+                        onChange={handleAdresseLieuChange}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Ville</label>
+                      <input 
+                        type="text" 
+                        className={styles.formControl}
+                        name="ville"
+                        value={adresseLieu.ville}
+                        onChange={handleAdresseLieuChange}
                       />
                     </div>
                   </div>
 
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>TVA Intracommunautaire</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="tva"
-                        value={formData.tva}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>N° TVA Intracommunautaire</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="numeroIntracommunautaire"
-                        value={formData.numeroIntracommunautaire}
-                        onChange={handleChange}
-                        placeholder="Ex: FR12345678901"
-                      />
-                    </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Pays</label>
+                    <input 
+                      type="text" 
+                      className={styles.formControl}
+                      name="pays"
+                      value={adresseLieu.pays}
+                      onChange={handleAdresseLieuChange}
+                    />
                   </div>
                 </div>
               </div>
@@ -791,213 +724,53 @@ const StructureFormEnhanced = () => {
               </div>
             </div>
 
-            {/* Section Informations du signataire du contrat */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-person-check section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Informations du signataire du contrat</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.formHelp}>
-                    <i className="bi bi-info-circle"></i>
-                    Ces informations seront utilisées pour générer le contrat. Merci de renseigner le représentant légal ou la personne habilitée à signer pour la structure.
-                  </div>
+            {/* Section Informations du signataire du contrat - Composant modulaire */}
+            <StructureSignataireSection 
+              signataire={signataire}
+              handleSignataireChange={handleSignataireChange}
+              errors={{}}
+            />
+
+            {/* Section Contacts associés - UnifiedContactSelector */}
+            <UnifiedContactSelector
+              multiple={true}
+              value={contactsAssocies.map(c => c.id)}
+              onChange={(contactIds) => {
+                // Gérer la mise à jour des contacts
+                const newContactIds = Array.isArray(contactIds) ? contactIds : [contactIds].filter(Boolean);
+                
+                // Si on a des nouveaux contacts à charger
+                const loadNewContacts = async () => {
+                  const currentIds = contactsAssocies.map(c => c.id);
+                  const idsToLoad = newContactIds.filter(id => !currentIds.includes(id));
                   
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        Prénom <span className={styles.required}>*</span>
-                      </label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="prenom"
-                        value={signataire.prenom}
-                        onChange={handleSignataireChange}
-                        required 
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        Nom <span className={styles.required}>*</span>
-                      </label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="nom"
-                        value={signataire.nom}
-                        onChange={handleSignataireChange}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>
-                      Fonction / Qualité <span className={styles.required}>*</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      className={styles.formControl}
-                      name="fonction"
-                      value={signataire.fonction}
-                      onChange={handleSignataireChange}
-                      placeholder="Ex: Directeur, Président, Responsable..."
-                      required
-                    />
-                  </div>
+                  if (idsToLoad.length > 0) {
+                    try {
+                      const newContacts = await Promise.all(
+                        idsToLoad.map(async (id) => {
+                          const docSnap = await getDoc(doc(db, 'contacts', id));
+                          return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
+                        })
+                      );
+                      
+                      const validContacts = newContacts.filter(c => c !== null);
+                      setContactsAssocies(prev => [...prev, ...validContacts]);
+                    } catch (error) {
+                      console.error('Erreur lors du chargement des contacts:', error);
+                    }
+                  }
                   
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Email (facultatif)</label>
-                      <input 
-                        type="email" 
-                        className={styles.formControl}
-                        name="email"
-                        value={signataire.email}
-                        onChange={handleSignataireChange}
-                        placeholder="Email du signataire"
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Téléphone (facultatif)</label>
-                      <input 
-                        type="tel" 
-                        className={styles.formControl}
-                        name="telephone"
-                        value={signataire.telephone}
-                        onChange={handleSignataireChange}
-                        placeholder="Téléphone du signataire"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Section Contacts associés */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-person-badge section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Contacts associés ({contactsAssocies.length})</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  {/* Recherche de contacts */}
-                  <div className={styles.searchBar} style={{ marginBottom: '20px' }}>
-                    <div className={styles.searchInputGroup}>
-                      <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="Rechercher un contact à associer..."
-                        value={contactSearchTerm}
-                        onChange={(e) => setContactSearchTerm(e.target.value)}
-                      />
-                      <button
-                        type="button"
-                        className={styles.searchBtn}
-                        onClick={() => navigate('/contacts/nouveau')}
-                      >
-                        <i className="bi bi-plus"></i>
-                        Nouveau
-                      </button>
-                    </div>
-
-                    {/* Résultats de recherche */}
-                    {contactSearchResults.length > 0 && (
-                      <div className={styles.searchResults}>
-                        {contactSearchResults.map((contact) => (
-                          <div
-                            key={contact.id}
-                            className={styles.searchResultItem}
-                            onClick={() => {
-                              setContactsAssocies(prev => [...prev, contact]);
-                              setContactSearchTerm('');
-                              setContactSearchResults([]);
-                              toast.success(`Contact "${contact.nom}" ajouté`);
-                            }}
-                          >
-                            <div className={styles.resultTitle}>
-                              {contact.contact?.prenom} {contact.contact?.nom || contact.nom}
-                            </div>
-                            <div className={styles.resultDetails}>
-                              {contact.structure?.raisonSociale && 
-                                <span><i className="bi bi-building"></i> {contact.structure.raisonSociale}</span>
-                              }
-                              {contact.contact?.email && 
-                                <span><i className="bi bi-envelope"></i> {contact.contact.email}</span>
-                              }
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Liste des contacts associés */}
-                  {contactsAssocies.length > 0 ? (
-                    <div className={styles.tableResponsive}>
-                      <table className={styles.table}>
-                        <thead>
-                          <tr>
-                            <th>Nom</th>
-                            <th>Email</th>
-                            <th>Téléphone</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {contactsAssocies.map((contact) => (
-                            <tr key={contact.id}>
-                              <td>
-                                <strong>
-                                  {contact.contact?.prenom} {contact.contact?.nom || contact.nom}
-                                </strong>
-                              </td>
-                              <td>{contact.contact?.email || contact.email || '-'}</td>
-                              <td>{contact.contact?.telephone || contact.telephone || '-'}</td>
-                              <td>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnSecondary}`}
-                                    onClick={() => navigate(`/contacts/${contact.id}`)}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-eye"></i>
-                                    Voir
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnDanger}`}
-                                    onClick={() => {
-                                      setContactsAssocies(prev => 
-                                        prev.filter(p => p.id !== contact.id)
-                                      );
-                                      toast.info('Contact retiré');
-                                    }}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-trash"></i>
-                                    Retirer
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className={styles.alert}>
-                      <i className="bi bi-info-circle"></i>
-                      Aucun contact associé pour le moment.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+                  // Si on a des contacts à retirer
+                  const idsToRemove = currentIds.filter(id => !newContactIds.includes(id));
+                  if (idsToRemove.length > 0) {
+                    setContactsAssocies(prev => prev.filter(c => !idsToRemove.includes(c.id)));
+                  }
+                };
+                
+                loadNewContacts();
+              }}
+              mode="edit"
+            />
 
             {/* Section Concerts associés */}
             <div className={styles.formSection}>

@@ -91,8 +91,8 @@ export default function useContactDetails(id) {
         } else {
           // Si pas de référence directe, chercher par référence inverse
           
-          // Méthode 1: Chercher les lieux avec ce contact dans 'contacts'
-          const lieuxConstraints = [where('contacts', 'array-contains', id)];
+          // Méthode 1: Chercher les lieux avec ce contact dans 'contactIds'
+          const lieuxConstraints = [where('contactIds', 'array-contains', id)];
           if (currentOrganization?.id) {
             lieuxConstraints.push(where('organizationId', '==', currentOrganization.id));
           }
@@ -211,8 +211,8 @@ export default function useContactDetails(id) {
         } else {
           // Méthode 2: Chercher par référence inverse dans la collection concerts
           
-          // Chercher les concerts avec ce contact comme contactId
-          const concertsConstraints = [where('contactId', '==', id)];
+          // Chercher les concerts avec ce contact dans contactIds
+          const concertsConstraints = [where('contactIds', 'array-contains', id)];
           if (currentOrganization?.id) {
             concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
           }
@@ -223,9 +223,9 @@ export default function useContactDetails(id) {
           let querySnapshot = await getDocs(concertsQuery);
           let concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           
-          // Si aucun résultat, essayer avec le champ contacts (array-contains)
+          // Si aucun résultat, essayer avec l'ancien format contactId pour rétrocompatibilité
           if (concertsLoaded.length === 0) {
-            const concertsConstraints2 = [where('contacts', 'array-contains', id)];
+            const concertsConstraints2 = [where('contactId', '==', id)];
             if (currentOrganization?.id) {
               concertsConstraints2.push(where('organizationId', '==', currentOrganization.id));
             }
@@ -263,8 +263,8 @@ export default function useContactDetails(id) {
       try {
         setLoadingArtistes(true);
         
-        // Chercher les artistes avec ce contact comme contactId
-        const artistesConstraints = [where('contactId', '==', id)];
+        // Chercher les artistes avec ce contact dans contactIds
+        const artistesConstraints = [where('contactIds', 'array-contains', id)];
         if (currentOrganization?.id) {
           artistesConstraints.push(where('organizationId', '==', currentOrganization.id));
         }
@@ -277,9 +277,9 @@ export default function useContactDetails(id) {
         
         console.log(`[DEBUG] useContactDetails - Artistes avec contactId=${id}:`, artistesLoaded.length);
         
-        // Si aucun résultat, essayer avec le champ contacts (array-contains)
+        // Si aucun résultat, essayer avec l'ancien format contactId pour rétrocompatibilité
         if (artistesLoaded.length === 0) {
-          const artistesConstraints2 = [where('contacts', 'array-contains', id)];
+          const artistesConstraints2 = [where('contactId', '==', id)];
           if (currentOrganization?.id) {
             artistesConstraints2.push(where('organizationId', '==', currentOrganization.id));
           }

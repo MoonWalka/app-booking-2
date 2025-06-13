@@ -8,7 +8,6 @@ import {
   getDoc,
   db
 } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 

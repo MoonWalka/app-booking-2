@@ -16,7 +16,7 @@ import LieuSearchSection from '../sections/LieuSearchSection';
 import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
 import ArtisteSearchSection from '../sections/ArtisteSearchSection';
 // import ArtisteSearchSectionWithFallback from '../sections/ArtisteSearchSectionWithFallback';
-import StructureSearchSection from '../sections/StructureSearchSection';
+import StructureSearchSection from '../../contacts/sections/StructureSearchSection';
 import NotesSection from '../sections/NotesSection';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 

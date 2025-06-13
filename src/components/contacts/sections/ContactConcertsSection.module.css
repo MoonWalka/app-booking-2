@@ -1,0 +1,201 @@
+/* ContactConcertsSection - Styles pour la section des concerts associés */
+
+.sectionBody {
+  padding: 1rem;
+}
+
+.searchBar {
+  margin-bottom: 1.5rem;
+}
+
+.searchInputGroup {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.searchBtn {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.searchBtn:hover {
+  background-color: #0056b3;
+}
+
+.searchResults {
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.searchResultItem {
+  padding: 0.75rem;
+  border-bottom: 1px solid #f1f3f4;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.searchResultItem:hover {
+  background-color: #f8f9fa;
+}
+
+.searchResultItem:last-child {
+  border-bottom: none;
+}
+
+.concertTitle {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #495057;
+}
+
+.concertDetails {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8125rem;
+  color: #6c757d;
+}
+
+.concertDetails span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.alert {
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.tableResponsive {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: top;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bgSuccess {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.bgWarning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.tcBtn {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s;
+}
+
+.tcBtnSecondary {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+.tcBtnSecondary:hover {
+  background-color: #545b62;
+  border-color: #4e555b;
+}
+
+.tcBtnDanger {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.tcBtnDanger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}

@@ -66,7 +66,7 @@ export const useConcertForm = (concertId) => {
       updatedAt: new Date()
     };
     
-    // Migration contactId → contactIds si nécessaire
+    // Support rétrocompatibilité contactId (ancien format)
     // Si on a un contactId mais pas de contactIds, migrer automatiquement
     if (data.contactId && (!data.contactIds || data.contactIds.length === 0)) {
       transformedData.contactIds = [data.contactId];

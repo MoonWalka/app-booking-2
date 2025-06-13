@@ -180,7 +180,7 @@ function ConcertsList() {
     {
       id: 'contact',
       label: 'Contact',
-      field: 'contactId',
+      field: 'contactIds', // Corrigé pour nouveau format
       type: 'text',
       placeholder: 'Nom du contact'
     },

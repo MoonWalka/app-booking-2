@@ -7,20 +7,12 @@
 /* Styles standardisés pour le formulaire d'artiste en version desktop */
 
 .artisteFormDesktop {
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   padding: var(--tc-space-4);
 }
 
-.desktopFormHeader {
-  margin-bottom: var(--tc-space-8);
-}
-
-.desktopFormHeader h1 {
-  font-size: var(--tc-font-size-xl);
-  font-weight: var(--tc-font-weight-semibold);
-  color: var(--tc-text-primary);
-}
+/* Les styles de header sont maintenant gérés par FormHeader */
 
 .stepFormContainer {
   background-color: var(--tc-color-white);

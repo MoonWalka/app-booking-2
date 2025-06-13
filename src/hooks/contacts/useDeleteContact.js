@@ -30,16 +30,16 @@ const useDeleteContact = (onDeleteSuccess) => {
     relatedEntities: [
       {
         collection: 'concerts',
-        field: 'contactId',
-        referenceType: 'direct',
+        field: 'contactIds', // Nouveau format
+        referenceType: 'array', // Nouveau format array
         message: 'Ce contact ne peut pas être supprimé car il a des concerts associés.',
         detailsField: 'titre',
         detailsLimit: 5
       },
       {
         collection: 'lieux',
-        field: 'contactId',
-        referenceType: 'direct',
+        field: 'contactIds', // Nouveau format
+        referenceType: 'array', // Nouveau format array
         message: 'Ce contact ne peut pas être supprimé car il est associé à des lieux.',
         detailsField: 'nom',
         detailsLimit: 5

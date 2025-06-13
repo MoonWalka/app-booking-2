@@ -1,0 +1,63 @@
+/* StructureSearchSection.module.css */
+
+.cardBody {
+  position: relative;
+}
+
+.formLabel {
+  display: block;
+  font-weight: 600;
+  color: var(--tc-color-text-primary);
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.structureItem {
+  margin-bottom: 16px;
+}
+
+.changeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid var(--tc-color-border);
+  border-radius: 6px;
+  color: var(--tc-color-text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.changeButton:hover {
+  background-color: var(--tc-color-bg-secondary);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-color-primary);
+}
+
+.changeButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tc-color-primary-light);
+}
+
+.changeButton i {
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cardBody {
+    padding: 16px;
+  }
+  
+  .formLabel {
+    font-size: 13px;
+  }
+  
+  .changeButton {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+}

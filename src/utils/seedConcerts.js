@@ -16,7 +16,7 @@ const sampleConcerts = [
     artisteNom: 'Les Étoiles du Rock',
     artisteId: 'artiste-1',
     lieuId: 'lieu-1',
-    contactId: 'prog-1',
+    contactIds: ['prog-1'], // Nouveau format unifié
     statut: 'confirme',
     prix: 45,
     description: 'Un concert rock énergique avec Les Étoiles du Rock',
@@ -33,7 +33,7 @@ const sampleConcerts = [
     artisteNom: 'Blue Note Quartet',
     artisteId: 'artiste-2',
     lieuId: 'lieu-2',
-    contactId: 'prog-1',
+    contactIds: ['prog-1'], // Nouveau format unifié
     statut: 'brouillon',
     prix: 35,
     description: 'Une soirée jazz intimiste',
@@ -50,7 +50,7 @@ const sampleConcerts = [
     artisteNom: 'Night Vision',
     artisteId: 'artiste-3',
     lieuId: 'lieu-3',
-    contactId: 'prog-2',
+    contactIds: ['prog-2'], // Nouveau format unifié
     statut: 'confirme',
     prix: 60,
     description: 'Festival de musique électronique',
@@ -67,7 +67,7 @@ const sampleConcerts = [
     artisteNom: 'Sarah Moon',
     artisteId: 'artiste-4',
     lieuId: 'lieu-4',
-    contactId: 'prog-1',
+    contactIds: ['prog-1'], // Nouveau format unifié
     statut: 'reporte',
     prix: 25,
     description: 'Concert acoustique intimiste',
@@ -84,7 +84,7 @@ const sampleConcerts = [
     artisteNom: 'Urban Flow',
     artisteId: 'artiste-5',
     lieuId: 'lieu-5',
-    contactId: 'prog-2',
+    contactIds: ['prog-2'], // Nouveau format unifié
     statut: 'annule',
     prix: 40,
     description: 'Show hip-hop avec Urban Flow',

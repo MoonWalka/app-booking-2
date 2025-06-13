@@ -152,24 +152,24 @@ const ConcertContactsDebug = () => {
             <div>
               <h4>Structure actuelle:</h4>
               <p>
-                La majorité des concerts utilisent <code>contactId</code> (singulier) pour stocker un seul contact.
-                Le composant <code>ContactSearchSection</code> a été conçu pour gérer plusieurs contacts mais 
-                l'implémentation actuelle ne sauvegarde qu'un seul contact.
+                Le système a été migré vers <code>contactIds</code> (pluriel) pour supporter plusieurs contacts.
+                Le composant <code>UnifiedContactSelector</code> remplace désormais les anciens composants
+                et gère correctement les contacts multiples.
               </p>
               
-              <h4>Limitation identifiée:</h4>
+              <h4>Migration effectuée:</h4>
               <ul>
-                <li>Le formulaire utilise <code>formData.contactId</code> (singulier)</li>
-                <li>Le hook <code>useConcertForm</code> ne gère qu'un seul contact</li>
-                <li>La configuration dans <code>entityConfigurations.js</code> définit <code>isArray: false</code></li>
-                <li>Le composant <code>ContactSearchSectionWithRoles</code> existe mais n'est pas utilisé</li>
+                <li>✅ Le formulaire utilise maintenant <code>formData.contactIds</code> (pluriel)</li>
+                <li>✅ Le hook <code>useConcertForm</code> gère plusieurs contacts</li>
+                <li>✅ La configuration définit <code>isArray: true</code></li>
+                <li>✅ <code>UnifiedContactSelector</code> remplace les anciens composants</li>
               </ul>
               
               <h4>Conclusion:</h4>
               <p>
-                C'est une <strong>limitation actuelle</strong> de l'implémentation, pas un bug. 
-                Le système est configuré pour ne gérer qu'un seul contact par concert, 
-                même si l'interface suggère la possibilité d'en ajouter plusieurs.
+                ✅ <strong>Migration terminée</strong> ! Le système gère maintenant plusieurs contacts par concert.
+                La rétrocompatibilité avec <code>contactId</code> est maintenue pour les anciens concerts.
+                Tous les nouveaux concerts utilisent le format <code>contactIds</code>.
               </p>
             </div>
           </div>

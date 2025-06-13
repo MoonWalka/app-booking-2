@@ -252,7 +252,7 @@ export const entityConfigurations = {
         isArray: true,
         displayName: 'Concerts',
         bidirectional: true,
-        inverseField: 'contactId'
+        inverseField: 'contactIds'
       }
     }
   },

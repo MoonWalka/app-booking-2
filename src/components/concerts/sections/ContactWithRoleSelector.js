@@ -3,7 +3,7 @@ import styles from './ContactWithRoleSelector.module.css';
 
 /**
  * Composant pour sélectionner le rôle d'un contact
- * Utilisé dans ContactSearchSection pour attribuer des rôles aux contacts
+ * Utilisé dans UnifiedContactSelector pour attribuer des rôles aux contacts
  */
 const ContactWithRoleSelector = ({ 
   contact, 

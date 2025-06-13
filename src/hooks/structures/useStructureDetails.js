@@ -244,7 +244,7 @@ const useStructureDetails = (id) => {
               console.log('[DEBUG] Recherche concerts via contacts associés:', contactIds);
               
               for (const contactId of contactIds) {
-                const concertsByProgConstraints = [where('contactId', '==', contactId)];
+                const concertsByProgConstraints = [where('contactIds', 'array-contains', contactId)];
                 if (currentOrganization?.id) {
                   concertsByProgConstraints.push(where('organizationId', '==', currentOrganization.id));
                 }

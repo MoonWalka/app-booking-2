@@ -86,12 +86,12 @@ const SystemAuditTool = () => {
           } else if (entityType === 'artistes') {
             analysis.relations = {
               concertsIds: data.concertsIds || [],
-              contactsIds: data.contactsIds || []
+              contactIds: data.contactIds || [] // Format harmonisé
             };
           } else if (entityType === 'lieux') {
             analysis.relations = {
               concertsIds: data.concertsIds || [],
-              contactsIds: data.contactsIds || []
+              contactIds: data.contactIds || [] // Format harmonisé
             };
           } else if (entityType === 'contacts') {
             analysis.relations = {

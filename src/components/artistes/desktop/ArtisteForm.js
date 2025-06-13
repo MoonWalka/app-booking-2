@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import FlexContainer from '@/components/ui/FlexContainer';
+import FormHeader from '@/components/ui/FormHeader';
 import styles from './ArtisteForm.module.css';
 import { 
   doc, 
@@ -335,31 +336,40 @@ const ArtisteFormDesktop = () => {
     }
   ];
   
+  // Préparer les actions pour le header
+  const headerActions = [];
+  
+  if (id !== 'nouveau') {
+    headerActions.push(
+      <Button
+        key="delete"
+        variant="danger"
+        onClick={() => handleDelete(id)}
+        disabled={isDeleting}
+      >
+        {isDeleting ? (
+          <>
+            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Suppression...
+          </>
+        ) : (
+          <>
+            <i className="bi bi-trash me-2"></i>
+            Supprimer
+          </>
+        )}
+      </Button>
+    );
+  }
+
   return (
     <div className={styles.artisteFormDesktop}>
-      <div className={styles.desktopFormHeader}>
-        <h1>{id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}</h1>
-        {id !== 'nouveau' && (
-          <Button
-            variant="danger"
-            className="ms-3"
-            onClick={() => handleDelete(id)}
-            disabled={isDeleting}
-          >
-            {isDeleting ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Suppression...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-trash me-2"></i>
-                Supprimer
-              </>
-            )}
-          </Button>
-        )}
-      </div>
+      <FormHeader
+        title={id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}
+        icon={<i className="bi bi-person-music"></i>}
+        actions={headerActions}
+        roundedTop={true}
+      />
       
       {/* Navigation sophistiquée par étapes */}
       <StepNavigation 

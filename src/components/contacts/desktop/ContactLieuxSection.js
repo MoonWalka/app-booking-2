@@ -121,7 +121,7 @@ const ContactLieuxSection = ({
         // Méthodes de requête alternatives
         let lieuxQuery = query(
           collection(db, 'lieux'),
-          where('contacts', 'array-contains', contactData.id)
+          where('contactIds', 'array-contains', contactData.id)
         );
         let querySnapshot = await getDocs(lieuxQuery);
         let newLieux = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

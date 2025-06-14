@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, setDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
+import { 
+  encryptSensitiveFields, 
+  decryptSensitiveFields,
+  generateAuditHash 
+} from '@/utils/cryptoUtils';
 
 export const ParametresContext = createContext(null);
 
@@ -36,6 +41,35 @@ export const ParametresProvider = ({ children }) => {
       formatParDefaut: 'json',
       sauvegardeAuto: true,
       frequenceSauvegarde: 'daily'
+    },
+    email: {
+      provider: 'smtp', // 'smtp' ou 'brevo'
+      smtp: {
+        enabled: false,
+        host: '',
+        port: 587,
+        user: '',
+        pass: '',
+        from: '',
+        fromName: ''
+      },
+      brevo: {
+        enabled: false,
+        apiKey: '',
+        fromEmail: '',
+        fromName: '',
+        templates: {
+          formulaire: '',
+          relance: '',
+          contrat: '',
+          confirmation: ''
+        }
+      },
+      templates: {
+        useCustomTemplates: false,
+        signatureName: '',
+        footerText: ''
+      }
     }
   });
 
@@ -56,10 +90,21 @@ export const ParametresProvider = ({ children }) => {
             // Parcourir toutes les sections
             Object.keys(parametresServeur).forEach(section => {
               if (typeof parametresServeur[section] === 'object' && parametresServeur[section] !== null) {
+                let sectionData = parametresServeur[section];
+                
+                // Déchiffrer les données sensibles pour la section email
+                if (section === 'email') {
+                  sectionData = {
+                    ...sectionData,
+                    smtp: decryptSensitiveFields(sectionData.smtp || {}, ['pass', 'user']),
+                    brevo: decryptSensitiveFields(sectionData.brevo || {}, ['apiKey'])
+                  };
+                }
+                
                 // Fusionner la section avec les valeurs par défaut
                 newParams[section] = {
                   ...newParams[section],
-                  ...parametresServeur[section]
+                  ...sectionData
                 };
               } else {
                 // Pour les valeurs simples
@@ -96,16 +141,43 @@ export const ParametresProvider = ({ children }) => {
 
   const sauvegarderParametres = useCallback(async (section, nouvellesValeurs) => {
     try {
+      let valeursPourSauvegarde = nouvellesValeurs;
+      
+      // Chiffrer les données sensibles avant sauvegarde
+      if (section === 'email') {
+        valeursPourSauvegarde = {
+          ...nouvellesValeurs,
+          smtp: encryptSensitiveFields(nouvellesValeurs.smtp || {}, ['pass', 'user']),
+          brevo: encryptSensitiveFields(nouvellesValeurs.brevo || {}, ['apiKey'])
+        };
+        
+        // Audit log pour les clés API (sans révéler la clé)
+        if (nouvellesValeurs.brevo?.apiKey) {
+          const auditHash = generateAuditHash(nouvellesValeurs.brevo.apiKey);
+          console.info(`[AUDIT] Clé API Brevo mise à jour - Hash: ${auditHash}`);
+        }
+      }
+      
       const parametresMisAJour = {
+        ...parametres,
+        [section]: {
+          ...parametres[section],
+          ...valeursPourSauvegarde
+        }
+      };
+
+      await setDoc(doc(db, 'parametres', 'global'), parametresMisAJour);
+      
+      // Mettre à jour l'état local avec les valeurs non chiffrées
+      const parametresLocalMisAJour = {
         ...parametres,
         [section]: {
           ...parametres[section],
           ...nouvellesValeurs
         }
       };
-
-      await setDoc(doc(db, 'parametres', 'global'), parametresMisAJour);
-      setParametres(parametresMisAJour);
+      
+      setParametres(parametresLocalMisAJour);
       return true;
     } catch (err) {
       console.error('Erreur lors de la sauvegarde des paramètres:', err);

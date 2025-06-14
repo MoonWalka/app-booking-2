@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Card, Alert, Row, Col } from 'react-bootstrap';
+import { Form, Card, Alert, Row, Col, Badge } from 'react-bootstrap';
 import Button from '@/components/ui/Button';
 import { useParametres } from '@/context/ParametresContext';
 import emailService from '@/services/emailService';
 import { debugLog } from '@/utils/logUtils';
+import { isEncrypted, validateEncryptedApiKey } from '@/utils/cryptoUtils';
 
 const ParametresEmail = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
   const [localState, setLocalState] = useState({
+    provider: 'smtp', // 'smtp' ou 'brevo'
     smtp: {
       enabled: false,
       host: '',
@@ -18,6 +20,18 @@ const ParametresEmail = () => {
       from: '',
       fromName: 'TourCraft'
     },
+    brevo: {
+      enabled: false,
+      apiKey: '',
+      fromEmail: '',
+      fromName: 'TourCraft',
+      templates: {
+        formulaire: '',
+        relance: '',
+        contrat: '',
+        confirmation: ''
+      }
+    },
     templates: {
       useCustomTemplates: false,
       signatureName: '',
@@ -26,10 +40,14 @@ const ParametresEmail = () => {
     }
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
   const [testEmail, setTestEmail] = useState('');
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [testLoading, setTestLoading] = useState(false);
+  const [brevoLoading, setBrevoLoading] = useState(false);
+  const [brevoTemplates, setBrevoTemplates] = useState([]);
+  const [validatingApiKey, setValidatingApiKey] = useState(false);
 
   // Providers SMTP prédéfinis
   const smtpProviders = [
@@ -51,13 +69,37 @@ const ParametresEmail = () => {
   }, [parametres.email]);
 
   const handleChange = (section, field, value) => {
-    setLocalState(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value
+    setLocalState(prev => {
+      if (section === '') {
+        // Pour les champs racine comme 'provider'
+        return {
+          ...prev,
+          [field]: value
+        };
+      } else if (field.includes('.')) {
+        // Pour les objets imbriqués comme 'templates.formulaire'
+        const [subSection, subField] = field.split('.');
+        return {
+          ...prev,
+          [section]: {
+            ...prev[section],
+            [subSection]: {
+              ...prev[section][subSection],
+              [subField]: value
+            }
+          }
+        };
+      } else {
+        // Pour les champs normaux
+        return {
+          ...prev,
+          [section]: {
+            ...prev[section],
+            [field]: value
+          }
+        };
       }
-    }));
+    });
   };
 
   const handleProviderSelect = (provider) => {
@@ -113,6 +155,70 @@ const ParametresEmail = () => {
     }
   };
 
+  const handleValidateBrevoApiKey = async () => {
+    if (!localState.brevo.apiKey) {
+      setError('Veuillez entrer une clé API Brevo');
+      return;
+    }
+
+    setValidatingApiKey(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const isValid = await emailService.validateBrevoApiKey(localState.brevo.apiKey);
+      if (isValid) {
+        setSuccess('Clé API Brevo valide ! Récupération des templates...');
+        await loadBrevoTemplates();
+      } else {
+        setError('Clé API Brevo invalide');
+      }
+    } catch (err) {
+      setError(`Erreur validation Brevo: ${err.message}`);
+      debugLog('[ParametresEmail] Erreur validation Brevo:', err, 'error');
+    } finally {
+      setValidatingApiKey(false);
+    }
+  };
+
+  const loadBrevoTemplates = async () => {
+    if (!localState.brevo.apiKey) return;
+
+    setBrevoLoading(true);
+    try {
+      const templates = await emailService.getBrevoTemplates(localState.brevo.apiKey);
+      setBrevoTemplates(templates);
+      debugLog('[ParametresEmail] Templates Brevo chargés:', templates, 'info');
+    } catch (err) {
+      setError(`Erreur chargement templates: ${err.message}`);
+      debugLog('[ParametresEmail] Erreur templates Brevo:', err, 'error');
+    } finally {
+      setBrevoLoading(false);
+    }
+  };
+
+  const handleTestBrevoTemplate = async (templateName) => {
+    if (!testEmail || !emailService.validateEmail(testEmail)) {
+      setError('Veuillez entrer une adresse email valide');
+      return;
+    }
+
+    setTestLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      await emailService.testBrevoTemplate(templateName, testEmail);
+      setSuccess(`Test template "${templateName}" envoyé avec succès !`);
+      setTimeout(() => setSuccess(''), 5000);
+    } catch (err) {
+      setError(`Erreur test template: ${err.message}`);
+      debugLog('[ParametresEmail] Erreur test template Brevo:', err, 'error');
+    } finally {
+      setTestLoading(false);
+    }
+  };
+
   if (loading) {
     return <div>Chargement...</div>;
   }
@@ -126,12 +232,201 @@ const ParametresEmail = () => {
         {error && <Alert variant="danger">{error}</Alert>}
         
         <Form onSubmit={handleSubmit}>
-          {/* Configuration SMTP */}
+          {/* Sélection du provider */}
           <Card className="mb-4">
             <Card.Header>
-              <h5 className="mb-0">Serveur SMTP</h5>
+              <h5 className="mb-0">Fournisseur d'email</h5>
             </Card.Header>
             <Card.Body>
+              <Form.Group className="mb-3">
+                <Form.Label>Choisir le service d'envoi d'emails</Form.Label>
+                <div className="d-flex gap-3">
+                  <Form.Check
+                    type="radio"
+                    id="provider-smtp"
+                    name="emailProvider"
+                    label="SMTP Classique"
+                    checked={localState.provider === 'smtp'}
+                    onChange={() => handleChange('', 'provider', 'smtp')}
+                  />
+                  <Form.Check
+                    type="radio"
+                    id="provider-brevo"
+                    name="emailProvider"
+                    label="Brevo (recommandé)"
+                    checked={localState.provider === 'brevo'}
+                    onChange={() => handleChange('', 'provider', 'brevo')}
+                  />
+                </div>
+                <Form.Text className="text-muted">
+                  {localState.provider === 'brevo' 
+                    ? 'Brevo offre des templates visuels, de meilleures statistiques et un taux de délivrance optimal'
+                    : 'Configuration SMTP traditionnelle avec votre propre serveur email'
+                  }
+                </Form.Text>
+              </Form.Group>
+            </Card.Body>
+          </Card>
+
+          {/* Configuration Brevo */}
+          {localState.provider === 'brevo' && (
+            <Card className="mb-4">
+              <Card.Header className="d-flex align-items-center">
+                <h5 className="mb-0">Configuration Brevo</h5>
+                <span className="badge bg-success ms-2">Recommandé</span>
+              </Card.Header>
+              <Card.Body>
+                <Form.Group className="mb-3">
+                  <Form.Check 
+                    type="switch"
+                    id="brevo-enabled"
+                    label="Activer l'envoi d'emails via Brevo"
+                    checked={localState.brevo.enabled}
+                    onChange={(e) => handleChange('brevo', 'enabled', e.target.checked)}
+                  />
+                  <Form.Text className="text-muted">
+                    Service d'emailing professionnel avec templates visuels et analytics
+                  </Form.Text>
+                </Form.Group>
+
+                {localState.brevo.enabled && (
+                  <>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="d-flex align-items-center gap-2">
+                        Clé API Brevo
+                        <Badge bg="success" className="d-flex align-items-center gap-1">
+                          <i className="bi bi-shield-check"></i>
+                          Chiffrée
+                        </Badge>
+                      </Form.Label>
+                      <div className="input-group">
+                        <Form.Control
+                          type={showApiKey ? 'text' : 'password'}
+                          placeholder="xkeysib-..."
+                          value={localState.brevo.apiKey}
+                          onChange={(e) => handleChange('brevo', 'apiKey', e.target.value)}
+                          required={localState.brevo.enabled}
+                        />
+                        <Button
+                          variant="outline-secondary"
+                          type="button"
+                          onClick={() => setShowApiKey(!showApiKey)}
+                        >
+                          <i className={`bi bi-eye${showApiKey ? '-slash' : ''}`}></i>
+                        </Button>
+                        <Button
+                          variant="outline-primary"
+                          type="button"
+                          onClick={handleValidateBrevoApiKey}
+                          disabled={validatingApiKey || !localState.brevo.apiKey}
+                        >
+                          {validatingApiKey ? 'Validation...' : 'Valider'}
+                        </Button>
+                      </div>
+                      <Form.Text className="text-muted d-flex align-items-center gap-2">
+                        <i className="bi bi-info-circle"></i>
+                        Récupérez votre clé API dans votre compte Brevo → SMTP & API → API Keys
+                      </Form.Text>
+                      <Form.Text className="text-success d-flex align-items-center gap-1 mt-1">
+                        <i className="bi bi-lock-fill"></i>
+                        Votre clé API est automatiquement chiffrée avant stockage
+                      </Form.Text>
+                    </Form.Group>
+
+                    <Row>
+                      <Col md={8}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Email d'expédition</Form.Label>
+                          <Form.Control
+                            type="email"
+                            placeholder="noreply@votredomaine.com"
+                            value={localState.brevo.fromEmail}
+                            onChange={(e) => handleChange('brevo', 'fromEmail', e.target.value)}
+                            required={localState.brevo.enabled}
+                          />
+                          <Form.Text className="text-muted">
+                            Email configuré et vérifié dans votre compte Brevo
+                          </Form.Text>
+                        </Form.Group>
+                      </Col>
+                      <Col md={4}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Nom d'expédition</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="TourCraft"
+                            value={localState.brevo.fromName}
+                            onChange={(e) => handleChange('brevo', 'fromName', e.target.value)}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    {/* Configuration des templates */}
+                    {brevoTemplates.length > 0 && (
+                      <div className="mt-4">
+                        <h6>Association des templates</h6>
+                        <p className="text-muted small">
+                          Associez vos templates Brevo créés aux types d'emails TourCraft
+                        </p>
+                        
+                        {Object.keys(localState.brevo.templates).map(templateType => (
+                          <Form.Group key={templateType} className="mb-3">
+                            <Form.Label className="text-capitalize">
+                              Template {templateType}
+                              {templateType === 'formulaire' && ' (demande infos)'}
+                              {templateType === 'relance' && ' (documents manquants)'}
+                              {templateType === 'contrat' && ' (contrat prêt)'}
+                              {templateType === 'confirmation' && ' (confirmation finale)'}
+                            </Form.Label>
+                            <div className="d-flex gap-2">
+                              <Form.Select
+                                value={localState.brevo.templates[templateType]}
+                                onChange={(e) => handleChange('brevo', `templates.${templateType}`, e.target.value)}
+                              >
+                                <option value="">-- Choisir un template --</option>
+                                {brevoTemplates.map(template => (
+                                  <option key={template.id} value={template.id}>
+                                    {template.name} (ID: {template.id})
+                                  </option>
+                                ))}
+                              </Form.Select>
+                              {localState.brevo.templates[templateType] && (
+                                <Button
+                                  variant="outline-info"
+                                  size="sm"
+                                  type="button"
+                                  onClick={() => handleTestBrevoTemplate(templateType)}
+                                  disabled={testLoading || !testEmail}
+                                  title={`Tester le template ${templateType}`}
+                                >
+                                  <i className="bi bi-send"></i>
+                                </Button>
+                              )}
+                            </div>
+                          </Form.Group>
+                        ))}
+
+                        {brevoLoading && (
+                          <div className="text-center text-muted">
+                            <i className="bi bi-hourglass-split"></i> Chargement des templates...
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </Card.Body>
+            </Card>
+          )}
+
+          {/* Configuration SMTP */}
+          {localState.provider === 'smtp' && (
+            <Card className="mb-4">
+              <Card.Header>
+                <h5 className="mb-0">Serveur SMTP</h5>
+              </Card.Header>
+              <Card.Body>
               <Form.Group className="mb-3">
                 <Form.Check 
                   type="switch"
@@ -271,6 +566,7 @@ const ParametresEmail = () => {
               )}
             </Card.Body>
           </Card>
+          )}
 
           {/* Templates d'email */}
           <Card className="mb-4">
@@ -331,7 +627,8 @@ const ParametresEmail = () => {
           </Card>
 
           {/* Test d'envoi */}
-          {localState.smtp.enabled && (
+          {((localState.provider === 'smtp' && localState.smtp.enabled) || 
+            (localState.provider === 'brevo' && localState.brevo.enabled)) && (
             <Card className="mb-4">
               <Card.Header>
                 <h5 className="mb-0">Test de configuration</h5>
@@ -356,7 +653,40 @@ const ParametresEmail = () => {
                       {testLoading ? 'Envoi...' : 'Envoyer'}
                     </Button>
                   </div>
+                  <Form.Text className="text-muted">
+                    {localState.provider === 'brevo' 
+                      ? 'Test avec un email transactionnel simple (pas de template)'
+                      : 'Test de la configuration SMTP'
+                    }
+                  </Form.Text>
                 </Form.Group>
+
+                {/* Tests spécifiques Brevo */}
+                {localState.provider === 'brevo' && brevoTemplates.length > 0 && (
+                  <div className="mt-3">
+                    <h6>Test des templates Brevo</h6>
+                    <p className="text-muted small">
+                      Testez vos templates avec des données de démonstration
+                    </p>
+                    <div className="d-flex flex-wrap gap-2">
+                      {Object.entries(localState.brevo.templates)
+                        .filter(([, templateId]) => templateId)
+                        .map(([templateType]) => (
+                          <Button
+                            key={templateType}
+                            variant="outline-info"
+                            size="sm"
+                            type="button"
+                            onClick={() => handleTestBrevoTemplate(templateType)}
+                            disabled={testLoading || !testEmail}
+                          >
+                            Test {templateType}
+                          </Button>
+                        ))
+                      }
+                    </div>
+                  </div>
+                )}
               </Card.Body>
             </Card>
           )}

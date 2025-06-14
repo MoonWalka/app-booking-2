@@ -1,27 +1,51 @@
 import React from 'react';
-import Card from '@/components/ui/Card';
+import { Form } from 'react-bootstrap';
 import styles from './StructureNotesSection.module.css';
 
 /**
- * Component for displaying notes about a structure
+ * Section component for structure notes
+ * Supports both display and edit modes
  * 
  * @param {Object} props - Component props
- * @param {String} props.notes - Structure notes text
+ * @param {Object} props.formData - Form data containing notes
+ * @param {Function} props.handleChange - Change handler for form fields
+ * @param {boolean} props.isEditing - Whether in edit mode (default true)
  */
-const StructureNotesSection = ({ notes }) => {
-  if (!notes) return null;
-  
+const StructureNotesSection = ({ formData, handleChange, isEditing = true }) => {
   return (
-    <Card
-      title="Notes"
-      icon={<i className="bi bi-sticky"></i>}
-    >
-        <div className={styles.notesContent}>
-          {notes.split('\n').map((line, index) => (
-            <p key={index}>{line}</p>
-          ))}
+    <div className={styles.formSection}>
+      <div className={styles.sectionCard}>
+        <div className={styles.sectionHeader}>
+          <i className="bi bi-pencil-square section-icon"></i>
+          <h3 className={styles.sectionTitle}>Notes</h3>
         </div>
-    </Card>
+        <div className={styles.sectionBody}>
+          {isEditing ? (
+            <div className={styles.formGroup}>
+              <Form.Control
+                as="textarea"
+                className={styles.formControl}
+                name="notes"
+                value={formData.notes || ''}
+                onChange={handleChange}
+                rows="4"
+                placeholder="Notes internes..."
+              />
+            </div>
+          ) : (
+            <div className={styles.notesContent}>
+              {formData.notes ? (
+                formData.notes.split('\n').map((line, index) => (
+                  <p key={index}>{line}</p>
+                ))
+              ) : (
+                <p className={styles.emptyNotes}>Aucune note</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

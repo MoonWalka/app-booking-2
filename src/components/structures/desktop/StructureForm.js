@@ -10,7 +10,11 @@ import FormHeader from '@/components/ui/FormHeader';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
 import StructureIdentitySection from './sections/StructureIdentitySection';
 import StructureSignataireSection from './sections/StructureSignataireSection';
-import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
+import StructureBillingSection from './sections/StructureBillingSection';
+import StructureNotesSection from './sections/StructureNotesSection';
+import StructureContactsSection from './sections/StructureContactsSection';
+import StructureConcertsManagementSection from './sections/StructureConcertsManagementSection';
+import StructureSiretSearchSection from './sections/StructureSiretSearchSection';
 import styles from './StructureForm.module.css';
 
 /**
@@ -41,7 +45,12 @@ const StructureFormEnhanced = () => {
     email: '',
     siteWeb: '',
     notes: '',
-    numeroIntracommunautaire: ''
+    numeroIntracommunautaire: '',
+    // Champs de facturation
+    adresseFacturation: '',
+    codePostalFacturation: '',
+    villeFacturation: '',
+    paysFacturation: ''
   });
 
   // Adresse du lieu (séparée des infos structure)
@@ -79,10 +88,25 @@ const StructureFormEnhanced = () => {
       }));
 
       // Remplir l'adresse du lieu avec les données de l'entreprise
+      const companyAdresse = typeof company.adresse === 'object' ? company.adresse?.adresse || '' : String(company.adresse || '');
+      
+      // Essayer d'extraire le code postal et la ville depuis l'adresse si pas fournis séparément
+      let codePostal = String(company.codePostal || '');
+      let ville = String(company.ville || '');
+      
+      if (companyAdresse && (!codePostal || !ville)) {
+        // Regex pour extraire code postal (5 chiffres) et ville
+        const addressMatch = companyAdresse.match(/(\d{5})\s+([A-Za-zÀ-ÿ\s\-']+)$/);
+        if (addressMatch) {
+          if (!codePostal) codePostal = addressMatch[1];
+          if (!ville) ville = addressMatch[2].trim();
+        }
+      }
+      
       setAdresseLieu({
-        adresse: String(company.adresse || ''),
-        codePostal: String(company.codePostal || ''),
-        ville: String(company.ville || ''),
+        adresse: companyAdresse,
+        codePostal: codePostal,
+        ville: ville,
         pays: 'France'
       });
 
@@ -94,10 +118,6 @@ const StructureFormEnhanced = () => {
   const companySearch = useCompanySearch({
     onCompanySelect: handleCompanySelect
   });
-
-  // États pour la recherche de concerts
-  const [concertSearchTerm, setConcertSearchTerm] = useState('');
-  const [concertSearchResults, setConcertSearchResults] = useState([]);
 
   // États pour la recherche de lieux
   const [lieuSearchTerm, setLieuSearchTerm] = useState('');
@@ -169,14 +189,34 @@ const StructureFormEnhanced = () => {
             email: data.email || '',
             siteWeb: data.siteWeb || '',
             notes: data.notes || '',
-            numeroIntracommunautaire: data.numeroIntracommunautaire || ''
+            numeroIntracommunautaire: data.numeroIntracommunautaire || '',
+            // Champs de facturation
+            adresseFacturation: data.adresseFacturation || '',
+            codePostalFacturation: data.codePostalFacturation || '',
+            villeFacturation: data.villeFacturation || '',
+            paysFacturation: data.paysFacturation || ''
           });
 
           // Charger l'adresse du lieu
+          const existingAdresse = data.adresseLieu?.adresse || 
+                                 (typeof data.adresse === 'object' ? data.adresse?.adresse || '' : data.adresse || '');
+          let existingCodePostal = data.adresseLieu?.codePostal || data.codePostal || '';
+          let existingVille = data.adresseLieu?.ville || data.ville || '';
+          
+          // Si les champs code postal ou ville sont vides mais qu'on a une adresse,
+          // essayer de les extraire depuis l'adresse
+          if (existingAdresse && (!existingCodePostal || !existingVille)) {
+            const addressMatch = existingAdresse.match(/(\d{5})\s+([A-Za-zÀ-ÿ\s\-']+)$/);
+            if (addressMatch) {
+              if (!existingCodePostal) existingCodePostal = addressMatch[1];
+              if (!existingVille) existingVille = addressMatch[2].trim();
+            }
+          }
+          
           setAdresseLieu({
-            adresse: data.adresseLieu?.adresse || data.adresse || '',
-            codePostal: data.adresseLieu?.codePostal || data.codePostal || '',
-            ville: data.adresseLieu?.ville || data.ville || '',
+            adresse: existingAdresse,
+            codePostal: existingCodePostal,
+            ville: existingVille,
             pays: data.adresseLieu?.pays || data.pays || 'France'
           });
 
@@ -204,6 +244,27 @@ const StructureFormEnhanced = () => {
 
     loadStructure();
   }, [id, isNewFromUrl, loadAssociations]);
+
+  // Effet pour extraire automatiquement code postal et ville depuis l'adresse au chargement
+  useEffect(() => {
+    // Si on a une adresse mais pas de code postal ou ville, essayer d'extraire
+    if (adresseLieu.adresse && (!adresseLieu.codePostal || !adresseLieu.ville)) {
+      const addressMatch = adresseLieu.adresse.match(/(\d{5})\s+([A-Za-zÀ-ÿ\s\-']+)$/);
+      if (addressMatch) {
+        const newCodePostal = adresseLieu.codePostal || addressMatch[1];
+        const newVille = adresseLieu.ville || addressMatch[2].trim();
+        
+        // Seulement mettre à jour si on a réellement extrait quelque chose de nouveau
+        if (newCodePostal !== adresseLieu.codePostal || newVille !== adresseLieu.ville) {
+          setAdresseLieu(prev => ({
+            ...prev,
+            codePostal: newCodePostal,
+            ville: newVille
+          }));
+        }
+      }
+    }
+  }, [adresseLieu.adresse, adresseLieu.codePostal, adresseLieu.ville]); // Dépendances complètes
 
   // Effet pour préremplir les infos du signataire avec le premier contact associé
   useEffect(() => {
@@ -327,32 +388,6 @@ const StructureFormEnhanced = () => {
   };
 
   // Fonctions de recherche
-  const searchConcerts = useCallback(async (searchTerm) => {
-    if (!searchTerm || searchTerm.length < 2) {
-      setConcertSearchResults([]);
-      return;
-    }
-
-    try {
-      const q = query(
-        collection(db, 'concerts'),
-        where('titre', '>=', searchTerm),
-        where('titre', '<=', searchTerm + '\uf8ff')
-      );
-      const querySnapshot = await getDocs(q);
-      const concerts = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      
-      setConcertSearchResults(concerts.filter(c => 
-        !concertsAssocies.find(ca => ca.id === c.id)
-      ));
-    } catch (error) {
-      console.error('Erreur recherche concerts:', error);
-    }
-  }, [concertsAssocies]);
-
   const searchLieux = useCallback(async (searchTerm) => {
     if (!searchTerm || searchTerm.length < 2) {
       setLieuSearchResults([]);
@@ -380,13 +415,6 @@ const StructureFormEnhanced = () => {
   }, [lieuxAssocies]);
 
   // Effets pour la recherche avec debounce
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      searchConcerts(concertSearchTerm);
-    }, 300);
-    return () => clearTimeout(timeoutId);
-  }, [concertSearchTerm, searchConcerts]);
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       searchLieux(lieuSearchTerm);
@@ -499,65 +527,7 @@ const StructureFormEnhanced = () => {
 
           <div className={styles.sectionBody}>
             {/* Section Recherche SIRET */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-search section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Rechercher une structure existante</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.searchBar}>
-                    <div className={styles.searchInputGroup}>
-                      <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="Rechercher par nom ou SIRET..."
-                        value={companySearch.searchTerm || ''}
-                        onChange={(e) => companySearch.setSearchTerm(e.target.value)}
-                      />
-                      <button
-                        type="button"
-                        className={styles.searchBtn}
-                        onClick={companySearch.searchCompany}
-                        disabled={companySearch.isSearchingCompany}
-                      >
-                        {companySearch.isSearchingCompany ? (
-                          <>
-                            <div className={styles.loadingSpinner}></div>
-                            Recherche...
-                          </>
-                        ) : (
-                          <>
-                            <i className="bi bi-search"></i>
-                            Rechercher
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Résultats de recherche */}
-                  {companySearch.searchResults.length > 0 && (
-                    <div className={styles.searchResults}>
-                      {companySearch.searchResults.map((company, index) => (
-                        <div
-                          key={index}
-                          className={styles.searchResultItem}
-                          onClick={() => companySearch.handleSelectCompany(company)}
-                        >
-                          <div className={styles.companyName}>{company.nom}</div>
-                          <div className={styles.companyDetails}>
-                            <span><i className="bi bi-building"></i> SIRET: {company.siret}</span>
-                            {company.ville && <span><i className="bi bi-geo-alt"></i> {company.ville}</span>}
-                            {company.statutJuridique && <span><i className="bi bi-tag"></i> {company.statutJuridique}</span>}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <StructureSiretSearchSection companySearch={companySearch} />
 
             {/* Suite du formulaire dans la partie 2... */}
 
@@ -567,61 +537,6 @@ const StructureFormEnhanced = () => {
               handleChange={handleChange}
               errors={{}}
             />
-
-            {/* Section Adresse du lieu */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-geo-alt section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Adresse du lieu</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.formGroup}>
-                    <AddressInput
-                      label="Adresse"
-                      value={adresseLieu.adresse}
-                      onChange={(e) => setAdresseLieu(prev => ({ ...prev, adresse: e.target.value }))}
-                      onAddressSelected={handleAddressSelected}
-                      placeholder="Commencez à taper pour rechercher une adresse..."
-                    />
-                  </div>
-                  
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Code postal</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="codePostal"
-                        value={adresseLieu.codePostal}
-                        onChange={handleAdresseLieuChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Ville</label>
-                      <input 
-                        type="text" 
-                        className={styles.formControl}
-                        name="ville"
-                        value={adresseLieu.ville}
-                        onChange={handleAdresseLieuChange}
-                      />
-                    </div>
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Pays</label>
-                    <input 
-                      type="text" 
-                      className={styles.formControl}
-                      name="pays"
-                      value={adresseLieu.pays}
-                      onChange={handleAdresseLieuChange}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Section Adresse du lieu */}
             <div className={styles.formSection}>
@@ -731,10 +646,9 @@ const StructureFormEnhanced = () => {
               errors={{}}
             />
 
-            {/* Section Contacts associés - UnifiedContactSelector */}
-            <UnifiedContactSelector
-              multiple={true}
-              value={contactsAssocies.map(c => c.id)}
+            {/* Section Contacts associés */}
+            <StructureContactsSection
+              contactIds={contactsAssocies.map(c => c.id)}
               onChange={(contactIds) => {
                 // Gérer la mise à jour des contacts
                 const newContactIds = Array.isArray(contactIds) ? contactIds : [contactIds].filter(Boolean);
@@ -769,117 +683,50 @@ const StructureFormEnhanced = () => {
                 
                 loadNewContacts();
               }}
-              mode="edit"
+              entityId={!isNewFromUrl ? id : null}
+              isEditing={true}
             />
 
             {/* Section Concerts associés */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-music-note section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Concerts associés ({concertsAssocies.length})</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  {/* Recherche de concerts */}
-                  <div className={styles.searchBar} style={{ marginBottom: '20px' }}>
-                    <div className={styles.searchInputGroup}>
-                      <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="Rechercher un concert à associer..."
-                        value={concertSearchTerm}
-                        onChange={(e) => setConcertSearchTerm(e.target.value)}
-                      />
-                    </div>
-
-                    {/* Résultats de recherche */}
-                    {concertSearchResults.length > 0 && (
-                      <div className={styles.searchResults}>
-                        {concertSearchResults.map((concert) => (
-                          <div
-                            key={concert.id}
-                            className={styles.searchResultItem}
-                            onClick={() => {
-                              setConcertsAssocies(prev => [...prev, concert]);
-                              setConcertSearchTerm('');
-                              setConcertSearchResults([]);
-                              toast.success(`Concert "${concert.titre}" ajouté`);
-                            }}
-                          >
-                            <div className={styles.concertTitle}>{concert.titre || 'Concert sans titre'}</div>
-                            <div className={styles.concertDetails}>
-                              {concert.date && <span><i className="bi bi-calendar"></i> {new Date(concert.date).toLocaleDateString('fr-FR')}</span>}
-                              {concert.lieuNom && <span><i className="bi bi-geo-alt"></i> {concert.lieuNom}</span>}
-                              {concert.artisteNom && <span><i className="bi bi-person"></i> {concert.artisteNom}</span>}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Liste des concerts associés */}
-                  {concertsAssocies.length > 0 ? (
-                    <div className={styles.tableResponsive}>
-                      <table className={styles.table}>
-                        <thead>
-                          <tr>
-                            <th>Concert</th>
-                            <th>Date</th>
-                            <th>Lieu</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {concertsAssocies.map((concert) => (
-                            <tr key={concert.id}>
-                              <td>
-                                <strong>{concert.titre || 'Concert sans titre'}</strong>
-                                {concert.artisteNom && <div style={{ fontSize: '12px', color: '#666' }}>Artiste: {concert.artisteNom}</div>}
-                              </td>
-                              <td>{concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : '-'}</td>
-                              <td>{concert.lieuNom || concert.lieu || '-'}</td>
-                              <td>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnSecondary}`}
-                                    onClick={() => navigate(`/concerts/${concert.id}`)}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-eye"></i>
-                                    Voir
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className={`${styles.tcBtn} ${styles.tcBtnDanger}`}
-                                    onClick={() => {
-                                      setConcertsAssocies(prev => 
-                                        prev.filter(c => c.id !== concert.id)
-                                      );
-                                      toast.info('Concert retiré');
-                                    }}
-                                    style={{ fontSize: '12px', padding: '4px 8px' }}
-                                  >
-                                    <i className="bi bi-trash"></i>
-                                    Retirer
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className={styles.alert}>
-                      <i className="bi bi-info-circle"></i>
-                      Aucun concert associé pour le moment.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <StructureConcertsManagementSection
+              concertIds={concertsAssocies.map(c => c.id)}
+              onChange={(concertIds) => {
+                // Gérer la mise à jour des concerts
+                const newConcertIds = Array.isArray(concertIds) ? concertIds : [concertIds].filter(Boolean);
+                
+                // Si on a des nouveaux concerts à charger
+                const loadNewConcerts = async () => {
+                  const currentIds = concertsAssocies.map(c => c.id);
+                  const idsToLoad = newConcertIds.filter(id => !currentIds.includes(id));
+                  
+                  if (idsToLoad.length > 0) {
+                    try {
+                      const newConcerts = await Promise.all(
+                        idsToLoad.map(async (id) => {
+                          const docSnap = await getDoc(doc(db, 'concerts', id));
+                          return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
+                        })
+                      );
+                      
+                      const validConcerts = newConcerts.filter(c => c !== null);
+                      setConcertsAssocies(prev => [...prev, ...validConcerts]);
+                    } catch (error) {
+                      console.error('Erreur lors du chargement des concerts:', error);
+                    }
+                  }
+                  
+                  // Si on a des concerts à retirer
+                  const idsToRemove = currentIds.filter(id => !newConcertIds.includes(id));
+                  if (idsToRemove.length > 0) {
+                    setConcertsAssocies(prev => prev.filter(c => !idsToRemove.includes(c.id)));
+                  }
+                };
+                
+                loadNewConcerts();
+              }}
+              entityId={!isNewFromUrl ? id : null}
+              isEditing={true}
+            />
 
             {/* Section Lieux associés */}
             <div className={styles.formSection}>
@@ -998,27 +845,18 @@ const StructureFormEnhanced = () => {
               </div>
             </div>
 
+            {/* Section Facturation */}
+            <StructureBillingSection 
+              formData={formData}
+              handleChange={handleChange}
+            />
+
             {/* Section Notes */}
-            <div className={styles.formSection}>
-              <div className={styles.sectionCard}>
-                <div className={styles.sectionHeader}>
-                  <i className="bi bi-pencil-square section-icon"></i>
-                  <h3 className={styles.sectionTitle}>Notes</h3>
-                </div>
-                <div className={styles.sectionBody}>
-                  <div className={styles.formGroup}>
-                    <textarea
-                      className={styles.formControl}
-                      name="notes"
-                      value={formData.notes}
-                      onChange={handleChange}
-                      rows="4"
-                      placeholder="Notes internes..."
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <StructureNotesSection
+              formData={formData}
+              handleChange={handleChange}
+              isEditing={true}
+            />
           </div>
         </div>
       </form>

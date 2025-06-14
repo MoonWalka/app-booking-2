@@ -1,8 +1,17 @@
 // src/components/artistes/desktop/ArtisteForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import FlexContainer from '@/components/ui/FlexContainer';
+import { toast } from 'react-toastify';
 import FormHeader from '@/components/ui/FormHeader';
+import Button from '@/components/ui/Button';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import {
+  ArtisteBasicInfoSection,
+  ArtisteContactSection,
+  ArtisteNotesSection,
+  ArtisteMembersSection
+} from './sections';
 import styles from './ArtisteForm.module.css';
 import { 
   doc, 
@@ -13,250 +22,38 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import '@styles/index.css';
-import Button from '@/components/ui/Button';
 import useDeleteArtiste from '@/hooks/artistes/useDeleteArtiste';
-import StepNavigation from '../../common/steps/StepNavigation';
 
-// Composant pour l'étape 1 : Informations de base
-const BasicInfoStep = ({ data, onNext, onBack }) => {
-  const [nom, setNom] = useState(data.nom || '');
-  const [genre, setGenre] = useState(data.genre || '');
-  const [description, setDescription] = useState(data.description || '');
-  
-  const handleNext = () => {
-    if (!nom.trim()) {
-      alert('Le nom de l\'artiste est obligatoire');
-      return;
-    }
-    
-    onNext({ nom, genre, description });
-  };
-  
-  return (
-    <div className={styles.stepForm}>
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="nom">Nom de l'artiste *</label>
-        <input
-          type="text"
-          id="nom"
-          value={nom}
-          onChange={(e) => setNom(e.target.value)}
-          placeholder="Ex: Les Rockeurs du Dimanche"
-          required
-        />
-      </div>
-      
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="genre">Genre musical</label>
-        <input
-          type="text"
-          id="genre"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          placeholder="Ex: Rock, Jazz, Pop..."
-        />
-      </div>
-      
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          rows="4"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Présentez l'artiste en quelques lignes..."
-        ></textarea>
-      </div>
-      
-      <div className={styles.stepFormActions}>
-        <Button
-          type="button"
-          variant="primary"
-          className="tc-btn tc-btn-primary"
-          onClick={handleNext}
-        >
-          Suivant
-        </Button>
-      </div>
-    </div>
-  );
-};
 
-// Composant pour l'étape 2 : Contacts
-const ContactStep = ({ data, onNext, onBack }) => {
-  const [email, setEmail] = useState(data.contacts?.email || '');
-  const [telephone, setTelephone] = useState(data.contacts?.telephone || '');
-  const [siteWeb, setSiteWeb] = useState(data.contacts?.siteWeb || '');
-  const [instagram, setInstagram] = useState(data.contacts?.instagram || '');
-  const [facebook, setFacebook] = useState(data.contacts?.facebook || '');
-  
-  const handleNext = () => {
-    const contacts = { email, telephone, siteWeb, instagram, facebook };
-    onNext({ contacts });
-  };
-  
-  return (
-    <div className={styles.stepForm}>
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Ex: contact@artiste.com"
-        />
-      </div>
-      
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="telephone">Téléphone</label>
-        <input
-          type="tel"
-          id="telephone"
-          value={telephone}
-          onChange={(e) => setTelephone(e.target.value)}
-          placeholder="Ex: 06 12 34 56 78"
-        />
-      </div>
-      
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="siteWeb">Site web</label>
-        <input
-          type="url"
-          id="siteWeb"
-          value={siteWeb}
-          onChange={(e) => setSiteWeb(e.target.value)}
-          placeholder="Ex: https://www.artiste.com"
-        />
-      </div>
-      
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="instagram">Instagram</label>
-        <input
-          type="text"
-          id="instagram"
-          value={instagram}
-          onChange={(e) => setInstagram(e.target.value)}
-          placeholder="Ex: artisteofficiel"
-        />
-      </div>
-      
-      <div className={styles.stepFormGroup}>
-        <label htmlFor="facebook">Facebook</label>
-        <input
-          type="text"
-          id="facebook"
-          value={facebook}
-          onChange={(e) => setFacebook(e.target.value)}
-          placeholder="Ex: artisteofficiel"
-        />
-      </div>
-      
-      <div className={styles.stepFormActions}>
-        <Button
-          type="button"
-          variant="primary"
-          className="tc-btn tc-btn-primary"
-          onClick={handleNext}
-        >
-          Suivant
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-// Composant pour l'étape 3 : Membres
-const MembersStep = ({ data, onNext, onBack }) => {
-  const [membres, setMembres] = useState(data.membres || []);
-  const [nouveauMembre, setNouveauMembre] = useState('');
-  
-  const ajouterMembre = () => {
-    if (nouveauMembre.trim()) {
-      setMembres([...membres, nouveauMembre.trim()]);
-      setNouveauMembre('');
-    }
-  };
-  
-  const supprimerMembre = (index) => {
-    const newMembres = [...membres];
-    newMembres.splice(index, 1);
-    setMembres(newMembres);
-  };
-  
-  const handleNext = () => {
-    onNext({ membres });
-  };
-  
-  return (
-    <div className={styles.stepForm}>
-      <div className={styles.stepFormGroup}>
-        <label>Membres du groupe</label>
-        <div className={styles.addMembreContainer}>
-          <input
-            type="text"
-            value={nouveauMembre}
-            onChange={(e) => setNouveauMembre(e.target.value)}
-            placeholder="Nom du membre"
-          />
-          <Button 
-            type="button" 
-            variant="outline-primary"
-            size="sm"
-            className="tc-btn tc-btn-sm tc-btn-outline-primary"
-            onClick={ajouterMembre}
-          >
-            <i className="bi bi-plus-lg"></i>
-          </Button>
-        </div>
-        
-        <div className={styles.membresList}>
-          {membres.length === 0 ? (
-            <div className="text-muted small">Aucun membre ajouté</div>
-          ) : (
-            <ul className="list-group">
-              {membres.map((membre, index) => (
-                <li key={index} className="list-group-item">
-                  <FlexContainer justify="space-between" align="center">
-                    {membre}
-                    <Button 
-                      type="button" 
-                      variant="outline-danger"
-                      size="sm"
-                      className="tc-btn tc-btn-sm tc-btn-outline-danger"
-                      onClick={() => supprimerMembre(index)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </Button>
-                  </FlexContainer>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-      
-      <div className={styles.stepFormActions}>
-        <Button
-          type="button"
-          variant="primary"
-          className="tc-btn tc-btn-primary"
-          onClick={handleNext}
-        >
-          Terminer
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-// Composant principal ArtisteForm pour desktop
+/**
+ * Composant de formulaire d'artiste enrichi - Style moderne TourCraft
+ * Architecture modulaire avec sections réutilisables
+ */
 const ArtisteFormDesktop = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(!!id && id !== 'nouveau');
-  const [initialData, setInitialData] = useState({});
+  
+  // États locaux
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Détecter le mode "nouveau" via l'URL
+  const isNewFromUrl = !id || id === 'nouveau';
+  
+  // Données du formulaire
+  const [formData, setFormData] = useState({
+    nom: '',
+    genre: '',
+    description: '',
+    email: '',
+    telephone: '',
+    siteWeb: '',
+    instagram: '',
+    facebook: '',
+    membres: [],
+    notes: ''
+  });
   
   // Ajout du hook de suppression optimisé
   const {
@@ -264,77 +61,127 @@ const ArtisteFormDesktop = () => {
     handleDelete
   } = useDeleteArtiste(() => navigate('/artistes'));
   
+  // Chargement des données de l'artiste
   useEffect(() => {
-    const fetchArtiste = async () => {
-      if (id && id !== 'nouveau') {
-        try {
-          const artisteDoc = await getDoc(doc(db, 'artistes', id));
-          if (artisteDoc.exists()) {
-            const data = artisteDoc.data();
-            setInitialData(data);
-          }
-        } catch (error) {
-          console.error('Erreur lors de la récupération de l\'artiste:', error);
-        } finally {
-          setLoading(false);
+    const loadArtiste = async () => {
+      if (isNewFromUrl) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const docRef = doc(db, 'artistes', id);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          
+          // Normaliser les données pour le formulaire
+          setFormData({
+            nom: data.nom || '',
+            genre: data.genre || '',
+            description: data.description || '',
+            email: data.email || data.contacts?.email || '',
+            telephone: data.telephone || data.contacts?.telephone || '',
+            siteWeb: data.siteWeb || data.contacts?.siteWeb || '',
+            instagram: data.instagram || data.contacts?.instagram || '',
+            facebook: data.facebook || data.contacts?.facebook || '',
+            membres: data.membres || [],
+            notes: data.notes || ''
+          });
+        } else {
+          setError('Artiste introuvable');
         }
-      } else {
+      } catch (err) {
+        console.error('Erreur lors du chargement:', err);
+        setError('Erreur lors du chargement de l\'artiste');
+      } finally {
         setLoading(false);
       }
     };
+
+    loadArtiste();
+  }, [id, isNewFromUrl]);
+
+  // Gestionnaire de changement des champs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Validation du formulaire
+  const validateForm = () => {
+    const errors = [];
     
-    fetchArtiste();
-  }, [id]);
+    if (!formData.nom.trim()) {
+      errors.push('Le nom de l\'artiste est obligatoire');
+    }
+    
+    if (formData.email.trim() && !/^\S+@\S+\.\S+$/.test(formData.email)) {
+      errors.push('Format d\'email invalide');
+    }
+    
+    return errors;
+  };
   
-  const handleComplete = async (data) => {
+  // Gestionnaire de sauvegarde
+  const handleSave = async (e) => {
+    e.preventDefault();
+    
+    const validationErrors = validateForm();
+    if (validationErrors.length > 0) {
+      toast.error(validationErrors.join(', '));
+      return;
+    }
+    
+    setIsSubmitting(true);
+
     try {
-      // Fusionner les données de toutes les étapes avec les données initiales
       const artisteData = {
-        ...initialData,
-        ...data,
+        ...formData,
         updatedAt: Timestamp.now()
       };
-      
-      if (id && id !== 'nouveau') {
-        // Mise à jour d'un artiste existant
-        await updateDoc(doc(db, 'artistes', id), artisteData);
-      } else {
-        // Création d'un nouvel artiste
+
+      if (isNewFromUrl) {
         artisteData.createdAt = Timestamp.now();
         const newArtisteRef = doc(collection(db, 'artistes'));
         await setDoc(newArtisteRef, artisteData);
+        toast.success('Artiste créé avec succès !');
+        navigate('/artistes');
+      } else {
+        const docRef = doc(db, 'artistes', id);
+        await updateDoc(docRef, artisteData);
+        toast.success('Artiste modifié avec succès !');
+        navigate(`/artistes/${id}`);
       }
-      
-      navigate('/artistes');
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement de l\'artiste:', error);
-      alert('Une erreur est survenue lors de l\'enregistrement de l\'artiste.');
+      console.error('Erreur lors de la sauvegarde:', error);
+      toast.error('Erreur lors de l\'enregistrement');
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
-  const handleCancel = () => {
-    navigate('/artistes');
-  };
-  
+  // Loading state
   if (loading) {
-    return <div className={styles.loadingIndicator}>Chargement...</div>;
+    return (
+      <div className={styles.loadingContainer}>
+        <LoadingSpinner message="Chargement de l'artiste..." />
+      </div>
+    );
   }
-  
-  // Définir les étapes du formulaire
-  const steps = [
-    { 
-      title: 'Informations de base', 
-      component: BasicInfoStep 
-    },
-    { 
-      title: 'Coordonnées', 
-      component: ContactStep 
-    },
-    { 
-      title: 'Membres', 
-      component: MembersStep 
-    }
-  ];
+
+  // Error state
+  if (error) {
+    return (
+      <div className={styles.errorContainer}>
+        <ErrorMessage message={error} />
+      </div>
+    );
+  }
   
   // Préparer les actions pour le header
   const headerActions = [];
@@ -363,22 +210,79 @@ const ArtisteFormDesktop = () => {
   }
 
   return (
-    <div className={styles.artisteFormDesktop}>
-      <FormHeader
-        title={id !== 'nouveau' ? 'Modifier l\'artiste' : 'Nouvel artiste'}
-        icon={<i className="bi bi-person-music"></i>}
-        actions={headerActions}
-        roundedTop={true}
-      />
-      
-      {/* Navigation sophistiquée par étapes */}
-      <StepNavigation 
-        steps={steps}
-        onComplete={handleComplete}
-        onCancel={handleCancel}
-        initialStep={0}
-        initialData={initialData}
-      />
+    <div className={styles.pageWrapper}>
+      <form onSubmit={handleSave}>
+        <div className={styles.formContainer}>
+          {/* Header avec FormHeader standardisé */}
+          <FormHeader
+            title={isNewFromUrl ? 'Nouvel Artiste' : 'Modifier Artiste'}
+            icon={<i className="bi bi-person-music"></i>}
+            isLoading={isSubmitting}
+            roundedTop={true}
+            actions={[
+              <Button 
+                key="save"
+                type="submit" 
+                variant="primary"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    Enregistrement...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle me-2"></i>
+                    Enregistrer
+                  </>
+                )}
+              </Button>,
+              <Button 
+                key="cancel"
+                type="button" 
+                variant="secondary"
+                onClick={() => navigate(isNewFromUrl ? '/artistes' : `/artistes/${id}`)}
+                disabled={isSubmitting}
+              >
+                <i className="bi bi-x-circle me-2"></i>
+                Annuler
+              </Button>,
+              ...(headerActions || [])
+            ]}
+          />
+
+          <div className={styles.sectionBody}>
+            {/* Section Informations de base */}
+            <ArtisteBasicInfoSection 
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+            />
+
+            {/* Section Coordonnées de contact */}
+            <ArtisteContactSection
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+            />
+
+            {/* Section Membres du groupe */}
+            <ArtisteMembersSection
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+            />
+
+            {/* Section Notes */}
+            <ArtisteNotesSection
+              formData={formData}
+              handleChange={handleChange}
+              isEditing={true}
+            />
+          </div>
+        </div>
+      </form>
     </div>
   );
 };

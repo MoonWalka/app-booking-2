@@ -1,0 +1,60 @@
+/* ArtisteNotesSection Styles */
+
+.sectionCard {
+  margin-bottom: 2rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formControl {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background-color: #fff;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.formControl:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+  outline: none;
+}
+
+.notesContent {
+  color: #495057;
+  line-height: 1.6;
+}
+
+.notesContent p {
+  margin-bottom: 0.5rem;
+}
+
+.notesContent p:last-child {
+  margin-bottom: 0;
+}
+
+.emptyNotes {
+  color: #6c757d;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sectionCard {
+    margin-bottom: 1rem;
+  }
+  
+  .formControl {
+    font-size: 16px; /* Évite le zoom sur mobile */
+  }
+}

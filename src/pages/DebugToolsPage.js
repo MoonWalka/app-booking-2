@@ -21,6 +21,7 @@ import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelatio
 import ConcertContactsDebug from '@/components/debug/ConcertContactsDebug';
 import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic';
 import UnifiedContactSelectorTest from '@/components/debug/UnifiedContactSelectorTest';
+import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -141,6 +142,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="unified-selector-test" title="🧪 Test UnifiedContactSelector">
           <UnifiedContactSelectorTest />
+        </Tab>
+        
+        <Tab eventKey="generic-detail-view-test" title="🎨 Test GenericDetailView">
+          <GenericDetailViewTest />
         </Tab>
       </Tabs>
     </div>

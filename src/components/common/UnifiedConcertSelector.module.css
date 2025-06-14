@@ -1,0 +1,168 @@
+/* Styles pour UnifiedConcertSelector */
+
+.unifiedConcertSelector {
+  width: 100%;
+}
+
+/* Concerts sélectionnés */
+.selectedConcerts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Section de recherche */
+.searchSection {
+  position: relative;
+}
+
+/* Résultats de recherche */
+.searchResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border: 1px solid var(--tc-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.searchResultItem {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--tc-border-light);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.searchResultItem:hover {
+  background-color: var(--tc-background-light);
+}
+
+.searchResultItem:last-child {
+  border-bottom: none;
+}
+
+.searchResultItem.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--tc-background-light);
+}
+
+/* Information du concert */
+.concertInfo {
+  flex: 1;
+}
+
+.concertTitle {
+  font-weight: 600;
+  color: var(--tc-text-primary);
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.concertDetails {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--tc-text-secondary);
+  flex-wrap: wrap;
+}
+
+.concertDate,
+.concertLieu,
+.concertArtiste {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Indicateur déjà sélectionné */
+.alreadySelected {
+  margin-left: 0.5rem;
+}
+
+/* États vides et loading */
+.emptyState {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--tc-text-secondary);
+  font-style: italic;
+}
+
+.loadingState {
+  padding: 1rem;
+  text-align: center;
+  color: var(--tc-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mode lecture seule */
+.readOnlyList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.concertItem {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--tc-border-light);
+}
+
+.concertItem:last-child {
+  border-bottom: none;
+}
+
+.concertItemInfo {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.concertItemDetails {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--tc-text-secondary);
+}
+
+.concertLink {
+  color: var(--tc-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s;
+}
+
+.concertLink:hover {
+  color: var(--tc-primary-dark);
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .concertDetails {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .concertItemDetails {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .searchResults {
+    max-height: 250px;
+  }
+}

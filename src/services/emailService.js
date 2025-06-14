@@ -7,8 +7,12 @@ import { httpsCallable } from 'firebase/functions';
 import { functions, auth } from './firebase-service';
 import { debugLog } from '@/utils/logUtils';
 
-// Référence à la fonction Cloud
+// Import du service Brevo pour les nouvelles fonctionnalités
+import brevoTemplateService from './brevoTemplateService';
+
+// Référence aux fonctions Cloud
 const sendEmailFunction = httpsCallable(functions, 'sendEmail');
+const sendUnifiedEmailFunction = httpsCallable(functions, 'sendUnifiedEmail');
 
 /**
  * Service principal pour l'envoi d'emails
@@ -36,7 +40,7 @@ class EmailService {
   }
 
   /**
-   * Envoie un email simple
+   * Envoie un email simple via le service unifié (SMTP/Brevo avec fallback)
    * @param {Object} emailData - Données de l'email
    * @param {string|Array<string>} emailData.to - Adresse email du/des destinataire(s)
    * @param {string} emailData.subject - Sujet de l'email
@@ -44,6 +48,7 @@ class EmailService {
    * @param {string} [emailData.text] - Contenu texte de l'email (fallback)
    * @param {string} [emailData.from] - Expéditeur (optionnel)
    * @param {Array} [emailData.attachments] - Pièces jointes (optionnel)
+   * @param {boolean} [emailData.useUnified=true] - Utiliser le service unifié (Brevo/SMTP)
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
   async sendMail(emailData) {
@@ -53,22 +58,40 @@ class EmailService {
       debugLog('[EmailService] Envoi d\'email:', {
         to: emailData.to,
         subject: emailData.subject,
+        useUnified: emailData.useUnified !== false,
         userId,
         organizationId
       }, 'info');
 
-      const result = await sendEmailFunction({
-        ...emailData,
-        userId,
-        organizationId
-      });
-      
-      debugLog('[EmailService] Email envoyé avec succès:', result.data, 'success');
-      
-      return {
-        success: true,
-        ...result.data
-      };
+      // Utiliser le service unifié par défaut (avec fallback Brevo/SMTP)
+      if (emailData.useUnified !== false) {
+        const result = await sendUnifiedEmailFunction({
+          ...emailData,
+          userId,
+          organizationId
+        });
+        
+        debugLog('[EmailService] Email unifié envoyé:', result.data, 'success');
+        
+        return {
+          success: true,
+          ...result.data
+        };
+      } else {
+        // Fallback sur l'ancien service SMTP uniquement si explicitement demandé
+        const result = await sendEmailFunction({
+          ...emailData,
+          userId,
+          organizationId
+        });
+        
+        debugLog('[EmailService] Email SMTP envoyé:', result.data, 'success');
+        
+        return {
+          success: true,
+          ...result.data
+        };
+      }
     } catch (error) {
       debugLog('[EmailService] Erreur lors de l\'envoi:', error, 'error');
       
@@ -79,13 +102,14 @@ class EmailService {
   }
 
   /**
-   * Envoie un email avec un template prédéfini
-   * @param {string} template - Nom du template ('formulaire', 'contrat', 'relance')
+   * Envoie un email avec un template prédéfini via le service unifié
+   * @param {string} template - Nom du template ('formulaire', 'contrat', 'relance', 'confirmation')
    * @param {Object} templateData - Données pour le template
    * @param {string|Array<string>} to - Email du/des destinataire(s)
+   * @param {boolean} [useUnified=true] - Utiliser le service unifié (Brevo/SMTP)
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendTemplatedMail(template, templateData, to) {
+  async sendTemplatedMail(template, templateData, to, useUnified = true) {
     try {
       const { userId, organizationId } = this.getCurrentUserInfo();
 
@@ -93,24 +117,44 @@ class EmailService {
         template,
         to,
         templateData,
+        useUnified,
         userId,
         organizationId
       }, 'info');
 
-      const result = await sendEmailFunction({
-        template,
-        templateData,
-        to,
-        userId,
-        organizationId
-      });
-      
-      debugLog('[EmailService] Email avec template envoyé:', result.data, 'success');
-      
-      return {
-        success: true,
-        ...result.data
-      };
+      // Utiliser le service unifié par défaut (Brevo avec fallback SMTP)
+      if (useUnified) {
+        const result = await sendUnifiedEmailFunction({
+          templateName: template,
+          variables: templateData,
+          to,
+          userId,
+          organizationId
+        });
+        
+        debugLog('[EmailService] Email template unifié envoyé:', result.data, 'success');
+        
+        return {
+          success: true,
+          ...result.data
+        };
+      } else {
+        // Fallback sur l'ancien service SMTP pour rétrocompatibilité
+        const result = await sendEmailFunction({
+          template,
+          templateData,
+          to,
+          userId,
+          organizationId
+        });
+        
+        debugLog('[EmailService] Email template SMTP envoyé:', result.data, 'success');
+        
+        return {
+          success: true,
+          ...result.data
+        };
+      }
     } catch (error) {
       debugLog('[EmailService] Erreur lors de l\'envoi avec template:', error, 'error');
       
@@ -308,6 +352,103 @@ class EmailService {
       .replace(/_{2,}/g, '_')
       .substring(0, 255);
   }
+
+  // ========================================
+  // NOUVELLES MÉTHODES BREVO
+  // ========================================
+
+  /**
+   * Envoie un email formulaire avec template Brevo optimisé
+   * @param {Object} concert - Données du concert
+   * @param {Object} contact - Données du contact
+   * @param {string} lienFormulaire - URL du formulaire
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendBrevoFormEmail(concert, contact, lienFormulaire) {
+    return await brevoTemplateService.sendFormulaireEmail(concert, contact, lienFormulaire);
+  }
+
+  /**
+   * Envoie un email de relance avec template Brevo optimisé
+   * @param {Object} concert - Données du concert
+   * @param {Object} contact - Données du contact
+   * @param {Array} documentsManquants - Liste des documents manquants
+   * @param {number} nombreRelance - Numéro de la relance
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendBrevoRelanceEmail(concert, contact, documentsManquants, nombreRelance = 1) {
+    return await brevoTemplateService.sendRelanceEmail(concert, contact, documentsManquants, nombreRelance);
+  }
+
+  /**
+   * Envoie un email contrat avec template Brevo optimisé
+   * @param {Object} concert - Données du concert
+   * @param {Object} contact - Données du contact
+   * @param {Object} contrat - Données du contrat
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendBrevoContractEmail(concert, contact, contrat) {
+    return await brevoTemplateService.sendContratEmail(concert, contact, contrat);
+  }
+
+  /**
+   * Envoie un email de confirmation avec template Brevo optimisé
+   * @param {Object} concert - Données du concert
+   * @param {Object} contact - Données du contact
+   * @param {Object} detailsTechniques - Détails techniques du concert
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendBrevoConfirmationEmail(concert, contact, detailsTechniques = {}) {
+    return await brevoTemplateService.sendConfirmationEmail(concert, contact, detailsTechniques);
+  }
+
+  /**
+   * Envoie un email à plusieurs contacts avec template Brevo
+   * @param {string} templateName - Nom du template
+   * @param {Array} contacts - Liste des contacts
+   * @param {Object} baseData - Données de base (concert, etc.)
+   * @param {Object} templateSpecificData - Données spécifiques au template
+   * @returns {Promise<Object>} - Résultats des envois
+   */
+  async sendBrevoToMultipleContacts(templateName, contacts, baseData, templateSpecificData = {}) {
+    return await brevoTemplateService.sendToMultipleContacts(templateName, contacts, baseData, templateSpecificData);
+  }
+
+  /**
+   * Valide une clé API Brevo
+   * @param {string} apiKey - Clé API à valider
+   * @returns {Promise<boolean>} - True si valide
+   */
+  async validateBrevoApiKey(apiKey) {
+    return await brevoTemplateService.validateApiKey(apiKey);
+  }
+
+  /**
+   * Récupère la liste des templates Brevo
+   * @param {string} apiKey - Clé API Brevo
+   * @returns {Promise<Array>} - Liste des templates
+   */
+  async getBrevoTemplates(apiKey) {
+    return await brevoTemplateService.getTemplates(apiKey);
+  }
+
+  /**
+   * Teste un template Brevo avec des données de démo
+   * @param {string} templateName - Nom du template à tester
+   * @param {string} emailTest - Email de test
+   * @returns {Promise<Object>} - Résultat du test
+   */
+  async testBrevoTemplate(templateName, emailTest) {
+    return await brevoTemplateService.testTemplate(templateName, emailTest);
+  }
+
+  /**
+   * Récupère des données de démo pour les templates
+   * @returns {Object} - Données de démo
+   */
+  getBrevoDemo() {
+    return brevoTemplateService.getDemoData();
+  }
 }
 
 // Export d'une instance unique
@@ -325,5 +466,15 @@ export const {
   sendToConcertContacts,
   extractContactEmails,
   validateEmail,
-  sanitizeFilename
+  sanitizeFilename,
+  // Nouvelles méthodes Brevo
+  sendBrevoFormEmail,
+  sendBrevoRelanceEmail,
+  sendBrevoContractEmail,
+  sendBrevoConfirmationEmail,
+  sendBrevoToMultipleContacts,
+  validateBrevoApiKey,
+  getBrevoTemplates,
+  testBrevoTemplate,
+  getBrevoDemo
 } = emailService;

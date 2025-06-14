@@ -1,0 +1,59 @@
+// Règles de sécurité Firestore renforcées pour TourCraft avec chiffrement Brevo
+// À déployer avec: firebase deploy --only firestore:rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Règles pour les paramètres des organisations
+    match /organizations/{orgId}/parametres/{document} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid != null
+        && isAuthorizedUser(orgId, request.auth.uid);
+    }
+    
+    // Règles pour les paramètres globaux (backwards compatibility)
+    match /parametres/{document} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid != null;
+    }
+    
+    // Audit log pour l'accès aux clés API chiffrées
+    match /audit_logs/{logId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null 
+        && (request.auth.uid == resource.data.userId 
+            || hasAdminRole(request.auth.uid));
+    }
+    
+    // Autres collections existantes...
+    match /concerts/{concertId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /contacts/{contactId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /contrats/{contratId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Fonctions utilitaires
+    function isAuthorizedUser(orgId, userId) {
+      // Vérifier si l'utilisateur est autorisé pour cette organisation
+      return exists(/databases/$(database)/documents/organizations/$(orgId)/users/$(userId))
+        || userId in get(/databases/$(database)/documents/organizations/$(orgId)).data.authorizedUsers;
+    }
+    
+    function hasAdminRole(userId) {
+      // Vérifier si l'utilisateur a un rôle admin
+      return get(/databases/$(database)/documents/users/$(userId)).data.role == 'admin';
+    }
+    
+    // Bloquer tout accès non autorisé
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

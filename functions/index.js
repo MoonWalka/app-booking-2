@@ -10,8 +10,9 @@ const cors = require('cors')({
   maxAge: 86400 // Durée de mise en cache en secondes (24 heures)
 });
 
-// Import du service d'email
+// Import des services d'email
 const { sendMail, sendTemplatedMail } = require('./sendMail');
+const { sendEmail: sendUnifiedEmail, validateBrevoApiKey, getBrevoTemplates } = require('./brevoService');
 
 // Définition des paramètres SMTP
 const smtpHost = defineString('SMTP_HOST');
@@ -468,6 +469,175 @@ exports.sendEmail = onRequest({
         error: 'Erreur lors de l\'envoi de l\'email',
         message: error.message,
         details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
+    }
+  });
+});
+
+/**
+ * Fonction Cloud pour l'envoi d'emails unifié (SMTP + Brevo)
+ * Gère automatiquement le fallback et le retry
+ */
+exports.sendUnifiedEmail = onRequest({
+  timeoutSeconds: 60,
+  memory: '256MiB',
+  cors: true
+}, (request, response) => {
+  // Gérer la requête preflight CORS
+  if (request.method === 'OPTIONS') {
+    response.set('Access-Control-Allow-Origin', '*');
+    response.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    response.set('Access-Control-Max-Age', '86400');
+    response.status(204).send('');
+    return;
+  }
+
+  cors(request, response, async () => {
+    try {
+      console.log('Début de l\'envoi d\'email unifié');
+      
+      // Vérifier la méthode HTTP
+      if (request.method !== 'POST') {
+        return response.status(405).json({ error: 'Méthode non autorisée' });
+      }
+
+      const emailData = request.body;
+
+      // Validation des données requises
+      if (!emailData.to) {
+        return response.status(400).json({ 
+          error: 'Adresse email destinataire manquante' 
+        });
+      }
+
+      console.log(`Envoi d'email unifié à ${emailData.to}`);
+      const result = await sendUnifiedEmail(emailData);
+      
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(200).json({
+        success: true,
+        message: 'Email envoyé avec succès',
+        messageId: result.messageId,
+        provider: result.provider
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email unifié:', error);
+      
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(500).json({
+        error: 'Erreur lors de l\'envoi de l\'email',
+        message: error.message,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
+    }
+  });
+});
+
+/**
+ * Fonction Cloud pour valider une clé API Brevo
+ */
+exports.validateBrevoKey = onRequest({
+  timeoutSeconds: 30,
+  memory: '128MiB',
+  cors: true
+}, (request, response) => {
+  // Gérer la requête preflight CORS
+  if (request.method === 'OPTIONS') {
+    response.set('Access-Control-Allow-Origin', '*');
+    response.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    response.set('Access-Control-Max-Age', '86400');
+    response.status(204).send('');
+    return;
+  }
+
+  cors(request, response, async () => {
+    try {
+      // Vérifier la méthode HTTP
+      if (request.method !== 'POST') {
+        return response.status(405).json({ error: 'Méthode non autorisée' });
+      }
+
+      const { apiKey } = request.body;
+
+      if (!apiKey) {
+        return response.status(400).json({ 
+          error: 'Clé API Brevo manquante' 
+        });
+      }
+
+      console.log('Validation de la clé API Brevo');
+      const isValid = await validateBrevoApiKey(apiKey);
+      
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(200).json({
+        valid: isValid,
+        message: isValid ? 'Clé API valide' : 'Clé API invalide'
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de la validation de la clé API Brevo:', error);
+      
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(500).json({
+        error: 'Erreur lors de la validation de la clé API',
+        message: error.message
+      });
+    }
+  });
+});
+
+/**
+ * Fonction Cloud pour récupérer les templates Brevo
+ */
+exports.getBrevoTemplates = onRequest({
+  timeoutSeconds: 30,
+  memory: '128MiB',
+  cors: true
+}, (request, response) => {
+  // Gérer la requête preflight CORS
+  if (request.method === 'OPTIONS') {
+    response.set('Access-Control-Allow-Origin', '*');
+    response.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    response.set('Access-Control-Max-Age', '86400');
+    response.status(204).send('');
+    return;
+  }
+
+  cors(request, response, async () => {
+    try {
+      // Vérifier la méthode HTTP
+      if (request.method !== 'POST') {
+        return response.status(405).json({ error: 'Méthode non autorisée' });
+      }
+
+      const { apiKey } = request.body;
+
+      if (!apiKey) {
+        return response.status(400).json({ 
+          error: 'Clé API Brevo manquante' 
+        });
+      }
+
+      console.log('Récupération des templates Brevo');
+      const templates = await getBrevoTemplates(apiKey);
+      
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(200).json({
+        success: true,
+        templates: templates
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de la récupération des templates Brevo:', error);
+      
+      response.set('Access-Control-Allow-Origin', '*');
+      response.status(500).json({
+        error: 'Erreur lors de la récupération des templates',
+        message: error.message
       });
     }
   });

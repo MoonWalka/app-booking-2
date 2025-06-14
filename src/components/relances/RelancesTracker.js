@@ -35,16 +35,44 @@ const RelancesTracker = () => {
     resetForm
   } = useRelanceForm();
 
+  // Fonction utilitaire pour convertir les dates Firebase
+  const parseFirebaseDate = (dateValue) => {
+    if (!dateValue) return null;
+    
+    // Si c'est déjà une Date valide
+    if (dateValue instanceof Date && !isNaN(dateValue)) {
+      return dateValue;
+    }
+    
+    // Si c'est un Timestamp Firebase
+    if (dateValue && typeof dateValue === 'object' && dateValue.seconds) {
+      return new Date(dateValue.seconds * 1000);
+    }
+    
+    // Si c'est une chaîne ISO
+    if (typeof dateValue === 'string') {
+      const parsed = new Date(dateValue);
+      return isNaN(parsed) ? null : parsed;
+    }
+    
+    return null;
+  };
+
   // Filtrer les relances selon le statut sélectionné
   const filteredRelances = relances.filter(relance => {
     if (filter === 'all') return true;
-    if (filter === 'pending') return relance.status === 'pending';
+    
+    // Gérer les relances manuelles et automatiques
+    const isPending = relance.status === 'pending' || (!relance.status && !relance.terminee);
+    const isCompleted = relance.status === 'completed' || relance.terminee === true;
+    
+    if (filter === 'pending') return isPending;
     if (filter === 'overdue') {
       const now = new Date();
-      const dueDate = new Date(relance.dateEcheance);
-      return relance.status === 'pending' && dueDate < now;
+      const dueDate = parseFirebaseDate(relance.dateEcheance);
+      return isPending && dueDate && dueDate < now;
     }
-    if (filter === 'completed') return relance.status === 'completed';
+    if (filter === 'completed') return isCompleted;
     return true;
   });
 
@@ -87,13 +115,18 @@ const RelancesTracker = () => {
   // Calculer les statistiques
   const stats = {
     total: relances.length,
-    pending: relances.filter(r => r.status === 'pending').length,
+    pending: relances.filter(r => {
+      return r.status === 'pending' || (!r.status && !r.terminee);
+    }).length,
     overdue: relances.filter(r => {
       const now = new Date();
-      const dueDate = new Date(r.dateEcheance);
-      return r.status === 'pending' && dueDate < now;
+      const dueDate = parseFirebaseDate(r.dateEcheance);
+      const isPending = r.status === 'pending' || (!r.status && !r.terminee);
+      return isPending && dueDate && dueDate < now;
     }).length,
-    completed: relances.filter(r => r.status === 'completed').length
+    completed: relances.filter(r => {
+      return r.status === 'completed' || r.terminee === true;
+    }).length
   };
 
   // Préparer les données pour StatsCards
@@ -203,12 +236,13 @@ const RelancesTracker = () => {
       sortable: true,
       render: (relance) => {
         const now = new Date();
-        const dueDate = new Date(relance.dateEcheance);
-        const isOverdue = relance.status === 'pending' && dueDate < now;
-        const isCompleted = relance.status === 'completed';
+        const dueDate = parseFirebaseDate(relance.dateEcheance);
+        const isPending = relance.status === 'pending' || (!relance.status && !relance.terminee);
+        const isCompleted = relance.status === 'completed' || relance.terminee === true;
+        const isOverdue = isPending && dueDate && dueDate < now;
         
-        const formatDate = (dateString) => {
-          const date = new Date(dateString);
+        const formatDate = (date) => {
+          if (!date) return 'Date non définie';
           return date.toLocaleDateString('fr-FR', {
             day: '2-digit',
             month: '2-digit',
@@ -217,7 +251,7 @@ const RelancesTracker = () => {
         };
         
         const getDaysRemaining = () => {
-          if (isCompleted) return null;
+          if (isCompleted || !dueDate) return null;
           const diffTime = dueDate - now;
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           
@@ -229,7 +263,7 @@ const RelancesTracker = () => {
         
         return (
           <span className={isOverdue ? styles.overdueDue : ''}>
-            <i className="bi bi-calendar"></i> {formatDate(relance.dateEcheance)}
+            <i className="bi bi-calendar"></i> {formatDate(dueDate)}
             {!isCompleted && <div className={styles.daysRemaining}>{getDaysRemaining()}</div>}
           </span>
         );
@@ -239,7 +273,7 @@ const RelancesTracker = () => {
 
   // Fonction pour rendre les actions
   const renderActions = (relance) => {
-    const isCompleted = relance.status === 'completed';
+    const isCompleted = relance.status === 'completed' || relance.terminee === true;
     
     return (
       <div className={styles.actionButtons}>
@@ -409,7 +443,10 @@ const RelancesTracker = () => {
               <div className={styles.detailGroup}>
                 <label className={styles.detailLabel}>Date d'échéance</label>
                 <div className={styles.detailValue}>
-                  {new Date(selectedRelance.dateEcheance).toLocaleDateString('fr-FR')}
+                  {(() => {
+                    const date = parseFirebaseDate(selectedRelance.dateEcheance);
+                    return date ? date.toLocaleDateString('fr-FR') : 'Date non définie';
+                  })()}
                 </div>
               </div>
 

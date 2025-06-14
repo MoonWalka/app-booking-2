@@ -1,0 +1,232 @@
+.container {
+  padding: 20px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin-bottom: 10px;
+  color: var(--color-primary);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* Statistiques */
+.statsCard {
+  margin-bottom: 20px;
+  background: var(--color-background);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.statItem {
+  text-align: center;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--color-primary);
+  margin-bottom: 5px;
+}
+
+.statLabel {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.subStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.subStats h4 {
+  margin-bottom: 10px;
+  color: var(--color-text);
+}
+
+.subStats ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.subStats li {
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.warning {
+  color: var(--color-warning);
+  font-weight: bold;
+}
+
+/* Cartes de problèmes */
+.problemCard {
+  margin-bottom: 20px;
+  border-left: 4px solid var(--color-warning);
+}
+
+.problemDescription {
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+}
+
+.relancesList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.relanceItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 15px;
+  align-items: start;
+  padding: 15px;
+  background: var(--color-background);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.relanceInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.relanceInfo strong {
+  color: var(--color-text);
+}
+
+.relanceId {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-family: monospace;
+}
+
+.relanceType {
+  font-size: 14px;
+  padding: 2px 8px;
+  background: var(--color-info-light);
+  color: var(--color-info);
+  border-radius: 4px;
+}
+
+.problemTag {
+  font-size: 12px;
+  padding: 2px 8px;
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.relanceDetails {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  grid-column: 1;
+}
+
+/* Groupes de doublons */
+.doublonGroupe {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: var(--color-background);
+  border-radius: 8px;
+}
+
+.doublonGroupe h4 {
+  margin-bottom: 15px;
+  color: var(--color-warning);
+}
+
+/* Table des relances */
+.allRelancesCard {
+  margin-top: 30px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.relancesTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.relancesTable th {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px;
+  text-align: left;
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+}
+
+.relancesTable td {
+  padding: 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.relancesTable tr:hover {
+  background: var(--color-background);
+}
+
+.relancesTable tr.invisible {
+  background: #fff3cd;
+}
+
+.relancesTable tr.invisible td {
+  color: var(--color-warning);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .subStats {
+    grid-template-columns: 1fr;
+  }
+  
+  .relanceItem {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .relanceItem button {
+    justify-self: end;
+  }
+  
+  .tableWrapper {
+    overflow-x: scroll;
+  }
+  
+  .relancesTable {
+    min-width: 800px;
+  }
+}

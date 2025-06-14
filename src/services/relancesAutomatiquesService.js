@@ -321,6 +321,8 @@ class RelancesAutomatiquesService {
         type: typeConfig.id,
         automatique: true,
         terminee: false,
+        // Champ status pour compatibilité avec le filtrage des relances manuelles
+        status: 'pending',
         dateCreation: serverTimestamp(),
         dateEcheance: this._calculerDateEcheance(concert, typeConfig),
         organizationId: organizationId,
@@ -358,6 +360,7 @@ class RelancesAutomatiquesService {
       
       await updateDoc(doc(db, 'relances', relanceId), {
         terminee: true,
+        status: 'completed',
         dateTerminee: serverTimestamp(),
         commentaireFin: commentaire,
         termineeAutomatiquement: true

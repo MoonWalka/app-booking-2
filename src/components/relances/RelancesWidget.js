@@ -38,17 +38,47 @@ const RelancesWidget = ({
       .sort((a, b) => new Date(a.dateEcheance) - new Date(b.dateEcheance));
   }, [relances, entityType, entityId]);
 
+  // Fonction utilitaire pour convertir les dates Firebase
+  const parseFirebaseDate = (dateValue) => {
+    if (!dateValue) return null;
+    
+    // Si c'est déjà une Date valide
+    if (dateValue instanceof Date && !isNaN(dateValue)) {
+      return dateValue;
+    }
+    
+    // Si c'est un Timestamp Firebase
+    if (dateValue && typeof dateValue === 'object' && dateValue.seconds) {
+      return new Date(dateValue.seconds * 1000);
+    }
+    
+    // Si c'est une chaîne ISO
+    if (typeof dateValue === 'string') {
+      const parsed = new Date(dateValue);
+      return isNaN(parsed) ? null : parsed;
+    }
+    
+    return null;
+  };
+
   // Calculer les relances actives et en retard
   const stats = useMemo(() => {
     const now = new Date();
-    const pending = entityRelances.filter(r => r.status === 'pending');
-    const overdue = pending.filter(r => new Date(r.dateEcheance) < now);
+    const pending = entityRelances.filter(r => {
+      return r.status === 'pending' || (!r.status && !r.terminee);
+    });
+    const overdue = pending.filter(r => {
+      const dueDate = parseFirebaseDate(r.dateEcheance);
+      return dueDate && dueDate < now;
+    });
     
     return {
       total: entityRelances.length,
       pending: pending.length,
       overdue: overdue.length,
-      completed: entityRelances.filter(r => r.status === 'completed').length
+      completed: entityRelances.filter(r => {
+        return r.status === 'completed' || r.terminee === true;
+      }).length
     };
   }, [entityRelances]);
 
@@ -150,10 +180,11 @@ const RelancesWidget = ({
           <p className={styles.emptyMessage}>Aucune relance pour {entityName}</p>
         ) : (
           entityRelances
-            .filter(r => r.status === 'pending')
+            .filter(r => r.status === 'pending' || (!r.status && !r.terminee))
             .slice(0, 5) // Limiter à 5 relances pour le widget
             .map(relance => {
-              const isOverdue = new Date(relance.dateEcheance) < new Date();
+              const dueDate = parseFirebaseDate(relance.dateEcheance);
+              const isOverdue = dueDate && dueDate < new Date();
               
               return (
                 <div 
@@ -179,7 +210,11 @@ const RelancesWidget = ({
                     </h5>
                     <div className={styles.relanceMeta}>
                       <span className={styles.dueDate}>
-                        📅 {formatDate(relance.dateEcheance)}
+                        📅 {dueDate ? dueDate.toLocaleDateString('fr-FR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric'
+                        }) : 'Date non définie'}
                       </span>
                       <Badge variant={getPriorityVariant(relance.priorite)}>
                         {getPriorityLabel(relance.priorite)}
@@ -192,10 +227,10 @@ const RelancesWidget = ({
         )}
         
         {/* Afficher un lien vers toutes les relances si plus de 5 */}
-        {entityRelances.filter(r => r.status === 'pending').length > 5 && (
+        {entityRelances.filter(r => r.status === 'pending' || (!r.status && !r.terminee)).length > 5 && (
           <div className={styles.moreLink}>
             <Button variant="link" size="sm">
-              Voir toutes les relances ({entityRelances.filter(r => r.status === 'pending').length})
+              Voir toutes les relances ({entityRelances.filter(r => r.status === 'pending' || (!r.status && !r.terminee)).length})
             </Button>
           </div>
         )}
@@ -228,7 +263,10 @@ const RelancesWidget = ({
             <div className={styles.detailGroup}>
               <label className={styles.detailLabel}>Date d'échéance</label>
               <div className={styles.detailValue}>
-                {formatDate(selectedRelance.dateEcheance)}
+                {(() => {
+                  const date = parseFirebaseDate(selectedRelance.dateEcheance);
+                  return date ? date.toLocaleDateString('fr-FR') : 'Date non définie';
+                })()}
               </div>
             </div>
 
@@ -246,13 +284,19 @@ const RelancesWidget = ({
             <div className={styles.detailGroup}>
               <label className={styles.detailLabel}>Statut</label>
               <div className={styles.detailValue}>
-                {selectedRelance.terminee ? (
-                  <Badge variant="success">Terminée</Badge>
-                ) : new Date(selectedRelance.dateEcheance) < new Date() ? (
-                  <Badge variant="danger">En retard</Badge>
-                ) : (
-                  <Badge variant="warning">En cours</Badge>
-                )}
+                {(() => {
+                  const isCompleted = selectedRelance.status === 'completed' || selectedRelance.terminee === true;
+                  const dueDate = parseFirebaseDate(selectedRelance.dateEcheance);
+                  const isOverdue = dueDate && dueDate < new Date();
+                  
+                  if (isCompleted) {
+                    return <Badge variant="success">Terminée</Badge>;
+                  } else if (isOverdue) {
+                    return <Badge variant="danger">En retard</Badge>;
+                  } else {
+                    return <Badge variant="warning">En cours</Badge>;
+                  }
+                })()}
               </div>
             </div>
 

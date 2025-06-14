@@ -77,11 +77,21 @@ const useRelances = () => {
   const updateRelanceStatus = useCallback(async (relanceId, newStatus) => {
     try {
       const relanceRef = doc(db, 'relances', relanceId);
-      await updateDoc(relanceRef, {
+      const updateData = {
         status: newStatus,
-        updatedAt: new Date().toISOString(),
-        ...(newStatus === 'completed' && { completedAt: new Date().toISOString() })
-      });
+        updatedAt: new Date().toISOString()
+      };
+      
+      // Pour les relances automatiques, maintenir aussi le champ terminee
+      if (newStatus === 'completed') {
+        updateData.terminee = true;
+        updateData.completedAt = new Date().toISOString();
+        updateData.dateTerminee = new Date().toISOString();
+      } else if (newStatus === 'pending') {
+        updateData.terminee = false;
+      }
+      
+      await updateDoc(relanceRef, updateData);
       
       return { success: true };
     } catch (error) {
@@ -106,15 +116,38 @@ const useRelances = () => {
   }, []);
 
   /**
+   * Fonction utilitaire pour convertir les dates Firebase
+   */
+  const parseFirebaseDate = useCallback((dateValue) => {
+    if (!dateValue) return null;
+    
+    if (dateValue instanceof Date && !isNaN(dateValue)) {
+      return dateValue;
+    }
+    
+    if (dateValue && typeof dateValue === 'object' && dateValue.seconds) {
+      return new Date(dateValue.seconds * 1000);
+    }
+    
+    if (typeof dateValue === 'string') {
+      const parsed = new Date(dateValue);
+      return isNaN(parsed) ? null : parsed;
+    }
+    
+    return null;
+  }, []);
+
+  /**
    * Obtenir les relances en retard
    */
   const getOverdueRelances = useCallback(() => {
     const now = new Date();
     return relances.filter(relance => {
-      const dueDate = new Date(relance.dateEcheance);
-      return relance.status === 'pending' && dueDate < now;
+      const dueDate = parseFirebaseDate(relance.dateEcheance);
+      const isPending = relance.status === 'pending' || (!relance.status && !relance.terminee);
+      return isPending && dueDate && dueDate < now;
     });
-  }, [relances]);
+  }, [relances, parseFirebaseDate]);
 
   /**
    * Obtenir les relances à venir (dans les 7 prochains jours)
@@ -125,12 +158,13 @@ const useRelances = () => {
     sevenDaysFromNow.setDate(now.getDate() + 7);
     
     return relances.filter(relance => {
-      const dueDate = new Date(relance.dateEcheance);
-      return relance.status === 'pending' && 
+      const dueDate = parseFirebaseDate(relance.dateEcheance);
+      const isPending = relance.status === 'pending' || (!relance.status && !relance.terminee);
+      return isPending && dueDate && 
              dueDate >= now && 
              dueDate <= sevenDaysFromNow;
     });
-  }, [relances]);
+  }, [relances, parseFirebaseDate]);
 
   /**
    * Obtenir les relances par type d'entité

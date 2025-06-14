@@ -22,6 +22,7 @@ import ConcertContactsDebug from '@/components/debug/ConcertContactsDebug';
 import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic';
 import UnifiedContactSelectorTest from '@/components/debug/UnifiedContactSelectorTest';
 import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest';
+import RelancesCompleteDiagnostic from '@/components/debug/RelancesCompleteDiagnostic';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -106,6 +107,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="relances" title="Audit Relances">
           <RelancesAuditTool />
+        </Tab>
+        
+        <Tab eventKey="relances-diagnostic" title="🔍 Diagnostic Relances Complet">
+          <RelancesCompleteDiagnostic />
         </Tab>
         
         <Tab eventKey="contact-email" title="Debug Email Contact">

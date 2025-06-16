@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, query, where, onSnapshot } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useTabs } from '@/context/TabsContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
@@ -17,6 +18,7 @@ import { mapTerm } from '@/utils/terminologyMapping';
 function ContactsList() {
   const navigate = useNavigate();
   const { currentOrganization } = useOrganization();
+  const { openContactTab } = useTabs();
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -230,7 +232,7 @@ function ContactsList() {
   // Actions sur les lignes
   const renderActions = (contact) => (
     <ActionButtons
-      onView={() => navigate(`/contacts/${contact.id}`)}
+      onView={() => openContactTab(contact.id, `${contact.prenom || ''} ${contact.nom || ''}`.trim() || 'Contact')}
       onEdit={() => navigate(`/contacts/${contact.id}/edit`)}
       onDelete={() => handleDelete(contact.id)}
     />
@@ -246,7 +248,8 @@ function ContactsList() {
 
   // Gestion du clic sur une ligne
   const handleRowClick = (contact) => {
-    navigate(`/contacts/${contact.id}`);
+    const contactName = `${contact.prenom || ''} ${contact.nom || ''}`.trim() || 'Contact';
+    openContactTab(contact.id, contactName);
   };
 
   return (

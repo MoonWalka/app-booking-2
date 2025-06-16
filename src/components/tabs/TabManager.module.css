@@ -1,0 +1,203 @@
+/* TabManager.module.css */
+
+.tabManager {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.tabBar {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+  padding: 0;
+  min-height: 40px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.tabBar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-right: 1px solid #e0e0e0;
+  background: #f8f9fa;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  min-width: 120px;
+  max-width: 200px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: #e9ecef;
+}
+
+.tab.active {
+  background: #fff;
+  border-bottom: 2px solid #007bff;
+  margin-bottom: -1px;
+}
+
+.tabIcon {
+  margin-right: 6px;
+  font-size: 13px;
+}
+
+.tabTitle {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: #495057;
+}
+
+.tab.active .tabTitle {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.closeButton {
+  margin-left: 8px;
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 16px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.addTabButton {
+  padding: 8px 12px;
+  color: #6c757d;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  border-right: 1px solid #e0e0e0;
+}
+
+.addTabButton:hover {
+  background: #e9ecef;
+  color: #007bff;
+}
+
+.tabContainer {
+  flex: 1;
+  overflow: auto;
+}
+
+.tabContent {
+  padding: 20px;
+  height: 100%;
+  overflow: auto;
+}
+
+.tabContent h2 {
+  margin: 0 0 16px 0;
+  color: #343a40;
+  font-size: 24px;
+}
+
+.tabContent p {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.demoActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.actionButton {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.actionButton:hover {
+  background: #0056b3;
+}
+
+.mockList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.mockItem {
+  padding: 12px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #495057;
+}
+
+.mockDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.mockDetails div {
+  color: #495057;
+}
+
+.mockDetails strong {
+  color: #343a40;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tab {
+    min-width: 100px;
+    max-width: 150px;
+    padding: 6px 8px;
+  }
+  
+  .tabTitle {
+    font-size: 13px;
+  }
+  
+  .tabContent {
+    padding: 16px;
+  }
+  
+  .demoActions {
+    flex-direction: column;
+  }
+  
+  .actionButton {
+    width: 100%;
+  }
+}

@@ -28,7 +28,7 @@ export const formatConcertVariables = (concert, contact = {}) => {
     email_programmateur: contact.email || '',
     
     // Informations concert
-    titre_concert: concert.nom || concert.title || 'Concert',
+    titre_concert: concert.nom || concert.title || concert.titre || 'Concert',
     date_concert: dateFormattee,
     heure_concert: heureFormattee,
     
@@ -102,25 +102,40 @@ export const formatRelanceVariables = (concert, contact, documentsManquants = []
 export const formatContratVariables = (concert, contact, contrat) => {
   const baseVariables = formatConcertVariables(concert, contact);
   
-  const montantFormate = contrat.montantTotal ? 
+  // Assurer la robustesse face aux objets undefined/null
+  const contratData = contrat || {};
+  const concertData = concert || {};
+  
+  // Le montant peut être dans contrat.montantTotal, concert.montant, ou concert.prix
+  const montantBrut = contratData.montantTotal || concertData.montant || concertData.prix || 0;
+  const montantFormate = montantBrut ? 
     new Intl.NumberFormat('fr-FR', { 
       style: 'currency', 
       currency: 'EUR' 
-    }).format(contrat.montantTotal) : 'Montant à définir';
+    }).format(parseFloat(montantBrut)) : 'Montant à définir';
 
-  const dateLimiteSignature = contrat.dateLimiteSignature ?
-    new Date(contrat.dateLimiteSignature).toLocaleDateString('fr-FR') :
+  const dateLimiteSignature = contratData.dateLimiteSignature ?
+    new Date(contratData.dateLimiteSignature).toLocaleDateString('fr-FR') :
     new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'); // +5 jours par défaut
 
-  const lienContrat = `${window.location.origin}/contrat/${contrat.id || contrat._id}`;
+  // Utiliser l'ID du contrat pour le lien de téléchargement direct
+  const contratId = contratData.id || contratData._id || 'unknown';
+  // Utiliser directement l'URL de la Cloud Function pour éviter React Router
+  const lienContrat = `https://us-central1-app-booking-26571.cloudfunctions.net/downloadContrat?id=${contratId}`;
+  
+  console.log('[templateVariables] Génération lien contrat:', {
+    contratId,
+    lienContrat,
+    type: 'cloud-function-direct'
+  });
 
   return {
     ...baseVariables,
-    type_contrat: contrat.type || 'Cession',
+    type_contrat: contratData.type || contratData.typeContrat || 'Cession',
     montant_total: montantFormate,
     lien_contrat: lienContrat,
     date_signature_limite: dateLimiteSignature,
-    conditions_particulieres: contrat.conditionsParticulieres || 'Conditions standard',
+    conditions_particulieres: contratData.conditionsParticulieres || 'Conditions standard',
     contact_juridique: DefaultVariables.contact_organisateur
   };
 };

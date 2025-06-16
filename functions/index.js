@@ -502,25 +502,61 @@ exports.sendUnifiedEmail = onRequest({
         return response.status(405).json({ error: 'Méthode non autorisée' });
       }
 
-      const emailData = request.body;
+      // Les données Firebase Functions sont dans request.body.data
+      const emailData = request.body.data || request.body;
+      console.log('=== AUDIT CLOUD FUNCTION sendUnifiedEmail ===');
+      console.log('request.body structure:', {
+        hasData: !!request.body.data,
+        bodyKeys: Object.keys(request.body),
+        finalEmailData: emailData
+      });
+      console.log('EmailData reçu:', {
+        keys: Object.keys(emailData || {}),
+        to: emailData?.to,
+        templateName: emailData?.templateName,
+        userId: emailData?.userId,
+        organizationId: emailData?.organizationId,
+        hasVariables: !!emailData?.variables,
+        variablesKeys: emailData?.variables ? Object.keys(emailData.variables) : null
+      });
 
       // Validation des données requises
+      if (!emailData) {
+        console.error('Aucune donnée reçue dans request.body');
+        return response.status(400).json({ 
+          error: 'Aucune donnée d\'email fournie' 
+        });
+      }
+
       if (!emailData.to) {
+        console.error('Adresse email destinataire manquante:', emailData);
         return response.status(400).json({ 
           error: 'Adresse email destinataire manquante' 
         });
       }
 
       console.log(`Envoi d'email unifié à ${emailData.to}`);
-      const result = await sendUnifiedEmail(emailData);
+      console.log('Avant appel sendUnifiedEmail avec:', emailData);
       
-      response.set('Access-Control-Allow-Origin', '*');
-      response.status(200).json({
-        success: true,
-        message: 'Email envoyé avec succès',
-        messageId: result.messageId,
-        provider: result.provider
-      });
+      try {
+        const result = await sendUnifiedEmail(emailData);
+        console.log('Résultat sendUnifiedEmail:', result);
+        
+        response.set('Access-Control-Allow-Origin', '*');
+        response.status(200).json({
+          success: true,
+          message: 'Email envoyé avec succès',
+          messageId: result.messageId,
+          provider: result.provider
+        });
+      } catch (unifiedError) {
+        console.error('ERREUR dans sendUnifiedEmail:', {
+          message: unifiedError.message,
+          code: unifiedError.code,
+          stack: unifiedError.stack
+        });
+        throw unifiedError;
+      }
 
     } catch (error) {
       console.error('Erreur lors de l\'envoi de l\'email unifié:', error);
@@ -562,20 +598,47 @@ exports.validateBrevoKey = onRequest({
 
       const { apiKey } = request.body;
 
+      console.log(`[DEBUG] validateBrevoKey endpoint called`);
+      console.log(`[DEBUG] Request body keys:`, Object.keys(request.body));
+      console.log(`[DEBUG] apiKey present: ${!!apiKey}, length: ${apiKey?.length || 0}`);
+
       if (!apiKey) {
+        console.error('[ERROR] Clé API Brevo manquante dans la requête');
         return response.status(400).json({ 
           error: 'Clé API Brevo manquante' 
         });
       }
 
-      console.log('Validation de la clé API Brevo');
-      const isValid = await validateBrevoApiKey(apiKey);
+      if (apiKey.length < 10) {
+        console.error('[ERROR] Clé API Brevo trop courte:', apiKey.length);
+        return response.status(400).json({ 
+          error: 'Clé API Brevo invalide (trop courte)' 
+        });
+      }
+
+      console.log(`[DEBUG] Validation de la clé API Brevo: ${apiKey.substring(0, 15)}...`);
       
-      response.set('Access-Control-Allow-Origin', '*');
-      response.status(200).json({
-        valid: isValid,
-        message: isValid ? 'Clé API valide' : 'Clé API invalide'
-      });
+      try {
+        const isValid = await validateBrevoApiKey(apiKey);
+        console.log(`[DEBUG] Résultat validation: ${isValid}`);
+        
+        response.set('Access-Control-Allow-Origin', '*');
+        response.status(200).json({
+          valid: isValid,
+          message: isValid ? 'Clé API valide' : 'Clé API invalide',
+          timestamp: new Date().toISOString()
+        });
+      } catch (validationError) {
+        console.error('[ERROR] Erreur lors de la validation:', validationError);
+        
+        response.set('Access-Control-Allow-Origin', '*');
+        response.status(200).json({
+          valid: false,
+          message: 'Erreur lors de la validation',
+          error: validationError.message,
+          timestamp: new Date().toISOString()
+        });
+      }
 
     } catch (error) {
       console.error('Erreur lors de la validation de la clé API Brevo:', error);
@@ -592,6 +655,63 @@ exports.validateBrevoKey = onRequest({
 /**
  * Fonction Cloud pour récupérer les templates Brevo
  */
+/**
+ * Fonction pour télécharger directement un contrat PDF
+ * Route: /downloadContrat?id=xxxxx
+ */
+exports.downloadContrat = onRequest({
+  timeoutSeconds: 30,
+  memory: '256MiB',
+  cors: true
+}, async (request, response) => {
+  // Gérer CORS
+  response.set('Access-Control-Allow-Origin', '*');
+  response.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  response.set('Access-Control-Allow-Headers', 'Content-Type');
+  
+  if (request.method === 'OPTIONS') {
+    response.status(204).send('');
+    return;
+  }
+  
+  try {
+    const contratId = request.query.id;
+    
+    if (!contratId) {
+      response.status(400).send('ID du contrat manquant');
+      return;
+    }
+    
+    console.log('Téléchargement du contrat:', contratId);
+    
+    // Récupérer le contrat depuis Firestore
+    const contratDoc = await admin.firestore()
+      .collection('contrats')
+      .doc(contratId)
+      .get();
+    
+    if (!contratDoc.exists) {
+      response.status(404).send('Contrat introuvable');
+      return;
+    }
+    
+    const contratData = contratDoc.data();
+    
+    if (!contratData.pdfUrl) {
+      response.status(404).send('Aucun PDF disponible pour ce contrat');
+      return;
+    }
+    
+    // Rediriger vers l'URL du PDF
+    console.log('Redirection vers:', contratData.pdfUrl);
+    response.redirect(contratData.pdfUrl);
+    
+  } catch (error) {
+    console.error('Erreur téléchargement contrat:', error);
+    response.status(500).send('Erreur lors du téléchargement');
+  }
+});
+
 exports.getBrevoTemplates = onRequest({
   timeoutSeconds: 30,
   memory: '128MiB',

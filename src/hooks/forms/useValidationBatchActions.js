@@ -53,19 +53,10 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         }
       });
 
-      // NOUVEAU FORMAT : données structurées du formulaire public
-      // Si pas de champs préfixés mais des données structurées, les utiliser
-      if (Object.keys(contactFields).length === 0 && formData.signataireData) {
-        // Mapper signataireData vers contactFields
-        const signataire = formData.signataireData;
-        if (signataire.nom) contactFields.nom = signataire.nom;
-        if (signataire.prenom) contactFields.prenom = signataire.prenom;
-        if (signataire.email) contactFields.email = signataire.email;
-        if (signataire.telephone) contactFields.telephone = signataire.telephone;
-        if (signataire.fonction) contactFields.fonction = signataire.fonction;
-        
-        console.log("Données signataire mappées vers contact:", contactFields);
-      }
+      // ❌ ANCIEN MAPPING AUTOMATIQUE SUPPRIMÉ
+      // Le mapping automatique des données signataire vers contact principal
+      // causait une perte de données. Remplacé par une logique de création
+      // de contact signataire séparé ci-dessous.
 
       if (Object.keys(structureFields).length === 0 && formData.structureData) {
         // Mapper structureData vers structureFields
@@ -99,7 +90,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       let programmId = concertData.contactId || formData.programmId;
       let structureId = null;
       
-      // Gestion du contact (contact)
+      // Gestion du contact principal (préservation)
       if (Object.keys(contactFields).length > 0) {
         if (programmId) {
           // Mise à jour contact existant avec SEULEMENT les données de contact
@@ -132,6 +123,89 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           });
           
           console.log("Nouveau contact créé avec les données de contact:", newContactData);
+        }
+      }
+
+      // ==========================================
+      // 2.5. GESTION DU SIGNATAIRE (NOUVEAU)
+      // ==========================================
+      
+      let signataireId = null;
+      
+      // Si on a des données de signataire dans le formulaire public
+      if (formData.signataireData) {
+        const signataireData = formData.signataireData;
+        
+        // Vérifier si le concert a déjà un contact avec le rôle signataire
+        const existingSignataire = concertData.contactsWithRoles?.find(c => c.role === 'signataire');
+        
+        if (existingSignataire) {
+          // Mettre à jour le signataire existant
+          signataireId = existingSignataire.contactId;
+          const signataireUpdateData = {
+            nom: `${signataireData.prenom || ''} ${signataireData.nom || ''}`.trim(),
+            prenom: signataireData.prenom || '',
+            nomLowercase: `${signataireData.prenom || ''} ${signataireData.nom || ''}`.toLowerCase(),
+            email: signataireData.email || '',
+            telephone: signataireData.telephone || '',
+            fonction: signataireData.fonction || '',
+            updatedAt: Timestamp.now()
+          };
+          
+          await updateDoc(doc(db, 'contacts', signataireId), signataireUpdateData);
+          console.log("Contact signataire existant mis à jour:", signataireUpdateData);
+        } else {
+          // Créer un nouveau contact signataire
+          const newSignataireData = {
+            nom: `${signataireData.prenom || ''} ${signataireData.nom || ''}`.trim(),
+            prenom: signataireData.prenom || '',
+            nomLowercase: `${signataireData.prenom || ''} ${signataireData.nom || ''}`.toLowerCase(),
+            email: signataireData.email || '',
+            telephone: signataireData.telephone || '',
+            fonction: signataireData.fonction || '',
+            // Relations
+            concertsIds: [concertId],
+            lieuxIds: [],
+            structureId: structureId || '',
+            structureNom: structureFields.nom || '',
+            // Métadonnées
+            organizationId: currentOrganization?.id,
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now(),
+            isFromPublicForm: true,
+            isSignataire: true
+          };
+          
+          const newSignataireRef = await addDoc(collection(db, 'contacts'), newSignataireData);
+          signataireId = newSignataireRef.id;
+          
+          console.log("Nouveau contact signataire créé:", newSignataireData);
+          
+          // Mettre à jour le concert avec le nouveau contact signataire
+          const updatedContactsWithRoles = [
+            ...(concertData.contactsWithRoles || []),
+            {
+              contactId: signataireId,
+              role: 'signataire',
+              isPrincipal: false
+            }
+          ];
+          
+          // Mettre à jour contactIds pour les relations bidirectionnelles
+          const currentContactIds = concertData.contactIds && Array.isArray(concertData.contactIds) 
+            ? [...concertData.contactIds] 
+            : (concertData.contactId ? [concertData.contactId] : []);
+          
+          if (!currentContactIds.includes(signataireId)) {
+            currentContactIds.push(signataireId);
+          }
+          
+          await updateDoc(doc(db, 'concerts', concertId), {
+            contactsWithRoles: updatedContactsWithRoles,
+            contactIds: currentContactIds // ✅ AJOUT CRUCIAL pour les relations bidirectionnelles
+          });
+          
+          console.log("Concert mis à jour avec le nouveau contact signataire");
         }
       }
 
@@ -330,6 +404,23 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       // Ajouter les références aux entités créées/mises à jour
       if (programmId) {
         concertUpdates.contactId = programmId;
+        
+        // ✅ CORRECTION: Assurer que contactIds est mis à jour pour les relations bidirectionnelles
+        const currentContactIds = concertData.contactIds && Array.isArray(concertData.contactIds) 
+          ? [...concertData.contactIds] 
+          : (concertData.contactId ? [concertData.contactId] : []);
+        
+        if (!currentContactIds.includes(programmId)) {
+          currentContactIds.push(programmId);
+        }
+        
+        // Ajouter aussi le signataire s'il existe et n'est pas déjà inclus
+        if (signataireId && !currentContactIds.includes(signataireId)) {
+          currentContactIds.push(signataireId);
+        }
+        
+        concertUpdates.contactIds = currentContactIds;
+        console.log("✅ contactIds mis à jour pour relations bidirectionnelles:", currentContactIds);
       }
       
       if (structureId) {
@@ -380,7 +471,8 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       setValidationInProgress(false);
       
       console.log("✅ Validation terminée avec succès !");
-      console.log("- Contact ID:", programmId);
+      console.log("- Contact principal ID:", programmId);
+      console.log("- Contact signataire ID:", signataireId);
       console.log("- Structure ID:", structureId);
       console.log("- Concert ID:", concertId);
       

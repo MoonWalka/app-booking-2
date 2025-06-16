@@ -23,6 +23,13 @@ import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDia
 import UnifiedContactSelectorTest from '@/components/debug/UnifiedContactSelectorTest';
 import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest';
 import RelancesCompleteDiagnostic from '@/components/debug/RelancesCompleteDiagnostic';
+import BrevoDiagnostic from '@/components/debug/BrevoDiagnostic';
+import ParametresMigration from '@/components/debug/ParametresMigration';
+import BrevoKeyRecovery from '@/components/debug/BrevoKeyRecovery';
+import BrevoKeyDiagnostic from '@/components/debug/BrevoKeyDiagnostic';
+import BrevoTemplateCreator from '@/components/debug/BrevoTemplateCreator';
+import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer';
+import StructuresClickDebug from '@/components/debug/StructuresClickDebug';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -151,6 +158,34 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="generic-detail-view-test" title="🎨 Test GenericDetailView">
           <GenericDetailViewTest />
+        </Tab>
+        
+        <Tab eventKey="brevo-diagnostic" title="📧 Diagnostic Brevo">
+          <BrevoDiagnostic />
+        </Tab>
+        
+        <Tab eventKey="parametres-migration" title="🔄 Migration Paramètres">
+          <ParametresMigration />
+        </Tab>
+        
+        <Tab eventKey="brevo-recovery" title="🔧 Récupération Brevo">
+          <BrevoKeyRecovery />
+        </Tab>
+        
+        <Tab eventKey="brevo-key-diagnostic" title="🔍 Diagnostic Clé Brevo">
+          <BrevoKeyDiagnostic />
+        </Tab>
+        
+        <Tab eventKey="brevo-template-creator" title="🎨 Créateur Templates Brevo">
+          <BrevoTemplateCreator />
+        </Tab>
+        
+        <Tab eventKey="brevo-template-customizer" title="🖌️ Configurateur Templates Brevo">
+          <BrevoTemplateCustomizer />
+        </Tab>
+        
+        <Tab eventKey="structures-click-debug" title="🏢 Debug Clics Structures">
+          <StructuresClickDebug />
         </Tab>
       </Tabs>
     </div>

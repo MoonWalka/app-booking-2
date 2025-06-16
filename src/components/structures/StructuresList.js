@@ -5,13 +5,16 @@ import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
 import { useDeleteStructure } from '@/hooks/structures';
+import { useTabs } from '@/context/TabsContext';
 
 /**
  * Liste unifiée des structures utilisant le composant générique ListWithFilters
  * Compatible desktop/mobile avec interface responsive
  */
 function StructuresList() {
+  console.log('🏢 Main StructuresList component loaded');
   const navigate = useNavigate();
+  const { openStructureTab } = useTabs();
   const [refreshKey, setRefreshKey] = useState(0);
   
   // Callback appelé après suppression réussie pour actualiser la liste
@@ -155,7 +158,7 @@ function StructuresList() {
   // Actions sur les lignes
   const renderActions = (structure) => (
     <ActionButtons
-      onView={() => navigate(`/structures/${structure.id}`)}
+      onView={() => openStructureTab(structure.id, structure.nom || structure.raisonSociale || 'Structure')}
       onEdit={() => navigate(`/structures/${structure.id}/edit`)}
       onDelete={() => handleDelete(structure.id)}
     />
@@ -172,7 +175,9 @@ function StructuresList() {
 
   // Gestion du clic sur une ligne
   const handleRowClick = (structure) => {
-    navigate(`/structures/${structure.id}`);
+    console.log('🖱️ Main StructuresList handleRowClick called with:', structure);
+    console.log('🚀 Opening tab for structure:', structure.id);
+    openStructureTab(structure.id, structure.nom || structure.raisonSociale || 'Structure');
   };
 
   return (

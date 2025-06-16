@@ -6,6 +6,7 @@ import { db } from '@/services/firebase-service';
 import { Modal, Button as BootstrapButton, Form, InputGroup } from 'react-bootstrap';
 import Button from '@ui/Button';
 import Alert from '@ui/Alert';
+import { useTabs } from '@/context/TabsContext';
 import styles from './StructuresList.module.css';
 
 /**
@@ -13,8 +14,9 @@ import styles from './StructuresList.module.css';
  * Même UI, même fonctionnalités, code 70% plus simple
  */
 const StructuresList = () => {
-  console.log('🏗️ StructuresList: Composant en cours de rendu');
+  console.log('🏗️ Desktop StructuresList component loaded');
   const navigate = useNavigate();
+  const { openStructureTab } = useTabs();
   
   // Un seul hook pour charger les données
   const {
@@ -273,7 +275,11 @@ const StructuresList = () => {
               {displayedStructures.map(structure => (
                 <tr 
                   key={structure.id}
-                  onClick={() => navigate(`/structures/${structure.id}`)}
+                  onClick={() => {
+                    console.log('🖱️ Desktop StructuresList row clicked:', structure);
+                    console.log('🚀 Opening tab for structure:', structure.id);
+                    openStructureTab(structure.id, structure.nom || structure.raisonSociale || 'Structure');
+                  }}
                   className={styles.clickableRow}
                 >
                   <td>

@@ -44,6 +44,7 @@ import DebugController from '@/components/debug/DebugController';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 import DebugButton from '@/components/common/DebugButton';
 import ConcertLieuDebug from '@/components/debug/ConcertLieuDebug';
+import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -299,6 +300,41 @@ function App() {
                                 </FlexContainer>
                               }>
                                 <ContratDetailsPage />
+                              </Suspense>
+                            </PrivateRoute>
+                          } />
+                          {/* Route API pour téléchargement direct de contrat */}
+                          <Route path="/api/contrats/:contratId/download" element={
+                            <PrivateRoute>
+                              <Suspense fallback={
+                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                                  <div className="text-center">
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Chargement...</span>
+                                    </div>
+                                    <p className="mt-2">Préparation du téléchargement...</p>
+                                  </div>
+                                </FlexContainer>
+                              }>
+                                <ContratDownloadDirect />
+                              </Suspense>
+                            </PrivateRoute>
+                          } />
+                          
+                          {/* Route legacy pour téléchargement via page contrat */}
+                          <Route path="/contrats/:contratId/download" element={
+                            <PrivateRoute>
+                              <Suspense fallback={
+                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                                  <div className="text-center">
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Chargement de la page...</span>
+                                    </div>
+                                    <p className="mt-2">Téléchargement en cours...</p>
+                                  </div>
+                                </FlexContainer>
+                              }>
+                                <ContratDetailsPage autoDownload={true} />
                               </Suspense>
                             </PrivateRoute>
                           } />

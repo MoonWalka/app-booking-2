@@ -31,13 +31,26 @@ class BrevoTemplateService {
    */
   getCurrentUserInfo() {
     const user = auth.currentUser;
+    debugLog('[BrevoTemplateService] getCurrentUserInfo - user:', {
+      exists: !!user,
+      uid: user?.uid,
+      email: user?.email
+    }, 'info');
+    
     if (!user) {
+      debugLog('[BrevoTemplateService] Utilisateur non authentifié', null, 'error');
       throw new Error('Utilisateur non authentifié');
     }
 
     const organizationId = localStorage.getItem('currentOrganizationId') || 
                           user.organizationId || 
                           'default';
+
+    debugLog('[BrevoTemplateService] getCurrentUserInfo - result:', {
+      userId: user.uid,
+      organizationId,
+      source: localStorage.getItem('currentOrganizationId') ? 'localStorage' : (user.organizationId ? 'user.organizationId' : 'default')
+    }, 'info');
 
     return {
       userId: user.uid,
@@ -71,23 +84,39 @@ class BrevoTemplateService {
       debugLog('[BrevoTemplateService] Envoi email formulaire:', {
         to: contact.email,
         variables: finalVariables,
-        concert: concert.nom
+        concert: concert?.nom || concert?.titre || concert?.title || 'nom non trouvé',
+        concertKeys: concert ? Object.keys(concert) : 'concert null'
       }, 'info');
 
-      const result = await sendUnifiedEmailFunction({
-        templateName: 'formulaire',
-        to: contact.email,
-        variables: finalVariables,
-        userId,
-        organizationId
-      });
-      
-      debugLog('[BrevoTemplateService] Email formulaire envoyé:', result.data, 'success');
-      
-      return {
-        success: true,
-        ...result.data
-      };
+      // Essayer d'abord l'envoi direct via Brevo (plus fiable)
+      try {
+        debugLog('[BrevoTemplateService] Tentative envoi direct via Brevo API');
+        const directResult = await this.sendTemplateDirectly('formulaire', contact.email, finalVariables);
+        debugLog('[BrevoTemplateService] Email formulaire envoyé via Brevo direct:', directResult);
+        return {
+          success: true,
+          messageId: directResult.messageId,
+          provider: 'brevo-direct'
+        };
+      } catch (directError) {
+        debugLog('[BrevoTemplateService] Fallback vers Cloud Functions', directError.message, 'warning');
+        
+        // Fallback vers Cloud Functions
+        const result = await sendUnifiedEmailFunction({
+          templateName: 'formulaire',
+          to: contact.email,
+          variables: finalVariables,
+          userId,
+          organizationId
+        });
+        
+        debugLog('[BrevoTemplateService] Email formulaire envoyé via Cloud Functions:', result.data, 'success');
+        
+        return {
+          success: true,
+          ...result.data
+        };
+      }
     } catch (error) {
       debugLog('[BrevoTemplateService] Erreur envoi formulaire:', error, 'error');
       throw new Error(error.message || 'Erreur lors de l\'envoi de l\'email formulaire');
@@ -150,12 +179,22 @@ class BrevoTemplateService {
    */
   async sendContratEmail(concert, contact, contrat) {
     try {
+      debugLog('[BrevoTemplateService] === DÉBUT SEND CONTRAT EMAIL ===');
+      debugLog('[BrevoTemplateService] 1. Récupération userInfo...');
       const { userId, organizationId } = this.getCurrentUserInfo();
+      debugLog('[BrevoTemplateService] 2. UserInfo récupéré:', { userId, organizationId });
 
+      debugLog('[BrevoTemplateService] 3. Formatage variables contrat...');
       const variables = formatContratVariables(concert, contact, contrat);
+      debugLog('[BrevoTemplateService] 4. Variables formatées:', variables);
+      
       const finalVariables = applyDefaultVariables(variables);
+      debugLog('[BrevoTemplateService] 5. Variables finales après défauts:', finalVariables);
 
+      debugLog('[BrevoTemplateService] 6. Validation variables requises...');
       const validation = validateRequiredVariables(finalVariables, RequiredVariables.contrat);
+      debugLog('[BrevoTemplateService] 7. Résultat validation:', validation);
+      
       if (!validation.valid) {
         throw new Error(`Variables manquantes pour le template contrat: ${validation.missing.join(', ')}`);
       }
@@ -163,25 +202,60 @@ class BrevoTemplateService {
       debugLog('[BrevoTemplateService] Envoi email contrat:', {
         to: contact.email,
         variables: finalVariables,
-        contrat: contrat.type
+        contrat: contrat?.type,
+        contratData: contrat,
+        concertData: concert,
+        contactData: contact
       }, 'info');
 
-      const result = await sendUnifiedEmailFunction({
-        templateName: 'contrat',
-        to: contact.email,
-        variables: finalVariables,
-        userId,
-        organizationId
-      });
+      debugLog('[BrevoTemplateService] 8. Tentative envoi direct via API Brevo...');
       
-      debugLog('[BrevoTemplateService] Email contrat envoyé:', result.data, 'success');
-      
-      return {
-        success: true,
-        ...result.data
-      };
+      try {
+        const result = await this.sendTemplateDirectly('contrat', contact.email, finalVariables);
+        debugLog('[BrevoTemplateService] 9. Email contrat envoyé via API directe:', result);
+        
+        return {
+          success: true,
+          messageId: result.messageId,
+          provider: 'brevo-direct'
+        };
+      } catch (directError) {
+        debugLog('[BrevoTemplateService] 10. Échec envoi direct, fallback vers Cloud Functions:', directError.message);
+        
+        // Fallback vers Cloud Functions si l'envoi direct échoue
+        const cloudFunctionParams = {
+          templateName: 'contrat',
+          to: contact.email,
+          variables: finalVariables,
+          userId,
+          organizationId
+        };
+        
+        debugLog('[BrevoTemplateService] 11. Fallback - Paramètres pour Cloud Function:', cloudFunctionParams);
+        
+        try {
+          const result = await sendUnifiedEmailFunction(cloudFunctionParams);
+          debugLog('[BrevoTemplateService] 12. Résultat fallback Cloud Function:', result);
+          
+          return {
+            success: true,
+            ...result.data
+          };
+        } catch (cloudError) {
+          debugLog('[BrevoTemplateService] 13. ERREUR finale:', {
+            directError: directError.message,
+            cloudError: cloudError.message
+          });
+          throw new Error(`Échec envoi direct (${directError.message}) et Cloud Function (${cloudError.message})`);
+        }
+      }
     } catch (error) {
-      debugLog('[BrevoTemplateService] Erreur envoi contrat:', error, 'error');
+      debugLog('[BrevoTemplateService] 12. ERREUR GÉNÉRALE sendContratEmail:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        stack: error.stack
+      });
       throw new Error(error.message || 'Erreur lors de l\'envoi de l\'email contrat');
     }
   }
@@ -335,31 +409,84 @@ class BrevoTemplateService {
   }
 
   /**
-   * Valide une clé API Brevo
+   * Valide une clé API Brevo avec fallback direct
    * @param {string} apiKey - Clé API à valider
    * @returns {Promise<boolean>} - True si valide
    */
   async validateApiKey(apiKey) {
     try {
       if (!apiKey) {
+        debugLog('[BrevoTemplateService] Clé API manquante', null, 'error');
         return false;
       }
 
-      debugLog('[BrevoTemplateService] Validation clé API Brevo', { apiKey: apiKey.substring(0, 10) + '...' }, 'info');
+      if (apiKey.length < 10) {
+        debugLog('[BrevoTemplateService] Clé API trop courte', { length: apiKey.length }, 'error');
+        return false;
+      }
 
-      const result = await validateBrevoKeyFunction({ apiKey });
-      
-      debugLog('[BrevoTemplateService] Résultat validation:', result.data, 'info');
-      
-      return result.data.valid === true;
+      debugLog('[BrevoTemplateService] Début validation clé API Brevo', { 
+        apiKey: apiKey.substring(0, 10) + '...',
+        length: apiKey.length,
+        startsWithXkeysib: apiKey.startsWith('xkeysib-')
+      }, 'info');
+
+      // Essayer d'abord la validation directe (plus fiable)
+      try {
+        debugLog('[BrevoTemplateService] Test direct API Brevo', { keyPreview: apiKey.substring(0, 10) + '...' }, 'info');
+        
+        const response = await fetch('https://api.brevo.com/v3/account', {
+          method: 'GET',
+          headers: {
+            'api-key': apiKey,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          debugLog('[BrevoTemplateService] Test direct API réussi', { account: data.email, plan: data.plan?.[0]?.type }, 'success');
+          return true;
+        } else {
+          const errorData = await response.text();
+          debugLog('[BrevoTemplateService] Test direct API échoué', { status: response.status, error: errorData }, 'error');
+        }
+      } catch (directError) {
+        debugLog('[BrevoTemplateService] Erreur test direct API', { error: directError.message }, 'error');
+      }
+
+      // Fallback vers Cloud Functions si le test direct échoue
+      try {
+        const result = await validateBrevoKeyFunction({ apiKey });
+        
+        debugLog('[BrevoTemplateService] Résultat validation Cloud Function:', {
+          success: !!result,
+          dataKeys: result?.data ? Object.keys(result.data) : 'null',
+          valid: result?.data?.valid,
+          message: result?.data?.message
+        }, 'info');
+        
+        const isValid = result.data.valid === true;
+        debugLog(`[BrevoTemplateService] Validation Cloud Function: ${isValid ? 'VALIDE' : 'INVALIDE'}`, null, isValid ? 'success' : 'warn');
+        
+        return isValid;
+      } catch (cfError) {
+        debugLog('[BrevoTemplateService] Erreur Cloud Function', { error: cfError.message }, 'error');
+        return false;
+      }
     } catch (error) {
-      debugLog('[BrevoTemplateService] Erreur validation clé API:', error, 'error');
+      debugLog('[BrevoTemplateService] Erreur validation clé API:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        stack: error.stack?.substring(0, 200) + '...'
+      }, 'error');
       return false;
     }
   }
 
   /**
-   * Récupère la liste des templates Brevo
+   * Récupère la liste des templates Brevo avec fallback direct
    * @param {string} apiKey - Clé API Brevo
    * @returns {Promise<Array>} - Liste des templates
    */
@@ -371,17 +498,148 @@ class BrevoTemplateService {
 
       debugLog('[BrevoTemplateService] Récupération templates Brevo', { apiKey: apiKey.substring(0, 10) + '...' }, 'info');
 
-      const result = await getBrevoTemplatesFunction({ apiKey });
-      
-      debugLog('[BrevoTemplateService] Templates récupérés:', {
-        count: result.data.templates?.length || 0
-      }, 'success');
-      
-      return result.data.templates || [];
+      // Essayer d'abord l'appel direct à l'API Brevo
+      try {
+        const response = await fetch('https://api.brevo.com/v3/smtp/templates', {
+          method: 'GET',
+          headers: {
+            'api-key': apiKey,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          debugLog('[BrevoTemplateService] Templates récupérés directement', { count: data.templates?.length || 0 }, 'success');
+          return data.templates || [];
+        } else {
+          debugLog('[BrevoTemplateService] Erreur appel direct templates', { status: response.status }, 'error');
+        }
+      } catch (directError) {
+        debugLog('[BrevoTemplateService] Erreur directe templates', { error: directError.message }, 'error');
+      }
+
+      // Fallback vers Cloud Functions
+      try {
+        const result = await getBrevoTemplatesFunction({ apiKey });
+        
+        debugLog('[BrevoTemplateService] Templates récupérés via Cloud Functions:', {
+          count: result.data.templates?.length || 0
+        }, 'success');
+        
+        return result.data.templates || [];
+      } catch (cfError) {
+        debugLog('[BrevoTemplateService] Erreur Cloud Functions templates:', cfError, 'error');
+        throw new Error('Impossible de récupérer les templates Brevo');
+      }
     } catch (error) {
       debugLog('[BrevoTemplateService] Erreur récupération templates:', error, 'error');
       throw new Error(error.message || 'Erreur lors de la récupération des templates');
     }
+  }
+
+  /**
+   * Envoie un template directement via l'API Brevo (contourne les Cloud Functions)
+   * @param {string} templateName - Nom du template
+   * @param {string} to - Email destinataire
+   * @param {Object} variables - Variables du template
+   * @returns {Promise<Object>} - Résultat de l'envoi
+   */
+  async sendTemplateDirectly(templateName, to, variables) {
+    try {
+      // Récupérer la configuration Brevo de l'organisation
+      const { organizationId } = this.getCurrentUserInfo();
+      const config = await this.getBrevoConfig(organizationId);
+      
+      debugLog('[BrevoTemplateService] Configuration récupérée:', {
+        hasApiKey: !!config.apiKey,
+        templates: config.templates,
+        templateName,
+        templateExists: !!config.templates[templateName],
+        templateValue: config.templates[templateName]
+      }, 'info');
+
+      if (!config.apiKey) {
+        throw new Error('Clé API Brevo manquante dans la configuration');
+      }
+      
+      if (!config.templates[templateName]) {
+        throw new Error(`Template ${templateName} non associé. Templates configurés: ${Object.keys(config.templates).join(', ')}`);
+      }
+
+      const templateId = config.templates[templateName];
+      
+      const emailData = {
+        templateId: parseInt(templateId),
+        to: [{ email: to }],
+        params: variables,
+        // Désactiver le tracking des liens pour les emails de contrat
+        disableUrlTracking: templateName === 'contrat'
+      };
+
+      debugLog('[BrevoTemplateService] Envoi direct template:', {
+        templateName,
+        templateId,
+        to,
+        variablesCount: Object.keys(variables).length
+      }, 'info');
+
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': config.apiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(emailData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`Erreur Brevo ${response.status}: ${errorData}`);
+      }
+
+      const result = await response.json();
+      debugLog('[BrevoTemplateService] Template envoyé directement:', { 
+        messageId: result.messageId,
+        templateName 
+      }, 'success');
+
+      return result;
+    } catch (error) {
+      debugLog('[BrevoTemplateService] Erreur envoi direct template:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
+   * Récupère la configuration Brevo de l'organisation
+   * @param {string} organizationId - ID de l'organisation
+   * @returns {Promise<Object>} - Configuration Brevo déchiffrée
+   */
+  async getBrevoConfig(organizationId) {
+    const { getDoc, doc } = await import('firebase/firestore');
+    const { db } = await import('./firebase-service');
+    const { decryptSensitiveFields } = await import('@/utils/cryptoUtils');
+
+    const parametresDoc = await getDoc(
+      doc(db, 'organizations', organizationId, 'parametres', 'settings')
+    );
+
+    if (!parametresDoc.exists()) {
+      throw new Error('Configuration organisation introuvable');
+    }
+
+    const parametresData = parametresDoc.data();
+    const emailConfig = parametresData.email;
+
+    if (!emailConfig?.brevo?.enabled) {
+      throw new Error('Brevo non configuré pour cette organisation');
+    }
+
+    // Déchiffrer la clé API
+    const decryptedConfig = decryptSensitiveFields(emailConfig.brevo, ['apiKey']);
+    
+    return decryptedConfig;
   }
 
   /**
@@ -444,18 +702,31 @@ class BrevoTemplateService {
         variables: finalVariables
       }, 'info');
 
-      const result = await sendUnifiedEmailFunction({
-        templateName,
-        to: emailTest,
-        variables: finalVariables,
-        userId,
-        organizationId
-      });
-      
-      return {
-        success: true,
-        ...result.data
-      };
+      // Essayer d'abord l'envoi direct via Brevo
+      try {
+        const result = await this.sendTemplateDirectly(templateName, emailTest, finalVariables);
+        return {
+          success: true,
+          messageId: result.messageId,
+          provider: 'brevo-direct'
+        };
+      } catch (directError) {
+        debugLog('[BrevoTemplateService] Fallback vers Cloud Functions pour test template', { error: directError.message }, 'warning');
+        
+        // Fallback vers Cloud Functions
+        const result = await sendUnifiedEmailFunction({
+          templateName,
+          to: emailTest,
+          variables: finalVariables,
+          userId,
+          organizationId
+        });
+        
+        return {
+          success: true,
+          ...result.data
+        };
+      }
     } catch (error) {
       debugLog('[BrevoTemplateService] Erreur test template:', error, 'error');
       throw new Error(error.message || 'Erreur lors du test du template');

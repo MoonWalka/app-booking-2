@@ -1,51 +1,130 @@
 /*
- * Styles pour Sidebar
+ * Styles pour Sidebar Icônes - Version Fine
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 12 mai 2025
+ * Dernière mise à jour: 16 juin 2025
  *
- * Ce composant implémente la barre latérale principale de navigation
- * avec support de la responsivité et des états ouverts/fermés
+ * Ce composant implémente la barre latérale fine avec icônes uniquement
+ * et sous-menus latéraux expandables
  */
 
 /* Import des classes utilitaires pour les points de rupture */
 @import '@styles/mixins/breakpoints.css';
 @import '@styles/base/variables.css';
 
-/* Test d'utilisation des alias d'importation */
+/* Variables pour sidebar fine */
+:root {
+  --tc-sidebar-width-thin: 70px;
+  --tc-submenu-width: 250px;
+}
+
+/* Styles pour les boutons de navigation */
+.navButton {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  width: 100%;
+  padding: var(--tc-space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: var(--tc-transition-base);
+  position: relative;
+  border-radius: var(--tc-border-radius-sm);
+  margin: 2px 0;
+}
+
+.navButton:hover {
+  background-color: var(--tc-color-primary-dark);
+  color: var(--tc-text-light);
+}
+
+.navButton:focus {
+  outline: 2px solid var(--tc-color-accent);
+  outline-offset: 2px;
+}
+
+.navButton.active {
+  background-color: var(--tc-color-accent);
+  color: var(--tc-text-dark);
+}
+
+.subMenu .navButton {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: var(--tc-space-3);
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--tc-space-3) var(--tc-space-6);
+  color: var(--tc-text-light);
+  border-radius: 0;
+  border-left: 3px solid transparent;
+  margin: 0;
+}
+
+.subMenu .navButton i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  font-size: 1.2rem;
+  width: 24px;
+  height: 24px;
+}
+
+.subMenu .navButton:hover {
+  background-color: var(--tc-hover-overlay-light);
+  border-left-color: rgba(255, 255, 255, 0.3);
+  color: var(--tc-text-light);
+}
+
+.subMenu .navButton.active {
+  background-color: var(--tc-active-overlay-light);
+  border-left-color: var(--tc-color-accent, #fff);
+}
 
 /* 
- * Container principal
- * -----------------
- * Structure en flex column pour permettre le positionnement du footer en bas
- * Utilise position: fixed pour rester visible pendant le défilement
+ * Container principal - Version Fine
+ * ---------------------------------
+ * Structure en flex column plus étroite avec icônes uniquement
  */
 .sidebar {
-  width: var(--tc-sidebar-width);
-  min-width: var(--tc-sidebar-width); /* Empêche la sidebar de rétrécir dans les flex layouts */
-  background-color: var(--tc-color-primary);        /* Utilise la variable commune */
-  color: var(--tc-text-light);                      /* Utilise la variable commune */
-  height: 100vh;
+  width: var(--tc-sidebar-width-thin);
+  min-width: var(--tc-sidebar-width-thin);
+  background-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
+  height: calc(100vh - 70px); /* Hauteur moins le header */
   position: fixed;
   left: 0;
-  top: 0;
-  overflow-y: auto; /* Permet le défilement si le contenu est trop long */
+  top: 70px; /* Commence sous le header */
+  overflow: visible; /* Permet aux sous-menus de déborder */
   z-index: var(--tc-z-index-sidebar);
   box-shadow: var(--tc-shadow-base);
   transition: var(--tc-transition-base);
-  /* Structure en flexbox verticale */
   display: flex;
   flex-direction: column;
 }
 
 /* 
- * En-tête de la sidebar
- * ------------------
- * Contient généralement le logo et peut-être un bouton de toggle
+ * En-tête de la sidebar - Version Fine
+ * -----------------------------------
+ * Logo centré et compact
  */
 .sidebarHeader {
-  padding: var(--tc-space-6);
+  padding: var(--tc-space-4);
   border-bottom: var(--tc-border-sidebar);
   text-align: center;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebarHeader h3 {
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 600;
 }
 
 /* 
@@ -114,26 +193,334 @@
 }
 
 /* 
- * Liens de navigation
- * ----------------
- * Style de base pour tous les liens dans la navigation
- * Structure en flexbox pour aligner facilement les icônes et le texte
+ * Groupe de navigation (avec sous-menu)
+ * -----------------------------------
+ * Conteneur pour les éléments de navigation expandables
+ */
+.navGroup {
+  margin-bottom: var(--tc-space-1);
+}
+
+/* 
+ * Bouton de toggle pour groupes de navigation - Version Icônes
+ * ----------------------------------------------------------
+ * Style centré pour icônes uniquement avec tooltips
+ */
+.navGroupToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - var(--tc-space-4));
+  height: 50px;
+  margin: var(--tc-space-1) var(--tc-space-2);
+  padding: var(--tc-space-3);
+  color: var(--tc-text-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--tc-transition-short);
+  position: relative;
+  border-radius: var(--tc-radius-base);
+}
+
+.navGroupToggle i {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.navGroupToggle:hover {
+  background-color: var(--tc-hover-overlay-light);
+  color: var(--tc-text-light);
+}
+
+.navGroupToggle:focus {
+  outline: 2px solid var(--tc-color-primary);
+  outline-offset: -2px;
+}
+
+/* 
+ * Tooltips pour les icônes
+ * ----------------------
+ * Affichage du nom au survol pour les icônes uniquement
+ */
+.tooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border-radius: var(--tc-radius-base);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+}
+
+.navLinks a:hover .tooltip,
+.navGroupToggle:hover .tooltip {
+  opacity: 1;
+}
+
+/* 
+ * Icône chevron pour indication d'état expandé/contracté
+ * ---------------------------------------------------
+ */
+.chevron {
+  margin-left: auto;
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+/* 
+ * Overlay pour fermer les sous-menus
+ * --------------------------------
+ * Arrière-plan transparent pour capturer les clics en dehors
+ */
+.subMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 999;
+}
+
+/* 
+ * Panel des sous-menus latéraux
+ * ----------------------------
+ * Panneau qui s'ouvre à droite de la sidebar
+ */
+.subMenuPanel {
+  position: fixed;
+  left: var(--tc-sidebar-width-thin);
+  top: 70px; /* Commence sous le header */
+  width: var(--tc-submenu-width);
+  height: calc(100vh - 70px); /* Hauteur moins le header */
+  background-color: var(--tc-color-primary);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: slideInFromLeft 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 
+ * En-tête du sous-menu
+ * ------------------
+ * Titre et bouton de fermeture
+ */
+.subMenuHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--tc-space-3) var(--tc-space-6); /* Même padding que les liens */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.subMenuHeader h4 {
+  margin: 0;
+  margin-left: calc(24px + var(--tc-space-3)); /* Même alignement que le texte des liens */
+  color: var(--tc-text-light);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.closeSubMenu {
+  background: none;
+  border: none;
+  color: var(--tc-text-light);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: var(--tc-space-1);
+  border-radius: var(--tc-radius-base);
+  transition: background-color 0.2s ease;
+}
+
+.closeSubMenu:hover {
+  background-color: var(--tc-hover-overlay-light);
+}
+
+/* 
+ * Liste des sous-éléments
+ * ----------------------
+ * Navigation dans le panneau latéral
+ */
+.subMenu {
+  list-style: none;
+  padding: 0; /* Suppression du padding pour alignement parfait */
+  margin: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.subMenu li {
+  margin-bottom: 0;
+}
+
+/* Anciens styles pour les liens supprimés - Remplacés par les styles .navButton */
+
+/* 
+ * Panneau utilisateur latéral
+ * -------------------------
+ * Panneau dédié au profil utilisateur et sélection d'organisation
+ */
+.userMenuPanel {
+  position: fixed;
+  left: var(--tc-sidebar-width-thin);
+  top: 70px; /* Commence sous le header */
+  width: var(--tc-submenu-width);
+  height: calc(100vh - 70px); /* Hauteur moins le header */
+  background-color: var(--tc-color-primary);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: slideInFromLeft 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 
+ * Contenu du menu utilisateur
+ * -------------------------
+ */
+.userMenuContent {
+  flex: 1;
+  padding: var(--tc-space-4);
+  overflow-y: auto;
+}
+
+/* 
+ * Section utilisateur
+ * -----------------
+ * Informations du profil utilisateur
+ */
+.userSection {
+  margin-bottom: var(--tc-space-6);
+}
+
+.userProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--tc-space-4);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--tc-radius-base);
+  margin-bottom: var(--tc-space-4);
+}
+
+.userDetails {
+  margin-top: var(--tc-space-2);
+}
+
+.userEmail {
+  color: var(--tc-text-light);
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.userRole {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+}
+
+/* 
+ * Section organisation
+ * ------------------
+ * Zone du sélecteur d'organisation
+ */
+.organizationSection {
+  margin-bottom: var(--tc-space-4);
+}
+
+.organizationSection h5 {
+  color: var(--tc-text-light);
+  margin-bottom: var(--tc-space-3);
+  font-size: 1rem;
+  font-weight: 600;
+  padding-bottom: var(--tc-space-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Styles pour OrganizationSelector dans le panneau utilisateur */
+.userMenuContent :global(.organization-selector) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-3);
+  color: var(--tc-text-light);
+}
+
+.userMenuContent :global(.organization-selector:hover) {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.userMenuContent :global(.form-select) {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--tc-color-primary);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--tc-radius-base);
+}
+
+/* 
+ * Panneau utilisateur mobile
+ * ------------------------
+ * Version mobile du panneau utilisateur
+ */
+.mobileUserPanel {
+  left: 0;
+  width: 80vw;
+  max-width: 350px;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 
+ * Liens de navigation - Version Icônes
+ * -----------------------------------
+ * Style centré pour icônes uniquement avec tooltips
  */
 .navLinks a {
   display: flex;
   align-items: center;
-  padding: var(--tc-space-2) var(--tc-space-6);
+  justify-content: center;
+  padding: var(--tc-space-3);
   color: var(--tc-text-light);
   text-decoration: none;
-  /* Transition courte pour une réaction rapide au hover */
   transition: var(--tc-transition-short);
+  position: relative;
+  height: 50px;
+  margin: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-radius-base);
+}
+
+.navLinks a i {
+  font-size: 1.4rem;
+  margin: 0;
 }
 
 /* 
- * État de survol des liens
- * ---------------------
- * Feedback visuel subtil lors du survol
- * Conserve la couleur du texte pour maintenir le contraste
+ * État de survol des liens - Version Icônes
+ * ----------------------------------------
+ * Feedback visuel pour icônes uniquement
  */
 .navLinks a:hover {
   background-color: var(--tc-hover-overlay-light);
@@ -141,15 +528,13 @@
 }
 
 /* 
- * État actif des liens
- * -----------------
- * Mise en évidence de l'élément de navigation actif
- * Utilise une bordure gauche colorée comme indicateur visuel principal
+ * État actif des liens - Version Icônes
+ * ------------------------------------
+ * Mise en évidence de l'icône active
  */
 .navLinks a.active {
   background-color: var(--tc-active-overlay-light);
-  /* La bordure gauche crée un indicateur visuel fort pour la page active */
-  border-left: 4px solid var(--tc-color-primary);
+  border: 2px solid var(--tc-color-accent, #fff);
 }
 
 /* 
@@ -163,22 +548,68 @@
 }
 
 /* 
- * Pied de la sidebar
- * ---------------
- * Utilise margin-top: auto pour pousser le footer en bas de la sidebar
- * quelle que soit la hauteur du contenu principal
+ * Pied de la sidebar - Version Fine
+ * --------------------------------
+ * Footer adapté à la largeur réduite
  */
 .sidebarFooter {
-  margin-top: auto; /* Astuce flexbox pour pousser cet élément tout en bas */
-  padding: var(--tc-space-4);
+  margin-top: auto;
+  padding: var(--tc-space-2);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(0, 0, 0, 0.05);
+  text-align: center;
 }
 
 /* 
- * Informations utilisateur
+ * Icônes du footer
+ * ---------------
+ * Container pour les icônes du footer (utilisateur et déconnexion)
+ */
+.footerIcons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+
+/* 
+ * Boutons d'icônes du footer
+ * ------------------------
+ * Style pour les boutons utilisateur et déconnexion
+ */
+.footerIconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  background: none;
+  border: none;
+  color: var(--tc-text-light);
+  cursor: pointer;
+  border-radius: var(--tc-radius-base);
+  transition: var(--tc-transition-short);
+  position: relative;
+}
+
+.footerIconButton i {
+  font-size: 1.3rem;
+}
+
+.footerIconButton:hover {
+  background-color: var(--tc-hover-overlay-light);
+  color: var(--tc-text-light);
+}
+
+.footerIconButton:focus {
+  outline: 2px solid var(--tc-color-primary);
+  outline-offset: -2px;
+}
+
+/* 
+ * Informations utilisateur (legacy)
  * ---------------------
- * Généralement affiché dans le footer de la sidebar
+ * Conservé pour compatibilité
  */
 .userInfo {
   display: flex;
@@ -212,6 +643,8 @@
   min-width: 200px; /* Largeur minimale pour lisibilité */
   max-width: 320px; /* Largeur maximale pour éviter un débordement */
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  top: 0; /* Sidebar mobile commence en haut (pas de header sur mobile) */
+  height: 100vh; /* Hauteur complète sur mobile */
 }
 
 .mobileOpen {
@@ -234,6 +667,31 @@
   text-align: center;
 }
 
+/* Styles mobile pour les groupes de navigation */
+.mobileSidebar .navGroupToggle {
+  padding: var(--tc-space-3) var(--tc-space-4);
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+.mobileSidebar .navGroupToggle i {
+  font-size: 1.3rem;
+  margin-right: var(--tc-space-3);
+  width: 24px;
+  text-align: center;
+}
+
+.mobileSidebar .subMenu .navButton {
+  padding: var(--tc-space-2) var(--tc-space-6);
+  font-size: 0.9rem;
+  min-height: 44px;
+}
+
+.mobileSidebar .subMenu .navButton i {
+  font-size: 1.1rem;
+  width: 20px;
+}
+
 /* Ajustement du header mobile */
 .mobileSidebar .sidebarHeader {
   padding: var(--tc-space-4);
@@ -250,10 +708,29 @@
   padding: var(--tc-space-3);
 }
 
-/* Footer mobile simplifié */
+/* Footer mobile avec icônes */
 .mobileSidebar .sidebarFooter {
   padding: var(--tc-space-3);
   margin-top: auto;
+}
+
+.mobileSidebar .footerIcons {
+  flex-direction: row;
+  justify-content: space-around;
+  gap: var(--tc-space-3);
+}
+
+.mobileSidebar .footerIconButton {
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  padding: var(--tc-space-2);
+  gap: var(--tc-space-1);
+}
+
+.mobileSidebar .footerIconButton span {
+  font-size: 0.8rem;
+  margin-top: var(--tc-space-1);
 }
 
 .mobileSidebar .userInfo {

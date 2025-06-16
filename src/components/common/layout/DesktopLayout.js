@@ -21,6 +21,7 @@ function DesktopLayout({ children }) {
     openConcertsListTab,
     openLieuxListTab,
     openStructuresListTab,
+    openDebugToolsTab,
     openTab
   } = useTabs();
   
@@ -96,6 +97,9 @@ function DesktopLayout({ children }) {
       case '/structures':
         openStructuresListTab();
         break;
+      case '/debug-tools':
+        openDebugToolsTab();
+        break;
       case '/artistes':
         openTab({
           id: 'artistes-list',
@@ -132,15 +136,6 @@ function DesktopLayout({ children }) {
           icon: 'bi-gear'
         });
         break;
-      case '/debug-tools':
-        openTab({
-          id: 'debug-tools',
-          title: 'Debug Tools',
-          path: '/debug-tools',
-          component: 'DebugToolsPage',
-          icon: 'bi-bug'
-        });
-        break;
       case '/tabs-test':
         // Naviguer normalement pour cette page de test
         navigate(item.to);
@@ -160,8 +155,17 @@ function DesktopLayout({ children }) {
       label: "Contact",
       subItems: [
         { to: "/contacts", icon: "bi-people", label: "Tous les contacts" },
+        { to: "/contacts/nouveau", icon: "bi-person-plus", label: "Ajouter un contact" },
         { to: "/lieux", icon: "bi-geo-alt", label: "Lieux" },
         { to: "/structures", icon: "bi-building", label: "Structures" }
+      ]
+    },
+    {
+      id: "tools",
+      icon: "bi-tools",
+      label: "Outils",
+      subItems: [
+        { to: "/debug-tools", icon: "bi-bug", label: "Debug Tools" }
       ]
     },
     {
@@ -256,7 +260,8 @@ function DesktopLayout({ children }) {
                     <li key={subItem.to}>
                       <button 
                         className={sidebarStyles.navButton}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           handleNavigation(subItem);
                           if (isMobile) {
                             handleMobileNavClick();
@@ -281,7 +286,8 @@ function DesktopLayout({ children }) {
       <li key={item.to}>
         <button 
           className={sidebarStyles.navButton}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             handleNavigation(item);
             if (isMobile) {
               handleMobileNavClick();

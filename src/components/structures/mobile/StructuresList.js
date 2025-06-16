@@ -6,6 +6,7 @@ import UnderConstruction from '@/components/common/UnderConstruction';
  * Actuellement affiche un message "en construction"
  */
 const StructuresList = () => {
+  console.log('📱 Mobile StructuresList component loaded');
   return <UnderConstruction />;
 };
 

@@ -1,7 +1,7 @@
 /* TabManager.module.css */
 
 .tabManager {
-  height: 100%;
+  height: calc(100vh - 118px);
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -106,9 +106,9 @@
 }
 
 .tabContent {
-  padding: 20px;
+  padding: 0;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .tabContent h2 {

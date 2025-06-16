@@ -99,6 +99,7 @@ const ContactInfoSection = ({
           </Form.Group>
         </Col>
       </Row>
+      
     </div>
   );
 

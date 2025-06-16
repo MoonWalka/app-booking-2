@@ -10,6 +10,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { OrganizationProvider } from '@/context/OrganizationContext';
 import { ParametresProvider } from '@/context/ParametresContext';
 import { ModalProvider } from '@/context/ModalContext';
+import { TabsProvider } from '@/context/TabsContext';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
@@ -45,6 +46,7 @@ import DebugToolsPage from '@/pages/DebugToolsPage';
 import DebugButton from '@/components/common/DebugButton';
 import ConcertLieuDebug from '@/components/debug/ConcertLieuDebug';
 import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
+import TabsTestPage from '@/pages/TabsTestPage';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -145,6 +147,7 @@ function App() {
             <OrganizationProvider>
               <ParametresProvider>
                 <ModalProvider>
+                  <TabsProvider>
                   <RouterStabilizer />
                   {/* Bouton de debug temporaire */}
                   <DebugButton />
@@ -441,6 +444,23 @@ function App() {
                             </PrivateRoute>
                           } />
                           
+                          <Route path="/tabs-test" element={
+                            <PrivateRoute>
+                              <Suspense fallback={
+                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
+                                  <div className="text-center">
+                                    <div className="spinner-border text-primary" role="status">
+                                      <span className="visually-hidden">Chargement de la page...</span>
+                                    </div>
+                                    <p className="mt-2">Chargement de la page...</p>
+                                  </div>
+                                </FlexContainer>
+                              }>
+                                <TabsTestPage />
+                              </Suspense>
+                            </PrivateRoute>
+                          } />
+                          
                           <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
                           
                           
@@ -467,8 +487,9 @@ function App() {
                       </Routes>
                     </>
                   </Suspense>
-                  </ModalProvider>
-                </ParametresProvider>
+                  </TabsProvider>
+                </ModalProvider>
+              </ParametresProvider>
                 
                 {/* 🔍 Panneau de debug flottant - UNIQUEMENT EN DÉVELOPPEMENT */}
                 {process.env.NODE_ENV === 'development' && <DebugController />}

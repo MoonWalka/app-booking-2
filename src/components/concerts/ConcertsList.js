@@ -1,6 +1,7 @@
 // src/components/concerts/ConcertsList.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTabs } from '@/context/TabsContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import AddButton from '@/components/ui/AddButton';
 import StatusBadge from '@/components/ui/StatusBadge';
@@ -18,6 +19,7 @@ import useConcertStatus from '@/hooks/concerts/useConcertStatus';
  */
 function ConcertsList() {
   const navigate = useNavigate();
+  const { openConcertTab } = useTabs();
   // const { handleDelete } = useConcertDelete(); // Pas utilisé pour l'instant
   // const { currentOrg } = useOrganization(); // Pas utilisé pour l'instant
   
@@ -38,7 +40,7 @@ function ConcertsList() {
   } = useConcertListData();
   
   const {
-    handleViewConcert,
+    // handleViewConcert, // Non utilisé - remplacé par les onglets
     handleViewForm,
     handleSendForm,
     handleViewContract,
@@ -653,7 +655,8 @@ function ConcertsList() {
 
   // Gestion du clic sur une ligne
   const handleRowClick = (concert) => {
-    handleViewConcert(concert.id);
+    const concertTitle = concert.titre || `Concert du ${concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : ''}`;
+    openConcertTab(concert.id, concertTitle);
   };
 
   return (

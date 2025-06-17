@@ -10,6 +10,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { OrganizationProvider } from '@/context/OrganizationContext';
 import { ParametresProvider } from '@/context/ParametresContext';
 import { ModalProvider } from '@/context/ModalContext';
+import { ContactModalsProvider } from '@/context/ContactModalsContext';
 import { TabsProvider } from '@/context/TabsContext';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Layout from '@/components/common/Layout';
@@ -147,7 +148,8 @@ function App() {
             <OrganizationProvider>
               <ParametresProvider>
                 <ModalProvider>
-                  <TabsProvider>
+                  <ContactModalsProvider>
+                    <TabsProvider>
                   <RouterStabilizer />
                   {/* Bouton de debug temporaire */}
                   <DebugButton />
@@ -487,7 +489,8 @@ function App() {
                       </Routes>
                     </>
                   </Suspense>
-                  </TabsProvider>
+                    </TabsProvider>
+                  </ContactModalsProvider>
                 </ModalProvider>
               </ParametresProvider>
                 

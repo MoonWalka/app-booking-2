@@ -67,49 +67,78 @@
   position: relative;
 }
 
-/* En-têtes de section - style bulle flottante */
+/* En-têtes de section - style bulle flottante épuré */
 .sectionHeader {
   position: absolute;
-  top: -14px;
+  top: -12px;
   left: 20px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: 2px solid #dee2e6;
-  border-radius: 25px;
-  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  padding: 6px 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s ease;
 }
 
 .sectionHeader:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  border-color: #007bff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
 .sectionHeader i {
   color: #007bff;
-  font-size: 1rem;
-  text-shadow: 0 1px 2px rgba(0,123,255,0.3);
+  font-size: 0.85rem;
 }
 
 .sectionHeader h2 {
   margin: 0;
-  color: #343a40;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+  color: #495057;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Actions de section */
+.sectionActions {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.actionBubble {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #f8f9fa;
+  color: #007bff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.actionBubble:hover {
+  background: #e9ecef;
+  border-color: #007bff;
+  color: #0056b3;
+}
+
+.actionBubble i {
+  font-size: 0.7rem;
 }
 
 /* Contenu des sections */
 .sectionContent {
-  height: calc(100% - 10px);
+  height: calc(100% - 5px);
   overflow: auto;
-  padding-top: 10px;
+  padding-top: 5px;
+  margin-top: 8px; /* Espace pour la bulle */
 }
 
 /* Zone d'onglets du bas */
@@ -394,48 +423,17 @@
   font-size: 0.9rem;
 }
 
-/* Actions personnes - style bulle flottante */
+/* Actions personnes - style bulle flottante épuré */
 .personnesActions {
   position: absolute;
-  top: -14px;
+  top: -12px;
   right: 20px;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   z-index: 10;
 }
 
-.actionBubble {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: 2px solid #dee2e6;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #495057;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
-}
-
-.actionBubble:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  border-color: #007bff;
-  color: #007bff;
-}
-
-.actionBubble i {
-  font-size: 0.85rem;
-  color: #007bff;
-}
-
-.actionBubble:hover i {
-  color: #0056b3;
-}
+/* Suppression de la duplication - utilise le style principal */
 
 .personnesList {
   flex: 1;

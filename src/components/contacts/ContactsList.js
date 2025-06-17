@@ -14,8 +14,9 @@ import { useDeleteStructure } from '@/hooks/structures';
  * Liste unifiée des contacts et structures utilisant le composant générique ListWithFilters
  * Compatible desktop/mobile avec interface responsive
  * Affiche les personnes depuis la collection "contacts" et les structures depuis la collection "structures"
+ * @param {string} filterType - Type de filtre: 'all' (défaut), 'structures', 'personnes'
  */
-function ContactsList() {
+function ContactsList({ filterType = 'all' }) {
   const navigate = useNavigate();
   const { currentOrganization } = useOrganization();
   const { openContactTab, openStructureTab } = useTabs();
@@ -32,55 +33,19 @@ function ContactsList() {
   const { handleDelete: handleDeleteContact } = useDeleteContact(onDeleteSuccess);
   const { handleDelete: handleDeleteStructure } = useDeleteStructure(onDeleteSuccess);
 
-  // Chargement unifié des données des contacts et structures
+  // Chargement unifié des contacts (après migration, tout est dans contacts)
   useEffect(() => {
     if (!currentOrganization?.id) {
       setLoading(false);
       return;
     }
 
-    console.log('🔄 Chargement unifié contacts + structures...');
+    console.log('🔄 Chargement de tous les contacts...');
     
-    const unsubscribeCallbacks = [];
-    let contactsData = [];
-    let structuresData = [];
-    let loadedCollections = 0;
-
-    const mergeAndSetData = () => {
-      // Convertir les structures en format contact unifié
-      const structuresAsContacts = structuresData.map(structure => ({
-        ...structure,
-        // Champs unifiés pour l'affichage
-        entityType: 'structure',
-        displayName: structure.nom || structure.raisonSociale || 'Structure sans nom',
-        nom: structure.nom || structure.raisonSociale,
-        prenom: null, // Les structures n'ont pas de prénom
-        email: structure.email || structure.contact?.email,
-        telephone: structure.telephone || structure.contact?.telephone,
-        // Garder les données originales pour les actions spécifiques
-        _originalData: structure,
-        _sourceCollection: 'structures'
-      }));
-
-      // Marquer les contacts comme personnes
-      const contactsAsPersons = contactsData.map(contact => ({
-        ...contact,
-        entityType: 'personne',
-        displayName: `${contact.prenom || ''} ${contact.nom || ''}`.trim() || 'Contact sans nom',
-        _originalData: contact,
-        _sourceCollection: 'contacts'
-      }));
-
-      // Fusionner les deux listes
-      const unified = [...contactsAsPersons, ...structuresAsContacts];
-      console.log(`✅ Données unifiées: ${contactsAsPersons.length} personnes + ${structuresAsContacts.length} structures = ${unified.length} total`);
-      
-      setUnifiedContacts(unified);
-      setLoading(false);
-      setError(null);
-    };
-
-    // Écouter les contacts
+    // Rechercher dans les deux collections possibles
+    console.log('🔍 Recherche contacts pour organisation:', currentOrganization.id);
+    
+    // D'abord essayer la collection globale
     const contactsQuery = query(
       collection(db, 'contacts'),
       where('organizationId', '==', currentOrganization.id)
@@ -88,13 +53,44 @@ function ContactsList() {
 
     const unsubscribeContacts = onSnapshot(contactsQuery, 
       (snapshot) => {
-        contactsData = snapshot.docs.map(doc => ({
+        const allContacts = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-        console.log(`📋 Contacts chargés: ${contactsData.length}`);
-        loadedCollections++;
-        if (loadedCollections >= 2) mergeAndSetData();
+        
+        console.log(`📋 Contacts globaux trouvés: ${allContacts.length}`);
+        console.log('🔍 Premier contact exemple:', allContacts[0]);
+        
+        // Si aucun contact dans la collection globale, essayer la collection organisationnelle
+        if (allContacts.length === 0) {
+          console.log('⚠️ Aucun contact dans collection globale, test collection org...');
+          
+          // Essayer la collection organisationnelle
+          const orgContactsQuery = query(
+            collection(db, `contacts_org_${currentOrganization.id}`)
+          );
+          
+          onSnapshot(orgContactsQuery, (orgSnapshot) => {
+            const orgContacts = orgSnapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }));
+            
+            console.log(`📋 Contacts org trouvés: ${orgContacts.length}`);
+            
+            if (orgContacts.length > 0) {
+              processContacts(orgContacts);
+            } else {
+              console.log('❌ Aucun contact trouvé dans aucune collection');
+              setUnifiedContacts([]);
+              setLoading(false);
+            }
+          });
+          
+          return;
+        }
+        
+        processContacts(allContacts);
       },
       (err) => {
         console.error('Erreur chargement contacts:', err);
@@ -102,34 +98,57 @@ function ContactsList() {
         setLoading(false);
       }
     );
-
-    // Écouter les structures
-    const structuresQuery = query(
-      collection(db, 'structures'),
-      where('organizationId', '==', currentOrganization.id)
-    );
-
-    const unsubscribeStructures = onSnapshot(structuresQuery, 
-      (snapshot) => {
-        structuresData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        console.log(`🏢 Structures chargées: ${structuresData.length}`);
-        loadedCollections++;
-        if (loadedCollections >= 2) mergeAndSetData();
-      },
-      (err) => {
-        console.error('Erreur chargement structures:', err);
-        setError(err.message);
+    
+    const processContacts = (allContacts) => {
+        console.log(`📋 Traitement de ${allContacts.length} contacts`);
+        
+        // Détecter le type selon les nouvelles métadonnées
+        const processedContacts = allContacts.map(contact => {
+          const hasStructureData = contact.structureRaisonSociale?.trim();
+          const hasPersonneData = contact.prenom?.trim() && contact.nom?.trim();
+          
+          let entityType, displayName;
+          
+          if (hasStructureData && !hasPersonneData) {
+            // Contact de type structure pure
+            entityType = 'structure';
+            displayName = contact.structureRaisonSociale || 'Structure sans nom';
+          } else if (hasPersonneData && !hasStructureData) {
+            // Contact de type personne pure  
+            entityType = 'personne';
+            displayName = `${contact.prenom} ${contact.nom}`.trim();
+          } else if (hasStructureData && hasPersonneData) {
+            // Contact mixte (structure + personne)
+            entityType = 'mixte';
+            displayName = `${contact.prenom} ${contact.nom} (${contact.structureRaisonSociale})`.trim();
+          } else {
+            // Contact basique (ancien format)
+            entityType = contact.type || 'personne';
+            displayName = contact.nom || contact.email || 'Contact sans nom';
+          }
+          
+          return {
+            ...contact,
+            entityType,
+            displayName,
+            // Préserver les champs pour compatibilité
+            nom: contact.nom || contact.structureRaisonSociale,
+            email: contact.email || contact.mailDirect || contact.structureEmail,
+            telephone: contact.telephone || contact.telDirect || contact.structureTelephone1,
+            _originalData: contact,
+            _sourceCollection: 'contacts'
+          };
+        });
+        
+        console.log(`✅ Contacts traités: ${processedContacts.filter(c => c.entityType === 'personne').length} personnes + ${processedContacts.filter(c => c.entityType === 'structure').length} structures + ${processedContacts.filter(c => c.entityType === 'mixte').length} mixtes`);
+        
+        setUnifiedContacts(processedContacts);
         setLoading(false);
-      }
-    );
-
-    unsubscribeCallbacks.push(unsubscribeContacts, unsubscribeStructures);
+        setError(null);
+    };
 
     return () => {
-      unsubscribeCallbacks.forEach(unsubscribe => unsubscribe());
+      unsubscribeContacts();
     };
   }, [currentOrganization?.id, refreshKey]);
 
@@ -148,9 +167,21 @@ function ContactsList() {
       width: '12%',
       render: (item) => {
         const type = item.entityType;
-        const icon = type === 'structure' ? 'bi bi-building' : 'bi bi-person';
-        const label = type === 'structure' ? 'Structure' : 'Personne';
-        const variant = type === 'structure' ? 'info' : 'primary';
+        
+        let icon, label, variant;
+        if (type === 'structure') {
+          icon = 'bi bi-building';
+          label = 'Structure';
+          variant = 'info';
+        } else if (type === 'mixte') {
+          icon = 'bi bi-person-gear';
+          label = 'Mixte';
+          variant = 'warning';
+        } else {
+          icon = 'bi bi-person';
+          label = 'Personne';
+          variant = 'primary';
+        }
         
         return (
           <span className={`badge bg-${variant} d-flex align-items-center gap-1`} style={{ fontSize: '0.75rem' }}>
@@ -167,10 +198,7 @@ function ContactsList() {
       sortable: true,
       width: '25%',
       render: (item) => {
-        if (item.entityType === 'structure') {
-          return item.nom || item.raisonSociale || 'Structure sans nom';
-        }
-        return `${item.prenom || ''} ${item.nom || ''}`.trim() || 'Contact sans nom';
+        return item.displayName || 'Contact sans nom';
       },
     },
     {

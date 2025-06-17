@@ -218,6 +218,16 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
+  const openDebugToolsTab = useCallback(() => {
+    openTab({
+      id: 'debug-tools',
+      title: 'Debug Tools',
+      path: '/debug-tools',
+      component: 'DebugToolsPage',
+      icon: 'bi-bug'
+    });
+  }, [openTab]);
+
   const value = {
     tabs,
     activeTabId,
@@ -235,7 +245,8 @@ export const TabsProvider = ({ children }) => {
     openContactsListTab,
     openConcertsListTab,
     openLieuxListTab,
-    openStructuresListTab
+    openStructuresListTab,
+    openDebugToolsTab
   };
 
   return (

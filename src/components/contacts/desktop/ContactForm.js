@@ -474,30 +474,94 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Structure plate pour éviter les objets imbriqués
+      // Structure plate pour éviter les objets imbriqués - Format unifié
       const contact = {
-        // Données du contact directement à la racine
-        prenom: formData.prenom.trim(),
-        nom: formData.nom.trim(),
-        email: formData.email.trim(),
-        telephone: formData.telephone.trim(),
-        adresse: formData.adresse.trim(),
-        codePostal: formData.codePostal.trim(),
-        ville: formData.ville.trim(),
-        // Données de la structure directement à la racine avec préfixe
-        structureId: selectedStructure?.id || formData.structureId || '',
+        // Marqueur de migration pour détection robuste
+        migrationVersion: 'unified-v1',
+        migrationDate: new Date(),
+        
+        // Section 1: Structure (avec données du formulaire)
         structureRaisonSociale: formData.structureRaisonSociale?.trim() || '',
-        structureType: formData.structureType || '',
-        structureSiret: formData.structureSiret?.trim() || '',
         structureAdresse: formData.structureAdresse?.trim() || '',
+        structureSuiteAdresse1: '',
         structureCodePostal: formData.structureCodePostal?.trim() || '',
         structureVille: formData.structureVille?.trim() || '',
+        structureDepartement: '',
+        structureRegion: '',
+        structurePays: 'France',
+        structureSiteWeb: formData.structureSiteWeb?.trim() || '',
+        structureTelephone1: '',
+        structureTelephone2: '',
+        structureMobile: '',
+        structureFax: '',
+        structureEmail: '',
+        structureType: formData.structureType || '',
+        structureSiret: formData.structureSiret?.trim() || '',
         structureTva: formData.structureTva?.trim() || '',
         structureNumeroIntracommunautaire: formData.structureNumeroIntracommunautaire?.trim() || '',
-        structureSiteWeb: formData.structureSiteWeb?.trim() || '',
-        // Commentaires/Notes
+        structureCommentaires1: '',
+        structureCommentaires2: '',
+        structureCommentaires3: '',
+        structureCommentaires4: '',
+        structureCommentaires5: '',
+        structureCommentaires6: '',
+        
+        // Section 2: Personne 1 (données principales)
+        civilite: '',
+        prenom: formData.prenom.trim(),
+        nom: formData.nom.trim(),
+        prenomNom: `${formData.prenom.trim()} ${formData.nom.trim()}`.trim(),
+        fonction: '',
+        telDirect: formData.telephone.trim(),
+        telPerso: '',
+        mobile: '',
+        mailDirect: formData.email.trim(),
+        mailPerso: '',
+        fax: '',
+        site: '',
+        adresse: formData.adresse.trim(),
+        suiteAdresse: '',
+        codePostal: formData.codePostal.trim(),
+        ville: formData.ville.trim(),
+        departement: '',
+        region: '',
+        pays: 'France',
+        commentaires1: '',
+        commentaires2: '',
+        commentaires3: '',
+        
+        // Section 3: Personne 2 (vide)
+        civilite2: '', prenom2: '', nom2: '', prenomNom2: '', fonction2: '',
+        telDirect2: '', telPerso2: '', mobile2: '', mailDirect2: '', mailPerso2: '',
+        fax2: '', site2: '', adresse2: '', suiteAdresse2: '', codePostal2: '',
+        ville2: '', departement2: '', region2: '', pays2: 'France',
+        commentaires12: '', commentaires22: '', commentaires32: '',
+        
+        // Section 4: Personne 3 (vide)
+        civilite3: '', prenom3: '', nom3: '', prenomNom3: '', fonction3: '',
+        telDirect3: '', telPerso3: '', mobile3: '', mailDirect3: '', mailPerso3: '',
+        fax3: '', site3: '', adresse3: '', suiteAdresse3: '', codePostal3: '',
+        ville3: '', departement3: '', region3: '', pays3: 'France',
+        commentaires13: '', commentaires23: '', commentaires33: '',
+        
+        // Section 5: Qualifications
+        tags: [],
+        client: false,
+        source: '',
+        
+        // Section 6: Diffusion (vide)
+        nomFestival: '', periodeFestivalMois: '', periodeFestivalComplete: '', bouclage: '',
+        diffusionCommentaires1: '', diffusionCommentaires2: '', diffusionCommentaires3: '',
+        
+        // Section 7: Salle (vide) 
+        salleNom: '', salleAdresse: '', salleSuiteAdresse: '', salleCodePostal: '',
+        salleVille: '', salleDepartement: '', salleRegion: '', sallePays: 'France',
+        salleTelephone: '', salleJauge1: '', salleJauge2: '', salleJauge3: '',
+        salleOuverture: '', salleProfondeur: '', salleHauteur: '',
+        
+        // Section 8: Associations et métadonnées
+        structureId: selectedStructure?.id || formData.structureId || '',
         notes: formData.notes?.trim() || '',
-        // Associations
         lieuxIds: lieuxAssocies.map(lieu => lieu.id),
         concertsIds: concertsAssocies.map(concert => concert.id),
         updatedAt: new Date()

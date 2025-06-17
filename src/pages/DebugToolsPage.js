@@ -30,6 +30,8 @@ import BrevoKeyDiagnostic from '@/components/debug/BrevoKeyDiagnostic';
 import BrevoTemplateCreator from '@/components/debug/BrevoTemplateCreator';
 import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer';
 import StructuresClickDebug from '@/components/debug/StructuresClickDebug';
+import FestitestContactFinder from '@/components/debug/FestitestContactFinder';
+import ContactMigrationTool from '@/components/debug/ContactMigrationTool';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -186,6 +188,14 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="structures-click-debug" title="🏢 Debug Clics Structures">
           <StructuresClickDebug />
+        </Tab>
+        
+        <Tab eventKey="festitest-contact-finder" title="🔍 Recherche Contact Festitest">
+          <FestitestContactFinder />
+        </Tab>
+        
+        <Tab eventKey="contact-migration-tool" title="🔄 Migration Automatique Contacts">
+          <ContactMigrationTool />
         </Tab>
       </Tabs>
     </div>

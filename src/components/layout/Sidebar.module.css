@@ -962,3 +962,269 @@
     font-size: 0.35rem;
   }
 }
+
+/* 
+ * ========================================
+ * STYLES POUR SIDEBAR HIÉRARCHIQUE
+ * ========================================
+ */
+
+/* 
+ * Élément de navigation
+ * -------------------
+ * Base pour tous les éléments de navigation
+ */
+.navItem {
+  margin-bottom: var(--tc-space-1);
+}
+
+/* 
+ * Liens de navigation simples
+ * --------------------------
+ * Style pour les liens directs (Dashboard, etc.)
+ */
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tc-space-3);
+  color: var(--tc-text-light);
+  text-decoration: none;
+  transition: var(--tc-transition-short);
+  position: relative;
+  height: 50px;
+  margin: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-radius-base);
+}
+
+.navLink i {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.navLink:hover {
+  background-color: var(--tc-hover-overlay-light);
+  color: var(--tc-text-light);
+}
+
+.navLink.active {
+  background-color: var(--tc-active-overlay-light);
+  border: 2px solid var(--tc-color-accent, #fff);
+}
+
+/* 
+ * Sections de navigation
+ * ---------------------
+ * Conteneurs pour les groupes d'éléments
+ */
+.navSection {
+  margin-bottom: var(--tc-space-2);
+}
+
+.navSubsection {
+  margin-left: var(--tc-space-2);
+  margin-bottom: var(--tc-space-1);
+}
+
+/* 
+ * En-têtes de section
+ * ------------------
+ * Boutons cliquables pour les sections expandables
+ */
+.navSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--tc-space-3);
+  color: var(--tc-text-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--tc-transition-short);
+  position: relative;
+  height: 50px;
+  margin: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-radius-base);
+  width: calc(100% - var(--tc-space-4));
+}
+
+.navSectionHeader:hover {
+  background-color: var(--tc-hover-overlay-light);
+}
+
+.navSectionHeader.expanded {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 
+ * Titre de section
+ * ---------------
+ * Container pour icône et label
+ */
+.navSectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navSectionTitle i {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+/* 
+ * Label de navigation
+ * ------------------
+ * Texte des éléments (caché en mode icônes uniquement)
+ */
+.navLabel {
+  display: none; /* Caché par défaut en mode icônes */
+}
+
+/* 
+ * Icône d'expansion
+ * ----------------
+ * Chevron pour indiquer l'état expandé/contracté
+ */
+.expandIcon {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+  opacity: 0.7;
+}
+
+.expandIcon.rotated {
+  transform: rotate(90deg);
+}
+
+/* 
+ * Sous-listes de navigation
+ * ------------------------
+ * Listes des éléments enfants
+ */
+.navSublist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-left: var(--tc-space-2);
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  margin-left: var(--tc-space-4);
+}
+
+.navSubSublist {
+  padding-left: var(--tc-space-4);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 
+ * Tooltips pour le mode icônes uniquement
+ * ---------------------------------------
+ * Affichage du nom au survol
+ */
+.navLink .tooltip,
+.navSectionHeader .tooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border-radius: var(--tc-radius-base);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+}
+
+.navLink:hover .tooltip,
+.navSectionHeader:hover .tooltip {
+  opacity: 1;
+}
+
+/* 
+ * Styles spécifiques pour les sous-éléments
+ * -----------------------------------------
+ * Réduction de la taille et ajustement des couleurs
+ */
+.navSublist .navLink {
+  height: 40px;
+  font-size: 0.9rem;
+  margin: var(--tc-space-half) var(--tc-space-1);
+}
+
+.navSublist .navLink i {
+  font-size: 1.2rem;
+}
+
+.navSubSublist .navLink {
+  height: 35px;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.navSubSublist .navLink i {
+  font-size: 1rem;
+}
+
+/* 
+ * Mode étendu (pour future implémentation)
+ * ----------------------------------------
+ * Styles pour quand la sidebar est étendue avec texte
+ */
+.sidebar.extended {
+  width: var(--tc-submenu-width);
+  min-width: var(--tc-submenu-width);
+}
+
+.sidebar.extended .navLabel {
+  display: inline;
+  margin-left: var(--tc-space-3);
+}
+
+.sidebar.extended .navLink,
+.sidebar.extended .navSectionHeader {
+  justify-content: flex-start;
+  padding: var(--tc-space-3) var(--tc-space-4);
+}
+
+.sidebar.extended .navSectionTitle {
+  justify-content: flex-start;
+}
+
+/* 
+ * Adaptations mobile pour la nouvelle structure
+ * --------------------------------------------
+ */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .mobileSidebar .navLabel {
+    display: inline;
+    margin-left: var(--tc-space-3);
+  }
+
+  .mobileSidebar .navLink,
+  .mobileSidebar .navSectionHeader {
+    justify-content: flex-start;
+    padding: var(--tc-space-3) var(--tc-space-4);
+    margin: var(--tc-space-1) var(--tc-space-2);
+  }
+
+  .mobileSidebar .navSectionTitle {
+    justify-content: flex-start;
+  }
+
+  .mobileSidebar .navSublist {
+    margin-left: var(--tc-space-2);
+    padding-left: var(--tc-space-4);
+  }
+
+  .mobileSidebar .navSubSublist {
+    padding-left: var(--tc-space-6);
+  }
+
+  /* Masquer les tooltips sur mobile */
+  .mobileSidebar .tooltip {
+    display: none;
+  }
+}

@@ -81,8 +81,23 @@ function EntityViewTabs({
           {config.topSections.map((section, index) => (
             <div key={index} className={styles[section.className]}>
               <div className={styles.sectionHeader}>
-                <i className={section.icon}></i>
-                <h2>{section.title}</h2>
+                <i className={typeof section.icon === 'function' ? section.icon(entity) : section.icon}></i>
+                <h2>{typeof section.title === 'function' ? section.title(entity) : section.title}</h2>
+                {section.actions && (
+                  <div className={styles.sectionActions}>
+                    {(typeof section.actions === 'function' ? section.actions(entity) : section.actions).map((action, actionIndex) => (
+                      <button
+                        key={actionIndex}
+                        className={styles.actionBubble}
+                        onClick={action.onClick}
+                        title={action.tooltip}
+                      >
+                        {action.icon && <i className={action.icon}></i>}
+                        {action.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className={styles.sectionContent}>
                 {section.render ? section.render(entity) : section.content}

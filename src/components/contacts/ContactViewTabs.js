@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useContactDetails } from '@/hooks/contacts';
 import { useStructureDetails } from '@/hooks/structures';
 import { doc, getDoc } from 'firebase/firestore';
@@ -19,7 +18,6 @@ import styles from './ContactViewTabs.module.css';
 function ContactViewTabs({ id }) {
   console.log('[ContactViewTabs] ID reçu:', id);
   
-  const navigate = useNavigate();
   const [entityType, setEntityType] = useState(null);
   const [isDetecting, setIsDetecting] = useState(true);
   
@@ -142,9 +140,14 @@ function ContactViewTabs({ id }) {
       render: (contact) => {
         if (!contact) return null;
         
-        const isStructure = !contact.prenom || contact.type === 'structure';
+        // Détecter le type selon les nouvelles métadonnées
+        const hasStructureData = contact.structureRaisonSociale?.trim();
+        const isStructure = hasStructureData;
+        
+        // Pour les structures : afficher le nom de la structure
+        // Pour les personnes : afficher prénom + nom
         const displayName = isStructure 
-          ? (contact.nom || contact.raisonSociale || 'Structure sans nom')
+          ? (contact.structureRaisonSociale || 'Structure sans nom')
           : `${contact.prenom || ''} ${contact.nom || ''}`.trim() || 'Contact sans nom';
 
         return (
@@ -159,8 +162,8 @@ function ContactViewTabs({ id }) {
               </div>
               <div className={styles.entityInfo}>
                 <h1 className={styles.entityName}>{displayName}</h1>
-                {isStructure && contact.type && (
-                  <span className={styles.entityType}>{contact.type}</span>
+                {isStructure && contact.structureType && (
+                  <span className={styles.entityType}>{contact.structureType}</span>
                 )}
                 {!isStructure && contact.fonction && (
                   <span className={styles.entityFunction}>{contact.fonction}</span>
@@ -208,8 +211,8 @@ function ContactViewTabs({ id }) {
     
     bottomTabs: [
       { id: 'correspondance', label: 'Correspondance', icon: 'bi-envelope', color: '#28a745' },
-      { id: 'lieux', label: 'Lieux', icon: 'bi-geo-alt', color: '#fd7e14' },
       { id: 'diffusion', label: 'Diffusion', icon: 'bi-broadcast', color: '#6f42c1' },
+      { id: 'salle', label: 'Salle', icon: 'bi-building', color: '#fd7e14' },
       { id: 'dates', label: 'Dates', icon: 'bi-calendar-event', color: '#dc3545' },
       { id: 'contrats', label: 'Contrats', icon: 'bi-file-earmark-text', color: '#007bff' },
       { id: 'factures', label: 'Factures', icon: 'bi-receipt', color: '#ffc107' }
@@ -218,72 +221,170 @@ function ContactViewTabs({ id }) {
     topSections: [
       {
         className: 'topLeft',
-        title: 'Informations de contact',
+        title: 'Informations générales',
         icon: 'bi bi-info-circle',
         render: (contact) => {
-          // Déterminer si c'est une structure ou une personne
-          const isStructure = !contact.prenom || contact.type === 'structure';
+          // Détecter si c'est une structure ou une personne
+          const hasStructureData = contact.structureRaisonSociale?.trim();
+          const isStructure = hasStructureData;
           
-          // Fonction pour formater l'adresse si c'est un objet
-          const formatAdresse = (adresse) => {
-            if (typeof adresse === 'string') return adresse;
-            if (typeof adresse === 'object' && adresse) {
-              const parts = [
-                adresse.adresse,
-                adresse.codePostal,
-                adresse.ville,
-                adresse.pays
-              ].filter(Boolean);
-              return parts.join(', ');
-            }
-            return '';
+          // Construire l'adresse structure complète
+          const formatStructureAddress = () => {
+            const parts = [
+              contact.structureAdresse,
+              contact.structureSuiteAdresse1,
+              contact.structureCodePostal,
+              contact.structureVille,
+              contact.structureDepartement,
+              contact.structureRegion,
+              contact.structurePays
+            ].filter(Boolean);
+            return parts.join(', ');
+          };
+
+          // Construire l'adresse personne complète
+          const formatPersonneAddress = () => {
+            const parts = [
+              contact.adresse,
+              contact.suiteAdresse,
+              contact.codePostal,
+              contact.ville,
+              contact.departement,
+              contact.region,
+              contact.pays
+            ].filter(Boolean);
+            return parts.join(', ');
           };
 
           return (
             <div className={styles.contactDetails}>
-              {contact.email && (
-                <div className={styles.detailItem}>
-                  <i className="bi bi-envelope"></i>
-                  <span>{contact.email}</span>
-                </div>
-              )}
-              
-              {contact.telephone && (
-                <div className={styles.detailItem}>
-                  <i className="bi bi-telephone"></i>
-                  <span>{contact.telephone}</span>
-                </div>
-              )}
+              {isStructure ? (
+                <>
+                  {/* Titre dans la bulle uniquement, pas dans le contenu */}
+                  
+                  {/* Raison sociale */}
+                  {contact.structureRaisonSociale && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-building"></i>
+                      <span><strong>{contact.structureRaisonSociale}</strong></span>
+                    </div>
+                  )}
+                  
+                  {/* Adresse structure */}
+                  {(contact.structureAdresse || contact.structureVille) && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-geo-alt"></i>
+                      <span>{formatStructureAddress()}</span>
+                    </div>
+                  )}
+                  
+                  {/* Email structure */}
+                  {contact.structureEmail && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-envelope"></i>
+                      <span>{contact.structureEmail}</span>
+                    </div>
+                  )}
+                  
+                  {/* Téléphones structure */}
+                  {contact.structureTelephone1 && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-telephone"></i>
+                      <span>{contact.structureTelephone1}</span>
+                    </div>
+                  )}
+                  
+                  {contact.structureTelephone2 && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-telephone"></i>
+                      <span>{contact.structureTelephone2} (2)</span>
+                    </div>
+                  )}
+                  
+                  {/* Site web structure */}
+                  {contact.structureSiteWeb && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-globe"></i>
+                      <span>{contact.structureSiteWeb}</span>
+                    </div>
+                  )}
 
-              {(contact.ville || contact.adresse) && (
-                <div className={styles.detailItem}>
-                  <i className="bi bi-geo-alt"></i>
-                  <span>{contact.ville || formatAdresse(contact.adresse)}</span>
-                </div>
-              )}
-
-              {/* SIRET pour les structures */}
-              {isStructure && contact.siret && (
-                <div className={styles.detailItem}>
-                  <i className="bi bi-building-gear"></i>
-                  <span>SIRET: {contact.siret}</span>
-                </div>
-              )}
-
-              {/* Site web si disponible */}
-              {contact.siteWeb && (
-                <div className={styles.detailItem}>
-                  <i className="bi bi-globe"></i>
-                  <span>{contact.siteWeb}</span>
-                </div>
-              )}
-
-              {/* Numéro de TVA pour les structures */}
-              {isStructure && contact.numeroTVA && (
-                <div className={styles.detailItem}>
-                  <i className="bi bi-receipt"></i>
-                  <span>TVA: {contact.numeroTVA}</span>
-                </div>
+                  {/* SIRET si disponible */}
+                  {(contact.structureSiret || contact.structureId) && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-building-gear"></i>
+                      <span>SIRET: {contact.structureSiret || contact.structureId}</span>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* Titre dans la bulle uniquement, pas dans le contenu */}
+                  
+                  {/* Fonction */}
+                  {contact.fonction && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-briefcase"></i>
+                      <span><strong>{contact.fonction}</strong></span>
+                    </div>
+                  )}
+                  
+                  {/* Adresse personne */}
+                  {(contact.adresse || contact.ville) && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-house"></i>
+                      <span>{formatPersonneAddress()}</span>
+                    </div>
+                  )}
+                  
+                  {/* Email direct */}
+                  {contact.mailDirect && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-envelope"></i>
+                      <span>{contact.mailDirect} (direct)</span>
+                    </div>
+                  )}
+                  
+                  {/* Email perso */}
+                  {contact.mailPerso && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-envelope-at"></i>
+                      <span>{contact.mailPerso} (perso)</span>
+                    </div>
+                  )}
+                  
+                  {/* Téléphone direct */}
+                  {contact.telDirect && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-telephone"></i>
+                      <span>{contact.telDirect} (direct)</span>
+                    </div>
+                  )}
+                  
+                  {/* Téléphone perso */}
+                  {contact.telPerso && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-phone"></i>
+                      <span>{contact.telPerso} (perso)</span>
+                    </div>
+                  )}
+                  
+                  {/* Mobile */}
+                  {contact.mobile && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-phone-vibrate"></i>
+                      <span>{contact.mobile} (mobile)</span>
+                    </div>
+                  )}
+                  
+                  {/* Source */}
+                  {contact.source && (
+                    <div className={styles.detailItem}>
+                      <i className="bi bi-diagram-3"></i>
+                      <span>Source: {contact.source}</span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           );
@@ -340,57 +441,249 @@ function ContactViewTabs({ id }) {
       },
       {
         className: 'middleLeft',
-        title: isStructure ? 'Personnes' : 'Relations',
-        icon: 'bi bi-people',
-        render: (contact) => {
-          const isStructure = !contact.prenom || contact.type === 'structure';
+        title: (contact) => {
+          // Détecter si c'est une structure ou une personne
+          const hasStructureData = contact?.structureRaisonSociale?.trim();
+          const isStructure = hasStructureData;
+          return isStructure ? 'Personnes' : 'Structure';
+        },
+        icon: (contact) => {
+          const hasStructureData = contact?.structureRaisonSociale?.trim();
+          const isStructure = hasStructureData;
+          return isStructure ? 'bi bi-people' : 'bi bi-building';
+        },
+        actions: (contact) => {
+          const hasStructureData = contact?.structureRaisonSociale?.trim();
+          const isStructure = hasStructureData;
           
-          return (
-            <div>
-              <div className={styles.personnesActions}>
-                <button 
-                  className={styles.actionBubble}
-                  onClick={() => navigate('/contacts/nouveau')}
-                  title={isStructure ? "Créer un nouveau contact" : "Créer une nouvelle relation"}
-                >
-                  <i className="bi bi-person-plus"></i>
-                  <span>Nouveau</span>
-                </button>
-                
-                <button 
-                  className={styles.actionBubble}
-                  onClick={() => {
-                    console.log('Associer contact existant pour:', id);
-                    alert('Fonctionnalité d\'association en cours de développement');
-                  }}
-                  title={isStructure ? "Associer un contact existant" : "Associer une relation existante"}
-                >
-                  <i className="bi bi-person-check"></i>
-                  <span>Associer</span>
-                </button>
-              </div>
+          if (isStructure) {
+            // Pour les structures : actions sur les personnes
+            return [
+              {
+                label: 'Ajouter',
+                icon: 'bi bi-plus-circle',
+                tooltip: 'Ajouter une nouvelle personne',
+                onClick: () => {
+                  console.log('Ajouter nouvelle personne');
+                  // TODO: Ouvrir modal de création de personne
+                }
+              },
+              {
+                label: 'Associer',
+                icon: 'bi bi-link-45deg',
+                tooltip: 'Associer une personne existante',
+                onClick: () => {
+                  console.log('Associer personne existante');
+                  // TODO: Ouvrir modal de sélection de personne
+                }
+              }
+            ];
+          } else {
+            // Pour les personnes : actions sur les structures
+            return [
+              {
+                label: 'Ajouter',
+                icon: 'bi bi-plus-circle',
+                tooltip: 'Créer une nouvelle structure',
+                onClick: () => {
+                  console.log('Créer nouvelle structure');
+                  // TODO: Ouvrir modal de création de structure
+                }
+              },
+              {
+                label: 'Associer',
+                icon: 'bi bi-link-45deg',
+                tooltip: 'Associer une structure existante',
+                onClick: () => {
+                  console.log('Associer structure existante');
+                  // TODO: Ouvrir modal de sélection de structure
+                }
+              }
+            ];
+          }
+        },
+        render: (contact) => {
+          // Détecter si c'est une structure ou une personne
+          const hasStructureData = contact.structureRaisonSociale?.trim();
+          const isStructure = hasStructureData;
+          
+          if (isStructure) {
+            // Pour les structures, afficher les personnes
+            // Construire l'adresse personne complète
+            const formatPersonneAddress = (personneNum = '') => {
+              const adresseField = personneNum ? `adresse${personneNum}` : 'adresse';
+              const codePostalField = personneNum ? `codePostal${personneNum}` : 'codePostal';
+              const villeField = personneNum ? `ville${personneNum}` : 'ville';
+              const paysField = personneNum ? `pays${personneNum}` : 'pays';
               
-              <div className={styles.personnesContent}>
-                <div className={styles.personnesList}>
-                  <div className={styles.emptyPersonnes}>
-                    <i className="bi bi-people" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>
-                    <p>
-                      {isStructure 
-                        ? "Aucun contact associé à cette structure"
-                        : "Aucune relation définie"
-                      }
-                    </p>
-                    <small>
-                      {isStructure 
-                        ? "Ajoutez les personnes qui travaillent dans cette structure."
-                        : "Ajoutez des relations avec d'autres contacts ou structures."
-                      }
-                    </small>
+              const parts = [
+                contact[adresseField],
+                contact[codePostalField],
+                contact[villeField],
+                contact[paysField]
+              ].filter(Boolean);
+              return parts.join(', ');
+            };
+
+            const renderPersonne = (personneNum = '') => {
+              const prenomField = personneNum ? `prenom${personneNum}` : 'prenom';
+              const nomField = personneNum ? `nom${personneNum}` : 'nom';
+              const fonctionField = personneNum ? `fonction${personneNum}` : 'fonction';
+              const telDirectField = personneNum ? `telDirect${personneNum}` : 'telDirect';
+              const telPersoField = personneNum ? `telPerso${personneNum}` : 'telPerso';
+              const mobileField = personneNum ? `mobile${personneNum}` : 'mobile';
+              const mailDirectField = personneNum ? `mailDirect${personneNum}` : 'mailDirect';
+              const mailPersoField = personneNum ? `mailPerso${personneNum}` : 'mailPerso';
+              
+              const prenom = contact[prenomField];
+              const nom = contact[nomField];
+              
+              if (!prenom && !nom) return null;
+
+              return (
+                <div key={personneNum} className={styles.personneCard}>
+                  <div className={styles.personneHeader}>
+                    <i className="bi bi-person-circle"></i>
+                    <strong>{`${prenom || ''} ${nom || ''}`.trim()}</strong>
+                    {contact[fonctionField] && (
+                      <span className={styles.personneFunction}>
+                        - {contact[fonctionField]}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className={styles.personneDetails}>
+                    {contact[telDirectField] && (
+                      <div className={styles.detailItem}>
+                        <i className="bi bi-telephone"></i>
+                        <span>{contact[telDirectField]} (direct)</span>
+                      </div>
+                    )}
+                    
+                    {contact[telPersoField] && (
+                      <div className={styles.detailItem}>
+                        <i className="bi bi-phone"></i>
+                        <span>{contact[telPersoField]} (perso)</span>
+                      </div>
+                    )}
+                    
+                    {contact[mobileField] && (
+                      <div className={styles.detailItem}>
+                        <i className="bi bi-phone-vibrate"></i>
+                        <span>{contact[mobileField]} (mobile)</span>
+                      </div>
+                    )}
+                    
+                    {contact[mailDirectField] && (
+                      <div className={styles.detailItem}>
+                        <i className="bi bi-envelope"></i>
+                        <span>{contact[mailDirectField]} (direct)</span>
+                      </div>
+                    )}
+                    
+                    {contact[mailPersoField] && (
+                      <div className={styles.detailItem}>
+                        <i className="bi bi-envelope-at"></i>
+                        <span>{contact[mailPersoField]} (perso)</span>
+                      </div>
+                    )}
+                    
+                    {formatPersonneAddress(personneNum) && (
+                      <div className={styles.detailItem}>
+                        <i className="bi bi-house"></i>
+                        <span>{formatPersonneAddress(personneNum)}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
+              );
+            };
+
+            return (
+              <div className={styles.personnesContent}>
+                {renderPersonne()} {/* Personne 1 */}
+                {renderPersonne('2')} {/* Personne 2 */}
+                {renderPersonne('3')} {/* Personne 3 */}
+                
+                {!contact.prenom && !contact.prenom2 && !contact.prenom3 && (
+                  <div className={styles.emptyPersonnes}>
+                    <i className="bi bi-people" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>
+                    <p>Aucune personne définie</p>
+                    <small>Les métadonnées personnes apparaîtront ici.</small>
+                  </div>
+                )}
               </div>
-            </div>
-          );
+            );
+          } else {
+            // Pour les personnes, afficher la structure
+            return (
+              <div className={styles.structureContent}>
+                {contact.structureRaisonSociale ? (
+                  <div className={styles.structureCard}>
+                    <div className={styles.structureHeader}>
+                      <i className="bi bi-building"></i>
+                      <strong>{contact.structureRaisonSociale}</strong>
+                    </div>
+                    
+                    <div className={styles.structureDetails}>
+                      {/* Adresse structure */}
+                      {(contact.structureAdresse || contact.structureVille) && (
+                        <div className={styles.detailItem}>
+                          <i className="bi bi-geo-alt"></i>
+                          <span>{[
+                            contact.structureAdresse,
+                            contact.structureSuiteAdresse1,
+                            contact.structureCodePostal,
+                            contact.structureVille,
+                            contact.structureDepartement,
+                            contact.structureRegion,
+                            contact.structurePays
+                          ].filter(Boolean).join(', ')}</span>
+                        </div>
+                      )}
+                      
+                      {/* Email structure */}
+                      {contact.structureEmail && (
+                        <div className={styles.detailItem}>
+                          <i className="bi bi-envelope"></i>
+                          <span>{contact.structureEmail}</span>
+                        </div>
+                      )}
+                      
+                      {/* Téléphones structure */}
+                      {contact.structureTelephone1 && (
+                        <div className={styles.detailItem}>
+                          <i className="bi bi-telephone"></i>
+                          <span>{contact.structureTelephone1}</span>
+                        </div>
+                      )}
+                      
+                      {contact.structureTelephone2 && (
+                        <div className={styles.detailItem}>
+                          <i className="bi bi-telephone"></i>
+                          <span>{contact.structureTelephone2} (2)</span>
+                        </div>
+                      )}
+                      
+                      {/* Site web */}
+                      {contact.structureSiteWeb && (
+                        <div className={styles.detailItem}>
+                          <i className="bi bi-globe"></i>
+                          <span>{contact.structureSiteWeb}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.emptyStructure}>
+                    <i className="bi bi-building" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>
+                    <p>Aucune structure associée</p>
+                    <small>Les informations de la structure apparaîtront ici.</small>
+                  </div>
+                )}
+              </div>
+            );
+          }
         }
       },
       {
@@ -418,11 +711,131 @@ function ContactViewTabs({ id }) {
             </div>
           );
         }
-      }
+      },
     ],
 
     renderBottomTabContent: (activeBottomTab) => {
       switch (activeBottomTab) {
+        case 'diffusion':
+          return (
+            <div className={styles.tabContent}>
+              <div className={styles.metadataSection}>
+                <h3><i className="bi bi-broadcast"></i> Informations de diffusion</h3>
+                <div className={styles.metadataGrid}>
+                  {contact?.nomFestival && (
+                    <div className={styles.metadataItem}>
+                      <strong>Nom du festival:</strong>
+                      <span>{contact.nomFestival}</span>
+                    </div>
+                  )}
+                  {contact?.periodeFestivalMois && (
+                    <div className={styles.metadataItem}>
+                      <strong>Période (mois):</strong>
+                      <span>{contact.periodeFestivalMois}</span>
+                    </div>
+                  )}
+                  {contact?.periodeFestivalComplete && (
+                    <div className={styles.metadataItem}>
+                      <strong>Période complète:</strong>
+                      <span>{contact.periodeFestivalComplete}</span>
+                    </div>
+                  )}
+                  {contact?.bouclage && (
+                    <div className={styles.metadataItem}>
+                      <strong>Bouclage:</strong>
+                      <span>{contact.bouclage}</span>
+                    </div>
+                  )}
+                  {contact?.diffusionCommentaires1 && (
+                    <div className={styles.metadataItem}>
+                      <strong>Commentaires:</strong>
+                      <span>{contact.diffusionCommentaires1}</span>
+                    </div>
+                  )}
+                </div>
+                {!contact?.nomFestival && !contact?.periodeFestivalMois && (
+                  <div className={styles.emptyMessage}>
+                    <i className="bi bi-broadcast" style={{ fontSize: '2rem', color: '#6c757d' }}></i>
+                    <p>Aucune information de diffusion</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+          
+        case 'salle':
+          return (
+            <div className={styles.tabContent}>
+              <div className={styles.metadataSection}>
+                <h3><i className="bi bi-building"></i> Informations de salle</h3>
+                <div className={styles.metadataGrid}>
+                  {contact?.salleNom && (
+                    <div className={styles.metadataItem}>
+                      <strong>Nom de la salle:</strong>
+                      <span>{contact.salleNom}</span>
+                    </div>
+                  )}
+                  {(contact?.salleAdresse || contact?.salleVille) && (
+                    <div className={styles.metadataItem}>
+                      <strong>Adresse:</strong>
+                      <span>
+                        {[
+                          contact.salleAdresse,
+                          contact.salleSuiteAdresse,
+                          contact.salleCodePostal,
+                          contact.salleVille,
+                          contact.salleDepartement,
+                          contact.salleRegion,
+                          contact.sallePays
+                        ].filter(Boolean).join(', ')}
+                      </span>
+                    </div>
+                  )}
+                  {contact?.salleTelephone && (
+                    <div className={styles.metadataItem}>
+                      <strong>Téléphone:</strong>
+                      <span>{contact.salleTelephone}</span>
+                    </div>
+                  )}
+                  {(contact?.salleJauge1 || contact?.salleJauge2 || contact?.salleJauge3) && (
+                    <div className={styles.metadataItem}>
+                      <strong>Jauges:</strong>
+                      <span>
+                        {[contact.salleJauge1, contact.salleJauge2, contact.salleJauge3]
+                          .filter(Boolean)
+                          .join(' / ')}
+                      </span>
+                    </div>
+                  )}
+                  {contact?.salleOuverture && (
+                    <div className={styles.metadataItem}>
+                      <strong>Ouverture:</strong>
+                      <span>{contact.salleOuverture}</span>
+                    </div>
+                  )}
+                  {contact?.salleProfondeur && (
+                    <div className={styles.metadataItem}>
+                      <strong>Profondeur:</strong>
+                      <span>{contact.salleProfondeur}</span>
+                    </div>
+                  )}
+                  {contact?.salleHauteur && (
+                    <div className={styles.metadataItem}>
+                      <strong>Hauteur:</strong>
+                      <span>{contact.salleHauteur}</span>
+                    </div>
+                  )}
+                </div>
+                {!contact?.salleNom && !contact?.salleAdresse && (
+                  <div className={styles.emptyMessage}>
+                    <i className="bi bi-building" style={{ fontSize: '2rem', color: '#6c757d' }}></i>
+                    <p>Aucune information de salle</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        
         case 'dates':
           return (
             <div className={styles.tabContent}>

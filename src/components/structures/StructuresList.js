@@ -6,6 +6,7 @@ import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
 import { useDeleteStructure } from '@/hooks/structures';
 import { useTabs } from '@/context/TabsContext';
+import StructureCreationModal from '@/components/contacts/modal/StructureCreationModal';
 
 /**
  * Liste unifiée des structures utilisant le composant générique ListWithFilters
@@ -14,8 +15,9 @@ import { useTabs } from '@/context/TabsContext';
 function StructuresList() {
   console.log('🏢 Main StructuresList component loaded');
   const navigate = useNavigate();
-  const { openStructureTab } = useTabs();
+  const { openContactTab } = useTabs();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showStructureModal, setShowStructureModal] = useState(false);
   
   // Callback appelé après suppression réussie pour actualiser la liste
   const onDeleteSuccess = () => {
@@ -24,109 +26,143 @@ function StructuresList() {
   
   const { handleDelete } = useDeleteStructure(onDeleteSuccess);
 
-  // Fonction de calcul des statistiques pour les structures
+  // Fonction de calcul des statistiques pour tous les contacts
   const calculateStats = (items) => {
     const total = items.length;
     
-    // Répartition par type
-    const typeCount = items.reduce((acc, structure) => {
-      const type = structure.type || 'non_defini';
+    // Répartition par type de contact
+    const typeCount = items.reduce((acc, contact) => {
+      const hasStructureData = contact.structureRaisonSociale?.trim();
+      
+      let type;
+      if (hasStructureData) {
+        type = 'structures';
+      } else {
+        type = 'personnes';
+      }
+      
       acc[type] = (acc[type] || 0) + 1;
       return acc;
     }, {});
     
-    const typePopulaire = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0];
-    
-    // Structures avec SIRET
-    const avecSiret = items.filter(structure => structure.siret && structure.siret.trim()).length;
-    
-    // Structures avec contact email
-    const avecEmail = items.filter(structure => structure.email && structure.email.trim()).length;
+    // Contacts avec email
+    const avecEmail = items.filter(contact => 
+      contact.email || contact.mailDirect || contact.structureEmail
+    ).length;
     
     return [
       {
         id: 'total',
-        label: 'Total Structures',
+        label: 'Total Contacts',
         value: total,
-        icon: 'bi bi-building',
+        icon: 'bi bi-people',
         variant: 'primary'
       },
       {
-        id: 'type_principal',
-        label: 'Type principal',
-        value: typePopulaire ? typePopulaire[0] : 'N/A',
-        icon: 'bi bi-diagram-3',
-        variant: 'info',
-        subtext: typePopulaire ? `${typePopulaire[1]} structures` : ''
+        id: 'structures',
+        label: 'Structures',
+        value: typeCount.structures || 0,
+        icon: 'bi bi-building',
+        variant: 'info'
       },
       {
-        id: 'avec_siret',
-        label: 'Avec SIRET',
-        value: avecSiret,
-        icon: 'bi bi-card-checklist',
-        variant: 'success',
-        subtext: `${Math.round((avecSiret / total) * 100) || 0}%`
+        id: 'personnes',
+        label: 'Personnes',
+        value: typeCount.personnes || 0,
+        icon: 'bi bi-person',
+        variant: 'success'
       },
       {
         id: 'avec_email',
         label: 'Avec email',
         value: avecEmail,
         icon: 'bi bi-envelope',
-        variant: 'warning',
+        variant: 'secondary',
         subtext: `${Math.round((avecEmail / total) * 100) || 0}%`
       }
     ];
   };
 
-  // Configuration des colonnes pour les structures
+  // Configuration des colonnes pour tous les contacts (avec détection du type)
   const columns = [
+    {
+      id: 'type',
+      label: 'Type',
+      field: 'entityType',
+      sortable: true,
+      width: '8%',
+      render: (contact) => {
+        // Détecter le type selon les nouvelles métadonnées
+        const hasStructureData = contact.structureRaisonSociale?.trim();
+        
+        let type, icon, variant;
+        if (hasStructureData) {
+          type = 'Structure'; icon = 'bi bi-building'; variant = 'info';
+        } else {
+          type = 'Personne'; icon = 'bi bi-person'; variant = 'primary';
+        }
+        
+        return (
+          <span 
+            className={`badge bg-${variant} d-flex align-items-center justify-content-center`} 
+            style={{ fontSize: '1rem', minWidth: '32px', height: '28px' }}
+            title={type}
+          >
+            <i className={icon}></i>
+          </span>
+        );
+      },
+    },
     {
       id: 'nom',
       label: 'Nom',
       field: 'nom',
       sortable: true,
-      width: '25%',
-    },
-    {
-      id: 'raisonSociale',
-      label: 'Raison Sociale',
-      field: 'raisonSociale',
-      sortable: true,
-      width: '25%',
-      render: (structure) => structure.raisonSociale || '-',
-    },
-    {
-      id: 'type',
-      label: 'Type',
-      field: 'type',
-      sortable: true,
-      width: '15%',
-      render: (structure) => {
-        const types = {
-          association: 'Association',
-          sas: 'SAS',
-          sarl: 'SARL',
-          eurl: 'EURL',
-          autre: 'Autre',
-        };
-        return types[structure.type] || structure.type || '-';
+      width: '30%',
+      render: (contact) => {
+        const hasStructureData = contact.structureRaisonSociale?.trim();
+        
+        if (hasStructureData) {
+          // Structure
+          return contact.structureRaisonSociale || 'Structure sans nom';
+        } else {
+          // Personne
+          return `${contact.prenom} ${contact.nom}`.trim() || contact.nom || contact.email || 'Contact sans nom';
+        }
       },
     },
     {
-      id: 'siret',
-      label: 'SIRET',
-      field: 'siret',
+      id: 'details',
+      label: 'Détails',
+      field: 'details',
       sortable: false,
       width: '20%',
-      render: (structure) => structure.siret || '-',
+      render: (contact) => {
+        if (contact.structureRaisonSociale) {
+          return contact.structureSiret || contact.structureId || 'Structure';
+        }
+        return contact.fonction || contact.structureNom || '—';
+      },
     },
     {
       id: 'email',
       label: 'Email',
       field: 'email',
       sortable: true,
-      width: '15%',
-      render: (structure) => structure.email || '-',
+      width: '20%',
+      render: (contact) => {
+        return contact.email || contact.mailDirect || contact.structureEmail || '—';
+      },
+    },
+    {
+      id: 'telephone',
+      label: 'Téléphone',
+      field: 'telephone',
+      sortable: false,
+      width: '18%',
+      render: (contact) => {
+        return contact.telephone || contact.telDirect || contact.structureTelephone1 || '—';
+      },
     },
   ];
 
@@ -155,47 +191,80 @@ function StructuresList() {
     },
   ];
 
-  // Actions sur les lignes
-  const renderActions = (structure) => (
-    <ActionButtons
-      onView={() => openStructureTab(structure.id, structure.nom || structure.raisonSociale || 'Structure')}
-      onEdit={() => navigate(`/structures/${structure.id}/edit`)}
-      onDelete={() => handleDelete(structure.id)}
-    />
-  );
+  // Actions sur les lignes (adaptées pour tous les contacts)
+  const renderActions = (contact) => {
+    const displayName = getContactDisplayName(contact);
+    
+    return (
+      <ActionButtons
+        onView={() => openContactTab(contact.id, displayName)}
+        onEdit={() => navigate(`/contacts/${contact.id}/edit`)}
+        onDelete={() => handleDelete(contact.id)}
+      />
+    );
+  };
+  
+  // Fonction utilitaire pour obtenir le nom d'affichage
+  const getContactDisplayName = (contact) => {
+    const hasStructureData = contact.structureRaisonSociale?.trim();
+    
+    if (hasStructureData) {
+      return contact.structureRaisonSociale || 'Structure';
+    } else {
+      return `${contact.prenom} ${contact.nom}`.trim() || contact.nom || contact.email || 'Contact';
+    }
+  };
+
+  // Callback appelé après création réussie d'une structure
+  const handleStructureCreated = (newStructure) => {
+    console.log('Structure créée:', newStructure);
+    setRefreshKey(prev => prev + 1); // Actualiser la liste
+    // Optionnel : ouvrir l'onglet de la nouvelle structure
+    openContactTab(newStructure.id, newStructure.structureRaisonSociale);
+  };
 
   // Actions de l'en-tête
   const headerActions = (
     <AddButton
-      onClick={() => navigate('/structures/nouveau')}
+      onClick={() => setShowStructureModal(true)}
     >
       Nouvelle structure
     </AddButton>
   );
 
   // Gestion du clic sur une ligne
-  const handleRowClick = (structure) => {
-    console.log('🖱️ Main StructuresList handleRowClick called with:', structure);
-    console.log('🚀 Opening tab for structure:', structure.id);
-    openStructureTab(structure.id, structure.nom || structure.raisonSociale || 'Structure');
+  const handleRowClick = (contact) => {
+    console.log('🖱️ Clic sur contact:', contact);
+    const displayName = getContactDisplayName(contact);
+    console.log('🚀 Ouverture onglet contact:', contact.id, displayName);
+    openContactTab(contact.id, displayName);
   };
 
   return (
-    <ListWithFilters
-      key={refreshKey}
-      entityType="structures"
-      title="Gestion des Structures"
-      columns={columns}
-      filterOptions={filterOptions}
-      sort={{ field: 'nom', direction: 'asc' }}
-      actions={headerActions}
-      onRowClick={handleRowClick}
-      renderActions={renderActions}
-      pageSize={20}
-      showRefresh={true}
-      showStats={true}
-      calculateStats={calculateStats}
-    />
+    <>
+      <ListWithFilters
+        key={refreshKey}
+        entityType="contacts"
+        title="Tous les Contacts"
+        columns={columns}
+        filterOptions={filterOptions}
+        sort={{ field: 'nom', direction: 'asc' }}
+        actions={headerActions}
+        onRowClick={handleRowClick}
+        renderActions={renderActions}
+        pageSize={20}
+        showRefresh={true}
+        showStats={true}
+        calculateStats={calculateStats}
+      />
+      
+      {/* Modal de création de structure */}
+      <StructureCreationModal
+        show={showStructureModal}
+        onHide={() => setShowStructureModal(false)}
+        onCreated={handleStructureCreated}
+      />
+    </>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import ContactsList from '@/components/contacts/ContactsList';
+import StructuresList from '@/components/structures/StructuresList';
 import ContactView from '@/components/contacts/desktop/ContactView';
 import ContactForm from '@/components/contacts/desktop/ContactForm';
 import ContactFormUnified from '@/components/contacts/ContactFormUnified';
@@ -8,6 +8,7 @@ import ContactTypeSelector from '@/components/contacts/ContactTypeSelector';
 
 const ContactsPage = ({ tabPath }) => {
   const location = useLocation();
+  
   console.log('[ContactsPage] Rendu avec location.pathname:', location.pathname);
   console.log('[ContactsPage] window.location.pathname:', window.location.pathname);
   console.log('[ContactsPage] tabPath reçu:', tabPath);
@@ -19,13 +20,27 @@ const ContactsPage = ({ tabPath }) => {
   console.log('[ContactsPage] effectivePath:', effectivePath);
   console.log('[ContactsPage] subPath calculé:', subPath);
   
+  // Note: Les modals sont maintenant gérées globalement dans ContactModalsContainer
+  
+  // Pour la route racine "/contacts", afficher directement la liste
+  if (subPath === '/') {
+    return (
+      <div className="contacts-page">
+        <StructuresList />
+      </div>
+    );
+  }
+  
   // Rendu direct basé sur le chemin de l'onglet
   if (subPath.startsWith('/nouveau/')) {
     const type = subPath.split('/')[2]; // Extraire 'structure' ou 'personne'
     console.log('[ContactsPage] Type détecté:', type);
+    
+    // Pour les créations, rediriger vers la liste des contacts
+    // Les modals sont gérées globalement maintenant
     return (
       <div className="contacts-page">
-        <ContactFormUnified />
+        <StructuresList />
       </div>
     );
   }
@@ -42,7 +57,7 @@ const ContactsPage = ({ tabPath }) => {
   return (
     <div className="contacts-page">
       <Routes>
-        <Route path="/" element={<ContactsList />} />
+        <Route path="/" element={<StructuresList />} />
         <Route path="/nouveau" element={<ContactTypeSelector />} />
         <Route path="/nouveau/:type" element={<ContactFormUnified />} />
         <Route path="/:id/edit" element={<ContactForm />} />

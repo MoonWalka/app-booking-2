@@ -1,5 +1,86 @@
 /* ContactViewTabs.module.css */
 
+/* Nouvelles sections métadonnées */
+/* Suppression des titres dans le contenu - ils sont dans la bulle uniquement */
+.sectionTitle {
+  display: none; /* Les titres apparaissent dans la bulle flottante uniquement */
+}
+
+.personneCard {
+  margin-bottom: 15px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.personneHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.personneFunction {
+  font-weight: normal;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.personneDetails {
+  display: grid;
+  gap: 6px;
+}
+
+.metadataSection {
+  padding: 20px;
+}
+
+.metadataGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+.metadataItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.metadataItem strong {
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.metadataItem span {
+  color: #212529;
+  font-size: 1rem;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+
+.emptyMessage p {
+  margin: 10px 0 0 0;
+  font-size: 1.1rem;
+}
+
+.tabContent {
+  height: 100%;
+  overflow-y: auto;
+}
+
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -291,43 +372,8 @@
   justify-content: center;
 }
 
-/* Header de section - bulle flottante */
-.sectionHeader {
-  position: absolute;
-  top: -14px;
-  left: 20px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: 2px solid #dee2e6;
-  border-radius: 25px;
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 10;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
-}
-
-.sectionHeader:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  border-color: #007bff;
-}
-
-.sectionHeader h2 {
-  margin: 0;
-  color: #343a40;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-}
-
-.sectionHeader i {
-  color: #007bff;
-  font-size: 1rem;
-  text-shadow: 0 1px 2px rgba(0,123,255,0.3);
-}
+/* Header de section - bulle flottante épurée (hérite d'EntityViewTabs) */
+/* Styles déjà définis dans EntityViewTabs.module.css - pas de redéfinition */
 
 /* Informations du contact */
 .contactInfo {
@@ -475,52 +521,22 @@
 .personnesContent {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   height: 100%;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
+/* Actions personnes - hérite d'EntityViewTabs.module.css */
 .personnesActions {
   position: absolute;
-  top: -14px;
+  top: -12px;
   right: 20px;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   z-index: 10;
 }
 
-.actionBubble {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: 2px solid #dee2e6;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #495057;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  backdrop-filter: blur(10px);
-}
-
-.actionBubble:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  border-color: #007bff;
-  color: #007bff;
-}
-
-.actionBubble i {
-  font-size: 0.85rem;
-  color: #007bff;
-}
-
-.actionBubble:hover i {
-  color: #0056b3;
-}
+/* ActionBubble hérite d'EntityViewTabs.module.css - pas de redéfinition */
 
 .personnesList {
   flex: 1;
@@ -554,8 +570,9 @@
 .tagsContent {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   height: 100%;
+  margin-top: 8px;
 }
 
 .currentTags {
@@ -661,7 +678,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-top: 10px;
+  padding-top: 8px;
+  margin-top: 8px;
 }
 
 .commentsTextarea {

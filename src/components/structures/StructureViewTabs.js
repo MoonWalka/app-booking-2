@@ -17,9 +17,6 @@ const StructureViewTabs = ({ id: propId }) => {
     structure,
     loading,
     error,
-    isEditing,
-    formData,
-    setFormData,
     contacts,
     concerts,
     lieux

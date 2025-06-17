@@ -7,6 +7,8 @@ import Button from '@ui/Button';
 import { useAuth } from '@/context/AuthContext.js';
 import { useResponsive } from '@/hooks/common';
 import { OrganizationSelector } from '@/components/organization';
+import { useContactModals } from '@/context/ContactModalsContext';
+import ContactModalsContainer from '@/components/contacts/modal/ContactModalsContainer';
 import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
 import sidebarStyles from '@/components/layout/Sidebar.module.css';
@@ -24,6 +26,12 @@ function DesktopLayout({ children }) {
     openDebugToolsTab,
     openTab
   } = useTabs();
+  
+  const { 
+    openStructureModal,
+    openPersonneModal 
+  } = useContactModals();
+  
   
   // État pour suivre si une transition est en cours
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -139,22 +147,12 @@ function DesktopLayout({ children }) {
         });
         break;
       case '/contacts/nouveau/structure':
-        openTab({
-          id: 'contact-new-structure',
-          title: 'Nouvelle Structure',
-          path: '/contacts/nouveau/structure',
-          component: 'ContactsPage',
-          icon: 'bi-building-add'
-        });
+        // Ouvrir directement la modal de création de structure
+        openStructureModal();
         break;
       case '/contacts/nouveau/personne':
-        openTab({
-          id: 'contact-new-personne',
-          title: 'Nouvelle Personne',
-          path: '/contacts/nouveau/personne',
-          component: 'ContactsPage',
-          icon: 'bi-person-circle'
-        });
+        // Ouvrir directement la modal de création de personne
+        openPersonneModal();
         break;
       case '/tabs-test':
         // Naviguer normalement pour cette page de test
@@ -183,17 +181,7 @@ function DesktopLayout({ children }) {
             { to: "/contacts/nouveau/structure", icon: "bi-building-add", label: "Ajouter une structure" },
             { to: "/contacts/nouveau/personne", icon: "bi-person-circle", label: "Ajouter une personne" }
           ]
-        },
-        { to: "/lieux", icon: "bi-geo-alt", label: "Lieux" },
-        { to: "/structures", icon: "bi-building", label: "Structures" }
-      ]
-    },
-    {
-      id: "tools",
-      icon: "bi-tools",
-      label: "Outils",
-      subItems: [
-        { to: "/debug-tools", icon: "bi-bug", label: "Debug Tools" }
+        }
       ]
     },
     {
@@ -202,15 +190,22 @@ function DesktopLayout({ children }) {
       label: "Booking",
       subItems: [
         { to: "/concerts", icon: "bi-calendar-event", label: "Concerts" },
-        { to: "/contrats", icon: "bi-file-earmark-text", label: "Contrats" },
-        { to: "/factures", icon: "bi-receipt", label: "Factures" },
         { to: "/artistes", icon: "bi-music-note-beamed", label: "Artistes" }
       ]
     },
     {
       id: "admin",
-      icon: "bi-shield-check",
+      icon: "bi-clipboard-data",
       label: "Admin", 
+      subItems: [
+        { to: "/contrats", icon: "bi-file-earmark-text", label: "Contrats" },
+        { to: "/factures", icon: "bi-receipt", label: "Factures" }
+      ]
+    },
+    {
+      id: "tools",
+      icon: "bi-tools",
+      label: "Outils",
       subItems: [
         { to: "/debug-tools", icon: "bi-bug", label: "Debug Tools" },
         { to: "/tabs-test", icon: "bi-window-stack", label: "Test Onglets" }
@@ -333,24 +328,29 @@ function DesktopLayout({ children }) {
                       );
                     }
                     
-                    // Sous-item simple
-                    return (
-                      <li key={subItem.to}>
-                        <button 
-                          className={sidebarStyles.navButton}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleNavigation(subItem);
-                            if (isMobile) {
-                              handleMobileNavClick();
-                            }
-                          }}
-                        >
-                          <i className={`bi ${subItem.icon}`}></i>
-                          <span>{subItem.label}</span>
-                        </button>
-                      </li>
-                    );
+                    // Sous-item simple (seulement s'il a une propriété 'to')
+                    if (subItem.to) {
+                      return (
+                        <li key={subItem.to}>
+                          <button 
+                            className={sidebarStyles.navButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleNavigation(subItem);
+                              if (isMobile) {
+                                handleMobileNavClick();
+                              }
+                            }}
+                          >
+                            <i className={`bi ${subItem.icon}`}></i>
+                            <span>{subItem.label}</span>
+                          </button>
+                        </li>
+                      );
+                    }
+                    
+                    // Si pas de 'to' et pas de 'subItems', ne rien rendre
+                    return null;
                   })}
                 </ul>
               </div>
@@ -507,6 +507,8 @@ function DesktopLayout({ children }) {
           <TabManagerProduction />
         </main>
         
+        {/* Conteneur des modals de contact */}
+        <ContactModalsContainer />
       </div>
     );
   }
@@ -606,6 +608,8 @@ function DesktopLayout({ children }) {
         <TabManagerProduction />
       </main>
       
+      {/* Conteneur des modals de contact */}
+      <ContactModalsContainer />
     </div>
   );
 }

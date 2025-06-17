@@ -5,13 +5,13 @@ import styles from './TabManager.module.css';
 
 // Import des pages/composants
 import DashboardPage from '@/pages/DashboardPage';
+import ContactsPage from '@/pages/ContactsPage';
 import ContratsPage from '@/pages/ContratsPage';
 import FacturesPage from '@/pages/FacturesPage';
 import ParametresPage from '@/pages/ParametresPage';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
-import ContactsList from '@/components/contacts/ContactsList';
 import ConcertsList from '@/components/concerts/ConcertsList';
 import LieuxList from '@/components/lieux/LieuxList';
 import StructuresList from '@/components/structures/StructuresList';
@@ -55,8 +55,10 @@ const TabManagerProduction = () => {
         case 'DashboardPage':
           return <DashboardPage />;
         case 'ContactsPage':
-          // Afficher directement la liste des contacts
-          return <ContactsList />;
+          // Rendre le composant ContactsPage complet pour gérer les sous-routes
+          console.log('[TabManager] Rendu ContactsPage pour activeTab:', activeTab);
+          console.log('[TabManager] activeTab.path:', activeTab.path);
+          return <ContactsPage tabPath={activeTab.path} />;
         case 'ContactDetailsPage':
           // Afficher les détails d'un contact avec le nouveau layout
           console.log('[DEBUG TabManager] activeTab pour ContactDetailsPage:', activeTab);

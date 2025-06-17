@@ -67,6 +67,8 @@ function DesktopLayout({ children }) {
 
   // État pour gérer l'expansion des menus
   const [expandedMenu, setExpandedMenu] = useState(null);
+  // État pour gérer l'expansion des sous-sous-menus
+  const [expandedSubMenu, setExpandedSubMenu] = useState(null);
   // État pour le menu utilisateur
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
@@ -136,6 +138,24 @@ function DesktopLayout({ children }) {
           icon: 'bi-gear'
         });
         break;
+      case '/contacts/nouveau/structure':
+        openTab({
+          id: 'contact-new-structure',
+          title: 'Nouvelle Structure',
+          path: '/contacts/nouveau/structure',
+          component: 'ContactsPage',
+          icon: 'bi-building-add'
+        });
+        break;
+      case '/contacts/nouveau/personne':
+        openTab({
+          id: 'contact-new-personne',
+          title: 'Nouvelle Personne',
+          path: '/contacts/nouveau/personne',
+          component: 'ContactsPage',
+          icon: 'bi-person-circle'
+        });
+        break;
       case '/tabs-test':
         // Naviguer normalement pour cette page de test
         navigate(item.to);
@@ -155,7 +175,15 @@ function DesktopLayout({ children }) {
       label: "Contact",
       subItems: [
         { to: "/contacts", icon: "bi-people", label: "Tous les contacts" },
-        { to: "/contacts/nouveau", icon: "bi-person-plus", label: "Ajouter un contact" },
+        { 
+          id: "add-contact",
+          icon: "bi-person-plus", 
+          label: "Ajouter un contact",
+          subItems: [
+            { to: "/contacts/nouveau/structure", icon: "bi-building-add", label: "Ajouter une structure" },
+            { to: "/contacts/nouveau/personne", icon: "bi-person-circle", label: "Ajouter une personne" }
+          ]
+        },
         { to: "/lieux", icon: "bi-geo-alt", label: "Lieux" },
         { to: "/structures", icon: "bi-building", label: "Structures" }
       ]
@@ -194,10 +222,17 @@ function DesktopLayout({ children }) {
   // Gérer l'expansion/contraction des menus
   const toggleMenu = (menuId) => {
     setExpandedMenu(expandedMenu === menuId ? null : menuId);
+    // Fermer les sous-sous-menus quand on change de menu principal
+    setExpandedSubMenu(null);
     // Fermer le menu utilisateur si un autre menu s'ouvre
     if (menuId && isUserMenuOpen) {
       setIsUserMenuOpen(false);
     }
+  };
+
+  // Gérer l'expansion/contraction des sous-sous-menus
+  const toggleSubMenu = (subMenuId) => {
+    setExpandedSubMenu(expandedSubMenu === subMenuId ? null : subMenuId);
   };
 
   // Gérer l'ouverture/fermeture du menu utilisateur
@@ -256,23 +291,67 @@ function DesktopLayout({ children }) {
                   </button>
                 </div>
                 <ul className={sidebarStyles.subMenu}>
-                  {item.subItems.map((subItem) => (
-                    <li key={subItem.to}>
-                      <button 
-                        className={sidebarStyles.navButton}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleNavigation(subItem);
-                          if (isMobile) {
-                            handleMobileNavClick();
-                          }
-                        }}
-                      >
-                        <i className={`bi ${subItem.icon}`}></i>
-                        <span>{subItem.label}</span>
-                      </button>
-                    </li>
-                  ))}
+                  {item.subItems.map((subItem) => {
+                    // Si le sous-item a des sous-éléments (sous-sous-menu)
+                    if (subItem.subItems) {
+                      const isSubExpanded = expandedSubMenu === subItem.id;
+                      return (
+                        <li key={subItem.id} className={sidebarStyles.subNavGroup}>
+                          <button 
+                            className={`${sidebarStyles.navButton} ${sidebarStyles.expandableSubItem}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSubMenu(subItem.id);
+                            }}
+                          >
+                            <i className={`bi ${subItem.icon}`}></i>
+                            <span>{subItem.label}</span>
+                            <i className={`bi bi-${isSubExpanded ? 'dash' : 'plus'} ${sidebarStyles.expandIcon}`}></i>
+                          </button>
+                          {isSubExpanded && (
+                            <ul className={sidebarStyles.subSubMenu}>
+                              {subItem.subItems.map((subSubItem) => (
+                                <li key={subSubItem.to}>
+                                  <button 
+                                    className={`${sidebarStyles.navButton} ${sidebarStyles.subSubNavButton}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleNavigation(subSubItem);
+                                      if (isMobile) {
+                                        handleMobileNavClick();
+                                      }
+                                    }}
+                                  >
+                                    <i className={`bi ${subSubItem.icon}`}></i>
+                                    <span>{subSubItem.label}</span>
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      );
+                    }
+                    
+                    // Sous-item simple
+                    return (
+                      <li key={subItem.to}>
+                        <button 
+                          className={sidebarStyles.navButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleNavigation(subItem);
+                            if (isMobile) {
+                              handleMobileNavClick();
+                            }
+                          }}
+                        >
+                          <i className={`bi ${subItem.icon}`}></i>
+                          <span>{subItem.label}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </>

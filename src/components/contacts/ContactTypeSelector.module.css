@@ -1,0 +1,268 @@
+.container {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  color: #2c3e50;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title i {
+  color: #3498db;
+  font-size: 2.5rem;
+}
+
+.subtitle {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.optionsRow {
+  margin-bottom: 2rem;
+}
+
+.optionCard {
+  height: 100%;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.optionCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.structureCard {
+  border-color: #e8f4f8;
+}
+
+.structureCard:hover {
+  border-color: #3498db;
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.2);
+}
+
+.personneCard {
+  border-color: #f0f8e8;
+}
+
+.personneCard:hover {
+  border-color: #27ae60;
+  box-shadow: 0 8px 25px rgba(39, 174, 96, 0.2);
+}
+
+.cardBody {
+  padding: 2rem;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.iconContainer {
+  margin-bottom: 1.5rem;
+}
+
+.structureCard .iconContainer i {
+  font-size: 4rem;
+  color: #3498db;
+}
+
+.personneCard .iconContainer i {
+  font-size: 4rem;
+  color: #27ae60;
+}
+
+.cardTitle {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.cardDescription {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.cardFeatures {
+  margin-bottom: 2rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: #5a6c7d;
+}
+
+.structureCard .feature i {
+  color: #3498db;
+  margin-right: 0.75rem;
+  font-size: 1rem;
+}
+
+.personneCard .feature i {
+  color: #27ae60;
+  margin-right: 0.75rem;
+  font-size: 1rem;
+}
+
+.cardAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.structureCard .cardAction {
+  color: #3498db;
+  background: linear-gradient(135deg, #e8f4f8 0%, #d6eaf8 100%);
+}
+
+.structureCard:hover .cardAction {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+}
+
+.personneCard .cardAction {
+  color: #27ae60;
+  background: linear-gradient(135deg, #f0f8e8 0%, #d5f4e6 100%);
+}
+
+.personneCard:hover .cardAction {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  color: white;
+}
+
+.cardAction i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.optionCard:hover .cardAction i {
+  transform: translateX(4px);
+}
+
+.infoSection {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.infoCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  max-width: 600px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.infoCard i {
+  color: #6c757d;
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.infoContent {
+  flex: 1;
+}
+
+.infoContent strong {
+  color: #495057;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.infoContent p {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .title i {
+    font-size: 2rem;
+  }
+  
+  .cardBody {
+    padding: 1.5rem;
+  }
+  
+  .iconContainer i {
+    font-size: 3rem !important;
+  }
+  
+  .cardTitle {
+    font-size: 1.3rem;
+  }
+  
+  .cardDescription {
+    font-size: 0.9rem;
+  }
+  
+  .infoCard {
+    padding: 1rem;
+    margin: 0 1rem;
+  }
+  
+  .feature {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .optionsRow {
+    margin-bottom: 1rem;
+  }
+  
+  .optionCard {
+    margin-bottom: 1.5rem;
+  }
+  
+  .infoCard {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+}

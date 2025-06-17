@@ -182,6 +182,8 @@ const TabManagerProduction = () => {
           return <ConcertsList />;
         case 'ConcertDetailsPage':
           // Afficher les détails d'un concert
+          console.log('[DEBUG TabManager] Rendu ConcertDetailsPage avec activeTab:', activeTab);
+          console.log('[DEBUG TabManager] concertId passé:', activeTab.params?.concertId);
           return <ConcertDetails id={activeTab.params?.concertId} />;
         case 'LieuxPage':
           // Afficher directement la liste des lieux

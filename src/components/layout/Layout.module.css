@@ -12,6 +12,9 @@
   display: flex;
   min-height: 100vh;
   width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .content {
@@ -23,6 +26,10 @@
   background-color: var(--tc-bg-default);
   transition: margin-left 0.2s ease-in-out, opacity var(--tc-transition-duration) ease-in-out;
   position: relative;
+  width: 100%;
+  max-width: calc(100vw - 80px); /* Largeur max moins la sidebar */
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Style pour corriger le problème du flash blanc pendant les transitions */

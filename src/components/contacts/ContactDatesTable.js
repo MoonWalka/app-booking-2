@@ -32,7 +32,7 @@ const ContactDatesTable = ({ contactId, concerts = [] }) => {
     },
     {
       key: 'formule',
-      label: 'Proposition artistique',
+      label: 'Projet',
       width: '12%',
       className: styles.concertCell,
       render: (concert) => (

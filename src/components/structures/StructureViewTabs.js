@@ -144,7 +144,7 @@ const StructureViewTabs = ({ id: propId }) => {
             data={concerts || []}
             columns={[
               { key: 'artiste', label: 'Artiste' },
-              { key: 'propositionArtistique', label: 'Proposition artistique' },
+              { key: 'propositionArtistique', label: 'Projet' },
               { key: 'ville', label: 'Ville' },
               { key: 'priseOption', label: 'Prise d\'option' },
               { key: 'dateDebut', label: 'Début' },

@@ -2,10 +2,14 @@
 import React from 'react';
 
 /**
- * Composant indiquant que la version mobile est en cours de construction
- * Utilisé comme placeholder pour tous les composants mobiles pas encore implémentés
+ * Composant indiquant qu'une section est en cours de construction
+ * Utilisé comme placeholder pour tous les composants pas encore implémentés
  */
-const UnderConstruction = () => {
+const UnderConstruction = ({ 
+  title = "Version mobile en construction", 
+  description = "Nous travaillons actuellement sur la version mobile de cette fonctionnalité. Veuillez utiliser la version desktop pour le moment.",
+  icon = "bi-tools" 
+}) => {
   const styles = {
     container: {
       display: 'flex',
@@ -41,12 +45,11 @@ const UnderConstruction = () => {
   return (
     <div style={styles.container}>
       <div style={styles.icon}>
-        <i className="bi bi-tools"></i>
+        <i className={icon}></i>
       </div>
-      <h3 style={styles.heading}>Version mobile en construction</h3>
+      <h3 style={styles.heading}>{title}</h3>
       <p style={styles.text}>
-        Nous travaillons actuellement sur la version mobile de cette fonctionnalité.
-        Veuillez utiliser la version desktop pour le moment.
+        {description}
       </p>
     </div>
   );

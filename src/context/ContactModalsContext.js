@@ -14,7 +14,6 @@ export const useContactModals = () => {
 export const ContactModalsProvider = ({ children }) => {
   const [showStructureModal, setShowStructureModal] = useState(false);
   const [showPersonneModal, setShowPersonneModal] = useState(false);
-  const [showDateCreationModal, setShowDateCreationModal] = useState(false);
 
   const openStructureModal = () => {
     setShowStructureModal(true);
@@ -32,24 +31,14 @@ export const ContactModalsProvider = ({ children }) => {
     setShowPersonneModal(false);
   };
 
-  const openDateCreationModal = () => {
-    setShowDateCreationModal(true);
-  };
-
-  const closeDateCreationModal = () => {
-    setShowDateCreationModal(false);
-  };
 
   const value = {
     showStructureModal,
     showPersonneModal,
-    showDateCreationModal,
     openStructureModal,
     closeStructureModal,
     openPersonneModal,
-    closePersonneModal,
-    openDateCreationModal,
-    closeDateCreationModal
+    closePersonneModal
   };
 
   return (

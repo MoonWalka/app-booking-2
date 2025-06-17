@@ -28,6 +28,7 @@ import BookingParametragePage from '@/pages/BookingParametragePage';
 import ProjetsPage from '@/pages/ProjetsPage';
 import SallesPage from '@/pages/SallesPage';
 import TableauDeBordPage from '@/pages/TableauDeBordPage';
+import DateCreationPage from '@/pages/DateCreationPage';
 import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
@@ -211,6 +212,12 @@ function App() {
                           <Route path="/booking/parametrage/*" element={
                             <PrivateRoute>
                               <BookingParametragePage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/booking/nouvelle-date" element={
+                            <PrivateRoute>
+                              <DateCreationPage />
                             </PrivateRoute>
                           } />
                           

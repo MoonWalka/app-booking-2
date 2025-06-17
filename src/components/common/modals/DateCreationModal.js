@@ -71,6 +71,7 @@ function DateCreationModal({ show, onHide, onCreated }) {
     };
   }, [show]);
 
+
   const loadArtistes = async () => {
     try {
       const q = query(

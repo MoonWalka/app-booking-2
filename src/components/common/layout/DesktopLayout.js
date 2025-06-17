@@ -29,8 +29,7 @@ function DesktopLayout({ children }) {
   
   const { 
     openStructureModal,
-    openPersonneModal,
-    openDateCreationModal
+    openPersonneModal
   } = useContactModals();
   
   
@@ -203,8 +202,14 @@ function DesktopLayout({ children }) {
         openPersonneModal();
         break;
       case '/booking/nouvelle-date':
-        // Ouvrir directement la modal de création de date
-        openDateCreationModal();
+        // Ouvrir la page de création de date dans un nouvel onglet
+        openTab({
+          id: 'date-creation',
+          title: 'Nouvelle Date',
+          path: '/booking/nouvelle-date',
+          component: 'DateCreationPage',
+          icon: 'bi-calendar-plus'
+        });
         break;
       case '/tableau-de-bord':
         openTab({

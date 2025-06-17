@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { collection, addDoc, updateDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useAuth } from '@/context/AuthContext';
 import { useTaches } from '@/hooks/taches/useTaches';
 import Modal from '@/components/common/Modal';
 import Card from '@/components/ui/Card';
@@ -15,6 +16,7 @@ import styles from './TachesPage.module.css';
  */
 function TachesPage() {
   const { currentOrganization } = useOrganization();
+  const { currentUser } = useAuth();
   const { taches, loading, error, refreshTaches } = useTaches();
   
   const [showModal, setShowModal] = useState(false);
@@ -22,20 +24,23 @@ function TachesPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [filters, setFilters] = useState({
     statut: '',
-    priorite: '',
+    important: '',
     search: ''
   });
 
   // Formulaire pour créer/modifier une tâche
   const [formData, setFormData] = useState({
     titre: '',
-    description: '',
-    priorite: 'medium',
-    statut: 'pending',
-    dateEcheance: '',
-    entityType: '',
-    entityId: '',
-    entityName: ''
+    commentaire: '',
+    tag: '',
+    assigneA: '',
+    deadline: '',
+    contactId: '',
+    contactNom: '',
+    dossierId: '',
+    dossierNom: '',
+    statut: 'a_faire',
+    important: false
   });
 
   // Filtrer les tâches selon les critères
@@ -45,33 +50,40 @@ function TachesPage() {
     return taches.filter(tache => {
       const matchesSearch = !filters.search || 
         (tache.titre && tache.titre.toLowerCase().includes(filters.search.toLowerCase())) ||
-        (tache.description && tache.description.toLowerCase().includes(filters.search.toLowerCase()));
+        (tache.commentaire && tache.commentaire.toLowerCase().includes(filters.search.toLowerCase())) ||
+        (tache.tag && tache.tag.toLowerCase().includes(filters.search.toLowerCase()));
       
       const matchesStatut = !filters.statut || tache.statut === filters.statut;
-      const matchesPriorite = !filters.priorite || tache.priorite === filters.priorite;
+      const matchesImportant = !filters.important || 
+        (filters.important === 'true' && tache.important === true) ||
+        (filters.important === 'false' && tache.important !== true);
       
-      return matchesSearch && matchesStatut && matchesPriorite;
+      return matchesSearch && matchesStatut && matchesImportant;
     });
   }, [taches, filters]);
 
   // Calculer les statistiques
   const stats = useMemo(() => {
-    if (!taches) return { total: 0, pending: 0, completed: 0, overdue: 0 };
+    if (!taches) return { total: 0, aFaire: 0, enCours: 0, termine: 0, overdue: 0, important: 0 };
     
     const now = new Date();
-    const pending = taches.filter(t => t.statut === 'pending');
-    const completed = taches.filter(t => t.statut === 'completed');
-    const overdue = pending.filter(t => {
-      if (!t.dateEcheance) return false;
-      const dueDate = new Date(t.dateEcheance);
+    const aFaire = taches.filter(t => t.statut === 'a_faire');
+    const enCours = taches.filter(t => t.statut === 'en_cours');
+    const termine = taches.filter(t => t.statut === 'termine');
+    const important = taches.filter(t => t.important === true);
+    const overdue = [...aFaire, ...enCours].filter(t => {
+      if (!t.deadline) return false;
+      const dueDate = new Date(t.deadline);
       return dueDate < now;
     });
     
     return {
       total: taches.length,
-      pending: pending.length,
-      completed: completed.length,
-      overdue: overdue.length
+      aFaire: aFaire.length,
+      enCours: enCours.length,
+      termine: termine.length,
+      overdue: overdue.length,
+      important: important.length
     };
   }, [taches]);
 
@@ -80,13 +92,16 @@ function TachesPage() {
     setSelectedTache(null);
     setFormData({
       titre: '',
-      description: '',
-      priorite: 'medium',
-      statut: 'pending',
-      dateEcheance: '',
-      entityType: '',
-      entityId: '',
-      entityName: ''
+      commentaire: '',
+      tag: '',
+      assigneA: '',
+      deadline: '',
+      contactId: '',
+      contactNom: '',
+      dossierId: '',
+      dossierNom: '',
+      statut: 'a_faire',
+      important: false
     });
     setShowModal(true);
   };
@@ -96,13 +111,16 @@ function TachesPage() {
     setSelectedTache(tache);
     setFormData({
       titre: tache.titre || '',
-      description: tache.description || '',
-      priorite: tache.priorite || 'medium',
-      statut: tache.statut || 'pending',
-      dateEcheance: tache.dateEcheance || '',
-      entityType: tache.entityType || '',
-      entityId: tache.entityId || '',
-      entityName: tache.entityName || ''
+      commentaire: tache.commentaire || '',
+      tag: tache.tag || '',
+      assigneA: tache.assigneA || '',
+      deadline: tache.deadline || '',
+      contactId: tache.contactId || '',
+      contactNom: tache.contactNom || '',
+      dossierId: tache.dossierId || '',
+      dossierNom: tache.dossierNom || '',
+      statut: tache.statut || 'a_faire',
+      important: tache.important || false
     });
     setShowModal(true);
   };
@@ -131,8 +149,9 @@ function TachesPage() {
         // Mise à jour
         await updateDoc(doc(db, 'taches', selectedTache.id), tacheData);
       } else {
-        // Création
+        // Création - ajouter les champs de création
         tacheData.createdAt = serverTimestamp();
+        tacheData.creePar = currentUser?.email || 'Utilisateur inconnu';
         await addDoc(collection(db, 'taches'), tacheData);
       }
 
@@ -159,12 +178,12 @@ function TachesPage() {
   };
 
   const handleToggleStatut = async (tache) => {
-    const newStatut = tache.statut === 'completed' ? 'pending' : 'completed';
+    const newStatut = tache.statut === 'termine' ? 'a_faire' : 'termine';
     
     try {
       await updateDoc(doc(db, 'taches', tache.id), {
         statut: newStatut,
-        dateTerminee: newStatut === 'completed' ? serverTimestamp() : null,
+        dateTerminee: newStatut === 'termine' ? serverTimestamp() : null,
         updatedAt: serverTimestamp()
       });
       refreshTaches();
@@ -174,38 +193,35 @@ function TachesPage() {
     }
   };
 
-  const getPriorityLabel = (priority) => {
-    switch (priority) {
-      case 'high': return 'Haute';
-      case 'medium': return 'Moyenne';
-      case 'low': return 'Basse';
-      default: return priority;
-    }
-  };
-
-  const getPriorityVariant = (priority) => {
-    switch (priority) {
-      case 'high': return 'danger';
-      case 'medium': return 'warning';
-      case 'low': return 'info';
-      default: return 'secondary';
+  const handleToggleImportant = async (tache) => {
+    try {
+      await updateDoc(doc(db, 'taches', tache.id), {
+        important: !tache.important,
+        updatedAt: serverTimestamp()
+      });
+      refreshTaches();
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l\'importance:', error);
+      alert('Erreur lors de la mise à jour de l\'importance');
     }
   };
 
   const getStatutLabel = (statut) => {
     switch (statut) {
-      case 'pending': return 'En cours';
-      case 'completed': return 'Terminée';
-      case 'cancelled': return 'Annulée';
+      case 'a_faire': return 'À faire';
+      case 'en_cours': return 'En cours';
+      case 'termine': return 'Terminé';
+      case 'annule': return 'Annulé';
       default: return statut;
     }
   };
 
   const getStatutVariant = (statut) => {
     switch (statut) {
-      case 'pending': return 'warning';
-      case 'completed': return 'success';
-      case 'cancelled': return 'secondary';
+      case 'a_faire': return 'secondary';
+      case 'en_cours': return 'warning';
+      case 'termine': return 'success';
+      case 'annule': return 'danger';
       default: return 'secondary';
     }
   };
@@ -264,11 +280,23 @@ function TachesPage() {
         
         <Card className={styles.statCard}>
           <div className={styles.statContent}>
-            <div className={`${styles.statIcon} ${styles.pending}`}>
+            <div className={`${styles.statIcon} ${styles.aFaire}`}>
+              <i className="bi bi-circle"></i>
+            </div>
+            <div className={styles.statInfo}>
+              <div className={styles.statValue}>{stats.aFaire}</div>
+              <div className={styles.statLabel}>À faire</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className={styles.statCard}>
+          <div className={styles.statContent}>
+            <div className={`${styles.statIcon} ${styles.enCours}`}>
               <i className="bi bi-hourglass-split"></i>
             </div>
             <div className={styles.statInfo}>
-              <div className={styles.statValue}>{stats.pending}</div>
+              <div className={styles.statValue}>{stats.enCours}</div>
               <div className={styles.statLabel}>En cours</div>
             </div>
           </div>
@@ -276,15 +304,29 @@ function TachesPage() {
         
         <Card className={styles.statCard}>
           <div className={styles.statContent}>
-            <div className={`${styles.statIcon} ${styles.completed}`}>
+            <div className={`${styles.statIcon} ${styles.termine}`}>
               <i className="bi bi-check-circle"></i>
             </div>
             <div className={styles.statInfo}>
-              <div className={styles.statValue}>{stats.completed}</div>
+              <div className={styles.statValue}>{stats.termine}</div>
               <div className={styles.statLabel}>Terminées</div>
             </div>
           </div>
         </Card>
+
+        {stats.important > 0 && (
+          <Card className={styles.statCard}>
+            <div className={styles.statContent}>
+              <div className={`${styles.statIcon} ${styles.important}`}>
+                <i className="bi bi-flag-fill"></i>
+              </div>
+              <div className={styles.statInfo}>
+                <div className={styles.statValue}>{stats.important}</div>
+                <div className={styles.statLabel}>Importantes</div>
+              </div>
+            </div>
+          </Card>
+        )}
         
         {stats.overdue > 0 && (
           <Card className={styles.statCard}>
@@ -320,21 +362,21 @@ function TachesPage() {
               onChange={(e) => setFilters(prev => ({ ...prev, statut: e.target.value }))}
             >
               <option value="">Tous les statuts</option>
-              <option value="pending">En cours</option>
-              <option value="completed">Terminées</option>
-              <option value="cancelled">Annulées</option>
+              <option value="a_faire">À faire</option>
+              <option value="en_cours">En cours</option>
+              <option value="termine">Terminé</option>
+              <option value="annule">Annulé</option>
             </Form.Select>
           </div>
           
           <div className={styles.filterGroup}>
             <Form.Select
-              value={filters.priorite}
-              onChange={(e) => setFilters(prev => ({ ...prev, priorite: e.target.value }))}
+              value={filters.important}
+              onChange={(e) => setFilters(prev => ({ ...prev, important: e.target.value }))}
             >
-              <option value="">Toutes les priorités</option>
-              <option value="high">Haute</option>
-              <option value="medium">Moyenne</option>
-              <option value="low">Basse</option>
+              <option value="">Toutes</option>
+              <option value="true">Importantes seulement</option>
+              <option value="false">Non importantes</option>
             </Form.Select>
           </div>
           
@@ -354,36 +396,42 @@ function TachesPage() {
             <thead>
               <tr>
                 <th>Statut</th>
-                <th>Titre</th>
-                <th>Priorité</th>
-                <th>Échéance</th>
-                <th>Liée à</th>
+                <th>Tâche</th>
+                <th>Commentaire</th>
+                <th>Tag</th>
+                <th>Assigné à</th>
+                <th>Deadline</th>
+                <th>Contact</th>
+                <th>Dossier</th>
+                <th>Créé par</th>
+                <th>Créé le</th>
+                <th>Important</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredTaches.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className={styles.emptyMessage}>
+                  <td colSpan="12" className={styles.emptyMessage}>
                     Aucune tâche trouvée
                   </td>
                 </tr>
               ) : (
                 filteredTaches.map(tache => {
-                  const isOverdue = tache.dateEcheance && 
-                    new Date(tache.dateEcheance) < new Date() && 
-                    tache.statut === 'pending';
+                  const isOverdue = tache.deadline && 
+                    new Date(tache.deadline) < new Date() && 
+                    tache.statut !== 'termine';
                   
                   return (
                     <tr 
                       key={tache.id} 
-                      className={`${isOverdue ? styles.overdueRow : ''} ${tache.statut === 'completed' ? styles.completedRow : ''}`}
+                      className={`${isOverdue ? styles.overdueRow : ''} ${tache.statut === 'termine' ? styles.completedRow : ''} ${tache.important ? styles.importantRow : ''}`}
                     >
                       <td>
                         <div className={styles.statutCell}>
                           <input
                             type="checkbox"
-                            checked={tache.statut === 'completed'}
+                            checked={tache.statut === 'termine'}
                             onChange={() => handleToggleStatut(tache)}
                             className={styles.checkbox}
                           />
@@ -395,19 +443,28 @@ function TachesPage() {
                       <td>
                         <div className={styles.titleCell}>
                           <strong className={styles.title}>{tache.titre}</strong>
-                          {tache.description && (
-                            <div className={styles.description}>{tache.description}</div>
-                          )}
                         </div>
                       </td>
                       <td>
-                        <Badge variant={getPriorityVariant(tache.priorite)}>
-                          {getPriorityLabel(tache.priorite)}
-                        </Badge>
+                        <div className={styles.commentCell}>
+                          {tache.commentaire || '-'}
+                        </div>
+                      </td>
+                      <td>
+                        <div className={styles.tagCell}>
+                          {tache.tag ? (
+                            <Badge variant="info" size="sm">{tache.tag}</Badge>
+                          ) : '-'}
+                        </div>
+                      </td>
+                      <td>
+                        <div className={styles.assigneeCell}>
+                          {tache.assigneA || '-'}
+                        </div>
                       </td>
                       <td>
                         <div className={styles.dateCell}>
-                          {formatDate(tache.dateEcheance)}
+                          {formatDate(tache.deadline)}
                           {isOverdue && (
                             <div className={styles.overdueIndicator}>
                               <i className="bi bi-exclamation-triangle"></i> En retard
@@ -416,14 +473,35 @@ function TachesPage() {
                         </div>
                       </td>
                       <td>
-                        {tache.entityName ? (
-                          <div className={styles.entityCell}>
-                            <div className={styles.entityName}>{tache.entityName}</div>
-                            <div className={styles.entityType}>{tache.entityType}</div>
-                          </div>
-                        ) : (
-                          '-'
-                        )}
+                        <div className={styles.contactCell}>
+                          {tache.contactNom || '-'}
+                        </div>
+                      </td>
+                      <td>
+                        <div className={styles.dossierCell}>
+                          {tache.dossierNom || '-'}
+                        </div>
+                      </td>
+                      <td>
+                        <div className={styles.createdByCell}>
+                          {tache.creePar || '-'}
+                        </div>
+                      </td>
+                      <td>
+                        <div className={styles.createdAtCell}>
+                          {formatDate(tache.createdAt)}
+                        </div>
+                      </td>
+                      <td>
+                        <div className={styles.importantCell}>
+                          <button
+                            className={`${styles.flagButton} ${tache.important ? styles.flagActive : ''}`}
+                            onClick={() => handleToggleImportant(tache)}
+                            title={tache.important ? 'Marquer comme non important' : 'Marquer comme important'}
+                          >
+                            <i className={`bi ${tache.important ? 'bi-flag-fill' : 'bi-flag'}`}></i>
+                          </button>
+                        </div>
                       </td>
                       <td>
                         <div className={styles.actionsCell}>
@@ -461,37 +539,61 @@ function TachesPage() {
       >
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label>Titre *</Form.Label>
+            <Form.Label>Tâche *</Form.Label>
             <Form.Control
               type="text"
               value={formData.titre}
               onChange={(e) => setFormData(prev => ({ ...prev, titre: e.target.value }))}
+              placeholder="Nom de la tâche"
               required
             />
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Description</Form.Label>
+            <Form.Label>Commentaire</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              value={formData.commentaire}
+              onChange={(e) => setFormData(prev => ({ ...prev, commentaire: e.target.value }))}
+              placeholder="Description ou commentaire sur la tâche"
             />
           </Form.Group>
 
           <div className="row">
             <div className="col-md-6">
               <Form.Group className="mb-3">
-                <Form.Label>Priorité</Form.Label>
-                <Form.Select
-                  value={formData.priorite}
-                  onChange={(e) => setFormData(prev => ({ ...prev, priorite: e.target.value }))}
-                >
-                  <option value="low">Basse</option>
-                  <option value="medium">Moyenne</option>
-                  <option value="high">Haute</option>
-                </Form.Select>
+                <Form.Label>Tag</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={formData.tag}
+                  onChange={(e) => setFormData(prev => ({ ...prev, tag: e.target.value }))}
+                  placeholder="Catégorie ou tag"
+                />
+              </Form.Group>
+            </div>
+            <div className="col-md-6">
+              <Form.Group className="mb-3">
+                <Form.Label>Assigné à</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={formData.assigneA}
+                  onChange={(e) => setFormData(prev => ({ ...prev, assigneA: e.target.value }))}
+                  placeholder="Personne assignée"
+                />
+              </Form.Group>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6">
+              <Form.Group className="mb-3">
+                <Form.Label>Deadline</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={formData.deadline}
+                  onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
+                />
               </Form.Group>
             </div>
             <div className="col-md-6">
@@ -501,62 +603,48 @@ function TachesPage() {
                   value={formData.statut}
                   onChange={(e) => setFormData(prev => ({ ...prev, statut: e.target.value }))}
                 >
-                  <option value="pending">En cours</option>
-                  <option value="completed">Terminée</option>
-                  <option value="cancelled">Annulée</option>
+                  <option value="a_faire">À faire</option>
+                  <option value="en_cours">En cours</option>
+                  <option value="termine">Terminé</option>
+                  <option value="annule">Annulé</option>
                 </Form.Select>
+              </Form.Group>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6">
+              <Form.Group className="mb-3">
+                <Form.Label>Contact</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={formData.contactNom}
+                  onChange={(e) => setFormData(prev => ({ ...prev, contactNom: e.target.value }))}
+                  placeholder="Contact lié à la tâche"
+                />
+              </Form.Group>
+            </div>
+            <div className="col-md-6">
+              <Form.Group className="mb-3">
+                <Form.Label>Dossier</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={formData.dossierNom}
+                  onChange={(e) => setFormData(prev => ({ ...prev, dossierNom: e.target.value }))}
+                  placeholder="Dossier ou projet lié"
+                />
               </Form.Group>
             </div>
           </div>
 
           <Form.Group className="mb-3">
-            <Form.Label>Date d'échéance</Form.Label>
-            <Form.Control
-              type="date"
-              value={formData.dateEcheance}
-              onChange={(e) => setFormData(prev => ({ ...prev, dateEcheance: e.target.value }))}
+            <Form.Check
+              type="checkbox"
+              label="Marquer comme important"
+              checked={formData.important}
+              onChange={(e) => setFormData(prev => ({ ...prev, important: e.target.checked }))}
             />
           </Form.Group>
-
-          <div className="row">
-            <div className="col-md-4">
-              <Form.Group className="mb-3">
-                <Form.Label>Type d'entité liée</Form.Label>
-                <Form.Select
-                  value={formData.entityType}
-                  onChange={(e) => setFormData(prev => ({ ...prev, entityType: e.target.value }))}
-                >
-                  <option value="">Aucune</option>
-                  <option value="concert">Concert</option>
-                  <option value="contact">Contact</option>
-                  <option value="contrat">Contrat</option>
-                  <option value="lieu">Lieu</option>
-                </Form.Select>
-              </Form.Group>
-            </div>
-            <div className="col-md-4">
-              <Form.Group className="mb-3">
-                <Form.Label>ID entité</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={formData.entityId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, entityId: e.target.value }))}
-                  placeholder="ID de l'entité"
-                />
-              </Form.Group>
-            </div>
-            <div className="col-md-4">
-              <Form.Group className="mb-3">
-                <Form.Label>Nom entité</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={formData.entityName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, entityName: e.target.value }))}
-                  placeholder="Nom de l'entité"
-                />
-              </Form.Group>
-            </div>
-          </div>
 
           <div className={styles.modalActions}>
             <Button variant="secondary" onClick={() => setShowModal(false)} className="me-2">

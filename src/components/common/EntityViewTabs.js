@@ -68,6 +68,13 @@ function EntityViewTabs({
 
   return (
     <div className={styles.container}>
+      {/* Header optionnel entre les zones du haut et les onglets */}
+      {config.header && (
+        <div className={styles.headerSection}>
+          {config.header.render ? config.header.render(entity) : config.header.content}
+        </div>
+      )}
+
       {/* Zones du haut configurables */}
       {config.topSections && (
         <div className={styles.topSection}>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import React, { useState, useEffect, useCallback } from 'react';
+import { collection, query, where, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import Card from '@/components/ui/Card';
@@ -22,7 +22,7 @@ const RelancesCompleteDiagnostic = () => {
   const [message, setMessage] = useState('');
 
   // Charger toutes les relances
-  const loadAllRelances = async () => {
+  const loadAllRelances = useCallback(async () => {
     if (!currentOrganization?.id) {
       setMessage('❌ Aucune organisation sélectionnée');
       return;
@@ -61,7 +61,7 @@ const RelancesCompleteDiagnostic = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentOrganization?.id]);
 
   // Analyser les relances
   const analyzeRelances = (relancesList) => {
@@ -208,7 +208,7 @@ const RelancesCompleteDiagnostic = () => {
 
   useEffect(() => {
     loadAllRelances();
-  }, [currentOrganization]);
+  }, [currentOrganization, loadAllRelances]);
 
   return (
     <div className={styles.container}>

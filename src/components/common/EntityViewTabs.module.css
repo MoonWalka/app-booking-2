@@ -2,13 +2,21 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 2fr;
+  grid-template-rows: auto 1fr 1fr 2fr;
   gap: 10px;
   height: 100%;
   padding: 10px;
   background: #f8f9fa;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+/* Section header */
+.headerSection {
+  grid-column: 1 / -1;
+  background: transparent;
+  padding: 15px 10px 10px 10px;
+  margin: 0;
 }
 
 /* Section supérieure avec grid - pas utilisée dans le nouveau layout */
@@ -59,38 +67,55 @@
   position: relative;
 }
 
-/* En-têtes de section */
+/* En-têtes de section - style bulle flottante */
 .sectionHeader {
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #dee2e6;
+  border-radius: 25px;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e9ecef;
+  gap: 8px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.sectionHeader:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  border-color: #007bff;
 }
 
 .sectionHeader i {
-  font-size: 1.2rem;
-  color: #6c757d;
+  color: #007bff;
+  font-size: 1rem;
+  text-shadow: 0 1px 2px rgba(0,123,255,0.3);
 }
 
 .sectionHeader h2 {
   margin: 0;
-  font-size: 1.1rem;
+  color: #343a40;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #495057;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
 }
 
 /* Contenu des sections */
 .sectionContent {
-  height: calc(100% - 3rem);
+  height: calc(100% - 10px);
   overflow: auto;
+  padding-top: 10px;
 }
 
 /* Zone d'onglets du bas */
 .bottomTabsContainer {
   grid-column: 1 / -1;
-  grid-row: 3;
+  grid-row: 4;
   display: flex;
   flex-direction: column;
   background: white;
@@ -369,42 +394,54 @@
   font-size: 0.9rem;
 }
 
-/* Actions personnes */
+/* Actions personnes - style bulle flottante */
 .personnesActions {
+  position: absolute;
+  top: -14px;
+  right: 20px;
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-  justify-content: center;
+  gap: 8px;
+  z-index: 10;
 }
 
 .actionBubble {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 5px;
-  padding: 10px;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #dee2e6;
+  border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 70px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #495057;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  backdrop-filter: blur(10px);
 }
 
 .actionBubble:hover {
-  background: #e9ecef;
-  transform: translateY(-1px);
-}
-
-.actionBubble i {
-  font-size: 1.2rem;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  border-color: #007bff;
   color: #007bff;
 }
 
-.actionBubble span {
-  font-size: 0.8rem;
-  color: #495057;
-  font-weight: 500;
+.actionBubble i {
+  font-size: 0.85rem;
+  color: #007bff;
+}
+
+.actionBubble:hover i {
+  color: #0056b3;
+}
+
+.personnesList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .emptyPersonnes {

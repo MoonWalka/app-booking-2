@@ -1,6 +1,10 @@
 /**
  * Service de gestion des templates Brevo
  * Facilite l'utilisation des templates Brevo avec les données TourCraft
+ * 
+ * IMPORTANT: L'envoi d'email de contrat est temporairement désactivé
+ * La fonction sendContratEmail est conservée mais non utilisée actuellement
+ * TODO: Réactiver une fois la solution API stable trouvée
  */
 
 import { httpsCallable } from 'firebase/functions';
@@ -172,6 +176,10 @@ class BrevoTemplateService {
 
   /**
    * Envoie un email contrat prêt avec template Brevo
+   * 
+   * TEMPORAIREMENT DÉSACTIVÉ: Cette fonction n'est pas appelée actuellement
+   * Conservée pour réactivation future avec une solution API stable
+   * 
    * @param {Object} concert - Données du concert
    * @param {Object} contact - Données du contact
    * @param {Object} contrat - Données du contrat

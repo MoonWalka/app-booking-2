@@ -11,9 +11,12 @@ import { updateBidirectionalRelation } from '@/services/bidirectionalRelationsSe
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 import FormHeader from '@/components/ui/FormHeader';
 import ContactInfoSection from '@/components/contacts/sections/ContactInfoSection';
+import ContactQualificationSection from '@/components/contacts/sections/ContactQualificationSection';
+import ContactDiffusionSection from '@/components/contacts/sections/ContactDiffusionSection';
 import StructureSearchSection from '@/components/contacts/sections/StructureSearchSection';
 import LieuSearchSection from '@/components/concerts/sections/LieuSearchSection';
 import ContactConcertsSection from '@/components/contacts/sections/ContactConcertsSection';
+import ContactNotesSection from '@/components/contacts/desktop/sections/ContactNotesSection';
 import { mapTerm } from '@/utils/terminologyMapping';
 import styles from './ContactForm.module.css';
 
@@ -46,6 +49,14 @@ const ContactForm = () => {
     adresse: '',
     codePostal: '',
     ville: '',
+    tags: [],
+    source: '',
+    createdAt: null,
+    updatedAt: null,
+    nomFestival: '',
+    periodeFestivalMois: '',
+    periodeFestivalComplete: '',
+    bouclage: '',
     structureRaisonSociale: '',
     structureType: '',
     structureSiret: '',
@@ -54,7 +65,8 @@ const ContactForm = () => {
     structureVille: '',
     structureTva: '',
     structureNumeroIntracommunautaire: '',
-    structureSiteWeb: ''
+    structureSiteWeb: '',
+    notes: ''
   });
 
   // État pour les associations
@@ -261,7 +273,8 @@ const ContactForm = () => {
             structureVille: data.structure?.ville || data.structureVille || '',
             structureTva: data.structure?.tva || data.structureTva || '',
             structureNumeroIntracommunautaire: data.structure?.numeroIntracommunautaire || data.structureNumeroIntracommunautaire || '',
-            structureSiteWeb: data.structure?.siteWeb || data.structureSiteWeb || ''
+            structureSiteWeb: data.structure?.siteWeb || data.structureSiteWeb || '',
+            notes: data.notes || ''
           });
 
           // Charger la structure liée si un structureId existe
@@ -482,6 +495,8 @@ const ContactForm = () => {
         structureTva: formData.structureTva?.trim() || '',
         structureNumeroIntracommunautaire: formData.structureNumeroIntracommunautaire?.trim() || '',
         structureSiteWeb: formData.structureSiteWeb?.trim() || '',
+        // Commentaires/Notes
+        notes: formData.notes?.trim() || '',
         // Associations
         lieuxIds: lieuxAssocies.map(lieu => lieu.id),
         concertsIds: concertsAssocies.map(concert => concert.id),
@@ -683,6 +698,21 @@ const ContactForm = () => {
               errors={{}}
             />
 
+            {/* Section Qualification */}
+            <ContactQualificationSection 
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+              isEditing={!isNewFromUrl}
+            />
+
+            {/* Section Diffusion */}
+            <ContactDiffusionSection 
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+            />
+
             {/* Section Structure - Composant unifié */}
             <StructureSearchSection 
               structureSearchTerm={structureSearchTerm}
@@ -725,6 +755,13 @@ const ContactForm = () => {
               loadingAssociations={loadingAssociations}
               handleSelectConcertFromSearch={handleSelectConcertFromSearch}
               handleRemoveConcert={handleRemoveConcert}
+            />
+
+            {/* Section Commentaires/Notes */}
+            <ContactNotesSection
+              notes={formData.notes}
+              onChange={handleChange}
+              isEditing={true}
             />
           </div>
         </div>

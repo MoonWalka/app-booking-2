@@ -1,0 +1,94 @@
+/* ContactDiffusionSection.module.css */
+
+.sectionCard {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formLabel {
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.diffusionInfo {
+  margin-top: 1.5rem;
+}
+
+.infoCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 1rem;
+  background: #e7f1ff;
+  border: 1px solid #b3d4fc;
+  border-radius: 8px;
+  color: #084298;
+}
+
+.infoCard i {
+  font-size: 1.25rem;
+  color: #084298;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.infoContent {
+  flex: 1;
+}
+
+.infoContent strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #084298;
+  font-weight: 600;
+}
+
+.infoContent p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #084298;
+}
+
+/* Styles pour les champs spéciaux */
+.formGroup textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.formGroup .form-select,
+.formGroup .form-control {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formGroup .form-select:focus,
+.formGroup .form-control:focus {
+  border-color: #17a2b8;
+  box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .infoCard {
+    padding: 0.75rem;
+    gap: 8px;
+  }
+  
+  .infoCard i {
+    font-size: 1.1rem;
+  }
+  
+  .infoContent p {
+    font-size: 0.85rem;
+  }
+  
+  .formGroup textarea {
+    min-height: 70px;
+  }
+}

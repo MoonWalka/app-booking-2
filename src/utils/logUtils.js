@@ -18,17 +18,19 @@ const isDebugEnabled = () => {
  * Log conditionnel pour le débogage des hooks
  * 
  * @param {string} message - Message à logger
- * @param {string} level - Niveau de log (debug, info, warn, error)
- * @param {string} hookName - Nom du hook émettant le log (optionnel)
  * @param {Object} data - Données additionnelles à logger (optionnel)
+ * @param {string} level - Niveau de log (debug, info, warn, error, success, trace)
+ * @param {string} hookName - Nom du hook émettant le log (optionnel)
  */
-export const debugLog = (message, level = 'debug', hookName = '', data = null) => {
+export const debugLog = (message, data = null, level = 'debug', hookName = '') => {
   if (!isDebugEnabled()) return;
 
+  // Assurer que level est une chaîne valide
+  const safeLevel = (typeof level === 'string' ? level : 'debug').toLowerCase();
   const prefix = hookName ? `[${hookName}] ` : '';
   const formattedMessage = `${prefix}${message}`;
   
-  switch (level.toLowerCase()) {
+  switch (safeLevel) {
     case 'info':
       console.info(`[INFO] ${formattedMessage}`, data || '');
       break;
@@ -38,9 +40,14 @@ export const debugLog = (message, level = 'debug', hookName = '', data = null) =
     case 'error':
       console.error(`[ERROR] ${formattedMessage}`, data || '');
       break;
+    case 'success':
+      console.log(`[SUCCESS] ${formattedMessage}`, data || '');
+      break;
     case 'trace':
+      console.trace(`[TRACE] ${formattedMessage}`, data || '');
       break;
     default:
+      console.log(`[DEBUG] ${formattedMessage}`, data || '');
   }
 };
 

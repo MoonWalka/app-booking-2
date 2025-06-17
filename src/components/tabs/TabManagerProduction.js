@@ -14,13 +14,13 @@ import DebugToolsPage from '@/pages/DebugToolsPage';
 // Import des composants de liste pour affichage direct dans les onglets
 import ConcertsList from '@/components/concerts/ConcertsList';
 import LieuxList from '@/components/lieux/LieuxList';
-import StructuresList from '@/components/structures/StructuresList';
+import ContactsList from '@/components/contacts/ContactsList'; // Liste unifiée contacts + structures
 import ArtistesList from '@/components/artistes/ArtistesList';
 
 // Import des composants de détails
 import ContactViewTabs from '@/components/contacts/ContactViewTabs';
 import LieuView from '@/components/lieux/desktop/LieuView';
-import StructureView from '@/components/structures/desktop/StructureView';
+// import StructureViewTabs from '@/components/structures/StructureViewTabs'; // Plus utilisé - maintenant tout est des contacts
 import ConcertDetails from '@/components/concerts/ConcertDetails';
 
 const TabManagerProduction = () => {
@@ -77,11 +77,11 @@ const TabManagerProduction = () => {
           // Afficher les détails d'un lieu
           return <LieuView id={activeTab.params?.lieuId} />;
         case 'StructuresPage':
-          // Afficher directement la liste des structures
-          return <StructuresList />;
+          // Afficher la liste unifiée des contacts (structures + personnes)
+          return <ContactsList />;
         case 'StructureDetailsPage':
-          // Afficher les détails d'une structure
-          return <StructureView id={activeTab.params?.structureId} />;
+          // Afficher les détails d'une structure (maintenant c'est un contact de type structure)
+          return <ContactViewTabs id={activeTab.params?.structureId} />;
         case 'ArtistesPage':
           // Afficher directement la liste des artistes
           return <ArtistesList />;

@@ -8,53 +8,18 @@ jest.mock('@/utils/logUtils', () => ({
   infoLog: jest.fn(),
 }));
 
-// Mock pour le module firebaseInit
-jest.mock('@/firebaseInit', () => {
-  const mockDocuments = {
-    concerts: [
-      { id: 'concert-1', titre: 'Concert de jazz', date: '2025-05-10', statut: 'confirme', montant: 1000 },
-      { id: 'concert-2', titre: 'Festival rock', date: '2025-06-15', statut: 'contact', montant: 2000 }
-    ],
-    lieux: [
-      { id: 'lieu-1', nom: 'Salle de concert A', ville: 'Paris', type: 'salle' },
-      { id: 'lieu-2', nom: 'Festival ground B', ville: 'Lyon', type: 'extérieur' }
-    ],
-    programmateurs: [
-      { id: 'prog-1', nom: 'John Doe', email: 'john@example.com', telephone: '0123456789' }
-    ]
-  };
-  
-  return {
-    db: {},
-    collection: jest.fn().mockImplementation((collectionName) => {
-      return {
-        orderBy: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        limit: jest.fn().mockReturnThis(),
-        startAfter: jest.fn().mockReturnThis(),
-        get: jest.fn().mockResolvedValue({
-          docs: (mockDocuments[collectionName] || []).map(doc => ({
-            id: doc.id,
-            data: () => doc,
-            exists: true
-          }))
-        })
-      };
-    }),
-    doc: jest.fn().mockReturnValue({
-      get: jest.fn().mockResolvedValue({
-        exists: true,
-        id: 'mock-id',
-        data: () => ({ title: 'Mock Document' })
-      })
-    }),
-    query: jest.fn().mockImplementation((baseQuery) => baseQuery),
-    orderBy: jest.fn().mockReturnValue({}),
-    where: jest.fn().mockReturnValue({}),
-    limit: jest.fn().mockReturnValue({}),
-    startAfter: jest.fn().mockReturnValue({})
-  };
-});
+// Mock pour les services Firebase
+jest.mock('@/services/firebase-service', () => ({
+  db: {},
+  functions: {},
+  collection: jest.fn(),
+  doc: jest.fn(),
+  query: jest.fn(),
+  orderBy: jest.fn(),
+  where: jest.fn(),
+  limit: jest.fn(),
+  startAfter: jest.fn()
+}));
 
 // Mock pour les hooks communs
 jest.mock('@/hooks/common', () => ({

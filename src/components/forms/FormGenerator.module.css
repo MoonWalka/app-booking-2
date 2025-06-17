@@ -112,6 +112,22 @@
   white-space: nowrap;
 }
 
+.sendButton {
+  border-radius: 0;
+  border-left: 1px solid var(--tc-border-default);
+  white-space: nowrap;
+}
+
+/* Quand il y a 3 éléments dans le groupe */
+.inputGroup > *:last-child {
+  border-top-right-radius: var(--tc-radius-base);
+  border-bottom-right-radius: var(--tc-radius-base);
+}
+
+.inputGroup > *:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
 /* =============================
    ACTIONS DU FOOTER (Remplacement Bootstrap d-flex justify-content-between)
    ============================= */
@@ -145,9 +161,20 @@
   }
   
   .copyButton {
+    border-radius: 0;
+    border-left: 1px solid var(--tc-border-default);
+    border-top: none;
+  }
+  
+  .sendButton {
     border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
     border-left: 1px solid var(--tc-border-default);
     border-top: none;
+  }
+  
+  /* Si pas de bouton Envoyer, le bouton Copier est le dernier */
+  .copyButton:last-child {
+    border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
   }
   
   .footerActions {

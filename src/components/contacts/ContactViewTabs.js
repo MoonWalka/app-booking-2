@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContactDetails } from '@/hooks/contacts';
+import { useStructureDetails } from '@/hooks/structures';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
 import ContactDatesTable from './ContactDatesTable';
 import ContactContratsTable from './ContactContratsTable';
 import ContactFacturesTable from './ContactFacturesTable';
@@ -17,11 +20,92 @@ function ContactViewTabs({ id }) {
   console.log('[ContactViewTabs] ID reçu:', id);
   
   const navigate = useNavigate();
+  const [entityType, setEntityType] = useState(null);
+  const [isDetecting, setIsDetecting] = useState(true);
   
-  // Hook pour récupérer les données du contact
-  const { contact, loading, error, concerts } = useContactDetails(id);
+  // Détecter si c'est un contact ou une structure
+  useEffect(() => {
+    const detectEntityType = async () => {
+      setIsDetecting(true);
+      
+      if (!id) {
+        setEntityType(null);
+        setIsDetecting(false);
+        return;
+      }
+      
+      console.log('[ContactViewTabs] Détection type pour ID:', id);
+      
+      try {
+        // Essayer d'abord dans contacts
+        console.log('[ContactViewTabs] Vérification dans collection contacts...');
+        const contactRef = doc(db, 'contacts', id);
+        const contactSnap = await getDoc(contactRef);
+        
+        if (contactSnap.exists()) {
+          console.log('[ContactViewTabs] Trouvé dans contacts');
+          setEntityType('contact');
+          setIsDetecting(false);
+          return;
+        }
+        
+        // Sinon essayer dans structures
+        console.log('[ContactViewTabs] Vérification dans collection structures...');
+        const structureRef = doc(db, 'structures', id);
+        const structureSnap = await getDoc(structureRef);
+        
+        if (structureSnap.exists()) {
+          console.log('[ContactViewTabs] Trouvé dans structures');
+          setEntityType('structure');
+          setIsDetecting(false);
+          return;
+        }
+        
+        console.log('[ContactViewTabs] Non trouvé dans aucune collection');
+        setEntityType('notfound');
+        setIsDetecting(false);
+      } catch (error) {
+        console.error('[ContactViewTabs] Erreur détection type:', error);
+        setEntityType('error');
+        setIsDetecting(false);
+      }
+    };
+    
+    detectEntityType();
+  }, [id]);
+  
+  // Hooks always called to avoid conditional hooks issue
+  const contactHook = useContactDetails(entityType === 'contact' && !isDetecting ? id : null);
+  const structureHook = useStructureDetails(entityType === 'structure' && !isDetecting ? id : null);
+  
+  // Utiliser les bonnes données selon le type
+  let contact, loading, error, concerts;
+  
+  if (isDetecting) {
+    // Pendant la détection, afficher un état de chargement
+    contact = null;
+    loading = true;
+    error = null;
+    concerts = [];
+  } else if (entityType === 'structure') {
+    contact = structureHook.structure;
+    loading = structureHook.loading;
+    error = structureHook.error;
+    concerts = structureHook.concerts || [];
+  } else if (entityType === 'contact') {
+    contact = contactHook.contact;
+    loading = contactHook.loading;
+    error = contactHook.error;
+    concerts = contactHook.concerts || [];
+  } else {
+    // entityType est 'notfound' ou 'error'
+    contact = null;
+    loading = false;
+    error = entityType === 'error' ? 'Erreur lors du chargement' : 'Contact non trouvé';
+    concerts = [];
+  }
 
-  console.log('[ContactViewTabs] Données:', { contact, loading, error });
+  console.log('[ContactViewTabs] Type détecté:', entityType, 'Données:', { contact, loading, error });
 
   // Tags disponibles
   const availableTags = ['Festival', 'Bar', 'Salles'];
@@ -41,12 +125,86 @@ function ContactViewTabs({ id }) {
     alert(`Tag "${tagToRemove}" supprimé (fonctionnalité de sauvegarde à implémenter)`);
   };
 
+  // Déterminer le type d'entité pour adapter la configuration
+  const isStructure = contact && (!contact.prenom || contact.type === 'structure');
+
   // Configuration pour le composant générique
   const config = {
     defaultBottomTab: 'correspondance',
-    notFoundIcon: 'bi-person-x',
-    notFoundTitle: 'Contact non trouvé',
-    notFoundMessage: 'Le contact demandé n\'existe pas ou n\'est plus disponible.',
+    notFoundIcon: isStructure ? 'bi-building-x' : 'bi-person-x',
+    notFoundTitle: isStructure ? 'Structure non trouvée' : 'Contact non trouvé',
+    notFoundMessage: isStructure 
+      ? 'La structure demandée n\'existe pas ou n\'est plus disponible.'
+      : 'Le contact demandé n\'existe pas ou n\'est plus disponible.',
+
+    // Header avec nom et qualifications
+    header: {
+      render: (contact) => {
+        if (!contact) return null;
+        
+        const isStructure = !contact.prenom || contact.type === 'structure';
+        const displayName = isStructure 
+          ? (contact.nom || contact.raisonSociale || 'Structure sans nom')
+          : `${contact.prenom || ''} ${contact.nom || ''}`.trim() || 'Contact sans nom';
+
+        return (
+          <div className={styles.entityHeader}>
+            <div className={styles.entityNameSection}>
+              <div className={styles.entityIcon}>
+                {isStructure ? (
+                  <i className="bi bi-building" style={{ fontSize: '1.1rem', color: '#007bff' }}></i>
+                ) : (
+                  <i className="bi bi-person-circle" style={{ fontSize: '1.1rem', color: '#28a745' }}></i>
+                )}
+              </div>
+              <div className={styles.entityInfo}>
+                <h1 className={styles.entityName}>{displayName}</h1>
+                {isStructure && contact.type && (
+                  <span className={styles.entityType}>{contact.type}</span>
+                )}
+                {!isStructure && contact.fonction && (
+                  <span className={styles.entityFunction}>{contact.fonction}</span>
+                )}
+              </div>
+            </div>
+            
+            <div className={styles.qualificationsSection}>
+              <h3 className={styles.qualificationsTitle}>
+                <i className="bi bi-award"></i>
+                Qualifications
+              </h3>
+              <div className={styles.qualificationsList}>
+                {contact.tags && contact.tags.length > 0 ? (
+                  contact.tags.map((tag, index) => (
+                    <span key={index} className={`${styles.qualificationTag} ${styles[`tag${tag.toLowerCase()}`]}`}>
+                      <i className="bi bi-tag-fill"></i>
+                      {tag}
+                    </span>
+                  ))
+                ) : (
+                  <span className={styles.noQualifications}>
+                    <i className="bi bi-info-circle"></i>
+                    Aucune qualification
+                  </span>
+                )}
+              </div>
+              
+              {/* Afficher les informations de création */}
+              <div className={styles.metaInfo}>
+                {contact.createdAt && (
+                  <span className={styles.createdDate}>
+                    <i className="bi bi-calendar-plus"></i>
+                    Créé le {contact.createdAt.toDate ? 
+                      contact.createdAt.toDate().toLocaleDateString('fr-FR') : 
+                      'Date inconnue'}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
+    },
     
     bottomTabs: [
       { id: 'correspondance', label: 'Correspondance', icon: 'bi-envelope', color: '#28a745' },
@@ -60,30 +218,28 @@ function ContactViewTabs({ id }) {
     topSections: [
       {
         className: 'topLeft',
-        title: 'Informations générales',
-        icon: 'bi bi-person-badge',
-        render: (contact) => (
-          <div className={styles.contactInfo}>
-            <div className={styles.avatar}>
-              {contact.photo ? (
-                <img src={contact.photo} alt={`${contact.prenom} ${contact.nom}`} />
-              ) : (
-                <div className={styles.avatarPlaceholder}>
-                  <i className="bi bi-person-circle"></i>
-                </div>
-              )}
-            </div>
+        title: 'Informations de contact',
+        icon: 'bi bi-info-circle',
+        render: (contact) => {
+          // Déterminer si c'est une structure ou une personne
+          const isStructure = !contact.prenom || contact.type === 'structure';
+          
+          // Fonction pour formater l'adresse si c'est un objet
+          const formatAdresse = (adresse) => {
+            if (typeof adresse === 'string') return adresse;
+            if (typeof adresse === 'object' && adresse) {
+              const parts = [
+                adresse.adresse,
+                adresse.codePostal,
+                adresse.ville,
+                adresse.pays
+              ].filter(Boolean);
+              return parts.join(', ');
+            }
+            return '';
+          };
 
-            <div className={styles.mainInfo}>
-              <h1 className={styles.contactName}>
-                {contact.prenom} {contact.nom}
-              </h1>
-              
-              {contact.fonction && (
-                <p className={styles.contactFunction}>{contact.fonction}</p>
-              )}
-            </div>
-
+          return (
             <div className={styles.contactDetails}>
               {contact.email && (
                 <div className={styles.detailItem}>
@@ -99,34 +255,39 @@ function ContactViewTabs({ id }) {
                 </div>
               )}
 
-              {contact.ville && (
+              {(contact.ville || contact.adresse) && (
                 <div className={styles.detailItem}>
                   <i className="bi bi-geo-alt"></i>
-                  <span>{contact.ville}</span>
+                  <span>{contact.ville || formatAdresse(contact.adresse)}</span>
                 </div>
               )}
 
-              {contact.createdAt && (
+              {/* SIRET pour les structures */}
+              {isStructure && contact.siret && (
                 <div className={styles.detailItem}>
-                  <i className="bi bi-calendar-plus"></i>
-                  <span>
-                    Créé le {contact.createdAt.toDate ? 
-                      contact.createdAt.toDate().toLocaleDateString('fr-FR') : 
-                      'Date inconnue'
-                    }
-                  </span>
+                  <i className="bi bi-building-gear"></i>
+                  <span>SIRET: {contact.siret}</span>
+                </div>
+              )}
+
+              {/* Site web si disponible */}
+              {contact.siteWeb && (
+                <div className={styles.detailItem}>
+                  <i className="bi bi-globe"></i>
+                  <span>{contact.siteWeb}</span>
+                </div>
+              )}
+
+              {/* Numéro de TVA pour les structures */}
+              {isStructure && contact.numeroTVA && (
+                <div className={styles.detailItem}>
+                  <i className="bi bi-receipt"></i>
+                  <span>TVA: {contact.numeroTVA}</span>
                 </div>
               )}
             </div>
-
-            {contact.notes && (
-              <div className={styles.notes}>
-                <h4><i className="bi bi-journal-text"></i> Notes</h4>
-                <p>{contact.notes}</p>
-              </div>
-            )}
-          </div>
-        )
+          );
+        }
       },
       {
         className: 'topRight',
@@ -179,57 +340,84 @@ function ContactViewTabs({ id }) {
       },
       {
         className: 'middleLeft',
-        title: 'Personnes',
+        title: isStructure ? 'Personnes' : 'Relations',
         icon: 'bi bi-people',
-        render: () => (
-          <div>
-            <div className={styles.personnesActions}>
-              <button 
-                className={styles.actionBubble}
-                onClick={() => navigate('/contacts/nouveau')}
-                title="Créer une nouvelle personne"
-              >
-                <i className="bi bi-person-plus"></i>
-                <span>Nouvelle</span>
-              </button>
+        render: (contact) => {
+          const isStructure = !contact.prenom || contact.type === 'structure';
+          
+          return (
+            <div>
+              <div className={styles.personnesActions}>
+                <button 
+                  className={styles.actionBubble}
+                  onClick={() => navigate('/contacts/nouveau')}
+                  title={isStructure ? "Créer un nouveau contact" : "Créer une nouvelle relation"}
+                >
+                  <i className="bi bi-person-plus"></i>
+                  <span>Nouveau</span>
+                </button>
+                
+                <button 
+                  className={styles.actionBubble}
+                  onClick={() => {
+                    console.log('Associer contact existant pour:', id);
+                    alert('Fonctionnalité d\'association en cours de développement');
+                  }}
+                  title={isStructure ? "Associer un contact existant" : "Associer une relation existante"}
+                >
+                  <i className="bi bi-person-check"></i>
+                  <span>Associer</span>
+                </button>
+              </div>
               
-              <button 
-                className={styles.actionBubble}
-                onClick={() => {
-                  console.log('Associer personne existante pour contact:', id);
-                  alert('Fonctionnalité d\'association en cours de développement');
-                }}
-                title="Associer une personne existante"
-              >
-                <i className="bi bi-person-check"></i>
-                <span>Associer</span>
-              </button>
-            </div>
-            
-            <div className={styles.personnesContent}>
-              <div className={styles.personnesList}>
-                <div className={styles.emptyPersonnes}>
-                  <i className="bi bi-people" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>
-                  <p>Aucune relation personnelle définie</p>
-                  <small>Utilisez les boutons ci-dessus pour ajouter des relations.</small>
+              <div className={styles.personnesContent}>
+                <div className={styles.personnesList}>
+                  <div className={styles.emptyPersonnes}>
+                    <i className="bi bi-people" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>
+                    <p>
+                      {isStructure 
+                        ? "Aucun contact associé à cette structure"
+                        : "Aucune relation définie"
+                      }
+                    </p>
+                    <small>
+                      {isStructure 
+                        ? "Ajoutez les personnes qui travaillent dans cette structure."
+                        : "Ajoutez des relations avec d'autres contacts ou structures."
+                      }
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )
+          );
+        }
       },
       {
         className: 'middleRight',
         title: 'Commentaires',
         icon: 'bi bi-chat-quote',
-        render: () => (
-          <div className={styles.constructionZone}>
-            <i className="bi bi-chat-quote" style={{ fontSize: '2rem', color: '#28a745' }}></i>
-            <h3>Notes et commentaires</h3>
-            <p>Aucun commentaire</p>
-            <small>Ajoutez des commentaires et notes sur ce contact.</small>
-          </div>
-        )
+        render: (contact) => {
+          const isStructure = !contact.prenom || contact.type === 'structure';
+          
+          return (
+            <div className={styles.commentsContent}>
+              <textarea
+                className={styles.commentsTextarea}
+                placeholder={isStructure 
+                  ? "Ajoutez vos notes et commentaires sur cette structure..."
+                  : "Ajoutez vos notes et commentaires sur ce contact..."
+                }
+                defaultValue={contact?.notes || ''}
+                rows={6}
+                onChange={(e) => {
+                  console.log('Notes modifiées:', e.target.value);
+                  // TODO: Implémenter la sauvegarde des notes
+                }}
+              />
+            </div>
+          );
+        }
       }
     ],
 

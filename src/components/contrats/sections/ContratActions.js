@@ -35,20 +35,45 @@ const ContratActions = ({
             variant="warning" 
             onClick={onSendContrat}
             disabled={isLoading}
+            title="Marquer le contrat comme envoyé manuellement"
           >
             <i className="bi bi-send"></i>
-            Envoyer
+            Marquer comme envoyé
           </Button>
         )}
         
         {contrat?.status === 'sent' && (
+          <>
+            <Button 
+              variant="outline-warning" 
+              onClick={onSendContrat}
+              disabled={isLoading}
+              title="Cliquer pour annuler l'envoi et revenir au statut 'généré'"
+            >
+              <i className="bi bi-send-check"></i>
+              Contrat envoyé
+            </Button>
+            <Button 
+              variant="success" 
+              onClick={onMarkAsSigned}
+              disabled={isLoading}
+              title="Marquer le contrat comme signé"
+            >
+              <i className="bi bi-pen-fill"></i>
+              Marquer comme signé
+            </Button>
+          </>
+        )}
+        
+        {contrat?.status === 'signed' && (
           <Button 
-            variant="success" 
+            variant="info" 
             onClick={onMarkAsSigned}
             disabled={isLoading}
+            title="Cliquer pour annuler la signature et revenir au statut 'envoyé'"
           >
-            <i className="bi bi-check-circle"></i>
-            Marquer comme signé
+            <i className="bi bi-check-circle-fill"></i>
+            Contrat signé
           </Button>
         )}
         

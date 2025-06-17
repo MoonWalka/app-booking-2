@@ -355,7 +355,7 @@ const ContratsPage = () => {
                   </button>
                 </div>
               )}
-              onRowClick={(contratId) => navigate(`/contrats/${contratId}`)}
+              onRowClick={(contrat) => navigate(`/contrats/${contrat.id}`)}
             />
           )}
         </>

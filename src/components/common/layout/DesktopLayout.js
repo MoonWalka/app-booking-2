@@ -110,13 +110,13 @@ function DesktopLayout({ children }) {
       case '/debug-tools':
         openDebugToolsTab();
         break;
-      case '/artistes':
+      case '/booking/parametrage':
         openTab({
-          id: 'artistes-list',
-          title: 'Artistes',
-          path: '/artistes',
-          component: 'ArtistesPage',
-          icon: 'bi-music-note-beamed'
+          id: 'booking-parametrage',
+          title: 'Paramétrage Booking',
+          path: '/booking/parametrage',
+          component: 'BookingParametragePage',
+          icon: 'bi-gear-fill'
         });
         break;
       case '/contrats':
@@ -144,6 +144,33 @@ function DesktopLayout({ children }) {
           path: '/parametres',
           component: 'ParametresPage',
           icon: 'bi-gear'
+        });
+        break;
+      case '/mails':
+        openTab({
+          id: 'mails',
+          title: 'Échanges de mails',
+          path: '/mails',
+          component: 'MailsPage',
+          icon: 'bi-envelope'
+        });
+        break;
+      case '/taches':
+        openTab({
+          id: 'taches',
+          title: 'Tâches',
+          path: '/taches',
+          component: 'TachesPage',
+          icon: 'bi-check2-square'
+        });
+        break;
+      case '/notes':
+        openTab({
+          id: 'notes',
+          title: 'Notes & Commentaires',
+          path: '/notes',
+          component: 'NotesPage',
+          icon: 'bi-journal-text'
         });
         break;
       case '/contacts/nouveau/structure':
@@ -190,7 +217,17 @@ function DesktopLayout({ children }) {
       label: "Booking",
       subItems: [
         { to: "/concerts", icon: "bi-calendar-event", label: "Concerts" },
-        { to: "/artistes", icon: "bi-music-note-beamed", label: "Artistes" }
+        { to: "/booking/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
+      ]
+    },
+    {
+      id: "collaboration",
+      icon: "bi-people-fill",
+      label: "Collaboration",
+      subItems: [
+        { to: "/mails", icon: "bi-envelope", label: "Échanges de mails" },
+        { to: "/taches", icon: "bi-check2-square", label: "Tâches" },
+        { to: "/notes", icon: "bi-journal-text", label: "Notes & Commentaires" }
       ]
     },
     {

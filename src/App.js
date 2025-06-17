@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import '@styles/index.css';
 import { 
   BrowserRouter as Router, 
@@ -12,7 +12,6 @@ import { ParametresProvider } from '@/context/ParametresContext';
 import { ModalProvider } from '@/context/ModalContext';
 import { ContactModalsProvider } from '@/context/ContactModalsContext';
 import { TabsProvider } from '@/context/TabsContext';
-import FlexContainer from '@/components/ui/FlexContainer';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import ConcertsPage from '@/pages/ConcertsPage';
@@ -25,6 +24,7 @@ import FormResponsePage from '@/pages/FormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
+import BookingParametragePage from '@/pages/BookingParametragePage';
 import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
@@ -153,18 +153,7 @@ function App() {
                   <RouterStabilizer />
                   {/* Bouton de debug temporaire */}
                   <DebugButton />
-                  <Suspense fallback={
-                  <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                    <div className="text-center">
-                      <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Chargement de la page...</span>
-                      </div>
-                      <p className="mt-2">Chargement de la page...</p>
-                    </div>
-                  </FlexContainer>
-                }>
-                  <>
-                    <Routes>
+                  <Routes>
                       <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                     
                     <Route path="/login" element={<LoginPage />} />
@@ -187,18 +176,7 @@ function App() {
                       
                       <Route path="/concerts/*" element={
                         <PrivateRoute>
-                          <Suspense fallback={
-                            <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                              <div className="text-center">
-                                <div className="spinner-border text-primary" role="status">
-                                  <span className="visually-hidden">Chargement de la page...</span>
-                                </div>
-                                <p className="mt-2">Chargement de la page...</p>
-                              </div>
-                            </FlexContainer>
-                          }>
-                            <ConcertsPage />
-                          </Suspense>
+                          <ConcertsPage />
                         </PrivateRoute>
                       }>
                         <Route index element={<ConcertsList />} />
@@ -209,18 +187,7 @@ function App() {
                       
                       <Route path="/contacts/*" element={
                         <PrivateRoute>
-                          <Suspense fallback={
-                            <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                              <div className="text-center">
-                                <div className="spinner-border text-primary" role="status">
-                                  <span className="visually-hidden">Chargement de la page...</span>
-                                </div>
-                                <p className="mt-2">Chargement de la page...</p>
-                              </div>
-                            </FlexContainer>
-                          }>
-                            <ContactsPage />
-                          </Suspense>
+                          <ContactsPage />
                         </PrivateRoute>
                       }>
                         {/* Routes gérées en interne par ContactsPage */}
@@ -228,238 +195,90 @@ function App() {
                       
                       <Route path="/lieux/*" element={
                         <PrivateRoute>
-                          <Suspense fallback={
-                            <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                              <div className="text-center">
-                                <div className="spinner-border text-primary" role="status">
-                                  <span className="visually-hidden">Chargement de la page...</span>
-                                </div>
-                                <p className="mt-2">Chargement de la page...</p>
-                              </div>
-                            </FlexContainer>
-                          }>
-                            <LieuxPage />
-                          </Suspense>
+                          <LieuxPage />
                         </PrivateRoute>
                       } />
                       
                       <Route path="/structures/*" element={
                         <PrivateRoute>
-                          <Suspense fallback={
-                            <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                              <div className="text-center">
-                                <div className="spinner-border text-primary" role="status">
-                                  <span className="visually-hidden">Chargement de la page...</span>
-                                </div>
-                                <p className="mt-2">Chargement de la page...</p>
-                              </div>
-                            </FlexContainer>
-                          }>
-                                <StructuresPage />
-                              </Suspense>
+                          <StructuresPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/booking/parametrage/*" element={
+                            <PrivateRoute>
+                              <BookingParametragePage />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/contrats" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <ContratsPage />
-                              </Suspense>
+                              <ContratsPage />
                             </PrivateRoute>
                           } />
                           <Route path="/contrats/generate/:concertId" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <ContratGenerationPage />
-                              </Suspense>
+                              <ContratGenerationPage />
                             </PrivateRoute>
                           } />
                           <Route path="/contrats/:contratId" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <ContratDetailsPage />
-                              </Suspense>
+                              <ContratDetailsPage />
                             </PrivateRoute>
                           } />
                           {/* Route API pour téléchargement direct de contrat */}
                           <Route path="/api/contrats/:contratId/download" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement...</span>
-                                    </div>
-                                    <p className="mt-2">Préparation du téléchargement...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <ContratDownloadDirect />
-                              </Suspense>
+                              <ContratDownloadDirect />
                             </PrivateRoute>
                           } />
                           
                           {/* Route legacy pour téléchargement via page contrat */}
                           <Route path="/contrats/:contratId/download" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Téléchargement en cours...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <ContratDetailsPage autoDownload={true} />
-                              </Suspense>
+                              <ContratDetailsPage autoDownload={true} />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/artistes/*" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <ArtistesPage />
-                              </Suspense>
+                              <ArtistesPage />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/factures" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <FacturesPage />
-                              </Suspense>
+                              <FacturesPage />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/factures/generate/:concertId" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <FactureGenerationPage />
-                              </Suspense>
+                              <FactureGenerationPage />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/factures/:factureId" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <FactureDetailsPage />
-                              </Suspense>
+                              <FactureDetailsPage />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/parametres/*" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <ParametresPage />
-                              </Suspense>
+                              <ParametresPage />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/debug-tools" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <DebugToolsPage />
-                              </Suspense>
+                              <DebugToolsPage />
                             </PrivateRoute>
                           } />
                           
                           <Route path="/tabs-test" element={
                             <PrivateRoute>
-                              <Suspense fallback={
-                                <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                                  <div className="text-center">
-                                    <div className="spinner-border text-primary" role="status">
-                                      <span className="visually-hidden">Chargement de la page...</span>
-                                    </div>
-                                    <p className="mt-2">Chargement de la page...</p>
-                                  </div>
-                                </FlexContainer>
-                              }>
-                                <TabsTestPage />
-                              </Suspense>
+                              <TabsTestPage />
                             </PrivateRoute>
                           } />
                           
@@ -468,18 +287,7 @@ function App() {
                           
                       <Route path="/admin/migration" element={
                         <PrivateRoute adminOnly={true}>
-                          <Suspense fallback={
-                            <FlexContainer justify="center" align="center" className="loading-container tc-min-h-300">
-                              <div className="text-center">
-                                <div className="spinner-border text-primary" role="status">
-                                  <span className="visually-hidden">Chargement de la page...</span>
-                                </div>
-                                <p className="mt-2">Chargement de la page...</p>
-                              </div>
-                            </FlexContainer>
-                          }>
-                            <MigrationPage />
-                          </Suspense>
+                          <MigrationPage />
                         </PrivateRoute>
                       } />
                       
@@ -487,8 +295,6 @@ function App() {
                           <Route path="*" element={<Navigate to="/concerts" replace />} />
                         </Route>
                       </Routes>
-                    </>
-                  </Suspense>
                     </TabsProvider>
                   </ContactModalsProvider>
                 </ModalProvider>

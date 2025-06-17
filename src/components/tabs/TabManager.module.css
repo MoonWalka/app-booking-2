@@ -5,6 +5,10 @@
   display: flex;
   flex-direction: column;
   background: #fff;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .tabBar {
@@ -14,12 +18,67 @@
   background: #f8f9fa;
   padding: 0;
   min-height: 40px;
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-.tabBar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+.tabScrollContainer {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.tabsWrapper {
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+  overflow: visible;
+  flex-shrink: 0;
+  min-width: max-content;
+}
+
+.navButton {
+  background: #f8f9fa;
+  border: none;
+  border-right: 1px solid #e0e0e0;
+  color: #6c757d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 40px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.navButton:hover {
+  background: #e9ecef;
+  color: #007bff;
+}
+
+.navButton:disabled {
+  color: #dee2e6;
+  cursor: not-allowed;
+  background: #f8f9fa;
+}
+
+.navButton:disabled:hover {
+  background: #f8f9fa;
+  color: #dee2e6;
+}
+
+.leftNavButton {
+  border-right: 1px solid #e0e0e0;
+}
+
+.rightNavButton {
+  border-left: 1px solid #e0e0e0;
+  border-right: none;
 }
 
 .tab {
@@ -31,10 +90,12 @@
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
-  min-width: 120px;
+  min-width: 140px;
   max-width: 200px;
+  width: auto;
   position: relative;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .tab:hover {
@@ -103,12 +164,18 @@
 .tabContainer {
   flex: 1;
   overflow: auto;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .tabContent {
   padding: 0;
   height: 100%;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .tabContent h2 {

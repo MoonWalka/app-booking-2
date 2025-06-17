@@ -25,6 +25,9 @@ import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import StructuresPage from '@/pages/StructuresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
+import ProjetsPage from '@/pages/ProjetsPage';
+import SallesPage from '@/pages/SallesPage';
+import TableauDeBordPage from '@/pages/TableauDeBordPage';
 import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
@@ -208,6 +211,24 @@ function App() {
                           <Route path="/booking/parametrage/*" element={
                             <PrivateRoute>
                               <BookingParametragePage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/projets/*" element={
+                            <PrivateRoute>
+                              <ProjetsPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/salles/*" element={
+                            <PrivateRoute>
+                              <SallesPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/tableau-de-bord" element={
+                            <PrivateRoute>
+                              <TableauDeBordPage />
                             </PrivateRoute>
                           } />
                           

@@ -4,20 +4,23 @@ import { useContactModals } from '@/context/ContactModalsContext';
 import { useTabs } from '@/context/TabsContext';
 import StructureCreationModal from './StructureCreationModal';
 import PersonneCreationModal from './PersonneCreationModal';
+import DateCreationModal from '@/components/common/modals/DateCreationModal';
 
 /**
- * Conteneur global pour les modals de création de contacts
- * Gère les modals de structure et personne de manière centralisée
+ * Conteneur global pour les modals de création de contacts et autres modales
+ * Gère les modals de structure, personne et création de date de manière centralisée
  */
 function ContactModalsContainer() {
   const { 
     showStructureModal, 
     showPersonneModal,
+    showDateCreationModal,
     closeStructureModal,
-    closePersonneModal 
+    closePersonneModal,
+    closeDateCreationModal
   } = useContactModals();
   
-  const { openContactTab } = useTabs();
+  const { openContactTab, openConcertsListTab } = useTabs();
 
   // Callback pour la création de structure
   const handleStructureCreated = (newStructure) => {
@@ -37,6 +40,15 @@ function ContactModalsContainer() {
     closePersonneModal();
   };
 
+  // Callback pour la création de date
+  const handleDateCreated = (newDate) => {
+    console.log('Date créée depuis modal globale:', newDate);
+    // Ouvrir l'onglet des concerts pour voir la nouvelle date
+    openConcertsListTab();
+    // Fermer la modal
+    closeDateCreationModal();
+  };
+
   return (
     <>
       {/* Modal de création de structure */}
@@ -51,6 +63,13 @@ function ContactModalsContainer() {
         show={showPersonneModal}
         onHide={closePersonneModal}
         onCreated={handlePersonneCreated}
+      />
+
+      {/* Modal de création de date */}
+      <DateCreationModal
+        show={showDateCreationModal}
+        onHide={closeDateCreationModal}
+        onCreated={handleDateCreated}
       />
     </>
   );

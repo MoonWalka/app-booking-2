@@ -102,45 +102,73 @@ function ContactsList({ filterType = 'all' }) {
     const processContacts = (allContacts) => {
         console.log(`📋 Traitement de ${allContacts.length} contacts`);
         
-        // Détecter le type selon les nouvelles métadonnées
-        const processedContacts = allContacts.map(contact => {
+        // Détecter le type et dupliquer les contacts mixtes
+        const processedContacts = [];
+        
+        allContacts.forEach(contact => {
           const hasStructureData = contact.structureRaisonSociale?.trim();
           const hasPersonneData = contact.prenom?.trim() && contact.nom?.trim();
           
-          let entityType, displayName;
-          
-          if (hasStructureData && !hasPersonneData) {
-            // Contact de type structure pure
-            entityType = 'structure';
-            displayName = contact.structureRaisonSociale || 'Structure sans nom';
-          } else if (hasPersonneData && !hasStructureData) {
-            // Contact de type personne pure  
-            entityType = 'personne';
-            displayName = `${contact.prenom} ${contact.nom}`.trim();
-          } else if (hasStructureData && hasPersonneData) {
-            // Contact mixte (structure + personne)
-            entityType = 'mixte';
-            displayName = `${contact.prenom} ${contact.nom} (${contact.structureRaisonSociale})`.trim();
+          if (hasStructureData && hasPersonneData) {
+            // Contact mixte : créer 2 entrées
+            processedContacts.push({
+              ...contact,
+              id: `${contact.id}_structure`,
+              _originalId: contact.id,
+              _viewType: 'structure',
+              entityType: 'structure',
+              displayName: contact.structureRaisonSociale || 'Structure sans nom',
+              nom: contact.structureRaisonSociale,
+              email: contact.structureEmail || contact.email || contact.mailDirect,
+              telephone: contact.structureTelephone1 || contact.telephone || contact.telDirect,
+              _originalData: contact,
+              _sourceCollection: 'contacts'
+            });
+            processedContacts.push({
+              ...contact,
+              id: `${contact.id}_personne`,
+              _originalId: contact.id,
+              _viewType: 'personne',
+              entityType: 'personne',
+              displayName: `${contact.prenom} ${contact.nom}`.trim(),
+              nom: contact.nom,
+              email: contact.mailDirect || contact.email || contact.structureEmail,
+              telephone: contact.telDirect || contact.telephone || contact.structureTelephone1,
+              _originalData: contact,
+              _sourceCollection: 'contacts'
+            });
           } else {
-            // Contact basique (ancien format)
-            entityType = contact.type || 'personne';
-            displayName = contact.nom || contact.email || 'Contact sans nom';
+            // Contact simple : garder tel quel
+            let entityType, displayName;
+            
+            if (hasStructureData) {
+              entityType = 'structure';
+              displayName = contact.structureRaisonSociale || 'Structure sans nom';
+            } else if (hasPersonneData) {
+              entityType = 'personne';
+              displayName = `${contact.prenom} ${contact.nom}`.trim();
+            } else {
+              // Contact basique (ancien format)
+              entityType = contact.type || 'personne';
+              displayName = contact.nom || contact.email || 'Contact sans nom';
+            }
+            
+            processedContacts.push({
+              ...contact,
+              _originalId: contact.id,
+              _viewType: entityType,
+              entityType,
+              displayName,
+              nom: contact.nom || contact.structureRaisonSociale,
+              email: contact.email || contact.mailDirect || contact.structureEmail,
+              telephone: contact.telephone || contact.telDirect || contact.structureTelephone1,
+              _originalData: contact,
+              _sourceCollection: 'contacts'
+            });
           }
-          
-          return {
-            ...contact,
-            entityType,
-            displayName,
-            // Préserver les champs pour compatibilité
-            nom: contact.nom || contact.structureRaisonSociale,
-            email: contact.email || contact.mailDirect || contact.structureEmail,
-            telephone: contact.telephone || contact.telDirect || contact.structureTelephone1,
-            _originalData: contact,
-            _sourceCollection: 'contacts'
-          };
         });
         
-        console.log(`✅ Contacts traités: ${processedContacts.filter(c => c.entityType === 'personne').length} personnes + ${processedContacts.filter(c => c.entityType === 'structure').length} structures + ${processedContacts.filter(c => c.entityType === 'mixte').length} mixtes`);
+        console.log(`✅ Contacts traités: ${processedContacts.filter(c => c.entityType === 'personne').length} personnes + ${processedContacts.filter(c => c.entityType === 'structure').length} structures`);
         
         setUnifiedContacts(processedContacts);
         setLoading(false);
@@ -164,29 +192,26 @@ function ContactsList({ filterType = 'all' }) {
       label: 'Type',
       field: 'entityType',
       sortable: true,
-      width: '12%',
+      width: '8%',
       render: (item) => {
         const type = item.entityType;
         
-        let icon, label, variant;
+        let icon, variant;
         if (type === 'structure') {
           icon = 'bi bi-building';
-          label = 'Structure';
           variant = 'info';
-        } else if (type === 'mixte') {
-          icon = 'bi bi-person-gear';
-          label = 'Mixte';
-          variant = 'warning';
         } else {
           icon = 'bi bi-person';
-          label = 'Personne';
           variant = 'primary';
         }
         
         return (
-          <span className={`badge bg-${variant} d-flex align-items-center gap-1`} style={{ fontSize: '0.75rem' }}>
+          <span 
+            className={`badge bg-${variant} d-flex align-items-center justify-content-center`} 
+            style={{ fontSize: '1rem', minWidth: '32px', height: '28px' }}
+            title={type === 'structure' ? 'Structure' : 'Personne'}
+          >
             <i className={icon}></i>
-            {label}
           </span>
         );
       },
@@ -362,23 +387,16 @@ function ContactsList({ filterType = 'all' }) {
 
   // Actions sur les lignes (adaptées selon le type d'entité)
   const renderActions = (item) => {
-    if (item.entityType === 'structure') {
-      return (
-        <ActionButtons
-          onView={() => openStructureTab(item.id, item.nom || item.raisonSociale || 'Structure')}
-          onEdit={() => navigate(`/structures/${item.id}/edit`)}
-          onDelete={() => handleDeleteStructure(item.id)}
-        />
-      );
-    } else {
-      return (
-        <ActionButtons
-          onView={() => openContactTab(item.id, `${item.prenom || ''} ${item.nom || ''}`.trim() || 'Contact')}
-          onEdit={() => navigate(`/contacts/${item.id}/edit`)}
-          onDelete={() => handleDeleteContact(item.id)}
-        />
-      );
-    }
+    const contactId = item._originalId || item.id; // Utiliser l'ID original si dupliqué
+    const viewType = item._viewType; // Type de vue pour les contacts dupliqués
+    
+    return (
+      <ActionButtons
+        onView={() => openContactTab(contactId, item.displayName, viewType)}
+        onEdit={() => navigate(`/contacts/${contactId}/edit`)}
+        onDelete={() => handleDeleteContact(contactId)}
+      />
+    );
   };
 
   // Actions de l'en-tête avec menu déroulant pour choisir le type
@@ -420,13 +438,11 @@ function ContactsList({ filterType = 'all' }) {
 
   // Gestion du clic sur une ligne (adaptée selon le type d'entité)
   const handleRowClick = (item) => {
-    if (item.entityType === 'structure') {
-      const structureName = item.nom || item.raisonSociale || 'Structure';
-      openStructureTab(item.id, structureName);
-    } else {
-      const contactName = `${item.prenom || ''} ${item.nom || ''}`.trim() || 'Contact';
-      openContactTab(item.id, contactName);
-    }
+    const contactId = item._originalId || item.id; // Utiliser l'ID original si dupliqué
+    const viewType = item._viewType; // Type de vue pour les contacts dupliqués
+    console.log('🖱️ Clic sur contact:', item);
+    console.log('🚀 Ouverture onglet contact:', contactId, item.displayName, 'viewType:', viewType);
+    openContactTab(contactId, item.displayName, viewType);
   };
 
   return (

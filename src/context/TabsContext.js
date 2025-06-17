@@ -133,13 +133,16 @@ export const TabsProvider = ({ children }) => {
   }, [tabs, activeTabId]);
 
   // Helpers pour créer des onglets rapidement
-  const openContactTab = useCallback((contactId, contactName) => {
+  const openContactTab = useCallback((contactId, contactName, viewType = null) => {
+    const tabId = viewType ? `contact-${contactId}-${viewType}` : `contact-${contactId}`;
+    const tabParams = viewType ? { contactId, viewType } : { contactId };
+    
     openTab({
-      id: `contact-${contactId}`,
+      id: tabId,
       title: contactName,
       path: `/contacts/${contactId}`,
       component: 'ContactDetailsPage',
-      params: { contactId },
+      params: tabParams,
       icon: 'bi-person'
     });
   }, [openTab]);

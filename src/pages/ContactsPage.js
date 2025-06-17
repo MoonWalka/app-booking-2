@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import StructuresList from '@/components/structures/StructuresList';
+import ContactsList from '@/components/contacts/ContactsList';
 import ContactView from '@/components/contacts/desktop/ContactView';
 import ContactForm from '@/components/contacts/desktop/ContactForm';
 import ContactFormUnified from '@/components/contacts/ContactFormUnified';
@@ -26,7 +26,7 @@ const ContactsPage = ({ tabPath }) => {
   if (subPath === '/') {
     return (
       <div className="contacts-page">
-        <StructuresList />
+        <ContactsList />
       </div>
     );
   }
@@ -40,7 +40,7 @@ const ContactsPage = ({ tabPath }) => {
     // Les modals sont gérées globalement maintenant
     return (
       <div className="contacts-page">
-        <StructuresList />
+        <ContactsList />
       </div>
     );
   }
@@ -57,7 +57,7 @@ const ContactsPage = ({ tabPath }) => {
   return (
     <div className="contacts-page">
       <Routes>
-        <Route path="/" element={<StructuresList />} />
+        <Route path="/" element={<ContactsList />} />
         <Route path="/nouveau" element={<ContactTypeSelector />} />
         <Route path="/nouveau/:type" element={<ContactFormUnified />} />
         <Route path="/:id/edit" element={<ContactForm />} />

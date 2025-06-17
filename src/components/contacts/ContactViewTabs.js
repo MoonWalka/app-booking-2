@@ -15,11 +15,12 @@ import styles from './ContactViewTabs.module.css';
  * Zone 2: En construction (haut droite) 
  * Zone 3: En construction (bas, pleine largeur)
  */
-function ContactViewTabs({ id }) {
-  console.log('[ContactViewTabs] ID reçu:', id);
+function ContactViewTabs({ id, viewType = null }) {
+  console.log('[ContactViewTabs] ID reçu:', id, 'viewType:', viewType);
   
   const [entityType, setEntityType] = useState(null);
   const [isDetecting, setIsDetecting] = useState(true);
+  const [forcedViewType, setForcedViewType] = useState(viewType);
   
   // Détecter si c'est un contact ou une structure
   useEffect(() => {
@@ -140,9 +141,9 @@ function ContactViewTabs({ id }) {
       render: (contact) => {
         if (!contact) return null;
         
-        // Détecter le type selon les nouvelles métadonnées
+        // Utiliser le type forcé si fourni, sinon détecter automatiquement
         const hasStructureData = contact.structureRaisonSociale?.trim();
-        const isStructure = hasStructureData;
+        const isStructure = forcedViewType ? (forcedViewType === 'structure') : hasStructureData;
         
         // Pour les structures : afficher le nom de la structure
         // Pour les personnes : afficher prénom + nom
@@ -224,9 +225,9 @@ function ContactViewTabs({ id }) {
         title: 'Informations générales',
         icon: 'bi bi-info-circle',
         render: (contact) => {
-          // Détecter si c'est une structure ou une personne
+          // Utiliser le type forcé si fourni, sinon détecter automatiquement
           const hasStructureData = contact.structureRaisonSociale?.trim();
-          const isStructure = hasStructureData;
+          const isStructure = forcedViewType ? (forcedViewType === 'structure') : hasStructureData;
           
           // Construire l'adresse structure complète
           const formatStructureAddress = () => {
@@ -442,19 +443,19 @@ function ContactViewTabs({ id }) {
       {
         className: 'middleLeft',
         title: (contact) => {
-          // Détecter si c'est une structure ou une personne
+          // Utiliser le type forcé si fourni, sinon détecter automatiquement
           const hasStructureData = contact?.structureRaisonSociale?.trim();
-          const isStructure = hasStructureData;
+          const isStructure = forcedViewType ? (forcedViewType === 'structure') : hasStructureData;
           return isStructure ? 'Personnes' : 'Structure';
         },
         icon: (contact) => {
           const hasStructureData = contact?.structureRaisonSociale?.trim();
-          const isStructure = hasStructureData;
+          const isStructure = forcedViewType ? (forcedViewType === 'structure') : hasStructureData;
           return isStructure ? 'bi bi-people' : 'bi bi-building';
         },
         actions: (contact) => {
           const hasStructureData = contact?.structureRaisonSociale?.trim();
-          const isStructure = hasStructureData;
+          const isStructure = forcedViewType ? (forcedViewType === 'structure') : hasStructureData;
           
           if (isStructure) {
             // Pour les structures : actions sur les personnes
@@ -503,9 +504,9 @@ function ContactViewTabs({ id }) {
           }
         },
         render: (contact) => {
-          // Détecter si c'est une structure ou une personne
+          // Utiliser le type forcé si fourni, sinon détecter automatiquement
           const hasStructureData = contact.structureRaisonSociale?.trim();
-          const isStructure = hasStructureData;
+          const isStructure = forcedViewType ? (forcedViewType === 'structure') : hasStructureData;
           
           if (isStructure) {
             // Pour les structures, afficher les personnes

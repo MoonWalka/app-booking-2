@@ -63,7 +63,8 @@ const TabManagerProduction = () => {
           // Afficher les détails d'un contact avec le nouveau layout
           console.log('[DEBUG TabManager] activeTab pour ContactDetailsPage:', activeTab);
           console.log('[DEBUG TabManager] contactId passé:', activeTab.params?.contactId);
-          return <ContactViewTabs id={activeTab.params?.contactId} />;
+          console.log('[DEBUG TabManager] viewType passé:', activeTab.params?.viewType);
+          return <ContactViewTabs id={activeTab.params?.contactId} viewType={activeTab.params?.viewType} />;
         case 'ConcertsPage':
           // Afficher directement la liste des concerts
           return <ConcertsList />;

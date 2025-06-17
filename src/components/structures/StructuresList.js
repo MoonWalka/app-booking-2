@@ -1,5 +1,5 @@
 // src/components/structures/StructuresList.js
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
@@ -7,6 +7,7 @@ import AddButton from '@/components/ui/AddButton';
 import { useDeleteStructure } from '@/hooks/structures';
 import { useTabs } from '@/context/TabsContext';
 import StructureCreationModal from '@/components/contacts/modal/StructureCreationModal';
+import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
 
 /**
  * Liste unifiée des structures utilisant le composant générique ListWithFilters
@@ -18,6 +19,54 @@ function StructuresList() {
   const { openContactTab } = useTabs();
   const [refreshKey, setRefreshKey] = useState(0);
   const [showStructureModal, setShowStructureModal] = useState(false);
+  
+  // Récupérer les données des contacts
+  const { items: originalContacts, loading, error } = useGenericEntityList('contacts', {
+    refreshKey,
+    sort: { field: 'createdAt', direction: 'desc' }
+  });
+  
+  // Fonction pour dupliquer les contacts mixtes
+  const transformedContacts = useMemo(() => {
+    if (!originalContacts || originalContacts.length === 0) {
+      return [];
+    }
+    
+    const duplicatedContacts = [];
+    
+    originalContacts.forEach(contact => {
+      const hasStructureData = contact.structureRaisonSociale?.trim();
+      const hasPersonneData = contact.prenom?.trim() && contact.nom?.trim();
+      
+      if (hasStructureData && hasPersonneData) {
+        // Contact mixte : créer 2 entrées
+        duplicatedContacts.push({
+          ...contact,
+          id: `${contact.id}_structure`,
+          _originalId: contact.id,
+          _viewType: 'structure',
+          _displayType: 'Structure'
+        });
+        duplicatedContacts.push({
+          ...contact,
+          id: `${contact.id}_personne`,
+          _originalId: contact.id,
+          _viewType: 'personne',
+          _displayType: 'Personne'
+        });
+      } else {
+        // Contact simple : garder tel quel
+        duplicatedContacts.push({
+          ...contact,
+          _originalId: contact.id,
+          _viewType: hasStructureData ? 'structure' : 'personne',
+          _displayType: hasStructureData ? 'Structure' : 'Personne'
+        });
+      }
+    });
+    
+    return duplicatedContacts;
+  }, [originalContacts]);
   
   // Callback appelé après suppression réussie pour actualiser la liste
   const onDeleteSuccess = () => {
@@ -92,14 +141,24 @@ function StructuresList() {
       sortable: true,
       width: '8%',
       render: (contact) => {
-        // Détecter le type selon les nouvelles métadonnées
-        const hasStructureData = contact.structureRaisonSociale?.trim();
-        
+        // Utiliser le type de vue si défini, sinon détecter
         let type, icon, variant;
-        if (hasStructureData) {
-          type = 'Structure'; icon = 'bi bi-building'; variant = 'info';
+        
+        if (contact._viewType) {
+          // Contact avec vue spécifique (dupliqué)
+          if (contact._viewType === 'structure') {
+            type = 'Structure'; icon = 'bi bi-building'; variant = 'info';
+          } else {
+            type = 'Personne'; icon = 'bi bi-person'; variant = 'primary';
+          }
         } else {
-          type = 'Personne'; icon = 'bi bi-person'; variant = 'primary';
+          // Logique de détection classique
+          const hasStructureData = contact.structureRaisonSociale?.trim();
+          if (hasStructureData) {
+            type = 'Structure'; icon = 'bi bi-building'; variant = 'info';
+          } else {
+            type = 'Personne'; icon = 'bi bi-person'; variant = 'primary';
+          }
         }
         
         return (
@@ -120,13 +179,20 @@ function StructuresList() {
       sortable: true,
       width: '30%',
       render: (contact) => {
-        const hasStructureData = contact.structureRaisonSociale?.trim();
+        // Utiliser le type de vue si défini
+        if (contact._viewType) {
+          if (contact._viewType === 'structure') {
+            return contact.structureRaisonSociale || 'Structure sans nom';
+          } else {
+            return `${contact.prenom} ${contact.nom}`.trim() || contact.nom || contact.email || 'Contact sans nom';
+          }
+        }
         
+        // Logique de détection classique
+        const hasStructureData = contact.structureRaisonSociale?.trim();
         if (hasStructureData) {
-          // Structure
           return contact.structureRaisonSociale || 'Structure sans nom';
         } else {
-          // Personne
           return `${contact.prenom} ${contact.nom}`.trim() || contact.nom || contact.email || 'Contact sans nom';
         }
       },
@@ -194,20 +260,31 @@ function StructuresList() {
   // Actions sur les lignes (adaptées pour tous les contacts)
   const renderActions = (contact) => {
     const displayName = getContactDisplayName(contact);
+    const contactId = contact._originalId || contact.id; // Utiliser l'ID original si dupliqué
+    const viewType = contact._viewType; // Type de vue pour les contacts dupliqués
     
     return (
       <ActionButtons
-        onView={() => openContactTab(contact.id, displayName)}
-        onEdit={() => navigate(`/contacts/${contact.id}/edit`)}
-        onDelete={() => handleDelete(contact.id)}
+        onView={() => openContactTab(contactId, displayName, viewType)}
+        onEdit={() => navigate(`/contacts/${contactId}/edit`)}
+        onDelete={() => handleDelete(contactId)}
       />
     );
   };
   
   // Fonction utilitaire pour obtenir le nom d'affichage
   const getContactDisplayName = (contact) => {
-    const hasStructureData = contact.structureRaisonSociale?.trim();
+    // Utiliser le type de vue si défini (pour les contacts dupliqués)
+    if (contact._viewType) {
+      if (contact._viewType === 'structure') {
+        return contact.structureRaisonSociale || 'Structure';
+      } else {
+        return `${contact.prenom} ${contact.nom}`.trim() || contact.nom || contact.email || 'Contact';
+      }
+    }
     
+    // Logique de détection classique pour les contacts simples
+    const hasStructureData = contact.structureRaisonSociale?.trim();
     if (hasStructureData) {
       return contact.structureRaisonSociale || 'Structure';
     } else {
@@ -236,8 +313,10 @@ function StructuresList() {
   const handleRowClick = (contact) => {
     console.log('🖱️ Clic sur contact:', contact);
     const displayName = getContactDisplayName(contact);
-    console.log('🚀 Ouverture onglet contact:', contact.id, displayName);
-    openContactTab(contact.id, displayName);
+    const contactId = contact._originalId || contact.id; // Utiliser l'ID original si dupliqué
+    const viewType = contact._viewType; // Type de vue pour les contacts dupliqués
+    console.log('🚀 Ouverture onglet contact:', contactId, displayName, 'viewType:', viewType);
+    openContactTab(contactId, displayName, viewType);
   };
 
   return (
@@ -256,6 +335,10 @@ function StructuresList() {
         showRefresh={true}
         showStats={true}
         calculateStats={calculateStats}
+        initialData={transformedContacts}
+        loading={loading}
+        error={error}
+        onRefresh={() => setRefreshKey(prev => prev + 1)}
       />
       
       {/* Modal de création de structure */}

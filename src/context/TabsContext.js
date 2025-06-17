@@ -231,6 +231,16 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
+  const openTachesTab = useCallback(() => {
+    openTab({
+      id: 'taches',
+      title: 'Tâches',
+      path: '/taches',
+      component: 'TachesPage',
+      icon: 'bi-check2-square'
+    });
+  }, [openTab]);
+
   const value = {
     tabs,
     activeTabId,
@@ -249,7 +259,8 @@ export const TabsProvider = ({ children }) => {
     openConcertsListTab,
     openLieuxListTab,
     openStructuresListTab,
-    openDebugToolsTab
+    openDebugToolsTab,
+    openTachesTab
   };
 
   return (

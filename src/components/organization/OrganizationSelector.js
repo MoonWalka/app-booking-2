@@ -3,7 +3,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 import { useAuth } from '@/context/AuthContext';
 import styles from './OrganizationSelector.module.css';
 
-const OrganizationSelector = ({ className = '', isMobile = false }) => {
+const OrganizationSelector = ({ className = '', isMobile = false, onDropdownToggle }) => {
   const { currentUser } = useAuth();
   const { 
     currentOrg, 
@@ -13,6 +13,13 @@ const OrganizationSelector = ({ className = '', isMobile = false }) => {
   } = useOrganization();
 
   const [showDropdown, setShowDropdown] = useState(false);
+  
+  // Notifier le parent quand le dropdown change
+  useEffect(() => {
+    if (onDropdownToggle) {
+      onDropdownToggle(showDropdown);
+    }
+  }, [showDropdown, onDropdownToggle]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);

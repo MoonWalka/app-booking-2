@@ -115,7 +115,7 @@
   top: 70px; /* Commence sous le header */
   overflow: visible; /* Permet aux sous-menus de déborder */
   z-index: var(--tc-z-index-sidebar);
-  box-shadow: var(--tc-shadow-base);
+  box-shadow: none;
   transition: var(--tc-transition-base);
   display: flex;
   flex-direction: column;
@@ -343,6 +343,17 @@
   }
 }
 
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* 
  * En-tête du sous-menu
  * ------------------
@@ -352,16 +363,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--tc-space-3) var(--tc-space-6); /* Même padding que les liens */
+  padding: var(--tc-space-2) var(--tc-space-4); /* Padding réduit */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--tc-color-primary);
+  min-height: 40px; /* Hauteur minimale réduite */
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .subMenuHeader h4 {
   margin: 0;
-  margin-left: calc(24px + var(--tc-space-3)); /* Même alignement que le texte des liens */
   color: var(--tc-text-light);
-  font-size: 1.1rem;
+  font-size: 1rem; /* Taille réduite */
   font-weight: 600;
 }
 
@@ -406,17 +420,27 @@
  */
 .userMenuPanel {
   position: fixed;
-  left: var(--tc-sidebar-width-thin);
-  top: 70px; /* Commence sous le header */
+  left: 0;
+  bottom: 0; /* Commence en bas */
   width: var(--tc-submenu-width);
-  height: calc(100vh - 70px); /* Hauteur moins le header */
+  height: auto; /* Hauteur automatique selon le contenu */
+  min-height: 200px; /* Hauteur minimale */
+  max-height: 60vh; /* Hauteur max réduite pour éviter de dépasser */
   background-color: var(--tc-color-primary);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  animation: slideInFromLeft 0.2s ease-out;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999; /* Juste en dessous de la sidebar */
+  animation: slideInFromBottom 0.2s ease-out;
   display: flex;
   flex-direction: column;
+  transition: height 0.3s ease, max-height 0.3s ease;
+  overflow: visible; /* Permettre au dropdown de déborder */
+}
+
+/* Quand le panneau a du contenu déployé, il grandit vers le haut */
+.userMenuPanel.expanded {
+  height: 500px; /* Hauteur fixe pour accommoder le dropdown */
+  max-height: calc(100vh - 100px); /* Limite maximale */
 }
 
 /* 
@@ -425,8 +449,10 @@
  */
 .userMenuContent {
   flex: 1;
-  padding: var(--tc-space-4);
-  overflow-y: auto;
+  padding: var(--tc-space-3);
+  overflow: visible; /* Permettre au dropdown de déborder */
+  display: flex;
+  flex-direction: column;
 }
 
 /* 
@@ -435,7 +461,7 @@
  * Informations du profil utilisateur
  */
 .userSection {
-  margin-bottom: var(--tc-space-6);
+  margin-bottom: var(--tc-space-4);
 }
 
 .userProfile {
@@ -443,10 +469,10 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--tc-space-4);
+  padding: var(--tc-space-3);
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: var(--tc-radius-base);
-  margin-bottom: var(--tc-space-4);
+  margin-bottom: var(--tc-space-3);
 }
 
 .userDetails {
@@ -512,7 +538,12 @@
   left: 0;
   width: 80vw;
   max-width: 350px;
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  bottom: 0; /* Commence en bas sur mobile aussi */
+  top: auto;
+  height: auto;
+  max-height: 70vh; /* Limite la hauteur sur mobile */
+  box-shadow: 2px -2px 15px rgba(0, 0, 0, 0.3);
+  animation: slideInFromBottom 0.3s ease-out;
 }
 
 /* 
@@ -577,8 +608,8 @@
 .sidebarFooter {
   margin-top: auto;
   padding: var(--tc-space-2);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: rgba(0, 0, 0, 0.05);
+  border-top: none;
+  background-color: transparent;
   text-align: center;
 }
 
@@ -1176,6 +1207,7 @@
 .sidebar.extended {
   width: var(--tc-submenu-width);
   min-width: var(--tc-submenu-width);
+  transition: width 0.3s ease;
 }
 
 .sidebar.extended .navLabel {
@@ -1187,6 +1219,40 @@
 .sidebar.extended .navSectionHeader {
   justify-content: flex-start;
   padding: var(--tc-space-3) var(--tc-space-4);
+}
+
+.sidebar.extended .navButton {
+  justify-content: flex-start;
+  padding: var(--tc-space-3) var(--tc-space-4);
+  margin: var(--tc-space-1) var(--tc-space-2); /* Même marge que navGroupToggle */
+  height: 50px; /* Même hauteur que navGroupToggle */
+}
+
+.sidebar.extended .navButton i {
+  width: 24px; /* Largeur fixe pour alignement */
+  text-align: center;
+  margin-right: var(--tc-space-3);
+  flex-shrink: 0;
+  font-size: 1.4rem; /* Même taille que navGroupToggle */
+}
+
+.sidebar.extended .navGroupToggle {
+  justify-content: flex-start;
+  padding: var(--tc-space-3) var(--tc-space-4);
+  width: calc(100% - var(--tc-space-4));
+  margin: var(--tc-space-1) var(--tc-space-2); /* Garder la marge existante */
+}
+
+.sidebar.extended .navGroupToggle i {
+  width: 24px; /* Largeur fixe pour alignement */
+  text-align: center;
+  margin-right: var(--tc-space-3);
+  flex-shrink: 0;
+  font-size: 1.4rem; /* Garder la taille existante */
+}
+
+.sidebar.extended .tooltip {
+  display: none; /* Pas besoin de tooltip quand les labels sont visibles */
 }
 
 .sidebar.extended .navSectionTitle {

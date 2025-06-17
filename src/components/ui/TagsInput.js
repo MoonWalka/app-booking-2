@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
+import { getTagCssClass, getTagColor } from '@/config/tagsConfig';
 import styles from './TagsInput.module.css';
 
 /**
@@ -34,7 +35,11 @@ const TagsInput = ({
       <div className={styles.currentTags}>
         {tags.length > 0 ? (
           tags.map((tag, index) => (
-            <span key={index} className={`${styles.tag} ${styles[`tag${tag.toLowerCase()}`]}`}>
+            <span 
+              key={index} 
+              className={`${styles.tag} ${styles[getTagCssClass(tag)]}`}
+              style={{ backgroundColor: getTagColor(tag) }}
+            >
               <i className="bi bi-tag"></i>
               {tag}
               <button 

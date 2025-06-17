@@ -1,0 +1,395 @@
+/*
+ * Styles pour TableauDeBordPage
+ * Harmonisé avec le style TourCraft
+ */
+
+/* Conteneur principal */
+.container {
+  padding: 1.5rem;
+  min-height: 100vh;
+  background-color: var(--tc-bg-color-light, #f8f9fa);
+}
+
+/* En-tête de la page */
+.header {
+  margin-bottom: 2rem;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--tc-text-primary, #2c3e50);
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.subtitle {
+  color: var(--tc-text-secondary, #6c757d);
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Carte du tableau */
+.tableCard {
+  border: 1px solid var(--tc-border-default, #e5e7eb);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.cardHeader {
+  background-color: var(--tc-bg-color-light, #f8f9fa);
+  border-bottom: 1px solid var(--tc-border-default, #e5e7eb);
+  padding: 1rem 1.5rem;
+}
+
+.cardHeaderContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--tc-text-primary, #2c3e50);
+  display: flex;
+  align-items: center;
+}
+
+.searchSection {
+  flex: 0 0 300px;
+}
+
+.searchInput {
+  width: 100%;
+}
+
+.cardBody {
+  padding: 0;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+/* Cellules du tableau */
+.dateCell {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.niveauCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.niveauIcon {
+  display: flex;
+  align-items: end;
+  gap: 2px;
+  height: 20px;
+}
+
+.niveauBar {
+  width: 4px;
+  border-radius: 1px;
+  transition: all 0.2s ease;
+}
+
+.niveauBar:nth-child(1) {
+  height: 6px;
+}
+
+.niveauBar:nth-child(2) {
+  height: 12px;
+}
+
+.niveauBar:nth-child(3) {
+  height: 18px;
+}
+
+.niveauBarActive {
+  background-color: #007bff;
+}
+
+.niveauBarInactive {
+  background-color: #e9ecef;
+}
+
+.niveauText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.artisteCell {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.projetCell {
+  font-weight: 400;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.lieuCell {
+  min-width: 150px;
+}
+
+.lieuNom {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+  margin-bottom: 0.25rem;
+}
+
+.lieuVille {
+  font-size: 0.875rem;
+  color: var(--tc-text-secondary, #6c757d);
+}
+
+.priseOptionCell {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.nbDatesCell {
+  text-align: center;
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.contratTypeCell {
+  text-align: center;
+}
+
+.contratTypeBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+  text-transform: capitalize;
+  letter-spacing: 0.025em;
+}
+
+.contratCell,
+.devisCell,
+.preContratCell,
+.confirmationCell,
+.contratFinalCell,
+.factureCell {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.typeconcert {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.typecontrat {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.typefacture {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.typeprojet {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.titleCell {
+  min-width: 200px;
+}
+
+.mainTitle {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--tc-text-secondary, #6c757d);
+}
+
+.locationCell {
+  min-width: 150px;
+}
+
+.mainLocation {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+  margin-bottom: 0.25rem;
+}
+
+.locationCity {
+  font-size: 0.875rem;
+  color: var(--tc-text-secondary, #6c757d);
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.statuscontact {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.statusoption {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.statusconfirme {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.statusannule {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.statusreporte {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.montantCell {
+  text-align: right;
+  min-width: 100px;
+}
+
+.montant {
+  font-weight: 600;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.noMontant {
+  color: var(--tc-text-secondary, #6c757d);
+  font-style: italic;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.actionBtn {
+  min-width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
+}
+
+.actionBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .cardHeaderContent {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .searchSection {
+    flex: 1 1 auto;
+  }
+
+  .titleCell,
+  .locationCell {
+    min-width: auto;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+
+  .actionBtn {
+    min-width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .tableCard {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .cardHeader {
+    padding: 0.75rem 1rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+} 

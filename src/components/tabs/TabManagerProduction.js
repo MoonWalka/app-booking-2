@@ -9,6 +9,9 @@ import ContratsPage from '@/pages/ContratsPage';
 import FacturesPage from '@/pages/FacturesPage';
 import ParametresPage from '@/pages/ParametresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
+import ProjetsPage from '@/pages/ProjetsPage';
+import SallesPage from '@/pages/SallesPage';
+import TableauDeBordPage from '@/pages/TableauDeBordPage';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
@@ -202,6 +205,13 @@ const TabManagerProduction = () => {
           return <ParametresPage />;
         case 'BookingParametragePage':
           return <BookingParametragePage />;
+        case 'ProjetsPage':
+          console.log('📂 Rendu de ProjetsPage dans TabManager');
+          return <ProjetsPage />;
+        case 'SallesPage':
+          return <SallesPage />;
+        case 'TableauDeBordPage':
+          return <TableauDeBordPage />;
         case 'DebugToolsPage':
           return <DebugToolsPage />;
         default:

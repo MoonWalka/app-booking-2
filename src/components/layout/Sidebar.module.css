@@ -63,11 +63,26 @@
   margin: 0;
 }
 
+.subMenu .navButton {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: var(--tc-space-3);
+  align-items: center;
+  padding: var(--tc-space-3) var(--tc-space-6);
+  color: var(--tc-text-light);
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--tc-transition-short);
+}
+
 .subMenu .navButton i {
   display: flex;
   align-items: center;
   justify-content: center;
-  justify-self: center;
   font-size: 1.2rem;
   width: 24px;
   height: 24px;
@@ -283,11 +298,12 @@
 .subMenuOverlay {
   position: fixed;
   top: 0;
-  left: 0;
+  left: 70px;
   right: 0;
   bottom: 0;
   background: transparent;
   z-index: 999;
+  pointer-events: none;
 }
 
 /* 
@@ -844,5 +860,93 @@
   .mobileSidebar .debugButton {
     font-size: 0.8rem;
     padding: var(--tc-space-2);
+  }
+}
+
+/* 
+ * Sous-sous-menus (menu à 3 niveaux)
+ * ---------------------------------
+ * Styles pour les éléments expandables dans les sous-menus
+ */
+.subNavGroup {
+  margin-bottom: 0;
+}
+
+.expandableSubItem {
+  position: relative;
+  display: grid !important;
+  grid-template-columns: 24px 1fr 12px !important;
+  gap: var(--tc-space-3) !important;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.expandIcon {
+  font-size: 0.4rem;
+  transition: transform 0.2s ease;
+  opacity: 0.5;
+  justify-self: end;
+  grid-column: 3;
+  margin-right: 0.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.subSubMenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  overflow: hidden;
+  animation: slideDown 0.2s ease-out;
+}
+
+.subSubNavButton {
+  padding-left: var(--tc-space-6) !important;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  background-color: transparent;
+  border-left: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.subSubNavButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--tc-color-accent);
+  color: white;
+  transform: translateX(2px);
+}
+
+.subSubNavButton i {
+  font-size: 0.9rem;
+  margin-right: var(--tc-space-2);
+  opacity: 0.8;
+}
+
+/* Animation de déploiement des sous-sous-menus */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    max-height: 200px;
+    transform: translateY(0);
+  }
+}
+
+/* Amélioration pour mobile */
+@media (max-width: var(--tc-breakpoint-md)) {
+  .subSubNavButton {
+    padding-left: var(--tc-space-4) !important;
+    font-size: 0.8rem;
+  }
+  
+  .expandIcon {
+    font-size: 0.35rem;
   }
 }

@@ -253,6 +253,12 @@
   outline-offset: -2px;
 }
 
+.navGroupToggle.active {
+  background-color: white;
+  color: var(--tc-color-primary);
+  border-radius: var(--tc-radius-base);
+}
+
 /* 
  * Tooltips pour les icônes
  * ----------------------
@@ -620,6 +626,12 @@
 .footerIconButton:focus {
   outline: 2px solid var(--tc-color-primary);
   outline-offset: -2px;
+}
+
+.footerIconButton.active {
+  background-color: white;
+  color: var(--tc-color-primary);
+  border-radius: var(--tc-radius-base);
 }
 
 /* 

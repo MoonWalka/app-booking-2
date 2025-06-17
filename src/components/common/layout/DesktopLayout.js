@@ -266,7 +266,7 @@ function DesktopLayout({ children }) {
       return (
         <li key={item.id} className={sidebarStyles.navGroup}>
           <button 
-            className={sidebarStyles.navGroupToggle}
+            className={`${sidebarStyles.navGroupToggle} ${isExpanded ? sidebarStyles.active : ''}`}
             onClick={() => toggleMenu(item.id)}
             aria-expanded={isExpanded}
             title={item.label}
@@ -437,7 +437,7 @@ function DesktopLayout({ children }) {
               <div className={sidebarStyles.footerIcons}>
                 {/* Icône utilisateur avec texte pour mobile */}
                 <button 
-                  className={sidebarStyles.footerIconButton}
+                  className={`${sidebarStyles.footerIconButton} ${isUserMenuOpen ? sidebarStyles.active : ''}`}
                   onClick={toggleUserMenu}
                   title="Profil utilisateur"
                 >
@@ -526,7 +526,7 @@ function DesktopLayout({ children }) {
             <div className={sidebarStyles.footerIcons}>
               {/* Icône utilisateur avec tooltip */}
               <button 
-                className={sidebarStyles.footerIconButton}
+                className={`${sidebarStyles.footerIconButton} ${isUserMenuOpen ? sidebarStyles.active : ''}`}
                 onClick={toggleUserMenu}
                 title="Profil utilisateur"
               >

@@ -16,11 +16,12 @@
 
 .content {
   flex: 1;
-  margin-left: var(--tc-sidebar-width); /* Correspond à la largeur de la sidebar */
+  /* margin-left sera contrôlé dynamiquement via JavaScript */
   padding: var(--tc-space-6);
+  padding-top: calc(70px + var(--tc-space-6)); /* Espace pour le header + padding normal */
   min-height: 100vh;
   background-color: var(--tc-bg-default);
-  transition: opacity var(--tc-transition-duration) ease-in-out;
+  transition: margin-left 0.2s ease-in-out, opacity var(--tc-transition-duration) ease-in-out;
   position: relative;
 }
 
@@ -41,7 +42,52 @@
   pointer-events: none; /* Permet toujours les clics à travers */
 }
 
-/* Styles pour le header */
+/* Header principal sur toute la largeur */
+.mainHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: var(--tc-color-primary);
+  color: var(--tc-text-light);
+  border-bottom: var(--tc-border-sidebar);
+  z-index: var(--tc-z-index-header, 1000);
+  display: flex;
+  align-items: center;
+  width: 100%; /* Prend toute la largeur */
+  box-shadow: var(--tc-shadow-base);
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Logo à gauche, actions à droite */
+  padding: 0 var(--tc-space-6);
+  width: 100%;
+  height: 100%;
+}
+
+.headerLogo {
+  display: flex;
+  align-items: center;
+}
+
+.headerLogo h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--tc-text-light);
+}
+
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3);
+}
+
+/* Styles pour le header (legacy) */
 .header {
   background-color: var(--tc-bg-default);
   padding: var(--tc-space-4) var(--tc-space-6);
@@ -177,7 +223,7 @@
 
 /* Contenu mobile adapté */
 .mobileContent {
-  margin-left: 0 !important;
+  margin-left: 0 !important; /* Force le margin-left à 0 sur mobile */
   padding-top: 80px; /* Espace pour le header mobile */
   padding-bottom: var(--tc-space-4); /* Espace réduit sans bottom nav */
   padding-left: var(--tc-space-3);
@@ -187,13 +233,20 @@
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
+  transition: none !important; /* Pas de transition sur mobile */
 }
 
 /* Responsive avec points de rupture standardisés */
 @media (max-width: var(--tc-breakpoint-md)) {
+  /* Masquer le header principal sur mobile */
+  .mainHeader {
+    display: none;
+  }
+  
   .content {
     margin-left: 0;
     padding: var(--tc-space-3);
+    padding-top: var(--tc-space-3); /* Pas d'espace header sur mobile */
     overflow-x: hidden;
     width: 100%;
     max-width: 100vw;

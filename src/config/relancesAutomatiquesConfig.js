@@ -12,7 +12,7 @@ export const RELANCES_CONFIG = {
   watcherEnabled: false,
   
   // Délai minimum entre deux évaluations pour le même concert (en ms)
-  evaluationCooldown: 30000, // 30 secondes
+  evaluationCooldown: 10000, // 10 secondes (réduit pour meilleure réactivité)
   
   // Délai après création/modification avant d'évaluer les relances (en ms)
   evaluationDelay: 5000, // 5 secondes

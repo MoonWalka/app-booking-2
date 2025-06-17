@@ -136,7 +136,7 @@ export const TabsProvider = ({ children }) => {
   const openContactTab = useCallback((contactId, contactName) => {
     openTab({
       id: `contact-${contactId}`,
-      title: `Contact - ${contactName}`,
+      title: contactName,
       path: `/contacts/${contactId}`,
       component: 'ContactDetailsPage',
       params: { contactId },
@@ -169,7 +169,7 @@ export const TabsProvider = ({ children }) => {
   const openStructureTab = useCallback((structureId, structureName) => {
     openTab({
       id: `structure-${structureId}`,
-      title: `Structure - ${structureName}`,
+      title: structureName,
       path: `/structures/${structureId}`,
       component: 'StructureDetailsPage',
       params: { structureId },

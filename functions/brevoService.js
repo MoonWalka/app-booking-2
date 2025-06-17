@@ -1,4 +1,4 @@
-const { TransactionalEmailsApi, TransactionalEmailsApiApiKeys } = require('@getbrevo/brevo');
+const axios = require('axios');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const { decryptBrevoApiKey, generateAuditHash } = require('./cryptoUtils');
@@ -26,8 +26,8 @@ class BrevoEmailService {
       throw new Error('Clé API Brevo manquante');
     }
 
-    this.api = new TransactionalEmailsApi();
-    this.api.setApiKey(TransactionalEmailsApiApiKeys.apiKey, apiKey);
+    this.apiKey = apiKey;
+    this.baseURL = 'https://api.brevo.com/v3';
     this.initialized = true;
     
     console.log('Service Brevo initialisé avec succès');
@@ -37,8 +37,62 @@ class BrevoEmailService {
    * Valide que le service est initialisé
    */
   validateInitialized() {
-    if (!this.initialized || !this.api) {
+    if (!this.initialized || !this.apiKey) {
       throw new Error('Service Brevo non initialisé. Appelez init() d\'abord.');
+    }
+  }
+
+  /**
+   * Effectue un appel HTTP à l'API Brevo
+   * @param {string} endpoint - Endpoint de l'API
+   * @param {string} method - Méthode HTTP
+   * @param {Object} data - Données à envoyer
+   * @returns {Promise<Object>} - Réponse de l'API
+   */
+  async makeRequest(endpoint, method = 'GET', data = null) {
+    this.validateInitialized();
+
+    try {
+      const config = {
+        method,
+        url: `${this.baseURL}${endpoint}`,
+        headers: {
+          'api-key': this.apiKey,
+          'Content-Type': 'application/json'
+        },
+        timeout: 15000 // 15 seconds timeout
+      };
+
+      if (data && (method === 'POST' || method === 'PUT')) {
+        config.data = data;
+      }
+
+      console.log(`[DEBUG] Making ${method} request to: ${config.url}`);
+      console.log(`[DEBUG] Request headers:`, {
+        'api-key': this.apiKey?.substring(0, 10) + '...',
+        'Content-Type': config.headers['Content-Type']
+      });
+
+      const response = await axios(config);
+      
+      console.log(`[DEBUG] Response received:`, {
+        status: response.status,
+        statusText: response.statusText,
+        dataKeys: response.data ? Object.keys(response.data) : 'null'
+      });
+      
+      return response.data;
+    } catch (error) {
+      console.error('[ERROR] Erreur API Brevo:', {
+        endpoint,
+        method,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message,
+        code: error.code
+      });
+      throw this.handleBrevoError(error);
     }
   }
 
@@ -88,7 +142,7 @@ class BrevoEmailService {
         variablesCount: Object.keys(variables).length
       });
 
-      const response = await this.api.sendTransacEmail(emailData);
+      const response = await this.makeRequest('/smtp/email', 'POST', emailData);
       
       console.log('Email Brevo envoyé avec succès:', {
         messageId: response.messageId,
@@ -147,7 +201,7 @@ class BrevoEmailService {
     try {
       console.log('Envoi email transactionnel Brevo:', { to, subject });
 
-      const response = await this.api.sendTransacEmail(emailData);
+      const response = await this.makeRequest('/smtp/email', 'POST', emailData);
       
       console.log('Email transactionnel Brevo envoyé avec succès:', {
         messageId: response.messageId,
@@ -174,7 +228,7 @@ class BrevoEmailService {
     this.validateInitialized();
 
     try {
-      const response = await this.api.getSmtpTemplates();
+      const response = await this.makeRequest('/smtp/templates');
       return response.templates || [];
     } catch (error) {
       console.error('Erreur récupération templates Brevo:', error);
@@ -190,11 +244,24 @@ class BrevoEmailService {
     this.validateInitialized();
 
     try {
-      // Test simple avec récupération des templates
-      await this.api.getSmtpTemplates({ limit: 1 });
+      console.log(`[DEBUG] Making request to /account endpoint with apiKey: ${this.apiKey?.substring(0, 10)}...`);
+      
+      // Test simple avec récupération du compte
+      const result = await this.makeRequest('/account');
+      console.log(`[DEBUG] Account request successful:`, {
+        email: result?.email,
+        planType: result?.plan?.type,
+        companyName: result?.companyName
+      });
+      
       return true;
     } catch (error) {
-      console.error('Validation clé API Brevo échouée:', error);
+      console.error('[ERROR] Validation clé API Brevo échouée:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data
+      });
       return false;
     }
   }
@@ -271,6 +338,8 @@ class UnifiedEmailService {
    */
   async getEmailConfig(userId, organizationId) {
     try {
+      console.log(`[DEBUG] getEmailConfig - userId: ${userId}, organizationId: ${organizationId}`);
+      
       const userDoc = await admin.firestore()
         .collection('organizations')
         .doc(organizationId)
@@ -278,32 +347,57 @@ class UnifiedEmailService {
         .doc('settings')
         .get();
 
+      console.log(`[DEBUG] Document exists: ${userDoc.exists}`);
+      
       if (userDoc.exists) {
         const params = userDoc.data();
+        console.log(`[DEBUG] Params keys: ${Object.keys(params)}`);
+        console.log(`[DEBUG] Email config exists: ${!!params.email}`);
+        
         const emailConfig = params.email || { provider: 'smtp' };
+        console.log(`[DEBUG] Email provider: ${emailConfig.provider}`);
+        console.log(`[DEBUG] Brevo enabled: ${emailConfig.brevo?.enabled}`);
+        console.log(`[DEBUG] Brevo apiKey exists: ${!!emailConfig.brevo?.apiKey}`);
         
         // Déchiffrer les données sensibles
         if (emailConfig.brevo?.apiKey) {
           try {
+            console.log(`[DEBUG] Tentative déchiffrement - apiKey starts with: ${emailConfig.brevo.apiKey.substring(0, 10)}..., userId: ${userId}`);
             const decryptedApiKey = decryptBrevoApiKey(emailConfig.brevo.apiKey, userId);
+            console.log(`[DEBUG] Déchiffrement réussi - clé déchiffrée starts with: ${decryptedApiKey?.substring(0, 10) || 'null'}...`);
             emailConfig.brevo.apiKey = decryptedApiKey;
             
             // Audit log (sans révéler la clé)
             const auditHash = generateAuditHash(decryptedApiKey);
             console.info(`[AUDIT] Clé API Brevo utilisée - User: ${userId}, Hash: ${auditHash}`);
           } catch (decryptError) {
-            console.error('Erreur déchiffrement clé API Brevo:', decryptError);
-            // En cas d'erreur de déchiffrement, utiliser SMTP en fallback
-            emailConfig.provider = 'smtp';
-            emailConfig.brevo.enabled = false;
+            console.error('[ERROR] Erreur déchiffrement clé API Brevo:', {
+              message: decryptError.message,
+              userId: userId,
+              apiKeyPrefix: emailConfig.brevo.apiKey?.substring(0, 10) || 'null',
+              stack: decryptError.stack
+            });
+            
+            // Vérifier si la clé est déjà en clair (cas de test/debug)
+            if (emailConfig.brevo.apiKey && emailConfig.brevo.apiKey.startsWith('xkeysib-')) {
+              console.log('[DEBUG] Clé API semble déjà en clair, utilisation directe');
+              // Garder la clé telle quelle
+            } else {
+              console.error('[ERROR] Impossible de déchiffrer la clé API, fallback vers SMTP');
+              // En cas d'erreur de déchiffrement, utiliser SMTP en fallback
+              emailConfig.provider = 'smtp';
+              emailConfig.brevo.enabled = false;
+            }
           }
         }
         
         return emailConfig;
+      } else {
+        console.log('[DEBUG] Document n\'existe pas - configuration email non trouvée');
       }
       return { provider: 'smtp' };
     } catch (error) {
-      console.error('Erreur récupération config email:', error);
+      console.error('[DEBUG] Erreur récupération config email:', error);
       return { provider: 'smtp' };
     }
   }
@@ -315,8 +409,31 @@ class UnifiedEmailService {
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
   async sendEmailWithFallback(emailData, retries = 3) {
+    console.log('[DEBUG] === DÉBUT sendEmailWithFallback ===');
+    console.log('[DEBUG] emailData reçu:', JSON.stringify(emailData, null, 2));
+    
     const { userId, organizationId } = emailData;
+    console.log(`[DEBUG] sendEmailWithFallback - userId: ${userId}, organizationId: ${organizationId}`);
+    console.log(`[DEBUG] emailData keys: ${Object.keys(emailData)}`);
+    console.log(`[DEBUG] emailData.to: ${emailData.to}, templateName: ${emailData.templateName}`);
+    
+    // Validation des paramètres critiques
+    if (!emailData.to) {
+      throw new Error('Adresse email destinataire manquante');
+    }
+    
+    if (!userId || !organizationId) {
+      throw new Error('userId et organizationId sont requis');
+    }
+    
+    console.log('[DEBUG] Récupération config email...');
     const config = await this.getEmailConfig(userId, organizationId);
+    console.log(`[DEBUG] Config récupérée:`, {
+      provider: config.provider,
+      brevoEnabled: config.brevo?.enabled,
+      hasBrevoApiKey: !!config.brevo?.apiKey,
+      smtpConfigured: !!config.smtp
+    });
 
     // Tentative avec le provider principal
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -426,14 +543,25 @@ module.exports = {
   sendEmail: (emailData, retries = 3) => unifiedEmailService.sendEmailWithFallback(emailData, retries),
   validateBrevoApiKey: async (apiKey) => {
     // Pas de déchiffrement ici car la clé API est déjà en clair lors de la validation côté client
-    const service = new BrevoEmailService();
-    service.init(apiKey);
+    console.log(`[DEBUG] validateBrevoApiKey called with apiKey length: ${apiKey?.length || 0}`);
+    console.log(`[DEBUG] apiKey starts with: ${apiKey?.substring(0, 10) || 'N/A'}...`);
     
-    // Audit log de la validation
-    const auditHash = generateAuditHash(apiKey);
-    console.info(`[AUDIT] Validation clé API Brevo - Hash: ${auditHash}`);
-    
-    return await service.validateApiKey();
+    try {
+      const service = new BrevoEmailService();
+      service.init(apiKey);
+      
+      // Audit log de la validation
+      const auditHash = generateAuditHash(apiKey);
+      console.info(`[AUDIT] Validation clé API Brevo - Hash: ${auditHash}`);
+      
+      const result = await service.validateApiKey();
+      console.log(`[DEBUG] validateApiKey result: ${result}`);
+      
+      return result;
+    } catch (error) {
+      console.error(`[ERROR] validateBrevoApiKey failed:`, error);
+      return false;
+    }
   },
   getBrevoTemplates: async (apiKey) => {
     // Pas de déchiffrement ici car la clé API est déjà en clair lors de la récupération des templates côté client

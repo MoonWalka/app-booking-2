@@ -15,6 +15,7 @@
   "main": "index.js",
   "dependencies": {
     "@getbrevo/brevo": "^2.2.0",
+    "axios": "^1.10.0",
     "chrome-aws-lambda": "^10.1.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",

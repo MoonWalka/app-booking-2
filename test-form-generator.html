@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test FormGenerator - TourCraft</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        .demo-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .demo-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .form-control {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ced4da;
+            border-right: none;
+            font-size: 14px;
+            outline: none;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: 1px solid #ced4da;
+            border-left: none;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-outline-secondary {
+            color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .alert {
+            padding: 12px 16px;
+            margin-top: 15px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .spinner-border {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        .feature-list li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 FormGenerator avec Bouton "Envoyer"</h1>
+            <p>Démonstration de la nouvelle fonctionnalité d'envoi d'email</p>
+        </div>
+
+        <div class="demo-section">
+            <h3>📋 Nouvelles Fonctionnalités</h3>
+            <ul class="feature-list">
+                <li>Bouton "Envoyer" ajouté à côté du bouton "Copier"</li>
+                <li>Envoi automatique via Brevo avec template personnalisé</li>
+                <li>Récupération automatique des données concert et contact</li>
+                <li>Messages de confirmation et d'erreur</li>
+                <li>Design responsive pour mobile</li>
+            </ul>
+        </div>
+
+        <div class="demo-section">
+            <h3>🎯 Interface Utilisateur</h3>
+            <p>Voici le lien du formulaire à envoyer au contact :</p>
+            
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    value="https://tourcraft.app/formulaire/abc123/def456" 
+                    readonly
+                />
+                <button class="btn btn-outline-secondary">
+                    Copier
+                </button>
+                <button class="btn btn-primary" id="sendBtn">
+                    <i>📧</i> Envoyer
+                </button>
+            </div>
+
+            <div class="alert alert-success" style="display: none;" id="successAlert">
+                <span>✅ Email envoyé avec succès à contact@example.com</span>
+            </div>
+
+            <div class="alert alert-danger" style="display: none;" id="errorAlert">
+                <span>❌ Erreur lors de l'envoi de l'email</span>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>🔧 Implémentation Technique</h3>
+            <p><strong>Fichier modifié :</strong> <code>src/components/forms/FormGenerator.js</code></p>
+            <p><strong>Service utilisé :</strong> <code>brevoTemplateService.sendFormulaireEmail()</code></p>
+            <p><strong>Template :</strong> Template Brevo "formulaire" avec variables TourCraft</p>
+        </div>
+
+        <div class="demo-section">
+            <h3>📱 Version Mobile</h3>
+            <p>Le design s'adapte automatiquement sur mobile avec les boutons empilés verticalement.</p>
+            <p><em>Redimensionnez la fenêtre pour voir l'effet responsive</em></p>
+        </div>
+    </div>
+
+    <script>
+        // Simulation de l'envoi d'email
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            const btn = this;
+            const successAlert = document.getElementById('successAlert');
+            const errorAlert = document.getElementById('errorAlert');
+            
+            // Cacher les alertes précédentes
+            successAlert.style.display = 'none';
+            errorAlert.style.display = 'none';
+            
+            // Changer le bouton en état loading
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border"></span> Envoi...';
+            
+            // Simuler l'envoi après 2 secondes
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i>📧</i> Envoyer';
+                
+                // Afficher le succès (90% de chance)
+                if (Math.random() > 0.1) {
+                    successAlert.style.display = 'flex';
+                    setTimeout(() => {
+                        successAlert.style.display = 'none';
+                    }, 5000);
+                } else {
+                    errorAlert.style.display = 'flex';
+                }
+            }, 2000);
+        });
+
+        // Fonction copier
+        document.querySelector('.btn-outline-secondary').addEventListener('click', function() {
+            const input = document.querySelector('.form-control');
+            input.select();
+            document.execCommand('copy');
+            
+            const originalText = this.textContent;
+            this.textContent = 'Copié !';
+            
+            setTimeout(() => {
+                this.textContent = originalText;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,10 @@
 /**
  * Utilitaires pour transformer les données TourCraft en variables Brevo
  * Gère la conversion des objets concert/contact en variables de templates
+ * 
+ * NOTE: La fonction formatContratVariables est temporairement non utilisée
+ * car l'envoi d'email de contrat est désactivé
+ * TODO: Réactiver avec la nouvelle solution API
  */
 
 import { DefaultVariables } from '../types/brevoTypes.js';
@@ -94,6 +98,10 @@ export const formatRelanceVariables = (concert, contact, documentsManquants = []
 
 /**
  * Formate les variables pour le template contrat prêt
+ * 
+ * TEMPORAIREMENT NON UTILISÉE: L'envoi d'email de contrat est désactivé
+ * Fonction conservée pour réactivation future
+ * 
  * @param {Object} concert - Données du concert
  * @param {Object} contact - Données du contact
  * @param {Object} contrat - Données du contrat

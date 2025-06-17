@@ -1,12 +1,12 @@
 import React from 'react';
-import StructureView from './StructureView';
+import StructureViewTabs from '../StructureViewTabs';
 
 /**
  * Wrapper component for structure details
- * Utilise le nouveau composant StructureView moderne
+ * Utilise le nouveau composant StructureViewTabs avec onglets
  */
 const StructureDetails = () => {
-  return <StructureView />;
+  return <StructureViewTabs />;
 };
 
 export default StructureDetails;

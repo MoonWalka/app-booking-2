@@ -160,20 +160,28 @@ class RelancesAutomatiquesService {
           continue;
         }
         
-        const relanceExistante = relancesExistantes.find(r => r.type === typeId);
+        // PROTECTION ANTI-DOUBLONS: Vérifier TOUTES les relances de ce type
+        const relancesDeceType = relancesExistantes.filter(r => r.type === typeId);
+        const relanceActive = relancesDeceType.find(r => !r.terminee);
+        const relanceExistante = relancesDeceType[0]; // Pour compatibilité avec le code existant
         const doitExister = this._verifierConditions(typeConfig.conditions, etatConcert);
         
-        console.log(`🔍 Type: ${typeId} | Doit exister: ${doitExister} | Existe déjà: ${!!relanceExistante} | Terminée: ${relanceExistante?.terminee || 'N/A'}`);
+        console.log(`🔍 Type: ${typeId} | Doit exister: ${doitExister} | Total ce type: ${relancesDeceType.length} | Active: ${!!relanceActive} | Terminée: ${relanceExistante?.terminee || 'N/A'}`);
         
-        if (doitExister && !relanceExistante) {
-          // Créer une nouvelle relance automatique
-          console.log(`➕ Création nécessaire pour: ${typeConfig.nom}`);
-          await this._creerRelanceAutomatique(concert, typeConfig, organizationId);
-        } else if (!doitExister && relanceExistante && !relanceExistante.terminee) {
+        // PROTECTION: Ne créer que s'il n'y a AUCUNE relance active de ce type
+        if (doitExister && !relanceActive) {
+          // Vérification finale anti-doublon
+          if (relancesDeceType.length === 0) {
+            console.log(`➕ Création nécessaire pour: ${typeConfig.nom}`);
+            await this._creerRelanceAutomatique(concert, typeConfig, organizationId);
+          } else {
+            console.log(`⚠️ Création bloquée: ${relancesDeceType.length} relances de ce type existent déjà`);
+          }
+        } else if (!doitExister && relanceActive) {
           // Marquer la relance comme terminée automatiquement
           console.log(`✅ Validation automatique de: ${typeConfig.nom}`);
-          await this._terminerRelanceAutomatique(relanceExistante.id, `Action "${typeConfig.nom}" effectuée automatiquement`);
-        } else if (doitExister && relanceExistante) {
+          await this._terminerRelanceAutomatique(relanceActive.id, `Action "${typeConfig.nom}" effectuée automatiquement`);
+        } else if (doitExister && relanceActive) {
           console.log(`⏩ Relance "${typeConfig.nom}" déjà existante et conforme`);
         } else {
           console.log(`⏭️ Aucune action nécessaire pour: ${typeConfig.nom}`);
@@ -238,6 +246,21 @@ class RelancesAutomatiquesService {
     if (concert.formValidated) {
       etat.formulaire_envoye = true;
       etat.formulaire_recu = true;
+      etat.formulaire_valide = true;
+    }
+    
+    // CORRECTION IMPORTANTE: Si le concert a des données complètes ET qu'un contrat existe,
+    // on peut supposer que le processus de validation est OK même sans formulaire explicite
+    if (contratData && champsCompletes.length >= 3) {
+      // Si un contrat a été généré et que le concert a des infos de base, 
+      // considérer le processus de validation comme OK
+      etat.formulaire_valide = true;
+    }
+    
+    // ALTERNATIVE: Si pas de système de formulaire utilisé mais concert complet, 
+    // marquer comme valide pour permettre l'envoi de contrat
+    if (!formulaireData && !concert.formValidated && champsCompletes.length >= 4) {
+      console.log('📋 Concert suffisamment complet, validation automatique pour les relances');
       etat.formulaire_valide = true;
     }
     
@@ -509,6 +532,7 @@ class RelancesAutomatiquesService {
   /**
    * Force la réévaluation de toutes les relances d'un concert
    * (utile après une mise à jour manuelle)
+   * IMPORTANT: Contourne le cooldown pour les actions manuelles
    * 
    * @param {string} concertId - ID du concert
    * @param {string} organizationId - ID de l'organisation
@@ -518,6 +542,10 @@ class RelancesAutomatiquesService {
     try {
       console.log(`🔄 Réévaluation forcée des relances pour le concert: ${concertId}`);
       
+      // FORCER la réévaluation en contournant le cooldown pour les actions manuelles
+      const evaluationKey = `relance_eval_${concertId}`;
+      this._lastEvaluations.delete(evaluationKey);
+      
       // Récupérer les données du concert
       const concertDoc = await getDoc(doc(db, 'concerts', concertId));
       if (!concertDoc.exists()) {
@@ -526,10 +554,36 @@ class RelancesAutomatiquesService {
       
       const concert = { id: concertId, ...concertDoc.data() };
       
-      // Récupérer les données associées (formulaire, contrat)
-      // TODO: Implémenter la récupération des données de formulaire et contrat
+      // Récupérer les données du contrat associé au concert
+      let contratData = null;
+      try {
+        const contratsQuery = query(
+          collection(db, 'contrats'),
+          where('concertId', '==', concertId),
+          where('organizationId', '==', organizationId)
+        );
+        const contratsSnapshot = await getDocs(contratsQuery);
+        
+        if (!contratsSnapshot.empty) {
+          // Prendre le contrat le plus récent s'il y en a plusieurs
+          const contrats = contratsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          contratData = contrats.sort((a, b) => 
+            (b.dateCreation?.seconds || 0) - (a.dateCreation?.seconds || 0)
+          )[0];
+          
+          console.log(`📄 Contrat trouvé pour réévaluation: ${contratData.id}, statut: ${contratData.status}`);
+        }
+      } catch (contratError) {
+        console.warn('Erreur récupération contrat (non bloquant):', contratError);
+      }
       
-      await this.evaluerEtMettreAJourRelances(concert, null, null, organizationId);
+      // Récupérer les données du formulaire (TODO si nécessaire)
+      const formulaireData = null;
+      
+      await this.evaluerEtMettreAJourRelances(concert, formulaireData, contratData, organizationId);
       
     } catch (error) {
       console.error('Erreur lors de la réévaluation des relances:', error);

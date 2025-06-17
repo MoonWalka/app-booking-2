@@ -9,6 +9,8 @@ import AddressInput from '@components/ui/AddressInput';
 import FormHeader from '@/components/ui/FormHeader';
 import useCompanySearch from '@/hooks/common/useCompanySearch';
 import StructureIdentitySection from './sections/StructureIdentitySection';
+import ContactQualificationSection from '@/components/contacts/sections/ContactQualificationSection';
+import ContactDiffusionSection from '@/components/contacts/sections/ContactDiffusionSection';
 import StructureSignataireSection from './sections/StructureSignataireSection';
 import StructureBillingSection from './sections/StructureBillingSection';
 import StructureNotesSection from './sections/StructureNotesSection';
@@ -46,6 +48,14 @@ const StructureFormEnhanced = () => {
     siteWeb: '',
     notes: '',
     numeroIntracommunautaire: '',
+    tags: [],
+    source: '',
+    createdAt: null,
+    updatedAt: null,
+    nomFestival: '',
+    periodeFestivalMois: '',
+    periodeFestivalComplete: '',
+    bouclage: '',
     // Champs de facturation
     adresseFacturation: '',
     codePostalFacturation: '',
@@ -533,6 +543,21 @@ const StructureFormEnhanced = () => {
 
             {/* Section Informations de base - Composant modulaire */}
             <StructureIdentitySection 
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+            />
+
+            {/* Section Qualification */}
+            <ContactQualificationSection 
+              formData={formData}
+              handleChange={handleChange}
+              errors={{}}
+              isEditing={!isNewFromUrl}
+            />
+
+            {/* Section Diffusion */}
+            <ContactDiffusionSection 
               formData={formData}
               handleChange={handleChange}
               errors={{}}

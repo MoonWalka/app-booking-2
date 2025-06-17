@@ -193,3 +193,144 @@
     padding: 15px;
   }
 }
+
+/* Styles pour la section Tags */
+.tagsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+}
+
+.currentTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 40px;
+  align-items: flex-start;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.tagfestival {
+  background: linear-gradient(135deg, #e91e63, #f06292);
+}
+
+.tagbar {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+}
+
+.tagsalles {
+  background: linear-gradient(135deg, #2196f3, #64b5f6);
+}
+
+.removeTag {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.removeTag:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.removeTag i {
+  font-size: 0.7rem;
+}
+
+.noTags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+  font-style: italic;
+  padding: 10px 0;
+}
+
+.tagSelector {
+  margin-top: auto;
+}
+
+.tagSelect {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 20px;
+  background: white;
+  font-size: 0.85rem;
+  color: #495057;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.tagSelect:hover {
+  border-color: #007bff;
+}
+
+.tagSelect:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* Styles pour la section Commentaires */
+.commentsContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 10px;
+}
+
+.commentsTextarea {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background: #f8f9fa;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #495057;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.commentsTextarea:focus {
+  outline: none;
+  border-color: #007bff;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.commentsTextarea::placeholder {
+  color: #6c757d;
+  font-style: italic;
+}

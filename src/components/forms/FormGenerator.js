@@ -12,6 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Card from '@/components/ui/Card';
 import Button from '@ui/Button';
 import FormField from '@/components/ui/FormField';
+import Alert from '@/components/ui/Alert';
+import brevoTemplateService from '@/services/brevoTemplateService';
 import styles from './FormGenerator.module.css';
 
 const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
@@ -21,40 +23,58 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
   const [existingLink, setExistingLink] = useState(null);
   const [expiryDate, setExpiryDate] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [concertData, setConcertData] = useState(null);
+  const [contactData, setContactData] = useState(null);
 
   // Charger un lien existant au démarrage
   useEffect(() => {
     const fetchExistingLink = async () => {
       try {
         setLoadingExisting(true);
-        // Vérifier si le concert a déjà un formLinkId
+        // Récupérer les données du concert
         const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists() && concertDoc.data().formLinkId) {
-          const formLinkId = concertDoc.data().formLinkId;
-          const formLinkDoc = await getDoc(doc(db, 'formLinks', formLinkId));
+        if (concertDoc.exists()) {
+          setConcertData({ id: concertDoc.id, ...concertDoc.data() });
           
-          if (formLinkDoc.exists()) {
-            const linkData = formLinkDoc.data();
+          // Récupérer les données du contact si disponible
+          if (contactId) {
+            const contactDoc = await getDoc(doc(db, 'contacts', contactId));
+            if (contactDoc.exists()) {
+              setContactData({ id: contactDoc.id, ...contactDoc.data() });
+            }
+          }
+          
+          // Vérifier si le concert a déjà un formLinkId
+          if (concertDoc.data().formLinkId) {
+            const formLinkId = concertDoc.data().formLinkId;
+            const formLinkDoc = await getDoc(doc(db, 'formLinks', formLinkId));
             
-            // Vérifier si le lien n'est pas expiré
-            const now = new Date();
-            const expiryDate = linkData.expiryDate?.toDate();
-            
-            if (expiryDate && expiryDate > now) {
-              // Reconstruire l'URL du formulaire
-              const baseUrl = window.location.origin;
-              const useHash = window.location.href.includes('#');
-              let formUrl;
+            if (formLinkDoc.exists()) {
+              const linkData = formLinkDoc.data();
               
-              if (useHash) {
-                formUrl = `${baseUrl}/#/formulaire/${concertId}/${linkData.token}`;
-              } else {
-                formUrl = `${baseUrl}/formulaire/${concertId}/${linkData.token}`;
+              // Vérifier si le lien n'est pas expiré
+              const now = new Date();
+              const expiryDate = linkData.expiryDate?.toDate();
+              
+              if (expiryDate && expiryDate > now) {
+                // Reconstruire l'URL du formulaire
+                const baseUrl = window.location.origin;
+                const useHash = window.location.href.includes('#');
+                let formUrl;
+                
+                if (useHash) {
+                  formUrl = `${baseUrl}/#/formulaire/${concertId}/${linkData.token}`;
+                } else {
+                  formUrl = `${baseUrl}/formulaire/${concertId}/${linkData.token}`;
+                }
+                
+                setFormLink(formUrl);
+                setExistingLink(linkData);
+                setExpiryDate(expiryDate);
               }
-              
-              setFormLink(formUrl);
-              setExistingLink(linkData);
-              setExpiryDate(expiryDate);
             }
           }
         }
@@ -66,7 +86,7 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
     };
     
     fetchExistingLink();
-  }, [concertId]);
+  }, [concertId, contactId]);
 
   const generateForm = async () => {
     setLoading(true);
@@ -157,6 +177,56 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
       });
   };
 
+  const sendFormByEmail = async () => {
+    if (!contactData || !contactData.email) {
+      setEmailError('Le contact n\'a pas d\'adresse email');
+      return;
+    }
+
+    if (!concertData) {
+      setEmailError('Les données du concert ne sont pas encore chargées. Veuillez patienter...');
+      return;
+    }
+
+    if (!formLink) {
+      setEmailError('Le lien du formulaire n\'est pas encore généré. Veuillez d\'abord générer le lien.');
+      return;
+    }
+
+    try {
+      setSendingEmail(true);
+      setEmailError('');
+      setEmailSent(false);
+
+      console.log('Envoi email formulaire avec:', {
+        concertData: concertData ? { 
+          id: concertData.id, 
+          nom: concertData.nom,
+          titre: concertData.titre,
+          title: concertData.title,
+          keys: Object.keys(concertData)
+        } : 'null',
+        contactData: contactData ? { id: contactData.id, email: contactData.email } : 'null',
+        formLink: formLink
+      });
+
+      await brevoTemplateService.sendFormulaireEmail(
+        concertData,
+        contactData,
+        formLink
+      );
+
+      setEmailSent(true);
+      // Réinitialiser le message de succès après 5 secondes
+      setTimeout(() => setEmailSent(false), 5000);
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email:', error);
+      setEmailError(error.message || 'Une erreur est survenue lors de l\'envoi de l\'email');
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   // Formater la date d'expiration
   const formatExpiryDate = (date) => {
     if (!date) return '';
@@ -227,7 +297,41 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
             >
               {copied ? 'Copié !' : 'Copier'}
             </Button>
+            {contactData && contactData.email && (
+              <Button
+                variant="primary"
+                onClick={sendFormByEmail}
+                disabled={sendingEmail || !concertData || !formLink || loadingExisting}
+                className={styles.sendButton}
+              >
+                {sendingEmail ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Envoi...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-envelope me-2"></i>
+                    Envoyer
+                  </>
+                )}
+              </Button>
+            )}
           </div>
+
+          {emailSent && (
+            <Alert variant="success" className="mt-3">
+              <i className="bi bi-check-circle-fill me-2"></i>
+              Email envoyé avec succès à {contactData.email}
+            </Alert>
+          )}
+
+          {emailError && (
+            <Alert variant="danger" className="mt-3">
+              <i className="bi bi-exclamation-circle-fill me-2"></i>
+              {emailError}
+            </Alert>
+          )}
           
           <div className={styles.alertInfo}>
             <i className="bi bi-info-circle"></i>

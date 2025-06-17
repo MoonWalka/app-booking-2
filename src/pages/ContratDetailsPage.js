@@ -19,7 +19,7 @@ import ContratPdfViewer from '@/components/contrats/sections/ContratPdfViewer';
 import ContratVariablesCard from '@/components/contrats/sections/ContratVariablesCard';
 import DownloadModal from '@/components/common/DownloadModal';
 
-const ContratDetailsPage = () => {
+const ContratDetailsPage = ({ autoDownload = false }) => {
   const { contratId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -38,6 +38,7 @@ const ContratDetailsPage = () => {
     loading, 
     error,
     setContrat,
+    refresh,
     handleDelete,
     showDeleteModal,
     isDeleting,
@@ -77,7 +78,7 @@ const ContratDetailsPage = () => {
     handleMarkAsSigned, 
     actionError,
     isActionLoading
-  } = useContratActions(contratId, contrat, setContrat);
+  } = useContratActions(contratId, contrat, setContrat, concert, contact || programmateur, refresh);
 
   // Hook for PDF preview functionality
   const {
@@ -156,7 +157,7 @@ const ContratDetailsPage = () => {
   };
 
   // Handle downloading PDF with Puppeteer
-  const handleDownload = () => {
+  const handleDownload = React.useCallback(() => {
     // Vérifier que les données essentielles sont chargées
     if (!concert || !template) {
       alert('Les données du contrat sont encore en cours de chargement. Veuillez réessayer dans un instant.');
@@ -168,7 +169,35 @@ const ContratDetailsPage = () => {
     console.log('[DEBUG handleDownload] structure disponible:', structure);
     
     handleDownloadPdf(ContratPDFWrapper, pdfData);
-  };
+  }, [concert, template, pdfData, structure, handleDownloadPdf]);
+
+  // Flag pour éviter les téléchargements multiples
+  const [autoDownloadTriggered, setAutoDownloadTriggered] = React.useState(false);
+
+  // Gérer le téléchargement automatique pour la route /download
+  useEffect(() => {
+    // Déclencher le téléchargement automatique si autoDownload est activé et pas encore déclenché
+    if (autoDownload && !loading && contrat && concert && template && !isDownloading && !autoDownloadTriggered) {
+      console.log('[ContratDetailsPage] Déclenchement du téléchargement automatique');
+      
+      // Marquer comme déclenché pour éviter les doublons
+      setAutoDownloadTriggered(true);
+      
+      // Vérifier que les données essentielles sont chargées
+      if (!contact && !lieu && !artiste) {
+        console.warn('[ContratDetailsPage] Données incomplètes pour le téléchargement automatique');
+        return;
+      }
+      
+      // Attendre un court délai pour s'assurer que toutes les données sont chargées
+      const timer = setTimeout(() => {
+        console.log('[ContratDetailsPage] Lancement du téléchargement automatique');
+        handleDownload();
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [autoDownload, loading, contrat, concert, template, contact, lieu, artiste, isDownloading, autoDownloadTriggered, handleDownload]);
 
   // Loading state
   if (loading) {
@@ -206,6 +235,22 @@ const ContratDetailsPage = () => {
 
   return (
     <div className={styles.container}>
+      {/* Message pour téléchargement automatique */}
+      {autoDownload && (
+        <div className="alert alert-info mb-4">
+          <div className="d-flex align-items-center">
+            <i className="bi bi-download me-2"></i>
+            <div>
+              <strong>Téléchargement en cours...</strong>
+              <div className="mt-1">
+                Le téléchargement du contrat PDF va commencer automatiquement. 
+                Si rien ne se passe, vous pouvez utiliser le bouton "Télécharger PDF" ci-dessous.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Contract Header */}
       <ContratHeader 
         contrat={contrat} 

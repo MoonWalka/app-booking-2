@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, setDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
+import { useOrganization } from './OrganizationContext';
 import { 
   encryptSensitiveFields, 
   decryptSensitiveFields,
@@ -18,6 +19,7 @@ export const useParametres = () => {
 };
 
 export const ParametresProvider = ({ children }) => {
+  const { currentOrganization } = useOrganization();
   const [parametres, setParametres] = useState({
     entreprise: {},
     generaux: {
@@ -78,8 +80,21 @@ export const ParametresProvider = ({ children }) => {
 
   useEffect(() => {
     const chargerParametres = async () => {
+      // Ne pas charger si aucune organisation n'est sélectionnée
+      if (!currentOrganization?.id) {
+        console.log('ℹ️ Aucune organisation sélectionnée, paramètres par défaut utilisés');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const parametresDoc = await getDoc(doc(db, 'parametres', 'global'));
+        console.log('📋 Chargement paramètres pour organisation:', currentOrganization.id);
+        
+        // Charger depuis organizations/{id}/parametres/settings
+        const parametresDoc = await getDoc(
+          doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        );
+        
         if (parametresDoc.exists()) {
           const parametresServeur = parametresDoc.data();
           
@@ -137,10 +152,17 @@ export const ParametresProvider = ({ children }) => {
     };
 
     chargerParametres();
-  }, []);
+  }, [currentOrganization?.id]); // Recharger quand l'organisation change
 
   const sauvegarderParametres = useCallback(async (section, nouvellesValeurs) => {
+    // Vérifier qu'une organisation est sélectionnée
+    if (!currentOrganization?.id) {
+      throw new Error('Aucune organisation sélectionnée. Impossible de sauvegarder les paramètres.');
+    }
+
     try {
+      console.log('💾 Sauvegarde paramètres pour organisation:', currentOrganization.id, 'section:', section);
+      
       let valeursPourSauvegarde = nouvellesValeurs;
       
       // Chiffrer les données sensibles avant sauvegarde
@@ -166,7 +188,11 @@ export const ParametresProvider = ({ children }) => {
         }
       };
 
-      await setDoc(doc(db, 'parametres', 'global'), parametresMisAJour);
+      // Sauvegarder dans organizations/{id}/parametres/settings
+      await setDoc(
+        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings'), 
+        parametresMisAJour
+      );
       
       // Mettre à jour l'état local avec les valeurs non chiffrées
       const parametresLocalMisAJour = {
@@ -184,7 +210,7 @@ export const ParametresProvider = ({ children }) => {
       setError(err.message);
       return false;
     }
-  }, [parametres]);
+  }, [parametres, currentOrganization?.id]);
 
   const value = {
     parametres,

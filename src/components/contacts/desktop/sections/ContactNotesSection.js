@@ -1,6 +1,6 @@
 // src/components/contacts/desktop/sections/ContactNotesSection.js
 import React from 'react';
-import Card from '@/components/ui/Card';
+import SectionWithBubbleTitle from '@/components/ui/SectionWithBubbleTitle';
 import FormField from '@/components/ui/FormField';
 import Alert from '@/components/ui/Alert';
 
@@ -10,15 +10,16 @@ import Alert from '@/components/ui/Alert';
 const ContactNotesSection = ({ 
   notes, 
   onChange, 
-  isEditMode 
+  isEditMode,
+  isEditing 
 }) => {
   
   return (
-    <Card
+    <SectionWithBubbleTitle
       title="Notes et commentaires"
       icon={<i className="bi bi-journal-text"></i>}
     >
-      {isEditMode ? (
+      {(isEditMode || isEditing) ? (
         <FormField
           label="Notes"
           name="notes"
@@ -39,7 +40,7 @@ const ContactNotesSection = ({
           </Alert>
         )
       )}
-    </Card>
+    </SectionWithBubbleTitle>
   );
 };
 

@@ -1,0 +1,125 @@
+/* TagsInput.module.css */
+
+.tagsInputContainer {
+  margin-bottom: 1rem;
+}
+
+.label {
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 0.5rem;
+}
+
+.currentTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 40px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.tagfestival {
+  background: linear-gradient(135deg, #e91e63, #f06292);
+}
+
+.tagbar {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+}
+
+.tagsalles {
+  background: linear-gradient(135deg, #2196f3, #64b5f6);
+}
+
+.removeTag {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 1px;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.removeTag:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.removeTag i {
+  font-size: 0.6rem;
+}
+
+.noTags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 4px 0;
+}
+
+.tagSelect {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #495057;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tagSelect:hover {
+  border-color: #007bff;
+}
+
+.tagSelect:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .currentTags {
+    padding: 6px 8px;
+  }
+  
+  .tag {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+  
+  .removeTag {
+    width: 14px;
+    height: 14px;
+  }
+}

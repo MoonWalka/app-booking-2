@@ -3,14 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useStructureDetails } from '@/hooks/structures';
 import Button from '@/components/ui/Button';
 import ContactEntityTable from '@/components/contacts/ContactEntityTable';
-import ContactQualificationSection from '@/components/contacts/sections/ContactQualificationSection';
-import ContactDiffusionSection from '@/components/contacts/sections/ContactDiffusionSection';
 import EntityViewTabs from '@/components/common/EntityViewTabs';
 import styles from './StructureViewTabs.module.css';
 
-const StructureViewTabs = () => {
-  const { id } = useParams();
+const StructureViewTabs = ({ id: propId }) => {
+  const { id: paramId } = useParams();
   const navigate = useNavigate();
+  
+  // Utiliser l'ID passé en prop ou celui des params
+  const id = propId || paramId;
   
   const {
     structure,
@@ -23,6 +24,24 @@ const StructureViewTabs = () => {
     concerts,
     lieux
   } = useStructureDetails(id);
+
+  // Tags disponibles
+  const availableTags = ['Festival', 'Bar', 'Salles'];
+  
+  // Fonctions pour gérer les tags
+  const handleAddTag = (e) => {
+    const newTag = e.target.value;
+    if (newTag && (!structure?.tags || !structure.tags.includes(newTag))) {
+      console.log('Ajouter tag:', newTag, 'à la structure:', id);
+      alert(`Tag "${newTag}" ajouté (fonctionnalité de sauvegarde à implémenter)`);
+    }
+    e.target.value = '';
+  };
+  
+  const handleRemoveTag = (tagToRemove) => {
+    console.log('Supprimer tag:', tagToRemove, 'de la structure:', id);
+    alert(`Tag "${tagToRemove}" supprimé (fonctionnalité de sauvegarde à implémenter)`);
+  };
 
   // Gestionnaire de navigation vers une personne
   const handlePersonAction = (action, personId) => {
@@ -237,26 +256,89 @@ const StructureViewTabs = () => {
         className: 'topLeft',
         title: 'Info générale',
         icon: 'bi bi-building',
-        render: (structure) => (
-          <div className={styles.structureInfo}>
-            <h2>{structure.nom || 'Structure sans nom'}</h2>
-            <p><strong>Type:</strong> {structure.type || 'Non spécifié'}</p>
-            {structure.email && <p><strong>Email:</strong> {structure.email}</p>}
-            {structure.telephone && <p><strong>Téléphone:</strong> {structure.telephone}</p>}
-            {structure.adresse && <p><strong>Adresse:</strong> {structure.adresse}</p>}
-          </div>
-        )
+        render: (structure) => {
+          // Fonction pour formater l'adresse si c'est un objet
+          const formatAdresse = (adresse) => {
+            if (typeof adresse === 'string') return adresse;
+            if (typeof adresse === 'object' && adresse) {
+              const parts = [
+                adresse.adresse,
+                adresse.codePostal,
+                adresse.ville,
+                adresse.pays
+              ].filter(Boolean);
+              return parts.join(', ');
+            }
+            return '';
+          };
+
+          // Fonction pour formater n'importe quel champ qui pourrait être un objet
+          const formatField = (field) => {
+            if (typeof field === 'string') return field;
+            if (typeof field === 'object' && field) {
+              return JSON.stringify(field);
+            }
+            return field;
+          };
+
+          return (
+            <div className={styles.structureInfo}>
+              <h2>{structure.nom || 'Structure sans nom'}</h2>
+              <p><strong>Type:</strong> {formatField(structure.type) || 'Non spécifié'}</p>
+              {structure.email && <p><strong>Email:</strong> {formatField(structure.email)}</p>}
+              {structure.telephone && <p><strong>Téléphone:</strong> {formatField(structure.telephone)}</p>}
+              {structure.adresse && <p><strong>Adresse:</strong> {formatAdresse(structure.adresse)}</p>}
+            </div>
+          );
+        }
       },
       {
         className: 'topRight',
-        title: 'Qualification',
-        icon: 'bi bi-award',
-        render: () => (
-          <ContactQualificationSection
-            formData={formData}
-            setFormData={setFormData}
-            isEditing={isEditing}
-          />
+        title: 'Tags',
+        icon: 'bi bi-tags',
+        render: (structure) => (
+          <div className={styles.tagsContent}>
+            <div className={styles.currentTags}>
+              {structure?.tags && structure.tags.length > 0 ? (
+                structure.tags.map((tag, index) => (
+                  <span key={index} className={`${styles.tag} ${styles[`tag${tag.toLowerCase()}`]}`}>
+                    <i className="bi bi-tag"></i>
+                    {tag}
+                    <button 
+                      className={styles.removeTag}
+                      onClick={() => handleRemoveTag(tag)}
+                      title="Supprimer ce tag"
+                    >
+                      <i className="bi bi-x"></i>
+                    </button>
+                  </span>
+                ))
+              ) : (
+                <div className={styles.noTags}>
+                  <i className="bi bi-tags" style={{ fontSize: '1.2rem', color: '#6c757d' }}></i>
+                  <span>Aucun tag défini</span>
+                </div>
+              )}
+            </div>
+            
+            <div className={styles.tagSelector}>
+              <select 
+                className={styles.tagSelect}
+                onChange={handleAddTag}
+                value=""
+              >
+                <option value="">Ajouter un tag...</option>
+                {availableTags
+                  .filter(tag => !structure?.tags?.includes(tag))
+                  .map(tag => (
+                    <option key={tag} value={tag}>
+                      {tag}
+                    </option>
+                  ))
+                }
+              </select>
+            </div>
+          </div>
         )
       },
       {
@@ -299,14 +381,21 @@ const StructureViewTabs = () => {
       },
       {
         className: 'middleRight',
-        title: 'Diffusion',
-        icon: 'bi bi-broadcast',
-        render: () => (
-          <ContactDiffusionSection
-            formData={formData}
-            setFormData={setFormData}
-            isEditing={isEditing}
-          />
+        title: 'Commentaires',
+        icon: 'bi bi-chat-quote',
+        render: (structure) => (
+          <div className={styles.commentsContent}>
+            <textarea
+              className={styles.commentsTextarea}
+              placeholder="Ajoutez vos notes et commentaires sur cette structure..."
+              defaultValue={structure?.notes || ''}
+              rows={6}
+              onChange={(e) => {
+                console.log('Notes modifiées:', e.target.value);
+                // TODO: Implémenter la sauvegarde des notes
+              }}
+            />
+          </div>
         )
       }
     ],

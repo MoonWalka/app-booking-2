@@ -3,6 +3,8 @@
 export { default as useAddressSearch } from './useAddressSearch';
 export { default as useContactDetails } from './useContactDetails';
 export { default as useContactSearch } from './useContactSearch';
+export { useContactContrats } from './useContactContrats';
+export { useContactFactures } from './useContactFactures';
 
 // Exporter les hooks migrés avec un nom explicite (pour la transition progressive)
 

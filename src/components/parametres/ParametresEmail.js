@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Card, Alert, Row, Col, Badge } from 'react-bootstrap';
+import { Form, Card, Alert, Row, Col, Badge, Modal } from 'react-bootstrap';
 import Button from '@/components/ui/Button';
 import { useParametres } from '@/context/ParametresContext';
 import emailService from '@/services/emailService';
 import { debugLog } from '@/utils/logUtils';
-import { isEncrypted, validateEncryptedApiKey } from '@/utils/cryptoUtils';
+import { decryptSensitiveFields } from '@/utils/cryptoUtils';
+import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer';
 
 const ParametresEmail = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
@@ -48,6 +49,9 @@ const ParametresEmail = () => {
   const [brevoLoading, setBrevoLoading] = useState(false);
   const [brevoTemplates, setBrevoTemplates] = useState([]);
   const [validatingApiKey, setValidatingApiKey] = useState(false);
+  
+  // État pour la modal du configurateur de templates
+  const [showTemplateCreator, setShowTemplateCreator] = useState(false);
 
   // Providers SMTP prédéfinis
   const smtpProviders = [
@@ -67,6 +71,28 @@ const ParametresEmail = () => {
       }));
     }
   }, [parametres.email]);
+
+  // Charger automatiquement les templates Brevo si la clé API est configurée
+  useEffect(() => {
+    const loadTemplatesIfConfigured = async () => {
+      if (localState.provider === 'brevo' && 
+          localState.brevo.enabled && 
+          localState.brevo.apiKey &&
+          brevoTemplates.length === 0) {
+        
+        // Charger les templates automatiquement
+        try {
+          await loadBrevoTemplates();
+        } catch (err) {
+          // En cas d'erreur, ne pas bloquer l'interface
+          debugLog('[ParametresEmail] Erreur chargement auto templates:', err, 'error');
+        }
+      }
+    };
+
+    loadTemplatesIfConfigured();
+  // eslint-disable-next-line react-hooks/exhaustive-deps  
+  }, [localState.provider, localState.brevo.enabled, localState.brevo.apiKey, brevoTemplates.length]);
 
   const handleChange = (section, field, value) => {
     setLocalState(prev => {
@@ -144,7 +170,13 @@ const ParametresEmail = () => {
     setSuccess('');
 
     try {
-      await emailService.sendTestEmail(testEmail);
+      // Si Brevo est configuré, utiliser l'envoi direct
+      if (localState.provider === 'brevo' && localState.brevo.enabled && localState.brevo.apiKey) {
+        await sendTestEmailDirect(testEmail);
+      } else {
+        // Sinon utiliser le service standard (SMTP)
+        await emailService.sendTestEmail(testEmail);
+      }
       setSuccess('Email de test envoyé avec succès !');
       setTimeout(() => setSuccess(''), 5000);
     } catch (err) {
@@ -153,6 +185,51 @@ const ParametresEmail = () => {
     } finally {
       setTestLoading(false);
     }
+  };
+
+  // Fonction d'envoi direct via Brevo (contourne les Cloud Functions)
+  const sendTestEmailDirect = async (email) => {
+    // Déchiffrer la clé API si nécessaire
+    let apiKeyToUse = localState.brevo.apiKey;
+    if (localState.brevo.apiKey.startsWith('ENC:')) {
+      const decryptedData = decryptSensitiveFields({ apiKey: localState.brevo.apiKey }, ['apiKey']);
+      apiKeyToUse = decryptedData.apiKey;
+    }
+
+    const emailData = {
+      to: [{ email }],
+      subject: 'TourCraft - Email de test',
+      htmlContent: `
+        <h2>Test du service d'email Brevo</h2>
+        <p>Ceci est un email de test envoyé depuis TourCraft via Brevo.</p>
+        <p>Si vous recevez cet email, le service fonctionne correctement !</p>
+        <hr>
+        <p><small>Envoyé le ${new Date().toLocaleString('fr-FR')}</small></p>
+      `,
+      sender: {
+        email: localState.brevo.fromEmail,
+        name: localState.brevo.fromName || 'TourCraft'
+      }
+    };
+
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': apiKeyToUse,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`Erreur Brevo: ${response.status} - ${errorData}`);
+    }
+
+    const result = await response.json();
+    debugLog('[ParametresEmail] Email test Brevo envoyé:', { messageId: result.messageId }, 'success');
+    
+    return result;
   };
 
   const handleValidateBrevoApiKey = async () => {
@@ -166,7 +243,17 @@ const ParametresEmail = () => {
     setSuccess('');
 
     try {
-      const isValid = await emailService.validateBrevoApiKey(localState.brevo.apiKey);
+      // Déchiffrer la clé API si nécessaire
+      let apiKeyToUse = localState.brevo.apiKey;
+      if (localState.brevo.apiKey.startsWith('ENC:')) {
+        const decryptedData = decryptSensitiveFields({ apiKey: localState.brevo.apiKey }, ['apiKey']);
+        apiKeyToUse = decryptedData.apiKey;
+        debugLog('[ParametresEmail] Clé API déchiffrée pour validation', { 
+          keyPreview: apiKeyToUse.substring(0, 10) + '...' 
+        }, 'info');
+      }
+
+      const isValid = await emailService.validateBrevoApiKey(apiKeyToUse);
       if (isValid) {
         setSuccess('Clé API Brevo valide ! Récupération des templates...');
         await loadBrevoTemplates();
@@ -186,7 +273,17 @@ const ParametresEmail = () => {
 
     setBrevoLoading(true);
     try {
-      const templates = await emailService.getBrevoTemplates(localState.brevo.apiKey);
+      // Déchiffrer la clé API si nécessaire
+      let apiKeyToUse = localState.brevo.apiKey;
+      if (localState.brevo.apiKey.startsWith('ENC:')) {
+        const decryptedData = decryptSensitiveFields({ apiKey: localState.brevo.apiKey }, ['apiKey']);
+        apiKeyToUse = decryptedData.apiKey;
+        debugLog('[ParametresEmail] Clé API déchiffrée pour chargement templates', { 
+          keyPreview: apiKeyToUse.substring(0, 10) + '...' 
+        }, 'info');
+      }
+
+      const templates = await emailService.getBrevoTemplates(apiKeyToUse);
       setBrevoTemplates(templates);
       debugLog('[ParametresEmail] Templates Brevo chargés:', templates, 'info');
     } catch (err) {
@@ -219,13 +316,196 @@ const ParametresEmail = () => {
     }
   };
 
+  // Ces fonctions ne sont plus nécessaires avec le nouveau configurateur
+  /*
+  // Analyser les templates TourCraft existants
+  const analyzeExistingTourCraftTemplates = (templates) => {
+    const tourCraftExisting = templates.filter(t => 
+      t.name && t.name.startsWith('[TourCraft]')
+    );
+    
+    const available = Object.keys(templateTypes).map(type => {
+      const existing = tourCraftExisting.find(t => 
+        t.name.includes(templateTypes[type].name)
+      );
+      
+      return {
+        type,
+        ...templateTypes[type],
+        exists: !!existing,
+        existingTemplate: existing
+      };
+    });
+    
+    setExistingTourCraftTemplates(available);
+  };
+
+  // Générer le HTML pour un template (version simplifiée)
+  const generateTemplateHTML = (type) => {
+    const baseStyles = `
+      <style>
+        .email-container { max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; background: #ffffff; }
+        .footer { background: #ecf0f1; padding: 20px; text-align: center; color: #7f8c8d; }
+        .highlight { background: #f8f9fa; padding: 15px; border-left: 4px solid #3498db; margin: 20px 0; }
+        .variable { color: #e74c3c; font-weight: bold; }
+      </style>
+    `;
+
+    const templates = {
+      formulaire: `${baseStyles}
+        <div class="email-container">
+          <div class="header">
+            <h1>TourCraft</h1>
+            <p>Demande d'informations reçue</p>
+          </div>
+          <div class="content">
+            <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
+            <p>Nous avons bien reçu votre demande d'informations concernant :</p>
+            <div class="highlight">
+              <h3><span class="variable">{{concert_nom}}</span></h3>
+              <p><strong>Date :</strong> <span class="variable">{{concert_date}}</span></p>
+            </div>
+            <p>Nous reviendrons vers vous dans les plus brefs délais.</p>
+          </div>
+          <div class="footer">
+            <p>Email automatique - TourCraft</p>
+          </div>
+        </div>`,
+      relance: `${baseStyles}
+        <div class="email-container">
+          <div class="header">
+            <h1>TourCraft</h1>
+            <p>Documents manquants</p>
+          </div>
+          <div class="content">
+            <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
+            <p>Concernant <strong><span class="variable">{{concert_nom}}</span></strong>, il nous manque :</p>
+            <div class="highlight">
+              <p><span class="variable">{{documents_manquants}}</span></p>
+            </div>
+            <p>Merci de nous transmettre ces éléments rapidement.</p>
+          </div>
+          <div class="footer">
+            <p>Relance automatique - TourCraft</p>
+          </div>
+        </div>`,
+      contrat: `${baseStyles}
+        <div class="email-container">
+          <div class="header">
+            <h1>TourCraft</h1>
+            <p>Contrat signé</p>
+          </div>
+          <div class="content">
+            <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
+            <p>Votre contrat pour <strong><span class="variable">{{concert_nom}}</span></strong> est finalisé.</p>
+            <p>Vous trouverez le contrat signé en pièce jointe.</p>
+          </div>
+          <div class="footer">
+            <p>Contrat automatique - TourCraft</p>
+          </div>
+        </div>`,
+      confirmation: `${baseStyles}
+        <div class="email-container">
+          <div class="header">
+            <h1>TourCraft</h1>
+            <p>Confirmation de réservation</p>
+          </div>
+          <div class="content">
+            <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
+            <p>Nous confirmons votre réservation :</p>
+            <div class="highlight">
+              <h3><span class="variable">{{concert_nom}}</span></h3>
+              <p><strong>Date :</strong> <span class="variable">{{concert_date}}</span></p>
+            </div>
+            <p>Nous vous souhaitons un excellent événement !</p>
+          </div>
+          <div class="footer">
+            <p>Confirmation automatique - TourCraft</p>
+          </div>
+        </div>`
+    };
+
+    return templates[type] || '';
+  };
+
+  // Créer un template dans Brevo
+  const createTemplateInBrevo = async (type) => {
+    if (!localState.brevo.apiKey) {
+      setError('Configuration Brevo manquante');
+      return;
+    }
+
+    setTemplateCreating(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      // Déchiffrer la clé API si nécessaire
+      let apiKeyToUse = localState.brevo.apiKey;
+      if (localState.brevo.apiKey.startsWith('ENC:')) {
+        const decryptedData = decryptSensitiveFields({ apiKey: localState.brevo.apiKey }, ['apiKey']);
+        apiKeyToUse = decryptedData.apiKey;
+      }
+
+      const config = templateTypes[type];
+      const html = generateTemplateHTML(type);
+      const templateName = `[TourCraft] ${config.name}`;
+
+      const templateData = {
+        templateName: templateName,
+        subject: config.subject,
+        htmlContent: html,
+        isActive: true,
+        tag: 'TourCraft',
+        sender: {
+          name: localState.brevo.fromName || 'TourCraft',
+          email: localState.brevo.fromEmail
+        }
+      };
+
+      const response = await fetch('https://api.brevo.com/v3/smtp/templates', {
+        method: 'POST',
+        headers: {
+          'api-key': apiKeyToUse,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(templateData)
+      });
+
+      if (response.ok) {
+        await response.json(); // Récupérer la réponse mais pas besoin de la stocker
+        setSuccess(`Template "${config.name}" créé avec succès ! Rechargement des templates...`);
+        
+        // Recharger la liste des templates
+        await loadBrevoTemplates();
+        setShowTemplateCreator(false);
+      } else {
+        const errorData = await response.text();
+        setError(`Erreur création template: ${response.status} - ${errorData}`);
+      }
+    } catch (err) {
+      setError(`Erreur: ${err.message}`);
+    } finally {
+      setTemplateCreating(false);
+    }
+  };
+  */
+
+  // Ouvrir le configurateur de templates
+  const openTemplateCreator = () => {
+    setShowTemplateCreator(true);
+  };
+
   if (loading) {
     return <div>Chargement...</div>;
   }
 
   return (
-    <Card>
-      <Card.Body>
+    <>
+      <Card>
+        <Card.Body>
         <h3 className="mb-4">Configuration Email</h3>
         
         {success && <Alert variant="success">{success}</Alert>}
@@ -361,6 +641,26 @@ const ParametresEmail = () => {
                         </Form.Group>
                       </Col>
                     </Row>
+
+                    {/* Création de templates TourCraft */}
+                    {brevoTemplates.length > 0 && (
+                      <div className="mt-4">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <h6>Templates TourCraft</h6>
+                          <Button
+                            variant="success"
+                            size="sm"
+                            onClick={openTemplateCreator}
+                          >
+                            <i className="bi bi-palette me-2"></i>
+                            Personnaliser les templates
+                          </Button>
+                        </div>
+                        <p className="text-muted small">
+                          Créez automatiquement vos templates TourCraft dans Brevo avec le bon design et les bonnes variables
+                        </p>
+                      </div>
+                    )}
 
                     {/* Configuration des templates */}
                     {brevoTemplates.length > 0 && (
@@ -701,8 +1001,19 @@ const ParametresEmail = () => {
             </Button>
           </div>
         </Form>
-      </Card.Body>
-    </Card>
+        </Card.Body>
+      </Card>
+
+      {/* Modal du configurateur de templates */}
+    <Modal show={showTemplateCreator} onHide={() => setShowTemplateCreator(false)} size="xl">
+      <Modal.Header closeButton>
+        <Modal.Title>🎨 Personnaliser les templates Brevo</Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="p-0">
+        <BrevoTemplateCustomizer />
+      </Modal.Body>
+    </Modal>
+    </>
   );
 };
 

@@ -29,6 +29,7 @@ import ProjetsPage from '@/pages/ProjetsPage';
 import SallesPage from '@/pages/SallesPage';
 import TableauDeBordPage from '@/pages/TableauDeBordPage';
 import DateCreationPage from '@/pages/DateCreationPage';
+import TachesPage from '@/pages/TachesPage';
 import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
@@ -307,6 +308,12 @@ function App() {
                           <Route path="/tabs-test" element={
                             <PrivateRoute>
                               <TabsTestPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/taches" element={
+                            <PrivateRoute>
+                              <TachesPage />
                             </PrivateRoute>
                           } />
                           

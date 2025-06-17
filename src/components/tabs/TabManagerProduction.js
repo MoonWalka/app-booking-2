@@ -14,6 +14,7 @@ import SallesPage from '@/pages/SallesPage';
 import TableauDeBordPage from '@/pages/TableauDeBordPage';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 import DateCreationPage from '@/pages/DateCreationPage';
+import TachesPage from '@/pages/TachesPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
 import ConcertsList from '@/components/concerts/ConcertsList';
@@ -219,6 +220,8 @@ const TabManagerProduction = () => {
           return <DebugToolsPage />;
         case 'DateCreationPage':
           return <DateCreationPage />;
+        case 'TachesPage':
+          return <TachesPage />;
         default:
           return (
             <div className={styles.tabContent}>

@@ -24,6 +24,7 @@ function DesktopLayout({ children }) {
     openLieuxListTab,
     openStructuresListTab,
     openDebugToolsTab,
+    openTachesTab,
     openTab
   } = useTabs();
   

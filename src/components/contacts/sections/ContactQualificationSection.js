@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import Card from '@components/ui/Card';
 import TagsInput from '@components/ui/TagsInput';
+import { getTagLabels } from '@/config/tagsConfig';
 import styles from './ContactQualificationSection.module.css';
 
 /**
@@ -15,8 +16,8 @@ const ContactQualificationSection = ({
   showCardWrapper = true,
   isEditing = false 
 }) => {
-  // Tags disponibles
-  const availableTags = ['Festival', 'Bar', 'Salles'];
+  // Tags disponibles depuis la configuration centralisée
+  const availableTags = getTagLabels();
   
   // Gestion des tags
   const handleTagsChange = (newTags) => {

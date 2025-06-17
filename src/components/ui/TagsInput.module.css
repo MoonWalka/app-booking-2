@@ -42,6 +42,7 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
+/* Styles pour les anciens tags (rétrocompatibilité) */
 .tagfestival {
   background: linear-gradient(135deg, #e91e63, #f06292);
 }
@@ -52,6 +53,57 @@
 
 .tagsalles {
   background: linear-gradient(135deg, #2196f3, #64b5f6);
+}
+
+/* Styles pour les nouveaux tags */
+.tagorganisme-institution {
+  background: linear-gradient(135deg, #6f42c1, #8a63d2);
+}
+
+.tagdisque {
+  background: linear-gradient(135deg, #fd7e14, #ff9a56);
+}
+
+.tagressource-formation {
+  background: linear-gradient(135deg, #20c997, #5ddbac);
+}
+
+.tagmedia {
+  background: linear-gradient(135deg, #dc3545, #e85563);
+}
+
+.tagartiste {
+  background: linear-gradient(135deg, #e91e63, #f06292);
+}
+
+.tagpublic {
+  background: linear-gradient(135deg, #17a2b8, #51bbd3);
+}
+
+.tagadherent {
+  background: linear-gradient(135deg, #28a745, #5bc46a);
+}
+
+.tagpersonnel {
+  background: linear-gradient(135deg, #6c757d, #868e96);
+}
+
+.tagdiffuseur {
+  background: linear-gradient(135deg, #007bff, #4dabf7);
+}
+
+.tagagent-entrepreneur {
+  background: linear-gradient(135deg, #ffc107, #ffd43b);
+  color: #212529; /* Texte sombre pour meilleur contraste sur jaune */
+}
+
+.tagprestataire {
+  background: linear-gradient(135deg, #795548, #8d6e63);
+}
+
+/* Style par défaut pour les tags non reconnus */
+.tagdefault {
+  background: linear-gradient(135deg, #6c757d, #868e96);
 }
 
 .removeTag {

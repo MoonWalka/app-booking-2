@@ -58,12 +58,12 @@
   height: 70px;
   background-color: var(--tc-color-primary);
   color: var(--tc-text-light);
-  border-bottom: var(--tc-border-sidebar);
+  border-bottom: none;
   z-index: var(--tc-z-index-header, 1000);
   display: flex;
   align-items: center;
   width: 100%; /* Prend toute la largeur */
-  box-shadow: var(--tc-shadow-base);
+  box-shadow: none;
 }
 
 .headerContent {

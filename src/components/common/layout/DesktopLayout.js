@@ -80,6 +80,8 @@ function DesktopLayout({ children }) {
   const [expandedSubMenu, setExpandedSubMenu] = useState(null);
   // État pour le menu utilisateur
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  // État pour savoir si le dropdown organisation est ouvert
+  const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
 
   // Navigation adaptée pour le système d'onglets
   const handleNavigation = (item) => {
@@ -314,6 +316,10 @@ function DesktopLayout({ children }) {
     if (!isUserMenuOpen && expandedMenu) {
       setExpandedMenu(null);
     }
+    // Réinitialiser l'état du dropdown quand on ferme
+    if (isUserMenuOpen) {
+      setIsOrgDropdownOpen(false);
+    }
   };
 
   // Calculer le décalage du contenu principal
@@ -323,7 +329,12 @@ function DesktopLayout({ children }) {
     const sidebarWidth = 70; // var(--tc-sidebar-width-thin)
     const panelWidth = 250; // var(--tc-submenu-width)
     
-    if (expandedMenu || isUserMenuOpen) {
+    // Si le menu utilisateur est ouvert, la sidebar s'étend mais le panneau est en bas
+    if (isUserMenuOpen) {
+      return panelWidth; // Seulement la sidebar étendue
+    }
+    
+    if (expandedMenu) {
       return sidebarWidth + panelWidth;
     }
     return sidebarWidth;
@@ -345,6 +356,7 @@ function DesktopLayout({ children }) {
           >
             <i className={`bi ${item.icon}`}></i>
             {!isMobile && <span className={sidebarStyles.tooltip}>{item.label}</span>}
+            {isUserMenuOpen && <span className={sidebarStyles.navLabel}>{item.label}</span>}
           </button>
           {isExpanded && (
             <>
@@ -453,6 +465,7 @@ function DesktopLayout({ children }) {
         >
           <i className={`bi ${item.icon}`}></i>
           {!isMobile && <span className={sidebarStyles.tooltip}>{item.label}</span>}
+          {isUserMenuOpen && <span className={sidebarStyles.navLabel}>{item.label}</span>}
         </button>
       </li>
     );
@@ -593,7 +606,7 @@ function DesktopLayout({ children }) {
   // Layout Desktop (inchangé)
   return (
     <div className={layoutStyles.layoutContainer}>
-      <nav className={sidebarStyles.sidebar}>
+      <nav className={`${sidebarStyles.sidebar} ${isUserMenuOpen ? sidebarStyles.extended : ''}`}>
         <div className={sidebarStyles.sidebarContent}>
           <ul className={sidebarStyles.navLinks}>
             {navigationGroups.map(renderNavItem)}
@@ -633,7 +646,7 @@ function DesktopLayout({ children }) {
               className={sidebarStyles.subMenuOverlay}
               onClick={() => setIsUserMenuOpen(false)}
             />
-            <div className={sidebarStyles.userMenuPanel}>
+            <div className={`${sidebarStyles.userMenuPanel} ${isOrgDropdownOpen ? sidebarStyles.expanded : ''}`}>
               <div className={sidebarStyles.subMenuHeader}>
                 <h4>Profil & Organisation</h4>
                 <button 
@@ -658,7 +671,7 @@ function DesktopLayout({ children }) {
                 {/* Sélecteur d'organisation */}
                 <div className={sidebarStyles.organizationSection}>
                   <h5>Organisation</h5>
-                  <OrganizationSelector />
+                  <OrganizationSelector onDropdownToggle={setIsOrgDropdownOpen} />
                 </div>
               </div>
             </div>

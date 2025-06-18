@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStructureDetails } from '@/hooks/structures';
-import Button from '@/components/ui/Button';
+import { useContactModals } from '@/context/ContactModalsContext';
+import { useTabs } from '@/context/TabsContext';
+import { useAuth } from '@/context/AuthContext';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
 import ContactEntityTable from '@/components/contacts/ContactEntityTable';
 import EntityViewTabs from '@/components/common/EntityViewTabs';
 import styles from './StructureViewTabs.module.css';
@@ -9,9 +13,19 @@ import styles from './StructureViewTabs.module.css';
 const StructureViewTabs = ({ id: propId }) => {
   const { id: paramId } = useParams();
   const navigate = useNavigate();
+  const { openCommentModal } = useContactModals();
+  const { openContactTab, openDateCreationTab } = useTabs();
+  const { currentUser } = useAuth();
   
   // Utiliser l'ID passé en prop ou celui des params
   const id = propId || paramId;
+  
+  // État pour l'affichage progressif
+  const [showAllDetails, setShowAllDetails] = useState(false);
+  
+  // État local pour les commentaires
+  const [localCommentaires, setLocalCommentaires] = useState([]);
+  const [lastLocalUpdate, setLastLocalUpdate] = useState(null);
   
   const {
     structure,
@@ -21,19 +35,55 @@ const StructureViewTabs = ({ id: propId }) => {
     concerts,
     lieux
   } = useStructureDetails(id);
-
-  // Tags disponibles
-  const availableTags = ['Festival', 'Bar', 'Salles'];
   
-  // Fonctions pour gérer les tags
-  const handleAddTag = (e) => {
-    const newTag = e.target.value;
-    if (newTag && (!structure?.tags || !structure.tags.includes(newTag))) {
-      console.log('Ajouter tag:', newTag, 'à la structure:', id);
-      alert(`Tag "${newTag}" ajouté (fonctionnalité de sauvegarde à implémenter)`);
+  // Logique intelligente pour choisir entre commentaires locaux et Firebase
+  const commentaires = useMemo(() => {
+    // Si on a une modification locale récente, l'utiliser en priorité
+    if (lastLocalUpdate && structure?.updatedAt) {
+      const firebaseTime = structure.updatedAt.toMillis ? structure.updatedAt.toMillis() : 0;
+      if (lastLocalUpdate > firebaseTime) {
+        console.log('[StructureViewTabs] Utilisation des commentaires locaux (plus récents)');
+        return localCommentaires;
+      }
     }
-    e.target.value = '';
-  };
+    
+    // Sinon utiliser les données Firebase si disponibles, ou l'état local en fallback
+    const result = structure?.commentaires || localCommentaires || [];
+    console.log('[StructureViewTabs] Utilisation des commentaires Firebase/fallback:', result.length);
+    return result;
+  }, [localCommentaires, structure?.commentaires, structure?.updatedAt, lastLocalUpdate]);
+  
+  // Synchroniser les commentaires locaux avec les données de la structure de manière intelligente
+  useEffect(() => {
+    if (structure?.commentaires) {
+      // Seulement synchroniser si :
+      // 1. L'état local est vide (premier chargement)
+      // 2. OU si les données Firebase sont plus récentes que la dernière modification locale
+      const shouldSync = localCommentaires.length === 0 || 
+        !lastLocalUpdate || 
+        (structure.updatedAt && structure.updatedAt.toMillis && structure.updatedAt.toMillis() > lastLocalUpdate);
+      
+      if (shouldSync) {
+        console.log('[StructureViewTabs] Synchronisation des commentaires depuis Firebase');
+        setLocalCommentaires(structure.commentaires);
+      } else {
+        console.log('[StructureViewTabs] Commentaires locaux plus récents, pas de synchronisation');
+      }
+    }
+  }, [structure?.commentaires, structure?.updatedAt, lastLocalUpdate, localCommentaires.length]);
+
+  // Tags disponibles (pour usage futur)
+  // const availableTags = ['Festival', 'Bar', 'Salles'];
+  
+  // Fonctions pour gérer les tags (pour usage futur)
+  // const handleAddTag = (e) => {
+  //   const newTag = e.target.value;
+  //   if (newTag && (!structure?.tags || !structure.tags.includes(newTag))) {
+  //     console.log('Ajouter tag:', newTag, 'à la structure:', id);
+  //     alert(`Tag "${newTag}" ajouté (fonctionnalité de sauvegarde à implémenter)`);
+  //   }
+  //   e.target.value = '';
+  // };
   
   const handleRemoveTag = (tagToRemove) => {
     console.log('Supprimer tag:', tagToRemove, 'de la structure:', id);
@@ -172,7 +222,12 @@ const StructureViewTabs = ({ id: propId }) => {
               }
             ]}
             addButtonLabel="Nouvelle date"
-            onAdd={() => navigate('/concerts/nouveau')}
+            onAdd={() => {
+              openDateCreationTab({
+                structureId: structure?.id || id,
+                structureName: structure?.nom || structure?.structureRaisonSociale || 'Structure'
+              });
+            }}
             {...commonTableProps}
           />
         );
@@ -278,13 +333,104 @@ const StructureViewTabs = ({ id: propId }) => {
             return field;
           };
 
+          // Logique d'affichage progressif pour réduire la densité
+          const getEssentialDetails = () => {
+            const details = [];
+            
+            if (structure.nom) {
+              details.push({
+                icon: 'bi bi-building',
+                content: <strong>{structure.nom}</strong>,
+                priority: 1
+              });
+            }
+            
+            if (structure.email) {
+              details.push({
+                icon: 'bi bi-envelope',
+                content: formatField(structure.email),
+                priority: 2
+              });
+            }
+            
+            if (structure.telephone) {
+              details.push({
+                icon: 'bi bi-telephone',
+                content: formatField(structure.telephone),
+                priority: 3
+              });
+            }
+            
+            if (structure.type) {
+              details.push({
+                icon: 'bi bi-tag',
+                content: `Type: ${formatField(structure.type)}`,
+                priority: 4
+              });
+            }
+            
+            return details;
+          };
+          
+          const getSecondaryDetails = () => {
+            const details = [];
+            
+            if (structure.adresse) {
+              details.push({
+                icon: 'bi bi-geo-alt',
+                content: formatAdresse(structure.adresse),
+              });
+            }
+            
+            if (structure.siret) {
+              details.push({
+                icon: 'bi bi-building-gear',
+                content: `SIRET: ${structure.siret}`,
+              });
+            }
+            
+            if (structure.secteur) {
+              details.push({
+                icon: 'bi bi-diagram-3',
+                content: `Secteur: ${structure.secteur}`,
+              });
+            }
+            
+            return details;
+          };
+
+          const essentialDetails = getEssentialDetails();
+          const secondaryDetails = getSecondaryDetails();
+          const hasSecondaryDetails = secondaryDetails.length > 0;
+
           return (
-            <div className={styles.structureInfo}>
-              <h2>{structure.nom || 'Structure sans nom'}</h2>
-              <p><strong>Type:</strong> {formatField(structure.type) || 'Non spécifié'}</p>
-              {structure.email && <p><strong>Email:</strong> {formatField(structure.email)}</p>}
-              {structure.telephone && <p><strong>Téléphone:</strong> {formatField(structure.telephone)}</p>}
-              {structure.adresse && <p><strong>Adresse:</strong> {formatAdresse(structure.adresse)}</p>}
+            <div className={styles.contactDetails}>
+              {/* Informations essentielles (toujours affichées) */}
+              {essentialDetails.map((detail, index) => (
+                <div key={`essential-${index}`} className={styles.detailItem}>
+                  <i className={detail.icon}></i>
+                  <span>{detail.content}</span>
+                </div>
+              ))}
+              
+              {/* Informations secondaires (affichées selon l'état) */}
+              {showAllDetails && secondaryDetails.map((detail, index) => (
+                <div key={`secondary-${index}`} className={styles.detailItem}>
+                  <i className={detail.icon}></i>
+                  <span>{detail.content}</span>
+                </div>
+              ))}
+              
+              {/* Bouton pour afficher/masquer les détails supplémentaires */}
+              {hasSecondaryDetails && (
+                <button 
+                  className={styles.toggleDetailsBtn}
+                  onClick={() => setShowAllDetails(!showAllDetails)}
+                >
+                  <i className={`bi bi-chevron-${showAllDetails ? 'up' : 'down'}`}></i>
+                  <span>{showAllDetails ? 'Moins de détails' : `${secondaryDetails.length} détail${secondaryDetails.length > 1 ? 's' : ''} supplémentaire${secondaryDetails.length > 1 ? 's' : ''}`}</span>
+                </button>
+              )}
             </div>
           );
         }
@@ -293,6 +439,26 @@ const StructureViewTabs = ({ id: propId }) => {
         className: 'topRight',
         title: 'Tags',
         icon: 'bi bi-tags',
+        actions: [
+          {
+            label: 'Ajouter',
+            icon: 'bi bi-plus-circle',
+            tooltip: 'Ajouter un tag',
+            onClick: () => {
+              console.log('Ouvrir modal ajout tag structure');
+              // TODO: Ouvrir modal de sélection de tags
+            }
+          },
+          {
+            label: 'Gérer',
+            icon: 'bi bi-pencil-square',
+            tooltip: 'Gérer les tags',
+            onClick: () => {
+              console.log('Ouvrir modal gestion tags structure');
+              // TODO: Ouvrir modal de gestion des tags
+            }
+          }
+        ],
         render: (structure) => (
           <div className={styles.tagsContent}>
             <div className={styles.currentTags}>
@@ -318,82 +484,230 @@ const StructureViewTabs = ({ id: propId }) => {
               )}
             </div>
             
-            <div className={styles.tagSelector}>
-              <select 
-                className={styles.tagSelect}
-                onChange={handleAddTag}
-                value=""
-              >
-                <option value="">Ajouter un tag...</option>
-                {availableTags
-                  .filter(tag => !structure?.tags?.includes(tag))
-                  .map(tag => (
-                    <option key={tag} value={tag}>
-                      {tag}
-                    </option>
-                  ))
-                }
-              </select>
-            </div>
+            {/* Le sélecteur de tags est maintenant remplacé par les actions dans la bulle */}
           </div>
         )
       },
       {
         className: 'middleLeft',
-        title: 'Personnes',
-        icon: 'bi bi-people',
-        render: () => (
-          <div className={styles.personsList}>
-            {contacts?.slice(0, 3).map((contact, index) => (
-              <div key={contact.id || index} className={styles.personItem}>
-                <div className={styles.personInfo}>
-                  <span className={styles.personName}>
-                    {contact.nom} {contact.prenom}
-                  </span>
-                  <span className={styles.personEmail}>{contact.email}</span>
+        title: 'Contact principal',
+        icon: 'bi bi-person-circle',
+        render: () => {
+          // Prendre le premier contact comme contact principal
+          const mainContact = contacts?.[0];
+          
+          console.log('[DEBUG StructureViewTabs] Contacts disponibles:', contacts?.length || 0);
+          console.log('[DEBUG StructureViewTabs] Premier contact:', mainContact);
+          console.log('[DEBUG StructureViewTabs] Loading:', loading);
+          
+          return (
+            <div className={styles.contactContent}>
+              {loading ? (
+                <div className={styles.loadingContact}>
+                  <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>
+                  <p>Chargement du contact...</p>
                 </div>
-                <div className={styles.personActions}>
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => handlePersonAction('modifier', contact.id)}
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => handlePersonAction('supprimer', contact.id)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </Button>
+              ) : mainContact ? (
+                <div className={styles.contactBusinessCard}>
+                  <div className={styles.businessCardHeader}>
+                    <div className={styles.businessCardTitle}>
+                      <i className="bi bi-person-circle"></i>
+                      <span className={styles.contactName}>
+                        {`${mainContact.prenom || ''} ${mainContact.nom || ''}`.trim() || 'Contact'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.businessCardBody}>
+                    <div className={styles.businessCardContent}>
+                      {mainContact.fonction && (
+                        <div className={styles.businessCardInfo}>
+                          <i className="bi bi-briefcase"></i>
+                          <span>{mainContact.fonction}</span>
+                        </div>
+                      )}
+                      
+                      {mainContact.email && (
+                        <div className={styles.businessCardInfo}>
+                          <i className="bi bi-envelope"></i>
+                          <span>{mainContact.email}</span>
+                        </div>
+                      )}
+                      
+                      {mainContact.telephone && (
+                        <div className={styles.businessCardInfo}>
+                          <i className="bi bi-telephone"></i>
+                          <span>{mainContact.telephone}</span>
+                        </div>
+                      )}
+                      
+                      {mainContact.ville && (
+                        <div className={styles.businessCardInfo}>
+                          <i className="bi bi-geo-alt"></i>
+                          <span>{mainContact.ville}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className={styles.businessCardActions}>
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => {
+                          console.log('Modifier contact');
+                          // TODO: Ouvrir modal de modification
+                        }}
+                        title="Modifier ce contact"
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </button>
+                      
+                      <button
+                        className={`${styles.actionButton} ${styles.actionButtonDanger}`}
+                        onClick={() => {
+                          console.log('Détacher contact de la structure');
+                          // TODO: Implémenter la dissociation
+                        }}
+                        title="Détacher ce contact"
+                      >
+                        <i className="bi bi-arrow-up-right text-danger"></i>
+                      </button>
+                      
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => {
+                          console.log('Visualiser contact:', mainContact?.id);
+                          if (mainContact?.id) {
+                            // Ouvrir le contact dans un nouvel onglet
+                            const contactName = `${mainContact.prenom || ''} ${mainContact.nom || ''}`.trim() || 'Contact';
+                            openContactTab(mainContact.id, contactName);
+                          }
+                        }}
+                        title="Visualiser ce contact"
+                      >
+                        <i className="bi bi-eye"></i>
+                      </button>
+                      
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => {
+                          console.log('Commentaires sur contact');
+                          // TODO: Ouvrir panel commentaires
+                        }}
+                        title="Commentaires sur ce contact"
+                      >
+                        <i className="bi bi-chat-dots"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {(!contacts || contacts.length === 0) && (
-              <p className={styles.emptyMessage}>Aucune personne associée</p>
-            )}
-          </div>
-        )
+              ) : (
+                <div className={styles.emptyContact}>
+                  <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>
+                  <p>Aucun contact principal</p>
+                  <small>Les informations du contact principal apparaîtront ici.</small>
+                </div>
+              )}
+            </div>
+          );
+        }
       },
       {
         className: 'middleRight',
         title: 'Commentaires',
         icon: 'bi bi-chat-quote',
-        render: (structure) => (
-          <div className={styles.commentsContent}>
-            <textarea
-              className={styles.commentsTextarea}
-              placeholder="Ajoutez vos notes et commentaires sur cette structure..."
-              defaultValue={structure?.notes || ''}
-              rows={6}
-              onChange={(e) => {
-                console.log('Notes modifiées:', e.target.value);
-                // TODO: Implémenter la sauvegarde des notes
-              }}
-            />
-          </div>
-        )
+        actions: [
+          {
+            label: 'Nouveau',
+            icon: 'bi bi-plus-circle',
+            tooltip: 'Nouveau commentaire',
+            onClick: () => {
+              openCommentModal({
+                title: 'Nouveau commentaire',
+                onSave: async (content) => {
+                  try {
+                    if (!id) throw new Error('ID de la structure manquant');
+                    
+                    const docRef = doc(db, 'structures', id);
+                    
+                    // Récupérer les commentaires existants
+                    const docSnap = await getDoc(docRef);
+                    if (!docSnap.exists()) throw new Error('Structure non trouvée');
+                    
+                    const existingData = docSnap.data();
+                    const existingComments = existingData.commentaires || [];
+                    
+                    // Créer le nouveau commentaire
+                    const newComment = {
+                      id: Date.now().toString(),
+                      contenu: content,
+                      auteur: currentUser?.displayName || currentUser?.email || 'Utilisateur inconnu',
+                      date: new Date(),
+                      modifie: false
+                    };
+                    
+                    // Ajouter le nouveau commentaire
+                    await updateDoc(docRef, {
+                      commentaires: [...existingComments, newComment],
+                      updatedAt: serverTimestamp()
+                    });
+                    
+                    // Mettre à jour l'état local immédiatement avec timestamp
+                    const now = Date.now();
+                    setLocalCommentaires([...existingComments, newComment]);
+                    setLastLocalUpdate(now);
+                    
+                    console.log('Commentaire enregistré avec succès', { localUpdate: now });
+                  } catch (error) {
+                    console.error('Erreur lors de la sauvegarde du commentaire:', error);
+                    alert(`Erreur: ${error.message}`);
+                  }
+                }
+              });
+            }
+          }
+        ],
+        render: (structure) => {
+          
+          return (
+            <div className={styles.commentsContent}>
+              {commentaires.length > 0 ? (
+                <div className={styles.commentsList}>
+                  {commentaires.map((commentaire) => (
+                    <div key={commentaire.id} className={styles.commentItem}>
+                      <div className={styles.commentHeader}>
+                        <div className={styles.commentAuthor}>
+                          <i className="bi bi-person-circle"></i>
+                          <span>{commentaire.auteur}</span>
+                        </div>
+                        <div className={styles.commentDate}>
+                          <i className="bi bi-calendar3"></i>
+                          <span>
+                            {commentaire.date?.toDate ? 
+                              commentaire.date.toDate().toLocaleDateString('fr-FR') : 
+                              new Date(commentaire.date).toLocaleDateString('fr-FR')
+                            }
+                          </span>
+                          {commentaire.modifie && (
+                            <i className="bi bi-pencil-fill" title="Modifié"></i>
+                          )}
+                        </div>
+                      </div>
+                      <div className={styles.commentContent}>
+                        {commentaire.contenu}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.emptyComments}>
+                  <i className="bi bi-chat-quote" style={{ fontSize: '2rem', color: 'var(--tc-text-secondary)' }}></i>
+                  <p>Aucun commentaire</p>
+                  <small>Cliquez sur + pour ajouter votre premier commentaire</small>
+                </div>
+              )}
+            </div>
+          );
+        }
       }
     ],
 

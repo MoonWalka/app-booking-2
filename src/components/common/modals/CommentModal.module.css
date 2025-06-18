@@ -1,0 +1,74 @@
+/* CommentModal.module.css */
+
+.textarea {
+  font-family: var(--tc-font-family);
+  font-size: var(--tc-font-size-base);
+  line-height: var(--tc-line-height-normal);
+  color: var(--tc-text-dark);
+  background: var(--tc-bg-white);
+  border: 2px solid var(--tc-border-light);
+  border-radius: var(--tc-radius-md);
+  padding: var(--tc-space-3);
+  transition: var(--tc-transition-fast);
+  resize: vertical;
+  min-height: 150px;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--tc-color-primary);
+  background: var(--tc-bg-white);
+  box-shadow: var(--tc-shadow-focus);
+}
+
+.textarea::placeholder {
+  color: var(--tc-text-secondary);
+  font-style: italic;
+}
+
+/* Surcharges pour Bootstrap Modal */
+.modal-content {
+  border: none;
+  box-shadow: var(--tc-shadow-xl);
+  border-radius: var(--tc-radius-lg);
+}
+
+.modal-header {
+  background: var(--tc-bg-light);
+  border-bottom: 1px solid var(--tc-border-light);
+  padding: var(--tc-space-4) var(--tc-space-5);
+}
+
+.modal-title {
+  color: var(--tc-text-dark);
+  font-weight: var(--tc-font-weight-semibold);
+  font-size: var(--tc-font-size-lg);
+  display: flex;
+  align-items: center;
+}
+
+.modal-body {
+  padding: var(--tc-space-5);
+}
+
+.modal-footer {
+  background: var(--tc-bg-light);
+  border-top: 1px solid var(--tc-border-light);
+  padding: var(--tc-space-3) var(--tc-space-5);
+}
+
+/* Animation d'entrée */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal.show .modal-dialog {
+  animation: modalFadeIn 0.2s ease-out;
+}

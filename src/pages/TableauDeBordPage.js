@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Table from '@/components/ui/Table';
 import AddButton from '@/components/ui/AddButton';
-import { useAuth } from '@/context/AuthContext';
+// import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -14,7 +14,7 @@ import styles from './TableauDeBordPage.module.css';
  */
 const TableauDeBordPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  // const { } = useAuth();
   const { currentOrg } = useOrganization();
   
   // État pour les données
@@ -302,37 +302,37 @@ const TableauDeBordPage = () => {
     }
   ];
 
-  // Fonctions utilitaires
-  const getTypeIcon = (type) => {
-    switch (type) {
-      case 'concert': return 'music-note';
-      case 'contrat': return 'file-text';
-      case 'facture': return 'receipt';
-      case 'projet': return 'folder';
-      default: return 'circle';
-    }
-  };
+  // Fonctions utilitaires (pour usage futur)
+  // const getTypeIcon = (type) => {
+  //   switch (type) {
+  //     case 'concert': return 'music-note';
+  //     case 'contrat': return 'file-text';
+  //     case 'facture': return 'receipt';
+  //     case 'projet': return 'folder';
+  //     default: return 'circle';
+  //   }
+  // };
 
-  const getTypeLabel = (type) => {
-    switch (type) {
-      case 'concert': return 'Concert';
-      case 'contrat': return 'Contrat';
-      case 'facture': return 'Facture';
-      case 'projet': return 'Projet';
-      default: return 'Autre';
-    }
-  };
+  // const getTypeLabel = (type) => {
+  //   switch (type) {
+  //     case 'concert': return 'Concert';
+  //     case 'contrat': return 'Contrat';
+  //     case 'facture': return 'Facture';
+  //     case 'projet': return 'Projet';
+  //     default: return 'Autre';
+  //   }
+  // };
 
-  const getStatusLabel = (statut) => {
-    switch (statut) {
-      case 'contact': return 'Contact';
-      case 'option': return 'Option';
-      case 'confirme': return 'Confirmé';
-      case 'annule': return 'Annulé';
-      case 'reporte': return 'Reporté';
-      default: return 'Contact';
-    }
-  };
+  // const getStatusLabel = (statut) => {
+  //   switch (statut) {
+  //     case 'contact': return 'Contact';
+  //     case 'option': return 'Option';
+  //     case 'confirme': return 'Confirmé';
+  //     case 'annule': return 'Annulé';
+  //     case 'reporte': return 'Reporté';
+  //     default: return 'Contact';
+  //   }
+  // };
 
   // Filtrage et tri des données
   const filteredAndSortedData = React.useMemo(() => {

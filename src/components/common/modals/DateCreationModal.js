@@ -8,14 +8,14 @@ import styles from './DateCreationModal.module.css';
 /**
  * Modal de création d'une nouvelle date de concert
  */
-function DateCreationModal({ show, onHide, onCreated }) {
+function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
   const { currentOrganization } = useOrganization();
   const [loading, setLoading] = useState(false);
   const [artistesData, setArtistesData] = useState([]);
   const [structuresData, setStructuresData] = useState([]);
   const [lieuxData, setLieuxData] = useState([]);
   const [artisteSearch, setArtisteSearch] = useState('');
-  const [organisateurSearch, setOrganisateurSearch] = useState('');
+  const [organisateurSearch, setOrganisateurSearch] = useState(prefilledData.structureName || '');
   const [lieuSearch, setLieuSearch] = useState('');
   const [showArtisteDropdown, setShowArtisteDropdown] = useState(false);
   const [showOrganisateurDropdown, setShowOrganisateurDropdown] = useState(false);
@@ -31,8 +31,8 @@ function DateCreationModal({ show, onHide, onCreated }) {
     artisteId: '',
     artisteNom: '',
     projetNom: '',
-    organisateurId: '',
-    organisateurNom: '',
+    organisateurId: prefilledData.structureId || '',
+    organisateurNom: prefilledData.structureName || '',
     libelle: '',
     lieuId: '',
     lieuNom: '',
@@ -46,7 +46,7 @@ function DateCreationModal({ show, onHide, onCreated }) {
       loadStructures();
       loadLieux();
     }
-  }, [show, currentOrganization]);
+  }, [show, currentOrganization, loadArtistes, loadLieux, loadStructures]);
 
   // Gérer les clics à l'extérieur des dropdowns
   useEffect(() => {
@@ -224,15 +224,15 @@ function DateCreationModal({ show, onHide, onCreated }) {
       artisteId: '',
       artisteNom: '',
       projetNom: '',
-      organisateurId: '',
-      organisateurNom: '',
+      organisateurId: prefilledData.structureId || '',
+      organisateurNom: prefilledData.structureName || '',
       libelle: '',
       lieuId: '',
       lieuNom: '',
       lieuVille: ''
     });
     setArtisteSearch('');
-    setOrganisateurSearch('');
+    setOrganisateurSearch(prefilledData.structureName || '');
     setLieuSearch('');
     setShowArtisteDropdown(false);
     setShowOrganisateurDropdown(false);

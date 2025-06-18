@@ -178,7 +178,7 @@ function ContactsList({ filterType = 'all' }) {
           variant = 'info';
         } else {
           icon = 'bi bi-person';
-          variant = item._isPersonLibre ? 'warning' : 'primary';
+          variant = 'primary';
         }
 
         // Déterminer la qualification/fonction

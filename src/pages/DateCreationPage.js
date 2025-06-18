@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -9,15 +9,19 @@ import styles from './DateCreationPage.module.css';
 /**
  * Page de création d'une nouvelle date de concert
  */
-function DateCreationPage() {
+function DateCreationPage({ params = {} }) {
   const { currentOrganization } = useOrganization();
-  const { openConcertsListTab } = useTabs();
+  const { openConcertsListTab, getActiveTab } = useTabs();
+  
+  // Récupérer les données pré-remplies depuis les paramètres de l'onglet
+  const activeTab = getActiveTab();
+  const prefilledData = activeTab?.params?.prefilledData || params.prefilledData || {};
   const [loading, setLoading] = useState(false);
   const [artistesData, setArtistesData] = useState([]);
   const [structuresData, setStructuresData] = useState([]);
   const [lieuxData, setLieuxData] = useState([]);
   const [artisteSearch, setArtisteSearch] = useState('');
-  const [organisateurSearch, setOrganisateurSearch] = useState('');
+  const [organisateurSearch, setOrganisateurSearch] = useState(prefilledData.structureName || '');
   const [lieuSearch, setLieuSearch] = useState('');
   const [showArtisteDropdown, setShowArtisteDropdown] = useState(false);
   const [showOrganisateurDropdown, setShowOrganisateurDropdown] = useState(false);
@@ -33,22 +37,13 @@ function DateCreationPage() {
     artisteId: '',
     artisteNom: '',
     projetNom: '',
-    organisateurId: '',
-    organisateurNom: '',
+    organisateurId: prefilledData.structureId || '',
+    organisateurNom: prefilledData.structureName || '',
     libelle: '',
     lieuId: '',
     lieuNom: '',
     lieuVille: ''
   });
-
-  // Charger les données au montage du composant
-  useEffect(() => {
-    if (currentOrganization?.id) {
-      loadArtistes();
-      loadStructures();
-      loadLieux();
-    }
-  }, [currentOrganization]);
 
   // Gérer les clics à l'extérieur des dropdowns
   useEffect(() => {
@@ -71,7 +66,7 @@ function DateCreationPage() {
     };
   }, []);
 
-  const loadArtistes = async () => {
+  const loadArtistes = useCallback(async () => {
     try {
       const q = query(
         collection(db, 'artistes'),
@@ -110,9 +105,9 @@ function DateCreationPage() {
     } catch (error) {
       console.error('Erreur lors du chargement des artistes:', error);
     }
-  };
+  }, [currentOrganization?.id]);
 
-  const loadStructures = async () => {
+  const loadStructures = useCallback(async () => {
     try {
       const q = query(
         collection(db, 'structures'),
@@ -134,9 +129,9 @@ function DateCreationPage() {
     } catch (error) {
       console.error('Erreur lors du chargement des structures:', error);
     }
-  };
+  }, [currentOrganization?.id]);
 
-  const loadLieux = async () => {
+  const loadLieux = useCallback(async () => {
     try {
       const q = query(
         collection(db, 'lieux'),
@@ -159,7 +154,16 @@ function DateCreationPage() {
     } catch (error) {
       console.error('Erreur lors du chargement des lieux:', error);
     }
-  };
+  }, [currentOrganization?.id]);
+
+  // Charger les données au montage du composant
+  useEffect(() => {
+    if (currentOrganization?.id) {
+      loadArtistes();
+      loadStructures();
+      loadLieux();
+    }
+  }, [currentOrganization, loadArtistes, loadLieux, loadStructures]);
 
   // Filtrer les résultats pour les dropdowns
   const filteredArtistes = artistesData.filter(artiste =>
@@ -212,15 +216,15 @@ function DateCreationPage() {
       artisteId: '',
       artisteNom: '',
       projetNom: '',
-      organisateurId: '',
-      organisateurNom: '',
+      organisateurId: prefilledData.structureId || '',
+      organisateurNom: prefilledData.structureName || '',
       libelle: '',
       lieuId: '',
       lieuNom: '',
       lieuVille: ''
     });
     setArtisteSearch('');
-    setOrganisateurSearch('');
+    setOrganisateurSearch(prefilledData.structureName || '');
     setLieuSearch('');
     setShowArtisteDropdown(false);
     setShowOrganisateurDropdown(false);

@@ -48,7 +48,7 @@ const BookingParametragePage = () => {
     if (newSelectedArtisteId !== selectedArtisteId) {
       setSelectedArtisteId(newSelectedArtisteId);
     }
-  }, [location.pathname]);
+  }, [location.pathname, activeTab, selectedArtisteId]);
   
   // Effet séparé pour sélectionner automatiquement le premier artiste
   useEffect(() => {
@@ -150,7 +150,7 @@ const BookingParametragePage = () => {
                 onClick={() => handleArtisteSelect(artiste.id)}
               >
                 <div className="text-start">
-                  <h6 className="mb-0 small">{artiste.prenom} {artiste.nom}</h6>
+                  <h6 className="mb-0 small">{artiste.nom}</h6>
                 </div>
               </button>
             ))}
@@ -178,32 +178,30 @@ const BookingParametragePage = () => {
                         <span className="ms-2">{artiste.nom || 'Non renseigné'}</span>
                       </div>
                       <div className="mb-2">
-                        <strong>Prénom :</strong> 
-                        <span className="ms-2">{artiste.prenom || 'Non renseigné'}</span>
+                        <strong>Code :</strong> 
+                        <span className="ms-2">{artiste.code || 'Non renseigné'}</span>
                       </div>
                       <div className="mb-2">
-                        <strong>Email :</strong> 
-                        <span className="ms-2">{artiste.email || 'Non renseigné'}</span>
+                        <strong>Code analytique :</strong> 
+                        <span className="ms-2">{artiste.codeAnalytique || 'Non renseigné'}</span>
                       </div>
                       <div className="mb-2">
-                        <strong>Téléphone :</strong> 
-                        <span className="ms-2">{artiste.telephone || 'Non renseigné'}</span>
+                        <strong>Libellé analytique :</strong> 
+                        <span className="ms-2">{artiste.libelleAnalytique || 'Non renseigné'}</span>
                       </div>
                     </div>
                     <div className="col-md-6">
-                      <h6 className="border-bottom pb-2 mb-3">Informations professionnelles</h6>
+                      <h6 className="border-bottom pb-2 mb-3">Statut</h6>
                       <div className="mb-2">
-                        <strong>Genre musical :</strong> 
-                        <span className="ms-2">{artiste.genre || 'Non renseigné'}</span>
+                        <strong>Actif :</strong> 
+                        <span className={`ms-2 badge ${artiste.actif !== false ? 'bg-success' : 'bg-secondary'}`}>
+                          {artiste.actif !== false ? 'Oui' : 'Non'}
+                        </span>
                       </div>
                       <div className="mb-2">
-                        <strong>Ville :</strong> 
-                        <span className="ms-2">{artiste.ville || 'Non renseigné'}</span>
-                      </div>
-                      <div className="mb-2">
-                        <strong>Statut :</strong> 
-                        <span className={`ms-2 badge ${artiste.status === 'active' ? 'bg-success' : 'bg-secondary'}`}>
-                          {artiste.status === 'active' ? 'Actif' : 'Inactif'}
+                        <strong>Au catalogue :</strong> 
+                        <span className={`ms-2 badge ${artiste.auCatalogue !== false ? 'bg-success' : 'bg-secondary'}`}>
+                          {artiste.auCatalogue !== false ? 'Oui' : 'Non'}
                         </span>
                       </div>
                     </div>

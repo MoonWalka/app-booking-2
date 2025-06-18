@@ -4,6 +4,7 @@ import { useContactModals } from '@/context/ContactModalsContext';
 import { useTabs } from '@/context/TabsContext';
 import StructureCreationModal from './StructureCreationModal';
 import PersonneCreationModal from './PersonneCreationModal';
+import CommentModal from '@/components/common/modals/CommentModal';
 
 /**
  * Conteneur global pour les modals de création de contacts
@@ -13,8 +14,11 @@ function ContactModalsContainer() {
   const { 
     showStructureModal, 
     showPersonneModal,
+    showCommentModal,
+    commentModalData,
     closeStructureModal,
-    closePersonneModal
+    closePersonneModal,
+    closeCommentModal
   } = useContactModals();
   
   const { openContactTab } = useTabs();
@@ -37,6 +41,16 @@ function ContactModalsContainer() {
     closePersonneModal();
   };
 
+  // Callback pour la sauvegarde d'un commentaire
+  const handleCommentSave = async (content, commentId) => {
+    // Pour l'instant, juste logger - la logique de sauvegarde sera implémentée dans le composant parent
+    console.log('Sauvegarde commentaire:', { content, commentId, data: commentModalData });
+    
+    // Le parent devra passer une fonction de sauvegarde via commentModalData.onSave
+    if (commentModalData?.onSave) {
+      await commentModalData.onSave(content, commentId);
+    }
+  };
 
   return (
     <>
@@ -54,6 +68,14 @@ function ContactModalsContainer() {
         onCreated={handlePersonneCreated}
       />
 
+      {/* Modal de création/édition de commentaire */}
+      <CommentModal
+        show={showCommentModal}
+        onHide={closeCommentModal}
+        onSave={handleCommentSave}
+        comment={commentModalData?.comment}
+        title={commentModalData?.title}
+      />
     </>
   );
 }

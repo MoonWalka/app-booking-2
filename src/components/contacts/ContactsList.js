@@ -6,7 +6,6 @@ import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import { ActionButtons } from '@/components/ui/ActionButtons';
 import { useDeleteContact } from '@/hooks/contacts';
 
 /**
@@ -83,7 +82,7 @@ function ContactsList({ filterType = 'all' }) {
               entityType: 'structure',
               displayName: structureDisplayName,
               nom: structureDisplayName,
-              email: doc.structure?.email || '',
+              email: doc.structure?.email?.trim() || '',
               telephone: doc.structure?.telephone1 || doc.structure?.telephone || '',
               subtext: `${personnesCount} personne${personnesCount > 1 ? 's' : ''}`,
               _sourceCollection: 'contacts_unified',
@@ -103,12 +102,16 @@ function ContactsList({ filterType = 'all' }) {
                   entityType: 'personne',
                   displayName: `${personne.prenom} ${personne.nom}`.trim(),
                   nom: personne.nom,
-                  email: personne.email || personne.mailDirect || '',
+                  email: (personne.mailDirect?.trim() || personne.email?.trim() || ''),
                   telephone: personne.telephone || personne.telDirect || personne.mobile || '',
                   subtext: structureDisplayName,
                   _sourceCollection: 'contacts_unified',
                   _isPersonInStructure: true,
                   _structureName: structureDisplayName,
+                  // Ajouter les données géographiques de la personne
+                  codePostal: personne.codePostal || '',
+                  ville: personne.ville || '',
+                  pays: personne.pays || '',
                   createdAt: doc.createdAt
                 });
               }
@@ -125,11 +128,15 @@ function ContactsList({ filterType = 'all' }) {
               entityType: 'personne',
               displayName: `${personne?.prenom || ''} ${personne?.nom || ''}`.trim() || 'Personne sans nom',
               nom: personne?.nom || '',
-              email: personne?.email || '',
+              email: (personne?.mailDirect?.trim() || personne?.email?.trim() || ''),
               telephone: personne?.telephone || personne?.mobile || '',
               subtext: 'Personne libre',
               _sourceCollection: 'contacts_unified',
               _isPersonLibre: true,
+              // Ajouter les données géographiques de la personne libre
+              codePostal: personne?.codePostal || '',
+              ville: personne?.ville || '',
+              pays: personne?.pays || '',
               createdAt: doc.createdAt
             });
           }
@@ -158,14 +165,13 @@ function ContactsList({ filterType = 'all' }) {
   // Configuration des colonnes pour l'affichage unifié
   const columns = [
     {
-      id: 'type',
-      label: 'Type',
-      field: 'entityType',
+      id: 'nom',
+      label: 'Nom / Qualification',
+      field: 'displayName',
       sortable: true,
-      width: '8%',
+      width: '22%',
       render: (item) => {
         const type = item.entityType;
-        
         let icon, variant;
         if (type === 'structure') {
           icon = 'bi bi-building';
@@ -174,60 +180,78 @@ function ContactsList({ filterType = 'all' }) {
           icon = 'bi bi-person';
           variant = item._isPersonLibre ? 'warning' : 'primary';
         }
-        
+
+        // Déterminer la qualification/fonction
+        let qualification = '';
+        if (item.entityType === 'structure') {
+          qualification = item.structure?.type || '';
+        } else {
+          const fonction = item._isPersonInStructure 
+            ? item.personnes?.[item._personneIndex]?.fonction
+            : item.personne?.fonction;
+          qualification = fonction || '';
+        }
+
         return (
-          <span 
-            className={`badge bg-${variant} d-flex align-items-center justify-content-center`} 
-            style={{ fontSize: '1rem', minWidth: '32px', height: '28px' }}
-            title={type === 'structure' ? 'Structure' : (item._isPersonLibre ? 'Personne libre' : 'Personne')}
-          >
-            <i className={icon}></i>
-          </span>
+          <div className="d-flex align-items-center">
+            <span 
+              className={`badge bg-${variant} d-flex align-items-center justify-content-center me-2`} 
+              style={{ fontSize: '0.8rem', minWidth: '24px', height: '24px' }}
+              title={type === 'structure' ? 'Structure' : 'Personne'}
+            >
+              <i className={icon}></i>
+            </span>
+            <div className="d-flex align-items-center flex-nowrap">
+              <span className="fw-bold text-truncate" style={{ maxWidth: '140px' }}>
+                {item.displayName || 'Sans nom'}
+              </span>
+              {qualification && (
+                <>
+                  <span className="mx-2 text-muted">•</span>
+                  <small className="text-muted text-truncate" style={{ maxWidth: '100px' }} title={qualification}>
+                    {qualification}
+                  </small>
+                </>
+              )}
+            </div>
+          </div>
         );
       },
     },
     {
-      id: 'nom',
-      label: 'Nom',
-      field: 'displayName',
-      sortable: true,
-      width: '25%',
-      render: (item) => (
-        <div>
-          <div className="fw-bold text-truncate" style={{ maxWidth: '200px' }}>
-            {item.displayName || 'Sans nom'}
-          </div>
-          {item.subtext && (
-            <small className="text-muted">{item.subtext}</small>
-          )}
-        </div>
-      ),
-    },
-    {
-      id: 'details',
-      label: 'Détails',
+      id: 'contacts_lies',
+      label: 'Contacts liés',
       sortable: false,
-      width: '20%',
+      width: '14%',
       render: (item) => {
-        if (item.entityType === 'structure') {
-          // Afficher SIRET ou type pour structure
-          const siret = item.structure?.siret;
-          const type = item.structure?.type;
-          return (
-            <div>
-              {siret && <div className="small text-truncate">SIRET: {siret}</div>}
-              {type && <div className="small text-muted">{type}</div>}
-            </div>
-          );
-        } else {
-          // Afficher fonction pour personne
-          const fonction = item._isPersonInStructure 
-            ? item.personnes?.[item._personneIndex]?.fonction
-            : item.personne?.fonction;
-          return fonction ? (
-            <div className="small text-muted">{fonction}</div>
-          ) : null;
-        }
+        return (
+          <div className="w-100 d-flex justify-content-start">
+            {item.entityType === 'structure' ? (
+              // Pour les structures, afficher le nombre de personnes associées
+              (() => {
+                const personnesCount = item.personnes?.filter(p => p.prenom && p.nom).length || 0;
+                return personnesCount > 0 ? (
+                  <span className="badge bg-secondary">
+                    <i className="bi bi-people me-1"></i>
+                    {personnesCount}
+                  </span>
+                ) : (
+                  <span className="text-muted">-</span>
+                );
+              })()
+            ) : (
+              // Pour les personnes, afficher la structure associée si applicable
+              item._structureName ? (
+                <span className="badge bg-info text-truncate" style={{ maxWidth: '100%' }} title={item._structureName}>
+                  <i className="bi bi-building me-1"></i>
+                  {item._structureName}
+                </span>
+              ) : (
+                <span className="text-muted">-</span>
+              )
+            )}
+          </div>
+        );
       },
     },
     {
@@ -235,15 +259,19 @@ function ContactsList({ filterType = 'all' }) {
       label: 'Email',
       field: 'email',
       sortable: true,
-      width: '25%',
+      width: '16%',
       render: (item) => {
-        const email = item.email;
-        return email ? (
-          <a href={`mailto:${email}`} className="text-decoration-none text-truncate d-block" style={{ maxWidth: '200px' }}>
-            {email}
-          </a>
-        ) : (
-          <span className="text-muted">-</span>
+        const email = item.email?.trim();
+        return (
+          <div className="w-100">
+            {email ? (
+              <a href={`mailto:${email}`} className="text-decoration-none" title={email}>
+                <span className="text-truncate d-block">{email}</span>
+              </a>
+            ) : (
+              <span className="text-muted">-</span>
+            )}
+          </div>
         );
       },
     },
@@ -252,33 +280,83 @@ function ContactsList({ filterType = 'all' }) {
       label: 'Téléphone',
       field: 'telephone',
       sortable: true,
-      width: '15%',
+      width: '10%',
       render: (item) => {
         const tel = item.telephone;
-        return tel ? (
-          <a href={`tel:${tel}`} className="text-decoration-none">
-            {tel}
-          </a>
+        return (
+          <div className="w-100">
+            {tel ? (
+              <a href={`tel:${tel}`} className="text-decoration-none">
+                <span className="text-truncate d-block">{tel}</span>
+              </a>
+            ) : (
+              <span className="text-muted">-</span>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      id: 'codePostal',
+      label: 'CP',
+      sortable: true,
+      width: '6%',
+      render: (item) => {
+        let cp = '';
+        if (item.entityType === 'structure') {
+          cp = item.structure?.codePostal || '';
+        } else {
+          // Pour les personnes, essayer d'extraire depuis les données directement
+          cp = item.codePostal || '';
+        }
+        return cp ? (
+          <span className="small">{cp}</span>
         ) : (
           <span className="text-muted">-</span>
         );
       },
     },
     {
-      id: 'createdAt',
-      label: 'Créé le',
-      field: 'createdAt',
+      id: 'ville',
+      label: 'Ville',
       sortable: true,
-      width: '12%',
+      width: '10%',
       render: (item) => {
-        const date = item.createdAt;
-        if (!date) return <span className="text-muted">-</span>;
-        
-        const dateObj = date.toDate ? date.toDate() : new Date(date);
+        let ville = '';
+        if (item.entityType === 'structure') {
+          ville = item.structure?.ville || '';
+        } else {
+          // Pour les personnes, essayer d'extraire depuis les données directement
+          ville = item.ville || '';
+        }
         return (
-          <span className="small text-muted">
-            {dateObj.toLocaleDateString('fr-FR')}
-          </span>
+          <div className="w-100">
+            {ville ? (
+              <span className="small text-truncate d-block">{ville}</span>
+            ) : (
+              <span className="text-muted">-</span>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      id: 'pays',
+      label: 'Pays',
+      sortable: true,
+      width: '6%',
+      render: (item) => {
+        let pays = '';
+        if (item.entityType === 'structure') {
+          pays = item.structure?.pays || '';
+        } else {
+          // Pour les personnes, essayer d'extraire depuis les données directement
+          pays = item.pays || '';
+        }
+        return pays ? (
+          <span className="small">{pays === 'France' ? 'FR' : pays}</span>
+        ) : (
+          <span className="text-muted">-</span>
         );
       },
     }
@@ -335,11 +413,51 @@ function ContactsList({ filterType = 'all' }) {
     const viewType = item._viewType;
     
     return (
-      <ActionButtons
-        onView={() => openContactTab(contactId, item.displayName, viewType)}
-        onEdit={() => navigate(`/contacts/${contactId}/edit`)}
-        onDelete={() => handleDeleteContact(contactId)}
-      />
+      <div className="d-flex gap-1 justify-content-end">
+        {/* Visualiser fiche */}
+        <button
+          className="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center"
+          onClick={() => openContactTab(contactId, item.displayName, viewType)}
+          title="Visualiser la fiche"
+          style={{ width: '32px', height: '32px' }}
+        >
+          <i className="bi bi-eye"></i>
+        </button>
+        
+        {/* Éditer */}
+        <button
+          className="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center"
+          onClick={() => navigate(`/contacts/${contactId}/edit`)}
+          title="Modifier"
+          style={{ width: '32px', height: '32px' }}
+        >
+          <i className="bi bi-pencil"></i>
+        </button>
+        
+        {/* Qualifier */}
+        <button
+          className="btn btn-sm btn-outline-success d-flex align-items-center justify-content-center"
+          onClick={() => {
+            // TODO: Implémenter modal de qualification
+            console.log('Qualifier:', item);
+            alert('Fonctionnalité de qualification à implémenter');
+          }}
+          title="Qualifier ce contact"
+          style={{ width: '32px', height: '32px' }}
+        >
+          <i className="bi bi-tags"></i>
+        </button>
+        
+        {/* Supprimer */}
+        <button
+          className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center"
+          onClick={() => handleDeleteContact(contactId)}
+          title="Supprimer"
+          style={{ width: '32px', height: '32px' }}
+        >
+          <i className="bi bi-trash"></i>
+        </button>
+      </div>
     );
   };
 

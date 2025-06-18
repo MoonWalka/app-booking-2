@@ -68,8 +68,9 @@
   grid-template-columns: 24px 1fr;
   gap: var(--tc-space-3);
   align-items: center;
-  padding: var(--tc-space-3) var(--tc-space-6);
-  color: var(--tc-text-light);
+  padding: 0 var(--tc-space-6);
+  height: 50px; /* Même hauteur que les icônes de la sidebar */
+  color: var(--tc-color-primary);
   background: none;
   border: none;
   border-left: 3px solid transparent;
@@ -86,17 +87,19 @@
   font-size: 1.2rem;
   width: 24px;
   height: 24px;
+  flex-shrink: 0; /* Empêche la compression de l'icône */
 }
 
 .subMenu .navButton:hover {
-  background-color: var(--tc-hover-overlay-light);
-  border-left-color: rgba(255, 255, 255, 0.3);
-  color: var(--tc-text-light);
+  background-color: rgba(0, 123, 255, 0.1);
+  border-left-color: var(--tc-color-primary);
+  color: var(--tc-color-primary);
 }
 
 .subMenu .navButton.active {
-  background-color: var(--tc-active-overlay-light);
-  border-left-color: var(--tc-color-accent, #fff);
+  background-color: rgba(0, 123, 255, 0.15);
+  border-left-color: var(--tc-color-primary);
+  color: var(--tc-color-primary);
 }
 
 /* 
@@ -256,7 +259,10 @@
 .navGroupToggle.active {
   background-color: white;
   color: var(--tc-color-primary);
-  border-radius: var(--tc-radius-base);
+  border-radius: var(--tc-radius-base) 0 0 var(--tc-radius-base); /* Arrondi seulement à gauche */
+  width: calc(100% - var(--tc-space-2)); /* S'étend plus à droite */
+  margin-right: 0; /* Supprime la marge droite */
+  margin-left: var(--tc-space-2); /* Garde seulement la marge gauche */
 }
 
 /* 
@@ -323,9 +329,10 @@
   top: 70px; /* Commence sous le header */
   width: var(--tc-submenu-width);
   height: calc(100vh - 70px); /* Hauteur moins le header */
-  background-color: var(--tc-color-primary);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  border-right: 3px solid var(--tc-color-primary);
+  border-top-right-radius: var(--tc-radius-base);
+  border-bottom-right-radius: var(--tc-radius-base);
   z-index: 1000;
   animation: slideInFromLeft 0.2s ease-out;
   display: flex;
@@ -363,35 +370,42 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--tc-space-2) var(--tc-space-4); /* Padding réduit */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: var(--tc-color-primary);
-  min-height: 40px; /* Hauteur minimale réduite */
+  padding: 0 var(--tc-space-6); /* Même padding horizontal que les boutons */
+  border-bottom: 1px solid rgba(0, 123, 255, 0.2);
+  background-color: white;
+  height: 50px; /* Même hauteur que les autres éléments */
   position: sticky;
   top: 0;
   z-index: 10;
+  margin-top: var(--tc-space-2); /* Alignement avec sidebarContent padding */
 }
 
 .subMenuHeader h4 {
   margin: 0;
-  color: var(--tc-text-light);
-  font-size: 1rem; /* Taille réduite */
+  color: var(--tc-color-primary);
+  font-size: 1.1rem; /* Taille harmonisée avec la hauteur */
   font-weight: 600;
+  line-height: 1.2; /* Améliore l'alignement vertical */
 }
 
 .closeSubMenu {
   background: none;
   border: none;
-  color: var(--tc-text-light);
+  color: var(--tc-color-primary);
   font-size: 1.2rem;
   cursor: pointer;
-  padding: var(--tc-space-1);
+  padding: var(--tc-space-2);
   border-radius: var(--tc-radius-base);
   transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px; /* Hauteur proportionnelle au header */
+  width: 36px;
 }
 
 .closeSubMenu:hover {
-  background-color: var(--tc-hover-overlay-light);
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
 /* 
@@ -408,7 +422,7 @@
 }
 
 .subMenu li {
-  margin-bottom: 0;
+  margin: var(--tc-space-1) 0; /* Même marge que les icônes de la sidebar */
 }
 
 /* Anciens styles pour les liens supprimés - Remplacés par les styles .navButton */

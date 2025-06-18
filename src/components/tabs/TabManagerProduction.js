@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useTabs } from '@/context/TabsContext';
 import styles from './TabManager.module.css';
 
@@ -35,8 +35,8 @@ const TabManagerProduction = () => {
     activateTab, 
     closeTab, 
     closeOtherTabs,
-    getActiveTab,
-    openTab
+    getActiveTab
+    // openTab
   } = useTabs();
 
   // États pour la navigation des onglets
@@ -47,7 +47,7 @@ const TabManagerProduction = () => {
   const scrollContainerRef = useRef(null);
 
   // Fonction pour calculer si on peut faire défiler
-  const updateScrollState = () => {
+  const updateScrollState = useCallback(() => {
     if (!tabsWrapperRef.current || !scrollContainerRef.current) return;
 
     const wrapper = tabsWrapperRef.current;
@@ -73,7 +73,7 @@ const TabManagerProduction = () => {
     
     setCanScrollLeft(scrollOffset > 0 && hasOverflow);
     setCanScrollRight(scrollOffset < maxOffset && hasOverflow);
-  };
+  }, [scrollOffset]);
 
   // Fonction pour faire défiler vers la gauche
   const scrollLeft = () => {
@@ -100,7 +100,7 @@ const TabManagerProduction = () => {
       updateScrollState();
     }, 0);
     return () => clearTimeout(timer);
-  }, [tabs, scrollOffset]);
+  }, [tabs, scrollOffset, updateScrollState]);
 
   // Effet pour écouter les changements de taille de fenêtre et recalculer
   useEffect(() => {
@@ -112,7 +112,7 @@ const TabManagerProduction = () => {
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [updateScrollState]);
 
   // Effet pour forcer une mise à jour initiale
   useEffect(() => {
@@ -120,7 +120,7 @@ const TabManagerProduction = () => {
       updateScrollState();
     }, 100); // Délai pour s'assurer que tout est rendu
     return () => clearTimeout(timer);
-  }, []);
+  }, [updateScrollState]);
 
   // Observer pour détecter les changements de taille du container
   useEffect(() => {
@@ -135,27 +135,27 @@ const TabManagerProduction = () => {
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [updateScrollState]);
 
   // Debug: Fonction pour forcer la mise à jour (temporaire)
-  const forceUpdate = () => {
-    console.log('🔄 Force update navigation');
-    updateScrollState();
-  };
+  // const forceUpdate = () => {
+  //   console.log('🔄 Force update navigation');
+  //   updateScrollState();
+  // };
 
   // Debug: Fonction pour créer des onglets de test
-  const createTestTabs = () => {
-    for (let i = 1; i <= 10; i++) {
-      openTab({
-        id: `test-tab-${i}`,
-        title: `Test Onglet ${i} avec nom très long pour forcer débordement`,
-        path: `/test-${i}`,
-        component: 'TestPage',
-        icon: 'bi-file-earmark',
-        closable: true
-      });
-    }
-  };
+  // const createTestTabs = () => {
+  //   for (let i = 1; i <= 10; i++) {
+  //     openTab({
+  //       id: `test-tab-${i}`,
+  //       title: `Test Onglet ${i} avec nom très long pour forcer débordement`,
+  //       path: `/test-${i}`,
+  //       component: 'TestPage',
+  //       icon: 'bi-file-earmark',
+  //       closable: true
+  //     });
+  //   }
+  // };
 
   const renderTabContent = () => {
     const activeTab = getActiveTab();

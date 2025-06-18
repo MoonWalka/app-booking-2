@@ -24,7 +24,6 @@ function DesktopLayout({ children }) {
     openLieuxListTab,
     openStructuresListTab,
     openDebugToolsTab,
-    openTachesTab,
     openTab
   } = useTabs();
   
@@ -195,9 +194,10 @@ function DesktopLayout({ children }) {
         });
         break;
       case '/collaboration/parametrage':
+      case '/collaboration/parametrage/entreprise':
+      case '/collaboration/parametrage/collaborateurs':
       case '/collaboration/parametrage/taches':
-      case '/collaboration/parametrage/mails':
-      case '/collaboration/parametrage/notes':
+      case '/collaboration/parametrage/permissions':
         openTab({
           id: 'collaboration-parametrage',
           title: 'Paramétrage Collaboration',

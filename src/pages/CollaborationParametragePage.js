@@ -1,21 +1,43 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
-import TabNavigation from '../components/common/TabNavigation';
 import styles from './CollaborationParametragePage.module.css';
 
 const CollaborationParametragePage = () => {
-  const [activeTab, setActiveTab] = useState('taches');
-  const [selectedConfig, setSelectedConfig] = useState('taches');
+  const [activeTab, setActiveTab] = useState('entreprise');
+  const [selectedConfig, setSelectedConfig] = useState('entreprise');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { currentOrganization } = useOrganization();
   
+  // Configuration entreprise
+  const [entrepriseConfig, setEntrepriseConfig] = useState({
+    nomEntreprise: '',
+    secteurActivite: '',
+    tailleEquipe: 'petit', // petit, moyen, grand
+    fuseauHoraire: 'Europe/Paris',
+    langueParDefaut: 'fr',
+    notificationsGenerales: true,
+    sauvegardeDonnees: 'automatique',
+    retentionDonnees: 365 // jours
+  });
+
+  // Configuration collaborateurs
+  const [collaborateursConfig, setCollaborateursConfig] = useState({
+    invitationAutomatique: true,
+    rolesPersonnalises: [],
+    approvalRequired: false,
+    sessionTimeout: 480, // minutes
+    authentificationDouble: false,
+    visibiliteEquipe: 'complete',
+    partageCalendrier: true
+  });
+
   // Configuration des tâches
   const [tachesConfig, setTachesConfig] = useState({
     statutsPersonnalises: [],
@@ -31,37 +53,30 @@ const CollaborationParametragePage = () => {
     }
   });
 
-  // Configuration des mails
-  const [mailsConfig, setMailsConfig] = useState({
-    signaturesAutomatiques: true,
-    modelesPredefinies: [],
-    archivageAutomatique: false,
-    delaiArchivage: 30, // jours
-    categoriesPersonnalisees: [],
-    notificationsNouveauxMails: true
-  });
-
-  // Configuration des notes
-  const [notesConfig, setNotesConfig] = useState({
-    partageParDefaut: 'prive',
-    categoriesPersonnalisees: [],
-    versionning: true,
-    commentairesActives: true,
-    notificationsModifications: true,
-    formatParDefaut: 'markdown'
+  // Configuration permissions
+  const [permissionsConfig, setPermissionsConfig] = useState({
+    creationTaches: 'tous', // tous, managers, admin
+    suppressionTaches: 'assignees', // assignees, managers, admin
+    modificationStatuts: 'tous',
+    consultationRapports: 'managers',
+    gestionEquipe: 'admin',
+    exportDonnees: 'admin',
+    parametresGeneraux: 'admin'
   });
 
   // Déterminer l'onglet actif en fonction de l'URL
   useEffect(() => {
     const path = location.pathname;
-    let newActiveTab = 'taches';
+    let newActiveTab = 'entreprise';
     
-    if (path.includes('/collaboration/parametrage/taches') || path === '/collaboration/parametrage') {
+    if (path.includes('/collaboration/parametrage/entreprise') || path === '/collaboration/parametrage') {
+      newActiveTab = 'entreprise';
+    } else if (path.includes('/collaboration/parametrage/collaborateurs')) {
+      newActiveTab = 'collaborateurs';
+    } else if (path.includes('/collaboration/parametrage/taches')) {
       newActiveTab = 'taches';
-    } else if (path.includes('/collaboration/parametrage/mails')) {
-      newActiveTab = 'mails';
-    } else if (path.includes('/collaboration/parametrage/notes')) {
-      newActiveTab = 'notes';
+    } else if (path.includes('/collaboration/parametrage/permissions')) {
+      newActiveTab = 'permissions';
     }
     
     if (newActiveTab !== activeTab) {
@@ -70,14 +85,7 @@ const CollaborationParametragePage = () => {
     }
   }, [location.pathname, activeTab]);
 
-  // Charger la configuration au montage
-  useEffect(() => {
-    if (currentOrganization?.id) {
-      loadConfiguration();
-    }
-  }, [currentOrganization?.id]);
-
-  const loadConfiguration = async () => {
+  const loadConfiguration = useCallback(async () => {
     if (!currentOrganization?.id) return;
     
     setLoading(true);
@@ -86,16 +94,24 @@ const CollaborationParametragePage = () => {
       
       if (configDoc.exists()) {
         const data = configDoc.data();
+        if (data.entreprise) setEntrepriseConfig(prev => ({ ...prev, ...data.entreprise }));
+        if (data.collaborateurs) setCollaborateursConfig(prev => ({ ...prev, ...data.collaborateurs }));
         if (data.taches) setTachesConfig(prev => ({ ...prev, ...data.taches }));
-        if (data.mails) setMailsConfig(prev => ({ ...prev, ...data.mails }));
-        if (data.notes) setNotesConfig(prev => ({ ...prev, ...data.notes }));
+        if (data.permissions) setPermissionsConfig(prev => ({ ...prev, ...data.permissions }));
       }
     } catch (error) {
       console.error('Erreur lors du chargement de la configuration:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentOrganization?.id]);
+
+  // Charger la configuration au montage
+  useEffect(() => {
+    if (currentOrganization?.id) {
+      loadConfiguration();
+    }
+  }, [currentOrganization?.id, loadConfiguration]);
 
   const saveConfiguration = async () => {
     if (!currentOrganization?.id) return;
@@ -103,9 +119,10 @@ const CollaborationParametragePage = () => {
     setSaving(true);
     try {
       const configData = {
+        entreprise: entrepriseConfig,
+        collaborateurs: collaborateursConfig,
         taches: tachesConfig,
-        mails: mailsConfig,
-        notes: notesConfig,
+        permissions: permissionsConfig,
         updatedAt: new Date(),
         organizationId: currentOrganization.id
       };
@@ -132,9 +149,10 @@ const CollaborationParametragePage = () => {
   // Rendu du menu latéral
   const renderSidebarMenu = () => {
     const tabs = [
+      { key: 'entreprise', label: 'Entreprise', icon: 'bi-building' },
+      { key: 'collaborateurs', label: 'Collaborateurs', icon: 'bi-people' },
       { key: 'taches', label: 'Tâches', icon: 'bi-check2-square' },
-      { key: 'mails', label: 'Échanges de mails', icon: 'bi-envelope' },
-      { key: 'notes', label: 'Notes & Commentaires', icon: 'bi-journal-text' }
+      { key: 'permissions', label: 'Permissions', icon: 'bi-shield-check' }
     ];
 
     return (
@@ -157,6 +175,269 @@ const CollaborationParametragePage = () => {
       </div>
     );
   };
+
+  // Rendu de la configuration entreprise
+  const renderEntrepriseConfig = () => (
+    <Card>
+      <Card.Header>
+        <h5 className="mb-0">
+          <i className="bi bi-building me-2"></i>
+          Configuration Entreprise
+        </h5>
+      </Card.Header>
+      <Card.Body>
+        <Form>
+          <Row>
+            <Col md={6}>
+              <h6 className="border-bottom pb-2 mb-3">Informations générales</h6>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Nom de l'entreprise</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={entrepriseConfig.nomEntreprise}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    nomEntreprise: e.target.value 
+                  }))}
+                  placeholder="Nom de votre entreprise"
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Secteur d'activité</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={entrepriseConfig.secteurActivite}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    secteurActivite: e.target.value 
+                  }))}
+                  placeholder="Industrie, Services, etc."
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Taille de l'équipe</Form.Label>
+                <Form.Select
+                  value={entrepriseConfig.tailleEquipe}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    tailleEquipe: e.target.value 
+                  }))}
+                >
+                  <option value="petit">Petite équipe (1-10 personnes)</option>
+                  <option value="moyen">Équipe moyenne (11-50 personnes)</option>
+                  <option value="grand">Grande équipe (50+ personnes)</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Fuseau horaire</Form.Label>
+                <Form.Select
+                  value={entrepriseConfig.fuseauHoraire}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    fuseauHoraire: e.target.value 
+                  }))}
+                >
+                  <option value="Europe/Paris">Europe/Paris (GMT+1)</option>
+                  <option value="Europe/London">Europe/London (GMT)</option>
+                  <option value="America/New_York">America/New_York (GMT-5)</option>
+                  <option value="America/Los_Angeles">America/Los_Angeles (GMT-8)</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            
+            <Col md={6}>
+              <h6 className="border-bottom pb-2 mb-3">Paramètres système</h6>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Langue par défaut</Form.Label>
+                <Form.Select
+                  value={entrepriseConfig.langueParDefaut}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    langueParDefaut: e.target.value 
+                  }))}
+                >
+                  <option value="fr">Français</option>
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="checkbox"
+                  label="Notifications générales activées"
+                  checked={entrepriseConfig.notificationsGenerales}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    notificationsGenerales: e.target.checked 
+                  }))}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Sauvegarde des données</Form.Label>
+                <Form.Select
+                  value={entrepriseConfig.sauvegardeDonnees}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    sauvegardeDonnees: e.target.value 
+                  }))}
+                >
+                  <option value="automatique">Automatique</option>
+                  <option value="manuel">Manuel</option>
+                  <option value="desactive">Désactivé</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Rétention des données (jours)</Form.Label>
+                <Form.Control
+                  type="number"
+                  min="30"
+                  max="3650"
+                  value={entrepriseConfig.retentionDonnees}
+                  onChange={(e) => setEntrepriseConfig(prev => ({ 
+                    ...prev, 
+                    retentionDonnees: parseInt(e.target.value) 
+                  }))}
+                />
+                <Form.Text className="text-muted">
+                  Durée de conservation des données inactives
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
+      </Card.Body>
+    </Card>
+  );
+
+  // Rendu de la configuration collaborateurs
+  const renderCollaborateursConfig = () => (
+    <Card>
+      <Card.Header>
+        <h5 className="mb-0">
+          <i className="bi bi-people me-2"></i>
+          Configuration Collaborateurs
+        </h5>
+      </Card.Header>
+      <Card.Body>
+        <Form>
+          <Row>
+            <Col md={6}>
+              <h6 className="border-bottom pb-2 mb-3">Gestion des invitations</h6>
+              
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="checkbox"
+                  label="Invitation automatique des nouveaux collaborateurs"
+                  checked={collaborateursConfig.invitationAutomatique}
+                  onChange={(e) => setCollaborateursConfig(prev => ({ 
+                    ...prev, 
+                    invitationAutomatique: e.target.checked 
+                  }))}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="checkbox"
+                  label="Approbation requise pour rejoindre l'équipe"
+                  checked={collaborateursConfig.approvalRequired}
+                  onChange={(e) => setCollaborateursConfig(prev => ({ 
+                    ...prev, 
+                    approvalRequired: e.target.checked 
+                  }))}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Visibilité de l'équipe</Form.Label>
+                <Form.Select
+                  value={collaborateursConfig.visibiliteEquipe}
+                  onChange={(e) => setCollaborateursConfig(prev => ({ 
+                    ...prev, 
+                    visibiliteEquipe: e.target.value 
+                  }))}
+                >
+                  <option value="complete">Complète (tous voient tout)</option>
+                  <option value="limitee">Limitée (par service/équipe)</option>
+                  <option value="prive">Privée (chacun voit ses tâches)</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="checkbox"
+                  label="Partage de calendrier entre collaborateurs"
+                  checked={collaborateursConfig.partageCalendrier}
+                  onChange={(e) => setCollaborateursConfig(prev => ({ 
+                    ...prev, 
+                    partageCalendrier: e.target.checked 
+                  }))}
+                />
+              </Form.Group>
+            </Col>
+            
+            <Col md={6}>
+              <h6 className="border-bottom pb-2 mb-3">Sécurité et sessions</h6>
+              
+              <Form.Group className="mb-3">
+                <Form.Label>Timeout de session (minutes)</Form.Label>
+                <Form.Control
+                  type="number"
+                  min="30"
+                  max="1440"
+                  value={collaborateursConfig.sessionTimeout}
+                  onChange={(e) => setCollaborateursConfig(prev => ({ 
+                    ...prev, 
+                    sessionTimeout: parseInt(e.target.value) 
+                  }))}
+                />
+                <Form.Text className="text-muted">
+                  Déconnexion automatique après inactivité
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="checkbox"
+                  label="Authentification double facteur"
+                  checked={collaborateursConfig.authentificationDouble}
+                  onChange={(e) => setCollaborateursConfig(prev => ({ 
+                    ...prev, 
+                    authentificationDouble: e.target.checked 
+                  }))}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Rôles personnalisés (un par ligne)</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={6}
+                  value={collaborateursConfig.rolesPersonnalises.join('\n')}
+                  onChange={(e) => setCollaborateursConfig(prev => ({ 
+                    ...prev, 
+                    rolesPersonnalises: e.target.value.split('\n').filter(role => role.trim()) 
+                  }))}
+                  placeholder="Manager de projet&#10;Responsable commercial&#10;Coordinateur&#10;Assistant"
+                />
+                <Form.Text className="text-muted">
+                  Définissez des rôles spécifiques à votre organisation
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
+      </Card.Body>
+    </Card>
+  );
 
   // Rendu de la configuration des tâches
   const renderTachesConfig = () => (
@@ -251,199 +532,134 @@ const CollaborationParametragePage = () => {
     </Card>
   );
 
-  // Rendu de la configuration des mails
-  const renderMailsConfig = () => (
+  // Rendu de la configuration des permissions
+  const renderPermissionsConfig = () => (
     <Card>
       <Card.Header>
         <h5 className="mb-0">
-          <i className="bi bi-envelope me-2"></i>
-          Configuration des Échanges de mails
+          <i className="bi bi-shield-check me-2"></i>
+          Configuration des Permissions
         </h5>
       </Card.Header>
       <Card.Body>
         <Form>
           <Row>
             <Col md={6}>
-              <h6 className="border-bottom pb-2 mb-3">Paramètres généraux</h6>
+              <h6 className="border-bottom pb-2 mb-3">Gestion des tâches</h6>
               
               <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  label="Signatures automatiques"
-                  checked={mailsConfig.signaturesAutomatiques}
-                  onChange={(e) => setMailsConfig(prev => ({ 
-                    ...prev, 
-                    signaturesAutomatiques: e.target.checked 
-                  }))}
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  label="Archivage automatique des anciens mails"
-                  checked={mailsConfig.archivageAutomatique}
-                  onChange={(e) => setMailsConfig(prev => ({ 
-                    ...prev, 
-                    archivageAutomatique: e.target.checked 
-                  }))}
-                />
-              </Form.Group>
-
-              {mailsConfig.archivageAutomatique && (
-                <Form.Group className="mb-3">
-                  <Form.Label>Délai d'archivage (jours)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    min="7"
-                    max="365"
-                    value={mailsConfig.delaiArchivage}
-                    onChange={(e) => setMailsConfig(prev => ({ 
-                      ...prev, 
-                      delaiArchivage: parseInt(e.target.value) 
-                    }))}
-                  />
-                </Form.Group>
-              )}
-
-              <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  label="Notifications pour nouveaux mails"
-                  checked={mailsConfig.notificationsNouveauxMails}
-                  onChange={(e) => setMailsConfig(prev => ({ 
-                    ...prev, 
-                    notificationsNouveauxMails: e.target.checked 
-                  }))}
-                />
-              </Form.Group>
-            </Col>
-            
-            <Col md={6}>
-              <h6 className="border-bottom pb-2 mb-3">Catégories personnalisées</h6>
-              <Form.Group className="mb-3">
-                <Form.Label>Catégories d'emails (une par ligne)</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={6}
-                  value={mailsConfig.categoriesPersonnalisees.join('\n')}
-                  onChange={(e) => setMailsConfig(prev => ({ 
-                    ...prev, 
-                    categoriesPersonnalisees: e.target.value.split('\n').filter(cat => cat.trim()) 
-                  }))}
-                  placeholder="Commercial&#10;Technique&#10;Administration&#10;Partenaires&#10;Artistes"
-                />
-                <Form.Text className="text-muted">
-                  Ces catégories permettront de classer vos échanges
-                </Form.Text>
-              </Form.Group>
-            </Col>
-          </Row>
-        </Form>
-      </Card.Body>
-    </Card>
-  );
-
-  // Rendu de la configuration des notes
-  const renderNotesConfig = () => (
-    <Card>
-      <Card.Header>
-        <h5 className="mb-0">
-          <i className="bi bi-journal-text me-2"></i>
-          Configuration des Notes & Commentaires
-        </h5>
-      </Card.Header>
-      <Card.Body>
-        <Form>
-          <Row>
-            <Col md={6}>
-              <h6 className="border-bottom pb-2 mb-3">Paramètres généraux</h6>
-              
-              <Form.Group className="mb-3">
-                <Form.Label>Partage par défaut</Form.Label>
+                <Form.Label>Création de tâches</Form.Label>
                 <Form.Select
-                  value={notesConfig.partageParDefaut}
-                  onChange={(e) => setNotesConfig(prev => ({ 
+                  value={permissionsConfig.creationTaches}
+                  onChange={(e) => setPermissionsConfig(prev => ({ 
                     ...prev, 
-                    partageParDefaut: e.target.value 
+                    creationTaches: e.target.value 
                   }))}
                 >
-                  <option value="prive">Privé</option>
-                  <option value="equipe">Équipe</option>
-                  <option value="organisation">Organisation</option>
+                  <option value="tous">Tous les collaborateurs</option>
+                  <option value="managers">Managers uniquement</option>
+                  <option value="admin">Administrateurs uniquement</option>
                 </Form.Select>
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>Format par défaut</Form.Label>
+                <Form.Label>Suppression de tâches</Form.Label>
                 <Form.Select
-                  value={notesConfig.formatParDefaut}
-                  onChange={(e) => setNotesConfig(prev => ({ 
+                  value={permissionsConfig.suppressionTaches}
+                  onChange={(e) => setPermissionsConfig(prev => ({ 
                     ...prev, 
-                    formatParDefaut: e.target.value 
+                    suppressionTaches: e.target.value 
                   }))}
                 >
-                  <option value="texte">Texte simple</option>
-                  <option value="markdown">Markdown</option>
-                  <option value="html">HTML</option>
+                  <option value="assignees">Assignés et créateurs</option>
+                  <option value="managers">Managers et créateurs</option>
+                  <option value="admin">Administrateurs uniquement</option>
                 </Form.Select>
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  label="Activer le versioning des notes"
-                  checked={notesConfig.versionning}
-                  onChange={(e) => setNotesConfig(prev => ({ 
+                <Form.Label>Modification des statuts</Form.Label>
+                <Form.Select
+                  value={permissionsConfig.modificationStatuts}
+                  onChange={(e) => setPermissionsConfig(prev => ({ 
                     ...prev, 
-                    versionning: e.target.checked 
+                    modificationStatuts: e.target.value 
                   }))}
-                />
+                >
+                  <option value="tous">Tous les collaborateurs</option>
+                  <option value="assignees">Assignés uniquement</option>
+                  <option value="managers">Managers uniquement</option>
+                </Form.Select>
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  label="Activer les commentaires"
-                  checked={notesConfig.commentairesActives}
-                  onChange={(e) => setNotesConfig(prev => ({ 
+                <Form.Label>Consultation des rapports</Form.Label>
+                <Form.Select
+                  value={permissionsConfig.consultationRapports}
+                  onChange={(e) => setPermissionsConfig(prev => ({ 
                     ...prev, 
-                    commentairesActives: e.target.checked 
+                    consultationRapports: e.target.value 
                   }))}
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  label="Notifications lors de modifications"
-                  checked={notesConfig.notificationsModifications}
-                  onChange={(e) => setNotesConfig(prev => ({ 
-                    ...prev, 
-                    notificationsModifications: e.target.checked 
-                  }))}
-                />
+                >
+                  <option value="tous">Tous les collaborateurs</option>
+                  <option value="managers">Managers et administrateurs</option>
+                  <option value="admin">Administrateurs uniquement</option>
+                </Form.Select>
               </Form.Group>
             </Col>
             
             <Col md={6}>
-              <h6 className="border-bottom pb-2 mb-3">Catégories de notes</h6>
+              <h6 className="border-bottom pb-2 mb-3">Administration</h6>
+              
               <Form.Group className="mb-3">
-                <Form.Label>Catégories personnalisées (une par ligne)</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={6}
-                  value={notesConfig.categoriesPersonnalisees.join('\n')}
-                  onChange={(e) => setNotesConfig(prev => ({ 
+                <Form.Label>Gestion de l'équipe</Form.Label>
+                <Form.Select
+                  value={permissionsConfig.gestionEquipe}
+                  onChange={(e) => setPermissionsConfig(prev => ({ 
                     ...prev, 
-                    categoriesPersonnalisees: e.target.value.split('\n').filter(cat => cat.trim()) 
+                    gestionEquipe: e.target.value 
                   }))}
-                  placeholder="Réunions&#10;Idées&#10;Procédures&#10;Contacts&#10;Projets"
-                />
-                <Form.Text className="text-muted">
-                  Ces catégories aideront à organiser vos notes
-                </Form.Text>
+                >
+                  <option value="managers">Managers et administrateurs</option>
+                  <option value="admin">Administrateurs uniquement</option>
+                </Form.Select>
               </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Export des données</Form.Label>
+                <Form.Select
+                  value={permissionsConfig.exportDonnees}
+                  onChange={(e) => setPermissionsConfig(prev => ({ 
+                    ...prev, 
+                    exportDonnees: e.target.value 
+                  }))}
+                >
+                  <option value="managers">Managers et administrateurs</option>
+                  <option value="admin">Administrateurs uniquement</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Paramètres généraux</Form.Label>
+                <Form.Select
+                  value={permissionsConfig.parametresGeneraux}
+                  onChange={(e) => setPermissionsConfig(prev => ({ 
+                    ...prev, 
+                    parametresGeneraux: e.target.value 
+                  }))}
+                >
+                  <option value="admin">Administrateurs uniquement</option>
+                </Form.Select>
+              </Form.Group>
+
+              <div className="mt-4 p-3 bg-light rounded">
+                <h6 className="text-muted">Niveaux de permissions</h6>
+                <small className="text-muted">
+                  <strong>Administrateur :</strong> Accès complet à tous les paramètres<br/>
+                  <strong>Manager :</strong> Gestion des équipes et tâches<br/>
+                  <strong>Collaborateur :</strong> Utilisation standard des fonctionnalités
+                </small>
+              </div>
             </Col>
           </Row>
         </Form>
@@ -464,12 +680,14 @@ const CollaborationParametragePage = () => {
     }
 
     switch (selectedConfig) {
+      case 'entreprise':
+        return renderEntrepriseConfig();
+      case 'collaborateurs':
+        return renderCollaborateursConfig();
       case 'taches':
         return renderTachesConfig();
-      case 'mails':
-        return renderMailsConfig();
-      case 'notes':
-        return renderNotesConfig();
+      case 'permissions':
+        return renderPermissionsConfig();
       default:
         return (
           <div className="text-center p-5">

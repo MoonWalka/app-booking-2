@@ -241,6 +241,20 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
+  const openDateCreationTab = useCallback((prefilledData = {}) => {
+    const tabId = prefilledData.structureId ? `date-creation-${prefilledData.structureId}` : 'date-creation';
+    const tabTitle = prefilledData.structureName ? `Nouvelle Date - ${prefilledData.structureName}` : 'Nouvelle Date';
+    
+    openTab({
+      id: tabId,
+      title: tabTitle,
+      path: '/booking/nouvelle-date',
+      component: 'DateCreationPage',
+      params: { prefilledData },
+      icon: 'bi-calendar-plus'
+    });
+  }, [openTab]);
+
   const value = {
     tabs,
     activeTabId,
@@ -260,7 +274,8 @@ export const TabsProvider = ({ children }) => {
     openLieuxListTab,
     openStructuresListTab,
     openDebugToolsTab,
-    openTachesTab
+    openTachesTab,
+    openDateCreationTab
   };
 
   return (

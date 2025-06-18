@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Table, Modal, Alert, InputGroup, Nav } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, Modal, Alert, Nav } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import './EntreprisesManager.css';
 

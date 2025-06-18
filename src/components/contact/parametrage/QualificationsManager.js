@@ -68,6 +68,7 @@ const QualificationsManager = ({ type, title, buttonLabel }) => {
     // Chargement initial des données
     useEffect(() => {
         loadItemsList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [type]);
 
     // Filtrage des éléments

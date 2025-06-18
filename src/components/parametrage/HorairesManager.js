@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Table, Modal, Form, Alert, Badge } from 'react-bootstrap';
+import { Card, Button, Table, Modal, Form, Alert } from 'react-bootstrap';
 import { FaPlus, FaSync, FaEdit, FaTrash } from 'react-icons/fa';
 import './HorairesManager.css';
 

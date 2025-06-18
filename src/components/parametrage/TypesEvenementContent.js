@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Row, Col, Card, Button, Table, Form, Badge } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/context/AuthContext';
 import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';

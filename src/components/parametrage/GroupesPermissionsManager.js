@@ -142,6 +142,7 @@ const GroupesPermissionsManager = () => {
         setTimeout(() => setShowAlert(false), 3000);
     };
 
+    // eslint-disable-next-line no-unused-vars
     const showErrorMessage = (message) => {
         setAlertMessage(message);
         setAlertVariant('danger');

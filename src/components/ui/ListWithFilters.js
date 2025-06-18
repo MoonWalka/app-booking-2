@@ -112,12 +112,52 @@ const ListWithFilters = ({
   const [filterValues, setFilterValues] = useState({});
   const [showFilters, setShowFilters] = useState(false);
 
+  // Fonction utilitaire pour le tri client-side
+  const sortDataClientSide = (data, sortField, sortDirection) => {
+    if (!sortField || !data || data.length === 0) return data;
+
+    return [...data].sort((a, b) => {
+      let aValue = a[sortField];
+      let bValue = b[sortField];
+
+      // Gestion des valeurs nulles/undefined
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return sortDirection === 'asc' ? 1 : -1;
+      if (bValue == null) return sortDirection === 'asc' ? -1 : 1;
+
+      // Conversion pour le tri
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        // Tri alphabétique avec gestion des accents
+        aValue = aValue.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        bValue = bValue.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      }
+
+      // Tri des dates Firestore
+      if (aValue?.toDate && bValue?.toDate) {
+        aValue = aValue.toDate();
+        bValue = bValue.toDate();
+      }
+
+      // Tri numérique
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      // Tri par défaut (string et dates)
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
   // Synchronisation avec les données externes
   useEffect(() => {
     if (initialData !== null) {
-      setItems(initialData);
+      console.log('🔄 Application tri client-side:', { field: sort.field, direction: sort.direction });
+      const sortedData = sortDataClientSide(initialData, sort.field, sort.direction);
+      setItems(sortedData);
     }
-  }, [initialData]);
+  }, [initialData, sort.field, sort.direction]);
 
   useEffect(() => {
     if (externalLoading !== null) {
@@ -208,6 +248,12 @@ const ListWithFilters = ({
         const sanitizedData = sanitizeNestedData(initialData, currentOrganization.id);
         setItems(sanitizedData);
       }
+      return;
+    }
+    
+    // Vérifier que entityType est défini
+    if (!entityType) {
+      console.warn('⚠️ entityType non défini - arrêt du chargement Firebase');
       return;
     }
 
@@ -351,9 +397,12 @@ const ListWithFilters = ({
 
   // Recharger les données quand les paramètres changent
   useEffect(() => {
-    setLastDoc(null); // Reset pagination when parameters change
-    loadData();
-  }, [loadData]);
+    // Ne charger que si pas de données externes
+    if (initialData === null) {
+      setLastDoc(null); // Reset pagination when parameters change
+      loadData();
+    }
+  }, [loadData, initialData]);
 
   // Gestion du rafraîchissement
   const handleRefresh = () => {

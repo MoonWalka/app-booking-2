@@ -112,6 +112,10 @@ function DesktopLayout({ children }) {
       case '/debug-tools':
         openDebugToolsTab();
         break;
+      case '/inventaire-pages':
+        // Ouvrir dans une nouvelle page, hors système d'onglets
+        navigate('/inventaire-pages');
+        break;
       case '/booking/parametrage':
         openTab({
           id: 'booking-parametrage',
@@ -206,6 +210,24 @@ function DesktopLayout({ children }) {
           icon: 'bi-gear'
         });
         break;
+      case '/admin/parametrage':
+        openTab({
+          id: 'admin-parametrage',
+          title: 'Paramétrage Admin',
+          path: '/admin/parametrage',
+          component: 'AdminParametragePage',
+          icon: 'bi-gear-fill'
+        });
+        break;
+      case '/contact/parametrage':
+        openTab({
+          id: 'contact-parametrage',
+          title: 'Paramétrage Contact',
+          path: '/contact/parametrage',
+          component: 'ContactParametragePage',
+          icon: 'bi-gear-fill'
+        });
+        break;
       case '/contacts/nouveau/structure':
         // Ouvrir directement la modal de création de structure
         openStructureModal();
@@ -260,7 +282,8 @@ function DesktopLayout({ children }) {
             { to: "/contacts/nouveau/structure", icon: "bi-building-add", label: "Ajouter une structure" },
             { to: "/contacts/nouveau/personne", icon: "bi-person-circle", label: "Ajouter une personne" }
           ]
-        }
+        },
+        { to: "/contact/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },
     {
@@ -297,7 +320,8 @@ function DesktopLayout({ children }) {
         { to: "/contrats", icon: "bi-file-earmark-text", label: "Contrats" },
         { to: "/factures", icon: "bi-receipt", label: "Factures" },
         { to: "#", icon: "bi-file-earmark-plus", label: "Devis" },
-        { to: "#", icon: "bi-people-fill", label: "Équipe dispo" }
+        { to: "#", icon: "bi-people-fill", label: "Équipe dispo" },
+        { to: "/admin/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },
     {
@@ -306,6 +330,7 @@ function DesktopLayout({ children }) {
       label: "Outils",
       subItems: [
         { to: "/debug-tools", icon: "bi-bug", label: "Debug Tools" },
+        { to: "/inventaire-pages", icon: "bi-file-earmark-code", label: "Inventaire des pages" },
         { to: "/tabs-test", icon: "bi-window-stack", label: "Test Onglets" }
       ]
     },

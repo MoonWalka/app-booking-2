@@ -7,6 +7,9 @@ import ProjetCreationModal from '../components/projets/modal/ProjetCreationModal
 import useGenericEntityList from '../hooks/generics/lists/useGenericEntityList';
 import '@styles/index.css';
 
+import TypesEvenementContent from '../components/parametrage/TypesEvenementContent';
+import TypesSalleContent from '../components/parametrage/TypesSalleContent';
+
 const BookingParametragePage = () => {
   const [activeTab, setActiveTab] = useState('artistes');
   const [selectedArtisteId, setSelectedArtisteId] = useState(null);
@@ -30,7 +33,11 @@ const BookingParametragePage = () => {
     let newActiveTab = 'artistes';
     let newSelectedArtisteId = null;
     
-    if (path.includes('/booking/parametrage/artistes') || path === '/booking/parametrage') {
+    if (path.includes('/booking/parametrage/types-evenement')) {
+      newActiveTab = 'types-evenement';
+    } else if (path.includes('/booking/parametrage/types-salle')) {
+      newActiveTab = 'types-salle';
+    } else if (path.includes('/booking/parametrage/artistes') || path === '/booking/parametrage') {
       newActiveTab = 'artistes';
     } else if (path.includes('/booking/parametrage/projets')) {
       newActiveTab = 'projets';
@@ -112,13 +119,23 @@ const BookingParametragePage = () => {
   
   // Rendu du menu latéral selon le contexte
   const renderSidebarMenu = () => {
+    const tabs = [
+      { label: 'Artistes', value: 'artistes' },
+      { label: 'Types d\'événement', value: 'types-evenement' },
+      { label: 'Types de salle', value: 'types-salle' }
+    ];
+    
+    const activeIndex = tabs.findIndex(tab => tab.value === activeTab);
+    
     return (
       <TabNavigation
-        tabs={[
-          { label: 'Artistes', content: null }
-        ]}
-        activeTab={0}
-        onTabChange={() => {}}
+        tabs={tabs.map(tab => ({ label: tab.label, content: null }))}
+        activeTab={activeIndex >= 0 ? activeIndex : 0}
+        onTabChange={(index) => {
+          const selectedTab = tabs[index];
+          setActiveTab(selectedTab.value);
+          navigate(`/booking/parametrage/${selectedTab.value}`);
+        }}
         vertical={true}
       />
     );
@@ -305,12 +322,26 @@ const BookingParametragePage = () => {
         <Col md={2}>
           {renderSidebarMenu()}
         </Col>
-        <Col md={2}>
-          {renderArtistSidebar()}
-        </Col>
-        <Col md={8}>
-          {renderMainContent()}
-        </Col>
+        {activeTab === 'artistes' && (
+          <>
+            <Col md={2}>
+              {renderArtistSidebar()}
+            </Col>
+            <Col md={8}>
+              {renderMainContent()}
+            </Col>
+          </>
+        )}
+        {activeTab === 'types-evenement' && (
+          <Col md={10}>
+            <TypesEvenementContent />
+          </Col>
+        )}
+        {activeTab === 'types-salle' && (
+          <Col md={10}>
+            <TypesSalleContent />
+          </Col>
+        )}
       </Row>
       
       {/* Modal de création/édition d'artiste */}

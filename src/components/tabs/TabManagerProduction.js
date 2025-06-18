@@ -16,6 +16,8 @@ import DebugToolsPage from '@/pages/DebugToolsPage';
 import DateCreationPage from '@/pages/DateCreationPage';
 import TachesPage from '@/pages/TachesPage';
 import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
+import AdminParametragePage from '@/pages/AdminParametragePage';
+import ContactParametragePage from '@/pages/ContactParametragePage';
 
 // Import des composants de liste pour affichage direct dans les onglets
 import ConcertsList from '@/components/concerts/ConcertsList';
@@ -225,6 +227,10 @@ const TabManagerProduction = () => {
           return <TachesPage />;
         case 'CollaborationParametragePage':
           return <CollaborationParametragePage />;
+        case 'AdminParametragePage':
+          return <AdminParametragePage />;
+        case 'ContactParametragePage':
+          return <ContactParametragePage />;
         default:
           return (
             <div className={styles.tabContent}>

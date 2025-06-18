@@ -27,7 +27,7 @@ function ContactViewTabs({ id, viewType = null }) {
   const [lastLocalUpdate, setLastLocalUpdate] = useState(null);
   
   // Hook pour gérer les onglets
-  const { openStructureTab } = useTabs();
+  const { openStructureTab, openDateCreationTab } = useTabs();
   
   // Hook pour gérer les modals
   const { openCommentModal } = useContactModals();
@@ -977,6 +977,16 @@ function ContactViewTabs({ id, viewType = null }) {
               <ContactDatesTable 
                 contactId={id} 
                 concerts={data?.concertsIds || []} 
+                onAddClick={entityType === 'structure' ? () => {
+                  console.log('🎯 ContactViewTabs - onAddClick pour structure!', { 
+                    structureId: id, 
+                    structureName: data?.structureNom || data?.structureRaisonSociale || 'Structure' 
+                  });
+                  openDateCreationTab({
+                    structureId: id,
+                    structureName: data?.structureNom || data?.structureRaisonSociale || 'Structure'
+                  });
+                } : null}
               />
             </div>
           );

@@ -132,7 +132,7 @@ const StructureViewTabs = ({ id: propId }) => {
               }
             ]}
             addButtonLabel="Nouveau contact"
-            onAdd={() => navigate('/contacts/nouveau')}
+            onAddClick={() => navigate('/contacts/nouveau')}
             {...commonTableProps}
           />
         );
@@ -157,7 +157,7 @@ const StructureViewTabs = ({ id: propId }) => {
               }
             ]}
             addButtonLabel="Nouveau lieu"
-            onAdd={() => navigate('/lieux/nouveau')}
+            onAddClick={() => navigate('/lieux/nouveau')}
             {...commonTableProps}
           />
         );
@@ -182,7 +182,7 @@ const StructureViewTabs = ({ id: propId }) => {
               }
             ]}
             addButtonLabel="Nouveau concert"
-            onAdd={() => navigate('/concerts/nouveau')}
+            onAddClick={() => navigate('/concerts/nouveau')}
             {...commonTableProps}
           />
         );
@@ -222,7 +222,8 @@ const StructureViewTabs = ({ id: propId }) => {
               }
             ]}
             addButtonLabel="Nouvelle date"
-            onAdd={() => {
+            onAddClick={() => {
+              console.log('🎯 onAddClick appelé pour dates!', { structureId: structure?.id || id, structureName: structure?.nom || structure?.structureRaisonSociale || 'Structure' });
               openDateCreationTab({
                 structureId: structure?.id || id,
                 structureName: structure?.nom || structure?.structureRaisonSociale || 'Structure'
@@ -252,7 +253,7 @@ const StructureViewTabs = ({ id: propId }) => {
               }
             ]}
             addButtonLabel="Nouveau contrat"
-            onAdd={() => navigate('/contrats/nouveau')}
+            onAddClick={() => navigate('/contrats/nouveau')}
             {...commonTableProps}
           />
         );
@@ -277,7 +278,7 @@ const StructureViewTabs = ({ id: propId }) => {
               }
             ]}
             addButtonLabel="Nouvelle facture"
-            onAdd={() => navigate('/factures/nouveau')}
+            onAddClick={() => navigate('/factures/nouveau')}
             {...commonTableProps}
           />
         );

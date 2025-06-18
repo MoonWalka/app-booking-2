@@ -92,13 +92,13 @@
 
 .subMenu .navButton:hover {
   background-color: rgba(0, 123, 255, 0.1);
-  border-left-color: var(--tc-color-primary);
+  border-left-color: transparent; /* TEMPORAIRE: masquer la barre */
   color: var(--tc-color-primary);
 }
 
 .subMenu .navButton.active {
   background-color: rgba(0, 123, 255, 0.15);
-  border-left-color: var(--tc-color-primary);
+  border-left-color: transparent; /* TEMPORAIRE: masquer la barre */
   color: var(--tc-color-primary);
 }
 
@@ -330,7 +330,7 @@
   width: var(--tc-submenu-width);
   height: calc(100vh - 70px); /* Hauteur moins le header */
   background-color: white;
-  border-right: 3px solid var(--tc-color-primary);
+  /* border-right: 3px solid var(--tc-color-primary); */
   border-top-right-radius: var(--tc-radius-base);
   border-bottom-right-radius: var(--tc-radius-base);
   z-index: 1000;

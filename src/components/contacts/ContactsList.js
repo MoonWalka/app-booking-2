@@ -1,4 +1,4 @@
-// src/components/contacts/ContactsList.js
+// src/components/contacts/ContactsListUnified.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, where, onSnapshot } from '@/services/firebase-service';
@@ -8,167 +8,137 @@ import { useTabs } from '@/context/TabsContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
 import { useDeleteContact } from '@/hooks/contacts';
-import { useDeleteStructure } from '@/hooks/structures';
 
 /**
- * Liste unifiée des contacts et structures utilisant le composant générique ListWithFilters
- * Compatible desktop/mobile avec interface responsive
- * Affiche les personnes depuis la collection "contacts" et les structures depuis la collection "structures"
- * @param {string} filterType - Type de filtre: 'all' (défaut), 'structures', 'personnes'
+ * Liste unifiée des contacts utilisant la collection contacts_unified
+ * Architecture Business-centrée avec affichage structures + personnes
+ * Compatible avec import/export XLS naturel
  */
 function ContactsList({ filterType = 'all' }) {
   const navigate = useNavigate();
   const { currentOrganization } = useOrganization();
-  const { openContactTab, openStructureTab } = useTabs();
+  const { openContactTab } = useTabs();
   const [unifiedContacts, setUnifiedContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   
-  // Callback appelé après suppression réussie pour actualiser la liste
+  // Callback après suppression
   const onDeleteSuccess = () => {
-    setRefreshKey(prev => prev + 1); // Force le re-render de ListWithFilters
+    setRefreshKey(prev => prev + 1);
   };
   
   const { handleDelete: handleDeleteContact } = useDeleteContact(onDeleteSuccess);
-  const { handleDelete: handleDeleteStructure } = useDeleteStructure(onDeleteSuccess);
 
-  // Chargement unifié des contacts (après migration, tout est dans contacts)
+  // Chargement de la collection unifiée
   useEffect(() => {
     if (!currentOrganization?.id) {
       setLoading(false);
       return;
     }
 
-    console.log('🔄 Chargement de tous les contacts...');
+    console.log('🔄 Chargement collection unifiée contacts_unified...');
     
-    // Rechercher dans les deux collections possibles
-    console.log('🔍 Recherche contacts pour organisation:', currentOrganization.id);
-    
-    // D'abord essayer la collection globale
-    const contactsQuery = query(
-      collection(db, 'contacts'),
+    // Requête sur la collection unifiée
+    const unifiedQuery = query(
+      collection(db, 'contacts_unified'),
       where('organizationId', '==', currentOrganization.id)
     );
-
-    const unsubscribeContacts = onSnapshot(contactsQuery, 
+    
+    const unsubscribeUnified = onSnapshot(
+      unifiedQuery,
       (snapshot) => {
-        const allContacts = snapshot.docs.map(doc => ({
+        const unifiedDocs = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
         
-        console.log(`📋 Contacts globaux trouvés: ${allContacts.length}`);
-        console.log('🔍 Premier contact exemple:', allContacts[0]);
-        
-        // Si aucun contact dans la collection globale, essayer la collection organisationnelle
-        if (allContacts.length === 0) {
-          console.log('⚠️ Aucun contact dans collection globale, test collection org...');
-          
-          // Essayer la collection organisationnelle
-          const orgContactsQuery = query(
-            collection(db, `contacts_org_${currentOrganization.id}`)
-          );
-          
-          onSnapshot(orgContactsQuery, (orgSnapshot) => {
-            const orgContacts = orgSnapshot.docs.map(doc => ({
-              id: doc.id,
-              ...doc.data()
-            }));
-            
-            console.log(`📋 Contacts org trouvés: ${orgContacts.length}`);
-            
-            if (orgContacts.length > 0) {
-              processContacts(orgContacts);
-            } else {
-              console.log('❌ Aucun contact trouvé dans aucune collection');
-              setUnifiedContacts([]);
-              setLoading(false);
-            }
-          });
-          
-          return;
-        }
-        
-        processContacts(allContacts);
+        console.log(`📋 Documents unifiés trouvés: ${unifiedDocs.length}`);
+        processUnifiedDocuments(unifiedDocs);
       },
       (err) => {
-        console.error('Erreur chargement contacts:', err);
+        console.error('Erreur chargement documents unifiés:', err);
         setError(err.message);
         setLoading(false);
       }
     );
-    
-    const processContacts = (allContacts) => {
-        console.log(`📋 Traitement de ${allContacts.length} contacts`);
+
+    const processUnifiedDocuments = (unifiedDocs) => {
+        console.log(`📋 Traitement de ${unifiedDocs.length} documents unifiés`);
         
-        // Détecter le type et dupliquer les contacts mixtes
         const processedContacts = [];
         
-        allContacts.forEach(contact => {
-          const hasStructureData = contact.structureRaisonSociale?.trim();
-          const hasPersonneData = contact.prenom?.trim() && contact.nom?.trim();
-          
-          if (hasStructureData && hasPersonneData) {
-            // Contact mixte : créer 2 entrées
+        unifiedDocs.forEach(doc => {
+          if (doc.entityType === 'structure') {
+            // Document structure avec personnes associées
+            const structureDisplayName = doc.structure?.raisonSociale || doc.structure?.nom || 'Structure sans nom';
+            const personnesCount = doc.personnes?.filter(p => p.prenom && p.nom).length || 0;
+            
+            // Ajouter la structure
             processedContacts.push({
-              ...contact,
-              id: `${contact.id}_structure`,
-              _originalId: contact.id,
+              ...doc,
+              id: `${doc.id}_structure`, // ID unique pour la structure
+              _originalId: doc.id,
               _viewType: 'structure',
               entityType: 'structure',
-              displayName: contact.structureRaisonSociale || 'Structure sans nom',
-              nom: contact.structureRaisonSociale,
-              email: contact.structureEmail || contact.email || contact.mailDirect,
-              telephone: contact.structureTelephone1 || contact.telephone || contact.telDirect,
-              _originalData: contact,
-              _sourceCollection: 'contacts'
+              displayName: structureDisplayName,
+              nom: structureDisplayName,
+              email: doc.structure?.email || '',
+              telephone: doc.structure?.telephone1 || doc.structure?.telephone || '',
+              subtext: `${personnesCount} personne${personnesCount > 1 ? 's' : ''}`,
+              _sourceCollection: 'contacts_unified',
+              _isStructureContainer: true,
+              createdAt: doc.createdAt
             });
+            
+            // Ajouter les personnes associées
+            doc.personnes?.forEach((personne, index) => {
+              if (personne.prenom && personne.nom) {
+                processedContacts.push({
+                  ...doc,
+                  id: `${doc.id}_personne_${index}`, // ID unique pour chaque personne
+                  _originalId: doc.id,
+                  _viewType: 'personne',
+                  _personneIndex: index,
+                  entityType: 'personne',
+                  displayName: `${personne.prenom} ${personne.nom}`.trim(),
+                  nom: personne.nom,
+                  email: personne.email || personne.mailDirect || '',
+                  telephone: personne.telephone || personne.telDirect || personne.mobile || '',
+                  subtext: structureDisplayName,
+                  _sourceCollection: 'contacts_unified',
+                  _isPersonInStructure: true,
+                  _structureName: structureDisplayName,
+                  createdAt: doc.createdAt
+                });
+              }
+            });
+            
+          } else if (doc.entityType === 'personne_libre') {
+            // Document personne libre
+            const personne = doc.personne;
             processedContacts.push({
-              ...contact,
-              id: `${contact.id}_personne`,
-              _originalId: contact.id,
+              ...doc,
+              id: `${doc.id}_personne_libre`, // ID unique pour personne libre
+              _originalId: doc.id,
               _viewType: 'personne',
               entityType: 'personne',
-              displayName: `${contact.prenom} ${contact.nom}`.trim(),
-              nom: contact.nom,
-              email: contact.mailDirect || contact.email || contact.structureEmail,
-              telephone: contact.telDirect || contact.telephone || contact.structureTelephone1,
-              _originalData: contact,
-              _sourceCollection: 'contacts'
-            });
-          } else {
-            // Contact simple : garder tel quel
-            let entityType, displayName;
-            
-            if (hasStructureData) {
-              entityType = 'structure';
-              displayName = contact.structureRaisonSociale || 'Structure sans nom';
-            } else if (hasPersonneData) {
-              entityType = 'personne';
-              displayName = `${contact.prenom} ${contact.nom}`.trim();
-            } else {
-              // Contact basique (ancien format)
-              entityType = contact.type || 'personne';
-              displayName = contact.nom || contact.email || 'Contact sans nom';
-            }
-            
-            processedContacts.push({
-              ...contact,
-              _originalId: contact.id,
-              _viewType: entityType,
-              entityType,
-              displayName,
-              nom: contact.nom || contact.structureRaisonSociale,
-              email: contact.email || contact.mailDirect || contact.structureEmail,
-              telephone: contact.telephone || contact.telDirect || contact.structureTelephone1,
-              _originalData: contact,
-              _sourceCollection: 'contacts'
+              displayName: `${personne?.prenom || ''} ${personne?.nom || ''}`.trim() || 'Personne sans nom',
+              nom: personne?.nom || '',
+              email: personne?.email || '',
+              telephone: personne?.telephone || personne?.mobile || '',
+              subtext: 'Personne libre',
+              _sourceCollection: 'contacts_unified',
+              _isPersonLibre: true,
+              createdAt: doc.createdAt
             });
           }
         });
         
-        console.log(`✅ Contacts traités: ${processedContacts.filter(c => c.entityType === 'personne').length} personnes + ${processedContacts.filter(c => c.entityType === 'structure').length} structures`);
+        const structures = processedContacts.filter(c => c.entityType === 'structure').length;
+        const personnes = processedContacts.filter(c => c.entityType === 'personne').length;
+        
+        console.log(`✅ Traitement terminé: ${structures} structures + ${personnes} personnes = ${processedContacts.length} entrées`);
         
         setUnifiedContacts(processedContacts);
         setLoading(false);
@@ -176,7 +146,7 @@ function ContactsList({ filterType = 'all' }) {
     };
 
     return () => {
-      unsubscribeContacts();
+      unsubscribeUnified();
     };
   }, [currentOrganization?.id, refreshKey]);
 
@@ -185,7 +155,7 @@ function ContactsList({ filterType = 'all' }) {
     setRefreshKey(prev => prev + 1);
   };
 
-  // Configuration des colonnes pour la liste unifiée
+  // Configuration des colonnes pour l'affichage unifié
   const columns = [
     {
       id: 'type',
@@ -202,14 +172,14 @@ function ContactsList({ filterType = 'all' }) {
           variant = 'info';
         } else {
           icon = 'bi bi-person';
-          variant = 'primary';
+          variant = item._isPersonLibre ? 'warning' : 'primary';
         }
         
         return (
           <span 
             className={`badge bg-${variant} d-flex align-items-center justify-content-center`} 
             style={{ fontSize: '1rem', minWidth: '32px', height: '28px' }}
-            title={type === 'structure' ? 'Structure' : 'Personne'}
+            title={type === 'structure' ? 'Structure' : (item._isPersonLibre ? 'Personne libre' : 'Personne')}
           >
             <i className={icon}></i>
           </span>
@@ -219,26 +189,45 @@ function ContactsList({ filterType = 'all' }) {
     {
       id: 'nom',
       label: 'Nom',
-      field: 'nom',
+      field: 'displayName',
       sortable: true,
       width: '25%',
-      render: (item) => {
-        return item.displayName || 'Contact sans nom';
-      },
+      render: (item) => (
+        <div>
+          <div className="fw-bold text-truncate" style={{ maxWidth: '200px' }}>
+            {item.displayName || 'Sans nom'}
+          </div>
+          {item.subtext && (
+            <small className="text-muted">{item.subtext}</small>
+          )}
+        </div>
+      ),
     },
     {
       id: 'details',
       label: 'Détails',
-      field: 'details',
       sortable: false,
       width: '20%',
       render: (item) => {
         if (item.entityType === 'structure') {
-          // Pour les structures, afficher le type ou SIRET
-          return item.type || item.siret || '—';
+          // Afficher SIRET ou type pour structure
+          const siret = item.structure?.siret;
+          const type = item.structure?.type;
+          return (
+            <div>
+              {siret && <div className="small text-truncate">SIRET: {siret}</div>}
+              {type && <div className="small text-muted">{type}</div>}
+            </div>
+          );
+        } else {
+          // Afficher fonction pour personne
+          const fonction = item._isPersonInStructure 
+            ? item.personnes?.[item._personneIndex]?.fonction
+            : item.personne?.fonction;
+          return fonction ? (
+            <div className="small text-muted">{fonction}</div>
+          ) : null;
         }
-        // Pour les personnes, afficher la fonction ou l'organisation
-        return item.fonction || (item.structure?.nom) || '—';
       },
     },
     {
@@ -246,107 +235,62 @@ function ContactsList({ filterType = 'all' }) {
       label: 'Email',
       field: 'email',
       sortable: true,
-      width: '20%',
-      render: (item) => item.email || '—',
+      width: '25%',
+      render: (item) => {
+        const email = item.email;
+        return email ? (
+          <a href={`mailto:${email}`} className="text-decoration-none text-truncate d-block" style={{ maxWidth: '200px' }}>
+            {email}
+          </a>
+        ) : (
+          <span className="text-muted">-</span>
+        );
+      },
     },
     {
       id: 'telephone',
       label: 'Téléphone',
       field: 'telephone',
-      sortable: false,
+      sortable: true,
       width: '15%',
-      render: (item) => item.telephone || '—',
+      render: (item) => {
+        const tel = item.telephone;
+        return tel ? (
+          <a href={`tel:${tel}`} className="text-decoration-none">
+            {tel}
+          </a>
+        ) : (
+          <span className="text-muted">-</span>
+        );
+      },
     },
     {
       id: 'createdAt',
       label: 'Créé le',
       field: 'createdAt',
       sortable: true,
-      width: '8%',
+      width: '12%',
       render: (item) => {
-        if (item.createdAt?.toDate) {
-          return item.createdAt.toDate().toLocaleDateString('fr-FR');
-        }
-        return '-';
+        const date = item.createdAt;
+        if (!date) return <span className="text-muted">-</span>;
+        
+        const dateObj = date.toDate ? date.toDate() : new Date(date);
+        return (
+          <span className="small text-muted">
+            {dateObj.toLocaleDateString('fr-FR')}
+          </span>
+        );
       },
-    },
-  ];
-
-  // Configuration des filtres
-  const filterOptions = [
-    {
-      id: 'search',
-      label: 'Rechercher',
-      field: 'displayName',
-      type: 'text',
-      placeholder: 'Nom, prénom, organisation...',
-    },
-    {
-      id: 'entityType',
-      label: 'Type d\'entité',
-      field: 'entityType',
-      type: 'select',
-      placeholder: 'Tous les types',
-      options: [
-        { value: 'personne', label: 'Personnes' },
-        { value: 'structure', label: 'Structures' },
-      ],
-    },
-  ];
-  
-  // Configuration des filtres avancés
-  const advancedFilterOptions = [
-    {
-      id: 'actif',
-      label: 'Statut d\'activité',
-      field: 'actif',
-      type: 'select',
-      options: [
-        { value: 'true', label: 'Actifs' },
-        { value: 'false', label: 'Inactifs' }
-      ]
-    },
-    {
-      id: 'hasEmail',
-      label: 'Contact email',
-      field: 'email',
-      type: 'boolean',
-      options: [
-        { value: 'true', label: 'Avec email' },
-        { value: 'false', label: 'Sans email' }
-      ]
-    },
-    {
-      id: 'hasTelephone',
-      label: 'Contact téléphone',
-      field: 'telephone',
-      type: 'boolean',
-      options: [
-        { value: 'true', label: 'Avec téléphone' },
-        { value: 'false', label: 'Sans téléphone' }
-      ]
-    },
-    {
-      id: 'fonction',
-      label: 'Fonction',
-      field: 'fonction',
-      type: 'text',
-      placeholder: 'Ex: Directeur, Manager...'
-    },
-    {
-      id: 'ville',
-      label: 'Ville',
-      field: 'contact.ville',
-      type: 'text',
-      placeholder: 'Ville de résidence'
     }
   ];
-  
-  // Fonction de calcul des statistiques
-  const calculateStats = (items) => {
+
+  // Statistiques pour l'affichage unifié
+  const getStatistics = (items) => {
     const total = items.length;
-    const personnes = items.filter(p => p.entityType === 'personne').length;
-    const structures = items.filter(p => p.entityType === 'structure').length;
+    const structures = items.filter(item => item.entityType === 'structure').length;
+    const personnes = items.filter(item => item.entityType === 'personne').length;
+    const personnesLibres = items.filter(item => item._isPersonLibre).length;
+    const personnesEnStructure = personnes - personnesLibres;
     const avecEmail = items.filter(p => p.email).length;
     const avecTelephone = items.filter(p => p.telephone).length;
     
@@ -359,20 +303,20 @@ function ContactsList({ filterType = 'all' }) {
         variant: 'primary'
       },
       {
-        id: 'personnes',
-        label: 'Personnes',
-        value: personnes,
-        icon: 'bi bi-person',
-        variant: 'success',
-        subtext: `${Math.round((personnes / total) * 100) || 0}%`
-      },
-      {
         id: 'structures',
         label: 'Structures',
         value: structures,
         icon: 'bi bi-building',
         variant: 'info',
         subtext: `${Math.round((structures / total) * 100) || 0}%`
+      },
+      {
+        id: 'personnes',
+        label: 'Personnes',
+        value: personnes,
+        icon: 'bi bi-person',
+        variant: 'success',
+        subtext: `${personnesEnStructure} liées + ${personnesLibres} libres`
       },
       {
         id: 'contact',
@@ -385,10 +329,10 @@ function ContactsList({ filterType = 'all' }) {
     ];
   };
 
-  // Actions sur les lignes (adaptées selon le type d'entité)
+  // Actions sur les lignes
   const renderActions = (item) => {
-    const contactId = item._originalId || item.id; // Utiliser l'ID original si dupliqué
-    const viewType = item._viewType; // Type de vue pour les contacts dupliqués
+    const contactId = item._originalId;
+    const viewType = item._viewType;
     
     return (
       <ActionButtons
@@ -399,75 +343,102 @@ function ContactsList({ filterType = 'all' }) {
     );
   };
 
-  // Actions de l'en-tête avec menu déroulant pour choisir le type
-  const headerActions = (
-    <div className="d-flex gap-2">
-      <div className="btn-group">
-        <button
-          type="button"
-          className="btn btn-primary dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <i className="bi bi-plus-lg me-1"></i>
-          Nouveau
-        </button>
-        <ul className="dropdown-menu">
-          <li>
-            <button
-              className="dropdown-item d-flex align-items-center"
-              onClick={() => navigate('/contacts/nouveau')}
-            >
-              <i className="bi bi-person me-2"></i>
-              Nouvelle personne
-            </button>
-          </li>
-          <li>
-            <button
-              className="dropdown-item d-flex align-items-center"
-              onClick={() => navigate('/structures/nouveau')}
-            >
-              <i className="bi bi-building me-2"></i>
-              Nouvelle structure
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
+  // Filtres avancés pour l'affichage unifié
+  const getFilterOptions = () => [
+    { value: 'all', label: 'Tous', icon: 'bi-list' },
+    { value: 'structures', label: 'Structures', icon: 'bi-building' },
+    { value: 'personnes', label: 'Personnes', icon: 'bi-person' },
+    { value: 'personnes_libres', label: 'Personnes libres', icon: 'bi-person-dash' },
+    { value: 'avec_email', label: 'Avec email', icon: 'bi-envelope' },
+    { value: 'avec_telephone', label: 'Avec téléphone', icon: 'bi-telephone' }
+  ];
 
-  // Gestion du clic sur une ligne (adaptée selon le type d'entité)
-  const handleRowClick = (item) => {
-    const contactId = item._originalId || item.id; // Utiliser l'ID original si dupliqué
-    const viewType = item._viewType; // Type de vue pour les contacts dupliqués
-    console.log('🖱️ Clic sur contact:', item);
-    console.log('🚀 Ouverture onglet contact:', contactId, item.displayName, 'viewType:', viewType);
-    openContactTab(contactId, item.displayName, viewType);
+  // Logique de filtrage unifié
+  const filterData = (items, filterValue, searchQuery) => {
+    let filtered = items;
+
+    // Filtrage par type
+    switch (filterValue) {
+      case 'structures':
+        filtered = filtered.filter(item => item.entityType === 'structure');
+        break;
+      case 'personnes':
+        filtered = filtered.filter(item => item.entityType === 'personne');
+        break;
+      case 'personnes_libres':
+        filtered = filtered.filter(item => item._isPersonLibre);
+        break;
+      case 'avec_email':
+        filtered = filtered.filter(item => item.email);
+        break;
+      case 'avec_telephone':
+        filtered = filtered.filter(item => item.telephone);
+        break;
+      default:
+        // 'all' ou autres valeurs - pas de filtrage supplémentaire
+        break;
+    }
+
+    // Recherche textuelle
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(item => 
+        item.displayName?.toLowerCase().includes(query) ||
+        item.nom?.toLowerCase().includes(query) ||
+        item.email?.toLowerCase().includes(query) ||
+        item.telephone?.includes(query) ||
+        item.subtext?.toLowerCase().includes(query)
+      );
+    }
+
+    return filtered;
   };
 
+  if (loading) {
+    return (
+      <div className="text-center p-4">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Chargement...</span>
+        </div>
+        <p className="mt-2">Chargement des contacts unifiés...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        <h4 className="alert-heading">Erreur de chargement</h4>
+        <p>{error}</p>
+        <hr />
+        <button className="btn btn-outline-danger" onClick={refreshData}>
+          <i className="bi bi-arrow-clockwise me-2"></i>
+          Réessayer
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <ListWithFilters
-      key={refreshKey}
-      entityType="contacts"
-      title="Gestion des Contacts & Structures"
-      columns={columns}
-      filterOptions={filterOptions}
-      sort={{ field: 'displayName', direction: 'asc' }}
-      actions={headerActions}
-      onRowClick={handleRowClick}
-      renderActions={renderActions}
-      pageSize={20}
-      showRefresh={true}
-      showStats={true}
-      calculateStats={calculateStats}
-      showAdvancedFilters={true}
-      advancedFilterOptions={advancedFilterOptions}
-      // Données et état depuis le chargement unifié
-      initialData={unifiedContacts}
-      loading={loading}
-      error={error}
-      onRefresh={refreshData}
-    />
+    <div className="contacts-list-unified">
+      <ListWithFilters
+        initialData={unifiedContacts}
+        loading={loading}
+        error={error}
+        onRefresh={refreshData}
+        columns={columns}
+        getStatistics={getStatistics}
+        renderActions={renderActions}
+        filterOptions={getFilterOptions()}
+        filterData={filterData}
+        searchPlaceholder="Rechercher dans structures et personnes..."
+        emptyStateMessage="Aucun contact trouvé"
+        emptyStateIcon="bi-people"
+        refreshKey={refreshKey}
+        showStats={true}
+        title="Contacts Unifiés"
+      />
+    </div>
   );
 }
 

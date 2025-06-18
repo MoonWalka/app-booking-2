@@ -194,6 +194,18 @@ function DesktopLayout({ children }) {
           icon: 'bi-journal-text'
         });
         break;
+      case '/collaboration/parametrage':
+      case '/collaboration/parametrage/taches':
+      case '/collaboration/parametrage/mails':
+      case '/collaboration/parametrage/notes':
+        openTab({
+          id: 'collaboration-parametrage',
+          title: 'Paramétrage Collaboration',
+          path: '/collaboration/parametrage',
+          component: 'CollaborationParametragePage',
+          icon: 'bi-gear'
+        });
+        break;
       case '/contacts/nouveau/structure':
         // Ouvrir directement la modal de création de structure
         openStructureModal();
@@ -272,7 +284,8 @@ function DesktopLayout({ children }) {
       subItems: [
         { to: "/mails", icon: "bi-envelope", label: "Échanges de mails" },
         { to: "/taches", icon: "bi-check2-square", label: "Tâches" },
-        { to: "/notes", icon: "bi-journal-text", label: "Notes & Commentaires" }
+        { to: "/notes", icon: "bi-journal-text", label: "Notes & Commentaires" },
+        { to: "/collaboration/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },
     {

@@ -6,7 +6,7 @@ import styles from './ContactDatesTable.module.css';
 /**
  * Tableau des dates de concerts associées à un contact
  */
-const ContactDatesTable = ({ contactId, concerts = [] }) => {
+const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
   const navigate = useNavigate();
 
   // Fonction pour supprimer un concert
@@ -223,6 +223,7 @@ const ContactDatesTable = ({ contactId, concerts = [] }) => {
       showHeader={true}
       itemsPerPage={5}
       addButtonLabel="Nouvelle date"
+      onAddClick={onAddClick}
     />
   );
 };

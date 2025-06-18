@@ -1,0 +1,49 @@
+.groupes-permissions-manager {
+    padding: 1rem;
+}
+
+.groupes-permissions-manager .card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.groupes-permissions-manager .gap-2 {
+    gap: 0.5rem !important;
+}
+
+.permissions-tree .cursor-pointer {
+    cursor: pointer;
+}
+
+.permissions-tree .card-header:hover {
+    background-color: #f8f9fa !important;
+}
+
+.permissions-tree .form-check {
+    margin-bottom: 0;
+}
+
+/* Style pour les collaborateurs dans la modal */
+.collaborateurs-modal .list-group-item {
+    border: 1px solid #dee2e6;
+    margin-bottom: 2px;
+    border-radius: 4px;
+}
+
+.collaborateurs-modal .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .groupes-permissions-manager .card-header > div {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .groupes-permissions-manager .card-header .d-flex.gap-2 {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

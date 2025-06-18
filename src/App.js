@@ -31,6 +31,7 @@ import TableauDeBordPage from '@/pages/TableauDeBordPage';
 import DateCreationPage from '@/pages/DateCreationPage';
 import TachesPage from '@/pages/TachesPage';
 import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
+import AdminParametragePage from '@/pages/AdminParametragePage';
 import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
@@ -54,6 +55,7 @@ import DebugButton from '@/components/common/DebugButton';
 import ConcertLieuDebug from '@/components/debug/ConcertLieuDebug';
 import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
 import TabsTestPage from '@/pages/TabsTestPage';
+import InventairePagesPage from '@/pages/InventairePagesPage';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -176,6 +178,158 @@ function App() {
                     } />
                     
                     <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
+                    
+                    {/* Route indépendante pour l'inventaire des pages (hors système d'onglets) */}
+                    <Route path="/inventaire-pages" element={
+                      <PrivateRoute>
+                        <InventairePagesPage />
+                      </PrivateRoute>
+                    } />
+                    
+                    {/* Routes de preview pour l'inventaire (sans Layout ni système d'onglets) */}
+                    <Route path="/preview/dashboard" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <DashboardPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/contacts" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <ContactsPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/concerts" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <ConcertsPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/contrats" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <ContratsPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/factures" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <FacturesPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/lieux" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <LieuxPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/artistes" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <ArtistesPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/structures" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <StructuresPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/projets" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <ProjetsPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/salles" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <SallesPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/parametres" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <ParametresPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/tableau-de-bord" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <TableauDeBordPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/taches" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <TachesPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/debug-tools" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <DebugToolsPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/booking/parametrage" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <BookingParametragePage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/collaboration/parametrage" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <CollaborationParametragePage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/admin/parametrage" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <AdminParametragePage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
+                    <Route path="/preview/booking/nouvelle-date" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <DateCreationPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
                     
                     <Route element={<Layout />}>
                       <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
@@ -321,6 +475,12 @@ function App() {
                           <Route path="/collaboration/parametrage/*" element={
                             <PrivateRoute>
                               <CollaborationParametragePage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/admin/parametrage/*" element={
+                            <PrivateRoute>
+                              <AdminParametragePage />
                             </PrivateRoute>
                           } />
                           

@@ -1,0 +1,26 @@
+.unites-manager {
+    padding: 1rem;
+}
+
+.unites-manager .card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.unites-manager .gap-2 {
+    gap: 0.5rem !important;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .unites-manager .card-header > div {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .unites-manager .card-header .d-flex.gap-2 {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

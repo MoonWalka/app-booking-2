@@ -1,0 +1,39 @@
+.mentions-manager {
+    padding: 1rem;
+}
+
+.mentions-manager .card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.mentions-manager .gap-2 {
+    gap: 0.5rem !important;
+}
+
+.mentions-manager .text-wrap {
+    white-space: normal !important;
+    max-width: 400px;
+}
+
+.mentions-manager .form-check-input {
+    cursor: pointer;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .mentions-manager .card-header > div {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .mentions-manager .card-header .d-flex.gap-2 {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .mentions-manager .text-wrap {
+        max-width: 200px;
+    }
+}

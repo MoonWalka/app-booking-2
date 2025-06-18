@@ -1,0 +1,63 @@
+.tva-manager {
+    padding: 1rem;
+}
+
+.tva-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.tva-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.tva-header-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.tva-table {
+    margin-top: 1rem;
+}
+
+.tva-actions {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.p-field {
+    margin-bottom: 1.5rem;
+}
+
+.p-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .tva-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .tva-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

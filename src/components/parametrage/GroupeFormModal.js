@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Alert, Dropdown, ButtonGroup } from 'react-bootstrap';
-import { FaPlus, FaCopy } from 'react-icons/fa';
+import { FaCopy } from 'react-icons/fa';
 import PermissionsTree from './PermissionsTree';
 
 const GroupeFormModal = ({ show, onHide, groupe, onSaveGroupe, isEditing = false }) => {

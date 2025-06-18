@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Table, Modal, Alert, Nav, InputGroup } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, Table, Modal, Alert, Nav, InputGroup } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './CollaborateursManager.css';
 

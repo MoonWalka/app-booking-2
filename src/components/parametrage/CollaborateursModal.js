@@ -29,6 +29,7 @@ const CollaborateursModal = ({ show, onHide, groupe, onSaveCollaborateurs }) => 
             setCollaborateursDisponibles(disponibles);
             setCollaborateursSelectionnes(affectes);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [show, groupe]);
 
     const moveToSelected = (collaborateur) => {

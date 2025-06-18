@@ -22,6 +22,7 @@
   width: 100%;
   max-width: 100%;
   overflow: hidden;
+  margin-top: -6px; /* TEMPORAIRE: Alignement avec subMenuHeader bottom */
 }
 
 .tabScrollContainer {

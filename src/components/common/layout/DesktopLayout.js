@@ -354,7 +354,7 @@ function DesktopLayout({ children }) {
     }
     
     if (expandedMenu) {
-      return sidebarWidth + panelWidth;
+      return 300; // Rapprocher le content du submenu
     }
     return sidebarWidth;
   };

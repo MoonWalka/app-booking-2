@@ -538,6 +538,45 @@ function ContactsList({ filterType = 'all' }) {
     );
   }
 
+  // Actions pour l'en-tête des contacts
+  const renderHeaderActions = () => (
+    <div className="d-flex gap-2">
+      <button
+        className="btn btn-outline-primary btn-sm d-flex align-items-center gap-2"
+        onClick={() => {
+          // TODO: Implémenter "Mes recherches"
+          console.log('Mes recherches clicked');
+        }}
+        title="Mes recherches sauvegardées"
+      >
+        <i className="bi bi-search"></i>
+        Mes recherches
+      </button>
+      <button
+        className="btn btn-outline-success btn-sm d-flex align-items-center gap-2"
+        onClick={() => {
+          // TODO: Implémenter "Mes sélections"
+          console.log('Mes sélections clicked');
+        }}
+        title="Mes sélections de contacts"
+      >
+        <i className="bi bi-check2-square"></i>
+        Mes sélections
+      </button>
+      <button
+        className="btn btn-outline-info btn-sm d-flex align-items-center gap-2"
+        onClick={() => {
+          // TODO: Implémenter "Tags"
+          console.log('Tags clicked');
+        }}
+        title="Gestion des tags"
+      >
+        <i className="bi bi-tags"></i>
+        Tags
+      </button>
+    </div>
+  );
+
   return (
     <div className="contacts-list-unified">
       <ListWithFilters
@@ -556,6 +595,7 @@ function ContactsList({ filterType = 'all' }) {
         refreshKey={refreshKey}
         showStats={true}
         title="Contacts Unifiés"
+        actions={renderHeaderActions()}
       />
     </div>
   );

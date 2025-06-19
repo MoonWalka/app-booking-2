@@ -90,10 +90,9 @@ function EntityViewTabs({
                         key={actionIndex}
                         className={styles.actionBubble}
                         onClick={action.onClick}
-                        title={action.tooltip}
+                        title={action.tooltip || action.label}
                       >
                         {action.icon && <i className={action.icon}></i>}
-                        {action.label}
                       </button>
                     ))}
                   </div>

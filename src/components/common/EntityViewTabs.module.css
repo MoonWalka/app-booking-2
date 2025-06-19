@@ -67,20 +67,22 @@
   position: relative;
 }
 
-/* En-têtes de section - style bulle flottante épuré */
+/* En-têtes de section - style bulle flottante épuré (icône uniquement) */
 .sectionHeader {
   position: absolute;
-  top: -12px;
+  top: -16px;
   left: 20px;
   background: var(--tc-bg-white);
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-radius-pill);
-  padding: var(--tc-space-2) var(--tc-space-4);
+  border-radius: 50%;
+  padding: var(--tc-space-2);
   display: flex;
   align-items: center;
-  gap: var(--tc-space-2);
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   z-index: 10;
-  box-shadow: var(--tc-shadow-card);
+  box-shadow: var(--tc-shadow-base);
   transition: var(--tc-transition-base);
 }
 
@@ -91,17 +93,12 @@
 
 .sectionHeader i {
   color: var(--tc-color-primary);
-  font-size: var(--tc-font-size-base);
+  font-size: 14px;
   font-weight: var(--tc-font-weight-medium);
 }
 
 .sectionHeader h2 {
-  margin: 0;
-  color: var(--tc-text-dark);
-  font-size: var(--tc-font-size-base);
-  font-weight: var(--tc-font-weight-semibold);
-  letter-spacing: 0.01em;
-  line-height: var(--tc-line-height-tight);
+  display: none;
 }
 
 /* Actions de section */
@@ -114,17 +111,17 @@
 .actionBubble {
   display: flex;
   align-items: center;
-  gap: var(--tc-space-1);
-  padding: var(--tc-space-2) var(--tc-space-3);
+  justify-content: center;
+  padding: var(--tc-space-1);
   background: var(--tc-bg-light);
   color: var(--tc-color-primary);
   border: 1px solid var(--tc-border-light);
-  border-radius: var(--tc-radius-lg);
-  font-size: var(--tc-font-size-sm);
-  font-weight: var(--tc-font-weight-medium);
+  border-radius: 50%;
+  font-size: 12px;
   cursor: pointer;
   transition: var(--tc-transition-fast);
-  min-height: 32px;
+  width: 24px;
+  height: 24px;
 }
 
 .actionBubble:hover {
@@ -136,7 +133,7 @@
 }
 
 .actionBubble i {
-  font-size: var(--tc-font-size-sm);
+  font-size: 12px;
 }
 
 /* Contenu des sections */

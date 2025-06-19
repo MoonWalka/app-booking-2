@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useTabs } from '@/context/TabsContext';
 import Table from '@/components/ui/Table';
 import AddButton from '@/components/ui/AddButton';
 // import { useAuth } from '@/context/AuthContext';
@@ -14,6 +15,7 @@ import styles from './TableauDeBordPage.module.css';
  */
 const TableauDeBordPage = () => {
   const navigate = useNavigate();
+  const { openPreContratTab } = useTabs();
   // const { } = useAuth();
   const { currentOrg } = useOrganization();
   
@@ -251,9 +253,19 @@ const TableauDeBordPage = () => {
       render: (item) => (
         <div className={styles.preContratCell}>
           {item.preContratId ? (
-            <i className="bi bi-file-earmark-text-fill text-warning" title="Pré-contrat existant"></i>
+            <i 
+              className="bi bi-file-earmark-text-fill text-warning" 
+              title="Pré-contrat existant"
+              style={{ cursor: 'pointer' }}
+              onClick={() => openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+            ></i>
           ) : (
-            <i className="bi bi-file-earmark-text text-muted" title="Pas de pré-contrat"></i>
+            <i 
+              className="bi bi-file-earmark-text text-muted" 
+              title="Créer un pré-contrat"
+              style={{ cursor: 'pointer' }}
+              onClick={() => openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+            ></i>
           )}
         </div>
       )

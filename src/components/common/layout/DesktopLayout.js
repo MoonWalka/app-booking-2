@@ -293,10 +293,10 @@ function DesktopLayout({ children }) {
       subItems: [
         { to: "/booking/nouvelle-date", icon: "bi-calendar-plus", label: "Nouvelle date" },
         { to: "/concerts", icon: "bi-calendar-event", label: "Liste des dates" },
-        { to: "#", icon: "bi-newspaper", label: "Publications" },
+        { to: "#publications", icon: "bi-newspaper", label: "Publications" },
         { to: "/projets", icon: "bi-folder", label: "Projets" },
         { to: "/salles", icon: "bi-building", label: "Salle" },
-        { to: "#", icon: "bi-calendar-event", label: "Date des festivals" },
+        { to: "#festivals", icon: "bi-calendar-event", label: "Date des festivals" },
         { to: "/booking/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },
@@ -319,8 +319,8 @@ function DesktopLayout({ children }) {
         { to: "/tableau-de-bord", icon: "bi-speedometer2", label: "Tableau de bord" },
         { to: "/contrats", icon: "bi-file-earmark-text", label: "Contrats" },
         { to: "/factures", icon: "bi-receipt", label: "Factures" },
-        { to: "#", icon: "bi-file-earmark-plus", label: "Devis" },
-        { to: "#", icon: "bi-people-fill", label: "Équipe dispo" },
+        { to: "#devis", icon: "bi-file-earmark-plus", label: "Devis" },
+        { to: "#equipe", icon: "bi-people-fill", label: "Équipe dispo" },
         { to: "/admin/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },

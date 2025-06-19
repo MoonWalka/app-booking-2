@@ -255,6 +255,17 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
+  const openPreContratTab = useCallback((concertId, concertTitle) => {
+    openTab({
+      id: `precontrat-${concertId}`,
+      title: `Pré-contrat - ${concertTitle}`,
+      path: `/precontrats/generate/${concertId}`,
+      component: 'PreContratGenerationPage',
+      params: { concertId },
+      icon: 'bi-file-earmark-text'
+    });
+  }, [openTab]);
+
   const value = {
     tabs,
     activeTabId,
@@ -275,7 +286,8 @@ export const TabsProvider = ({ children }) => {
     openStructuresListTab,
     openDebugToolsTab,
     openTachesTab,
-    openDateCreationTab
+    openDateCreationTab,
+    openPreContratTab
   };
 
   return (

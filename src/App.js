@@ -23,6 +23,7 @@ import ParametresPage from '@/pages/ParametresPage';
 import FormResponsePage from '@/pages/FormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
+import PreContratGenerationPage from '@/pages/PreContratGenerationPage';
 import StructuresPage from '@/pages/StructuresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
 import ProjetsPage from '@/pages/ProjetsPage';
@@ -403,6 +404,11 @@ function App() {
                           <Route path="/contrats/generate/:concertId" element={
                             <PrivateRoute>
                               <ContratGenerationPage />
+                            </PrivateRoute>
+                          } />
+                          <Route path="/precontrats/generate/:concertId" element={
+                            <PrivateRoute>
+                              <PreContratGenerationPage />
                             </PrivateRoute>
                           } />
                           <Route path="/contrats/:contratId" element={

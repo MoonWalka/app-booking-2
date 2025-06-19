@@ -1,0 +1,57 @@
+/* DevisEditor.module.css */
+
+.devisEditor {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+}
+
+.statusBar {
+  background: white;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem 0;
+  flex-shrink: 0;
+}
+
+.mainLayout {
+  flex: 1;
+  padding: 1rem;
+  height: calc(100vh - 80px);
+}
+
+.editorPanel {
+  padding-right: 0.5rem;
+}
+
+.previewPanel {
+  padding-left: 0.5rem;
+}
+
+.editorPanel .card,
+.previewPanel .card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.previewPanel .card-body {
+  overflow-y: auto;
+  background-color: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .mainLayout {
+    flex-direction: column;
+  }
+  
+  .editorPanel,
+  .previewPanel {
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .previewPanel .card {
+    height: 500px;
+  }
+}

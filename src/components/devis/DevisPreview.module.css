@@ -1,0 +1,255 @@
+/* DevisPreview.module.css */
+
+.devisPreview {
+  width: 100%;
+  height: 100%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.page {
+  width: 210mm;
+  max-width: 100%;
+  background: white;
+  padding: 20mm;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #333;
+}
+
+/* En-tête */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 20px;
+}
+
+.company h1 {
+  font-size: 32px;
+  color: #007bff;
+  margin: 0;
+  font-weight: bold;
+}
+
+.devisNumber {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.logo .logoPlaceholder {
+  width: 80px;
+  height: 60px;
+  background: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 10px;
+}
+
+/* Informations générales */
+.infosGenerales {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.emetteur, .destinataire {
+  width: 48%;
+}
+
+.emetteur h3, .destinataire h3 {
+  font-size: 14px;
+  color: #007bff;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 5px;
+}
+
+.details div {
+  margin-bottom: 3px;
+}
+
+/* Événement */
+.evenement {
+  margin-bottom: 30px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.evenement h3 {
+  font-size: 14px;
+  color: #007bff;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+/* Tables */
+.tableauObjets, .tableauReglement {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tableauObjets th, .tableauObjets td,
+.tableauReglement th, .tableauReglement td {
+  border: 1px solid #dee2e6;
+  padding: 8px;
+  text-align: left;
+}
+
+.tableauObjets th,
+.tableauReglement th {
+  background: #f8f9fa;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.tableauObjets td:nth-child(2), /* Qté */
+.tableauObjets td:nth-child(4), /* Prix unit */
+.tableauObjets td:nth-child(5), /* Montant HT */
+.tableauObjets td:nth-child(6), /* TVA % */
+.tableauObjets td:nth-child(7), /* Montant TTC */
+.tableauReglement td:nth-child(2) { /* Montant TTC */
+  text-align: right;
+}
+
+.tableauObjets tfoot td {
+  border-top: 2px solid #007bff;
+  font-weight: bold;
+}
+
+.totalHT { background: #f8f9fa; }
+.totalTVA { background: #f8f9fa; }
+.totalTTC { 
+  background: #007bff !important; 
+  color: white !important;
+}
+
+/* Conditions financières */
+.conditionsFinancieres {
+  margin-bottom: 30px;
+}
+
+.conditionsFinancieres h3 {
+  font-size: 16px;
+  color: #007bff;
+  margin: 0 0 15px 0;
+  font-weight: bold;
+}
+
+/* Règlement */
+.reglement {
+  margin-bottom: 30px;
+}
+
+.reglement h3 {
+  font-size: 16px;
+  color: #007bff;
+  margin: 0 0 15px 0;
+  font-weight: bold;
+}
+
+/* Conditions */
+.conditions {
+  margin-bottom: 40px;
+}
+
+.conditionsRow {
+  display: flex;
+  gap: 20px;
+}
+
+.conditionsCol {
+  flex: 1;
+}
+
+.conditionsCol h4 {
+  font-size: 12px;
+  color: #007bff;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.conditionsText {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Pied de page */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid #dee2e6;
+  padding-top: 20px;
+  margin-top: 40px;
+}
+
+.signature {
+  width: 200px;
+}
+
+.signatureBlock {
+  text-align: center;
+  font-size: 11px;
+}
+
+.signatureLine {
+  height: 60px;
+  border-bottom: 1px solid #333;
+  margin-top: 10px;
+}
+
+.infosLegales {
+  text-align: right;
+  font-size: 10px;
+  color: #666;
+}
+
+.infosLegales div {
+  margin-bottom: 2px;
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 768px) {
+  .page {
+    padding: 10mm;
+    font-size: 11px;
+  }
+  
+  .infosGenerales {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .emetteur, .destinataire {
+    width: 100%;
+  }
+  
+  .conditionsRow {
+    flex-direction: column;
+  }
+  
+  .footer {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+}

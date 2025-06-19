@@ -1,0 +1,275 @@
+/* Page de rédaction de contrat */
+
+.editorLayout {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  max-height: 900px;
+}
+
+/* 1. Bandeau d'actions fixe */
+.actionBar {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-space-3);
+  background: var(--tc-bg-white);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+/* 2. Contenu principal */
+.editorContent {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--tc-color-border);
+  border-top: none;
+  border-radius: 0 0 var(--tc-radius-base) var(--tc-radius-base);
+  overflow: hidden;
+}
+
+/* Zone d'édition (70%) */
+.editorZone {
+  flex: 0 0 70%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--tc-color-border);
+  background: var(--tc-bg-white);
+}
+
+.modelSelector {
+  padding: var(--tc-space-3);
+  border-bottom: 1px solid var(--tc-color-border);
+  background: var(--tc-bg-light);
+}
+
+.modelSelector label {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-default);
+  margin-bottom: var(--tc-space-2);
+}
+
+.infoAlert {
+  margin: var(--tc-space-3);
+  margin-bottom: 0;
+}
+
+/* Éditeur WYSIWYG */
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.editorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  background: var(--tc-bg-light);
+  border-bottom: 1px solid var(--tc-color-border);
+}
+
+.editorToolbar {
+  display: flex;
+  gap: var(--tc-space-1);
+  align-items: center;
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background: var(--tc-color-border);
+  margin: 0 var(--tc-space-1);
+}
+
+.contractRef {
+  display: flex;
+  align-items: center;
+}
+
+.editorTextarea {
+  flex: 1;
+  padding: var(--tc-space-4);
+  background: var(--tc-bg-white);
+  border: none;
+  outline: none;
+  overflow-y: auto;
+  font-family: var(--tc-font-family-base);
+  font-size: var(--tc-font-size-base);
+  line-height: 1.6;
+}
+
+.editorTextarea:focus {
+  background: var(--tc-bg-white);
+}
+
+.editorTextarea h2 {
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-3);
+}
+
+.editorTextarea h3 {
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-top: var(--tc-space-4);
+  margin-bottom: var(--tc-space-2);
+}
+
+.editorTextarea p {
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-default);
+}
+
+/* Zone d'aperçu (30%) */
+.previewZone {
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  background: var(--tc-bg-light);
+  min-height: 0;
+}
+
+.previewHeader {
+  padding: var(--tc-space-3);
+  background: var(--tc-bg-white);
+  border-bottom: 1px solid var(--tc-color-border);
+}
+
+.previewHeader h6 {
+  color: var(--tc-text-default);
+  font-weight: var(--tc-font-weight-semibold);
+}
+
+.previewContent {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--tc-bg-white);
+}
+
+.previewEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--tc-space-4);
+  text-align: center;
+}
+
+.previewDocument {
+  padding: var(--tc-space-4);
+  font-family: var(--tc-font-family-base);
+  font-size: var(--tc-font-size-sm);
+  line-height: 1.5;
+}
+
+.previewDocument h2 {
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-bold);
+  margin-bottom: var(--tc-space-3);
+}
+
+.previewDocument h3 {
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-semibold);
+  margin-top: var(--tc-space-3);
+  margin-bottom: var(--tc-space-2);
+}
+
+.previewDocument p {
+  margin-bottom: var(--tc-space-2);
+  color: var(--tc-text-default);
+}
+
+.previewDocument em {
+  color: var(--tc-text-secondary);
+  font-style: italic;
+}
+
+/* États des boutons */
+.actionBar button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: var(--tc-breakpoint-lg)) {
+  .editorLayout {
+    height: auto;
+    max-height: none;
+  }
+  
+  .editorContent {
+    flex-direction: column;
+  }
+  
+  .editorZone {
+    flex: none;
+    min-height: 400px;
+    border-right: none;
+    border-bottom: 1px solid var(--tc-color-border);
+  }
+  
+  .previewZone {
+    flex: none;
+    min-height: 300px;
+  }
+  
+  .actionBar {
+    flex-wrap: wrap;
+    gap: var(--tc-space-2);
+  }
+}
+
+@media (max-width: var(--tc-breakpoint-md)) {
+  .actionBar {
+    padding: var(--tc-space-2);
+  }
+  
+  .actionBar button {
+    font-size: var(--tc-font-size-sm);
+    padding: var(--tc-space-1) var(--tc-space-2);
+  }
+  
+  .editorToolbar {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  
+  .editorTextarea {
+    padding: var(--tc-space-2);
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .previewDocument {
+    padding: var(--tc-space-2);
+    font-size: var(--tc-font-size-xs);
+  }
+}
+
+/* Animation de focus pour l'éditeur */
+.editorTextarea:focus {
+  background: #fafafa;
+  transition: background-color 0.15s ease;
+}
+
+/* Style pour les éléments désactivés quand contrat terminé */
+.editor[data-finished="true"] .editorTextarea {
+  background: var(--tc-bg-light);
+  color: var(--tc-text-secondary);
+  cursor: not-allowed;
+}
+
+.editor[data-finished="true"] .editorToolbar button {
+  opacity: 0.5;
+}

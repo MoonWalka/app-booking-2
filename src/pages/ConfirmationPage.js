@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Container, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import styles from './ConfirmationPage.module.css';
@@ -8,8 +8,8 @@ import styles from './ConfirmationPage.module.css';
  * Deux colonnes : Mes informations (éditable) | Informations organisateur (lecture seule)
  */
 function ConfirmationPage() {
-  const [searchParams] = useSearchParams();
-  const concertId = searchParams.get('concertId');
+  // const [searchParams] = useSearchParams();
+  // const concertId = searchParams.get('concertId');
   
   // État pour les données
   const [mesInfos, setMesInfos] = useState({
@@ -88,7 +88,7 @@ function ConfirmationPage() {
     divers: ''
   });
   
-  const [infosOrganisateur, setInfosOrganisateur] = useState({
+  const [infosOrganisateur] = useState({
     // Les mêmes champs mais remplis depuis les données du pré-contrat
   });
 

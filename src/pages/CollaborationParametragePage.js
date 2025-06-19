@@ -347,25 +347,14 @@ const CollaborationParametragePage = () => {
         )}
       </div>
       
-      {['entreprise', 'collaborateurs'].includes(selectedConfig) ? (
-        <Row>
-          <Col md={2}>
-            {renderSidebarMenu()}
-          </Col>
-          <Col md={10}>
-            {renderMainContent()}
-          </Col>
-        </Row>
-      ) : (
-        <Row>
-          <Col md={3}>
-            {renderSidebarMenu()}
-          </Col>
-          <Col md={9}>
-            {renderMainContent()}
-          </Col>
-        </Row>
-      )}
+      <Row>
+        <Col md={2}>
+          {renderSidebarMenu()}
+        </Col>
+        <Col md={10}>
+          {renderMainContent()}
+        </Col>
+      </Row>
     </Container>
   );
 };

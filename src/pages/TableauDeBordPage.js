@@ -15,7 +15,7 @@ import styles from './TableauDeBordPage.module.css';
  */
 const TableauDeBordPage = () => {
   const navigate = useNavigate();
-  const { openPreContratTab, openTab } = useTabs();
+  const { openPreContratTab, openContratTab, openTab } = useTabs();
   // const { } = useAuth();
   const { currentOrg } = useOrganization();
   
@@ -328,15 +328,41 @@ const TableauDeBordPage = () => {
       label: 'Contrat',
       key: 'contratFinal',
       sortable: false,
-      render: (item) => (
-        <div className={styles.contratFinalCell}>
-          {item.contratId ? (
-            <i className="bi bi-file-earmark-check-fill text-success" title="Contrat signé"></i>
-          ) : (
-            <i className="bi bi-file-earmark text-muted" title="Pas de contrat"></i>
-          )}
-        </div>
-      )
+      render: (item) => {
+        // Déterminer l'état du contrat basé sur contratStatut
+        const contratStatut = item.contratStatut;
+        const hasContrat = item.contratId || contratStatut;
+        
+        let iconClass, title, action;
+        
+        if (contratStatut === 'redige') {
+          // Contrat rédigé et terminé - icône verte
+          iconClass = "bi bi-file-earmark-check-fill text-success";
+          title = "Contrat rédigé - Voir";
+          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+        } else if (hasContrat) {
+          // Contrat en cours de rédaction - icône orange
+          iconClass = "bi bi-file-earmark-text-fill text-warning";
+          title = "Contrat en cours - Continuer la rédaction";
+          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+        } else {
+          // Aucun contrat - icône grise
+          iconClass = "bi bi-file-earmark text-muted";
+          title = "Créer un contrat";
+          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+        }
+        
+        return (
+          <div className={styles.contratFinalCell}>
+            <i 
+              className={iconClass}
+              title={title}
+              style={{ cursor: 'pointer' }}
+              onClick={action}
+            ></i>
+          </div>
+        );
+      }
     },
     {
       label: 'Facture',

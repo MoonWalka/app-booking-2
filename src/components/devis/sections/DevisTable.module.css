@@ -1,4 +1,4 @@
-/* Tableau des factures - Styles selon spécifications TourCraft */
+/* Tableau des devis - Styles selon spécifications TourCraft */
 
 .tableContainer {
   width: 100%;
@@ -44,31 +44,33 @@
   white-space: nowrap;
 }
 
+.refreshButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--tc-color-border);
+  background: var(--tc-bg-white);
+  border-radius: var(--tc-radius-sm);
+  color: var(--tc-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refreshButton:hover {
+  background: var(--tc-bg-light);
+  color: var(--tc-text-default);
+  border-color: var(--tc-color-primary);
+}
+
 .searchGroup {
-  min-width: 250px;
-  max-width: 350px;
+  min-width: 300px;
+  max-width: 400px;
 }
 
 .searchInput {
   font-size: var(--tc-font-size-sm);
-}
-
-.dateFilter {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tc-space-1);
-}
-
-.filterLabel {
-  font-size: var(--tc-font-size-xs);
-  color: var(--tc-text-secondary);
-  margin: 0;
-  white-space: nowrap;
-}
-
-.dateInput {
-  font-size: var(--tc-font-size-sm);
-  min-width: 140px;
 }
 
 .toolbarBtn {
@@ -87,62 +89,52 @@
   display: block;
 }
 
+.emetteurCode {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-sm);
+}
+
+.collaborateurCode {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+}
+
+.centeredCell {
+  text-align: center;
+  display: block;
+}
+
+.objetCell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--tc-font-size-sm);
+}
+
 .checkmark {
   color: var(--tc-color-success);
   font-weight: var(--tc-font-weight-bold);
   text-align: center;
   display: block;
+  font-size: var(--tc-font-size-base);
 }
 
-.cross {
-  color: var(--tc-color-danger);
-  font-weight: var(--tc-font-weight-bold);
+.emptyCheckmark {
+  color: var(--tc-text-muted);
   text-align: center;
   display: block;
+  font-size: var(--tc-font-size-base);
 }
 
-.crossClickable {
-  color: #dc3545;
-  font-weight: var(--tc-font-weight-bold);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.crossClickable:hover {
-  color: #b02a37;
-  transform: scale(1.1);
-}
-
-.dropdownToggle {
-  border: none !important;
-  background: none !important;
-  padding: 0 !important;
-  box-shadow: none !important;
-}
-
-.dropdownToggle:focus {
-  box-shadow: none !important;
-}
-
-.dropdownToggle::after {
-  display: none !important;
-}
-
-.dropdownItem {
-  font-size: var(--tc-font-size-sm);
-  padding: var(--tc-space-2);
-}
-
-.dropdownItem:hover {
-  background: var(--tc-bg-light);
-}
-
-.dot {
-  color: var(--tc-text-default);
-  font-weight: var(--tc-font-weight-bold);
+.pendingTriangle {
+  color: var(--tc-color-warning);
   text-align: center;
   display: block;
-  font-size: var(--tc-font-size-lg);
+  font-size: var(--tc-font-size-base);
+  font-weight: var(--tc-font-weight-bold);
 }
 
 /* =============================
@@ -223,21 +215,6 @@
     min-width: auto;
     max-width: none;
   }
-  
-  .dateFilter {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .filterLabel {
-    min-width: 120px;
-  }
-  
-  .dateInput {
-    min-width: auto;
-    flex: 1;
-  }
 }
 
 @media (max-width: var(--tc-breakpoint-md)) {
@@ -298,7 +275,7 @@
   transition: background-color 0.15s ease;
 }
 
-/* Variables de fallback si pas définies dans TourCraft */
+/* Variables de fallback */
 :root {
   --tc-color-border-light: #e9ecef;
   --tc-font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;

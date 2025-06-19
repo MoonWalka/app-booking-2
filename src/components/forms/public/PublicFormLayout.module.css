@@ -1,24 +1,24 @@
 /*
  * Styles pour PublicFormLayout
- * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Utilise les variables TourCraft unifiées
+ * Dernière mise à jour: 19 Juin 2025
  */
 
 .formIsolatedContainer {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--tc-text-default);
+  background-color: var(--tc-bg-light);
   max-width: 1200px;
   margin: 0 auto;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tc-shadow-lg);
 }
 
 .formHeader {
-  background-color: var(--tc-text-default);
-  padding: 1rem 2rem;
-  border-bottom: 1px solid var(--tc-text-default);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: var(--tc-bg-card);
+  padding: var(--tc-space-4) var(--tc-space-8);
+  border-bottom: 1px solid var(--tc-color-gray-200);
+  box-shadow: var(--tc-shadow-sm);
 }
 
 .formLogo {
@@ -27,20 +27,22 @@
 
 .formLogo h2 {
   margin: 0;
-  color: var(--tc-text-default);
+  color: var(--tc-text-primary);
+  font-size: var(--tc-font-size-xl);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .formContent {
   flex-grow: 1;
-  padding: 2rem;
-  background-color: var(--tc-text-default);
+  padding: var(--tc-space-8);
+  background-color: var(--tc-bg-light);
 }
 
 .formFooter {
-  padding: 1rem 2rem;
-  background-color: var(--tc-text-default);
-  border-top: 1px solid var(--tc-text-default);
+  padding: var(--tc-space-4) var(--tc-space-8);
+  background-color: var(--tc-bg-card);
+  border-top: 1px solid var(--tc-color-gray-200);
   text-align: center;
-  color: var(--tc-text-default);
-  font-size: 0.9rem;
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
 }

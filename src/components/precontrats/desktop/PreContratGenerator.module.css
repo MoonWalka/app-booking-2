@@ -1,9 +1,9 @@
 .preContratContainer {
-  padding: 15px 15px 120px 15px;
+  padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-6) var(--tc-space-4);
   margin: 0;
   width: 100%;
   max-width: none;
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - var(--tc-space-6));
 }
 
 /* Réduction de la taille des champs pour compacter l'interface */
@@ -11,9 +11,9 @@
 .preContratContainer .form-select,
 .preContratContainer .card .form-control,
 .preContratContainer .card .form-select {
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  line-height: 1.2;
+  padding: var(--tc-space-1) var(--tc-space-2);
+  font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-tight);
   min-height: auto;
   height: auto;
 }
@@ -24,7 +24,7 @@
   min-height: 50px;
   height: 50px;
   resize: vertical;
-  font-size: 0.8rem;
+  font-size: var(--tc-font-size-sm);
 }
 
 /* Textareas spécifiques encore plus compactes */
@@ -42,20 +42,20 @@
 
 /* Réduction des marges entre les groupes de formulaires */
 .preContratContainer .mb-3 {
-  margin-bottom: 1rem;
+  margin-bottom: var(--tc-space-4);
 }
 
 /* Compacter les labels */
 .preContratContainer .form-label,
 .preContratContainer .card .form-label {
-  margin-bottom: 0.25rem;
-  font-size: 0.8rem;
-  font-weight: 500;
+  margin-bottom: var(--tc-space-1);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
 }
 
 .contentWrapper {
   display: flex;
-  gap: 20px;
+  gap: var(--tc-space-5);
   width: 100%;
   max-width: none;
 }
@@ -69,14 +69,14 @@
 .sidePanel {
   width: 320px;
   flex-shrink: 0;
-  min-width: 280px; /* Largeur minimale */
+  min-width: 280px;
 }
 
 /* Compacter la zone récapitulative */
 .preContratContainer .bg-light {
-  background-color: #f8f9fa !important;
-  padding: 0.75rem !important;
-  margin-bottom: 1rem !important;
+  background-color: var(--tc-bg-light) !important;
+  padding: var(--tc-space-3) !important;
+  margin-bottom: var(--tc-space-4) !important;
 }
 
 /* Réduire l'espacement dans les Row/Col */
@@ -85,8 +85,8 @@
 }
 
 .preContratContainer .col-md-6 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
+  padding-left: var(--tc-space-3);
+  padding-right: var(--tc-space-3);
 }
 
 .fixedActions {
@@ -94,10 +94,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: #fff;
-  border-top: 1px solid #dee2e6;
-  padding: 15px 20px;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--tc-bg-white);
+  border-top: 1px solid var(--tc-color-border);
+  padding: var(--tc-space-4) var(--tc-space-5);
+  box-shadow: var(--tc-shadow-lg);
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -105,7 +105,7 @@
 }
 
 .sectionSpacer {
-  margin-bottom: 20px;
+  margin-bottom: var(--tc-space-5);
 }
 
 /* Responsive */
@@ -119,12 +119,12 @@
 
 @media (max-width: 768px) {
   .preContratContainer {
-    padding: 10px 10px 120px 10px;
+    padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-6) var(--tc-space-3);
   }
   
   .contentWrapper {
     flex-direction: column;
-    gap: 15px;
+    gap: var(--tc-space-4);
   }
   
   .sidePanel {
@@ -133,11 +133,16 @@
     min-width: auto;
   }
   
+  .sidePanelTab {
+    font-size: var(--tc-font-size-xs);
+    padding: var(--tc-space-2);
+  }
+  
   .formField {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
-    margin-bottom: 0.5rem;
+    gap: var(--tc-space-1);
+    margin-bottom: var(--tc-space-2);
   }
   
   .formField .form-label,
@@ -145,7 +150,7 @@
     width: 100%;
     min-width: auto;
     white-space: normal;
-    font-size: 0.75rem;
+    font-size: var(--tc-font-size-xs);
   }
   
   .formField .form-control,
@@ -153,12 +158,12 @@
     width: 100%;
     min-width: auto;
     max-width: none;
-    font-size: 0.8rem;
+    font-size: var(--tc-font-size-sm);
   }
   
   .fixedActions {
     flex-direction: column;
-    gap: 10px;
+    gap: var(--tc-space-3);
   }
   
   .fixedActions .btn {
@@ -168,72 +173,118 @@
 
 /* Styles pour les cartes - version compacte */
 .preContratContainer .card {
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-radius-base);
+  box-shadow: var(--tc-shadow-sm);
+  margin-bottom: var(--tc-space-5);
 }
 
 .preContratContainer .card-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-  font-weight: 600;
-  padding: 0.75rem 1rem;
+  background-color: var(--tc-bg-light);
+  border-bottom: 1px solid var(--tc-color-border);
+  font-weight: var(--tc-font-weight-semibold);
+  padding: var(--tc-space-3) var(--tc-space-4);
 }
 
 .preContratContainer .card-body {
-  padding: 1rem;
+  padding: var(--tc-space-4);
 }
 
 .preContratContainer .card-header h4,
 .preContratContainer .card-header h5,
 .preContratContainer .card-header h6 {
   margin: 0;
-  color: #495057;
-  font-size: 1rem;
+  color: var(--tc-text-default);
+  font-size: var(--tc-font-size-lg);
 }
 
 /* Styles pour le panneau latéral - version compacte */
 .sidePanel .card {
   position: sticky;
-  top: 15px;
-  margin-bottom: 1rem;
+  top: var(--tc-space-4);
+  margin-bottom: var(--tc-space-4);
 }
 
 .sidePanel .card-body {
-  padding: 0.75rem !important;
+  padding: var(--tc-space-3) !important;
 }
 
 .sidePanel .small {
-  font-size: 0.8rem;
-  line-height: 1.3;
-  margin-bottom: 0.25rem;
+  font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-normal);
+  margin-bottom: var(--tc-space-1);
 }
 
 .sidePanel h6 {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-base);
+  margin-bottom: var(--tc-space-2);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 .sidePanel h5 {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: var(--tc-font-size-lg);
+  margin-bottom: var(--tc-space-2);
+}
+
+/* Styles pour les onglets du panneau latéral */
+.sidePanelTabs {
+  display: flex;
+  border-bottom: 1px solid var(--tc-color-border);
+  background-color: var(--tc-bg-light);
+  border-radius: var(--tc-radius-base) var(--tc-radius-base) 0 0;
+}
+
+.sidePanelTab {
+  flex: 1;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  border: none;
+  background: none;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  position: relative;
+}
+
+.sidePanelTab:hover {
+  color: var(--tc-text-default);
+  background-color: var(--tc-bg-white);
+}
+
+.sidePanelTab.active {
+  color: var(--tc-color-primary);
+  background-color: var(--tc-bg-white);
+}
+
+.sidePanelTab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--tc-color-primary);
+}
+
+.sidePanelTab:not(:last-child) {
+  border-right: 1px solid var(--tc-color-border);
 }
 
 /* Compacter le titre principal */
 .preContratContainer h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
+  font-size: var(--tc-font-size-2xl);
+  margin-bottom: var(--tc-space-5);
+  font-weight: var(--tc-font-weight-semibold);
 }
 
 /* Styles pour les champs avec labels sur la même ligne */
 .formField {
   display: flex;
   align-items: center;
-  margin-bottom: 0.6rem;
-  gap: 8px;
+  margin-bottom: var(--tc-space-2);
+  gap: var(--tc-space-2);
 }
 
 .formField .form-label {
@@ -241,8 +292,8 @@
   width: 140px;
   margin-bottom: 0;
   text-align: left;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
   flex-shrink: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -254,8 +305,8 @@
   min-width: 220px;
   max-width: 320px;
   flex: 1;
-  font-size: 0.8rem;
-  padding: 0.3rem 0.6rem;
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
   height: auto;
   min-height: auto;
 }
@@ -264,8 +315,8 @@
 .formFieldFull {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 0.6rem;
-  gap: 8px;
+  margin-bottom: var(--tc-space-2);
+  gap: var(--tc-space-2);
 }
 
 .formFieldFull .form-label {
@@ -273,10 +324,10 @@
   width: 140px;
   margin-bottom: 0;
   text-align: left;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
   flex-shrink: 0;
-  padding-top: 0.3rem;
+  padding-top: var(--tc-space-1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -285,43 +336,16 @@
 .formFieldFull .form-control {
   flex: 1;
   min-width: 0;
-  font-size: 0.8rem;
-  padding: 0.3rem 0.6rem;
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }
 
 /* Styles pour la zone récapitulative */
 .preContratContainer .bg-light {
-  background-color: #f8f9fa;
+  background-color: var(--tc-bg-light);
 }
 
-/* Styles pour le tableau des représentations */
-.representationsTable {
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 6px;
-  border: 1px solid #e9ecef;
-}
-
-.summaryField {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  gap: 6px;
-}
-
-.summaryLabel {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #495057;
-  min-width: 140px;
-  flex-shrink: 0;
-}
-
-.summaryValue {
-  font-size: 0.8rem;
-  color: #212529;
-  font-weight: 400;
-}
+/* Styles pour Représentations supprimés - utilise maintenant RepresentationsSection */
 
 /* Animation pour les alertes */
 .preContratContainer .alert {
@@ -331,4 +355,39 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Styles pour la colonne des labels */
+.labelColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-2);
+  padding-right: var(--tc-space-2);
+}
+
+.labelItem {
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-default);
+  padding: var(--tc-space-1) 0;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Styles pour les colonnes de champs */
+.fieldColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-2);
+}
+
+.fieldColumn .form-control,
+.fieldColumn .form-select {
+  font-size: var(--tc-font-size-sm);
+  padding: var(--tc-space-1) var(--tc-space-2);
 }

@@ -6,7 +6,7 @@ import { db } from '@/services/firebase-service';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Button from '@/components/ui/Button';
-import Table from '@/components/ui/Table';
+import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import Badge from '@/components/ui/Badge';
 import { useResponsive } from '@/hooks/common';
 import '@styles/index.css';
@@ -113,6 +113,15 @@ const ContratsPage = () => {
 
     fetchContrats();
   }, []);
+
+  const handleUpdateContrat = (contratUpdated) => {
+    // Callback pour mettre à jour un contrat localement
+    setContrats(prev => 
+      prev.map(contrat => 
+        contrat.id === contratUpdated.id ? contratUpdated : contrat
+      )
+    );
+  };
 
   return (
     <Container fluid className="p-4">
@@ -244,118 +253,9 @@ const ContratsPage = () => {
               ))}
             </div>
           ) : (
-            <Table
-              columns={[
-                {
-                  label: 'Date',
-                  key: 'dateGeneration',
-                  sortable: true,
-                  render: (contrat) => {
-                    if (!contrat.dateGeneration) return '-';
-                    try {
-                      if (contrat.dateGeneration.seconds) {
-                        return new Date(contrat.dateGeneration.seconds * 1000).toLocaleDateString('fr-FR');
-                      }
-                      return new Date(contrat.dateGeneration).toLocaleDateString('fr-FR');
-                    } catch (error) {
-                      return '-';
-                    }
-                  }
-                },
-                {
-                  label: 'Concert',
-                  key: 'concert.titre',
-                  sortable: true,
-                  render: (contrat) => (
-                    <div>
-                      <div style={{ fontWeight: '500' }}>
-                        {contrat.concert?.titre || 'N/A'}
-                      </div>
-                      {contrat.concert?.artisteNom && (
-                        <div style={{ fontSize: '0.875rem', color: 'var(--tc-color-text-light)' }}>
-                          {contrat.concert.artisteNom}
-                        </div>
-                      )}
-                    </div>
-                  )
-                },
-                {
-                  label: 'Lieu',
-                  key: 'concert.lieuNom',
-                  sortable: true,
-                  render: (contrat) => (
-                    <div>
-                      <i className="bi bi-geo-alt me-2"></i>
-                      {contrat.concert?.lieuNom || 'N/A'}
-                    </div>
-                  )
-                },
-                {
-                  label: 'Contact',
-                  key: 'concert.contactNom',
-                  sortable: true,
-                  render: (contrat) => (
-                    <div>
-                      <i className="bi bi-person me-2"></i>
-                      {contrat.concert?.contactNom || 'N/A'}
-                    </div>
-                  )
-                },
-                {
-                  label: 'Statut',
-                  key: 'status',
-                  sortable: true,
-                  render: (contrat) => {
-                    const getStatusBadge = (status) => {
-                      switch (status) {
-                        case 'signed':
-                          return <Badge variant="green">Signé</Badge>;
-                        case 'sent':
-                          return <Badge variant="blue">Envoyé</Badge>;
-                        case 'generated':
-                          return <Badge variant="yellow">Généré</Badge>;
-                        default:
-                          return <Badge variant="gray">Inconnu</Badge>;
-                      }
-                    };
-                    return getStatusBadge(contrat.status);
-                  }
-                }
-              ]}
-              data={contrats}
-              renderActions={(contrat) => (
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button 
-                    className="btn btn-sm btn-outline-primary"
-                    onClick={() => navigate(`/contrats/${contrat.id}`)} 
-                    title="Voir le contrat"
-                  >
-                    <i className="bi bi-eye"></i>
-                  </button>
-                  <button 
-                    className="btn btn-sm btn-outline-secondary"
-                    onClick={() => navigate(`/contrats/${contrat.id}?preview=web`)} 
-                    title="Aperçu web"
-                  >
-                    <i className="bi bi-globe"></i>
-                  </button>
-                  <button 
-                    className="btn btn-sm btn-outline-warning"
-                    onClick={() => navigate(`/contrats/${contrat.id}/edit`)} 
-                    title="Éditer le contrat"
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </button>
-                  <button 
-                    className="btn btn-sm btn-outline-success"
-                    onClick={() => window.open(`/contrats/${contrat.id}/download`, '_blank')} 
-                    title="Télécharger"
-                  >
-                    <i className="bi bi-download"></i>
-                  </button>
-                </div>
-              )}
-              onRowClick={(contrat) => navigate(`/contrats/${contrat.id}`)}
+            <ContratsTableNew 
+              contrats={contrats} 
+              onUpdateContrat={handleUpdateContrat}
             />
           )}
         </>

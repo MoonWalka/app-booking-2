@@ -5,8 +5,11 @@ import styles from './TabManager.module.css';
 // Import des pages/composants
 import DashboardPage from '@/pages/DashboardPage';
 import ContactsPage from '@/pages/ContactsPage';
+import ConcertsPage from '@/pages/ConcertsPage';
+import PublicationsPage from '@/pages/PublicationsPage';
 import ContratsPage from '@/pages/ContratsPage';
 import FacturesPage from '@/pages/FacturesPage';
+import DevisPage from '@/pages/DevisPage';
 import ParametresPage from '@/pages/ParametresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
 import ProjetsPage from '@/pages/ProjetsPage';
@@ -19,9 +22,12 @@ import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
 import AdminParametragePage from '@/pages/AdminParametragePage';
 import ContactParametragePage from '@/pages/ContactParametragePage';
 import PreContratGenerationPage from '@/pages/PreContratGenerationPage';
+import ConfirmationPage from '@/pages/ConfirmationPage';
+import ContratGenerationNewPage from '@/pages/ContratGenerationNewPage';
+import ContratRedactionPage from '@/pages/ContratRedactionPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
-import ConcertsList from '@/components/concerts/ConcertsList';
+// import ConcertsList from '@/components/concerts/ConcertsList'; // Plus utilisé
 import LieuxList from '@/components/lieux/LieuxList';
 import ContactsList from '@/components/contacts/ContactsList'; // Liste unifiée contacts + structures
 import ArtistesList from '@/components/artistes/ArtistesList';
@@ -183,8 +189,11 @@ const TabManagerProduction = () => {
           console.log('[DEBUG TabManager] viewType passé:', activeTab.params?.viewType);
           return <ContactViewTabs id={activeTab.params?.contactId} viewType={activeTab.params?.viewType} />;
         case 'ConcertsPage':
-          // Afficher directement la liste des concerts
-          return <ConcertsList />;
+          // Afficher directement la liste des dates
+          return <ConcertsPage />;
+        case 'PublicationsPage':
+          // Afficher directement la liste des publications
+          return <PublicationsPage />;
         case 'ConcertDetailsPage':
           // Afficher les détails d'un concert
           console.log('[DEBUG TabManager] Rendu ConcertDetailsPage avec activeTab:', activeTab);
@@ -209,6 +218,8 @@ const TabManagerProduction = () => {
           return <ContratsPage />;
         case 'FacturesPage':
           return <FacturesPage />;
+        case 'DevisPage':
+          return <DevisPage />;
         case 'ParametresPage':
           return <ParametresPage />;
         case 'BookingParametragePage':
@@ -236,6 +247,16 @@ const TabManagerProduction = () => {
           console.log('[TabManager] Rendu PreContratGenerationPage avec activeTab:', activeTab);
           console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
           return <PreContratGenerationPage concertId={activeTab.params?.concertId} />;
+        case 'ConfirmationPage':
+          return <ConfirmationPage />;
+        case 'ContratGenerationNewPage':
+          console.log('[TabManager] Rendu ContratGenerationNewPage avec activeTab:', activeTab);
+          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          return <ContratGenerationNewPage concertId={activeTab.params?.concertId} />;
+        case 'ContratRedactionPage':
+          console.log('[TabManager] Rendu ContratRedactionPage avec activeTab:', activeTab);
+          console.log('[TabManager] contratId passé:', activeTab.params?.id);
+          return <ContratRedactionPage />;
         default:
           return (
             <div className={styles.tabContent}>

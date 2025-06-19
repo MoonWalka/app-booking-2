@@ -54,6 +54,9 @@ import StructuresMobileForm from './structures/mobile/StructureForm';
 
 import FormsMobileValidationInterface from './forms/mobile/FormValidationInterface';
 
+// Import des pages
+import ContratRedactionPage from '../pages/ContratRedactionPage';
+
 // Mapping des chemins vers les composants réels
 export const componentMapping = {
   // Artistes
@@ -106,6 +109,9 @@ export const componentMapping = {
   // Formulaires
   'forms/desktop/FormValidationInterface': FormsDesktopValidationInterface,
   'forms/mobile/FormValidationInterface': FormsMobileValidationInterface,
+
+  // Pages
+  'ContratRedactionPage': ContratRedactionPage,
 };
 
 /**

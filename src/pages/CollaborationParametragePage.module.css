@@ -173,6 +173,7 @@
 }
 
 /* Animations */
+/* Animation désactivée pour éviter le clignotement lors du changement de menu
 .configSection {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -187,6 +188,7 @@
     transform: translateY(0);
   }
 }
+*/
 
 /* Custom form elements */
 .customTextarea {

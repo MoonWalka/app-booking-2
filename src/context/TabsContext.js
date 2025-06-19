@@ -194,10 +194,20 @@ export const TabsProvider = ({ children }) => {
   const openConcertsListTab = useCallback(() => {
     openTab({
       id: 'concerts-list',
-      title: 'Concerts',
+      title: 'Liste des dates',
       path: '/concerts',
       component: 'ConcertsPage',
       icon: 'bi-calendar-event'
+    });
+  }, [openTab]);
+
+  const openPublicationsListTab = useCallback(() => {
+    openTab({
+      id: 'publications-list',
+      title: 'Publications',
+      path: '/publications',
+      component: 'PublicationsPage',
+      icon: 'bi-newspaper'
     });
   }, [openTab]);
 
@@ -266,6 +276,17 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
+  const openContratTab = useCallback((concertId, concertTitle) => {
+    openTab({
+      id: `contrat-${concertId}`,
+      title: `Contrat - ${concertTitle}`,
+      path: `/contrats/generate/${concertId}`,
+      component: 'ContratGenerationNewPage',
+      params: { concertId },
+      icon: 'bi-file-earmark-check'
+    });
+  }, [openTab]);
+
   const value = {
     tabs,
     activeTabId,
@@ -282,12 +303,14 @@ export const TabsProvider = ({ children }) => {
     openStructureTab,
     openContactsListTab,
     openConcertsListTab,
+    openPublicationsListTab,
     openLieuxListTab,
     openStructuresListTab,
     openDebugToolsTab,
     openTachesTab,
     openDateCreationTab,
-    openPreContratTab
+    openPreContratTab,
+    openContratTab
   };
 
   return (

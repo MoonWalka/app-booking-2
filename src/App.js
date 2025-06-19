@@ -19,10 +19,14 @@ import ContactsPage from '@/pages/ContactsPage';
 import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ArtistesPage from '@/pages/ArtistesPage';
+import PublicationsPage from '@/pages/PublicationsPage';
+import DevisPage from '@/pages/DevisPage';
 import ParametresPage from '@/pages/ParametresPage';
 import FormResponsePage from '@/pages/FormResponsePage';
+import PreContratFormResponsePage from '@/pages/PreContratFormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
+import ContratRedactionPage from '@/pages/ContratRedactionPage';
 import PreContratGenerationPage from '@/pages/PreContratGenerationPage';
 import StructuresPage from '@/pages/StructuresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
@@ -37,9 +41,9 @@ import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-import ConcertFormWrapper from '@/components/concerts/ConcertForm';
-import ConcertsList from '@/components/concerts/ConcertsList';
-import ConcertDetails from '@/components/concerts/ConcertDetails';
+// import ConcertFormWrapper from '@/components/concerts/ConcertForm';
+// import ConcertsList from '@/components/concerts/ConcertsList';
+// import ConcertDetails from '@/components/concerts/ConcertDetails';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
@@ -53,7 +57,7 @@ import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
 import DebugController from '@/components/debug/DebugController';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 import DebugButton from '@/components/common/DebugButton';
-import ConcertLieuDebug from '@/components/debug/ConcertLieuDebug';
+// import ConcertLieuDebug from '@/components/debug/ConcertLieuDebug';
 import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
 import TabsTestPage from '@/pages/TabsTestPage';
 import InventairePagesPage from '@/pages/InventairePagesPage';
@@ -179,6 +183,7 @@ function App() {
                     } />
                     
                     <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
+                    <Route path="/pre-contrat/:concertId/:token" element={<PreContratFormResponsePage />} />
                     
                     {/* Route indépendante pour l'inventaire des pages (hors système d'onglets) */}
                     <Route path="/inventaire-pages" element={
@@ -339,12 +344,7 @@ function App() {
                         <PrivateRoute>
                           <ConcertsPage />
                         </PrivateRoute>
-                      }>
-                        <Route index element={<ConcertsList />} />
-                        <Route path=":id" element={<ConcertDetails />} />
-                        <Route path=":id/debug" element={<ConcertLieuDebug />} />
-                        <Route path=":id/edit" element={<ConcertFormWrapper />} />
-                      </Route>
+                      } />
                       
                       <Route path="/contacts/*" element={
                         <PrivateRoute>
@@ -411,6 +411,11 @@ function App() {
                               <PreContratGenerationPage />
                             </PrivateRoute>
                           } />
+                          <Route path="/contrats/:id/redaction" element={
+                            <PrivateRoute>
+                              <ContratRedactionPage />
+                            </PrivateRoute>
+                          } />
                           <Route path="/contrats/:contratId" element={
                             <PrivateRoute>
                               <ContratDetailsPage />
@@ -433,6 +438,18 @@ function App() {
                           <Route path="/artistes/*" element={
                             <PrivateRoute>
                               <ArtistesPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/publications/*" element={
+                            <PrivateRoute>
+                              <PublicationsPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/devis/*" element={
+                            <PrivateRoute>
+                              <DevisPage />
                             </PrivateRoute>
                           } />
                           

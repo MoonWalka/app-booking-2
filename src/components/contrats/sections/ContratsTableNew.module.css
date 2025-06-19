@@ -1,4 +1,4 @@
-/* Tableau des factures - Styles selon spécifications TourCraft */
+/* Tableau des contrats - Styles selon spécifications TourCraft */
 
 .tableContainer {
   width: 100%;
@@ -68,7 +68,7 @@
 
 .dateInput {
   font-size: var(--tc-font-size-sm);
-  min-width: 140px;
+  min-width: 160px;
 }
 
 .toolbarBtn {
@@ -87,15 +87,20 @@
   display: block;
 }
 
-.checkmark {
-  color: var(--tc-color-success);
-  font-weight: var(--tc-font-weight-bold);
-  text-align: center;
-  display: block;
+.entrepriseCode {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-sm);
 }
 
-.cross {
-  color: var(--tc-color-danger);
+.collaborateurCode {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-secondary);
+  font-size: var(--tc-font-size-sm);
+}
+
+.checkmark {
+  color: var(--tc-color-success);
   font-weight: var(--tc-font-weight-bold);
   text-align: center;
   display: block;
@@ -137,12 +142,21 @@
   background: var(--tc-bg-light);
 }
 
-.dot {
-  color: var(--tc-text-default);
-  font-weight: var(--tc-font-weight-bold);
+/* =============================
+   COLONNES ICÔNES
+   ============================= */
+.iconCell {
   text-align: center;
-  display: block;
-  font-size: var(--tc-font-size-lg);
+  width: 40px;
+}
+
+.iconCell i {
+  font-size: var(--tc-font-size-base);
+  transition: all 0.2s ease;
+}
+
+.iconCell i[style*="cursor: pointer"]:hover {
+  transform: scale(1.2);
 }
 
 /* =============================
@@ -231,7 +245,7 @@
   }
   
   .filterLabel {
-    min-width: 120px;
+    min-width: 140px;
   }
   
   .dateInput {
@@ -298,7 +312,7 @@
   transition: background-color 0.15s ease;
 }
 
-/* Variables de fallback si pas définies dans TourCraft */
+/* Variables de fallback */
 :root {
   --tc-color-border-light: #e9ecef;
   --tc-font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;

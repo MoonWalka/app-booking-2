@@ -354,6 +354,34 @@ function App() {
                         {/* Routes gérées en interne par ContactsPage */}
                       </Route>
                       
+                      {/* Nouvelles routes pour les fonctionnalités contacts */}
+                      <Route path="/contacts/recherches" element={
+                        <PrivateRoute>
+                          <div className="container mt-4">
+                            <h2><i className="bi bi-search me-2"></i>Mes recherches</h2>
+                            <p className="text-muted">Fonctionnalité en développement...</p>
+                          </div>
+                        </PrivateRoute>
+                      } />
+                      
+                      <Route path="/contacts/selections" element={
+                        <PrivateRoute>
+                          <div className="container mt-4">
+                            <h2><i className="bi bi-check2-square me-2"></i>Mes sélections</h2>
+                            <p className="text-muted">Fonctionnalité en développement...</p>
+                          </div>
+                        </PrivateRoute>
+                      } />
+                      
+                      <Route path="/contacts/tags" element={
+                        <PrivateRoute>
+                          <div className="container mt-4">
+                            <h2><i className="bi bi-tags me-2"></i>Tags</h2>
+                            <p className="text-muted">Fonctionnalité en développement...</p>
+                          </div>
+                        </PrivateRoute>
+                      } />
+                      
                       <Route path="/lieux/*" element={
                         <PrivateRoute>
                           <LieuxPage />

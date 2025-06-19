@@ -15,9 +15,21 @@ import styles from './TableauDeBordPage.module.css';
  */
 const TableauDeBordPage = () => {
   const navigate = useNavigate();
-  const { openPreContratTab } = useTabs();
+  const { openPreContratTab, openTab } = useTabs();
   // const { } = useAuth();
   const { currentOrg } = useOrganization();
+  
+  // Fonction pour ouvrir la page de confirmation
+  const openConfirmationPage = (item) => {
+    openTab({
+      id: `confirmation-${item.id}`,
+      title: `Confirmation - ${item.artisteNom || item.titre || 'Concert'}`,
+      path: `/confirmation?concertId=${item.id}`,
+      component: 'ConfirmationPage',
+      params: { concertId: item.id },
+      icon: 'bi-check-circle'
+    });
+  };
   
   // État pour les données
   const [data, setData] = useState([]);
@@ -239,9 +251,33 @@ const TableauDeBordPage = () => {
       render: (item) => (
         <div className={styles.devisCell}>
           {item.devisId ? (
-            <i className="bi bi-file-earmark-check-fill text-success" title="Devis existant"></i>
+            <i 
+              className="bi bi-file-earmark-check-fill text-success" 
+              title="Voir le devis"
+              style={{ cursor: 'pointer' }}
+              onClick={() => openTab({
+                id: `devis-${item.devisId}`,
+                title: `Devis - ${item.artisteNom || item.titre || 'Concert'}`,
+                path: `/devis/${item.devisId}`,
+                component: 'DevisPage',
+                params: { devisId: item.devisId },
+                icon: 'bi-file-earmark-check'
+              })}
+            ></i>
           ) : (
-            <i className="bi bi-file-earmark text-muted" title="Pas de devis"></i>
+            <i 
+              className="bi bi-file-earmark text-muted" 
+              title="Créer un devis"
+              style={{ cursor: 'pointer' }}
+              onClick={() => openTab({
+                id: `devis-nouveau-${item.id}`,
+                title: `Nouveau devis - ${item.artisteNom || item.titre || 'Concert'}`,
+                path: `/devis/nouveau?concertId=${item.id}&structureId=${item.structureId}`,
+                component: 'DevisPage',
+                params: { concertId: item.id, structureId: item.structureId },
+                icon: 'bi-file-earmark-plus'
+              })}
+            ></i>
           )}
         </div>
       )
@@ -275,11 +311,15 @@ const TableauDeBordPage = () => {
       key: 'confirmation',
       sortable: false,
       render: (item) => (
-        <div className={styles.confirmationCell}>
+        <div 
+          className={`${styles.confirmationCell} ${styles.clickable}`}
+          onClick={() => openConfirmationPage(item)}
+          title="Cliquer pour gérer la confirmation"
+        >
           {item.confirmation || item.statut === 'confirme' ? (
-            <i className="bi bi-check-circle-fill text-success" title="Confirmé"></i>
+            <i className="bi bi-check-circle-fill text-success"></i>
           ) : (
-            <i className="bi bi-clock text-warning" title="En attente"></i>
+            <i className="bi bi-clock text-warning"></i>
           )}
         </div>
       )

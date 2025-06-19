@@ -67,20 +67,18 @@
   position: relative;
 }
 
-/* En-têtes de section - style bulle flottante épuré (icône uniquement) */
+/* En-têtes de section - style bulle flottante épuré (icône + titre compact) */
 .sectionHeader {
   position: absolute;
-  top: -16px;
+  top: -12px;
   left: 20px;
   background: var(--tc-bg-white);
   border: 1px solid var(--tc-border-light);
-  border-radius: 50%;
-  padding: var(--tc-space-2);
+  border-radius: var(--tc-radius-pill);
+  padding: var(--tc-space-1) var(--tc-space-3);
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  gap: var(--tc-space-1);
   z-index: 10;
   box-shadow: var(--tc-shadow-base);
   transition: var(--tc-transition-base);
@@ -98,7 +96,12 @@
 }
 
 .sectionHeader h2 {
-  display: none;
+  margin: 0;
+  color: var(--tc-text-dark);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-semibold);
+  letter-spacing: 0.01em;
+  line-height: var(--tc-line-height-tight);
 }
 
 /* Actions de section */

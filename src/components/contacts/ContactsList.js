@@ -7,6 +7,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { useDeleteContact } from '@/hooks/contacts';
+import styles from './ContactsList.module.css';
 
 /**
  * Liste unifiée des contacts utilisant la collection contacts_unified
@@ -231,7 +232,7 @@ function ContactsList({ filterType = 'all' }) {
               (() => {
                 const personnesCount = item.personnes?.filter(p => p.prenom && p.nom).length || 0;
                 return personnesCount > 0 ? (
-                  <span className="badge bg-secondary">
+                  <span className={styles.linkedContactsBadge}>
                     <i className="bi bi-people me-1"></i>
                     {personnesCount}
                   </span>
@@ -242,7 +243,7 @@ function ContactsList({ filterType = 'all' }) {
             ) : (
               // Pour les personnes, afficher la structure associée si applicable
               item._structureName ? (
-                <span className="badge bg-info text-truncate" style={{ maxWidth: '100%' }} title={item._structureName}>
+                <span className={`${styles.linkedStructureBadge} text-truncate`} style={{ maxWidth: '100%' }} title={item._structureName}>
                   <i className="bi bi-building me-1"></i>
                   {item._structureName}
                 </span>

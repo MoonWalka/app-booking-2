@@ -355,6 +355,14 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
       sortable: true,
       render: (contrat) => <span>{contrat.devise || 'EUR'}</span>
     },
+    // ===== COLONNE ICÔNE CONTRAT =====
+    // Icône qui change de couleur selon l'état d'avancement du contrat
+    // ÉVOLUTION DES COULEURS SELON L'ÉTAT :
+    // - 🔘 Gris (text-muted) : Pas de contrat généré
+    // - 🟡 Jaune (text-warning) : Contrat en brouillon/rédaction
+    // - 🔵 Bleu (text-primary) : Contrat généré mais pas envoyé
+    // - 🟠 Orange (text-info) : Contrat envoyé mais pas signé
+    // - 🟢 Vert (text-success) : Contrat signé et complet
     {
       label: 'Contrat',
       key: 'contratIcon',
@@ -377,9 +385,25 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
               title="Pas de contrat"
             ></i>
           )}
+          {/* TODO: Implémenter la logique des couleurs selon l'état :
+              - contrat.statut === 'brouillon' → text-warning (jaune)
+              - contrat.statut === 'genere' → text-primary (bleu)
+              - contrat.statut === 'envoye' → text-info (orange)
+              - contrat.statut === 'signe' → text-success (vert)
+          */}
         </div>
       )
     },
+    
+    // ===== COLONNE ICÔNE DEVIS =====
+    // Icône qui change de couleur selon l'état d'avancement du devis
+    // ÉVOLUTION DES COULEURS SELON L'ÉTAT :
+    // - 🔘 Gris (text-muted) : Pas de devis
+    // - 🟡 Jaune (text-warning) : Devis en brouillon
+    // - 🔵 Bleu (text-primary) : Devis généré mais pas envoyé
+    // - 🟠 Orange (text-info) : Devis envoyé en attente de réponse
+    // - 🟢 Vert (text-success) : Devis accepté par le client
+    // - 🔴 Rouge (text-danger) : Devis refusé
     {
       label: 'Devis',
       key: 'devisIcon',
@@ -402,9 +426,26 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
               title="Pas de devis"
             ></i>
           )}
+          {/* TODO: Implémenter la logique des couleurs selon l'état du devis :
+              - devis.statut === 'brouillon' → text-warning (jaune)
+              - devis.statut === 'genere' → text-primary (bleu)
+              - devis.statut === 'envoye' → text-info (orange)
+              - devis.statut === 'accepte' → text-success (vert)
+              - devis.statut === 'refuse' → text-danger (rouge)
+          */}
         </div>
       )
     },
+    
+    // ===== COLONNE ICÔNE FACTURE =====
+    // Icône qui change de couleur selon l'état d'avancement de la facture
+    // ÉVOLUTION DES COULEURS SELON L'ÉTAT :
+    // - 🔘 Gris (text-muted) : Pas de facture
+    // - 🟡 Jaune (text-warning) : Facture en brouillon
+    // - 🔵 Bleu (text-primary) : Facture générée mais pas envoyée
+    // - 🟠 Orange (text-info) : Facture envoyée en attente de paiement
+    // - 🟢 Vert (text-success) : Facture payée intégralement
+    // - 🔴 Rouge (text-danger) : Facture en retard de paiement
     {
       label: 'Facture',
       key: 'factureIcon',
@@ -427,6 +468,18 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
               title="Pas de facture"
             ></i>
           )}
+          {/* TODO: Implémenter la logique des couleurs selon l'état de la facture :
+              - facture.statut === 'brouillon' → text-warning (jaune)
+              - facture.statut === 'generee' → text-primary (bleu)
+              - facture.statut === 'envoyee' → text-info (orange)
+              - facture.statut === 'payee' → text-success (vert)
+              - facture.statut === 'retard' → text-danger (rouge)
+              
+              Logique de calcul pour le statut de paiement :
+              - Si montantPaye >= montantTotal → 'payee' (vert)
+              - Si dateEcheance < aujourd'hui && montantPaye < montantTotal → 'retard' (rouge)
+              - Si envoyee && montantPaye < montantTotal → 'envoyee' (orange)
+          */}
         </div>
       )
     }

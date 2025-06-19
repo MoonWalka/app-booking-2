@@ -18,6 +18,7 @@ import TachesPage from '@/pages/TachesPage';
 import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
 import AdminParametragePage from '@/pages/AdminParametragePage';
 import ContactParametragePage from '@/pages/ContactParametragePage';
+import PreContratGenerationPage from '@/pages/PreContratGenerationPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
 import ConcertsList from '@/components/concerts/ConcertsList';
@@ -231,6 +232,10 @@ const TabManagerProduction = () => {
           return <AdminParametragePage />;
         case 'ContactParametragePage':
           return <ContactParametragePage />;
+        case 'PreContratGenerationPage':
+          console.log('[TabManager] Rendu PreContratGenerationPage avec activeTab:', activeTab);
+          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          return <PreContratGenerationPage concertId={activeTab.params?.concertId} />;
         default:
           return (
             <div className={styles.tabContent}>

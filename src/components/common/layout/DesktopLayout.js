@@ -296,6 +296,9 @@ function DesktopLayout({ children }) {
             { to: "/contacts/nouveau/personne", icon: "bi-person-circle", label: "Ajouter une personne" }
           ]
         },
+        { to: "/contacts/recherches", icon: "bi-search", label: "Mes recherches" },
+        { to: "/contacts/selections", icon: "bi-check2-square", label: "Mes sélections" },
+        { to: "/contacts/tags", icon: "bi-tags", label: "Tags" },
         { to: "/contact/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },

@@ -149,8 +149,10 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
     console.log('Export PDF');
   };
 
-  // Colonnes selon spécifications
+  // Colonnes selon spécifications TourCraft
   const columns = [
+    // ===== COLONNE SELECTION =====
+    // Case à cocher pour sélection multiple des contrats
     {
       label: (
         <Form.Check
@@ -169,48 +171,81 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
         />
       )
     },
+    
+    // ===== COLONNE REF =====
+    // Référence/numéro du contrat (ex: CONT-001)
     {
       label: 'Ref',
       key: 'ref',
       sortable: true,
       render: (contrat) => <span>{contrat.ref || '—'}</span>
     },
+    
+    // ===== COLONNE ENTR (ENTREPRISE) =====
+    // Code/nom abrégé de l'entreprise émettrice du contrat
+    // Ex: "TourCraft", "SARL MUSIC", etc.
     {
       label: 'Entr',
       key: 'entreprise',
       sortable: true,
       render: (contrat) => <span className={styles.entrepriseCode}>{contrat.entrepriseCode || '—'}</span>
     },
+    
+    // ===== COLONNE COLL. (COLLABORATEUR) =====
+    // Initiales ou code du collaborateur/booker responsable
+    // Ex: "LT", "JD", "AB", etc.
     {
-      label: 'C.',
+      label: 'Coll.',
       key: 'collaborateur',
       sortable: true,
       render: (contrat) => <span className={styles.collaborateurCode}>{contrat.collaborateurCode || '—'}</span>
     },
+    
+    // ===== COLONNE TYPE =====
+    // Type de contrat utilisé (défini lors de l'association avec les modèles de contrats)
+    // Quand on choisit le modèle de contrat, son type doit être affiché ici
+    // Ex: "Cession", "Coréo", "Promo", "Standard", etc.
+    // IMPORTANT: Ce champ doit être mis à jour depuis la sélection du modèle de contrat
     {
       label: 'Type',
       key: 'type',
       sortable: true,
       render: (contrat) => getTypeBadge(contrat.type)
+      // NOTE: contrat.type doit être rempli depuis les modèles de contrats sélectionnés
     },
+    
+    // ===== COLONNE ARTISTE =====
+    // Nom de l'artiste concerné par le contrat
     {
       label: 'Artiste',
       key: 'artiste',
       sortable: true,
       render: (contrat) => <span>{contrat.artiste || '—'}</span>
     },
+    
+    // ===== COLONNE RAISON SOCIALE =====
+    // Nom officiel/raison sociale de la structure contractante
+    // C'est le nom légal de l'entité qui signe le contrat côté client
+    // Ex: "SARL Les Productions Musicales", "Association Culturelle XYZ", etc.
     {
       label: 'Raison sociale',
       key: 'raisonSociale',
       sortable: true,
       render: (contrat) => <span>{contrat.raisonSociale || '—'}</span>
+      // NOTE: Correspond au nom officiel de la structure/contractant
     },
+    
+    // ===== COLONNE DATE =====
+    // Date de l'événement principal du contrat
     {
       label: 'Date',
       key: 'dateEvenement',
       sortable: true,
       render: (contrat) => <span>{formatDate(contrat.dateEvenement)}</span>
     },
+    
+    // ===== COLONNE ENVOYÉ =====
+    // Statut d'envoi du contrat (✓ si envoyé, X cliquable sinon)
     {
       label: 'Envoyé',
       key: 'envoye',
@@ -240,6 +275,9 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
         )
       )
     },
+    
+    // ===== COLONNE SIGNÉ =====
+    // Statut de signature du contrat (✓ si signé, X cliquable sinon)
     {
       label: 'Signé',
       key: 'signe',
@@ -269,17 +307,26 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
         )
       )
     },
+    
+    // ===== COLONNE VALIDITÉ =====
+    // Date de validité/expiration du contrat
     {
       label: 'Validité',
       key: 'dateValidite',
       sortable: true,
       render: (contrat) => <span>{formatDate(contrat.dateValidite)}</span>
     },
+    
+    // ===== COLONNE SIGNATURE =====
+    // IMPORTANT: Champ DATE de signature du contrat
+    // Affiche la date à laquelle le contrat a été signé (pas un texte)
+    // Format: JJ/MM/AAAA ou "—" si pas encore signé
     {
       label: 'Signature',
-      key: 'signature',
+      key: 'dateSignature',
       sortable: true,
-      render: (contrat) => <span>{contrat.signature || '—'}</span>
+      render: (contrat) => <span>{formatDate(contrat.dateSignature) || '—'}</span>
+      // NOTE: Utilise contrat.dateSignature (type Date) pour afficher la date de signature
     },
     {
       label: 'Total HT',

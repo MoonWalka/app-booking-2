@@ -33,10 +33,10 @@ function DevisList() {
       try {
         setLoading(true);
         
+        // Requête simplifiée pour éviter l'index composite
         const devisQuery = query(
           collection(db, 'devis'),
-          where('organizationId', '==', currentOrg.id),
-          orderBy('createdAt', 'desc')
+          where('organizationId', '==', currentOrg.id)
         );
         
         const devisSnapshot = await getDocs(devisQuery);
@@ -44,6 +44,13 @@ function DevisList() {
           id: doc.id,
           ...doc.data()
         }));
+        
+        // Trier localement par date de création (descendant)
+        devisData.sort((a, b) => {
+          const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+          const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+          return dateB - dateA;
+        });
         
         setDevis(devisData);
       } catch (err) {

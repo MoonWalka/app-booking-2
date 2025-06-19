@@ -1,7 +1,7 @@
 /*
  * Styles pour ContactsList
  * Standardisé selon le Guide de Style CSS de TourCraft
- * Dernière mise à jour: 16 May 2025
+ * Dernière mise à jour: 19 juin 2025
  */
 
 /* ContactsList.module.css - Styles unifiés responsive */
@@ -51,6 +51,45 @@
   justify-content: flex-end;
 }
 
+/* =============================
+   LINKED CONTACTS STYLING - Ultra subtle approach
+   ============================= */
+.linkedContactsBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+  background-color: transparent;
+  color: #6c757d;
+  border: none;
+  border-radius: 0.2rem;
+  transition: all 0.2s ease;
+}
+
+.linkedContactsBadge:hover {
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
+.linkedStructureBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+  background-color: transparent;
+  color: #6c757d;
+  border: none;
+  border-radius: 0.2rem;
+  transition: all 0.2s ease;
+}
+
+.linkedStructureBadge:hover {
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
 /* Responsive - Mobile */
 @media (max-width: 768px) {
   .container {
@@ -70,5 +109,10 @@
   .contactLink span {
     display: none;
   }
-}
 
+  .linkedContactsBadge,
+  .linkedStructureBadge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+}

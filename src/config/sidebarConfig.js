@@ -60,24 +60,6 @@ export const sidebarConfig = [
         path: '/contacts'
       },
       {
-        id: 'mes-recherches',
-        label: 'Mes recherches',
-        icon: 'bi-search',
-        path: '/contacts/recherches'
-      },
-      {
-        id: 'mes-selections',
-        label: 'Mes sélections',
-        icon: 'bi-check2-square',
-        path: '/contacts/selections'
-      },
-      {
-        id: 'tags',
-        label: 'Tags',
-        icon: 'bi-tags',
-        path: '/contacts/tags'
-      },
-      {
         id: 'structures',
         label: 'Structures',
         icon: 'bi-building',

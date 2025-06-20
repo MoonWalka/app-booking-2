@@ -22,7 +22,9 @@ const EntityCard = ({
   onClick,
   className = '',
   icon = null,
-  disabled = false
+  disabled = false,
+  compact = false,
+  actions = null
 }) => {
   // Mapping des types d'entités vers leurs configurations
   const entityConfig = {
@@ -77,6 +79,7 @@ const EntityCard = ({
     styles.entityCard,
     config.colorClass,
     disabled ? styles.disabled : '',
+    compact ? styles.compact : '',
     className
   ].filter(Boolean).join(' ');
 
@@ -113,6 +116,29 @@ const EntityCard = ({
             {displaySubtitle}
           </p>
         </div>
+        
+        {/* Colonne d'actions à droite */}
+        {actions && (
+          <div className={styles.entityActions}>
+            {actions.map((action, index) => (
+              <button
+                key={index}
+                className={`${styles.actionButton} ${action.variant ? styles[`actionButton${action.variant}`] : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (action.onClick) {
+                    action.onClick();
+                  }
+                }}
+                title={action.tooltip || action.label}
+                disabled={disabled}
+              >
+                <i className={`bi ${action.icon}`}></i>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

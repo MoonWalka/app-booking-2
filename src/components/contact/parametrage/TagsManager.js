@@ -4,11 +4,13 @@ import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDow
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
-import { TAGS_HIERARCHY } from '@/config/tagsHierarchy';
+import { useTabs } from '@/context/TabsContext';
+import { TAGS_HIERARCHY, GENRES_HIERARCHY, RESEAUX_HIERARCHY, MOTS_CLES_HIERARCHY } from '@/config/tagsHierarchy';
 import './TagsManager.css';
 
 const TagsManager = ({ type, title, buttonLabel }) => {
     const { currentOrganization } = useOrganization();
+    const { openTab } = useTabs();
     const [itemsList, setItemsList] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -22,11 +24,29 @@ const TagsManager = ({ type, title, buttonLabel }) => {
         type: 'Utilisateur'
     });
 
-    // États pour l'arborescence hiérarchique (pour les activités)
-    const [expandedItems, setExpandedItems] = useState(new Set(TAGS_HIERARCHY.map(item => item.id)));
+    // États pour l'arborescence hiérarchique
+    const [expandedItems, setExpandedItems] = useState(new Set());
     const [hiddenItems, setHiddenItems] = useState(new Set());
     const [showOnlyUsed, setShowOnlyUsed] = useState(false);
     const [realUsageData, setRealUsageData] = useState({});
+
+    // Fonction pour obtenir la hiérarchie selon le type
+    const getHierarchyForType = () => {
+        switch (type) {
+            case 'activites':
+                return TAGS_HIERARCHY;
+            case 'genres':
+                return GENRES_HIERARCHY;
+            case 'reseaux':
+                return RESEAUX_HIERARCHY;
+            case 'mots-cles':
+                return MOTS_CLES_HIERARCHY;
+            default:
+                return [];
+        }
+    };
+
+    const currentHierarchy = getHierarchyForType();
 
     // Données d'exemple selon le type
     const getMockData = () => {
@@ -83,9 +103,11 @@ const TagsManager = ({ type, title, buttonLabel }) => {
         }
     };
 
-    // Chargement initial des données
+    // Chargement initial des données et configuration de l'expansion
     useEffect(() => {
         loadItemsList();
+        // Initialiser l'expansion avec tous les éléments principaux de la hiérarchie actuelle
+        setExpandedItems(new Set(currentHierarchy.map(item => item.id)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [type]);
 
@@ -164,6 +186,35 @@ const TagsManager = ({ type, title, buttonLabel }) => {
         setTimeout(() => setShowAlert(false), 3000);
     };
 
+    // Fonction pour ouvrir un onglet avec les contacts filtrés par tag
+    const openContactsWithTag = (tagLabel, usageCount) => {
+        console.log('🔍 Clic sur tag:', tagLabel, 'avec', usageCount, 'utilisations');
+        
+        const tabId = `contacts-filtered-${type}-${tagLabel.replace(/[^a-zA-Z0-9]/g, '-')}`;
+        const tabTitle = usageCount > 0 ? `${tagLabel} (${usageCount})` : `${tagLabel} (0)`;
+        
+        console.log('📋 Ouverture onglet:', { tabId, tabTitle, tagLabel, type, usageCount });
+        
+        try {
+            openTab({
+                id: tabId,
+                title: tabTitle,
+                path: `/contacts?filter=${encodeURIComponent(tagLabel)}&type=${type}`,
+                component: 'ContactsListFiltered',
+                params: { 
+                    filterTag: tagLabel,
+                    filterType: type,
+                    usageCount: usageCount 
+                },
+                icon: 'bi-funnel',
+                closable: true
+            });
+            console.log('✅ Onglet créé avec succès');
+        } catch (error) {
+            console.error('❌ Erreur lors de la création de l\'onglet:', error);
+        }
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setCurrentItem(prev => ({
@@ -212,7 +263,9 @@ const TagsManager = ({ type, title, buttonLabel }) => {
 
     // Fonction pour charger les vraies données d'utilisation depuis Firestore
     const loadRealUsageData = useCallback(async () => {
-        if (!currentOrganization?.id) return;
+        if (!currentOrganization?.id) {
+            return;
+        }
 
         try {
             // Requête pour tous les contacts avec des tags
@@ -230,41 +283,45 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                 const tags = contact.qualification?.tags || [];
                 
                 tags.forEach(tag => {
-                    // Incrémenter pour le tag tel quel (label)
-                    usageCount[tag] = (usageCount[tag] || 0) + 1;
-                    
-                    // Aussi essayer de trouver l'ID correspondant dans la hiérarchie
+                    // Trouver l'ID correspondant dans la hiérarchie et l'incrémenter
                     const findTagInHierarchy = (items) => {
                         for (const item of items) {
                             if (item.label === tag) {
                                 usageCount[item.id] = (usageCount[item.id] || 0) + 1;
+                                return true; // Tag trouvé, arrêter la recherche
                             }
                             if (item.children) {
-                                findTagInHierarchy(item.children);
+                                const found = findTagInHierarchy(item.children);
+                                if (found) return true;
                             }
                         }
+                        return false;
                     };
-                    findTagInHierarchy(TAGS_HIERARCHY);
+                    
+                    // Si le tag n'est pas trouvé dans la hiérarchie, le compter quand même par label
+                    if (!findTagInHierarchy(currentHierarchy)) {
+                        usageCount[tag] = (usageCount[tag] || 0) + 1;
+                    }
                 });
             });
             
             setRealUsageData(usageCount);
         } catch (error) {
-            console.error('Erreur lors du chargement des données d\'utilisation:', error);
+            console.error('TagsManager: Erreur lors du chargement des données d\'utilisation:', error);
         }
-    }, [currentOrganization?.id]);
+    }, [currentOrganization?.id, currentHierarchy]);
 
     // Charger les données d'utilisation au montage
     useEffect(() => {
-        if (currentOrganization?.id && type === 'activites') {
+        if (currentOrganization?.id && ['activites', 'genres', 'reseaux', 'mots-cles'].includes(type)) {
             loadRealUsageData();
         }
     }, [currentOrganization?.id, type, loadRealUsageData]);
 
     const getUsageCount = (itemId) => {
-        // Pour les activités, utiliser les vraies données si disponibles
-        if (type === 'activites' && realUsageData[itemId] !== undefined) {
-            return realUsageData[itemId];
+        // Pour tous les types avec hiérarchie, utiliser les vraies données (y compris 0 si jamais utilisé)
+        if (['activites', 'genres', 'reseaux', 'mots-cles'].includes(type)) {
+            return realUsageData[itemId] || 0;
         }
         // Sinon, retourner des données fictives
         return Math.floor(Math.random() * 100);
@@ -309,7 +366,7 @@ const TagsManager = ({ type, title, buttonLabel }) => {
             });
         };
         
-        addTags(TAGS_HIERARCHY);
+        addTags(currentHierarchy);
         return flatTags;
     };
 
@@ -345,15 +402,43 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                                     boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)'
                                 }}
                             ></div>
-                            <span className={tag.level === 0 ? 'fw-bold' : ''} style={{ 
-                                fontSize: tag.level === 0 ? '0.95rem' : '0.9rem',
-                                color: tag.level === 0 ? '#212529' : '#495057'
-                            }}>{tag.label}</span>
+                            <span 
+                                className={`${tag.level === 0 ? 'fw-bold' : ''}`}
+                                style={{ 
+                                    fontSize: tag.level === 0 ? '0.95rem' : '0.9rem',
+                                    color: tag.level === 0 ? '#212529' : '#495057',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={(e) => {
+                                    console.log('🖱️ Clic détecté sur tag:', tag.label, 'count:', tag.usageCount);
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    openContactsWithTag(tag.label, tag.usageCount);
+                                }}
+                                title={`Voir les contacts avec le tag "${tag.label}" (${tag.usageCount} trouvé${tag.usageCount > 1 ? 's' : ''})`}
+                            >
+                                {tag.label}
+                            </span>
                         </div>
                     </div>
                 </td>
                 <td className="text-center">
-                    <Badge bg="light" text="dark">{tag.usageCount}</Badge>
+                    <Badge 
+                        bg={tag.usageCount > 0 ? "success" : "secondary"} 
+                        text="white"
+                        style={{ 
+                            cursor: 'pointer' 
+                        }}
+                        onClick={(e) => {
+                            console.log('🖱️ Clic sur badge nombre:', tag.label, 'count:', tag.usageCount);
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openContactsWithTag(tag.label, tag.usageCount);
+                        }}
+                        title={`Cliquer pour voir les contacts avec "${tag.label}" (${tag.usageCount} trouvé${tag.usageCount > 1 ? 's' : ''})`}
+                    >
+                        {tag.usageCount}
+                    </Badge>
                 </td>
                 <td className="text-center">
                     <Badge bg={tag.type === 'Système' ? 'secondary' : 'primary'}>
@@ -395,18 +480,18 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                             >
                                 <FaPlus /> {buttonLabel}
                             </Button>
-                            {type === 'activites' && (
+                            {['activites', 'genres', 'reseaux', 'mots-cles'].includes(type) && (
                                 <Button 
                                     variant={showOnlyUsed ? "primary" : "outline-primary"}
                                     onClick={() => setShowOnlyUsed(!showOnlyUsed)}
                                     className="d-flex align-items-center gap-2"
                                 >
-                                    <FaFilter /> {showOnlyUsed ? 'Toutes les activités' : 'Activités utilisées'}
+                                    <FaFilter /> {showOnlyUsed ? `Tous les ${title.toLowerCase()}` : `${title} utilisé(e)s`}
                                 </Button>
                             )}
                             <Button 
                                 variant="outline-secondary" 
-                                onClick={type === 'activites' ? loadRealUsageData : loadItemsList}
+                                onClick={['activites', 'genres', 'reseaux', 'mots-cles'].includes(type) ? loadRealUsageData : loadItemsList}
                                 className="d-flex align-items-center"
                             >
                                 <FaSync />
@@ -429,8 +514,8 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                         </InputGroup>
                     </div>
 
-                    {type === 'activites' ? (
-                        // Affichage hiérarchique pour les activités
+                    {['activites', 'genres', 'reseaux', 'mots-cles'].includes(type) ? (
+                        // Affichage hiérarchique pour tous les types de tags
                         <>
                             {/* Statistiques */}
                             <div className="mb-3 p-3 bg-light rounded">
@@ -463,7 +548,7 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                                     <Button
                                         variant="outline-secondary"
                                         size="sm"
-                                        onClick={() => setExpandedItems(new Set(TAGS_HIERARCHY.map(item => item.id)))}
+                                        onClick={() => setExpandedItems(new Set(currentHierarchy.map(item => item.id)))}
                                     >
                                         Tout déplier
                                     </Button>

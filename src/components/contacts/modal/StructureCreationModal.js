@@ -1,7 +1,7 @@
 // src/components/contacts/modal/StructureCreationModal.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import AddressInput from '@/components/ui/AddressInput';
@@ -11,59 +11,170 @@ import styles from './StructureCreationModal.module.css';
  * Modal de création d'une nouvelle structure
  * Avec système d'onglets : Adresse, Email/Tél, Administratif, Réseaux sociaux
  */
-function StructureCreationModal({ show, onHide, onCreated }) {
+function StructureCreationModal({ show, onHide, onCreated, editMode = false, initialData = null }) {
   const { currentOrganization } = useOrganization();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    // Champs principaux
-    structureRaisonSociale: '',
-    structureSource: '',
+  const [formData, setFormData] = useState(() => {
+    // En mode édition, pré-remplir avec les données initiales
+    if (editMode && initialData) {
+      return {
+        // Champs principaux
+        structureRaisonSociale: initialData.raisonSociale || '',
+        structureSource: initialData.source || '',
+        
+        // Onglet Adresse
+        structureAdresse: initialData.adresse || '',
+        structureSuiteAdresse1: initialData.suiteAdresse || '',
+        structureCodePostal: initialData.codePostal || '',
+        structureVille: initialData.ville || '',
+        structureDepartement: initialData.departement || '',
+        structureRegion: initialData.region || '',
+        structurePays: initialData.pays || 'France',
+        
+        // Onglet Email/Téléphone
+        structureEmail: initialData.email || '',
+        structureEmail2: initialData.email2 || '',
+        structureTelephone1: initialData.telephone1 || '',
+        structureTelephone2: initialData.telephone2 || '',
+        structureFax: initialData.fax || '',
+        
+        // Onglet Administratif
+        structureCodeClient: initialData.codeClient || '',
+        structureRaisonSocialeAdmin: initialData.raisonSocialeAdmin || '',
+        structureAdresseAdmin: initialData.adresseAdmin || '',
+        structureSuiteAdresseAdmin: initialData.suiteAdresseAdmin || '',
+        structureCodePostalAdmin: initialData.codePostalAdmin || '',
+        structureVilleAdmin: initialData.villeAdmin || '',
+        structurePaysAdmin: initialData.paysAdmin || '',
+        structureRegionAdmin: initialData.regionAdmin || '',
+        structureDepartementAdmin: initialData.departementAdmin || '',
+        structureTelAdmin: initialData.telAdmin || '',
+        structureFaxAdmin: initialData.faxAdmin || '',
+        structureEmailAdmin: initialData.emailAdmin || '',
+        structureSignataire: initialData.signataire || '',
+        structureQualite: initialData.qualite || '',
+        structureSiret: initialData.siret || '',
+        structureCodeApe: initialData.codeApe || '',
+        structureLicence: initialData.licence || '',
+        structureTvaIntracom: initialData.tvaIntracom || '',
+        
+        // Onglet Réseaux sociaux
+        structureSiteWeb: initialData.siteWeb || '',
+        structureFacebook: initialData.facebook || '',
+        structureInstagram: initialData.instagram || '',
+        structureTwitter: initialData.twitter || '',
+        structureLinkedin: initialData.linkedin || '',
+        structureYoutube: initialData.youtube || ''
+      };
+    }
     
-    // Onglet Adresse
-    structureAdresse: '',
-    structureSuiteAdresse1: '',
-    structureCodePostal: '',
-    structureVille: '',
-    structureDepartement: '',
-    structureRegion: '',
-    structurePays: 'France',
-    
-    // Onglet Email/Téléphone
-    structureEmail: '',
-    structureEmail2: '',
-    structureTelephone1: '',
-    structureTelephone2: '',
-    structureFax: '',
-    
-    // Onglet Administratif
-    structureCodeClient: '',
-    structureRaisonSocialeAdmin: '',
-    structureAdresseAdmin: '',
-    structureSuiteAdresseAdmin: '',
-    structureCodePostalAdmin: '',
-    structureVilleAdmin: '',
-    structurePaysAdmin: '',
-    structureRegionAdmin: '',
-    structureDepartementAdmin: '',
-    structureTelAdmin: '',
-    structureFaxAdmin: '',
-    structureEmailAdmin: '',
-    structureSignataire: '',
-    structureQualite: '',
-    structureSiret: '',
-    structureCodeApe: '',
-    structureLicence: '',
-    structureTvaIntracom: '',
-    
-    // Onglet Réseaux sociaux
-    structureSiteWeb: '',
-    structureFacebook: '',
-    structureInstagram: '',
-    structureTwitter: '',
-    structureLinkedin: '',
-    structureYoutube: ''
+    // Mode création - valeurs par défaut
+    return {
+      // Champs principaux
+      structureRaisonSociale: '',
+      structureSource: '',
+      
+      // Onglet Adresse
+      structureAdresse: '',
+      structureSuiteAdresse1: '',
+      structureCodePostal: '',
+      structureVille: '',
+      structureDepartement: '',
+      structureRegion: '',
+      structurePays: 'France',
+      
+      // Onglet Email/Téléphone
+      structureEmail: '',
+      structureEmail2: '',
+      structureTelephone1: '',
+      structureTelephone2: '',
+      structureFax: '',
+      
+      // Onglet Administratif
+      structureCodeClient: '',
+      structureRaisonSocialeAdmin: '',
+      structureAdresseAdmin: '',
+      structureSuiteAdresseAdmin: '',
+      structureCodePostalAdmin: '',
+      structureVilleAdmin: '',
+      structurePaysAdmin: '',
+      structureRegionAdmin: '',
+      structureDepartementAdmin: '',
+      structureTelAdmin: '',
+      structureFaxAdmin: '',
+      structureEmailAdmin: '',
+      structureSignataire: '',
+      structureQualite: '',
+      structureSiret: '',
+      structureCodeApe: '',
+      structureLicence: '',
+      structureTvaIntracom: '',
+      
+      // Onglet Réseaux sociaux
+      structureSiteWeb: '',
+      structureFacebook: '',
+      structureInstagram: '',
+      structureTwitter: '',
+      structureLinkedin: '',
+      structureYoutube: ''
+    };
   });
+
+  // Mettre à jour le formulaire quand les données initiales changent
+  useEffect(() => {
+    if (editMode && initialData) {
+      setFormData({
+        // Champs principaux
+        structureRaisonSociale: initialData.raisonSociale || '',
+        structureSource: initialData.source || '',
+        
+        // Onglet Adresse
+        structureAdresse: initialData.adresse || '',
+        structureSuiteAdresse1: initialData.suiteAdresse || '',
+        structureCodePostal: initialData.codePostal || '',
+        structureVille: initialData.ville || '',
+        structureDepartement: initialData.departement || '',
+        structureRegion: initialData.region || '',
+        structurePays: initialData.pays || 'France',
+        
+        // Onglet Email/Téléphone
+        structureEmail: initialData.email || '',
+        structureEmail2: initialData.email2 || '',
+        structureTelephone1: initialData.telephone1 || '',
+        structureTelephone2: initialData.telephone2 || '',
+        structureFax: initialData.fax || '',
+        
+        // Onglet Administratif
+        structureCodeClient: initialData.codeClient || '',
+        structureRaisonSocialeAdmin: initialData.raisonSocialeAdmin || '',
+        structureAdresseAdmin: initialData.adresseAdmin || '',
+        structureSuiteAdresseAdmin: initialData.suiteAdresseAdmin || '',
+        structureCodePostalAdmin: initialData.codePostalAdmin || '',
+        structureVilleAdmin: initialData.villeAdmin || '',
+        structurePaysAdmin: initialData.paysAdmin || '',
+        structureRegionAdmin: initialData.regionAdmin || '',
+        structureDepartementAdmin: initialData.departementAdmin || '',
+        structureTelAdmin: initialData.telAdmin || '',
+        structureFaxAdmin: initialData.faxAdmin || '',
+        structureEmailAdmin: initialData.emailAdmin || '',
+        structureSignataire: initialData.signataire || '',
+        structureQualite: initialData.qualite || '',
+        structureSiret: initialData.siret || '',
+        structureCodeApe: initialData.codeApe || '',
+        structureLicence: initialData.licence || '',
+        structureTvaIntracom: initialData.tvaIntracom || '',
+        
+        // Onglet Réseaux sociaux
+        structureSiteWeb: initialData.siteWeb || '',
+        structureFacebook: initialData.facebook || '',
+        structureInstagram: initialData.instagram || '',
+        structureTwitter: initialData.twitter || '',
+        structureLinkedin: initialData.linkedin || '',
+        structureYoutube: initialData.youtube || ''
+      });
+    }
+  }, [editMode, initialData]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -104,75 +215,98 @@ function StructureCreationModal({ show, onHide, onCreated }) {
     setLoading(true);
 
     try {
-      // Créer le document structure dans la collection contacts
-      const structureData = {
-        ...formData,
-        organizationId: currentOrganization.id,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        type: 'structure'
-      };
+      if (editMode && initialData?.id) {
+        // Mode édition - Mise à jour du document existant
+        const structureData = {
+          ...formData,
+          updatedAt: serverTimestamp()
+        };
 
-      const docRef = await addDoc(collection(db, 'contacts'), structureData);
-      
-      console.log('Structure créée avec ID:', docRef.id);
-      
-      // Callback pour notifier la création
-      if (onCreated) {
-        onCreated({
-          id: docRef.id,
-          ...structureData
-        });
+        const docRef = doc(db, 'contacts_unified', initialData.id);
+        await updateDoc(docRef, structureData);
+        
+        console.log('Structure mise à jour avec ID:', initialData.id);
+        
+        // Callback pour notifier la mise à jour
+        if (onCreated) {
+          onCreated({
+            id: initialData.id,
+            ...structureData
+          });
+        }
+      } else {
+        // Mode création - Créer un nouveau document
+        const structureData = {
+          ...formData,
+          organizationId: currentOrganization.id,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          type: 'structure'
+        };
+
+        const docRef = await addDoc(collection(db, 'contacts'), structureData);
+        
+        console.log('Structure créée avec ID:', docRef.id);
+        
+        // Callback pour notifier la création
+        if (onCreated) {
+          onCreated({
+            id: docRef.id,
+            ...structureData
+          });
+        }
       }
 
-      // Réinitialiser le formulaire
-      setFormData({
-        structureRaisonSociale: '',
-        structureSource: '',
-        structureAdresse: '',
-        structureSuiteAdresse1: '',
-        structureCodePostal: '',
-        structureVille: '',
-        structureDepartement: '',
-        structureRegion: '',
-        structurePays: 'France',
-        structureEmail: '',
-        structureEmail2: '',
-        structureTelephone1: '',
-        structureTelephone2: '',
-        structureFax: '',
-        structureCodeClient: '',
-        structureRaisonSocialeAdmin: '',
-        structureAdresseAdmin: '',
-        structureSuiteAdresseAdmin: '',
-        structureCodePostalAdmin: '',
-        structureVilleAdmin: '',
-        structurePaysAdmin: '',
-        structureRegionAdmin: '',
-        structureDepartementAdmin: '',
-        structureTelAdmin: '',
-        structureFaxAdmin: '',
-        structureEmailAdmin: '',
-        structureSignataire: '',
-        structureQualite: '',
-        structureSiret: '',
-        structureCodeApe: '',
-        structureLicence: '',
-        structureTvaIntracom: '',
-        structureSiteWeb: '',
-        structureFacebook: '',
-        structureInstagram: '',
-        structureTwitter: '',
-        structureLinkedin: '',
-        structureYoutube: ''
-      });
+      // En mode création, réinitialiser le formulaire
+      if (!editMode) {
+        setFormData({
+          structureRaisonSociale: '',
+          structureSource: '',
+          structureAdresse: '',
+          structureSuiteAdresse1: '',
+          structureCodePostal: '',
+          structureVille: '',
+          structureDepartement: '',
+          structureRegion: '',
+          structurePays: 'France',
+          structureEmail: '',
+          structureEmail2: '',
+          structureTelephone1: '',
+          structureTelephone2: '',
+          structureFax: '',
+          structureCodeClient: '',
+          structureRaisonSocialeAdmin: '',
+          structureAdresseAdmin: '',
+          structureSuiteAdresseAdmin: '',
+          structureCodePostalAdmin: '',
+          structureVilleAdmin: '',
+          structurePaysAdmin: '',
+          structureRegionAdmin: '',
+          structureDepartementAdmin: '',
+          structureTelAdmin: '',
+          structureFaxAdmin: '',
+          structureEmailAdmin: '',
+          structureSignataire: '',
+          structureQualite: '',
+          structureSiret: '',
+          structureCodeApe: '',
+          structureLicence: '',
+          structureTvaIntracom: '',
+          structureSiteWeb: '',
+          structureFacebook: '',
+          structureInstagram: '',
+          structureTwitter: '',
+          structureLinkedin: '',
+          structureYoutube: ''
+        });
+      }
 
       // Fermer la modal
       onHide();
 
     } catch (error) {
-      console.error('Erreur lors de la création de la structure:', error);
-      alert('Erreur lors de la création de la structure');
+      console.error(`Erreur lors de ${editMode ? 'la mise à jour' : 'la création'} de la structure:`, error);
+      alert(`Erreur lors de ${editMode ? 'la mise à jour' : 'la création'} de la structure`);
     } finally {
       setLoading(false);
     }
@@ -566,8 +700,8 @@ function StructureCreationModal({ show, onHide, onCreated }) {
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <i className="bi bi-building-add me-2"></i>
-          Nouvelle Structure
+          <i className={`bi ${editMode ? 'bi-building-gear' : 'bi-building-add'} me-2`}></i>
+          {editMode ? 'Modifier la Structure' : 'Nouvelle Structure'}
         </Modal.Title>
       </Modal.Header>
       
@@ -657,12 +791,12 @@ function StructureCreationModal({ show, onHide, onCreated }) {
             {loading ? (
               <>
                 <span className="spinner-border spinner-border-sm me-2"></span>
-                Création...
+                {editMode ? 'Mise à jour...' : 'Création...'}
               </>
             ) : (
               <>
-                <i className="bi bi-plus-lg me-1"></i>
-                Créer la structure
+                <i className={`bi ${editMode ? 'bi-check-lg' : 'bi-plus-lg'} me-1`}></i>
+                {editMode ? 'Mettre à jour' : 'Créer la structure'}
               </>
             )}
           </Button>

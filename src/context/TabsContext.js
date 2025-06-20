@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
 const TabsContext = createContext();
 
@@ -24,6 +24,9 @@ export const TabsProvider = ({ children }) => {
   ]);
 
   const [activeTabId, setActiveTabId] = useState('dashboard');
+  
+  // État pour persister les onglets du bas actifs par entité
+  const [bottomTabsState, setBottomTabsState] = useState({});
 
   // Ouvrir un nouvel onglet ou activer un existant
   const openTab = useCallback((tabConfig) => {
@@ -287,7 +290,20 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
-  const value = {
+  // Fonctions pour gérer l'état des onglets du bas
+  const setBottomTabForEntity = useCallback((entityId, tabId) => {
+    setBottomTabsState(prev => ({
+      ...prev,
+      [entityId]: tabId
+    }));
+  }, []);
+
+  const getBottomTabForEntity = useCallback((entityId, defaultTab = 'historique') => {
+    return bottomTabsState[entityId] || defaultTab;
+  }, [bottomTabsState]);
+
+  // MÉMOÏSATION CRITIQUE : Éviter que tous les consommateurs se re-render
+  const value = useMemo(() => ({
     tabs,
     activeTabId,
     openTab,
@@ -296,6 +312,9 @@ export const TabsProvider = ({ children }) => {
     closeOtherTabs,
     closeAllTabs,
     getActiveTab,
+    // Gestion des onglets du bas
+    setBottomTabForEntity,
+    getBottomTabForEntity,
     // Helpers spécialisés
     openContactTab,
     openLieuTab,
@@ -311,7 +330,32 @@ export const TabsProvider = ({ children }) => {
     openDateCreationTab,
     openPreContratTab,
     openContratTab
-  };
+  }), [
+    tabs,
+    activeTabId,
+    openTab,
+    closeTab,
+    activateTab,
+    closeOtherTabs,
+    closeAllTabs,
+    getActiveTab,
+    setBottomTabForEntity,
+    getBottomTabForEntity,
+    openContactTab,
+    openLieuTab,
+    openConcertTab,
+    openStructureTab,
+    openContactsListTab,
+    openConcertsListTab,
+    openPublicationsListTab,
+    openLieuxListTab,
+    openStructuresListTab,
+    openDebugToolsTab,
+    openTachesTab,
+    openDateCreationTab,
+    openPreContratTab,
+    openContratTab
+  ]);
 
   return (
     <TabsContext.Provider value={value}>

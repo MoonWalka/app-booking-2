@@ -186,6 +186,183 @@ export const TAGS_HIERARCHY = [
   }
 ];
 
+// Hiérarchie pour les genres
+export const GENRES_HIERARCHY = [
+  {
+    id: 'musique',
+    label: 'Musique',
+    color: '#e91e63',
+    description: 'Genres musicaux',
+    children: [
+      { id: 'musique-classique', label: 'Musique classique' },
+      {
+        id: 'musiques-actuelles',
+        label: 'Musiques actuelles',
+        children: [
+          { id: 'traditionnel-world', label: 'Traditionnel et world' },
+          { id: 'jazz-blues', label: 'Jazz & blues' },
+          { id: 'musiques-electroniques', label: 'Musiques électroniques' },
+          { id: 'reggae-ska-dub', label: 'Reggae, ska, dub' },
+          { id: 'hip-hop-rnb', label: 'Hip-Hop, R&B' },
+          { id: 'rock', label: 'Rock' },
+          { id: 'pop', label: 'Pop' },
+          { id: 'chanson', label: 'Chanson' },
+          { id: 'dj-mix', label: 'DJ, Mix' },
+          { id: 'soul-funk', label: 'Soul, funk' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'arts-vivants',
+    label: 'Arts vivants',
+    color: '#9c27b0',
+    description: 'Spectacles vivants',
+    children: [
+      { id: 'arts-de-rue', label: 'Arts de rue' },
+      { id: 'burlesque', label: 'Burlesque' },
+      { id: 'cirque', label: 'Cirque' },
+      { id: 'clown', label: 'Clown' },
+      { id: 'conte', label: 'Conte' },
+      { id: 'danse', label: 'Danse' },
+      { id: 'humour', label: 'Humour' },
+      { id: 'litterature-poesie', label: 'Littérature, poésie' },
+      { id: 'marionnettes', label: 'Marionnettes' },
+      { id: 'theatre', label: 'Théâtre' }
+    ]
+  },
+  {
+    id: 'pluridisciplinaire',
+    label: 'Pluridisciplinaire',
+    color: '#00bcd4',
+    description: 'Mélange de disciplines',
+    children: []
+  },
+  {
+    id: 'arts-plastiques',
+    label: 'Arts plastiques',
+    color: '#ff9800',
+    description: 'Arts visuels',
+    children: []
+  },
+  {
+    id: 'cinema',
+    label: 'Cinéma',
+    color: '#f44336',
+    description: 'Œuvres cinématographiques',
+    children: []
+  },
+  {
+    id: 'expositions',
+    label: 'Expositions',
+    color: '#795548',
+    description: 'Événements d\'exposition',
+    children: []
+  },
+  {
+    id: 'video-arts-numeriques',
+    label: 'Vidéo et arts numériques',
+    color: '#607d8b',
+    description: 'Arts digitaux et vidéo',
+    children: []
+  },
+  {
+    id: 'jeune-public',
+    label: 'Jeune public',
+    color: '#4caf50',
+    description: 'Destiné aux enfants et adolescents',
+    children: []
+  }
+];
+// Hiérarchie pour les réseaux
+export const RESEAUX_HIERARCHY = [
+  { id: 'actes-if', label: 'Actes IF', color: '#2196f3' },
+  { id: 'ajc-jazze-croise', label: 'AJC – Jazzé Croisé', color: '#2196f3' },
+  { id: 'apresmmai', label: 'AprèsMai', color: '#2196f3' },
+  { id: 'atp', label: 'ATP', color: '#2196f3' },
+  { id: 'avant-mardi', label: 'Avant-Mardi', color: '#2196f3' },
+  { id: 'bretagne-en-scene', label: 'Bretagne en Scène', color: '#2196f3' },
+  { id: 'ccr', label: 'CCR', color: '#2196f3' },
+  { id: 'centre-choregraphique-national', label: 'Centre Chorégraphique National', color: '#2196f3' },
+  { id: 'centre-developpement-choregraphique', label: 'Centre de Développement Chorégraphique', color: '#2196f3' },
+  { id: 'centre-dramatique-national', label: 'Centre Dramatique National', color: '#2196f3' },
+  { id: 'centre-dramatique-regional', label: 'Centre Dramatique Régional', color: '#2196f3' },
+  { id: 'centre-national-creation', label: 'Centre National de Création', color: '#2196f3' },
+  { id: 'centre-national-arts-rue', label: 'Centre National des Arts de la rue', color: '#2196f3' },
+  { id: 'chainon', label: 'Chaînon', color: '#2196f3' },
+  { id: 'combo95', label: 'Combo95', color: '#2196f3' },
+  { id: 'creatyve', label: 'Créat\'Yve', color: '#2196f3' },
+  { id: 'crous', label: 'CROUS', color: '#2196f3' },
+  { id: 'cry-78', label: 'CRY (78)', color: '#2196f3' },
+  { id: 'culture-bar-bars', label: 'Culture Bar-Bars', color: '#2196f3' },
+  { id: 'efwmf', label: 'EFWMF', color: '#2196f3' },
+  { id: 'fedelima', label: 'Fedelima', color: '#2196f3' },
+  { id: 'federation-petites-scenes-paris', label: 'Fédération des Petites Scènes de Paris', color: '#2196f3' },
+  { id: 'federation-scenes-jazz-impro', label: 'Fédération des Scènes de Jazz et Musiques Impro', color: '#2196f3' },
+  { id: 'federation-nationale-arts-rue', label: 'Fédération Nationale des Arts de la Rue', color: '#2196f3' },
+  { id: 'fepra', label: 'Fepra', color: '#2196f3' },
+  { id: 'festival-musical-grands-crus-bourgogne', label: 'Festival Musical des Grands Crus de Bourgogne', color: '#2196f3' },
+  { id: 'festival-off-avignon', label: 'Festival Off d\'Avignon', color: '#2196f3' },
+  { id: 'fneijma', label: 'FNEIJMA', color: '#2196f3' },
+  { id: 'fracama', label: 'Fracama', color: '#2196f3' },
+  { id: 'france-festival', label: 'France festival', color: '#2196f3' },
+  { id: 'g19', label: 'G19', color: '#2196f3' },
+  { id: 'gral', label: 'Gral', color: '#2196f3' },
+  { id: 'grand-bureau', label: 'Grand Bureau', color: '#2196f3' },
+  { id: 'groupe-20-ile-france', label: 'Groupe des 20 Île-de-France', color: '#2196f3' },
+  { id: 'groupe-20-rhone-alpes', label: 'Groupe des 20 Rhône-Alpes', color: '#2196f3' },
+  { id: 'jazz-ra', label: 'Jazz(s)RA', color: '#2196f3' },
+  { id: 'la-deferlante', label: 'La Déferlante', color: '#2196f3' },
+  { id: 'collectif-festivals', label: 'Le Collectif des Festivals', color: '#2196f3' },
+  { id: 'pole-pays-loire', label: 'Le Pôle – Pays de la Loire', color: '#2196f3' },
+  { id: 'lieux-missionnes-compagnonnage-marionnette', label: 'Lieux missionnés compagnonnage Marionnette', color: '#2196f3' },
+  { id: 'maad-93', label: 'MAAD 93', color: '#2196f3' },
+  { id: 'mael', label: 'MAEL', color: '#2196f3' },
+  { id: 'map-paris', label: 'MAP (Réseau des Musiques Actuelles de Paris)', color: '#2196f3' },
+  { id: 'mjc-mpt', label: 'MJC – MPT', color: '#2196f3' },
+  { id: 'musiques-94', label: 'Musiques 94', color: '#2196f3' },
+  { id: 'paris-jazz-club', label: 'Paris Jazz Club', color: '#2196f3' },
+  { id: 'patch', label: 'Patch', color: '#2196f3' },
+  { id: 'phonopaca', label: 'PhonoPaca', color: '#2196f3' },
+  { id: 'pince-oreilles-77', label: 'Pince-Oreilles (77)', color: '#2196f3' },
+  { id: 'polca', label: 'Polca', color: '#2196f3' },
+  { id: 'pole-national-arts-cirque', label: 'Pôle National des Arts du Cirque', color: '#2196f3' },
+  { id: 'raoul', label: 'Raoul', color: '#2196f3' },
+  { id: 'rca', label: 'RCA', color: '#2196f3' },
+  { id: 'renar', label: 'RENAR', color: '#2196f3' },
+  { id: 'reseau-printemps', label: 'Réseau Printemps', color: '#2196f3' },
+  { id: 'reseau-ressource', label: 'Réseau Ressource', color: '#2196f3' },
+  { id: 'reseau92', label: 'Reseau92', color: '#2196f3' },
+  { id: 'reunion-operas-france', label: 'Réunion des Opéras de France', color: '#2196f3' },
+  { id: 'rezone-91', label: 'REZONE 91', color: '#2196f3' },
+  { id: 'rif', label: 'RIF', color: '#2196f3' },
+  { id: 'rim', label: 'RIM', color: '#2196f3' },
+  { id: 'rman-normandie', label: 'RMAN – Réseau des Musiques Actuelles en Normandie', color: '#2196f3' },
+  { id: 's2m', label: 'S2M', color: '#2196f3' },
+  { id: 'scene-conventionnee', label: 'Scène Conventionnée', color: '#2196f3' },
+  { id: 'scene-nationale', label: 'Scène Nationale', color: '#2196f3' },
+  { id: 'smac', label: 'SMAC', color: '#2196f3' },
+  { id: 'territoires-cirque', label: 'Territoires de Cirque', color: '#2196f3' },
+  { id: 'theatre-departemental', label: 'Théâtre Départemental', color: '#2196f3' },
+  { id: 'theatre-national', label: 'Théâtre National', color: '#2196f3' },
+  { id: 'theatre-parisiens-associes', label: 'Théâtre Parisiens Associés', color: '#2196f3' },
+  { id: 'theatre-regional', label: 'Théâtre Régional', color: '#2196f3' },
+  { id: 'tras', label: 'TRAS', color: '#2196f3' },
+  { id: 'yourope', label: 'Yourope', color: '#2196f3' },
+  { id: 'zenith', label: 'Zénith', color: '#2196f3' },
+  { id: 'zone-franche', label: 'Zone Franche', color: '#2196f3' }
+];
+// Hiérarchie pour les mots-clés (gérée par l'utilisateur)
+export const MOTS_CLES_HIERARCHY = [
+  {
+    id: 'mots-cles-utilisateur',
+    label: 'Mots-clés personnalisés',
+    color: '#9c27b0',
+    description: 'Mots-clés définis par l\'utilisateur',
+    children: []
+  }
+];
+
 // Helper pour obtenir tous les tags de façon plate (pour la compatibilité)
 export const getAllTags = () => {
   const flatTags = [];

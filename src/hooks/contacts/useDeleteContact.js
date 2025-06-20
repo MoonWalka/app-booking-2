@@ -20,7 +20,7 @@ const useDeleteContact = (onDeleteSuccess) => {
     checkRelatedEntities
   } = useGenericEntityDelete({
     entityType: 'contact',
-    collectionName: 'contacts',
+    collectionName: 'contacts_unified',
     
     // Messages personnalisés
     confirmationTitle: 'Supprimer ce contact',

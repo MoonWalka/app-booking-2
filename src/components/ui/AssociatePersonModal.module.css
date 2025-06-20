@@ -1,0 +1,401 @@
+/* Modal overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* En-tête */
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.closeButton:hover {
+  color: #dc3545;
+  background-color: #f8f9fa;
+}
+
+/* Bloc de sélection */
+.selectionBlock {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.searchLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.searchInput {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput i {
+  position: absolute;
+  left: 0.75rem;
+  color: #6c757d;
+  z-index: 1;
+}
+
+.searchInput input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.searchInput input:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.detailsButton {
+  padding: 0.5rem 1rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.detailsButton:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.detailsButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.newPersonButton {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.newPersonButton:hover {
+  background-color: #218838;
+}
+
+/* Tableau */
+.tableContainer {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.loading i {
+  margin-right: 0.5rem;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.resultsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.resultsTable th,
+.resultsTable td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.resultsTable th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.checkboxColumn {
+  width: 40px;
+}
+
+.nameColumn {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.nameColumn:hover {
+  background-color: #e9ecef;
+}
+
+.nameColumn i {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.contactsColumn {
+  width: 200px;
+}
+
+.resultsTable tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.resultsTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.selectedRow {
+  background-color: #e3f2fd !important;
+}
+
+.selectedRow:hover {
+  background-color: #bbdefb !important;
+}
+
+.disabledRow {
+  background-color: #f5f5f5 !important;
+  opacity: 0.6;
+}
+
+.disabledRow:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.alreadyAssociated {
+  color: #28a745;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.alreadyAssociated i {
+  margin-right: 0.25rem;
+}
+
+.personInfo strong {
+  display: block;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.fonction {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.contactsInfo {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.contactsInfo div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.contactsInfo i {
+  margin-right: 0.5rem;
+  width: 12px;
+}
+
+/* Pied de modal */
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.pagination button {
+  background: none;
+  border: 1px solid #ced4da;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #6c757d;
+  transition: all 0.2s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  margin: 0 0.5rem;
+  color: #6c757d;
+}
+
+.itemsInfo {
+  margin-left: 1rem;
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+/* Boutons d'action */
+.actionButtons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.cancelButton {
+  padding: 0.5rem 1.5rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+.associateButton {
+  padding: 0.5rem 1.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.associateButton:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.associateButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #6c757d;
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+  .modalContent {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .searchRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .modalFooter {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pagination {
+    order: 2;
+  }
+  
+  .actionButtons {
+    order: 1;
+    justify-content: stretch;
+  }
+  
+  .actionButtons button {
+    flex: 1;
+  }
+}

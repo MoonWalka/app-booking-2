@@ -7,6 +7,8 @@ import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { useDeleteContact } from '@/hooks/contacts';
+import PersonneCreationModal from '@/components/contacts/modal/PersonneCreationModal';
+import StructureCreationModal from '@/components/contacts/modal/StructureCreationModal';
 import styles from './ContactsList.module.css';
 
 /**
@@ -17,18 +19,115 @@ import styles from './ContactsList.module.css';
 function ContactsList({ filterType = 'all' }) {
   const navigate = useNavigate();
   const { currentOrganization } = useOrganization();
-  const { openContactTab } = useTabs();
+  const { openContactTab, openTab } = useTabs();
   const [unifiedContacts, setUnifiedContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   
+  // États pour la modal d'édition des personnes
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingContact, setEditingContact] = useState(null);
+  
+  // États pour la modal d'édition des structures
+  const [showEditStructureModal, setShowEditStructureModal] = useState(false);
+  const [editingStructure, setEditingStructure] = useState(null);
+  
   // Callback après suppression
   const onDeleteSuccess = () => {
     setRefreshKey(prev => prev + 1);
   };
+
+
+  // Callback après mise à jour du contact (personne)
+  const handleContactUpdated = () => {
+    setShowEditModal(false);
+    setEditingContact(null);
+    setRefreshKey(prev => prev + 1); // Rafraîchir la liste
+  };
+
+  // Callback après mise à jour de la structure
+  const handleStructureUpdated = () => {
+    setShowEditStructureModal(false);
+    setEditingStructure(null);
+    setRefreshKey(prev => prev + 1); // Rafraîchir la liste
+  };
   
   const { handleDelete: handleDeleteContact } = useDeleteContact(onDeleteSuccess);
+
+  // Fonction pour ouvrir la modal d'édition - gère personnes et structures
+  const handleEditContact = (item) => {
+    console.log('=== DEBUG CONTACT EDIT ===');
+    console.log('[ContactsList] handleEditContact appelé avec:', item);
+    console.log('[ContactsList] item keys:', Object.keys(item));
+    console.log('[ContactsList] viewType:', item._viewType);
+    console.log('[ContactsList] entityType:', item.entityType);
+    
+    // Si c'est une structure
+    if (item._viewType === 'structure' || item.entityType === 'structure') {
+      console.log('[ContactsList] Structure item complet:', item);
+      console.log('[ContactsList] Clés disponibles:', Object.keys(item));
+      
+      // Essayer différentes sources pour la raison sociale
+      const raisonSociale = item.structureRaisonSociale || 
+                           item.raisonSociale || 
+                           item.structureName || 
+                           item.nom || 
+                           item.displayName || 
+                           '';
+      
+      console.log('[ContactsList] Raison sociale trouvée:', raisonSociale);
+      
+      const editStructureData = {
+        id: item.id,
+        raisonSociale: raisonSociale,
+        typeStructure: item.structureType || item.typeStructure || '',
+        adresse: item.structureAdresse || item.adresse || '',
+        suiteAdresse: item.structureSuiteAdresse1 || item.suiteAdresse || '',
+        codePostal: item.structureCodePostal || item.codePostal || '',
+        ville: item.structureVille || item.ville || '',
+        departement: item.structureDepartement || item.departement || '',
+        region: item.structureRegion || item.region || '',
+        pays: item.structurePays || item.pays || 'France',
+        email: item.structureEmail || item.email || '',
+        telephone1: item.structureTelephone1 || item.telephone || '',
+        telephone2: item.structureTelephone2 || '',
+        siteWeb: item.structureSiteWeb || '',
+        siret: item.structureSiret || '',
+        source: item.source || 'Prospection'
+      };
+      
+      console.log('[ContactsList] editStructureData préparé:', editStructureData);
+      setEditingStructure(editStructureData);
+      setShowEditStructureModal(true);
+      return;
+    }
+    
+    // Pour les personnes, utiliser la même approche que ContactViewTabs
+    const editData = {
+      id: item.id,
+      prenom: item.prenom || '',
+      nom: item.nom || '',
+      source: item.source || 'Prospection',
+      adresse: item.adresse || '',
+      suiteAdresse: item.suiteAdresse || '',
+      codePostal: item.codePostal || '',
+      ville: item.ville || '',
+      departement: item.departement || '',
+      region: item.region || '',
+      pays: item.pays || 'France',
+      mailDirect: item.mailDirect || item.email || '',
+      mailPerso: item.mailPerso || '',
+      telDirect: item.telDirect || item.telephone || '',
+      telPerso: item.telPerso || '',
+      mobile: item.mobile || '',
+      fonction: item.fonction || ''
+    };
+    
+    console.log('[ContactsList] editData préparé:', editData);
+    setEditingContact(editData);
+    setShowEditModal(true);
+  };
 
   // Chargement de la collection unifiée
   useEffect(() => {
@@ -418,7 +517,10 @@ function ContactsList({ filterType = 'all' }) {
         {/* Visualiser fiche */}
         <button
           className="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center"
-          onClick={() => openContactTab(contactId, item.displayName, viewType)}
+          onClick={(e) => {
+            e.stopPropagation();
+            openContactTab(contactId, item.displayName, viewType);
+          }}
           title="Visualiser la fiche"
           style={{ width: '32px', height: '32px' }}
         >
@@ -428,7 +530,10 @@ function ContactsList({ filterType = 'all' }) {
         {/* Éditer */}
         <button
           className="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center"
-          onClick={() => navigate(`/contacts/${contactId}/edit`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEditContact(item);
+          }}
           title="Modifier"
           style={{ width: '32px', height: '32px' }}
         >
@@ -438,7 +543,8 @@ function ContactsList({ filterType = 'all' }) {
         {/* Qualifier */}
         <button
           className="btn btn-sm btn-outline-success d-flex align-items-center justify-content-center"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             // TODO: Implémenter modal de qualification
             console.log('Qualifier:', item);
             alert('Fonctionnalité de qualification à implémenter');
@@ -452,7 +558,10 @@ function ContactsList({ filterType = 'all' }) {
         {/* Supprimer */}
         <button
           className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center"
-          onClick={() => handleDeleteContact(contactId)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteContact(contactId);
+          }}
           title="Supprimer"
           style={{ width: '32px', height: '32px' }}
         >
@@ -548,6 +657,11 @@ function ContactsList({ filterType = 'all' }) {
         columns={columns}
         getStatistics={getStatistics}
         renderActions={renderActions}
+        onRowClick={(item) => {
+          const contactId = item._originalId;
+          const viewType = item._viewType;
+          openContactTab(contactId, item.displayName, viewType);
+        }}
         filterOptions={getFilterOptions()}
         filterData={filterData}
         searchPlaceholder="Rechercher dans structures et personnes..."
@@ -556,6 +670,30 @@ function ContactsList({ filterType = 'all' }) {
         refreshKey={refreshKey}
         showStats={true}
         title="Contacts Unifiés"
+      />
+
+      {/* Modal d'édition des personnes */}
+      <PersonneCreationModal
+        show={showEditModal}
+        onHide={() => {
+          setShowEditModal(false);
+          setEditingContact(null);
+        }}
+        onCreated={handleContactUpdated}
+        editMode={true}
+        initialData={editingContact}
+      />
+
+      {/* Modal d'édition des structures */}
+      <StructureCreationModal
+        show={showEditStructureModal}
+        onHide={() => {
+          setShowEditStructureModal(false);
+          setEditingStructure(null);
+        }}
+        onCreated={handleStructureUpdated}
+        editMode={true}
+        initialData={editingStructure}
       />
     </div>
   );

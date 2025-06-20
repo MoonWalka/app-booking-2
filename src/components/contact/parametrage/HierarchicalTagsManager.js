@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Button, Alert, InputGroup, Form, Modal, Badge } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDown, FaTags } from 'react-icons/fa';
 import { TAGS_HIERARCHY } from '@/config/tagsHierarchy';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import './TagsManager.css';
 
 const HierarchicalTagsManager = () => {
+  const { currentOrganization } = useOrganization();
+  
   // Démarrer avec tous les éléments principaux expandés
   const [expandedItems, setExpandedItems] = useState(new Set(TAGS_HIERARCHY.map(item => item.id)));
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +19,7 @@ const HierarchicalTagsManager = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('success');
+  const [realUsageData, setRealUsageData] = useState({});
   
   const [formData, setFormData] = useState({
     label: '',
@@ -111,16 +117,78 @@ const HierarchicalTagsManager = () => {
     setTimeout(() => setShowAlert(false), 3000);
   };
 
-  // Compter les utilisations (mock data pour l'instant)
-  const getUsageCount = (itemId) => {
-    return Math.floor(Math.random() * 100);
+  // Fonction pour charger les vraies données d'utilisation depuis Firestore
+  const loadRealUsageData = useCallback(async () => {
+    if (!currentOrganization?.id) return;
+
+    try {
+      // Requête pour tous les contacts avec des tags
+      const contactsQuery = query(
+        collection(db, 'contacts'),
+        where('organizationId', '==', currentOrganization.id)
+      );
+      
+      const contactsSnapshot = await getDocs(contactsQuery);
+      const usageCount = {};
+      const contactsWithTags = [];
+      
+      // Compter l'utilisation de chaque tag
+      contactsSnapshot.docs.forEach(doc => {
+        const contact = doc.data();
+        const tags = contact.qualification?.tags || [];
+        
+        if (tags.length > 0) {
+          contactsWithTags.push({
+            nom: contact.nom || 'Sans nom',
+            tags: tags
+          });
+        }
+        
+        tags.forEach(tag => {
+          // Incrémenter pour le tag tel quel (label)
+          usageCount[tag] = (usageCount[tag] || 0) + 1;
+          
+          // Aussi essayer de trouver l'ID correspondant dans la hiérarchie
+          const findTagInHierarchy = (items) => {
+            for (const item of items) {
+              if (item.label === tag) {
+                usageCount[item.id] = (usageCount[item.id] || 0) + 1;
+              }
+              if (item.children) {
+                findTagInHierarchy(item.children);
+              }
+            }
+          };
+          findTagInHierarchy(TAGS_HIERARCHY);
+        });
+      });
+      
+      
+      setRealUsageData(usageCount);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données d\'utilisation:', error);
+    }
+  }, [currentOrganization?.id]);
+
+  // Charger les données d'utilisation au montage
+  useEffect(() => {
+    if (currentOrganization?.id) {
+      loadRealUsageData();
+    }
+  }, [currentOrganization?.id, loadRealUsageData]);
+
+  // Compter les utilisations avec les vraies données
+  const getUsageCount = (itemId, itemLabel) => {
+    // Chercher d'abord par ID, puis par label
+    const count = realUsageData[itemId] || realUsageData[itemLabel] || 0;
+    return count;
   };
 
   // Rendu récursif de l'arborescence
   const renderTreeItem = (item, level = 0) => {
     const hasSubItems = item.children && item.children.length > 0;
     const isExpanded = expandedItems.has(item.id);
-    const usageCount = getUsageCount(item.id);
+    const usageCount = getUsageCount(item.id, item.label);
     
     // Debug pour voir les données
     if (level === 0) {
@@ -249,6 +317,7 @@ const HierarchicalTagsManager = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </InputGroup>
+
 
         {/* Statistiques */}
         <div className="mb-3 p-3 bg-light rounded">

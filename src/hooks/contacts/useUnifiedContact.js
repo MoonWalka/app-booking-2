@@ -1,5 +1,5 @@
 // src/hooks/contacts/useUnifiedContact.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { doc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
@@ -15,7 +15,7 @@ export const useUnifiedContact = (contactId) => {
     entityType: null
   });
 
-  useEffect(() => {
+  const loadUnifiedContact = useCallback(async () => {
     if (!contactId) {
       setData({
         contact: null,
@@ -26,54 +26,65 @@ export const useUnifiedContact = (contactId) => {
       return;
     }
 
-    const loadUnifiedContact = async () => {
-      console.log('🔄 [useUnifiedContact] Chargement ID:', contactId);
-      
-      try {
-        setData(prev => ({ ...prev, loading: true, error: null }));
+    console.log('🔄 [useUnifiedContact] Chargement ID:', contactId);
+    
+    try {
+      setData(prev => ({ ...prev, loading: true, error: null }));
 
-        // Charger depuis contacts_unified
-        const docRef = doc(db, 'contacts_unified', contactId);
-        const docSnap = await getDoc(docRef);
+      // Charger depuis contacts_unified
+      const docRef = doc(db, 'contacts_unified', contactId);
+      const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          const unifiedData = { id: docSnap.id, ...docSnap.data() };
-          
-          console.log('✅ [useUnifiedContact] Document trouvé:', {
-            id: unifiedData.id,
-            entityType: unifiedData.entityType,
-            structureName: unifiedData.structure?.raisonSociale,
-            personnesCount: unifiedData.personnes?.length || 0
-          });
+      if (docSnap.exists()) {
+        const unifiedData = { id: docSnap.id, ...docSnap.data() };
+        
+        console.log('✅ [useUnifiedContact] Document trouvé:', {
+          id: unifiedData.id,
+          entityType: unifiedData.entityType,
+          structureName: unifiedData.structure?.raisonSociale,
+          personnesCount: unifiedData.personnes?.length || 0,
+          tags: unifiedData.qualification?.tags?.length || 0
+        });
 
-          setData({
-            contact: unifiedData,
-            loading: false,
-            error: null,
-            entityType: unifiedData.entityType
-          });
-        } else {
-          console.warn('⚠️ [useUnifiedContact] Document non trouvé:', contactId);
-          setData({
-            contact: null,
-            loading: false,
-            error: 'Contact non trouvé dans la collection unifiée',
-            entityType: null
-          });
-        }
-      } catch (error) {
-        console.error('❌ [useUnifiedContact] Erreur:', error);
+        setData({
+          contact: unifiedData,
+          loading: false,
+          error: null,
+          entityType: unifiedData.entityType
+        });
+      } else {
+        console.warn('⚠️ [useUnifiedContact] Document non trouvé:', contactId);
         setData({
           contact: null,
           loading: false,
-          error: error.message,
+          error: 'Contact non trouvé dans la collection unifiée',
           entityType: null
         });
       }
-    };
-
-    loadUnifiedContact();
+    } catch (error) {
+      console.error('❌ [useUnifiedContact] Erreur:', error);
+      setData({
+        contact: null,
+        loading: false,
+        error: error.message,
+        entityType: null
+      });
+    }
   }, [contactId]);
 
-  return data;
+  useEffect(() => {
+    loadUnifiedContact();
+  }, [loadUnifiedContact]);
+
+  const reload = useCallback(() => {
+    console.log('🔄 [useUnifiedContact] Rechargement forcé');
+    // Éviter les appels multiples rapprochés
+    if (data.loading) {
+      console.log('⏳ [useUnifiedContact] Rechargement déjà en cours, ignoré');
+      return;
+    }
+    loadUnifiedContact();
+  }, [loadUnifiedContact, data.loading]);
+
+  return { ...data, reload };
 };

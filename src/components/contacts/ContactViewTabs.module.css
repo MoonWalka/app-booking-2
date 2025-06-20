@@ -336,13 +336,13 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1);
-  background: var(--tc-color-info-50);
-  color: var(--tc-color-info-700);
+  background: linear-gradient(135deg, #6c757d, #868e96); /* Couleur par défaut */
+  color: white;
   padding: var(--tc-space-1) var(--tc-space-2);
   border-radius: var(--tc-radius-lg);
   font-size: var(--tc-font-size-xs);
   font-weight: var(--tc-font-weight-medium);
-  border: 1px solid var(--tc-color-info-200);
+  border: none;
   white-space: nowrap;
 }
 
@@ -766,6 +766,7 @@
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   color: white;
+  background: linear-gradient(135deg, #6c757d, #868e96); /* Couleur par défaut */
   position: relative;
   box-shadow: var(--tc-shadow-base);
   transition: var(--tc-transition-base);
@@ -1181,6 +1182,32 @@
   font-size: var(--tc-font-size-xs);
 }
 
+.deleteCommentButton {
+  background: none;
+  border: none;
+  color: var(--tc-text-secondary);
+  padding: var(--tc-space-1);
+  border-radius: var(--tc-radius-sm);
+  cursor: pointer;
+  transition: var(--tc-transition-fast);
+  margin-left: var(--tc-space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.deleteCommentButton:hover {
+  background: var(--tc-color-danger-50);
+  color: var(--tc-color-danger-600);
+  transform: scale(1.05);
+}
+
+.deleteCommentButton i {
+  font-size: var(--tc-font-size-sm);
+}
+
 .commentContent {
   color: var(--tc-text-dark);
   font-size: var(--tc-font-size-sm);
@@ -1234,4 +1261,194 @@
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-normal);
+}
+
+/* Styles pour les nouveaux tableaux intégrés */
+.structureDatesTable {
+  background: var(--tc-bg-white);
+  border-radius: var(--tc-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--tc-border-light);
+}
+
+.structureDatesTable .tableHeader {
+  background: var(--tc-bg-subtle);
+  border-bottom: 1px solid var(--tc-border-light);
+  padding: var(--tc-space-3) var(--tc-space-4);
+}
+
+.structureDatesTable .tableHeader h3 {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-dark);
+}
+
+.structureDatesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tc-space-4);
+  background: var(--tc-bg-subtle);
+  border-bottom: 1px solid var(--tc-border-light);
+  margin-bottom: var(--tc-space-3);
+}
+
+.structureDatesHeader h3 {
+  margin: 0;
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-text-dark);
+}
+
+.addDateButton {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  background: var(--tc-color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--tc-radius-md);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition-fast);
+}
+
+.addDateButton:hover {
+  background: var(--tc-color-primary-600);
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+/* Styles pour les cellules du tableau de bord */
+.niveauCell,
+.artisteCell,
+.projetCell,
+.dateCell {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-dark);
+}
+
+.lieuCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-1);
+}
+
+.lieuNom {
+  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-dark);
+}
+
+.lieuVille {
+  font-size: var(--tc-font-size-xs);
+  color: var(--tc-text-secondary);
+}
+
+.montantCell {
+  text-align: right;
+}
+
+.montant {
+  font-weight: var(--tc-font-weight-semibold);
+  color: var(--tc-color-success-600);
+}
+
+.noMontant {
+  color: var(--tc-text-secondary);
+}
+
+.devisCell,
+.preContratCell {
+  text-align: center;
+}
+
+.devisCell i,
+.preContratCell i {
+  font-size: var(--tc-font-size-lg);
+  cursor: pointer;
+  transition: var(--tc-transition-fast);
+}
+
+.devisCell i:hover,
+.preContratCell i:hover {
+  transform: scale(1.1);
+}
+
+/* Styles supplémentaires pour toutes les colonnes du tableau de bord */
+.niveauIcon {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.niveauBar {
+  width: 4px;
+  height: 12px;
+  border-radius: 2px;
+  transition: var(--tc-transition-fast);
+}
+
+.niveauBarActive {
+  background: var(--tc-color-primary);
+}
+
+.niveauBarInactive {
+  background: var(--tc-color-neutral-300);
+}
+
+.priseOptionCell {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-dark);
+}
+
+.contratTypeCell {
+  text-align: center;
+}
+
+.contratTypeBadge {
+  display: inline-block;
+  padding: var(--tc-space-1) var(--tc-space-2);
+  border-radius: var(--tc-radius-full);
+  color: white;
+  font-size: var(--tc-font-size-xs);
+  font-weight: var(--tc-font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nbDatesCell {
+  text-align: center;
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-text-dark);
+}
+
+.confirmationCell,
+.contratFinalCell,
+.factureCell {
+  text-align: center;
+}
+
+.confirmationCell.clickable {
+  cursor: pointer;
+  transition: var(--tc-transition-fast);
+}
+
+.confirmationCell.clickable:hover {
+  transform: scale(1.1);
+}
+
+.confirmationCell i,
+.contratFinalCell i,
+.factureCell i {
+  font-size: var(--tc-font-size-lg);
+  transition: var(--tc-transition-fast);
+}
+
+.contratFinalCell i:hover,
+.factureCell i:hover {
+  transform: scale(1.1);
 }

@@ -49,7 +49,6 @@ const MesRecherchesPage = () => {
 
   // Synchronisation avec l'URL
   useEffect(() => {
-    const path = location.pathname;
     const searchParams = new URLSearchParams(location.search);
     const config = searchParams.get('section') || 'nouvelle-recherche';
     const subOption = searchParams.get('sub') || '';

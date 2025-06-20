@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrganization } from '@/context/OrganizationContext';
-import { collection, getDocs, query, where, orderBy } from '@/services/firebase-service';
+import { collection, getDocs, query, where } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';

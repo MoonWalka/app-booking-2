@@ -40,6 +40,9 @@ import AdminParametragePage from '@/pages/AdminParametragePage';
 import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
+import MesRecherchesPage from '@/pages/MesRecherchesPage';
+import MesSelectionsPage from '@/pages/MesSelectionsPage';
+import ContactTagsPage from '@/pages/ContactTagsPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 // import ConcertFormWrapper from '@/components/concerts/ConcertForm';
 // import ConcertsList from '@/components/concerts/ConcertsList';
@@ -357,28 +360,19 @@ function App() {
                       {/* Nouvelles routes pour les fonctionnalités contacts */}
                       <Route path="/contacts/recherches" element={
                         <PrivateRoute>
-                          <div className="container mt-4">
-                            <h2><i className="bi bi-search me-2"></i>Mes recherches</h2>
-                            <p className="text-muted">Fonctionnalité en développement...</p>
-                          </div>
+                          <MesRecherchesPage />
                         </PrivateRoute>
                       } />
                       
                       <Route path="/contacts/selections" element={
                         <PrivateRoute>
-                          <div className="container mt-4">
-                            <h2><i className="bi bi-check2-square me-2"></i>Mes sélections</h2>
-                            <p className="text-muted">Fonctionnalité en développement...</p>
-                          </div>
+                          <MesSelectionsPage />
                         </PrivateRoute>
                       } />
                       
                       <Route path="/contacts/tags" element={
                         <PrivateRoute>
-                          <div className="container mt-4">
-                            <h2><i className="bi bi-tags me-2"></i>Tags</h2>
-                            <p className="text-muted">Fonctionnalité en développement...</p>
-                          </div>
+                          <ContactTagsPage />
                         </PrivateRoute>
                       } />
                       

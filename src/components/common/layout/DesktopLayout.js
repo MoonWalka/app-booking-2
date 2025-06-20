@@ -272,6 +272,33 @@ function DesktopLayout({ children }) {
         // Naviguer normalement pour cette page de test
         navigate(item.to);
         break;
+      case '/contacts/recherches':
+        openTab({
+          id: 'contacts-recherches',
+          title: 'Mes recherches',
+          path: '/contacts/recherches',
+          component: 'MesRecherchesPage',
+          icon: 'bi-search'
+        });
+        break;
+      case '/contacts/selections':
+        openTab({
+          id: 'contacts-selections',
+          title: 'Mes sélections',
+          path: '/contacts/selections',
+          component: 'MesSelectionsPage',
+          icon: 'bi-check2-square'
+        });
+        break;
+      case '/contacts/tags':
+        openTab({
+          id: 'contacts-tags',
+          title: 'Tags',
+          path: '/contacts/tags',
+          component: 'ContactTagsPage',
+          icon: 'bi-tags'
+        });
+        break;
       default:
         // Navigation standard pour les autres pages
         navigate(item.to);

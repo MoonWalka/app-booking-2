@@ -190,6 +190,125 @@
 }
 */
 
+/* Styles pour la navigation multi-niveaux */
+.sidebarMenu {
+  background: #f8f9fa;
+  border-radius: 0.375rem;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+.menuItem {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-bottom: 1px solid #e9ecef;
+  background: transparent;
+  color: #495057;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.menuItem:hover {
+  background: #e9ecef;
+  color: #212529;
+}
+
+.menuItem:last-child {
+  border-bottom: none;
+}
+
+.menuItemActive {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.subMenu {
+  background: #f8f9fa;
+  border-radius: 0.375rem;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+.subMenuItem {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-bottom: 1px solid #e9ecef;
+  background: transparent;
+  color: #495057;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.subMenuItem:hover {
+  background: #e9ecef;
+  color: #212529;
+}
+
+.subMenuItem:last-child {
+  border-bottom: none;
+}
+
+.subMenuItemActive {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.subMenuSection {
+  /* Container pour les sections avec sous-éléments */
+}
+
+.subMenuItems {
+  background: #ffffff;
+  border-top: 1px solid #e9ecef;
+}
+
+.subMenuSubItem {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #f1f3f4;
+  background: transparent;
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.subMenuSubItem:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.subMenuSubItem:last-child {
+  border-bottom: none;
+}
+
+.contentArea {
+  background: white;
+  border-radius: 0.375rem;
+  border: 1px solid #e9ecef;
+  padding: 2rem;
+  min-height: 500px;
+}
+
+.contentArea h3 {
+  margin-bottom: 1rem;
+  color: #212529;
+  font-weight: 600;
+}
+
+.contentArea .text-muted {
+  margin-bottom: 1.5rem;
+}
+
 /* Custom form elements */
 .customTextarea {
   resize: vertical;

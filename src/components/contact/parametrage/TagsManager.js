@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Table, Modal, Form, Alert, Badge, InputGroup } from 'react-bootstrap';
-import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDown, FaTags } from 'react-icons/fa';
+import { TAGS_HIERARCHY } from '@/config/tagsHierarchy';
 import './TagsManager.css';
 
 const TagsManager = ({ type, title, buttonLabel }) => {
@@ -16,6 +17,11 @@ const TagsManager = ({ type, title, buttonLabel }) => {
         nom: '',
         type: 'Utilisateur'
     });
+
+    // États pour l'arborescence hiérarchique (pour les activités)
+    const [expandedItems, setExpandedItems] = useState(new Set(TAGS_HIERARCHY.map(item => item.id)));
+    const [modalMode, setModalMode] = useState('add'); // 'add', 'edit', 'addChild'
+    const [selectedHierarchyItem, setSelectedHierarchyItem] = useState(null);
 
     // Données d'exemple selon le type
     const getMockData = () => {
@@ -178,6 +184,110 @@ const TagsManager = ({ type, title, buttonLabel }) => {
         );
     };
 
+    // Fonctions pour l'arborescence hiérarchique
+    const toggleExpand = (itemId) => {
+        const newExpanded = new Set(expandedItems);
+        if (newExpanded.has(itemId)) {
+            newExpanded.delete(itemId);
+        } else {
+            newExpanded.add(itemId);
+        }
+        setExpandedItems(newExpanded);
+    };
+
+    const handleAddChild = (parentItem) => {
+        setModalMode('addChild');
+        setSelectedHierarchyItem(parentItem);
+        setCurrentItem({ id: null, nom: '', type: 'Utilisateur' });
+        setShowModal(true);
+    };
+
+    const handleEditHierarchy = (item) => {
+        setModalMode('edit');
+        setSelectedHierarchyItem(item);
+        setCurrentItem({ id: item.id, nom: item.label, type: 'Système' });
+        setIsEditing(true);
+        setShowModal(true);
+    };
+
+    const getUsageCount = (itemId) => {
+        return Math.floor(Math.random() * 100);
+    };
+
+    // Rendu récursif de l'arborescence
+    const renderTreeItem = (item, level = 0) => {
+        const hasSubItems = item.children && item.children.length > 0;
+        const isExpanded = expandedItems.has(item.id);
+        const usageCount = getUsageCount(item.id);
+
+        return (
+            <div key={item.id} className="tree-item">
+                <div 
+                    className={`tree-item-content ${level > 0 ? 'tree-item-child' : 'tree-item-root'}`}
+                    style={{ marginLeft: `${level * 20}px` }}
+                >
+                    <div className="tree-item-left">
+                        {hasSubItems ? (
+                            <button
+                                className="tree-expand-btn"
+                                onClick={() => toggleExpand(item.id)}
+                            >
+                                {isExpanded ? <FaChevronDown /> : <FaChevronRight />}
+                            </button>
+                        ) : (
+                            <span className="tree-expand-placeholder"></span>
+                        )}
+                        
+                        <div 
+                            className="tree-item-color"
+                            style={{ backgroundColor: item.color || '#6c757d' }}
+                        ></div>
+                        
+                        <span className="tree-item-label">{item.label}</span>
+                        
+                        <Badge bg="secondary" className="ms-2">
+                            {usageCount}
+                        </Badge>
+                    </div>
+
+                    <div className="tree-item-actions">
+                        {hasSubItems && (
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={() => handleAddChild(item)}
+                                className="me-1"
+                            >
+                                <FaPlus />
+                            </Button>
+                        )}
+                        <Button
+                            variant="outline-warning"
+                            size="sm"
+                            onClick={() => handleEditHierarchy(item)}
+                            className="me-1"
+                        >
+                            <FaEdit />
+                        </Button>
+                        <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDelete(item)}
+                        >
+                            <FaTrash />
+                        </Button>
+                    </div>
+                </div>
+
+                {hasSubItems && isExpanded && (
+                    <div className="tree-children">
+                        {item.children.map(child => renderTreeItem(child, level + 1))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div className="tags-manager">
             {showAlert && (
@@ -223,6 +333,59 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                         </InputGroup>
                     </div>
 
+                    {type === 'activites' ? (
+                        // Affichage hiérarchique pour les activités
+                        <>
+                            {/* Statistiques */}
+                            <div className="mb-3 p-3 bg-light rounded">
+                                <div className="row text-center">
+                                    <div className="col">
+                                        <h6 className="mb-1">{TAGS_HIERARCHY.length}</h6>
+                                        <small className="text-muted">Catégories principales</small>
+                                    </div>
+                                    <div className="col">
+                                        <h6 className="mb-1">
+                                            {TAGS_HIERARCHY.reduce((acc, item) => acc + (item.children?.length || 0), 0)}
+                                        </h6>
+                                        <small className="text-muted">Sous-catégories</small>
+                                    </div>
+                                    <div className="col">
+                                        <h6 className="mb-1">
+                                            {TAGS_HIERARCHY.reduce((acc, item) => {
+                                                return acc + (item.children?.reduce((subAcc, child) => subAcc + (child.children?.length || 0), 0) || 0);
+                                            }, 0)}
+                                        </h6>
+                                        <small className="text-muted">Tags finaux</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Boutons de contrôle */}
+                            <div className="mb-3 d-flex gap-2">
+                                <Button
+                                    variant="outline-secondary"
+                                    size="sm"
+                                    onClick={() => setExpandedItems(new Set())}
+                                >
+                                    Tout replier
+                                </Button>
+                                <Button
+                                    variant="outline-secondary"
+                                    size="sm"
+                                    onClick={() => setExpandedItems(new Set(TAGS_HIERARCHY.map(item => item.id)))}
+                                >
+                                    Tout déplier
+                                </Button>
+                            </div>
+
+                            {/* Arborescence */}
+                            <div className="tags-tree">
+                                {TAGS_HIERARCHY.map(item => renderTreeItem(item))}
+                            </div>
+                        </>
+                    ) : (
+                        // Affichage tableau traditionnel pour les autres types
+                        <>
                     <Table responsive hover>
                         <thead>
                             <tr>
@@ -277,6 +440,8 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                         <div className="text-center py-5 text-muted">
                             {searchTerm ? `Aucun résultat pour "${searchTerm}"` : `Aucun élément trouvé`}
                         </div>
+                    )}
+                        </>
                     )}
                 </Card.Body>
             </Card>

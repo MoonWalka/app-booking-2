@@ -1,7 +1,7 @@
 // src/components/contacts/desktop/ContactView.js
 import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useContactDetails } from '@/hooks/contacts';
+import useSimpleContactDetails from '@/hooks/contacts/useSimpleContactDetails';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import Button from '@/components/ui/Button';
@@ -20,8 +20,8 @@ function ContactView({ id: propId }) {
   const navigate = useNavigate();
   const id = propId || urlId;
 
-  // Hook Firebase existant
-  const detailsHook = useContactDetails(id);
+  // Hook Firebase simplifié
+  const detailsHook = useSimpleContactDetails(id);
 
   const {
     contact,

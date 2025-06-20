@@ -32,6 +32,8 @@ import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer'
 import StructuresClickDebug from '@/components/debug/StructuresClickDebug';
 import FestitestContactFinder from '@/components/debug/FestitestContactFinder';
 import ContactMigrationTool from '@/components/debug/ContactMigrationTool';
+import SophieMadetMigration from '@/components/debug/SophieMadetMigration';
+import TagsHierarchyDebug from '@/components/debug/TagsHierarchyDebug';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -196,6 +198,14 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="contact-migration-tool" title="🔄 Migration Automatique Contacts">
           <ContactMigrationTool />
+        </Tab>
+        
+        <Tab eventKey="sophie-madet-migration" title="👤 Migration Sophie Madet">
+          <SophieMadetMigration />
+        </Tab>
+        
+        <Tab eventKey="tags-hierarchy-debug" title="🏷️ Debug Tags Hiérarchie">
+          <TagsHierarchyDebug />
         </Tab>
       </Tabs>
     </div>

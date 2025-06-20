@@ -13,6 +13,30 @@
   min-width: 0; /* Permet la troncature du texte */
 }
 
+/* Mode compact pour les listes denses */
+.entityCard.compact {
+  padding: var(--tc-space-3);
+  border-radius: var(--tc-radius-md);
+}
+
+.entityCard.compact .entityContent {
+  gap: var(--tc-space-2);
+}
+
+.entityCard.compact .entityIcon {
+  font-size: 1rem;
+  width: 32px;
+  height: 32px;
+}
+
+.entityCard.compact .entityDetails h5 {
+  font-size: 0.9rem;
+}
+
+.entityCard.compact .entityDetails p {
+  font-size: 0.8rem;
+}
+
 .entityCard::before {
   content: '';
   position: absolute;
@@ -159,6 +183,80 @@
   white-space: nowrap;
 }
 
+/* Actions dans la carte */
+.entityActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-1);
+  flex-shrink: 0;
+  margin-left: var(--tc-space-2);
+}
+
+.actionButton {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: var(--tc-radius-sm);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--tc-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--tc-transition-fast);
+  font-size: var(--tc-font-size-sm);
+  pointer-events: auto;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.actionButton:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.1);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.actionButton:active {
+  transform: scale(0.95);
+}
+
+/* Variantes de couleur pour les boutons d'action */
+.actionButtonPrimary:hover {
+  background: var(--tc-color-primary-50);
+  color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary-200);
+}
+
+.actionButtonSecondary:hover {
+  background: var(--tc-color-gray-50);
+  color: var(--tc-color-gray-700);
+  border-color: var(--tc-color-gray-300);
+}
+
+.actionButtonWarning:hover {
+  background: var(--tc-color-warning-50);
+  color: var(--tc-color-warning-700);
+  border-color: var(--tc-color-warning-200);
+}
+
+.actionButtonDanger:hover {
+  background: var(--tc-color-danger-50);
+  color: var(--tc-color-danger-700);
+  border-color: var(--tc-color-danger-200);
+}
+
+/* Mode compact - boutons plus petits */
+.entityCard.compact .actionButton {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.entityCard.compact .entityActions {
+  gap: 2px;
+  margin-left: var(--tc-space-1);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .entityCard {
@@ -185,5 +283,15 @@
   
   .entityType {
     font-size: var(--tc-font-size-xs);
+  }
+  
+  .actionButton {
+    width: 28px;
+    height: 28px;
+    font-size: var(--tc-font-size-base);
+  }
+  
+  .entityActions {
+    gap: var(--tc-space-1);
   }
 }

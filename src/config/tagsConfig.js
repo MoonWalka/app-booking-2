@@ -87,14 +87,69 @@ export const getTagLabels = () => {
   return CONTACT_TAGS.map(tag => tag.label);
 };
 
+// Helper pour chercher un tag dans toutes les hiérarchies
+const findTagInHierarchy = (tagLabel, hierarchy) => {
+  for (const item of hierarchy) {
+    if (item.label === tagLabel) {
+      return item;
+    }
+    if (item.children) {
+      const found = findTagInHierarchy(tagLabel, item.children);
+      if (found) {
+        // Si c'est un enfant sans couleur, prendre la couleur du parent
+        return found.color ? found : { ...found, color: item.color };
+      }
+    }
+  }
+  return null;
+};
+
 // Helper pour obtenir la couleur d'un tag par son label
 export const getTagColor = (tagLabel) => {
+  // D'abord chercher dans les tags de base
   const tag = getTagByLabel(tagLabel);
-  return tag ? tag.color : '#6c757d'; // Couleur par défaut
+  if (tag) return tag.color;
+  
+  // Ensuite chercher dans les hiérarchies
+  try {
+    const { TAGS_HIERARCHY, GENRES_HIERARCHY, RESEAUX_HIERARCHY, MOTS_CLES_HIERARCHY } = require('./tagsHierarchy');
+    const hierarchies = [TAGS_HIERARCHY, GENRES_HIERARCHY, RESEAUX_HIERARCHY, MOTS_CLES_HIERARCHY];
+    
+    for (const hierarchy of hierarchies) {
+      const found = findTagInHierarchy(tagLabel, hierarchy);
+      if (found && found.color) {
+        return found.color;
+      }
+    }
+  } catch (error) {
+    // Silently fail in non-React environments
+    console.warn('Hiérarchies de tags non disponibles');
+  }
+  
+  return '#6c757d'; // Couleur par défaut
 };
 
 // Helper pour normaliser un nom de classe CSS à partir d'un label
 export const getTagCssClass = (tagLabel) => {
+  // D'abord chercher dans les tags de base
   const tag = getTagByLabel(tagLabel);
-  return tag ? tag.id : 'default';
+  if (tag) return tag.id;
+  
+  // Ensuite chercher dans les hiérarchies
+  try {
+    const { TAGS_HIERARCHY, GENRES_HIERARCHY, RESEAUX_HIERARCHY, MOTS_CLES_HIERARCHY } = require('./tagsHierarchy');
+    const hierarchies = [TAGS_HIERARCHY, GENRES_HIERARCHY, RESEAUX_HIERARCHY, MOTS_CLES_HIERARCHY];
+    
+    for (const hierarchy of hierarchies) {
+      const found = findTagInHierarchy(tagLabel, hierarchy);
+      if (found) {
+        return found.id;
+      }
+    }
+  } catch (error) {
+    // Silently fail in non-React environments
+    console.warn('Hiérarchies de tags non disponibles');
+  }
+  
+  return 'default';
 };

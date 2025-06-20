@@ -1,7 +1,7 @@
 // src/components/contacts/modal/PersonneCreationModal.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import AddressInput from '@/components/ui/AddressInput';
@@ -11,7 +11,7 @@ import styles from './StructureCreationModal.module.css'; // Réutiliser les sty
  * Modal de création d'une nouvelle personne
  * Avec système d'onglets : Adresse, Email/Tél
  */
-function PersonneCreationModal({ show, onHide, onCreated }) {
+function PersonneCreationModal({ show, onHide, onCreated, editMode = false, initialData = null }) {
   const { currentOrganization } = useOrganization();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
@@ -38,6 +38,50 @@ function PersonneCreationModal({ show, onHide, onCreated }) {
     mobile: '',
     fonction: ''
   });
+
+  // Effet pour initialiser les données en mode édition
+  useEffect(() => {
+    if (editMode && initialData) {
+      setFormData({
+        prenom: initialData.prenom || '',
+        nom: initialData.nom || '',
+        source: initialData.source || '',
+        adresse: initialData.adresse || '',
+        suiteAdresse: initialData.suiteAdresse || '',
+        codePostal: initialData.codePostal || '',
+        ville: initialData.ville || '',
+        departement: initialData.departement || '',
+        region: initialData.region || '',
+        pays: initialData.pays || 'France',
+        mailDirect: initialData.email || initialData.mailDirect || '',
+        mailPerso: initialData.mailPerso || '',
+        telDirect: initialData.telephone || initialData.telDirect || '',
+        telPerso: initialData.telPerso || '',
+        mobile: initialData.mobile || '',
+        fonction: initialData.fonction || ''
+      });
+    } else if (!editMode) {
+      // Réinitialiser en mode création
+      setFormData({
+        prenom: '',
+        nom: '',
+        source: '',
+        adresse: '',
+        suiteAdresse: '',
+        codePostal: '',
+        ville: '',
+        departement: '',
+        region: '',
+        pays: 'France',
+        mailDirect: '',
+        mailPerso: '',
+        telDirect: '',
+        telPerso: '',
+        mobile: '',
+        fonction: ''
+      });
+    }
+  }, [editMode, initialData]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -78,25 +122,45 @@ function PersonneCreationModal({ show, onHide, onCreated }) {
     setLoading(true);
 
     try {
-      // Créer le document personne dans la collection contacts
-      const personneData = {
-        ...formData,
-        organizationId: currentOrganization.id,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        type: 'personne'
-      };
+      if (editMode && initialData) {
+        // Mode édition - mettre à jour la personne existante
+        console.log('Mode édition - mise à jour de la personne:', initialData.id);
+        
+        // Pour les personnes dans une structure unifiée, on ne peut pas modifier directement
+        // car elles font partie du document structure. On doit passer par le callback
+        const updatedPersonneData = {
+          ...formData,
+          id: initialData.id, // Garder l'ID original
+          updatedAt: new Date() // Date pour l'état local
+        };
+        
+        // Callback pour notifier la mise à jour
+        if (onCreated) {
+          onCreated(updatedPersonneData);
+        }
+        
+        console.log('Personne mise à jour:', updatedPersonneData);
+      } else {
+        // Mode création - créer une nouvelle personne
+        const personneData = {
+          ...formData,
+          organizationId: currentOrganization.id,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          type: 'personne'
+        };
 
-      const docRef = await addDoc(collection(db, 'contacts'), personneData);
-      
-      console.log('Personne créée avec ID:', docRef.id);
-      
-      // Callback pour notifier la création
-      if (onCreated) {
-        onCreated({
-          id: docRef.id,
-          ...personneData
-        });
+        const docRef = await addDoc(collection(db, 'contacts'), personneData);
+        
+        console.log('Personne créée avec ID:', docRef.id);
+        
+        // Callback pour notifier la création
+        if (onCreated) {
+          onCreated({
+            id: docRef.id,
+            ...personneData
+          });
+        }
       }
 
       // Réinitialiser le formulaire
@@ -276,8 +340,8 @@ function PersonneCreationModal({ show, onHide, onCreated }) {
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <i className="bi bi-person-plus me-2"></i>
-          Nouvelle Personne
+          <i className={`bi ${editMode ? 'bi-person-gear' : 'bi-person-plus'} me-2`}></i>
+          {editMode ? 'Modifier la Personne' : 'Nouvelle Personne'}
         </Modal.Title>
       </Modal.Header>
       
@@ -361,12 +425,12 @@ function PersonneCreationModal({ show, onHide, onCreated }) {
             {loading ? (
               <>
                 <span className="spinner-border spinner-border-sm me-2"></span>
-                Création...
+                {editMode ? 'Mise à jour...' : 'Création...'}
               </>
             ) : (
               <>
-                <i className="bi bi-plus-lg me-1"></i>
-                Créer la personne
+                <i className={`bi ${editMode ? 'bi-check-lg' : 'bi-plus-lg'} me-1`}></i>
+                {editMode ? 'Mettre à jour' : 'Créer la personne'}
               </>
             )}
           </Button>

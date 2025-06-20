@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import styles from './EntityViewTabs.module.css';
@@ -9,9 +9,10 @@ function EntityViewTabs({
   error,
   entityType,
   config,
-  children
+  children,
+  activeBottomTab,
+  setActiveBottomTab
 }) {
-  const [activeBottomTab, setActiveBottomTab] = useState(config.defaultBottomTab || 'correspondance');
 
   if (loading) {
     return (
@@ -48,7 +49,7 @@ function EntityViewTabs({
     const activeTab = config.bottomTabs.find(tab => tab.id === activeBottomTab);
     
     if (config.renderBottomTabContent) {
-      return config.renderBottomTabContent(activeBottomTab, activeTab);
+      return config.renderBottomTabContent();
     }
 
     return (

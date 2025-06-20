@@ -33,6 +33,7 @@ import ContactTagsPage from '@/pages/ContactTagsPage';
 // import ConcertsList from '@/components/concerts/ConcertsList'; // Plus utilisé
 import LieuxList from '@/components/lieux/LieuxList';
 import ContactsList from '@/components/contacts/ContactsList'; // Liste unifiée contacts + structures
+import ContactsListFiltered from '@/components/contacts/ContactsListFiltered'; // Liste filtrée par tag
 import ArtistesList from '@/components/artistes/ArtistesList';
 
 // Import des composants de détails
@@ -185,6 +186,13 @@ const TabManagerProduction = () => {
           console.log('[TabManager] Rendu ContactsPage pour activeTab:', activeTab);
           console.log('[TabManager] activeTab.path:', activeTab.path);
           return <ContactsPage tabPath={activeTab.path} />;
+        case 'ContactsListFiltered':
+          // Afficher la liste filtrée des contacts par tag
+          return <ContactsListFiltered 
+            filterTag={activeTab.params?.filterTag}
+            filterType={activeTab.params?.filterType}
+            usageCount={activeTab.params?.usageCount}
+          />;
         case 'ContactDetailsPage':
           // Afficher les détails d'un contact avec le nouveau layout
           console.log('[DEBUG TabManager] activeTab pour ContactDetailsPage:', activeTab);

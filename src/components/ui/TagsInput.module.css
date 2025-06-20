@@ -159,6 +159,24 @@
   box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
 }
 
+.addTagButton {
+  width: 100%;
+  border: 2px dashed #ced4da;
+  background: transparent;
+  color: #6c757d;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.addTagButton:hover {
+  border-color: #007bff;
+  background: rgba(0, 123, 255, 0.05);
+  color: #007bff;
+  transform: translateY(-1px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .currentTags {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useImperativeHandle, forwardRef } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import Card from '@components/ui/Card';
 import TagsInput from '@components/ui/TagsInput';
@@ -9,13 +9,14 @@ import styles from './ContactQualificationSection.module.css';
  * ContactQualificationSection - Section de qualification du contact
  * Gère les tags, date de création et dernière modification
  */
-const ContactQualificationSection = ({ 
+const ContactQualificationSection = forwardRef(({ 
   formData, 
   handleChange, 
   errors,
   showCardWrapper = true,
   isEditing = false 
-}) => {
+}, ref) => {
+  const tagsInputRef = useRef();
   // Tags disponibles depuis la configuration centralisée
   const availableTags = getTagLabels();
   
@@ -28,6 +29,15 @@ const ContactQualificationSection = ({
       }
     });
   };
+
+  // Exposer la méthode pour ouvrir la modal de tags
+  useImperativeHandle(ref, () => ({
+    openTagsModal: () => {
+      if (tagsInputRef.current) {
+        tagsInputRef.current.openModal();
+      }
+    }
+  }));
 
   // Formater les dates pour l'affichage
   const formatDate = (date) => {
@@ -48,6 +58,7 @@ const ContactQualificationSection = ({
     <div>
       {/* Section Tags */}
       <TagsInput
+        ref={tagsInputRef}
         tags={formData.tags || []}
         availableTags={availableTags}
         onChange={handleTagsChange}
@@ -175,6 +186,6 @@ const ContactQualificationSection = ({
       {formContent}
     </Card>
   );
-};
+});
 
 export default ContactQualificationSection;

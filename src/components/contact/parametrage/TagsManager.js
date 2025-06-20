@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Button, Table, Modal, Form, Alert, Badge, InputGroup } from 'react-bootstrap';
-import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDown, FaTags } from 'react-icons/fa';
+import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDown, FaFilter } from 'react-icons/fa';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import { TAGS_HIERARCHY } from '@/config/tagsHierarchy';
 import './TagsManager.css';
 
 const TagsManager = ({ type, title, buttonLabel }) => {
+    const { currentOrganization } = useOrganization();
     const [itemsList, setItemsList] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -20,8 +24,9 @@ const TagsManager = ({ type, title, buttonLabel }) => {
 
     // États pour l'arborescence hiérarchique (pour les activités)
     const [expandedItems, setExpandedItems] = useState(new Set(TAGS_HIERARCHY.map(item => item.id)));
-    const [modalMode, setModalMode] = useState('add'); // 'add', 'edit', 'addChild'
-    const [selectedHierarchyItem, setSelectedHierarchyItem] = useState(null);
+    const [hiddenItems, setHiddenItems] = useState(new Set());
+    const [showOnlyUsed, setShowOnlyUsed] = useState(false);
+    const [realUsageData, setRealUsageData] = useState({});
 
     // Données d'exemple selon le type
     const getMockData = () => {
@@ -195,96 +200,178 @@ const TagsManager = ({ type, title, buttonLabel }) => {
         setExpandedItems(newExpanded);
     };
 
-    const handleAddChild = (parentItem) => {
-        setModalMode('addChild');
-        setSelectedHierarchyItem(parentItem);
-        setCurrentItem({ id: null, nom: '', type: 'Utilisateur' });
-        setShowModal(true);
+    const handleHideItem = (item) => {
+        const newHidden = new Set(hiddenItems);
+        newHidden.add(item.id);
+        setHiddenItems(newHidden);
+        
+        setAlertMessage(`Tag "${item.label}" masqué avec succès`);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 3000);
     };
 
-    const handleEditHierarchy = (item) => {
-        setModalMode('edit');
-        setSelectedHierarchyItem(item);
-        setCurrentItem({ id: item.id, nom: item.label, type: 'Système' });
-        setIsEditing(true);
-        setShowModal(true);
-    };
+    // Fonction pour charger les vraies données d'utilisation depuis Firestore
+    const loadRealUsageData = useCallback(async () => {
+        if (!currentOrganization?.id) return;
+
+        try {
+            // Requête pour tous les contacts avec des tags
+            const contactsQuery = query(
+                collection(db, 'contacts'),
+                where('organizationId', '==', currentOrganization.id)
+            );
+            
+            const contactsSnapshot = await getDocs(contactsQuery);
+            const usageCount = {};
+            
+            // Compter l'utilisation de chaque tag
+            contactsSnapshot.docs.forEach(doc => {
+                const contact = doc.data();
+                const tags = contact.qualification?.tags || [];
+                
+                tags.forEach(tag => {
+                    // Incrémenter pour le tag tel quel (label)
+                    usageCount[tag] = (usageCount[tag] || 0) + 1;
+                    
+                    // Aussi essayer de trouver l'ID correspondant dans la hiérarchie
+                    const findTagInHierarchy = (items) => {
+                        for (const item of items) {
+                            if (item.label === tag) {
+                                usageCount[item.id] = (usageCount[item.id] || 0) + 1;
+                            }
+                            if (item.children) {
+                                findTagInHierarchy(item.children);
+                            }
+                        }
+                    };
+                    findTagInHierarchy(TAGS_HIERARCHY);
+                });
+            });
+            
+            setRealUsageData(usageCount);
+        } catch (error) {
+            console.error('Erreur lors du chargement des données d\'utilisation:', error);
+        }
+    }, [currentOrganization?.id]);
+
+    // Charger les données d'utilisation au montage
+    useEffect(() => {
+        if (currentOrganization?.id && type === 'activites') {
+            loadRealUsageData();
+        }
+    }, [currentOrganization?.id, type, loadRealUsageData]);
 
     const getUsageCount = (itemId) => {
+        // Pour les activités, utiliser les vraies données si disponibles
+        if (type === 'activites' && realUsageData[itemId] !== undefined) {
+            return realUsageData[itemId];
+        }
+        // Sinon, retourner des données fictives
         return Math.floor(Math.random() * 100);
     };
 
-    // Rendu récursif de l'arborescence
-    const renderTreeItem = (item, level = 0) => {
-        const hasSubItems = item.children && item.children.length > 0;
-        const isExpanded = expandedItems.has(item.id);
-        const usageCount = getUsageCount(item.id);
+    // Fonction pour collecter tous les tags de façon plate avec gestion du pliage
+    const getFlatTagsList = () => {
+        const flatTags = [];
+        
+        const addTags = (items, level = 0, parentPath = '', parentExpanded = true) => {
+            items.forEach(item => {
+                if (hiddenItems.has(item.id)) return;
+                
+                const fullPath = parentPath ? `${parentPath} > ${item.label}` : item.label;
+                const usageCount = getUsageCount(item.id);
+                const type = level === 0 ? 'Système' : 'Système'; // Tous système pour l'instant
+                const hasChildren = item.children && item.children.length > 0;
+                const isExpanded = expandedItems.has(item.id);
+                
+                // Filtrer selon le mode "utilisés seulement"
+                const shouldShow = !showOnlyUsed || usageCount > 0;
+                
+                // Ajouter l'item seulement si son parent est déplié et qu'il respecte le filtre
+                if ((level === 0 || parentExpanded) && shouldShow) {
+                    flatTags.push({
+                        id: item.id,
+                        label: item.label,
+                        fullPath: fullPath,
+                        level: level,
+                        color: item.color || '#6c757d',
+                        usageCount: usageCount,
+                        type: type,
+                        hasChildren: hasChildren,
+                        isExpanded: isExpanded
+                    });
+                }
+                
+                // Ajouter les enfants seulement si l'item est déplié et visible
+                if (hasChildren && isExpanded && (level === 0 || parentExpanded)) {
+                    addTags(item.children, level + 1, fullPath, true);
+                }
+            });
+        };
+        
+        addTags(TAGS_HIERARCHY);
+        return flatTags;
+    };
 
+    // Rendu d'une ligne de tableau
+    const renderTableRow = (tag) => {
         return (
-            <div key={item.id} className="tree-item">
-                <div 
-                    className={`tree-item-content ${level > 0 ? 'tree-item-child' : 'tree-item-root'}`}
-                    style={{ marginLeft: `${level * 20}px` }}
-                >
-                    <div className="tree-item-left">
-                        {hasSubItems ? (
-                            <button
-                                className="tree-expand-btn"
-                                onClick={() => toggleExpand(item.id)}
-                            >
-                                {isExpanded ? <FaChevronDown /> : <FaChevronRight />}
-                            </button>
-                        ) : (
-                            <span className="tree-expand-placeholder"></span>
-                        )}
-                        
-                        <div 
-                            className="tree-item-color"
-                            style={{ backgroundColor: item.color || '#6c757d' }}
-                        ></div>
-                        
-                        <span className="tree-item-label">{item.label}</span>
-                        
-                        <Badge bg="secondary" className="ms-2">
-                            {usageCount}
-                        </Badge>
+            <tr key={tag.id}>
+                <td>
+                    <div className="d-flex align-items-center">
+                        {/* Indentation pour montrer la hiérarchie */}
+                        <div style={{ marginLeft: `${tag.level * 20}px` }} className="d-flex align-items-center">
+                            {/* Bouton expand/collapse pour les éléments avec enfants */}
+                            {tag.hasChildren ? (
+                                <button
+                                    className="btn btn-sm p-0 me-2"
+                                    style={{ width: '16px', height: '16px', fontSize: '0.7rem' }}
+                                    onClick={() => toggleExpand(tag.id)}
+                                >
+                                    {tag.isExpanded ? <FaChevronDown /> : <FaChevronRight />}
+                                </button>
+                            ) : (
+                                <span style={{ width: '16px', marginRight: '0.5rem' }}></span>
+                            )}
+                            
+                            <div 
+                                className="me-2"
+                                style={{ 
+                                    width: '12px', 
+                                    height: '12px', 
+                                    backgroundColor: tag.color,
+                                    borderRadius: '50%',
+                                    border: '2px solid white',
+                                    boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)'
+                                }}
+                            ></div>
+                            <span className={tag.level === 0 ? 'fw-bold' : ''} style={{ 
+                                fontSize: tag.level === 0 ? '0.95rem' : '0.9rem',
+                                color: tag.level === 0 ? '#212529' : '#495057'
+                            }}>{tag.label}</span>
+                        </div>
                     </div>
-
-                    <div className="tree-item-actions">
-                        {hasSubItems && (
-                            <Button
-                                variant="outline-primary"
-                                size="sm"
-                                onClick={() => handleAddChild(item)}
-                                className="me-1"
-                            >
-                                <FaPlus />
-                            </Button>
-                        )}
-                        <Button
-                            variant="outline-warning"
-                            size="sm"
-                            onClick={() => handleEditHierarchy(item)}
-                            className="me-1"
-                        >
-                            <FaEdit />
-                        </Button>
-                        <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDelete(item)}
-                        >
-                            <FaTrash />
-                        </Button>
-                    </div>
-                </div>
-
-                {hasSubItems && isExpanded && (
-                    <div className="tree-children">
-                        {item.children.map(child => renderTreeItem(child, level + 1))}
-                    </div>
-                )}
-            </div>
+                </td>
+                <td className="text-center">
+                    <Badge bg="light" text="dark">{tag.usageCount}</Badge>
+                </td>
+                <td className="text-center">
+                    <Badge bg={tag.type === 'Système' ? 'secondary' : 'primary'}>
+                        {tag.type}
+                    </Badge>
+                </td>
+                <td className="text-center">
+                    <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={() => handleHideItem({ id: tag.id, label: tag.label })}
+                        title="Masquer ce tag"
+                        className="p-1"
+                    >
+                        <i className="bi bi-eye-slash"></i>
+                    </Button>
+                </td>
+            </tr>
         );
     };
 
@@ -308,9 +395,18 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                             >
                                 <FaPlus /> {buttonLabel}
                             </Button>
+                            {type === 'activites' && (
+                                <Button 
+                                    variant={showOnlyUsed ? "primary" : "outline-primary"}
+                                    onClick={() => setShowOnlyUsed(!showOnlyUsed)}
+                                    className="d-flex align-items-center gap-2"
+                                >
+                                    <FaFilter /> {showOnlyUsed ? 'Toutes les activités' : 'Activités utilisées'}
+                                </Button>
+                            )}
                             <Button 
                                 variant="outline-secondary" 
-                                onClick={loadItemsList}
+                                onClick={type === 'activites' ? loadRealUsageData : loadItemsList}
                                 className="d-flex align-items-center"
                             >
                                 <FaSync />
@@ -340,48 +436,68 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                             <div className="mb-3 p-3 bg-light rounded">
                                 <div className="row text-center">
                                     <div className="col">
-                                        <h6 className="mb-1">{TAGS_HIERARCHY.length}</h6>
+                                        <h6 className="mb-1">{getFlatTagsList().filter(tag => tag.level === 0).length}</h6>
                                         <small className="text-muted">Catégories principales</small>
                                     </div>
                                     <div className="col">
-                                        <h6 className="mb-1">
-                                            {TAGS_HIERARCHY.reduce((acc, item) => acc + (item.children?.length || 0), 0)}
-                                        </h6>
+                                        <h6 className="mb-1">{getFlatTagsList().filter(tag => tag.level > 0).length}</h6>
                                         <small className="text-muted">Sous-catégories</small>
                                     </div>
                                     <div className="col">
-                                        <h6 className="mb-1">
-                                            {TAGS_HIERARCHY.reduce((acc, item) => {
-                                                return acc + (item.children?.reduce((subAcc, child) => subAcc + (child.children?.length || 0), 0) || 0);
-                                            }, 0)}
-                                        </h6>
-                                        <small className="text-muted">Tags finaux</small>
+                                        <h6 className="mb-1">{getFlatTagsList().length}</h6>
+                                        <small className="text-muted">Total visible</small>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Boutons de contrôle */}
-                            <div className="mb-3 d-flex gap-2">
-                                <Button
-                                    variant="outline-secondary"
-                                    size="sm"
-                                    onClick={() => setExpandedItems(new Set())}
-                                >
-                                    Tout replier
-                                </Button>
-                                <Button
-                                    variant="outline-secondary"
-                                    size="sm"
-                                    onClick={() => setExpandedItems(new Set(TAGS_HIERARCHY.map(item => item.id)))}
-                                >
-                                    Tout déplier
-                                </Button>
+                            <div className="mb-3 d-flex gap-2 justify-content-between">
+                                <div className="d-flex gap-2">
+                                    <Button
+                                        variant="outline-secondary"
+                                        size="sm"
+                                        onClick={() => setExpandedItems(new Set())}
+                                    >
+                                        Tout replier
+                                    </Button>
+                                    <Button
+                                        variant="outline-secondary"
+                                        size="sm"
+                                        onClick={() => setExpandedItems(new Set(TAGS_HIERARCHY.map(item => item.id)))}
+                                    >
+                                        Tout déplier
+                                    </Button>
+                                </div>
+                                <div className="d-flex gap-2 align-items-center">
+                                    {hiddenItems.size > 0 && (
+                                        <>
+                                            <Badge bg="secondary">{hiddenItems.size} masqué(s)</Badge>
+                                            <Button
+                                                variant="outline-primary"
+                                                size="sm"
+                                                onClick={() => setHiddenItems(new Set())}
+                                            >
+                                                Tout afficher
+                                            </Button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
 
-                            {/* Arborescence */}
-                            <div className="tags-tree">
-                                {TAGS_HIERARCHY.map(item => renderTreeItem(item))}
-                            </div>
+                            {/* Tableau hiérarchique */}
+                            <Table responsive hover>
+                                <thead>
+                                    <tr>
+                                        <th>Titre</th>
+                                        <th className="text-center">Nbr</th>
+                                        <th className="text-center">Type</th>
+                                        <th className="text-center" style={{ width: '80px' }}>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {getFlatTagsList().map(tag => renderTableRow(tag))}
+                                </tbody>
+                            </Table>
                         </>
                     ) : (
                         // Affichage tableau traditionnel pour les autres types

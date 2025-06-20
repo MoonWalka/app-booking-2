@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Button, Alert, InputGroup, Form, Modal, Badge } from 'react-bootstrap';
-import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDown, FaTags } from 'react-icons/fa';
-import { TAGS_HIERARCHY, getTagById, hasChildren } from '@/config/tagsHierarchy';
+import { FaPlus, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDown, FaTags } from 'react-icons/fa';
+import { TAGS_HIERARCHY } from '@/config/tagsHierarchy';
 import './TagsManager.css';
 
 const HierarchicalTagsManager = () => {
@@ -94,6 +94,9 @@ const HierarchicalTagsManager = () => {
         break;
       case 'edit':
         message = `Tag "${formData.label}" modifié avec succès`;
+        break;
+      default:
+        message = `Action effectuée avec succès`;
         break;
     }
 
@@ -263,8 +266,7 @@ const HierarchicalTagsManager = () => {
             <div className="col">
               <h6 className="mb-1">
                 {TAGS_HIERARCHY.reduce((acc, item) => {
-                  const childrenWithSubChildren = item.children?.filter(child => child.children?.length > 0).length || 0;
-                  return acc + item.children?.reduce((subAcc, child) => subAcc + (child.children?.length || 0), 0);
+                  return acc + (item.children?.reduce((subAcc, child) => subAcc + (child.children?.length || 0), 0) || 0);
                 }, 0)}
               </h6>
               <small className="text-muted">Tags finaux</small>

@@ -25,6 +25,9 @@ import PreContratGenerationPage from '@/pages/PreContratGenerationPage';
 import ConfirmationPage from '@/pages/ConfirmationPage';
 import ContratGenerationNewPage from '@/pages/ContratGenerationNewPage';
 import ContratRedactionPage from '@/pages/ContratRedactionPage';
+import MesRecherchesPage from '@/pages/MesRecherchesPage';
+import MesSelectionsPage from '@/pages/MesSelectionsPage';
+import ContactTagsPage from '@/pages/ContactTagsPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
 // import ConcertsList from '@/components/concerts/ConcertsList'; // Plus utilisé
@@ -257,6 +260,12 @@ const TabManagerProduction = () => {
           console.log('[TabManager] Rendu ContratRedactionPage avec activeTab:', activeTab);
           console.log('[TabManager] contratId passé:', activeTab.params?.id);
           return <ContratRedactionPage />;
+        case 'MesRecherchesPage':
+          return <MesRecherchesPage />;
+        case 'MesSelectionsPage':
+          return <MesSelectionsPage />;
+        case 'ContactTagsPage':
+          return <ContactTagsPage />;
         default:
           return (
             <div className={styles.tabContent}>

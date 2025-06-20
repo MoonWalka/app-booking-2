@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useUnifiedContact } from '@/hooks/contacts/useUnifiedContact';
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
@@ -59,31 +59,38 @@ function ContactViewTabs({ id, viewType = null }) {
   const navigate = useNavigate();
   
   // Utiliser le hook unifié pour charger le contact
-  const { contact, loading, error, entityType } = useUnifiedContact(id);
+  const { contact, loading, error, entityType, invalidateCache } = useUnifiedContact(id);
 
   console.log('[ContactViewTabs] Données unifiées:', { contact, loading, error, entityType });
   
-  // Synchroniser les tags locaux avec les données du contact
+  // Synchroniser les données locales avec le contact (optimisé)
   useEffect(() => {
-    if (contact?.qualification?.tags) {
-      setLocalTags(contact.qualification.tags);
-    } else {
-      setLocalTags([]);
-    }
-  }, [contact?.qualification?.tags]);
-
-  // Synchroniser les personnes locales avec les données du contact
-  useEffect(() => {
-    if (contact?.personnes) {
-      setLocalPersonnes(contact.personnes);
-    } else {
-      setLocalPersonnes([]);
-    }
-  }, [contact?.personnes]);
+    if (!contact) return;
+    
+    // Synchroniser les tags seulement si différents
+    const newTags = contact?.qualification?.tags || [];
+    setLocalTags(prevTags => {
+      if (JSON.stringify(prevTags) !== JSON.stringify(newTags)) {
+        console.log('🏷️ [ContactViewTabs] Synchronisation tags:', newTags.length);
+        return newTags;
+      }
+      return prevTags;
+    });
+    
+    // Synchroniser les personnes seulement si différentes
+    const newPersonnes = contact?.personnes || [];
+    setLocalPersonnes(prevPersonnes => {
+      if (JSON.stringify(prevPersonnes) !== JSON.stringify(newPersonnes)) {
+        console.log('👥 [ContactViewTabs] Synchronisation personnes:', newPersonnes.length);
+        return newPersonnes;
+      }
+      return prevPersonnes;
+    });
+  }, [contact]);
 
   
-  // Gestion des tags
-  const handleTagsChange = async (newTags) => {
+  // Gestion des tags (mémorisée pour éviter les boucles)
+  const handleTagsChange = useCallback(async (newTags) => {
     try {
       console.log('[ContactViewTabs] handleTagsChange appelé avec:', newTags);
       console.log('[ContactViewTabs] Tags actuels:', extractedData?.tags);
@@ -97,16 +104,19 @@ function ContactViewTabs({ id, viewType = null }) {
       
       console.log('[ContactViewTabs] Tags mis à jour avec succès dans Firestore');
       
+      // Invalider le cache pour forcer le rechargement lors du prochain accès
+      invalidateCache();
+      
       // Mettre à jour l'état local immédiatement (pas de rechargement de page)
       setLocalTags(newTags);
       setShowTagsModal(false);
     } catch (error) {
       console.error('[ContactViewTabs] Erreur lors de la mise à jour des tags:', error);
     }
-  };
+  }, [id, invalidateCache]);
 
-  // Gestion de l'association des personnes
-  const handleAssociatePersons = async (selectedPersons) => {
+  // Gestion de l'association des personnes (mémorisée)
+  const handleAssociatePersons = useCallback(async (selectedPersons) => {
     try {
       console.log('[ContactViewTabs] Association de personnes:', selectedPersons);
       
@@ -185,6 +195,9 @@ function ContactViewTabs({ id, viewType = null }) {
 
       console.log('[ContactViewTabs] Personnes associées avec succès');
       
+      // Invalider le cache pour forcer le rechargement lors du prochain accès
+      invalidateCache();
+      
       // Mettre à jour l'état local immédiatement (pas de rechargement de page)
       setLocalPersonnes(updatedPersonnes);
 
@@ -192,17 +205,17 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de l\'association des personnes:', error);
       alert('Erreur lors de l\'association des personnes');
     }
-  };
+  }, [id, currentOrganization, invalidateCache]);
 
-  // Gestion de l'édition d'une personne
-  const handleEditPerson = (personne) => {
+  // Gestion de l'édition d'une personne (mémorisée)
+  const handleEditPerson = useCallback((personne) => {
     console.log('[ContactViewTabs] Ouverture de l\'édition pour:', personne);
     setEditingPerson(personne);
     setShowEditPersonModal(true);
-  };
+  }, []);
 
-  // Gestion de la sauvegarde de l'édition d'une personne
-  const handleUpdatePerson = async (updatedPersonData) => {
+  // Gestion de la sauvegarde de l'édition d'une personne (mémorisée)
+  const handleUpdatePerson = useCallback(async (updatedPersonData) => {
     try {
       console.log('[ContactViewTabs] Mise à jour de la personne:', updatedPersonData);
       
@@ -249,6 +262,9 @@ function ContactViewTabs({ id, viewType = null }) {
 
       console.log('[ContactViewTabs] Personne mise à jour avec succès');
       
+      // Invalider le cache pour forcer le rechargement lors du prochain accès
+      invalidateCache();
+      
       // Mettre à jour l'état local immédiatement
       setLocalPersonnes(updatedPersonnes);
       
@@ -260,10 +276,10 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de la mise à jour de la personne:', error);
       alert('Erreur lors de la mise à jour de la personne');
     }
-  };
+  }, [id, invalidateCache]);
 
-  // Gestion de la dissociation d'une personne
-  const handleDissociatePerson = async (personne) => {
+  // Gestion de la dissociation d'une personne (mémorisée)
+  const handleDissociatePerson = useCallback(async (personne) => {
     try {
       console.log('[ContactViewTabs] Dissociation de la personne:', personne);
       
@@ -372,6 +388,9 @@ function ContactViewTabs({ id, viewType = null }) {
 
       console.log('[ContactViewTabs] Dissociation terminée avec succès');
       
+      // Invalider le cache pour forcer le rechargement lors du prochain accès
+      invalidateCache();
+      
       // Mettre à jour l'état local immédiatement
       setLocalPersonnes(updatedPersonnes);
       
@@ -424,10 +443,10 @@ function ContactViewTabs({ id, viewType = null }) {
         console.warn('[ContactViewTabs] Impossible de rafraîchir l\'affichage:', refreshError);
       }
     }
-  };
+  }, [id, currentOrganization, invalidateCache]);
 
-  // Gestion de l'ouverture de la fiche d'une personne
-  const handleOpenPersonFiche = async (personne) => {
+  // Gestion de l'ouverture de la fiche d'une personne (mémorisée)
+  const handleOpenPersonFiche = useCallback(async (personne) => {
     try {
       console.log('[ContactViewTabs] Ouverture fiche personne:', personne);
       
@@ -525,10 +544,10 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de l\'ouverture de la fiche personne:', error);
       alert('Erreur lors de l\'ouverture de la fiche de la personne');
     }
-  };
+  }, [id, currentOrganization, openContactTab]);
 
-  // Gestion de l'ajout de commentaire à une personne
-  const handleAddCommentToPerson = async (personne) => {
+  // Gestion de l'ajout de commentaire à une personne (mémorisée)
+  const handleAddCommentToPerson = useCallback(async (personne) => {
     console.log('[ContactViewTabs] Ajout commentaire pour personne:', personne);
     
     const personneNom = `${personne.prenom || ''} ${personne.nom || ''}`.trim() || 'Personne';
@@ -637,7 +656,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de la gestion du commentaire personne:', error);
       alert('Erreur lors de l\'ouverture du commentaire pour cette personne');
     }
-  };
+  }, [id, currentOrganization]);
 
   // Fonction pour ouvrir la modal de création de commentaire
   const openCreateCommentModal = (personneLibreId, personneNom) => {
@@ -682,8 +701,8 @@ function ContactViewTabs({ id, viewType = null }) {
     });
   };
 
-  // Fonction pour supprimer un commentaire
-  const handleDeleteComment = async (commentaire) => {
+  // Fonction pour supprimer un commentaire (mémorisée)
+  const handleDeleteComment = useCallback(async (commentaire) => {
     try {
       console.log('[ContactViewTabs] Suppression commentaire:', commentaire);
       
@@ -720,6 +739,9 @@ function ContactViewTabs({ id, viewType = null }) {
         updatedAt: serverTimestamp()
       });
       
+      // Invalider le cache pour forcer le rechargement lors du prochain accès
+      invalidateCache();
+      
       // Mettre à jour l'état local immédiatement avec timestamp
       const now = Date.now();
       setLocalCommentaires(updatedComments);
@@ -731,7 +753,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de la suppression du commentaire:', error);
       alert(`Erreur lors de la suppression: ${error.message}`);
     }
-  };
+  }, [id, invalidateCache]);
 
   // Navigation vers les entités liées
   const navigateToEntity = (entityType, entityId, entityName) => {
@@ -918,13 +940,29 @@ function ContactViewTabs({ id, viewType = null }) {
     return contact;
   }, [contact, entityType, localTags, localPersonnes]);
 
-  // Charger les données du tableau de bord filtrées par structure
+  // Mémoriser le nom de structure pour éviter les changements de référence
+  const structureName = useMemo(() => extractedData?.structureRaisonSociale, [extractedData?.structureRaisonSociale]);
+  
+  // Charger les données du tableau de bord filtrées par structure (optimisé)
   useEffect(() => {
     const loadStructureDates = async () => {
-      if (!currentOrganization?.id || !extractedData?.structureRaisonSociale) {
-        setDatesData([]);
+      const organizationId = currentOrganization?.id;
+      
+      if (!organizationId || !structureName) {
+        if (datesData.length > 0) {
+          console.log('🗂️ [ContactViewTabs] Réinitialisation dates (pas de structure)');
+          setDatesData([]);
+        }
         return;
       }
+
+      // Éviter les rechargements si les données sont déjà en cours de chargement
+      if (datesLoading) {
+        console.log('⏳ [ContactViewTabs] Chargement dates déjà en cours');
+        return;
+      }
+
+      console.log('📅 [ContactViewTabs] Chargement dates pour structure:', structureName);
 
       try {
         setDatesLoading(true);
@@ -932,8 +970,8 @@ function ContactViewTabs({ id, viewType = null }) {
         // Charger les concerts liés à cette structure
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('organizationId', '==', currentOrganization.id),
-          where('structureNom', '==', extractedData.structureRaisonSociale)
+          where('organizationId', '==', organizationId),
+          where('structureNom', '==', structureName)
         );
         
         const concertsSnapshot = await getDocs(concertsQuery);
@@ -942,6 +980,7 @@ function ContactViewTabs({ id, viewType = null }) {
           ...doc.data()
         }));
         
+        console.log('✅ [ContactViewTabs] Dates chargées:', structureConcerts.length);
         setDatesData(structureConcerts);
       } catch (error) {
         console.error('[ContactViewTabs] Erreur chargement dates structure:', error);
@@ -951,8 +990,10 @@ function ContactViewTabs({ id, viewType = null }) {
       }
     };
 
-    loadStructureDates();
-  }, [currentOrganization?.id, extractedData?.structureRaisonSociale]);
+    // Debounce pour éviter les appels multiples rapprochés
+    const timeoutId = setTimeout(loadStructureDates, 100);
+    return () => clearTimeout(timeoutId);
+  }, [currentOrganization?.id, structureName]); // Supprimer datesLoading des dépendances
   
   // Logique intelligente pour choisir entre commentaires locaux et Firebase
   const commentaires = useMemo(() => {
@@ -973,20 +1014,18 @@ function ContactViewTabs({ id, viewType = null }) {
   
   // Synchroniser les commentaires locaux avec les données du contact de manière intelligente
   useEffect(() => {
-    if (extractedData?.commentaires) {
-      // Seulement synchroniser si :
-      // 1. L'état local est vide (premier chargement)
-      // 2. OU si les données Firebase sont plus récentes que la dernière modification locale
-      const shouldSync = localCommentaires.length === 0 || 
-        !lastLocalUpdate || 
-        (extractedData.updatedAt && extractedData.updatedAt.toMillis && extractedData.updatedAt.toMillis() > lastLocalUpdate);
-      
-      if (shouldSync) {
-        console.log('[ContactViewTabs] Synchronisation des commentaires depuis Firebase');
-        setLocalCommentaires(extractedData.commentaires);
-      } else {
-        console.log('[ContactViewTabs] Commentaires locaux plus récents, pas de synchronisation');
-      }
+    if (!extractedData?.commentaires) return;
+    
+    // Seulement synchroniser si :
+    // 1. L'état local est vide (premier chargement)
+    // 2. OU si les données Firebase sont plus récentes que la dernière modification locale
+    const shouldSync = localCommentaires.length === 0 || 
+      !lastLocalUpdate || 
+      (extractedData.updatedAt && extractedData.updatedAt.toMillis && extractedData.updatedAt.toMillis() > lastLocalUpdate);
+    
+    if (shouldSync && JSON.stringify(localCommentaires) !== JSON.stringify(extractedData.commentaires)) {
+      console.log('💬 [ContactViewTabs] Synchronisation des commentaires depuis Firebase');
+      setLocalCommentaires(extractedData.commentaires);
     }
   }, [extractedData?.commentaires, extractedData?.updatedAt, lastLocalUpdate, localCommentaires.length]);
 
@@ -1003,7 +1042,7 @@ function ContactViewTabs({ id, viewType = null }) {
   //   e.target.value = '';
   // };
   
-  const handleRemoveTag = async (tagToRemove) => {
+  const handleRemoveTag = useCallback(async (tagToRemove) => {
     try {
       console.log('Suppression du tag:', tagToRemove, 'du contact:', id);
       
@@ -1022,13 +1061,16 @@ function ContactViewTabs({ id, viewType = null }) {
       
       console.log('Tag supprimé avec succès');
       
+      // Invalider le cache pour forcer le rechargement lors du prochain accès
+      invalidateCache();
+      
       // Mettre à jour l'état local immédiatement (pas de rechargement de page)
       setLocalTags(newTags);
     } catch (error) {
       console.error('Erreur lors de la suppression du tag:', error);
       alert('Erreur lors de la suppression du tag');
     }
-  };
+  }, [id, localTags, invalidateCache]);
 
   // Déterminer le type d'entité pour adapter la configuration
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');
@@ -1051,8 +1093,18 @@ function ContactViewTabs({ id, viewType = null }) {
     }
   };
 
-  // Configuration simplifiée (pas de useMemo)
-  const config = {
+  // Configuration des onglets du bas (statique, mémorisée)
+  const bottomTabsConfig = useMemo(() => [
+    { id: 'historique', label: 'Historique', icon: 'bi-clock-history', color: '#28a745' },
+    { id: 'diffusion', label: 'Diffusion', icon: 'bi-broadcast', color: '#6f42c1' },
+    { id: 'salle', label: 'Salle', icon: 'bi-building', color: '#fd7e14' },
+    { id: 'dates', label: 'Dates', icon: 'bi-calendar-event', color: '#dc3545' },
+    { id: 'contrats', label: 'Contrats', icon: 'bi-file-earmark-text', color: '#007bff' },
+    { id: 'factures', label: 'Factures', icon: 'bi-receipt', color: '#ffc107' }
+  ], []);
+  
+  // Configuration optimisée avec useMemo
+  const config = useMemo(() => ({
     defaultBottomTab: 'historique',
     notFoundIcon: isStructure ? 'bi-building-x' : 'bi-person-x',
     notFoundTitle: isStructure ? 'Structure non trouvée' : 'Contact non trouvé',
@@ -1139,14 +1191,7 @@ function ContactViewTabs({ id, viewType = null }) {
       }
     },
     
-    bottomTabs: [
-      { id: 'historique', label: 'Historique', icon: 'bi-clock-history', color: '#28a745' },
-      { id: 'diffusion', label: 'Diffusion', icon: 'bi-broadcast', color: '#6f42c1' },
-      { id: 'salle', label: 'Salle', icon: 'bi-building', color: '#fd7e14' },
-      { id: 'dates', label: 'Dates', icon: 'bi-calendar-event', color: '#dc3545' },
-      { id: 'contrats', label: 'Contrats', icon: 'bi-file-earmark-text', color: '#007bff' },
-      { id: 'factures', label: 'Factures', icon: 'bi-receipt', color: '#ffc107' }
-    ],
+    bottomTabs: bottomTabsConfig,
 
     topSections: [
       {
@@ -1567,6 +1612,9 @@ function ContactViewTabs({ id, viewType = null }) {
                       updatedAt: serverTimestamp()
                     });
                     
+                    // Invalider le cache pour forcer le rechargement lors du prochain accès
+                    invalidateCache();
+                    
                     // Mettre à jour l'état local immédiatement avec timestamp
                     const now = Date.now();
                     setLocalCommentaires([...existingComments, newComment]);
@@ -1814,7 +1862,35 @@ function ContactViewTabs({ id, viewType = null }) {
       // Fallback
       return null;
     }
-  };
+  }), [
+    // Dépendances minimales pour le useMemo
+    isStructure, 
+    extractedData, 
+    localTags, 
+    localPersonnes, 
+    commentaires, 
+    activeBottomTab,
+    datesData,
+    datesLoading,
+    bottomTabsConfig,
+    forcedViewType,
+    entityType,
+    id,
+    // Fonctions stables
+    handleRemoveTag,
+    openCommentModal,
+    currentUser,
+    handleDeleteComment,
+    openPersonneModal,
+    setShowTagsModal,
+    setShowAssociatePersonModal,
+    openDateCreationTab,
+    handleEditPerson,
+    handleDissociatePerson,
+    handleOpenPersonFiche,
+    handleAddCommentToPerson,
+    navigateToEntity
+  ]);
 
   return (
     <>

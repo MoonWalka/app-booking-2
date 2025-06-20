@@ -32,66 +32,67 @@ export const TabsProvider = ({ children }) => {
   const openTab = useCallback((tabConfig) => {
     const { id, title, path, component, params = {}, icon = 'bi-file-earmark', closable = true } = tabConfig;
     
-    // Vérifier si l'onglet existe déjà
-    const existingTab = tabs.find(tab => tab.id === id);
-    
-    if (existingTab) {
-      // Activer l'onglet existant
-      setActiveTabId(id);
-      setTabs(prevTabs => 
-        prevTabs.map(tab => ({
+    setTabs(prevTabs => {
+      // Vérifier si l'onglet existe déjà
+      const existingTab = prevTabs.find(tab => tab.id === id);
+      
+      if (existingTab) {
+        // Activer l'onglet existant
+        setActiveTabId(id);
+        return prevTabs.map(tab => ({
           ...tab,
           isActive: tab.id === id
-        }))
-      );
-    } else {
-      // Créer un nouvel onglet
-      const newTab = {
-        id,
-        title,
-        path,
-        component,
-        params,
-        icon,
-        closable,
-        isActive: true,
-        createdAt: Date.now()
-      };
-      
-      setTabs(prevTabs => [
-        ...prevTabs.map(tab => ({ ...tab, isActive: false })),
-        newTab
-      ]);
-      setActiveTabId(id);
-    }
-  }, [tabs]);
+        }));
+      } else {
+        // Créer un nouvel onglet
+        const newTab = {
+          id,
+          title,
+          path,
+          component,
+          params,
+          icon,
+          closable,
+          isActive: true,
+          createdAt: Date.now()
+        };
+        
+        setActiveTabId(id);
+        return [
+          ...prevTabs.map(tab => ({ ...tab, isActive: false })),
+          newTab
+        ];
+      }
+    });
+  }, []); // Supprimer tabs des dépendances - utiliser prevTabs dans setter
 
   // Fermer un onglet
   const closeTab = useCallback((tabId) => {
-    if (tabs.length <= 1) return; // Ne pas fermer le dernier onglet
-    
-    const tab = tabs.find(t => t.id === tabId);
-    if (!tab?.closable) return; // Ne pas fermer un onglet non-fermable
-    
-    const tabIndex = tabs.findIndex(tab => tab.id === tabId);
-    const isActiveTab = activeTabId === tabId;
-    
-    const newTabs = tabs.filter(tab => tab.id !== tabId);
-    setTabs(newTabs);
-    
-    // Si on ferme l'onglet actif, activer le précédent ou le suivant
-    if (isActiveTab && newTabs.length > 0) {
-      const newActiveIndex = Math.max(0, tabIndex - 1);
-      const newActiveTabId = newTabs[newActiveIndex]?.id;
-      setActiveTabId(newActiveTabId);
-      setTabs(prevTabs => 
-        prevTabs.map(tab => ({
+    setTabs(prevTabs => {
+      if (prevTabs.length <= 1) return prevTabs; // Ne pas fermer le dernier onglet
+      
+      const tab = prevTabs.find(t => t.id === tabId);
+      if (!tab?.closable) return prevTabs; // Ne pas fermer un onglet non-fermable
+      
+      const tabIndex = prevTabs.findIndex(tab => tab.id === tabId);
+      const isActiveTab = activeTabId === tabId;
+      
+      const newTabs = prevTabs.filter(tab => tab.id !== tabId);
+      
+      // Si on ferme l'onglet actif, activer le précédent ou le suivant
+      if (isActiveTab && newTabs.length > 0) {
+        const newActiveIndex = Math.max(0, tabIndex - 1);
+        const newActiveTabId = newTabs[newActiveIndex]?.id;
+        setActiveTabId(newActiveTabId);
+        return newTabs.map(tab => ({
           ...tab,
           isActive: tab.id === newActiveTabId
-        }))
-      );
-    }
-  }, [tabs, activeTabId]);
+        }));
+      }
+      
+      return newTabs;
+    });
+  }, [activeTabId]); // Supprimer tabs des dépendances
 
   // Activer un onglet
   const activateTab = useCallback((tabId) => {
@@ -115,25 +116,26 @@ export const TabsProvider = ({ children }) => {
 
   // Fermer tous les onglets fermables
   const closeAllTabs = useCallback(() => {
-    const nonClosableTabs = tabs.filter(tab => !tab.closable);
-    setTabs(nonClosableTabs);
-    
-    if (nonClosableTabs.length > 0) {
-      const dashboardTab = nonClosableTabs[0];
-      setActiveTabId(dashboardTab.id);
-      setTabs(prevTabs => 
-        prevTabs.map(tab => ({
+    setTabs(prevTabs => {
+      const nonClosableTabs = prevTabs.filter(tab => !tab.closable);
+      
+      if (nonClosableTabs.length > 0) {
+        const dashboardTab = nonClosableTabs[0];
+        setActiveTabId(dashboardTab.id);
+        return nonClosableTabs.map(tab => ({
           ...tab,
           isActive: tab.id === dashboardTab.id
-        }))
-      );
-    }
-  }, [tabs]);
+        }));
+      }
+      
+      return nonClosableTabs;
+    });
+  }, []); // Supprimer tabs des dépendances
 
   // Obtenir l'onglet actif
   const getActiveTab = useCallback(() => {
     return tabs.find(tab => tab.id === activeTabId);
-  }, [tabs, activeTabId]);
+  }, [tabs, activeTabId]); // Cette fonction peut garder tabs car elle ne modifie pas l'état
 
   // Helpers pour créer des onglets rapidement
   const openContactTab = useCallback((contactId, contactName, viewType = null) => {

@@ -141,18 +141,43 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         
         console.log('Personne mise à jour:', updatedPersonneData);
       } else {
-        // Mode création - créer une nouvelle personne
+        // Mode création - créer une nouvelle personne libre dans contacts_unified
         const personneData = {
-          ...formData,
+          entityType: 'personne_libre',
           organizationId: currentOrganization.id,
+          personne: {
+            prenom: formData.prenom,
+            nom: formData.nom,
+            fonction: formData.fonction || '',
+            civilite: '',
+            email: formData.mailDirect || '',
+            mailDirect: formData.mailDirect || '',
+            mailPerso: formData.mailPerso || '',
+            telephone: formData.telDirect || '',
+            telDirect: formData.telDirect || '',
+            telPerso: formData.telPerso || '',
+            mobile: formData.mobile || '',
+            fax: '',
+            adresse: formData.adresse || '',
+            suiteAdresse: formData.suiteAdresse || '',
+            codePostal: formData.codePostal || '',
+            ville: formData.ville || '',
+            departement: formData.departement || '',
+            region: formData.region || '',
+            pays: formData.pays || 'France'
+          },
+          qualification: {
+            tags: [],
+            source: formData.source || 'Prospection'
+          },
+          commentaires: [],
           createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          type: 'personne'
+          updatedAt: serverTimestamp()
         };
 
-        const docRef = await addDoc(collection(db, 'contacts'), personneData);
+        const docRef = await addDoc(collection(db, 'contacts_unified'), personneData);
         
-        console.log('Personne créée avec ID:', docRef.id);
+        console.log('Personne libre créée avec ID:', docRef.id);
         
         // Callback pour notifier la création
         if (onCreated) {

@@ -1,5 +1,6 @@
 import React from 'react';
 import EntityCard from '@/components/ui/EntityCard';
+import { formatActivityTags } from '@/utils/contactUtils';
 import styles from '../ContactViewTabs.module.css';
 
 /**
@@ -14,7 +15,10 @@ function ContactPersonsSection({
   onDissociatePerson,
   onOpenPersonFiche,
   onAddCommentToPerson,
-  navigateToEntity
+  navigateToEntity,
+  onEditStructure,
+  onOpenStructureFiche,
+  onAddCommentToStructure
 }) {
   if (isStructure) {
     // Pour les structures, afficher les personnes associées
@@ -80,14 +84,14 @@ function ContactPersonsSection({
       </div>
     );
   } else {
-    // Pour les personnes, afficher la structure associée
+    // Pour les personnes, afficher la structure associée - VERSION ENRICHIE
     return (
       <div className={styles.structureContent}>
         {structureData?.structureRaisonSociale ? (
           <EntityCard
             entityType="structure"
             name={structureData.structureRaisonSociale}
-            subtitle={structureData.structureType || 'Structure'}
+            subtitle={formatActivityTags(structureData.tags || [], 'Structure')}
             onClick={() => {
               if (structureData?.structureId) {
                 navigateToEntity('structure', structureData.structureId, structureData.structureRaisonSociale);
@@ -99,6 +103,30 @@ function ContactPersonsSection({
               }
             }}
             icon={<i className="bi bi-building" style={{ fontSize: '1.2rem' }}></i>}
+            compact={true}
+            actions={[
+              {
+                icon: 'bi-pencil',
+                label: 'Modifier',
+                tooltip: 'Modifier cette structure',
+                variant: 'Secondary',
+                onClick: () => onEditStructure && onEditStructure(structureData)
+              },
+              {
+                icon: 'bi-eye',
+                label: 'Ouvrir',
+                tooltip: 'Ouvrir la fiche structure',
+                variant: 'Primary',
+                onClick: () => onOpenStructureFiche && onOpenStructureFiche(structureData)
+              },
+              {
+                icon: 'bi-chat-quote',
+                label: 'Commentaire',
+                tooltip: 'Ajouter un commentaire',
+                variant: 'Secondary',
+                onClick: () => onAddCommentToStructure && onAddCommentToStructure(structureData)
+              }
+            ].filter(action => action.onClick)}
           />
         ) : (
           <div className={styles.emptyStructure}>

@@ -3,9 +3,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { doc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
-// Cache simple en mémoire pour éviter les rechargements inutiles
-const contactCache = new Map();
-const CACHE_DURATION = 30000; // 30 secondes
+// Pas de cache - simple et direct
 
 /**
  * Hook optimisé pour charger un contact depuis la collection unifiée contacts_unified
@@ -41,20 +39,7 @@ export const useUnifiedContact = (contactId) => {
       return;
     }
 
-    // Vérifier le cache d'abord
-    if (!forceReload) {
-      const cached = contactCache.get(contactId);
-      if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
-        console.log('💾 [useUnifiedContact] Utilisation du cache pour:', contactId);
-        setData({
-          contact: cached.data,
-          loading: false,
-          error: null,
-          entityType: cached.data.entityType
-        });
-        return;
-      }
-    }
+    // Pas de cache - chargement direct
 
     console.log('🔄 [useUnifiedContact] Chargement ID:', contactId, forceReload ? '(forcé)' : '');
     
@@ -69,11 +54,7 @@ export const useUnifiedContact = (contactId) => {
       if (docSnap.exists()) {
         const unifiedData = { id: docSnap.id, ...docSnap.data() };
         
-        // Mettre en cache
-        contactCache.set(contactId, {
-          data: unifiedData,
-          timestamp: Date.now()
-        });
+        // Pas de cache
         
         console.log('✅ [useUnifiedContact] Document trouvé et mis en cache:', {
           id: unifiedData.id,
@@ -127,7 +108,7 @@ export const useUnifiedContact = (contactId) => {
   // Fonction pour invalider le cache
   const invalidateCache = useCallback(() => {
     if (contactId) {
-      contactCache.delete(contactId);
+      // Cache supprimé.delete(contactId);
       console.log('🗑️ [useUnifiedContact] Cache invalidé pour:', contactId);
     }
   }, [contactId]);
@@ -147,6 +128,6 @@ export const useUnifiedContact = (contactId) => {
 
 // Fonction utilitaire pour nettoyer le cache
 export const clearContactCache = () => {
-  contactCache.clear();
+  // Cache supprimé.clear();
   console.log('🧹 [useUnifiedContact] Cache entièrement nettoyé');
 };

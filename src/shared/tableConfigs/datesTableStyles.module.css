@@ -1,0 +1,169 @@
+/*
+ * Styles partagés pour les tableaux de dates
+ * Extraits du TableauDeBordPage.module.css pour réutilisation
+ */
+
+/* Cellules du tableau */
+.dateCell {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.niveauCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+}
+
+.niveauIcon {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.niveauBar {
+  width: 4px;
+  height: 12px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.niveauBarActive {
+  background-color: var(--tc-primary, #007bff);
+}
+
+.niveauBarInactive {
+  background-color: var(--tc-border-light, #e5e7eb);
+}
+
+.artisteCell {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.projetCell {
+  color: var(--tc-text-secondary, #6c757d);
+  font-style: italic;
+}
+
+.lieuCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.lieuNom {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.lieuVille {
+  font-size: 0.8em;
+  color: var(--tc-text-secondary, #6c757d);
+}
+
+.priseOptionCell {
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+.contratTypeCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contratTypeBadge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  min-width: 70px;
+}
+
+.montantCell {
+  text-align: right;
+}
+
+.montant {
+  font-weight: 600;
+  color: var(--tc-success, #28a745);
+}
+
+.noMontant {
+  color: var(--tc-text-muted, #6c757d);
+}
+
+.nbDatesCell {
+  text-align: center;
+  font-weight: 500;
+  color: var(--tc-text-primary, #2c3e50);
+}
+
+/* Cellules d'actions */
+.devisCell,
+.preContratCell,
+.confirmationCell,
+.contratFinalCell,
+.factureCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+}
+
+.devisCell i,
+.preContratCell i,
+.confirmationCell i,
+.contratFinalCell i,
+.factureCell i {
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.devisCell i:hover,
+.preContratCell i:hover,
+.confirmationCell i:hover,
+.contratFinalCell i:hover,
+.factureCell i:hover {
+  transform: scale(1.1);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background-color: var(--tc-bg-hover, rgba(0, 123, 255, 0.05));
+  border-radius: 4px;
+}
+
+/* Indicateurs de statut */
+.text-success {
+  color: var(--tc-success, #28a745) !important;
+}
+
+.text-warning {
+  color: var(--tc-warning, #ffc107) !important;
+}
+
+.text-muted {
+  color: var(--tc-text-muted, #6c757d) !important;
+}
+
+/* Animation hover pour les icônes cliquables */
+.devisCell i[style*="cursor: pointer"],
+.preContratCell i[style*="cursor: pointer"],
+.contratFinalCell i[style*="cursor: pointer"] {
+  transition: all 0.2s ease;
+}
+
+.devisCell i[style*="cursor: pointer"]:hover,
+.preContratCell i[style*="cursor: pointer"]:hover,
+.contratFinalCell i[style*="cursor: pointer"]:hover {
+  transform: scale(1.15);
+  filter: brightness(1.1);
+}

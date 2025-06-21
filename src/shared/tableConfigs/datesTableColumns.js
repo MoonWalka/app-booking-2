@@ -1,57 +1,45 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTabs } from '@/context/TabsContext';
-import ContactEntityTable from './ContactEntityTable';
-import styles from './ContactDatesTable.module.css';
-import tableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
+// Configuration partagée des colonnes pour les tableaux de dates/concerts
+// Extraite du TableauDeBordPage pour réutilisation
 
 /**
- * Tableau des dates de concerts associées à un contact
+ * Configuration des colonnes du tableau de dates avancé
+ * @param {Object} hooks - Hooks et fonctions nécessaires
+ * @param {Function} hooks.openTab - Fonction pour ouvrir un onglet
+ * @param {Function} hooks.openPreContratTab - Fonction pour ouvrir un pré-contrat
+ * @param {Function} hooks.openContratTab - Fonction pour ouvrir un contrat
+ * @param {Object} styles - Classes CSS pour le styling
  */
-const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
-  const navigate = useNavigate();
-  const { openTab, openPreContratTab, openContratTab } = useTabs();
-
-  // Fonction pour supprimer un concert
-  const handleDeleteConcert = (concert) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer le concert "${concert.titre || 'sans titre'}" ?`)) {
-      // TODO: Implémenter la suppression via un service
-      console.log('Suppression du concert:', concert.id);
-      // Ici il faudrait appeler un service de suppression
-    }
-  };
-
-  // Version simplifiée des boutons d'actions
-  // Pour une version complète avec vérification des statuts,
-  // il faudrait charger les données de formulaires/contrats/factures
-  // spécifiquement pour ces concerts
+export const createDatesTableColumns = (hooks = {}, styles = {}) => {
+  const { openTab, openPreContratTab, openContratTab } = hooks;
 
   // Fonction pour ouvrir la page de confirmation
   const openConfirmationPage = (item) => {
-    openTab({
-      id: `confirmation-${item.id}`,
-      title: `Confirmation - ${item.artisteNom || item.titre || 'Concert'}`,
-      path: `/confirmation?concertId=${item.id}`,
-      component: 'ConfirmationPage',
-      params: { concertId: item.id },
-      icon: 'bi-check-circle'
-    });
+    if (openTab) {
+      openTab({
+        id: `confirmation-${item.id}`,
+        title: `Confirmation - ${item.artisteNom || item.titre || 'Concert'}`,
+        path: `/confirmation?concertId=${item.id}`,
+        component: 'ConfirmationPage',
+        params: { concertId: item.id },
+        icon: 'bi-check-circle'
+      });
+    }
   };
 
-  // Configuration des colonnes - IDENTIQUE au tableau de bord
-  const columns = [
+  return [
     {
       label: 'Niveau',
       key: 'niveau',
+      sortable: true,
       render: (item) => {
         const niveau = item.niveau || 1;
         return (
-          <div className={tableStyles.niveauCell}>
-            <div className={tableStyles.niveauIcon}>
+          <div className={styles.niveauCell}>
+            <div className={styles.niveauIcon}>
               {Array.from({ length: 3 }, (_, index) => (
                 <div 
                   key={index}
-                  className={`${tableStyles.niveauBar} ${index < niveau ? tableStyles.niveauBarActive : tableStyles.niveauBarInactive}`}
+                  className={`${styles.niveauBar} ${index < niveau ? styles.niveauBarActive : styles.niveauBarInactive}`}
                 ></div>
               ))}
             </div>
@@ -62,8 +50,9 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Artiste',
       key: 'artisteNom',
+      sortable: true,
       render: (item) => (
-        <span className={tableStyles.artisteCell}>
+        <span className={styles.artisteCell}>
           {item.artisteNom || 'Non spécifié'}
         </span>
       )
@@ -71,8 +60,9 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Projet',
       key: 'projet',
+      sortable: true,
       render: (item) => (
-        <span className={tableStyles.projetCell}>
+        <span className={styles.projetCell}>
           {item.formule || item.projet || '—'}
         </span>
       )
@@ -80,13 +70,14 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Lieu',
       key: 'lieuNom',
+      sortable: true,
       render: (item) => (
-        <div className={tableStyles.lieuCell}>
-          <div className={tableStyles.lieuNom}>
+        <div className={styles.lieuCell}>
+          <div className={styles.lieuNom}>
             {item.lieuNom || item.lieu?.nom || 'Non spécifié'}
           </div>
           {(item.lieuVille || item.lieu?.ville) && (
-            <div className={tableStyles.lieuVille}>
+            <div className={styles.lieuVille}>
               {item.lieuVille || item.lieu?.ville}
             </div>
           )}
@@ -96,6 +87,7 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Prise d\'option',
       key: 'priseOption',
+      sortable: true,
       render: (item) => {
         if (!item.priseOption && !item.datePriseOption) return '—';
         
@@ -104,7 +96,7 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
         
         const date = datePriseOption.toDate ? datePriseOption.toDate() : new Date(datePriseOption);
         return (
-          <span className={tableStyles.priseOptionCell}>
+          <span className={styles.priseOptionCell}>
             {date.toLocaleDateString('fr-FR')}
           </span>
         );
@@ -113,6 +105,7 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Contrat',
       key: 'contrat',
+      sortable: true,
       render: (item) => {
         const typeContrat = item.typeContrat || item.contratType || 'Aucun';
         const getContratBadge = (type) => {
@@ -135,9 +128,9 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
         const badgeInfo = getContratBadge(typeContrat);
         
         return (
-          <div className={tableStyles.contratTypeCell}>
+          <div className={styles.contratTypeCell}>
             <span 
-              className={tableStyles.contratTypeBadge}
+              className={styles.contratTypeBadge}
               style={{ backgroundColor: badgeInfo.color }}
             >
               {badgeInfo.label}
@@ -149,11 +142,12 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Début',
       key: 'date',
+      sortable: true,
       render: (item) => {
         if (!item.date) return '—';
         const date = item.date.toDate ? item.date.toDate() : new Date(item.date);
         return (
-          <span className={tableStyles.dateCell}>
+          <span className={styles.dateCell}>
             {date.toLocaleDateString('fr-FR')}
           </span>
         );
@@ -162,11 +156,12 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Fin',
       key: 'dateFin',
+      sortable: true,
       render: (item) => {
         if (!item.dateFin) return '—';
         const date = item.dateFin.toDate ? item.dateFin.toDate() : new Date(item.dateFin);
         return (
-          <span className={tableStyles.dateCell}>
+          <span className={styles.dateCell}>
             {date.toLocaleDateString('fr-FR')}
           </span>
         );
@@ -175,14 +170,15 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Montant',
       key: 'montant',
+      sortable: true,
       render: (item) => (
-        <div className={tableStyles.montantCell}>
+        <div className={styles.montantCell}>
           {item.montant ? (
-            <span className={tableStyles.montant}>
+            <span className={styles.montant}>
               {item.montant.toLocaleString('fr-FR')} €
             </span>
           ) : (
-            <span className={tableStyles.noMontant}>—</span>
+            <span className={styles.noMontant}>—</span>
           )}
         </div>
       )
@@ -190,8 +186,9 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Nb. de dates',
       key: 'nbDates',
+      sortable: true,
       render: (item) => (
-        <span className={tableStyles.nbDatesCell}>
+        <span className={styles.nbDatesCell}>
           {item.nbDates || '1'}
         </span>
       )
@@ -199,14 +196,15 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Devis',
       key: 'devis',
+      sortable: false,
       render: (item) => (
-        <div className={tableStyles.devisCell}>
+        <div className={styles.devisCell}>
           {item.devisId ? (
             <i 
               className="bi bi-file-earmark-check-fill text-success" 
               title="Voir le devis"
               style={{ cursor: 'pointer' }}
-              onClick={() => openTab({
+              onClick={() => openTab && openTab({
                 id: `devis-${item.devisId}`,
                 title: `Devis - ${item.artisteNom || item.titre || 'Concert'}`,
                 path: `/devis/${item.devisId}`,
@@ -220,7 +218,7 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
               className="bi bi-file-earmark text-muted" 
               title="Créer un devis"
               style={{ cursor: 'pointer' }}
-              onClick={() => openTab({
+              onClick={() => openTab && openTab({
                 id: `devis-nouveau-${item.id}`,
                 title: `Nouveau devis - ${item.artisteNom || item.titre || 'Concert'}`,
                 path: `/devis/nouveau?concertId=${item.id}&structureId=${item.structureId}`,
@@ -236,21 +234,22 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Pré contrat',
       key: 'preContrat',
+      sortable: false,
       render: (item) => (
-        <div className={tableStyles.preContratCell}>
+        <div className={styles.preContratCell}>
           {item.preContratId ? (
             <i 
               className="bi bi-file-earmark-text-fill text-warning" 
               title="Pré-contrat existant"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab && openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
             ></i>
           ) : (
             <i 
               className="bi bi-file-earmark-text text-muted" 
               title="Créer un pré-contrat"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab && openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
             ></i>
           )}
         </div>
@@ -259,9 +258,10 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Confirmation',
       key: 'confirmation',
+      sortable: false,
       render: (item) => (
         <div 
-          className={`${tableStyles.confirmationCell} ${tableStyles.clickable}`}
+          className={`${styles.confirmationCell} ${styles.clickable}`}
           onClick={() => openConfirmationPage(item)}
           title="Cliquer pour gérer la confirmation"
         >
@@ -276,6 +276,7 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Contrat',
       key: 'contratFinal',
+      sortable: false,
       render: (item) => {
         // Déterminer l'état du contrat basé sur contratStatut
         const contratStatut = item.contratStatut;
@@ -287,21 +288,21 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
           // Contrat rédigé et terminé - icône verte
           iconClass = "bi bi-file-earmark-check-fill text-success";
           title = "Contrat rédigé - Voir";
-          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+          action = () => openContratTab && openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         } else if (hasContrat) {
           // Contrat en cours de rédaction - icône orange
           iconClass = "bi bi-file-earmark-text-fill text-warning";
           title = "Contrat en cours - Continuer la rédaction";
-          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+          action = () => openContratTab && openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         } else {
           // Aucun contrat - icône grise
           iconClass = "bi bi-file-earmark text-muted";
           title = "Créer un contrat";
-          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+          action = () => openContratTab && openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         }
         
         return (
-          <div className={tableStyles.contratFinalCell}>
+          <div className={styles.contratFinalCell}>
             <i 
               className={iconClass}
               title={title}
@@ -315,8 +316,9 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
     {
       label: 'Facture',
       key: 'facture',
+      sortable: false,
       render: (item) => (
-        <div className={tableStyles.factureCell}>
+        <div className={styles.factureCell}>
           {item.factureId ? (
             <i className="bi bi-receipt-cutoff text-success" title="Facture existante"></i>
           ) : (
@@ -324,73 +326,6 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
           )}
         </div>
       )
-    },
-    {
-      label: 'Actions',
-      key: 'actions',
-      render: (item) => (
-        <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
-          {/* Bouton Modifier */}
-          <button
-            style={{
-              padding: '4px 8px',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              backgroundColor: '#fd7e14',
-              color: 'white',
-              fontSize: '12px'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/concerts/${item.id}/edit`);
-            }}
-            title="Modifier le concert"
-          >
-            <i className="bi bi-pencil-square"></i>
-          </button>
-
-          {/* Bouton Supprimer */}
-          <button
-            style={{
-              padding: '4px 8px',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              fontSize: '12px'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteConcert(item);
-            }}
-            title="Supprimer le concert"
-          >
-            <i className="bi bi-trash"></i>
-          </button>
-        </div>
-      )
     }
   ];
-
-  return (
-    <ContactEntityTable
-      title="Dates de concerts"
-      icon="bi bi-calendar-event"
-      iconColor="#dc3545"
-      data={concerts}
-      columns={columns}
-      emptyMessage="Ce contact n'a pas encore de concerts associés."
-      emptyIcon="bi-calendar-x"
-      contactId={contactId}
-      fullWidth={true}
-      showHeader={true}
-      itemsPerPage={5}
-      addButtonLabel="Nouvelle date"
-      onAddClick={onAddClick}
-    />
-  );
 };
-
-export default ContactDatesTable;

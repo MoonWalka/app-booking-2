@@ -199,7 +199,7 @@ const TabManagerProduction = () => {
           console.log('[DEBUG TabManager] contactId passé:', activeTab.params?.contactId);
           console.log('[DEBUG TabManager] viewType passé:', activeTab.params?.viewType);
           return <ContactViewTabs 
-            key={`contact-${activeTab.params?.contactId}`}
+            key={activeTab.id}
             id={activeTab.params?.contactId} 
             viewType={activeTab.params?.viewType} 
           />;
@@ -226,7 +226,7 @@ const TabManagerProduction = () => {
         case 'StructureDetailsPage':
           // Afficher les détails d'une structure (maintenant c'est un contact de type structure)
           return <ContactViewTabs 
-            key={`structure-${activeTab.params?.structureId}`}
+            key={activeTab.id}
             id={activeTab.params?.structureId} 
           />;
         case 'ArtistesPage':

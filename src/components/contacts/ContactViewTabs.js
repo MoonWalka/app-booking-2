@@ -68,26 +68,21 @@ function ContactViewTabs({ id, viewType = null }) {
     handleDeleteComment
   } = useContactActions(id);
 
-  // Synchronisation des données locales
+  // Synchronisation initiale uniquement
   useEffect(() => {
     if (!contact) return;
     
-    const newTags = contact?.qualification?.tags || [];
-    setLocalTags(prevTags => {
-      if (JSON.stringify(prevTags) !== JSON.stringify(newTags)) {
-        return newTags;
-      }
-      return prevTags;
-    });
+    // Synchroniser seulement si les états locaux sont vides (première charge)
+    if (localTags.length === 0) {
+      const newTags = contact?.qualification?.tags || [];
+      setLocalTags(newTags);
+    }
     
-    const newPersonnes = contact?.personnes || [];
-    setLocalPersonnes(prevPersonnes => {
-      if (JSON.stringify(prevPersonnes) !== JSON.stringify(newPersonnes)) {
-        return newPersonnes;
-      }
-      return prevPersonnes;
-    });
-  }, [contact, setLocalTags, setLocalPersonnes]);
+    if (localPersonnes.length === 0) {
+      const newPersonnes = contact?.personnes || [];
+      setLocalPersonnes(newPersonnes);
+    }
+  }, [contact?.id]); // Dépendance sur l'ID uniquement
 
   // Gestion des personnes
   const handleEditPerson = useCallback((personne) => {
@@ -350,29 +345,21 @@ function ContactViewTabs({ id, viewType = null }) {
     return () => clearTimeout(timeoutId);
   }, [currentOrganization?.id, structureName]); // eslint-disable-line react-hooks/exhaustive-deps
   
-  // Gestion des commentaires
+  // Utiliser directement les commentaires locaux après modification, sinon Firebase
   const commentaires = useMemo(() => {
-    if (lastLocalUpdate && extractedData?.updatedAt) {
-      const firebaseTime = extractedData.updatedAt.toMillis ? extractedData.updatedAt.toMillis() : 0;
-      if (lastLocalUpdate > firebaseTime) {
-        return localCommentaires;
-      }
+    // Si on a des modifications locales récentes, les utiliser
+    if (localCommentaires.length > 0 || lastLocalUpdate) {
+      return localCommentaires;
     }
-    
-    return extractedData?.commentaires || localCommentaires || [];
-  }, [localCommentaires, extractedData?.commentaires, extractedData?.updatedAt, lastLocalUpdate]);
+    // Sinon utiliser les données Firebase
+    return extractedData?.commentaires || [];
+  }, [localCommentaires, lastLocalUpdate, extractedData?.commentaires]);
   
+  // Synchronisation initiale des commentaires
   useEffect(() => {
-    if (!extractedData?.commentaires) return;
-    
-    const shouldSync = localCommentaires.length === 0 || 
-      !lastLocalUpdate || 
-      (extractedData.updatedAt && extractedData.updatedAt.toMillis && extractedData.updatedAt.toMillis() > lastLocalUpdate);
-    
-    if (shouldSync && JSON.stringify(localCommentaires) !== JSON.stringify(extractedData.commentaires)) {
-      setLocalCommentaires(extractedData.commentaires);
-    }
-  }, [extractedData?.commentaires, extractedData?.updatedAt, lastLocalUpdate, setLocalCommentaires, localCommentaires]);
+    if (!extractedData?.commentaires || localCommentaires.length > 0) return;
+    setLocalCommentaires(extractedData.commentaires);
+  }, [extractedData?.id]); // Dépendance sur l'ID uniquement
 
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');
 
@@ -402,7 +389,7 @@ function ContactViewTabs({ id, viewType = null }) {
     { id: 'factures', label: 'Factures', icon: 'bi-receipt', color: '#ffc107' }
   ], []);
   
-  // Configuration principale
+  // Configuration principale - Dépendances minimales
   const config = useMemo(() => ({
     defaultBottomTab: 'historique',
     notFoundIcon: isStructure ? 'bi-building-x' : 'bi-person-x',
@@ -606,27 +593,17 @@ function ContactViewTabs({ id, viewType = null }) {
       />
     )
   }), [
+    // Dépendances vraiment nécessaires uniquement
     isStructure,
-    id,
     entityType,
     forcedViewType,
-    bottomTabsConfig,
     activeBottomTab,
-    extractedData,
-    localPersonnes,
-    commentaires,
-    datesData,
-    handleRemoveTag,
-    handleEditPerson,
-    handleDissociatePerson,
-    handleOpenPersonFiche,
-    handleAddCommentToPersonWithModal,
-    handleAddComment,
-    handleDeleteComment,
-    openPersonneModal,
-    openCommentModal,
-    openDateCreationTab,
-    navigateToEntity
+    extractedData?.tags,
+    extractedData?.structureRaisonSociale,
+    extractedData?.prenom,
+    extractedData?.nom,
+    extractedData?.fonction,
+    extractedData?.createdAt
   ]);
 
   return (

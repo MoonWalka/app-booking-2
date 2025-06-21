@@ -64,7 +64,6 @@ function ContactViewTabs({ id, viewType = null }) {
     handleUpdatePerson,
     handleDissociatePerson,
     handleOpenPersonFiche,
-    handleAddCommentToPerson,
     handleAddComment,
     handleDeleteComment
   } = useContactActions(id);
@@ -174,7 +173,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('Erreur lors de la gestion du commentaire personne:', error);
       alert('Erreur lors de l\'ouverture du commentaire pour cette personne');
     }
-  }, [id, currentOrganization]);
+  }, [id, currentOrganization, openCommentModal, currentUser]);
 
   // Fonction pour ouvrir la modal de création de commentaire
   const openCreateCommentModal = (personneLibreId, personneNom) => {
@@ -210,7 +209,7 @@ function ContactViewTabs({ id, viewType = null }) {
     });
   };
 
-  const navigateToEntity = (entityType, entityId, entityName) => {
+  const navigateToEntity = useCallback((entityType, entityId, entityName) => {
     if (!entityId) return;
     
     const routes = {
@@ -224,7 +223,7 @@ function ContactViewTabs({ id, viewType = null }) {
     if (routes[entityType]) {
       navigate(routes[entityType]);
     }
-  };
+  }, [navigate]);
 
   // Extraction des données selon le type d'entité
   const extractedData = useMemo(() => {
@@ -232,7 +231,6 @@ function ContactViewTabs({ id, viewType = null }) {
     
     if (entityType === 'structure') {
       const structureData = contact.structure || {};
-      const personnes = localPersonnes;
       
       return {
         id: contact.id,
@@ -350,7 +348,7 @@ function ContactViewTabs({ id, viewType = null }) {
 
     const timeoutId = setTimeout(loadStructureDates, 100);
     return () => clearTimeout(timeoutId);
-  }, [currentOrganization?.id, structureName]);
+  }, [currentOrganization?.id, structureName]); // eslint-disable-line react-hooks/exhaustive-deps
   
   // Gestion des commentaires
   const commentaires = useMemo(() => {
@@ -374,7 +372,7 @@ function ContactViewTabs({ id, viewType = null }) {
     if (shouldSync && JSON.stringify(localCommentaires) !== JSON.stringify(extractedData.commentaires)) {
       setLocalCommentaires(extractedData.commentaires);
     }
-  }, [extractedData?.commentaires, extractedData?.updatedAt, lastLocalUpdate, setLocalCommentaires]);
+  }, [extractedData?.commentaires, extractedData?.updatedAt, lastLocalUpdate, setLocalCommentaires, localCommentaires]);
 
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');
 

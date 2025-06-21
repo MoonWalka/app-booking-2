@@ -1,6 +1,6 @@
 import React from 'react';
 import EntityCard from '@/components/ui/EntityCard';
-import { formatActivityTags } from '@/utils/contactUtils';
+import { formatActivityTags, getPersonDisplayType } from '@/utils/contactUtils';
 import styles from '../ContactViewTabs.module.css';
 
 /**
@@ -34,27 +34,25 @@ function ContactPersonsSection({
                   key={personne.id}
                   entityType="contact"
                   name={displayName}
-                  subtitle={personne.fonction || 'Contact'}
+                  subtitle={(() => {
+                    // Afficher les tags d'activité, ou la fonction, ou "Indépendant"
+                    const tags = personne.tags || [];
+                    const activityDisplay = getPersonDisplayType({ tags });
+                    
+                    if (activityDisplay !== 'Indépendant') {
+                      return activityDisplay; // Tags d'activité
+                    } else if (personne.fonction) {
+                      return personne.fonction; // Fonction si définie
+                    } else {
+                      return 'Indépendant'; // Par défaut
+                    }
+                  })()}
                   onClick={() => {
                     console.log('[ContactPersonsSection] Clic sur personne:', personne);
                   }}
                   icon={<i className="bi bi-person-circle" style={{ fontSize: '1.2rem' }}></i>}
                   compact={true}
                   actions={[
-                    {
-                      icon: 'bi-pencil',
-                      label: 'Modifier',
-                      tooltip: 'Modifier cette personne',
-                      variant: 'Secondary',
-                      onClick: () => onEditPerson(personne)
-                    },
-                    {
-                      icon: 'bi-link-45deg',
-                      label: 'Dissocier',
-                      tooltip: 'Dissocier de la structure',
-                      variant: 'Warning',
-                      onClick: () => onDissociatePerson(personne)
-                    },
                     {
                       icon: 'bi-eye',
                       label: 'Ouvrir',
@@ -63,11 +61,25 @@ function ContactPersonsSection({
                       onClick: () => onOpenPersonFiche(personne)
                     },
                     {
+                      icon: 'bi-pencil',
+                      label: 'Modifier',
+                      tooltip: 'Modifier cette personne',
+                      variant: 'Secondary',
+                      onClick: () => onEditPerson(personne)
+                    },
+                    {
                       icon: 'bi-chat-quote',
                       label: 'Commentaire',
                       tooltip: 'Ajouter un commentaire',
                       variant: 'Secondary',
                       onClick: () => onAddCommentToPerson(personne)
+                    },
+                    {
+                      icon: 'bi-link-45deg',
+                      label: 'Dissocier',
+                      tooltip: 'Dissocier de la structure',
+                      variant: 'Warning',
+                      onClick: () => onDissociatePerson(personne)
                     }
                   ]}
                 />
@@ -88,7 +100,8 @@ function ContactPersonsSection({
     return (
       <div className={styles.structureContent}>
         {structureData?.structureRaisonSociale ? (
-          <EntityCard
+          <div style={{ maxWidth: '350px' }}>
+            <EntityCard
             entityType="structure"
             name={structureData.structureRaisonSociale}
             subtitle={formatActivityTags(structureData.tags || [], 'Structure')}
@@ -106,18 +119,18 @@ function ContactPersonsSection({
             compact={true}
             actions={[
               {
-                icon: 'bi-pencil',
-                label: 'Modifier',
-                tooltip: 'Modifier cette structure',
-                variant: 'Secondary',
-                onClick: () => onEditStructure && onEditStructure(structureData)
-              },
-              {
                 icon: 'bi-eye',
                 label: 'Ouvrir',
                 tooltip: 'Ouvrir la fiche structure',
                 variant: 'Primary',
                 onClick: () => onOpenStructureFiche && onOpenStructureFiche(structureData)
+              },
+              {
+                icon: 'bi-pencil',
+                label: 'Modifier',
+                tooltip: 'Modifier cette structure',
+                variant: 'Secondary',
+                onClick: () => onEditStructure && onEditStructure(structureData)
               },
               {
                 icon: 'bi-chat-quote',
@@ -128,6 +141,7 @@ function ContactPersonsSection({
               }
             ].filter(action => action.onClick)}
           />
+          </div>
         ) : (
           <div className={styles.emptyStructure}>
             <i className="bi bi-building" style={{ fontSize: '1.5rem', color: '#6c757d' }}></i>

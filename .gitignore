@@ -37,3 +37,6 @@ firebase-debug.log
 test-brevo-direct.js
 test-brevo-local.js
 test-*.local.js
+
+# Scripts environment variables (contient des clés API)
+.env.scripts

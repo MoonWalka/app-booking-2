@@ -1,0 +1,6 @@
+# Fichier pour marquer des faux positifs comme autorisés
+# Exemple : si vous avez des UUIDs légitimes qui matchent nos patterns
+# [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
+
+# Patterns autorisés pour les exemples de documentation :
+AIzaXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

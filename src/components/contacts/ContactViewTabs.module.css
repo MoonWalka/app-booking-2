@@ -1074,6 +1074,14 @@
 /* Conteneur de la section structure */
 .structureContent {
   padding-top: var(--tc-space-4); /* Espace clair sous la bulle titre */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Limiter la largeur de la carte structure pour un affichage compact */
+.structureContent > div {
+  max-width: 100%;
 }
 
 /* Colonne d'actions verticales */

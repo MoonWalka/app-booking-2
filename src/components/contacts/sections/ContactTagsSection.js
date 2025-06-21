@@ -6,7 +6,7 @@ import styles from '../ContactViewTabs.module.css';
  * Section de gestion des tags d'un contact
  * Affiche les tags actuels et permet leur modification
  */
-function ContactTagsSection({ tags = [], onRemoveTag }) {
+const ContactTagsSection = React.memo(({ tags = [], onRemoveTag }) => {
   return (
     <div className={styles.tagsContent}>
       <div className={styles.currentTags}>
@@ -37,6 +37,8 @@ function ContactTagsSection({ tags = [], onRemoveTag }) {
       </div>
     </div>
   );
-}
+});
+
+ContactTagsSection.displayName = 'ContactTagsSection';
 
 export default ContactTagsSection;

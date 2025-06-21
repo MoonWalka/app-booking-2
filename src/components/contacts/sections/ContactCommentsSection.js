@@ -5,7 +5,7 @@ import styles from '../ContactViewTabs.module.css';
  * Section de gestion des commentaires d'un contact
  * Affiche la liste des commentaires avec possibilité de suppression
  */
-function ContactCommentsSection({ commentaires = [], onDeleteComment }) {
+const ContactCommentsSection = React.memo(({ commentaires = [], onDeleteComment }) => {
   return (
     <div className={styles.commentsContent}>
       {commentaires.length > 0 ? (
@@ -60,6 +60,8 @@ function ContactCommentsSection({ commentaires = [], onDeleteComment }) {
       )}
     </div>
   );
-}
+});
+
+ContactCommentsSection.displayName = 'ContactCommentsSection';
 
 export default ContactCommentsSection;

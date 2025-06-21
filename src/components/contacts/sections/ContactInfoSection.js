@@ -5,7 +5,7 @@ import styles from '../ContactViewTabs.module.css';
  * Section d'affichage des informations générales d'un contact
  * Gère l'affichage pour les structures et les personnes libres
  */
-function ContactInfoSection({ data, entityType, isStructure }) {
+const ContactInfoSection = React.memo(({ data, entityType, isStructure }) => {
   if (!data) return null;
 
   return (
@@ -125,6 +125,8 @@ function ContactInfoSection({ data, entityType, isStructure }) {
       )}
     </div>
   );
-}
+});
+
+ContactInfoSection.displayName = 'ContactInfoSection';
 
 export default ContactInfoSection;

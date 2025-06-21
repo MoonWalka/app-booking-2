@@ -116,7 +116,7 @@ export function useContactActions(contactId) {
       console.error('Erreur lors de l\'association des personnes:', error);
       throw error;
     }
-  }, [contactId, currentOrganization]);
+  }, [contactId]);
 
   const handleUpdatePerson = useCallback(async (updatedPersonData) => {
     try {

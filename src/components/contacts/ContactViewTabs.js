@@ -13,6 +13,7 @@ import AssociatePersonModal from '@/components/ui/AssociatePersonModal';
 import PersonneCreationModal from '@/components/contacts/modal/PersonneCreationModal';
 import CommentListModal from '@/components/common/modals/CommentListModal';
 import { getTagColor, getTagCssClass } from '@/config/tagsConfig';
+import { formatActivityTags, getPersonDisplayType } from '@/utils/contactUtils';
 import { useNavigate } from 'react-router-dom';
 
 // Import des nouvelles sections
@@ -224,7 +225,49 @@ function ContactViewTabs({ id, viewType = null }) {
   const extractedData = useMemo(() => {
     if (!contact) return null;
     
-    if (entityType === 'structure') {
+    // Si on veut afficher une personne spécifique dans une structure
+    if (forcedViewType === 'personne' && entityType === 'structure' && contact.personnes) {
+      // Trouver la personne dans le tableau des personnes
+      // Par défaut, prendre la première personne
+      const personneIndex = 0; // TODO: on pourrait passer l'index via viewType
+      const personneData = contact.personnes[personneIndex];
+      
+      if (personneData) {
+        return {
+          id: contact.id,
+          entityType: 'contact',
+          prenom: personneData.prenom,
+          nom: personneData.nom,
+          fonction: personneData.fonction,
+          civilite: personneData.civilite,
+          email: personneData.mailDirect || personneData.email,
+          mailDirect: personneData.mailDirect || personneData.email,
+          mailPerso: personneData.mailPerso,
+          telephone: personneData.telDirect || personneData.telephone,
+          telDirect: personneData.telDirect,
+          telPerso: personneData.telPerso,
+          mobile: personneData.mobile,
+          fax: personneData.fax,
+          adresse: personneData.adresse,
+          suiteAdresse: personneData.suiteAdresse,
+          codePostal: personneData.codePostal,
+          ville: personneData.ville,
+          departement: personneData.departement,
+          region: personneData.region,
+          pays: personneData.pays,
+          tags: localTags,
+          commentaires: contact.commentaires || [],
+          createdAt: contact.createdAt,
+          updatedAt: contact.updatedAt,
+          // Ajouter les infos de la structure associée
+          structureId: contact.id,
+          structureRaisonSociale: contact.structure?.raisonSociale,
+          structureNom: contact.structure?.nom
+        };
+      }
+    }
+    
+    if (entityType === 'structure' && forcedViewType !== 'personne') {
       const structureData = contact.structure || {};
       
       return {
@@ -299,7 +342,7 @@ function ContactViewTabs({ id, viewType = null }) {
     }
     
     return contact;
-  }, [contact, entityType, localTags, localPersonnes]);
+  }, [contact, entityType, localTags, localPersonnes, forcedViewType]);
 
   const structureName = useMemo(() => extractedData?.structureRaisonSociale, [extractedData?.structureRaisonSociale]);
   
@@ -422,11 +465,26 @@ function ContactViewTabs({ id, viewType = null }) {
               </div>
               <div className={styles.entityInfo}>
                 <h1 className={styles.entityName}>{displayName}</h1>
-                {isStructure && data.structureType && (
-                  <span className={styles.entityType}>{data.structureType}</span>
-                )}
-                {!isStructure && data.fonction && (
-                  <span className={styles.entityFunction}>{data.fonction}</span>
+                {isStructure && data.tags && data.tags.length > 0 && (() => {
+                  const activityDisplay = formatActivityTags(data.tags);
+                  return activityDisplay ? (
+                    <span className={styles.entityType}>{activityDisplay}</span>
+                  ) : null;
+                })()}
+                {!isStructure && (
+                  <span className={styles.entityFunction}>
+                    {(() => {
+                      // Afficher les tags d'activité, ou la fonction, ou "Indépendant"
+                      const activityDisplay = getPersonDisplayType(data);
+                      if (activityDisplay !== 'Indépendant') {
+                        return activityDisplay; // Tags d'activité
+                      } else if (data.fonction) {
+                        return data.fonction; // Fonction si définie
+                      } else {
+                        return 'Indépendant'; // Par défaut
+                      }
+                    })()}
+                  </span>
                 )}
               </div>
             </div>
@@ -554,6 +612,9 @@ function ContactViewTabs({ id, viewType = null }) {
             onOpenPersonFiche={handleOpenPersonFiche}
             onAddCommentToPerson={handleAddCommentToPersonWithModal}
             navigateToEntity={navigateToEntity}
+            onEditStructure={handleEditStructure}
+            onOpenStructureFiche={handleOpenStructureFiche}
+            onAddCommentToStructure={handleAddCommentToStructure}
           />
         )
       },
@@ -604,7 +665,32 @@ function ContactViewTabs({ id, viewType = null }) {
     extractedData?.nom,
     extractedData?.fonction,
     extractedData?.createdAt
-  ]);
+    ]);
+
+  // Nouveau: Gestionnaires pour les actions sur la structure
+  const handleEditStructure = useCallback((structureData) => {
+    console.log('[ContactViewTabs] Édition de la structure:', structureData);
+    // Logique pour ouvrir le modal d'édition de structure
+    // À implémenter selon vos besoins
+  }, []);
+
+  const handleOpenStructureFiche = useCallback((structureData) => {
+    console.log('[ContactViewTabs] Ouverture de la fiche structure:', structureData);
+    if (structureData?.structureId) {
+      navigateToEntity('structure', structureData.structureId, structureData.structureRaisonSociale);
+    } else if (structureData.id) {
+      const originalId = structureData.id?.replace('unified_structure_', '');
+      if (originalId) {
+        navigateToEntity('structure', originalId, structureData.structureRaisonSociale);
+      }
+    }
+  }, [navigateToEntity]);
+
+  const handleAddCommentToStructure = useCallback((structureData) => {
+    console.log('[ContactViewTabs] Ajout commentaire à la structure:', structureData);
+    // Logique pour ajouter un commentaire à la structure
+    // À implémenter selon vos besoins
+  }, []);
 
   return (
     <>

@@ -272,6 +272,7 @@ export function useContactActions(contactId) {
       const prenomSafe = prenom || '';
       const nomSafe = nom || '';
       
+      // D'abord, chercher si cette personne existe déjà comme personne libre
       let personneLibreQuery = query(
         collection(db, 'contacts_unified'),
         where('entityType', '==', 'personne_libre'),
@@ -288,6 +289,7 @@ export function useContactActions(contactId) {
       const personneLibreSnapshot = await getDocs(personneLibreQuery);
       
       if (!personneLibreSnapshot.empty) {
+        // Si la personne existe déjà comme personne libre, l'ouvrir
         const existingPersonDoc = personneLibreSnapshot.docs[0];
         const personneLibreId = existingPersonDoc.id;
         const personneData = existingPersonDoc.data();
@@ -295,39 +297,14 @@ export function useContactActions(contactId) {
         
         openContactTab(personneLibreId, personneNom);
       } else {
-        const personneLibreData = {
-          entityType: 'personne_libre',
-          organizationId: currentOrganization.id,
-          personne: {
-            prenom: prenomSafe,
-            nom: nomSafe,
-            fonction: personne.fonction || '',
-            email: personne.email || '',
-            telephone: personne.telephone || '',
-            mobile: personne.mobile || '',
-            mailPerso: personne.mailPerso || '',
-            telPerso: personne.telPerso || '',
-            adresse: personne.adresse || '',
-            codePostal: personne.codePostal || '',
-            ville: personne.ville || '',
-            departement: personne.departement || '',
-            region: personne.region || '',
-            pays: personne.pays || 'France'
-          },
-          metadata: {
-            createdFrom: 'structure_person_view',
-            sourceStructureId: contactId,
-            createdForViewing: true
-          },
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        };
+        // CORRECTION: Ne plus créer de doublon automatiquement
+        // Au lieu de créer une nouvelle personne libre, ouvrir directement 
+        // la structure avec viewType 'personne' pour afficher cette personne
+        const personneNom = `${prenomSafe} ${nomSafe}`.trim() || 'Personne';
         
-        const docRef = await addDoc(collection(db, 'contacts_unified'), personneLibreData);
-        const newPersonneId = docRef.id;
-        const newPersonneNom = `${prenomSafe} ${nomSafe}`.trim() || 'Nouvelle personne';
-        
-        openContactTab(newPersonneId, newPersonneNom);
+        // Ouvrir la structure actuelle avec le viewType 'personne'
+        // Cela affichera la personne dans le contexte de sa structure
+        openContactTab(contactId, personneNom, 'personne');
       }
     } catch (error) {
       console.error('Erreur lors de l\'ouverture de la fiche personne:', error);

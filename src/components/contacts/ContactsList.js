@@ -9,6 +9,7 @@ import ListWithFilters from '@/components/ui/ListWithFilters';
 import { useDeleteContact } from '@/hooks/contacts';
 import PersonneCreationModal from '@/components/contacts/modal/PersonneCreationModal';
 import StructureCreationModal from '@/components/contacts/modal/StructureCreationModal';
+import { formatActivityTags, getPersonDisplayType } from '@/utils/contactUtils';
 import styles from './ContactsList.module.css';
 
 /**
@@ -284,12 +285,22 @@ function ContactsList({ filterType = 'all' }) {
         // Déterminer la qualification/fonction
         let qualification = '';
         if (item.entityType === 'structure') {
-          qualification = item.structure?.type || '';
+          // Pour les structures, afficher les tags d'activité au lieu du type
+          const tags = item.qualification?.tags || [];
+          qualification = formatActivityTags(tags);
         } else {
-          const fonction = item._isPersonInStructure 
-            ? item.personnes?.[item._personneIndex]?.fonction
-            : item.personne?.fonction;
-          qualification = fonction || '';
+          // Pour les personnes, afficher les tags d'activité, ou la fonction, ou "Indépendant"
+          const tags = item.qualification?.tags || [];
+          const activityDisplay = getPersonDisplayType({ tags });
+          
+          if (activityDisplay !== 'Indépendant') {
+            qualification = activityDisplay; // Tags d'activité
+          } else {
+            const fonction = item._isPersonInStructure 
+              ? item.personnes?.[item._personneIndex]?.fonction
+              : item.personne?.fonction;
+            qualification = fonction || 'Indépendant';
+          }
         }
 
         return (

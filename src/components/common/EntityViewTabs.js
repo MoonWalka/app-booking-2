@@ -14,13 +14,7 @@ function EntityViewTabs({
   setActiveBottomTab
 }) {
 
-  if (loading) {
-    return (
-      <div className={styles.container}>
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  // Ne plus retourner directement le spinner pour toute la page
 
   if (error) {
     return (
@@ -70,41 +64,47 @@ function EntityViewTabs({
   return (
     <div className={styles.container}>
       {/* Header optionnel entre les zones du haut et les onglets */}
-      {config.header && (
+      {config.header && !loading && (
         <div className={styles.headerSection}>
           {config.header.render ? config.header.render(entity) : config.header.content}
         </div>
       )}
 
       {/* Zones du haut configurables */}
-      {config.topSections && (
+      {loading ? (
         <div className={styles.topSection}>
-          {config.topSections.map((section, index) => (
-            <div key={index} className={styles[section.className]}>
-              <div className={styles.sectionHeader}>
-                <i className={typeof section.icon === 'function' ? section.icon(entity) : section.icon}></i>
-                <h2>{typeof section.title === 'function' ? section.title(entity) : section.title}</h2>
-                {section.actions && (
-                  <div className={styles.sectionActions}>
-                    {(typeof section.actions === 'function' ? section.actions(entity) : section.actions).map((action, actionIndex) => (
-                      <button
-                        key={actionIndex}
-                        className={styles.actionBubble}
-                        onClick={action.onClick}
-                        title={action.tooltip || action.label}
-                      >
-                        {action.icon && <i className={action.icon}></i>}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className={styles.sectionContent}>
-                {section.render ? section.render(entity) : section.content}
-              </div>
-            </div>
-          ))}
+          <LoadingSpinner />
         </div>
+      ) : (
+        config.topSections && (
+          <div className={styles.topSection}>
+            {config.topSections.map((section, index) => (
+              <div key={index} className={styles[section.className]}>
+                <div className={styles.sectionHeader}>
+                  <i className={typeof section.icon === 'function' ? section.icon(entity) : section.icon}></i>
+                  <h2>{typeof section.title === 'function' ? section.title(entity) : section.title}</h2>
+                  {section.actions && (
+                    <div className={styles.sectionActions}>
+                      {(typeof section.actions === 'function' ? section.actions(entity) : section.actions).map((action, actionIndex) => (
+                        <button
+                          key={actionIndex}
+                          className={styles.actionBubble}
+                          onClick={action.onClick}
+                          title={action.tooltip || action.label}
+                        >
+                          {action.icon && <i className={action.icon}></i>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className={styles.sectionContent}>
+                  {section.render ? section.render(entity) : section.content}
+                </div>
+              </div>
+            ))}
+          </div>
+        )
       )}
 
       {/* Conteneur unifié onglets + contenu */}

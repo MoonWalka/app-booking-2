@@ -58,8 +58,8 @@ function ContactViewTabs({ id, viewType = null }) {
   // Hook pour la navigation
   const navigate = useNavigate();
   
-  // Utiliser le hook unifié pour charger le contact
-  const { contact, loading, error, entityType, invalidateCache } = useUnifiedContact(id);
+  // Hook unifié original (qui marchait) mais sans cache
+  const { contact, loading, error, entityType } = useUnifiedContact(id);
 
   console.log('[ContactViewTabs] Données unifiées:', { contact, loading, error, entityType });
   
@@ -90,6 +90,7 @@ function ContactViewTabs({ id, viewType = null }) {
 
   
   // Gestion des tags (mémorisée pour éviter les boucles)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleTagsChange = useCallback(async (newTags) => {
     try {
       console.log('[ContactViewTabs] handleTagsChange appelé avec:', newTags);
@@ -104,8 +105,7 @@ function ContactViewTabs({ id, viewType = null }) {
       
       console.log('[ContactViewTabs] Tags mis à jour avec succès dans Firestore');
       
-      // Invalider le cache pour forcer le rechargement lors du prochain accès
-      invalidateCache();
+      // Plus besoin d'invalider le cache - temps réel avec onSnapshot
       
       // Mettre à jour l'état local immédiatement (pas de rechargement de page)
       setLocalTags(newTags);
@@ -113,7 +113,7 @@ function ContactViewTabs({ id, viewType = null }) {
     } catch (error) {
       console.error('[ContactViewTabs] Erreur lors de la mise à jour des tags:', error);
     }
-  }, [id, invalidateCache]);
+  }, [id]);
 
   // Gestion de l'association des personnes (mémorisée)
   const handleAssociatePersons = useCallback(async (selectedPersons) => {
@@ -195,8 +195,7 @@ function ContactViewTabs({ id, viewType = null }) {
 
       console.log('[ContactViewTabs] Personnes associées avec succès');
       
-      // Invalider le cache pour forcer le rechargement lors du prochain accès
-      invalidateCache();
+      // Plus besoin d'invalider le cache - temps réel avec onSnapshot
       
       // Mettre à jour l'état local immédiatement (pas de rechargement de page)
       setLocalPersonnes(updatedPersonnes);
@@ -205,7 +204,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de l\'association des personnes:', error);
       alert('Erreur lors de l\'association des personnes');
     }
-  }, [id, currentOrganization, invalidateCache]);
+  }, [id, currentOrganization]);
 
   // Gestion de l'édition d'une personne (mémorisée)
   const handleEditPerson = useCallback((personne) => {
@@ -262,8 +261,7 @@ function ContactViewTabs({ id, viewType = null }) {
 
       console.log('[ContactViewTabs] Personne mise à jour avec succès');
       
-      // Invalider le cache pour forcer le rechargement lors du prochain accès
-      invalidateCache();
+      // Plus besoin d'invalider le cache - temps réel avec onSnapshot
       
       // Mettre à jour l'état local immédiatement
       setLocalPersonnes(updatedPersonnes);
@@ -276,7 +274,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de la mise à jour de la personne:', error);
       alert('Erreur lors de la mise à jour de la personne');
     }
-  }, [id, invalidateCache]);
+  }, [id]);
 
   // Gestion de la dissociation d'une personne (mémorisée)
   const handleDissociatePerson = useCallback(async (personne) => {
@@ -388,8 +386,7 @@ function ContactViewTabs({ id, viewType = null }) {
 
       console.log('[ContactViewTabs] Dissociation terminée avec succès');
       
-      // Invalider le cache pour forcer le rechargement lors du prochain accès
-      invalidateCache();
+      // Plus besoin d'invalider le cache - temps réel avec onSnapshot
       
       // Mettre à jour l'état local immédiatement
       setLocalPersonnes(updatedPersonnes);
@@ -443,7 +440,7 @@ function ContactViewTabs({ id, viewType = null }) {
         console.warn('[ContactViewTabs] Impossible de rafraîchir l\'affichage:', refreshError);
       }
     }
-  }, [id, currentOrganization, invalidateCache]);
+  }, [id, currentOrganization]);
 
   // Gestion de l'ouverture de la fiche d'une personne (mémorisée)
   const handleOpenPersonFiche = useCallback(async (personne) => {
@@ -739,8 +736,7 @@ function ContactViewTabs({ id, viewType = null }) {
         updatedAt: serverTimestamp()
       });
       
-      // Invalider le cache pour forcer le rechargement lors du prochain accès
-      invalidateCache();
+      // Plus besoin d'invalider le cache - temps réel avec onSnapshot
       
       // Mettre à jour l'état local immédiatement avec timestamp
       const now = Date.now();
@@ -753,7 +749,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('[ContactViewTabs] Erreur lors de la suppression du commentaire:', error);
       alert(`Erreur lors de la suppression: ${error.message}`);
     }
-  }, [id, invalidateCache]);
+  }, [id]);
 
   // Navigation vers les entités liées
   const navigateToEntity = (entityType, entityId, entityName) => {
@@ -1027,7 +1023,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.log('💬 [ContactViewTabs] Synchronisation des commentaires depuis Firebase');
       setLocalCommentaires(extractedData.commentaires);
     }
-  }, [extractedData?.commentaires, extractedData?.updatedAt, lastLocalUpdate, localCommentaires.length]);
+  }, [extractedData?.commentaires, extractedData?.updatedAt, lastLocalUpdate]);
 
   // Tags disponibles (pour usage futur)
   // const availableTags = ['Festival', 'Bar', 'Salles'];
@@ -1061,8 +1057,7 @@ function ContactViewTabs({ id, viewType = null }) {
       
       console.log('Tag supprimé avec succès');
       
-      // Invalider le cache pour forcer le rechargement lors du prochain accès
-      invalidateCache();
+      // Plus besoin d'invalider le cache - temps réel avec onSnapshot
       
       // Mettre à jour l'état local immédiatement (pas de rechargement de page)
       setLocalTags(newTags);
@@ -1070,7 +1065,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('Erreur lors de la suppression du tag:', error);
       alert('Erreur lors de la suppression du tag');
     }
-  }, [id, localTags, invalidateCache]);
+  }, [id, localTags]);
 
   // Déterminer le type d'entité pour adapter la configuration
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');
@@ -1103,7 +1098,8 @@ function ContactViewTabs({ id, viewType = null }) {
     { id: 'factures', label: 'Factures', icon: 'bi-receipt', color: '#ffc107' }
   ], []);
   
-  // Configuration optimisée avec useMemo
+  // Configuration optimisée avec useMemo - Dépendances volontairement réduites
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const config = useMemo(() => ({
     defaultBottomTab: 'historique',
     notFoundIcon: isStructure ? 'bi-building-x' : 'bi-person-x',
@@ -1613,7 +1609,7 @@ function ContactViewTabs({ id, viewType = null }) {
                     });
                     
                     // Invalider le cache pour forcer le rechargement lors du prochain accès
-                    invalidateCache();
+                    // Plus besoin d'invalider le cache - temps réel
                     
                     // Mettre à jour l'état local immédiatement avec timestamp
                     const now = Date.now();
@@ -1863,33 +1859,12 @@ function ContactViewTabs({ id, viewType = null }) {
       return null;
     }
   }), [
-    // Dépendances minimales pour le useMemo
-    isStructure, 
-    extractedData, 
-    localTags, 
-    localPersonnes, 
-    commentaires, 
-    activeBottomTab,
-    datesData,
-    datesLoading,
-    bottomTabsConfig,
-    forcedViewType,
-    entityType,
+    // SEULEMENT les dépendances critiques pour éviter les boucles
+    isStructure,
     id,
-    // Fonctions stables
-    handleRemoveTag,
-    openCommentModal,
-    currentUser,
-    handleDeleteComment,
-    openPersonneModal,
-    setShowTagsModal,
-    setShowAssociatePersonModal,
-    openDateCreationTab,
-    handleEditPerson,
-    handleDissociatePerson,
-    handleOpenPersonFiche,
-    handleAddCommentToPerson,
-    navigateToEntity
+    entityType,
+    forcedViewType
+    // Suppression de extractedData, localTags, etc. qui changent constamment
   ]);
 
   return (

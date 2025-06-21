@@ -198,7 +198,11 @@ const TabManagerProduction = () => {
           console.log('[DEBUG TabManager] activeTab pour ContactDetailsPage:', activeTab);
           console.log('[DEBUG TabManager] contactId passé:', activeTab.params?.contactId);
           console.log('[DEBUG TabManager] viewType passé:', activeTab.params?.viewType);
-          return <ContactViewTabs id={activeTab.params?.contactId} viewType={activeTab.params?.viewType} />;
+          return <ContactViewTabs 
+            key={`contact-${activeTab.params?.contactId}`}
+            id={activeTab.params?.contactId} 
+            viewType={activeTab.params?.viewType} 
+          />;
         case 'ConcertsPage':
           // Afficher directement la liste des dates
           return <ConcertsPage />;
@@ -221,7 +225,10 @@ const TabManagerProduction = () => {
           return <ContactsList />;
         case 'StructureDetailsPage':
           // Afficher les détails d'une structure (maintenant c'est un contact de type structure)
-          return <ContactViewTabs id={activeTab.params?.structureId} />;
+          return <ContactViewTabs 
+            key={`structure-${activeTab.params?.structureId}`}
+            id={activeTab.params?.structureId} 
+          />;
         case 'ArtistesPage':
           // Afficher directement la liste des artistes
           return <ArtistesList />;

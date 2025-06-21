@@ -29,11 +29,11 @@
   height: 32px;
 }
 
-.entityCard.compact .entityDetails h5 {
+.entityCard.compact .entityName {
   font-size: 0.9rem;
 }
 
-.entityCard.compact .entityDetails p {
+.entityCard.compact .entityType {
   font-size: 0.8rem;
 }
 

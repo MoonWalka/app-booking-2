@@ -16,7 +16,7 @@ const BASE_URL = 'https://eu1.locationiq.com/v1';
  */
 export async function autocompleteAddress(query) {
   if (!query) return [];
-  const url = `${BASE_URL}/autocomplete.php?key=${API_KEY}&q=${encodeURIComponent(query)}&format=json&limit=5`;
+  const url = `${BASE_URL}/autocomplete.php?key=${API_KEY}&q=${encodeURIComponent(query)}&format=json&limit=5&countrycodes=fr`;
   const response = await fetch(url);
   if (!response.ok) throw new Error('Erreur LocationIQ');
   return await response.json();

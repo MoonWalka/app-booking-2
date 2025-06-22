@@ -12,7 +12,7 @@ function GlobalModalsContainer() {
   const { 
     activeModals, 
     closeStructureCreationModal,
-    closePersonneCreationModal 
+ 
   } = useModals();
   
   const { openContactTab } = useTabs();
@@ -26,14 +26,15 @@ function GlobalModalsContainer() {
     closeStructureCreationModal();
   };
 
-  // Callback pour la création de personne (à implémenter plus tard)
-  const handlePersonneCreated = (newPersonne) => {
-    console.log('Personne créée depuis modal globale:', newPersonne);
-    // Ouvrir l'onglet de la nouvelle personne
-    openContactTab(newPersonne.id, `${newPersonne.prenom} ${newPersonne.nom}`);
-    // Fermer la modal
-    closePersonneCreationModal();
-  };
+  // Callback pour la création de personne
+  // TODO: Implémenter quand la modal de création de personne sera ajoutée
+  // const handlePersonneCreated = (newPersonne) => {
+  //   console.log('Personne créée depuis modal globale:', newPersonne);
+  //   // Ouvrir l'onglet de la nouvelle personne
+  //   openContactTab(newPersonne.id, `${newPersonne.prenom} ${newPersonne.nom}`);
+  //   // Fermer la modal
+  //   closePersonneCreationModal();
+  // };
 
   return (
     <>

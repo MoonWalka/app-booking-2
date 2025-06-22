@@ -3,7 +3,10 @@ import { useUnifiedContact } from '@/hooks/contacts/useUnifiedContact';
 import { useContactActions } from '@/hooks/contacts/useContactActions';
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
-import { doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
+// Utilisation du modèle relationnel via les services
+import { personnesService } from '@/services/contacts/personnesService';
+// Imports Firestore pour les requêtes directes
+import { query, collection, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
@@ -30,6 +33,21 @@ import styles from './ContactViewTabs.module.css';
  * Utilise des sous-composants modulaires pour une meilleure maintenabilité
  */
 function ContactViewTabs({ id, viewType = null }) {
+  // Nettoyer l'ID en enlevant les suffixes ajoutés par la liste (_structure, _personne_libre, etc.)
+  // Amélioration: gérer aussi les cas comme _in_structureId
+  let cleanId = id;
+  if (id) {
+    // D'abord, gérer le cas spécial _in_structureId pour les personnes dans une structure
+    const inMatch = id.match(/^(.+?)_in_/);
+    if (inMatch) {
+      cleanId = inMatch[1];
+    } else {
+      // Sinon, nettoyer les suffixes habituels
+      cleanId = id.replace(/_structure$|_personne_libre$|_personne_\d+$/, '');
+    }
+  }
+  
+  console.log('[ContactViewTabs] ID reçu:', id, '→ ID nettoyé:', cleanId, 'viewType:', viewType);
   const [forcedViewType] = useState(viewType);
   const [showTagsModal, setShowTagsModal] = useState(false);
   const [showAssociatePersonModal, setShowAssociatePersonModal] = useState(false);
@@ -47,8 +65,8 @@ function ContactViewTabs({ id, viewType = null }) {
   const { currentOrganization } = useOrganization();
   const navigate = useNavigate();
   
-  // Hook unifié pour les données
-  const { contact, loading, error, entityType } = useUnifiedContact(id);
+  // Hook unifié pour les données - passer le viewType pour aider à déterminer le type
+  const { contact, loading, error, entityType, reload } = useUnifiedContact(cleanId, forcedViewType);
   
   // Hook personnalisé pour toute la logique métier
   const {
@@ -66,24 +84,28 @@ function ContactViewTabs({ id, viewType = null }) {
     handleDissociatePerson,
     handleOpenPersonFiche,
     handleAddComment,
-    handleDeleteComment
-  } = useContactActions(id);
+    handleDeleteComment,
+    handleSetPrioritaire,
+    handleToggleActif
+  } = useContactActions(cleanId);
 
-  // Synchronisation initiale uniquement
+  // Synchronisation initiale et après rechargement
   useEffect(() => {
     if (!contact) return;
     
-    // Synchroniser seulement si les états locaux sont vides (première charge)
-    if (localTags.length === 0) {
-      const newTags = contact?.qualification?.tags || [];
+    // Synchroniser les tags
+    const newTags = contact?.qualification?.tags || contact?.tags || [];
+    if (JSON.stringify(newTags) !== JSON.stringify(localTags)) {
       setLocalTags(newTags);
     }
     
-    if (localPersonnes.length === 0) {
-      const newPersonnes = contact?.personnes || [];
+    // Synchroniser les personnes
+    const newPersonnes = contact?.personnes || [];
+    if (JSON.stringify(newPersonnes.map(p => p.id)) !== JSON.stringify(localPersonnes.map(p => p.id))) {
+      console.log('🔄 [ContactViewTabs] Mise à jour des personnes locales:', newPersonnes.length);
       setLocalPersonnes(newPersonnes);
     }
-  }, [contact?.id]); // Dépendance sur l'ID uniquement
+  }, [contact, localPersonnes, localTags, setLocalPersonnes, setLocalTags]); // Dépendance sur tout l'objet contact pour détecter les changements
 
   // Gestion des personnes
   const handleEditPerson = useCallback((personne) => {
@@ -95,94 +117,48 @@ function ContactViewTabs({ id, viewType = null }) {
     const personneNom = `${personne.prenom || ''} ${personne.nom || ''}`.trim() || 'Personne';
     
     try {
-      // Chercher ou créer la fiche personne
-      let prenom = personne.prenom;
-      let nom = personne.nom;
-      
-      if (!prenom && nom && nom.includes(' ')) {
-        const parts = nom.split(' ');
-        prenom = parts[0];
-        nom = parts.slice(1).join(' ');
-      }
-      
-      const prenomSafe = prenom || '';
-      const nomSafe = nom || '';
-      
-      let personneLibreQuery = query(
-        collection(db, 'contacts_unified'),
-        where('entityType', '==', 'personne_libre'),
-        where('organizationId', '==', currentOrganization.id)
-      );
-      
-      if (prenomSafe) {
-        personneLibreQuery = query(personneLibreQuery, where('personne.prenom', '==', prenomSafe));
-      }
-      if (nomSafe) {
-        personneLibreQuery = query(personneLibreQuery, where('personne.nom', '==', nomSafe));
-      }
-      
-      const personneLibreSnapshot = await getDocs(personneLibreQuery);
-      
-      let personneLibreId;
-      let existingComments = [];
-      
-      if (!personneLibreSnapshot.empty) {
-        const personneDoc = personneLibreSnapshot.docs[0];
-        personneLibreId = personneDoc.id;
-        const personneData = personneDoc.data();
-        existingComments = personneData.commentaires || [];
-      } else {
-        // Créer la personne libre
-        const personneLibreData = {
-          entityType: 'personne_libre',
-          organizationId: currentOrganization.id,
-          personne: {
-            prenom: prenomSafe,
-            nom: nomSafe,
-            fonction: personne.fonction || '',
-            email: personne.email || '',
-            telephone: personne.telephone || '',
-            mobile: personne.mobile || ''
-          },
-          commentaires: [],
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        };
+      // Dans le modèle relationnel, utiliser directement l'ID de la personne
+      if (personne.id) {
+        // Récupérer la personne via le service relationnel
+        const personneData = await personnesService.getPersonne(personne.id, currentOrganization.id);
         
-        const docRef = await addDoc(collection(db, 'contacts_unified'), personneLibreData);
-        personneLibreId = docRef.id;
-      }
-      
-      if (existingComments.length > 0) {
-        setSelectedPersonForComments({
-          id: personneLibreId,
-          nom: personneNom,
-          prenom: prenomSafe,
-          nomFamille: nomSafe
-        });
-        setShowCommentListModal(true);
+        if (personneData) {
+          const existingComments = personneData.commentaires || [];
+          
+          if (existingComments.length > 0) {
+            setSelectedPersonForComments({
+              id: personne.id,
+              nom: personneNom,
+              prenom: personne.prenom || '',
+              nomFamille: personne.nom || ''
+            });
+            setShowCommentListModal(true);
+          } else {
+            openCreateCommentModal(personne.id, personneNom);
+          }
+        } else {
+          throw new Error('Personne non trouvée dans le modèle relationnel');
+        }
       } else {
-        openCreateCommentModal(personneLibreId, personneNom);
+        throw new Error('ID de personne manquant');
       }
       
     } catch (error) {
       console.error('Erreur lors de la gestion du commentaire personne:', error);
       alert('Erreur lors de l\'ouverture du commentaire pour cette personne');
     }
-  }, [id, currentOrganization, openCommentModal, currentUser]);
+  }, [currentOrganization, openCreateCommentModal]);
 
   // Fonction pour ouvrir la modal de création de commentaire
-  const openCreateCommentModal = (personneLibreId, personneNom) => {
+  const openCreateCommentModal = (personneId, personneNom) => {
     openCommentModal({
       title: `Nouveau commentaire - ${personneNom}`,
       onSave: async (content) => {
         try {
-          const personneDocRef = doc(db, 'contacts_unified', personneLibreId);
-          const personneDocSnap = await getDoc(personneDocRef);
+          const personneData = await personnesService.getPersonne(personneId, currentOrganization.id);
           
-          if (!personneDocSnap.exists()) throw new Error('Fiche personne non trouvée');
+          if (!personneData) throw new Error('Fiche personne non trouvée');
           
-          const personneData = personneDocSnap.data();
           const existingComments = personneData.commentaires || [];
           
           const newComment = {
@@ -193,9 +169,8 @@ function ContactViewTabs({ id, viewType = null }) {
             modifie: false
           };
           
-          await updateDoc(personneDocRef, {
-            commentaires: [...existingComments, newComment],
-            updatedAt: serverTimestamp()
+          await personnesService.updatePersonne(personneId, currentOrganization.id, {
+            commentaires: [...existingComments, newComment]
           });
         } catch (error) {
           console.error('Erreur lors de la sauvegarde du commentaire personne:', error);
@@ -220,6 +195,22 @@ function ContactViewTabs({ id, viewType = null }) {
       navigate(routes[entityType]);
     }
   }, [navigate]);
+
+  // Wrapper pour handleAssociatePersons qui recharge les données après association
+  const handleAssociatePersonsWithReload = useCallback(async (selectedPersons) => {
+    try {
+      const result = await handleAssociatePersons(selectedPersons);
+      if (result) {
+        // Recharger les données pour afficher les personnes nouvellement associées
+        console.log('🔄 [ContactViewTabs] Rechargement après association de personnes');
+        await reload();
+      }
+      return result;
+    } catch (error) {
+      console.error('❌ [ContactViewTabs] Erreur lors de l\'association:', error);
+      throw error;
+    }
+  }, [handleAssociatePersons, reload]);
 
   // Extraction des données selon le type d'entité
   const extractedData = useMemo(() => {
@@ -261,8 +252,14 @@ function ContactViewTabs({ id, viewType = null }) {
           updatedAt: contact.updatedAt,
           // Ajouter les infos de la structure associée
           structureId: contact.id,
-          structureRaisonSociale: contact.structure?.raisonSociale,
-          structureNom: contact.structure?.nom
+          structureRaisonSociale: contact.structure?.raisonSociale || contact.structureRaisonSociale,
+          structureNom: contact.structure?.nom || contact.structureNom,
+          structureTags: contact.qualification?.tags || contact.tags || [],
+          structureData: {
+            structureRaisonSociale: contact.structure?.raisonSociale || contact.structureRaisonSociale,
+            tags: contact.qualification?.tags || contact.tags || [],
+            id: contact.id
+          }
         };
       }
     }
@@ -273,23 +270,23 @@ function ContactViewTabs({ id, viewType = null }) {
       return {
         id: contact.id,
         entityType: 'structure',
-        structureRaisonSociale: structureData.raisonSociale,
-        structureNom: structureData.nom,
-        structureEmail: structureData.email,
-        structureTelephone1: structureData.telephone1,
-        structureTelephone2: structureData.telephone2,
-        structureMobile: structureData.mobile,
-        structureFax: structureData.fax,
-        structureSiteWeb: structureData.siteWeb,
-        structureSiret: structureData.siret,
-        structureType: structureData.type,
-        structureAdresse: structureData.adresse,
-        structureSuiteAdresse1: structureData.suiteAdresse,
-        structureCodePostal: structureData.codePostal,
-        structureVille: structureData.ville,
-        structureDepartement: structureData.departement,
-        structureRegion: structureData.region,
-        structurePays: structureData.pays,
+        structureRaisonSociale: structureData.raisonSociale || contact.structureRaisonSociale,
+        structureNom: structureData.nom || contact.structureNom,
+        structureEmail: structureData.email || contact.structureEmail,
+        structureTelephone1: structureData.telephone1 || contact.structureTelephone1,
+        structureTelephone2: structureData.telephone2 || contact.structureTelephone2,
+        structureMobile: structureData.mobile || contact.structureMobile,
+        structureFax: structureData.fax || contact.structureFax,
+        structureSiteWeb: structureData.siteWeb || contact.structureSiteWeb,
+        structureSiret: structureData.siret || contact.structureSiret,
+        structureType: structureData.type || contact.structureType,
+        structureAdresse: structureData.adresse || contact.structureAdresse,
+        structureSuiteAdresse1: structureData.suiteAdresse || contact.structureSuiteAdresse1,
+        structureCodePostal: structureData.codePostal || contact.structureCodePostal,
+        structureVille: structureData.ville || contact.structureVille,
+        structureDepartement: structureData.departement || contact.structureDepartement,
+        structureRegion: structureData.region || contact.structureRegion,
+        structurePays: structureData.pays || contact.structurePays,
         tags: localTags,
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,
@@ -308,6 +305,39 @@ function ContactViewTabs({ id, viewType = null }) {
         nomFestival: structureData.nomFestival,
         periodeFestivalMois: structureData.periodeFestivalMois,
         periodeFestivalComplete: structureData.periodeFestivalComplete
+      };
+    } else if (entityType === 'personne') {
+      // Cas d'une personne liée à des structures
+      const personneData = contact.personne || {};
+      
+      return {
+        id: contact.id,
+        entityType: 'personne',
+        prenom: personneData.prenom,
+        nom: personneData.nom,
+        fonction: personneData.fonction,
+        civilite: personneData.civilite,
+        email: personneData.email,
+        mailDirect: personneData.email,
+        mailPerso: personneData.mailPerso,
+        telephone: personneData.telephone,
+        telDirect: personneData.telDirect,
+        telPerso: personneData.telPerso,
+        mobile: personneData.mobile,
+        fax: personneData.fax,
+        adresse: personneData.adresse,
+        suiteAdresse: personneData.suiteAdresse,
+        codePostal: personneData.codePostal,
+        ville: personneData.ville,
+        departement: personneData.departement,
+        region: personneData.region,
+        pays: personneData.pays,
+        tags: localTags,
+        commentaires: contact.commentaires || [],
+        createdAt: contact.createdAt,
+        updatedAt: contact.updatedAt,
+        // Ajouter les structures associées
+        structures: contact.structures || []
       };
     } else if (entityType === 'personne_libre') {
       const personneData = contact.personne || {};
@@ -342,7 +372,7 @@ function ContactViewTabs({ id, viewType = null }) {
     }
     
     return contact;
-  }, [contact, entityType, localTags, localPersonnes, forcedViewType]);
+  }, [contact, entityType, localTags, forcedViewType]);
 
   const structureName = useMemo(() => extractedData?.structureRaisonSociale, [extractedData?.structureRaisonSociale]);
   
@@ -402,7 +432,7 @@ function ContactViewTabs({ id, viewType = null }) {
   useEffect(() => {
     if (!extractedData?.commentaires || localCommentaires.length > 0) return;
     setLocalCommentaires(extractedData.commentaires);
-  }, [extractedData?.id]); // Dépendance sur l'ID uniquement
+  }, [extractedData?.id, extractedData?.commentaires, localCommentaires.length, setLocalCommentaires]); // Dépendance sur l'ID uniquement
 
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');
 
@@ -450,7 +480,7 @@ function ContactViewTabs({ id, viewType = null }) {
         const isStructure = forcedViewType ? (forcedViewType === 'structure') : (entityType === 'structure' || hasStructureData);
         
         const displayName = isStructure 
-          ? (data.structureRaisonSociale || 'Structure sans nom')
+          ? (data.structureRaisonSociale || data.structure?.raisonSociale || 'Structure sans nom')
           : `${data.prenom || ''} ${data.nom || ''}`.trim() || 'Contact sans nom';
 
         return (
@@ -589,7 +619,7 @@ function ContactViewTabs({ id, viewType = null }) {
                 label: 'Ajouter',
                 icon: 'bi bi-plus-circle',
                 tooltip: 'Ajouter une nouvelle personne',
-                onClick: () => openPersonneModal()
+                onClick: () => openPersonneModal({ structureId: cleanId })
               },
               {
                 label: 'Associer',
@@ -605,7 +635,7 @@ function ContactViewTabs({ id, viewType = null }) {
         render: () => (
           <ContactPersonsSection 
             isStructure={forcedViewType ? (forcedViewType === 'structure') : (entityType === 'structure' || extractedData?.structureRaisonSociale)}
-            personnes={localPersonnes}
+            personnes={contact?.personnes || []}
             structureData={extractedData}
             onEditPerson={handleEditPerson}
             onDissociatePerson={handleDissociatePerson}
@@ -615,6 +645,8 @@ function ContactViewTabs({ id, viewType = null }) {
             onEditStructure={handleEditStructure}
             onOpenStructureFiche={handleOpenStructureFiche}
             onAddCommentToStructure={handleAddCommentToStructure}
+            onTogglePrioritaire={handleSetPrioritaire}
+            onToggleActif={handleToggleActif}
           />
         )
       },
@@ -715,10 +747,18 @@ function ContactViewTabs({ id, viewType = null }) {
       <AssociatePersonModal
         isOpen={showAssociatePersonModal}
         onClose={() => setShowAssociatePersonModal(false)}
-        onAssociate={handleAssociatePersons}
+        onAssociate={handleAssociatePersonsWithReload}
         structureId={id}
         allowMultiple={true}
-        existingPersonIds={localPersonnes.map(p => p.id)}
+        existingPersonIds={(() => {
+          const personnesFromContact = contact?.personnes || [];
+          const ids = personnesFromContact.map(p => p.id);
+          // 🔍 DEBUG: Tracer les IDs existants passés au modal
+          console.log('🔍 [DEBUG ContactViewTabs] - Passage existingPersonIds au modal');
+          console.log('📋 personnes du contact:', personnesFromContact.map(p => ({ id: p.id, nom: `${p.prenom || ''} ${p.nom || ''}`.trim() })));
+          console.log('🔑 existingPersonIds calculés:', ids);
+          return ids;
+        })()}
       />
       
       <PersonneCreationModal

@@ -1,18 +1,20 @@
 // src/components/contacts/modal/StructureCreationModal.js
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
-import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useAuth } from '@/context/AuthContext';
+import { structuresService } from '@/services/contacts/structuresService';
 import AddressInput from '@/components/ui/AddressInput';
 import styles from './StructureCreationModal.module.css';
 
 /**
- * Modal de création d'une nouvelle structure
+ * Modal de création d'une nouvelle structure - MODÈLE RELATIONNEL
+ * Utilise structuresService pour créer dans la collection 'structures'
  * Avec système d'onglets : Adresse, Email/Tél, Administratif, Réseaux sociaux
  */
 function StructureCreationModal({ show, onHide, onCreated, editMode = false, initialData = null }) {
   const { currentOrganization } = useOrganization();
+  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(() => {
@@ -20,24 +22,26 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
     if (editMode && initialData) {
       return {
         // Champs principaux
-        structureRaisonSociale: initialData.raisonSociale || '',
-        structureSource: initialData.source || '',
+        raisonSociale: initialData.raisonSociale || '',
+        type: initialData.type || '',
+        source: initialData.source || '',
         
         // Onglet Adresse
-        structureAdresse: initialData.adresse || '',
-        structureSuiteAdresse1: initialData.suiteAdresse || '',
-        structureCodePostal: initialData.codePostal || '',
-        structureVille: initialData.ville || '',
-        structureDepartement: initialData.departement || '',
-        structureRegion: initialData.region || '',
-        structurePays: initialData.pays || 'France',
+        adresse: initialData.adresse || '',
+        suiteAdresse: initialData.suiteAdresse || '',
+        codePostal: initialData.codePostal || '',
+        ville: initialData.ville || '',
+        departement: initialData.departement || '',
+        region: initialData.region || '',
+        pays: initialData.pays || 'France',
         
         // Onglet Email/Téléphone
-        structureEmail: initialData.email || '',
-        structureEmail2: initialData.email2 || '',
-        structureTelephone1: initialData.telephone1 || '',
-        structureTelephone2: initialData.telephone2 || '',
-        structureFax: initialData.fax || '',
+        email: initialData.email || '',
+        telephone1: initialData.telephone1 || '',
+        telephone2: initialData.telephone2 || '',
+        fax: initialData.fax || '',
+        siteWeb: initialData.siteWeb || '',
+        notes: initialData.notes || '',
         
         // Onglet Administratif
         structureCodeClient: initialData.codeClient || '',
@@ -72,24 +76,26 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
     // Mode création - valeurs par défaut
     return {
       // Champs principaux
-      structureRaisonSociale: '',
-      structureSource: '',
+      raisonSociale: '',
+      type: '',
+      source: '',
       
       // Onglet Adresse
-      structureAdresse: '',
-      structureSuiteAdresse1: '',
-      structureCodePostal: '',
-      structureVille: '',
-      structureDepartement: '',
-      structureRegion: '',
-      structurePays: 'France',
+      adresse: '',
+      suiteAdresse: '',
+      codePostal: '',
+      ville: '',
+      departement: '',
+      region: '',
+      pays: 'France',
       
       // Onglet Email/Téléphone
-      structureEmail: '',
-      structureEmail2: '',
-      structureTelephone1: '',
-      structureTelephone2: '',
-      structureFax: '',
+      email: '',
+      telephone1: '',
+      telephone2: '',
+      fax: '',
+      siteWeb: '',
+      notes: '',
       
       // Onglet Administratif
       structureCodeClient: '',
@@ -124,54 +130,57 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
   // Mettre à jour le formulaire quand les données initiales changent
   useEffect(() => {
     if (editMode && initialData) {
+      // Les données peuvent être dans initialData.structure (nouveau format) ou directement dans initialData (ancien format)
+      const structureData = initialData.structure || initialData;
+      
       setFormData({
         // Champs principaux
-        structureRaisonSociale: initialData.raisonSociale || '',
-        structureSource: initialData.source || '',
+        structureRaisonSociale: structureData.raisonSociale || '',
+        structureSource: structureData.source || '',
         
         // Onglet Adresse
-        structureAdresse: initialData.adresse || '',
-        structureSuiteAdresse1: initialData.suiteAdresse || '',
-        structureCodePostal: initialData.codePostal || '',
-        structureVille: initialData.ville || '',
-        structureDepartement: initialData.departement || '',
-        structureRegion: initialData.region || '',
-        structurePays: initialData.pays || 'France',
+        structureAdresse: structureData.adresse || '',
+        structureSuiteAdresse1: structureData.suiteAdresse || '',
+        structureCodePostal: structureData.codePostal || '',
+        structureVille: structureData.ville || '',
+        structureDepartement: structureData.departement || '',
+        structureRegion: structureData.region || '',
+        structurePays: structureData.pays || 'France',
         
         // Onglet Email/Téléphone
-        structureEmail: initialData.email || '',
-        structureEmail2: initialData.email2 || '',
-        structureTelephone1: initialData.telephone1 || '',
-        structureTelephone2: initialData.telephone2 || '',
-        structureFax: initialData.fax || '',
+        structureEmail: structureData.email || '',
+        structureEmail2: structureData.email2 || '',
+        structureTelephone1: structureData.telephone1 || '',
+        structureTelephone2: structureData.telephone2 || '',
+        structureFax: structureData.fax || '',
         
         // Onglet Administratif
-        structureCodeClient: initialData.codeClient || '',
-        structureRaisonSocialeAdmin: initialData.raisonSocialeAdmin || '',
-        structureAdresseAdmin: initialData.adresseAdmin || '',
-        structureSuiteAdresseAdmin: initialData.suiteAdresseAdmin || '',
-        structureCodePostalAdmin: initialData.codePostalAdmin || '',
-        structureVilleAdmin: initialData.villeAdmin || '',
-        structurePaysAdmin: initialData.paysAdmin || '',
-        structureRegionAdmin: initialData.regionAdmin || '',
-        structureDepartementAdmin: initialData.departementAdmin || '',
-        structureTelAdmin: initialData.telAdmin || '',
-        structureFaxAdmin: initialData.faxAdmin || '',
-        structureEmailAdmin: initialData.emailAdmin || '',
-        structureSignataire: initialData.signataire || '',
-        structureQualite: initialData.qualite || '',
-        structureSiret: initialData.siret || '',
-        structureCodeApe: initialData.codeApe || '',
-        structureLicence: initialData.licence || '',
-        structureTvaIntracom: initialData.tvaIntracom || '',
+        structureCodeClient: structureData.codeClient || '',
+        structureRaisonSocialeAdmin: structureData.raisonSocialeAdmin || '',
+        structureAdresseAdmin: structureData.adresseAdmin || '',
+        structureSuiteAdresseAdmin: structureData.suiteAdresseAdmin || '',
+        structureCodePostalAdmin: structureData.codePostalAdmin || '',
+        structureVilleAdmin: structureData.villeAdmin || '',
+        structurePaysAdmin: structureData.paysAdmin || '',
+        structureRegionAdmin: structureData.regionAdmin || '',
+        structureDepartementAdmin: structureData.departementAdmin || '',
+        structureTelAdmin: structureData.telAdmin || '',
+        structureFaxAdmin: structureData.faxAdmin || '',
+        structureEmailAdmin: structureData.emailAdmin || '',
+        structureSignataire: structureData.signataire || '',
+        structureQualite: structureData.qualite || '',
+        structureSiret: structureData.siret || '',
+        structureCodeApe: structureData.codeApe || '',
+        structureLicence: structureData.licence || '',
+        structureTvaIntracom: structureData.tvaIntracom || '',
         
         // Onglet Réseaux sociaux
-        structureSiteWeb: initialData.siteWeb || '',
-        structureFacebook: initialData.facebook || '',
-        structureInstagram: initialData.instagram || '',
-        structureTwitter: initialData.twitter || '',
-        structureLinkedin: initialData.linkedin || '',
-        structureYoutube: initialData.youtube || ''
+        structureSiteWeb: structureData.siteWeb || '',
+        structureFacebook: structureData.facebook || '',
+        structureInstagram: structureData.instagram || '',
+        structureTwitter: structureData.twitter || '',
+        structureLinkedin: structureData.linkedin || '',
+        structureYoutube: structureData.youtube || ''
       });
     }
   }, [editMode, initialData]);
@@ -190,19 +199,19 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
     // Mettre à jour les champs d'adresse avec les données de l'autocomplétion
     setFormData(prev => ({
       ...prev,
-      structureAdresse: addressData.display_name || addressData.road || '',
-      structureCodePostal: addressData.postcode || '',
-      structureVille: addressData.city || addressData.town || addressData.village || '',
-      structureDepartement: addressData.state_district || addressData.county || '',
-      structureRegion: addressData.state || '',
-      structurePays: addressData.country || 'France'
+      structureAdresse: addressData.adresse || '',
+      structureCodePostal: addressData.codePostal || '',
+      structureVille: addressData.ville || '',
+      structureDepartement: addressData.departement || '',
+      structureRegion: addressData.region || '',
+      structurePays: addressData.pays || 'France'
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.structureRaisonSociale.trim()) {
+    if (!formData.raisonSociale.trim()) {
       alert('Le nom de la structure est obligatoire');
       return;
     }
@@ -216,42 +225,81 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
 
     try {
       if (editMode && initialData?.id) {
-        // Mode édition - Mise à jour du document existant
-        const structureData = {
-          ...formData,
-          updatedAt: serverTimestamp()
-        };
-
-        const docRef = doc(db, 'contacts_unified', initialData.id);
-        await updateDoc(docRef, structureData);
+        // Mode édition - mettre à jour la structure existante
+        console.log('🔄 [StructureCreationModal] Mode édition - mise à jour de la structure:', initialData.id);
         
-        console.log('Structure mise à jour avec ID:', initialData.id);
+        const updatedData = {
+          raisonSociale: formData.raisonSociale,
+          type: formData.type || null,
+          source: formData.source || null,
+          email: formData.email || null,
+          telephone1: formData.telephone1 || null,
+          telephone2: formData.telephone2 || null,
+          fax: formData.fax || null,
+          siteWeb: formData.siteWeb || null,
+          adresse: formData.adresse || null,
+          suiteAdresse: formData.suiteAdresse || null,
+          codePostal: formData.codePostal || null,
+          ville: formData.ville || null,
+          departement: formData.departement || null,
+          region: formData.region || null,
+          pays: formData.pays || 'France',
+          notes: formData.notes || null
+        };
+        
+        // Mettre à jour via le service relationnel
+        const updateResult = await structuresService.updateStructure(initialData.id, updatedData, currentUser?.uid);
+        
+        if (!updateResult.success) {
+          throw new Error(updateResult.error || 'Erreur lors de la mise à jour');
+        }
+        
+        console.log('✅ [StructureCreationModal] Structure mise à jour avec succès');
         
         // Callback pour notifier la mise à jour
         if (onCreated) {
           onCreated({
             id: initialData.id,
-            ...structureData
+            ...updatedData
           });
         }
       } else {
-        // Mode création - Créer un nouveau document
+        // Mode création - créer une nouvelle structure dans la collection 'structures'
         const structureData = {
-          ...formData,
-          organizationId: currentOrganization.id,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          type: 'structure'
+          raisonSociale: formData.raisonSociale,
+          type: formData.type || null,
+          source: formData.source || null,
+          email: formData.email || null,
+          telephone1: formData.telephone1 || null,
+          telephone2: formData.telephone2 || null,
+          fax: formData.fax || null,
+          siteWeb: formData.siteWeb || null,
+          adresse: formData.adresse || null,
+          suiteAdresse: formData.suiteAdresse || null,
+          codePostal: formData.codePostal || null,
+          ville: formData.ville || null,
+          departement: formData.departement || null,
+          region: formData.region || null,
+          pays: formData.pays || 'France',
+          tags: [],
+          notes: formData.notes || null,
+          isClient: false // Par défaut, pas client
         };
 
-        const docRef = await addDoc(collection(db, 'contacts'), structureData);
+        console.log('🆕 [StructureCreationModal] Création nouvelle structure:', structureData);
         
-        console.log('Structure créée avec ID:', docRef.id);
+        const result = await structuresService.createStructure(structureData, currentOrganization.id, currentUser?.uid);
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Erreur lors de la création');
+        }
+        
+        console.log('✅ [StructureCreationModal] Structure créée avec ID:', result.id);
         
         // Callback pour notifier la création
         if (onCreated) {
           onCreated({
-            id: docRef.id,
+            id: result.id,
             ...structureData
           });
         }
@@ -260,44 +308,22 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
       // En mode création, réinitialiser le formulaire
       if (!editMode) {
         setFormData({
-          structureRaisonSociale: '',
-          structureSource: '',
-          structureAdresse: '',
-          structureSuiteAdresse1: '',
-          structureCodePostal: '',
-          structureVille: '',
-          structureDepartement: '',
-          structureRegion: '',
-          structurePays: 'France',
-          structureEmail: '',
-          structureEmail2: '',
-          structureTelephone1: '',
-          structureTelephone2: '',
-          structureFax: '',
-          structureCodeClient: '',
-          structureRaisonSocialeAdmin: '',
-          structureAdresseAdmin: '',
-          structureSuiteAdresseAdmin: '',
-          structureCodePostalAdmin: '',
-          structureVilleAdmin: '',
-          structurePaysAdmin: '',
-          structureRegionAdmin: '',
-          structureDepartementAdmin: '',
-          structureTelAdmin: '',
-          structureFaxAdmin: '',
-          structureEmailAdmin: '',
-          structureSignataire: '',
-          structureQualite: '',
-          structureSiret: '',
-          structureCodeApe: '',
-          structureLicence: '',
-          structureTvaIntracom: '',
-          structureSiteWeb: '',
-          structureFacebook: '',
-          structureInstagram: '',
-          structureTwitter: '',
-          structureLinkedin: '',
-          structureYoutube: ''
+          raisonSociale: '',
+          type: '',
+          source: '',
+          adresse: '',
+          suiteAdresse: '',
+          codePostal: '',
+          ville: '',
+          departement: '',
+          region: '',
+          pays: 'France',
+          email: '',
+          telephone1: '',
+          telephone2: '',
+          fax: '',
+          siteWeb: '',
+          notes: ''
         });
       }
 
@@ -305,8 +331,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
       onHide();
 
     } catch (error) {
-      console.error(`Erreur lors de ${editMode ? 'la mise à jour' : 'la création'} de la structure:`, error);
-      alert(`Erreur lors de ${editMode ? 'la mise à jour' : 'la création'} de la structure`);
+      console.error(`❌ [StructureCreationModal] Erreur lors de ${editMode ? 'la mise à jour' : 'la création'} de la structure:`, error);
+      alert(`Erreur lors de ${editMode ? 'la mise à jour' : 'la création'} de la structure: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -318,8 +344,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
         <div className="col-12 mb-3">
           <AddressInput
             label="Adresse avec autocomplétion"
-            value={formData.structureAdresse}
-            onChange={(e) => handleInputChange('structureAdresse', e.target.value)}
+            value={formData.adresse}
+            onChange={(e) => handleInputChange('adresse', e.target.value)}
             onAddressSelected={handleAddressSelected}
             placeholder="Commencez à taper pour rechercher une adresse..."
           />
@@ -330,8 +356,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           <Form.Control
             type="text"
             placeholder="Complément d'adresse"
-            value={formData.structureSuiteAdresse1}
-            onChange={(e) => handleInputChange('structureSuiteAdresse1', e.target.value)}
+            value={formData.suiteAdresse}
+            onChange={(e) => handleInputChange('suiteAdresse', e.target.value)}
           />
         </div>
         
@@ -340,8 +366,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           <Form.Control
             type="text"
             placeholder="Code postal"
-            value={formData.structureCodePostal}
-            onChange={(e) => handleInputChange('structureCodePostal', e.target.value)}
+            value={formData.codePostal}
+            onChange={(e) => handleInputChange('codePostal', e.target.value)}
           />
         </div>
         
@@ -350,8 +376,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           <Form.Control
             type="text"
             placeholder="Ville"
-            value={formData.structureVille}
-            onChange={(e) => handleInputChange('structureVille', e.target.value)}
+            value={formData.ville}
+            onChange={(e) => handleInputChange('ville', e.target.value)}
           />
         </div>
         
@@ -360,8 +386,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           <Form.Control
             type="text"
             placeholder="Département"
-            value={formData.structureDepartement}
-            onChange={(e) => handleInputChange('structureDepartement', e.target.value)}
+            value={formData.departement}
+            onChange={(e) => handleInputChange('departement', e.target.value)}
           />
         </div>
         
@@ -370,8 +396,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           <Form.Control
             type="text"
             placeholder="Région"
-            value={formData.structureRegion}
-            onChange={(e) => handleInputChange('structureRegion', e.target.value)}
+            value={formData.region}
+            onChange={(e) => handleInputChange('region', e.target.value)}
           />
         </div>
         
@@ -380,8 +406,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           <Form.Control
             type="text"
             placeholder="Pays"
-            value={formData.structurePays}
-            onChange={(e) => handleInputChange('structurePays', e.target.value)}
+            value={formData.pays}
+            onChange={(e) => handleInputChange('pays', e.target.value)}
           />
         </div>
       </div>
@@ -396,55 +422,66 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           <Form.Control
             type="email"
             placeholder="email@structure.com"
-            value={formData.structureEmail}
-            onChange={(e) => handleInputChange('structureEmail', e.target.value)}
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
           />
         </div>
         
         <div className="col-md-6 mb-3">
-          <Form.Label>Email secondaire</Form.Label>
+          <Form.Label>Site web</Form.Label>
           <Form.Control
-            type="email"
-            placeholder="email2@structure.com"
-            value={formData.structureEmail2}
-            onChange={(e) => handleInputChange('structureEmail2', e.target.value)}
+            type="url"
+            placeholder="https://www.structure.com"
+            value={formData.siteWeb}
+            onChange={(e) => handleInputChange('siteWeb', e.target.value)}
           />
         </div>
         
-        <div className="col-md-6 mb-3">
+        <div className="col-md-4 mb-3">
           <Form.Label>Téléphone principal</Form.Label>
           <Form.Control
             type="tel"
             placeholder="01 23 45 67 89"
-            value={formData.structureTelephone1}
-            onChange={(e) => handleInputChange('structureTelephone1', e.target.value)}
+            value={formData.telephone1}
+            onChange={(e) => handleInputChange('telephone1', e.target.value)}
           />
         </div>
         
-        <div className="col-md-6 mb-3">
+        <div className="col-md-4 mb-3">
           <Form.Label>Téléphone secondaire</Form.Label>
           <Form.Control
             type="tel"
             placeholder="01 23 45 67 89"
-            value={formData.structureTelephone2}
-            onChange={(e) => handleInputChange('structureTelephone2', e.target.value)}
+            value={formData.telephone2}
+            onChange={(e) => handleInputChange('telephone2', e.target.value)}
           />
         </div>
         
-        <div className="col-md-6 mb-3">
+        <div className="col-md-4 mb-3">
           <Form.Label>Fax</Form.Label>
           <Form.Control
             type="tel"
             placeholder="01 23 45 67 89"
-            value={formData.structureFax}
-            onChange={(e) => handleInputChange('structureFax', e.target.value)}
+            value={formData.fax}
+            onChange={(e) => handleInputChange('fax', e.target.value)}
+          />
+        </div>
+        
+        <div className="col-12 mb-3">
+          <Form.Label>Notes</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            placeholder="Notes sur cette structure..."
+            value={formData.notes}
+            onChange={(e) => handleInputChange('notes', e.target.value)}
           />
         </div>
       </div>
     </div>
   );
 
-  const renderAdministratifTab = () => (
+  /* const renderAdministratifTab = () => (
     <div className={styles.tabContent}>
       <div className="row">
         <div className="col-md-6 mb-3">
@@ -628,9 +665,9 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
         </div>
       </div>
     </div>
-  );
+  ); */
 
-  const renderReseauxSociauxTab = () => (
+  /* const renderReseauxSociauxTab = () => (
     <div className={styles.tabContent}>
       <div className="row">
         <div className="col-12 mb-3">
@@ -694,7 +731,7 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
         </div>
       </div>
     </div>
-  );
+  ); */
 
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
@@ -709,22 +746,40 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
         <Modal.Body>
           {/* Champs principaux */}
           <div className="row mb-4">
-            <div className="col-md-8 mb-3">
+            <div className="col-md-6 mb-3">
               <Form.Label>Nom de la structure *</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Raison sociale de la structure"
-                value={formData.structureRaisonSociale}
-                onChange={(e) => handleInputChange('structureRaisonSociale', e.target.value)}
+                value={formData.raisonSociale}
+                onChange={(e) => handleInputChange('raisonSociale', e.target.value)}
                 required
               />
             </div>
             
-            <div className="col-md-4 mb-3">
+            <div className="col-md-3 mb-3">
+              <Form.Label>Type</Form.Label>
+              <Form.Select
+                value={formData.type}
+                onChange={(e) => handleInputChange('type', e.target.value)}
+              >
+                <option value="">Sélectionner...</option>
+                <option value="Salle">Salle</option>
+                <option value="Festival">Festival</option>
+                <option value="Association">Association</option>
+                <option value="Théâtre">Théâtre</option>
+                <option value="Centre culturel">Centre culturel</option>
+                <option value="Producteur">Producteur</option>
+                <option value="Label">Label</option>
+                <option value="Autre">Autre</option>
+              </Form.Select>
+            </div>
+            
+            <div className="col-md-3 mb-3">
               <Form.Label>Source</Form.Label>
               <Form.Select
-                value={formData.structureSource}
-                onChange={(e) => handleInputChange('structureSource', e.target.value)}
+                value={formData.source}
+                onChange={(e) => handleInputChange('source', e.target.value)}
               >
                 <option value="">Sélectionner...</option>
                 <option value="Prospection">Prospection</option>
@@ -749,19 +804,7 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
               <Nav.Item>
                 <Nav.Link eventKey="email-tel">
                   <i className="bi bi-envelope me-1"></i>
-                  Email / Tél
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="administratif">
-                  <i className="bi bi-building-gear me-1"></i>
-                  Administratif
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="reseaux">
-                  <i className="bi bi-share me-1"></i>
-                  Réseaux sociaux
+                  Contact
                 </Nav.Link>
               </Nav.Item>
             </Nav>
@@ -772,12 +815,6 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
               </Tab.Pane>
               <Tab.Pane eventKey="email-tel">
                 {renderEmailTelTab()}
-              </Tab.Pane>
-              <Tab.Pane eventKey="administratif">
-                {renderAdministratifTab()}
-              </Tab.Pane>
-              <Tab.Pane eventKey="reseaux">
-                {renderReseauxSociauxTab()}
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>

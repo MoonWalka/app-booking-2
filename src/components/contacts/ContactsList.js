@@ -1,30 +1,32 @@
-// src/components/contacts/ContactsListUnified.js
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { collection, query, where, onSnapshot } from '@/services/firebase-service';
-import { db } from '@/services/firebase-service';
+// src/components/contacts/ContactsList.js
+import React, { useState, useMemo, useCallback } from 'react';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
+import { useContactsRelational } from '@/hooks/contacts/useContactsRelational';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import { useDeleteContact } from '@/hooks/contacts';
+import { useDeleteContactRelational } from '@/hooks/contacts';
 import PersonneCreationModal from '@/components/contacts/modal/PersonneCreationModal';
 import StructureCreationModal from '@/components/contacts/modal/StructureCreationModal';
-import { formatActivityTags, getPersonDisplayType } from '@/utils/contactUtils';
-import styles from './ContactsList.module.css';
+import './ContactsList.module.css';
 
 /**
- * Liste unifiée des contacts utilisant la collection contacts_unified
- * Architecture Business-centrée avec affichage structures + personnes
- * Compatible avec import/export XLS naturel
+ * Liste unifiée des contacts utilisant le modèle relationnel
+ * MIGRATION: Maintenant utilise useContactsRelational au lieu de contacts_unified
+ * Architecture Business-centrée avec affichage structures + personnes libres
  */
 function ContactsList({ filterType = 'all' }) {
-  const navigate = useNavigate();
   const { currentOrganization } = useOrganization();
-  const { openContactTab, openTab } = useTabs();
-  const [unifiedContacts, setUnifiedContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const { openContactTab } = useTabs();
+  
+  // Utiliser le hook relationnel au lieu de l'ancienne approche
+  const { 
+    structures, 
+    personnes, 
+    liaisons, 
+    loading, 
+    error,
+    getStructureWithPersonnes 
+  } = useContactsRelational();
   
   // États pour la modal d'édition des personnes
   const [showEditModal, setShowEditModal] = useState(false);
@@ -34,68 +36,163 @@ function ContactsList({ filterType = 'all' }) {
   const [showEditStructureModal, setShowEditStructureModal] = useState(false);
   const [editingStructure, setEditingStructure] = useState(null);
   
-  // Callback après suppression
-  const onDeleteSuccess = () => {
-    setRefreshKey(prev => prev + 1);
-  };
-
-
   // Callback après mise à jour du contact (personne)
   const handleContactUpdated = () => {
     setShowEditModal(false);
     setEditingContact(null);
-    setRefreshKey(prev => prev + 1); // Rafraîchir la liste
+    // Pas besoin de refresh avec le hook relationnel (temps réel)
   };
 
   // Callback après mise à jour de la structure
   const handleStructureUpdated = () => {
     setShowEditStructureModal(false);
     setEditingStructure(null);
-    setRefreshKey(prev => prev + 1); // Rafraîchir la liste
+    // Pas besoin de refresh avec le hook relationnel (temps réel)
   };
   
-  const { handleDelete: handleDeleteContact } = useDeleteContact(onDeleteSuccess);
+  // Callback après suppression réussie
+  const onDeleteSuccess = useCallback((contactId, contactType) => {
+    console.log('[ContactsList] Contact supprimé avec succès:', contactId, contactType);
+    // Le hook relationnel se met à jour automatiquement via les listeners temps réel
+    // Donc pas besoin de forcer un refresh manuel
+  }, []);
+  
+  const { handleDeleteContact } = useDeleteContactRelational(onDeleteSuccess);
+
+  // Transformer les données relationnelles en format compatible avec l'affichage
+  const unifiedContacts = useMemo(() => {
+    if (!currentOrganization?.id) return [];
+    
+    const processedContacts = [];
+    
+    // Ajouter les structures avec leurs personnes
+    structures.forEach(structure => {
+      const structureWithPersonnes = getStructureWithPersonnes(structure.id);
+      const personnesCount = structureWithPersonnes?.personnes?.filter(p => p.actif !== false).length || 0;
+      
+      // Ajouter la structure
+      processedContacts.push({
+        id: `${structure.id}_structure`,
+        _originalId: structure.id,
+        _viewType: 'structure',
+        entityType: 'structure',
+        nom: structure.raisonSociale || 'Structure sans nom',
+        raisonSociale: structure.raisonSociale,
+        displayName: structure.raisonSociale,
+        type: structure.type,
+        email: structure.email,
+        telephone: structure.telephone1,
+        ville: structure.ville,
+        tags: structure.tags || [],
+        isClient: structure.isClient,
+        personnesCount,
+        createdAt: structure.createdAt,
+        updatedAt: structure.updatedAt,
+        // Données complètes pour l'édition
+        adresse: structure.adresse,
+        codePostal: structure.codePostal,
+        pays: structure.pays,
+        telephone1: structure.telephone1,
+        telephone2: structure.telephone2,
+        siteWeb: structure.siteWeb,
+        notes: structure.notes
+      });
+      
+      // Ajouter les personnes de cette structure (si demandé)
+      if (filterType === 'all' || filterType === 'personnes') {
+        structureWithPersonnes?.personnes?.forEach(personne => {
+          if (personne.actif !== false) { // Ne pas afficher les liaisons inactives
+            processedContacts.push({
+              id: `${personne.id}_in_${structure.id}`,
+              _originalId: personne.id,
+              _structureId: structure.id,
+              _viewType: 'personne',
+              entityType: 'personne',
+              nom: personne.nom || '',
+              prenom: personne.prenom || '',
+              displayName: `${personne.prenom || ''} ${personne.nom || ''}`.trim(),
+              email: personne.email,
+              telephone: personne.telephone,
+              ville: personne.ville,
+              tags: personne.tags || [],
+              fonction: personne.liaison?.fonction || '',
+              prioritaire: personne.liaison?.prioritaire || false,
+              interesse: personne.liaison?.interesse || false,
+              structureName: structure.raisonSociale,
+              createdAt: personne.createdAt,
+              updatedAt: personne.updatedAt,
+              // Données complètes pour l'édition
+              adresse: personne.adresse,
+              codePostal: personne.codePostal,
+              pays: personne.pays,
+              telephone2: personne.telephone2,
+              notes: personne.notes
+            });
+          }
+        });
+      }
+    });
+    
+    // Collecter les IDs des personnes déjà affichées avec des structures
+    const personnesAvecStructure = new Set();
+    liaisons
+      .filter(l => l.actif && l.organizationId === currentOrganization.id)
+      .forEach(l => personnesAvecStructure.add(l.personneId));
+    
+    // Ajouter les personnes libres (celles qui n'ont aucune liaison active)
+    if (filterType === 'all' || filterType === 'personnes_libres') {
+      personnes
+        .filter(personne => personne.isPersonneLibre && !personnesAvecStructure.has(personne.id))
+        .forEach(personne => {
+          processedContacts.push({
+            id: personne.id,
+            _originalId: personne.id,
+            _viewType: 'personne_libre',
+            entityType: 'personne_libre',
+            nom: personne.nom || '',
+            prenom: personne.prenom || '',
+            displayName: `${personne.prenom || ''} ${personne.nom || ''}`.trim(),
+            email: personne.email,
+            telephone: personne.telephone,
+            ville: personne.ville,
+            tags: personne.tags || [],
+            createdAt: personne.createdAt,
+            updatedAt: personne.updatedAt,
+            // Données complètes pour l'édition
+            adresse: personne.adresse,
+            codePostal: personne.codePostal,
+            pays: personne.pays,
+            telephone2: personne.telephone2,
+            notes: personne.notes
+          });
+        });
+    }
+    
+    return processedContacts;
+  }, [structures, personnes, currentOrganization, filterType, getStructureWithPersonnes]);
 
   // Fonction pour ouvrir la modal d'édition - gère personnes et structures
   const handleEditContact = (item) => {
     console.log('=== DEBUG CONTACT EDIT ===');
     console.log('[ContactsList] handleEditContact appelé avec:', item);
-    console.log('[ContactsList] item keys:', Object.keys(item));
     console.log('[ContactsList] viewType:', item._viewType);
     console.log('[ContactsList] entityType:', item.entityType);
     
     // Si c'est une structure
     if (item._viewType === 'structure' || item.entityType === 'structure') {
-      console.log('[ContactsList] Structure item complet:', item);
-      console.log('[ContactsList] Clés disponibles:', Object.keys(item));
-      
-      // Essayer différentes sources pour la raison sociale
-      const raisonSociale = item.structureRaisonSociale || 
-                           item.raisonSociale || 
-                           item.structureName || 
-                           item.nom || 
-                           item.displayName || 
-                           '';
-      
-      console.log('[ContactsList] Raison sociale trouvée:', raisonSociale);
-      
       const editStructureData = {
-        id: item.id,
-        raisonSociale: raisonSociale,
-        typeStructure: item.structureType || item.typeStructure || '',
-        adresse: item.structureAdresse || item.adresse || '',
-        suiteAdresse: item.structureSuiteAdresse1 || item.suiteAdresse || '',
-        codePostal: item.structureCodePostal || item.codePostal || '',
-        ville: item.structureVille || item.ville || '',
-        departement: item.structureDepartement || item.departement || '',
-        region: item.structureRegion || item.region || '',
-        pays: item.structurePays || item.pays || 'France',
-        email: item.structureEmail || item.email || '',
-        telephone1: item.structureTelephone1 || item.telephone || '',
-        telephone2: item.structureTelephone2 || '',
-        siteWeb: item.structureSiteWeb || '',
-        siret: item.structureSiret || '',
-        source: item.source || 'Prospection'
+        id: item._originalId,
+        raisonSociale: item.raisonSociale || '',
+        typeStructure: item.type || '',
+        adresse: item.adresse || '',
+        codePostal: item.codePostal || '',
+        ville: item.ville || '',
+        pays: item.pays || 'France',
+        email: item.email || '',
+        telephone1: item.telephone1 || '',
+        telephone2: item.telephone2 || '',
+        siteWeb: item.siteWeb || '',
+        notes: item.notes || ''
       };
       
       console.log('[ContactsList] editStructureData préparé:', editStructureData);
@@ -104,25 +201,20 @@ function ContactsList({ filterType = 'all' }) {
       return;
     }
     
-    // Pour les personnes, utiliser la même approche que ContactViewTabs
+    // Pour les personnes
     const editData = {
-      id: item.id,
+      id: item._originalId,
       prenom: item.prenom || '',
       nom: item.nom || '',
-      source: item.source || 'Prospection',
       adresse: item.adresse || '',
-      suiteAdresse: item.suiteAdresse || '',
       codePostal: item.codePostal || '',
       ville: item.ville || '',
-      departement: item.departement || '',
-      region: item.region || '',
       pays: item.pays || 'France',
-      mailDirect: item.mailDirect || item.email || '',
-      mailPerso: item.mailPerso || '',
-      telDirect: item.telDirect || item.telephone || '',
-      telPerso: item.telPerso || '',
-      mobile: item.mobile || '',
-      fonction: item.fonction || ''
+      mailDirect: item.email || '',
+      telDirect: item.telephone || '',
+      mobile: item.telephone2 || '',
+      fonction: item.fonction || '',
+      notes: item.notes || ''
     };
     
     console.log('[ContactsList] editData préparé:', editData);
@@ -130,147 +222,14 @@ function ContactsList({ filterType = 'all' }) {
     setShowEditModal(true);
   };
 
-  // Chargement de la collection unifiée
-  useEffect(() => {
-    if (!currentOrganization?.id) {
-      setLoading(false);
-      return;
-    }
-
-    console.log('🔄 Chargement collection unifiée contacts_unified...');
-    
-    // Requête sur la collection unifiée
-    const unifiedQuery = query(
-      collection(db, 'contacts_unified'),
-      where('organizationId', '==', currentOrganization.id)
-    );
-    
-    const unsubscribeUnified = onSnapshot(
-      unifiedQuery,
-      (snapshot) => {
-        const unifiedDocs = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        console.log(`📋 Documents unifiés trouvés: ${unifiedDocs.length}`);
-        processUnifiedDocuments(unifiedDocs);
-      },
-      (err) => {
-        console.error('Erreur chargement documents unifiés:', err);
-        setError(err.message);
-        setLoading(false);
-      }
-    );
-
-    const processUnifiedDocuments = (unifiedDocs) => {
-        console.log(`📋 Traitement de ${unifiedDocs.length} documents unifiés`);
-        
-        const processedContacts = [];
-        
-        unifiedDocs.forEach(doc => {
-          if (doc.entityType === 'structure') {
-            // Document structure avec personnes associées
-            const structureDisplayName = doc.structure?.raisonSociale || doc.structure?.nom || 'Structure sans nom';
-            const personnesCount = doc.personnes?.filter(p => p.prenom && p.nom).length || 0;
-            
-            // Ajouter la structure
-            processedContacts.push({
-              ...doc,
-              id: `${doc.id}_structure`, // ID unique pour la structure
-              _originalId: doc.id,
-              _viewType: 'structure',
-              entityType: 'structure',
-              displayName: structureDisplayName,
-              nom: structureDisplayName,
-              email: doc.structure?.email?.trim() || '',
-              telephone: doc.structure?.telephone1 || doc.structure?.telephone || '',
-              subtext: `${personnesCount} personne${personnesCount > 1 ? 's' : ''}`,
-              _sourceCollection: 'contacts_unified',
-              _isStructureContainer: true,
-              createdAt: doc.createdAt
-            });
-            
-            // Ajouter les personnes associées
-            doc.personnes?.forEach((personne, index) => {
-              if (personne.prenom && personne.nom) {
-                processedContacts.push({
-                  ...doc,
-                  id: `${doc.id}_personne_${index}`, // ID unique pour chaque personne
-                  _originalId: doc.id,
-                  _viewType: 'personne',
-                  _personneIndex: index,
-                  entityType: 'personne',
-                  displayName: `${personne.prenom} ${personne.nom}`.trim(),
-                  nom: personne.nom,
-                  email: (personne.mailDirect?.trim() || personne.email?.trim() || ''),
-                  telephone: personne.telephone || personne.telDirect || personne.mobile || '',
-                  subtext: structureDisplayName,
-                  _sourceCollection: 'contacts_unified',
-                  _isPersonInStructure: true,
-                  _structureName: structureDisplayName,
-                  // Ajouter les données géographiques de la personne
-                  codePostal: personne.codePostal || '',
-                  ville: personne.ville || '',
-                  pays: personne.pays || '',
-                  createdAt: doc.createdAt
-                });
-              }
-            });
-            
-          } else if (doc.entityType === 'personne_libre') {
-            // Document personne libre
-            const personne = doc.personne;
-            processedContacts.push({
-              ...doc,
-              id: `${doc.id}_personne_libre`, // ID unique pour personne libre
-              _originalId: doc.id,
-              _viewType: 'personne',
-              entityType: 'personne',
-              displayName: `${personne?.prenom || ''} ${personne?.nom || ''}`.trim() || 'Personne sans nom',
-              nom: personne?.nom || '',
-              email: (personne?.mailDirect?.trim() || personne?.email?.trim() || ''),
-              telephone: personne?.telephone || personne?.mobile || '',
-              subtext: 'Personne libre',
-              _sourceCollection: 'contacts_unified',
-              _isPersonLibre: true,
-              // Ajouter les données géographiques de la personne libre
-              codePostal: personne?.codePostal || '',
-              ville: personne?.ville || '',
-              pays: personne?.pays || '',
-              createdAt: doc.createdAt
-            });
-          }
-        });
-        
-        const structures = processedContacts.filter(c => c.entityType === 'structure').length;
-        const personnes = processedContacts.filter(c => c.entityType === 'personne').length;
-        
-        console.log(`✅ Traitement terminé: ${structures} structures + ${personnes} personnes = ${processedContacts.length} entrées`);
-        
-        setUnifiedContacts(processedContacts);
-        setLoading(false);
-        setError(null);
-    };
-
-    return () => {
-      unsubscribeUnified();
-    };
-  }, [currentOrganization?.id, refreshKey]);
-
-  // Fonction de rafraîchissement
-  const refreshData = () => {
-    setRefreshKey(prev => prev + 1);
-  };
-
-  // Configuration des colonnes pour l'affichage unifié
+  // Configuration des colonnes simplifiée pour le modèle relationnel
   const columns = [
     {
       id: 'nom',
       label: 'Nom / Qualification',
       field: 'displayName',
       sortable: true,
-      width: '22%',
+      width: '25%',
       render: (item) => {
         const type = item.entityType;
         let icon, variant;
@@ -282,25 +241,12 @@ function ContactsList({ filterType = 'all' }) {
           variant = 'primary';
         }
 
-        // Déterminer la qualification/fonction
-        let qualification = '';
+        // Fonction ou type de structure
+        let subInfo = '';
         if (item.entityType === 'structure') {
-          // Pour les structures, afficher les tags d'activité au lieu du type
-          const tags = item.qualification?.tags || [];
-          qualification = formatActivityTags(tags);
+          subInfo = item.type || '';
         } else {
-          // Pour les personnes, afficher les tags d'activité, ou la fonction, ou "Indépendant"
-          const tags = item.qualification?.tags || [];
-          const activityDisplay = getPersonDisplayType({ tags });
-          
-          if (activityDisplay !== 'Indépendant') {
-            qualification = activityDisplay; // Tags d'activité
-          } else {
-            const fonction = item._isPersonInStructure 
-              ? item.personnes?.[item._personneIndex]?.fonction
-              : item.personne?.fonction;
-            qualification = fonction || 'Indépendant';
-          }
+          subInfo = item.fonction || (item._viewType === 'personne_libre' ? 'Personne libre' : '');
         }
 
         return (
@@ -312,17 +258,17 @@ function ContactsList({ filterType = 'all' }) {
             >
               <i className={icon}></i>
             </span>
-            <div className="d-flex align-items-center flex-nowrap">
-              <span className="fw-bold text-truncate" style={{ maxWidth: '140px' }}>
+            <div>
+              <div className="fw-bold">
                 {item.displayName || 'Sans nom'}
-              </span>
-              {qualification && (
-                <>
-                  <span className="mx-2 text-muted">•</span>
-                  <small className="text-muted text-truncate" style={{ maxWidth: '100px' }} title={qualification}>
-                    {qualification}
-                  </small>
-                </>
+              </div>
+              {subInfo && (
+                <small className="text-muted">{subInfo}</small>
+              )}
+              {item.prioritaire && (
+                <span className="badge bg-warning ms-1" title="Contact prioritaire">
+                  <i className="bi bi-star-fill"></i>
+                </span>
               )}
             </div>
           </div>
@@ -333,36 +279,32 @@ function ContactsList({ filterType = 'all' }) {
       id: 'contacts_lies',
       label: 'Contacts liés',
       sortable: false,
-      width: '14%',
+      width: '15%',
       render: (item) => {
-        return (
-          <div className="w-100 d-flex justify-content-start">
-            {item.entityType === 'structure' ? (
-              // Pour les structures, afficher le nombre de personnes associées
-              (() => {
-                const personnesCount = item.personnes?.filter(p => p.prenom && p.nom).length || 0;
-                return personnesCount > 0 ? (
-                  <span className={styles.linkedContactsBadge}>
-                    <i className="bi bi-people me-1"></i>
-                    {personnesCount}
-                  </span>
-                ) : (
-                  <span className="text-muted">-</span>
-                );
-              })()
-            ) : (
-              // Pour les personnes, afficher la structure associée si applicable
-              item._structureName ? (
-                <span className={`${styles.linkedStructureBadge} text-truncate`} style={{ maxWidth: '100%' }} title={item._structureName}>
-                  <i className="bi bi-building me-1"></i>
-                  {item._structureName}
+        if (item.entityType === 'structure') {
+          return (
+            <div>
+              {item.personnesCount > 0 ? (
+                <span className="badge bg-light text-dark">
+                  <i className="bi bi-people me-1"></i>
+                  {item.personnesCount}
                 </span>
               ) : (
                 <span className="text-muted">-</span>
-              )
-            )}
-          </div>
-        );
+              )}
+            </div>
+          );
+        } else if (item.structureName) {
+          return (
+            <div>
+              <small className="text-muted text-truncate d-block" title={item.structureName}>
+                <i className="bi bi-building me-1"></i>
+                {item.structureName}
+              </small>
+            </div>
+          );
+        }
+        return <span className="text-muted">-</span>;
       },
     },
     {
@@ -370,19 +312,15 @@ function ContactsList({ filterType = 'all' }) {
       label: 'Email',
       field: 'email',
       sortable: true,
-      width: '16%',
+      width: '20%',
       render: (item) => {
         const email = item.email?.trim();
-        return (
-          <div className="w-100">
-            {email ? (
-              <a href={`mailto:${email}`} className="text-decoration-none" title={email}>
-                <span className="text-truncate d-block">{email}</span>
-              </a>
-            ) : (
-              <span className="text-muted">-</span>
-            )}
-          </div>
+        return email ? (
+          <a href={`mailto:${email}`} className="text-decoration-none" title={email}>
+            <span className="text-truncate d-block">{email}</span>
+          </a>
+        ) : (
+          <span className="text-muted">-</span>
         );
       },
     },
@@ -391,37 +329,13 @@ function ContactsList({ filterType = 'all' }) {
       label: 'Téléphone',
       field: 'telephone',
       sortable: true,
-      width: '10%',
+      width: '15%',
       render: (item) => {
         const tel = item.telephone;
-        return (
-          <div className="w-100">
-            {tel ? (
-              <a href={`tel:${tel}`} className="text-decoration-none">
-                <span className="text-truncate d-block">{tel}</span>
-              </a>
-            ) : (
-              <span className="text-muted">-</span>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      id: 'codePostal',
-      label: 'CP',
-      sortable: true,
-      width: '6%',
-      render: (item) => {
-        let cp = '';
-        if (item.entityType === 'structure') {
-          cp = item.structure?.codePostal || '';
-        } else {
-          // Pour les personnes, essayer d'extraire depuis les données directement
-          cp = item.codePostal || '';
-        }
-        return cp ? (
-          <span className="small">{cp}</span>
+        return tel ? (
+          <a href={`tel:${tel}`} className="text-decoration-none">
+            <span className="text-truncate d-block">{tel}</span>
+          </a>
         ) : (
           <span className="text-muted">-</span>
         );
@@ -431,41 +345,40 @@ function ContactsList({ filterType = 'all' }) {
       id: 'ville',
       label: 'Ville',
       sortable: true,
-      width: '10%',
+      width: '15%',
       render: (item) => {
-        let ville = '';
-        if (item.entityType === 'structure') {
-          ville = item.structure?.ville || '';
-        } else {
-          // Pour les personnes, essayer d'extraire depuis les données directement
-          ville = item.ville || '';
-        }
+        const ville = item.ville;
+        const cp = item.codePostal;
         return (
-          <div className="w-100">
+          <div>
             {ville ? (
-              <span className="small text-truncate d-block">{ville}</span>
+              <span className="text-truncate d-block">{ville}</span>
             ) : (
               <span className="text-muted">-</span>
             )}
+            {cp && <small className="text-muted">{cp}</small>}
           </div>
         );
       },
     },
     {
-      id: 'pays',
-      label: 'Pays',
-      sortable: true,
-      width: '6%',
+      id: 'tags',
+      label: 'Tags',
+      sortable: false,
+      width: '10%',
       render: (item) => {
-        let pays = '';
-        if (item.entityType === 'structure') {
-          pays = item.structure?.pays || '';
-        } else {
-          // Pour les personnes, essayer d'extraire depuis les données directement
-          pays = item.pays || '';
-        }
-        return pays ? (
-          <span className="small">{pays === 'France' ? 'FR' : pays}</span>
+        const tags = item.tags || [];
+        return tags.length > 0 ? (
+          <div>
+            {tags.slice(0, 2).map((tag, index) => (
+              <small key={index} className="badge bg-secondary me-1">
+                {tag}
+              </small>
+            ))}
+            {tags.length > 2 && (
+              <small className="text-muted">+{tags.length - 2}</small>
+            )}
+          </div>
         ) : (
           <span className="text-muted">-</span>
         );
@@ -473,12 +386,12 @@ function ContactsList({ filterType = 'all' }) {
     }
   ];
 
-  // Statistiques pour l'affichage unifié
+  // Statistiques simplifiées pour le modèle relationnel
   const getStatistics = (items) => {
     const total = items.length;
     const structures = items.filter(item => item.entityType === 'structure').length;
-    const personnes = items.filter(item => item.entityType === 'personne').length;
-    const personnesLibres = items.filter(item => item._isPersonLibre).length;
+    const personnes = items.filter(item => item.entityType === 'personne' || item.entityType === 'personne_libre').length;
+    const personnesLibres = items.filter(item => item._viewType === 'personne_libre').length;
     const personnesEnStructure = personnes - personnesLibres;
     const avecEmail = items.filter(p => p.email).length;
     const avecTelephone = items.filter(p => p.telephone).length;
@@ -522,6 +435,10 @@ function ContactsList({ filterType = 'all' }) {
   const renderActions = (item) => {
     const contactId = item._originalId;
     const viewType = item._viewType;
+    
+    console.log('[ContactsList] renderActions - item:', item);
+    console.log('[ContactsList] renderActions - contactId:', contactId);
+    console.log('[ContactsList] renderActions - viewType:', viewType);
     
     return (
       <div className="d-flex gap-1 justify-content-end">
@@ -571,7 +488,9 @@ function ContactsList({ filterType = 'all' }) {
           className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center"
           onClick={(e) => {
             e.stopPropagation();
-            handleDeleteContact(contactId);
+            // Déterminer le type en fonction du viewType
+            const contactType = viewType === 'structure' ? 'structure' : 'personne';
+            handleDeleteContact(contactId, e, contactType);
           }}
           title="Supprimer"
           style={{ width: '32px', height: '32px' }}
@@ -582,7 +501,7 @@ function ContactsList({ filterType = 'all' }) {
     );
   };
 
-  // Filtres avancés pour l'affichage unifié
+  // Filtres simplifiés pour le modèle relationnel
   const getFilterOptions = () => [
     { value: 'all', label: 'Tous', icon: 'bi-list' },
     { value: 'structures', label: 'Structures', icon: 'bi-building' },
@@ -592,7 +511,7 @@ function ContactsList({ filterType = 'all' }) {
     { value: 'avec_telephone', label: 'Avec téléphone', icon: 'bi-telephone' }
   ];
 
-  // Logique de filtrage unifié
+  // Logique de filtrage simplifiée
   const filterData = (items, filterValue, searchQuery) => {
     let filtered = items;
 
@@ -602,10 +521,10 @@ function ContactsList({ filterType = 'all' }) {
         filtered = filtered.filter(item => item.entityType === 'structure');
         break;
       case 'personnes':
-        filtered = filtered.filter(item => item.entityType === 'personne');
+        filtered = filtered.filter(item => item.entityType === 'personne' || item.entityType === 'personne_libre');
         break;
       case 'personnes_libres':
-        filtered = filtered.filter(item => item._isPersonLibre);
+        filtered = filtered.filter(item => item._viewType === 'personne_libre');
         break;
       case 'avec_email':
         filtered = filtered.filter(item => item.email);
@@ -614,7 +533,6 @@ function ContactsList({ filterType = 'all' }) {
         filtered = filtered.filter(item => item.telephone);
         break;
       default:
-        // 'all' ou autres valeurs - pas de filtrage supplémentaire
         break;
     }
 
@@ -626,7 +544,8 @@ function ContactsList({ filterType = 'all' }) {
         item.nom?.toLowerCase().includes(query) ||
         item.email?.toLowerCase().includes(query) ||
         item.telephone?.includes(query) ||
-        item.subtext?.toLowerCase().includes(query)
+        item.fonction?.toLowerCase().includes(query) ||
+        item.structureName?.toLowerCase().includes(query)
       );
     }
 
@@ -639,7 +558,7 @@ function ContactsList({ filterType = 'all' }) {
         <div className="spinner-border" role="status">
           <span className="visually-hidden">Chargement...</span>
         </div>
-        <p className="mt-2">Chargement des contacts unifiés...</p>
+        <p className="mt-2">Chargement des contacts relationnels...</p>
       </div>
     );
   }
@@ -650,21 +569,21 @@ function ContactsList({ filterType = 'all' }) {
         <h4 className="alert-heading">Erreur de chargement</h4>
         <p>{error}</p>
         <hr />
-        <button className="btn btn-outline-danger" onClick={refreshData}>
+        <button className="btn btn-outline-danger" onClick={() => window.location.reload()}>
           <i className="bi bi-arrow-clockwise me-2"></i>
-          Réessayer
+          Recharger la page
         </button>
       </div>
     );
   }
 
   return (
-    <div className="contacts-list-unified">
+    <div className="contacts-list-relational">
       <ListWithFilters
         initialData={unifiedContacts}
         loading={loading}
         error={error}
-        onRefresh={refreshData}
+        onRefresh={() => window.location.reload()} // Simple reload pour le modèle relationnel
         columns={columns}
         getStatistics={getStatistics}
         renderActions={renderActions}
@@ -678,9 +597,8 @@ function ContactsList({ filterType = 'all' }) {
         searchPlaceholder="Rechercher dans structures et personnes..."
         emptyStateMessage="Aucun contact trouvé"
         emptyStateIcon="bi-people"
-        refreshKey={refreshKey}
         showStats={true}
-        title="Contacts Unifiés"
+        title="Contacts (Modèle Relationnel)"
       />
 
       {/* Modal d'édition des personnes */}

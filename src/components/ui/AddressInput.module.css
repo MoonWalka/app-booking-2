@@ -137,6 +137,38 @@
 }
 
 /* =============================
+   GESTION AUCUN RÉSULTAT
+   ============================= */
+.noResults {
+  display: flex;
+  align-items: center;
+  padding: var(--tc-space-3);
+  color: var(--tc-color-gray-600);
+  background-color: var(--tc-color-gray-50);
+}
+
+.noResultsIcon {
+  margin-right: var(--tc-space-2);
+  color: var(--tc-color-gray-500);
+  font-size: var(--tc-font-size-lg);
+}
+
+.noResultsText {
+  flex: 1;
+}
+
+.noResultsMessage {
+  font-weight: var(--tc-font-weight-medium);
+  color: var(--tc-color-gray-700);
+  margin-bottom: var(--tc-space-1);
+}
+
+.noResultsHint {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-color-gray-500);
+}
+
+/* =============================
    RESPONSIVE DESIGN
    ============================= */
 @media (max-width: var(--tc-breakpoint-md)) {

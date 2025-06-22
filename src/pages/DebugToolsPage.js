@@ -34,6 +34,10 @@ import FestitestContactFinder from '@/components/debug/FestitestContactFinder';
 import ContactMigrationTool from '@/components/debug/ContactMigrationTool';
 import SophieMadetMigration from '@/components/debug/SophieMadetMigration';
 import TagsHierarchyDebug from '@/components/debug/TagsHierarchyDebug';
+import HybridFormatNormalizer from '@/components/debug/HybridFormatNormalizer';
+import RelationalMigrationFixer from '@/components/debug/RelationalMigrationFixer';
+import CheckStructureMigration from '@/components/debug/CheckStructureMigration';
+import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -86,6 +90,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="concert-contacts" title="👥 Contacts Concerts">
           <ConcertContactsDebug />
+        </Tab>
+        
+        <Tab eventKey="test-delete" title="🗑️ Test Suppression">
+          <TestDeleteContactDebug />
         </Tab>
         
         <Tab eventKey="lists" title="Diagnostic des listes">
@@ -206,6 +214,18 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="tags-hierarchy-debug" title="🏷️ Debug Tags Hiérarchie">
           <TagsHierarchyDebug />
+        </Tab>
+        
+        <Tab eventKey="hybrid-format-normalizer" title="🔧 Normalisation Formats Hybrides">
+          <HybridFormatNormalizer />
+        </Tab>
+        
+        <Tab eventKey="relational-migration-fixer" title="🔗 Correction Migration Relationnelle">
+          <RelationalMigrationFixer />
+        </Tab>
+        
+        <Tab eventKey="check-structure-migration" title="🔍 Vérifier Migration Structure">
+          <CheckStructureMigration />
         </Tab>
       </Tabs>
     </div>

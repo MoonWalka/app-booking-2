@@ -16,6 +16,7 @@ export const ContactModalsProvider = ({ children }) => {
   const [showPersonneModal, setShowPersonneModal] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [commentModalData, setCommentModalData] = useState(null);
+  const [personneModalData, setPersonneModalData] = useState(null);
 
   const openStructureModal = () => {
     setShowStructureModal(true);
@@ -25,12 +26,14 @@ export const ContactModalsProvider = ({ children }) => {
     setShowStructureModal(false);
   };
 
-  const openPersonneModal = () => {
+  const openPersonneModal = (data = null) => {
+    setPersonneModalData(data);
     setShowPersonneModal(true);
   };
 
   const closePersonneModal = () => {
     setShowPersonneModal(false);
+    setPersonneModalData(null);
   };
 
   const openCommentModal = (data = null) => {
@@ -48,6 +51,7 @@ export const ContactModalsProvider = ({ children }) => {
     showPersonneModal,
     showCommentModal,
     commentModalData,
+    personneModalData,
     openStructureModal,
     closeStructureModal,
     openPersonneModal,

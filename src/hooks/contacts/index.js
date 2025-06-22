@@ -25,4 +25,5 @@ export { default as useCompanySearch } from './useCompanySearch';
 export { default as useConcertSearch } from './useConcertSearch';
 export { default as useFormSubmission } from './useFormSubmission';
 export { default as useDeleteContact } from './useDeleteContact';
+export { default as useDeleteContactRelational } from './useDeleteContactRelational';
 export { default as useHistoriqueEchanges } from './useHistoriqueEchanges';

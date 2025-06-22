@@ -1,7 +1,7 @@
 {
   "indexes": [
     {
-      "collectionGroup": "concerts",
+      "collectionGroup": "structures",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -9,49 +9,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "contacts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "nom",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "artistes",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "nom",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "lieux",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "nom",
+          "fieldPath": "raisonSociale",
           "order": "ASCENDING"
         }
       ]
@@ -65,99 +23,61 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "nom",
+          "fieldPath": "isClient",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "concerts",
+      "collectionGroup": "structures",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "programmateurId",
+          "fieldPath": "organizationId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "date",
-          "order": "ASCENDING"
+          "fieldPath": "tags",
+          "arrayConfig": "CONTAINS"
         }
       ]
     },
     {
-      "collectionGroup": "concerts",
+      "collectionGroup": "structures",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "lieuId",
+          "fieldPath": "organizationId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "date",
-          "order": "ASCENDING"
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "concerts",
+      "collectionGroup": "personnes",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "artisteId",
+          "fieldPath": "organizationId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "date",
+          "fieldPath": "email",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "concerts",
+      "collectionGroup": "personnes",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "structureId",
+          "fieldPath": "organizationId",
           "order": "ASCENDING"
         },
-        {
-          "fieldPath": "date",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "concerts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "statut",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "programmateurs",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "structureId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "nom",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "programmateurs",
-      "queryScope": "COLLECTION",
-      "fields": [
         {
           "fieldPath": "nom",
           "order": "ASCENDING"
@@ -169,35 +89,7 @@
       ]
     },
     {
-      "collectionGroup": "lieux",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "ville",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "nom",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "artistes",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "style",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "nom",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "formulaires",
+      "collectionGroup": "personnes",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -205,13 +97,13 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "concertId",
+          "fieldPath": "isPersonneLibre",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "contrats",
+      "collectionGroup": "personnes",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -219,41 +111,95 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "concertId",
+          "fieldPath": "tags",
+          "arrayConfig": "CONTAINS"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "liaisons",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "organizationId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "structureId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "personneId",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "contrats",
+      "collectionGroup": "liaisons",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "concertId",
+          "fieldPath": "organizationId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "dateCreation",
+          "fieldPath": "actif",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "liaisons",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "organizationId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "prioritaire",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "liaisons",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "structureId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "actif",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "prioritaire",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "contrats",
+      "collectionGroup": "liaisons",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "programmateurId",
+          "fieldPath": "personneId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "dateCreation",
+          "fieldPath": "actif",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dateDebut",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "relances",
+      "collectionGroup": "qualifications",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -261,13 +207,17 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "dateEcheance",
+          "fieldPath": "parentId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ordre",
           "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "relances",
+      "collectionGroup": "qualifications",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -275,128 +225,15 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "status",
+          "fieldPath": "type",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "dateEcheance",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "relances",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "entityType",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "entityId",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "historique_echanges",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "contactId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "historique_echanges",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "concertId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "historique_echanges",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "rappel",
+          "fieldPath": "actif",
           "order": "ASCENDING"
         }
       ]
     }
   ],
-  "fieldOverrides": [
-    {
-      "collectionGroup": "concerts",
-      "fieldPath": "date",
-      "indexes": [
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION"
-        },
-        {
-          "order": "DESCENDING",
-          "queryScope": "COLLECTION"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "programmateurs",
-      "fieldPath": "nom",
-      "indexes": [
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "lieux",
-      "fieldPath": "nom",
-      "indexes": [
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "artistes",
-      "fieldPath": "nom",
-      "indexes": [
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION"
-        }
-      ]
-    }
-  ]
-} 
+  "fieldOverrides": []
+}

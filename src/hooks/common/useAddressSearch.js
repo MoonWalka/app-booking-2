@@ -88,7 +88,17 @@ const useAddressSearch = (options = {}) => {
     }
 
     try {
-      const results = await searchAddress(query);
+      let results = await searchAddress(query);
+      
+      // ✅ RECHERCHE PROGRESSIVE: Si aucun résultat avec adresse complète, essayer sans le numéro
+      if (results.length === 0 && /^\d+\s+/.test(query)) {
+        const queryWithoutNumber = query.replace(/^\d+\s+/, '');
+        if (queryWithoutNumber.trim().length >= 3) {
+          console.log(`Aucun résultat pour "${query}", essai sans numéro: "${queryWithoutNumber}"`);
+          results = await searchAddress(queryWithoutNumber);
+        }
+      }
+      
       setAddressResults(results);
       setShowResults(true);
     } catch (error) {
@@ -134,6 +144,8 @@ const useAddressSearch = (options = {}) => {
       let ville = '';
       let adresse = '';
       let pays = 'France';
+      let departement = '';
+      let region = '';
       
       // Extract address components
       if (address.address) {
@@ -145,6 +157,17 @@ const useAddressSearch = (options = {}) => {
         
         // Extract country
         pays = address.address.country || pays;
+        
+        // ✅ AMÉLIORATION: Extraction département et région
+        // Extraire le département depuis différents champs possibles
+        departement = address.address.county || 
+                     address.address.state_district || 
+                     address.address.administrative_area_level_2 || '';
+        
+        // Extraire la région depuis différents champs possibles  
+        region = address.address.state || 
+                address.address.region || 
+                address.address.administrative_area_level_1 || '';
         
         // Build street address
         const houseNumber = address.address.house_number || '';
@@ -158,6 +181,8 @@ const useAddressSearch = (options = {}) => {
         codePostal,
         ville,
         pays,
+        departement,
+        region,
         latitude: address.lat,
         longitude: address.lon
       });

@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Container, Card, Badge, Alert } from 'react-bootstrap';
-import { collection, query, where, onSnapshot } from '@/services/firebase-service';
-import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
+import { useContactsRelational } from '@/hooks/contacts/useContactsRelational';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { useDeleteContact } from '@/hooks/contacts';
 
 /**
- * Liste des contacts filtrée par tag
+ * Liste des contacts filtrée par tag - MODÈLE RELATIONNEL
+ * Utilise useContactsRelational pour filtrer structures et personnes par tags
  * Utilisée dans les onglets ouverts depuis la gestion des tags
  */
 function ContactsListFiltered({ filterTag, filterType, usageCount }) {
-  const { currentOrganization } = useOrganization();
+  useOrganization(); // Pour le contexte
   const { openContactTab } = useTabs();
-  const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Utiliser le hook relationnel
+  const { 
+    structures, 
+    personnes, 
+    loading, 
+    error 
+  } = useContactsRelational();
 
   // Callback après suppression
   const onDeleteSuccess = () => {
@@ -26,58 +31,59 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
   
   const { handleDelete: handleDeleteContact } = useDeleteContact(onDeleteSuccess);
 
-  // Chargement des contacts filtrés par tag
-  useEffect(() => {
-    if (!currentOrganization?.id || !filterTag) {
-      setLoading(false);
-      return;
-    }
-
-    console.log(`🔍 Chargement contacts avec tag "${filterTag}" (type: ${filterType})...`);
+  // Filtrer les contacts par tag depuis le modèle relationnel
+  const filteredContacts = useMemo(() => {
+    if (!filterTag) return [];
     
-    // Requête pour les contacts avec le tag spécifique
-    const contactsQuery = query(
-      collection(db, 'contacts_unified'),
-      where('organizationId', '==', currentOrganization.id),
-      where('qualification.tags', 'array-contains', filterTag)
-    );
+    console.log(`🔍 Filtrage contacts avec tag "${filterTag}" (type: ${filterType})...`);
     
-    const unsubscribe = onSnapshot(
-      contactsQuery,
-      (snapshot) => {
-        try {
-          const contactsData = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-            // Assurer la compatibilité avec ListWithFilters
-            type: doc.data().type || 'personne',
-            displayName: doc.data().nom || 'Sans nom',
-            email: doc.data().email || '',
-            telephone: doc.data().telephone || '',
-            adresse: doc.data().adresse || {},
-            qualification: doc.data().qualification || {}
-          }));
-
-          console.log(`✅ ${contactsData.length} contacts trouvés avec tag "${filterTag}"`);
-          setContacts(contactsData);
-          setError(null);
-        } catch (err) {
-          console.error('❌ Erreur lors du chargement des contacts filtrés:', err);
-          setError('Erreur lors du chargement des contacts');
-          setContacts([]);
-        } finally {
-          setLoading(false);
-        }
-      },
-      (err) => {
-        console.error('❌ Erreur snapshot contacts filtrés:', err);
-        setError('Erreur de connexion à la base de données');
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [currentOrganization?.id, filterTag, filterType, refreshKey]);
+    const contacts = [];
+    
+    // Filtrer les structures par tag
+    structures
+      .filter(structure => structure.tags && structure.tags.includes(filterTag))
+      .forEach(structure => {
+        contacts.push({
+          id: structure.id,
+          entityType: 'structure',
+          type: 'structure',
+          nom: structure.raisonSociale || 'Structure sans nom',
+          raisonSociale: structure.raisonSociale,
+          displayName: structure.raisonSociale || 'Structure sans nom',
+          email: structure.email || '',
+          telephone: structure.telephone1 || '',
+          ville: structure.ville || '',
+          tags: structure.tags || [],
+          isClient: structure.isClient,
+          createdAt: structure.createdAt,
+          updatedAt: structure.updatedAt
+        });
+      });
+    
+    // Filtrer les personnes par tag
+    personnes
+      .filter(personne => personne.tags && personne.tags.includes(filterTag))
+      .forEach(personne => {
+        contacts.push({
+          id: personne.id,
+          entityType: personne.isPersonneLibre ? 'personne_libre' : 'personne',
+          type: 'personne',
+          nom: personne.nom || '',
+          prenom: personne.prenom || '',
+          displayName: `${personne.prenom || ''} ${personne.nom || ''}`.trim() || 'Personne sans nom',
+          email: personne.email || '',
+          telephone: personne.telephone || '',
+          ville: personne.ville || '',
+          tags: personne.tags || [],
+          isPersonneLibre: personne.isPersonneLibre,
+          createdAt: personne.createdAt,
+          updatedAt: personne.updatedAt
+        });
+      });
+    
+    console.log(`✅ ${contacts.length} contacts trouvés avec tag "${filterTag}"`);
+    return contacts;
+  }, [structures, personnes, filterTag, filterType, refreshKey]);
 
   // Configuration pour ListWithFilters
   const listConfig = {
@@ -96,9 +102,19 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
         <Badge bg="info" className="small">
           {contact.type === 'structure' ? 'Structure' : 'Personne'}
         </Badge>
-        {contact.qualification?.tags?.length > 0 && (
+        {contact.tags?.length > 0 && (
           <Badge bg="secondary" className="small">
-            {contact.qualification.tags.length} tags
+            {contact.tags.length} tags
+          </Badge>
+        )}
+        {contact.isClient && (
+          <Badge bg="success" className="small ms-1">
+            Client
+          </Badge>
+        )}
+        {contact.isPersonneLibre && (
+          <Badge bg="warning" className="small ms-1">
+            Libre
           </Badge>
         )}
       </div>
@@ -144,11 +160,17 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
       render: (contact) => contact.telephone || '-'
     },
     {
+      key: 'ville',
+      label: 'Ville',
+      sortable: true,
+      render: (contact) => contact.ville || '-'
+    },
+    {
       key: 'tags',
       label: 'Tags',
       render: (contact) => (
         <div className="d-flex flex-wrap gap-1">
-          {contact.qualification?.tags?.map((tag, index) => (
+          {contact.tags?.map((tag, index) => (
             <Badge 
               key={index} 
               bg={tag === filterTag ? 'warning' : 'light'} 
@@ -189,13 +211,13 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
             </small>
           </div>
           <Badge bg="primary" className="fs-6">
-            {contacts.length} résultat{contacts.length > 1 ? 's' : ''}
+            {filteredContacts.length} résultat{filteredContacts.length > 1 ? 's' : ''}
           </Badge>
         </Card.Header>
       </Card>
 
       <ListWithFilters
-        data={contacts}
+        data={filteredContacts}
         config={listConfig}
         columns={columns}
         loading={loading}

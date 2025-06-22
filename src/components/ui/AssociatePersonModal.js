@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { collection, query, orderBy, getDocs, limit, startAfter } from 'firebase/firestore';
-import { db } from '@/services/firebase-service';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useOrganization } from '@/context/OrganizationContext';
+import { personnesService } from '@/services/contacts/personnesService';
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { createPortal } from 'react-dom';
@@ -15,60 +15,55 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
   const [filteredPersonnes, setFilteredPersonnes] = useState([]);
   const [selectedPersonnes, setSelectedPersonnes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc' ou 'desc'
   
+  const { currentOrganization } = useOrganization();
   const { openTab } = useTabs();
   const { openPersonneModal } = useContactModals();
   const itemsPerPage = 10;
 
-  // Charger les personnes depuis Firestore
+  // Charger les personnes depuis le modèle relationnel
   const loadPersonnes = async (page = 1) => {
+    if (!currentOrganization?.id) {
+      console.warn('Organisation manquante pour charger les personnes');
+      return;
+    }
+
     setLoading(true);
+    setError(null);
     try {
-      const personnesRef = collection(db, 'contacts_unified');
-      const q = query(
-        personnesRef,
-        limit(itemsPerPage * 5) // Charger plus d'éléments pour compenser le filtrage
-      );
+      console.log('🔄 [AssociatePersonModal] Chargement des personnes pour organisation:', currentOrganization.id);
       
-      const snapshot = await getDocs(q);
-      const personnesData = [];
+      // Charger toutes les personnes de l'organisation
+      const result = await personnesService.listPersonnes(currentOrganization.id);
       
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        
-        // Nouveau format unifié
-        if (data.personne && (data.personne.nom || data.personne.prenom)) {
-          personnesData.push({
-            id: doc.id,
-            nom: `${data.personne.prenom || ''} ${data.personne.nom || ''}`.trim(),
-            prenom: data.personne.prenom || '',
-            nomFamille: data.personne.nom || '',
-            fonction: data.personne.fonction || '',
-            email: data.personne.email || '',
-            telephone: data.personne.telephone || data.personne.mobile || '',
-            structures: [], // TODO: Récupérer les structures associées
-            ...data
-          });
-        }
-        // Ancien format (partiellement migré) - personne libre
-        else if ((data.type === 'personne' || data.type === 'mixte') && 
-                 (data.nom || data.prenom)) {
-          personnesData.push({
-            id: doc.id,
-            nom: `${data.prenom || ''} ${data.nom || ''}`.trim(),
-            prenom: data.prenom || '',
-            nomFamille: data.nom || '',
-            fonction: data.fonction || '',
-            email: data.email || data.mailDirect || '',
-            telephone: data.telephone || data.mobile || data.telDirect || '',
-            structures: [],
-            ...data
-          });
-        }
-      });
+      console.log('📋 [AssociatePersonModal] Personnes trouvées:', result.data?.length || 0);
+      
+      // Vérifier si la requête a réussi
+      if (!result.success) {
+        throw new Error(result.error || 'Erreur lors du chargement des personnes');
+      }
+      
+      const allPersonnes = result.data || [];
+      
+      // Transformer les données pour l'affichage
+      const personnesData = allPersonnes.map(personne => ({
+        id: personne.id,
+        nom: `${personne.prenom || ''} ${personne.nom || ''}`.trim() || 'Personne sans nom',
+        prenom: personne.prenom || '',
+        nomFamille: personne.nom || '',
+        fonction: personne.fonction || '',
+        email: personne.email || '',
+        telephone: personne.telephone || personne.telephone2 || '',
+        ville: personne.ville || '',
+        isPersonneLibre: personne.isPersonneLibre || false,
+        tags: personne.tags || [],
+        // Données complètes pour référence
+        _originalData: personne
+      }));
       
       // Trier par nom après récupération
       personnesData.sort((a, b) => {
@@ -80,10 +75,12 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
       });
       
       setPersonnes(personnesData);
-      // Calculer le nombre total de pages (approximatif)
       setTotalPages(Math.ceil(personnesData.length / itemsPerPage));
+      
+      console.log('✅ [AssociatePersonModal] Personnes chargées avec succès');
     } catch (error) {
-      console.error('Erreur lors du chargement des personnes:', error);
+      console.error('❌ [AssociatePersonModal] Erreur lors du chargement des personnes:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -108,17 +105,14 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
 
   // Charger les données au montage du composant
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && currentOrganization?.id) {
+      console.log('🔍 [DEBUG AssociatePersonModal] - Ouverture modal');
+      console.log('📋 Organisation courante:', currentOrganization.id);
+      console.log('📋 existingPersonIds à l\'ouverture:', existingPersonIds);
       loadPersonnes();
     }
-  }, [isOpen, sortOrder]);
+  }, [isOpen, sortOrder, currentOrganization?.id, existingPersonIds, loadPersonnes]);
 
-  // Fonction publique pour rafraîchir la liste (utile après création d'une nouvelle personne)
-  const refreshPersonnes = useCallback(() => {
-    if (isOpen) {
-      loadPersonnes(currentPage);
-    }
-  }, [isOpen, currentPage]);
 
   // Gérer la sélection des personnes
   const handlePersonSelection = (personneId) => {
@@ -168,6 +162,27 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
   // Associer les personnes sélectionnées
   const handleAssociate = () => {
     const selectedPersonnesData = filteredPersonnes.filter(p => selectedPersonnes.includes(p.id));
+    
+    // 🔍 DEBUG: Tracer les données envoyées
+    console.log('🔍 [DEBUG AssociatePersonModal] - Envoi association');
+    console.log('📋 selectedPersonnes IDs:', selectedPersonnes);
+    console.log('📋 existingPersonIds reçus:', existingPersonIds);
+    console.log('📋 selectedPersonnesData à envoyer:', selectedPersonnesData.map(p => ({
+      id: p.id,
+      nom: p.nom,
+      entityType: p.entityType,
+      hasPersonneNested: !!p.personne,
+      keys: Object.keys(p).slice(0, 10)
+    })));
+    
+    // Vérifier si les personnes sélectionnées sont censées être exclues
+    selectedPersonnesData.forEach(p => {
+      const shouldBeExcluded = existingPersonIds.includes(p.id);
+      if (shouldBeExcluded) {
+        console.log(`⚠️  PROBLÈME - Personne ${p.id} devrait être exclue mais est sélectionnée!`);
+      }
+    });
+    
     onAssociate(selectedPersonnesData);
     onClose();
   };
@@ -230,7 +245,15 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
           {loading ? (
             <div className={styles.loading}>
               <i className="bi bi-arrow-clockwise spinning"></i>
-              Chargement...
+              Chargement des personnes...
+            </div>
+          ) : error ? (
+            <div className={styles.error}>
+              <i className="bi bi-exclamation-triangle"></i>
+              Erreur: {error}
+              <button onClick={() => loadPersonnes()} className={styles.retryButton}>
+                <i className="bi bi-arrow-clockwise"></i> Réessayer
+              </button>
             </div>
           ) : (
             <table className={styles.resultsTable}>
@@ -278,6 +301,12 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
                         <div className={styles.personInfo}>
                           <strong>{personne.nom}</strong>
                           {personne.fonction && <div className={styles.fonction}>{personne.fonction}</div>}
+                          {personne.ville && <div className={styles.ville}><i className="bi bi-geo-alt"></i> {personne.ville}</div>}
+                          {personne.isPersonneLibre && (
+                            <div className={styles.personneLibre}>
+                              <i className="bi bi-person-dash"></i> Personne libre
+                            </div>
+                          )}
                           {isAlreadyAssociated && (
                             <div className={styles.alreadyAssociated}>
                               <i className="bi bi-check-circle-fill"></i> Déjà associée
@@ -289,6 +318,14 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
                         <div className={styles.contactsInfo}>
                           {personne.email && <div><i className="bi bi-envelope"></i> {personne.email}</div>}
                           {personne.telephone && <div><i className="bi bi-telephone"></i> {personne.telephone}</div>}
+                          {personne.tags && personne.tags.length > 0 && (
+                            <div className={styles.tags}>
+                              {personne.tags.slice(0, 2).map((tag, idx) => (
+                                <span key={idx} className={styles.tag}>{tag}</span>
+                              ))}
+                              {personne.tags.length > 2 && <span className={styles.moreTags}>+{personne.tags.length - 2}</span>}
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>

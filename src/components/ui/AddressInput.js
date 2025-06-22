@@ -58,9 +58,9 @@ const AddressInput = ({
 
   // Gérer la sélection d'une adresse
   const handleSelect = (address) => {
-    // Bloquer l'affichage des résultats pendant 500ms
-    setIsSelecting(true);
+    // Fermer immédiatement et bloquer l'affichage
     setShowResults(false);
+    setIsSelecting(true);
     
     if (blockTimeoutRef.current) {
       clearTimeout(blockTimeoutRef.current);
@@ -68,13 +68,15 @@ const AddressInput = ({
     
     blockTimeoutRef.current = setTimeout(() => {
       setIsSelecting(false);
-    }, 500);
+    }, 1000); // Délai plus long pour éviter la réouverture
     
     // Extraire les informations d'adresse
     let street = '';
     let postalCode = '';
     let city = '';
     let country = 'France';
+    let department = '';
+    let region = '';
 
     if (address.address) {
       street = address.address.house_number 
@@ -83,6 +85,15 @@ const AddressInput = ({
       postalCode = address.address.postcode || '';
       city = address.address.city || address.address.town || address.address.village || '';
       country = address.address.country || 'France';
+      
+      // Extraire département et région avec les mêmes champs que useAddressSearch
+      department = address.address.county || 
+                  address.address.state_district || 
+                  address.address.administrative_area_level_2 || '';
+      
+      region = address.address.state || 
+              address.address.region || 
+              address.address.administrative_area_level_1 || '';
     }
 
     // Adresse complète à afficher
@@ -113,6 +124,8 @@ const AddressInput = ({
           codePostal: postalCode,
           ville: city,
           pays: country,
+          departement: department,
+          region: region,
           latitude: address.lat,
           longitude: address.lon,
           display_name: address.display_name
@@ -154,37 +167,51 @@ const AddressInput = ({
       </div>
       
       {/* Suggestions d'adresse */}
-      {showResults && addressResults.length > 0 && !isSelecting && (
+      {showResults && !isSelecting && (
         <div className={styles.suggestions} ref={dropdownRef}>
-          {addressResults.map((suggestion, index) => (
-            <div
-              key={index}
-              className={styles.suggestionItem}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleSelect(suggestion);
-              }}
-              onMouseDown={(e) => {
-                // Empêcher le blur de l'input qui pourrait fermer le dropdown prématurément
-                e.preventDefault();
-              }}
-            >
-              <div className={styles.suggestionIcon}>
-                <i className="bi bi-geo-alt-fill"></i>
+          {addressResults.length > 0 ? (
+            addressResults.map((suggestion, index) => (
+              <div
+                key={index}
+                className={styles.suggestionItem}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleSelect(suggestion);
+                }}
+                onMouseDown={(e) => {
+                  // Empêcher le blur de l'input qui pourrait fermer le dropdown prématurément
+                  e.preventDefault();
+                }}
+              >
+                <div className={styles.suggestionIcon}>
+                  <i className="bi bi-geo-alt-fill"></i>
+                </div>
+                <div className={styles.suggestionText}>
+                  <div className={styles.suggestionName}>{suggestion.display_name}</div>
+                  {suggestion.address && (
+                    <div className={styles.suggestionDetails}>
+                      {suggestion.address.postcode && suggestion.address.city && (
+                        <span>{suggestion.address.postcode} {suggestion.address.city}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className={styles.suggestionText}>
-                <div className={styles.suggestionName}>{suggestion.display_name}</div>
-                {suggestion.address && (
-                  <div className={styles.suggestionDetails}>
-                    {suggestion.address.postcode && suggestion.address.city && (
-                      <span>{suggestion.address.postcode} {suggestion.address.city}</span>
-                    )}
-                  </div>
-                )}
+            ))
+          ) : (
+            searchTerm && searchTerm.length >= 3 && !isSearching && (
+              <div className={styles.noResults}>
+                <div className={styles.noResultsIcon}>
+                  <i className="bi bi-search"></i>
+                </div>
+                <div className={styles.noResultsText}>
+                  <div className={styles.noResultsMessage}>Aucune adresse trouvée</div>
+                  <div className={styles.noResultsHint}>Essayez de modifier votre recherche</div>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
       )}
       

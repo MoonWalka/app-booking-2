@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTabs } from '@/context/TabsContext';
 import ContactEntityTable from './ContactEntityTable';
-import styles from './ContactDatesTable.module.css';
 import tableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
 
 /**

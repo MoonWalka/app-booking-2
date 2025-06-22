@@ -18,7 +18,9 @@ function ContactPersonsSection({
   navigateToEntity,
   onEditStructure,
   onOpenStructureFiche,
-  onAddCommentToStructure
+  onAddCommentToStructure,
+  onTogglePrioritaire,
+  onToggleActif
 }) {
   if (isStructure) {
     // Pour les structures, afficher les personnes associées
@@ -47,6 +49,26 @@ function ContactPersonsSection({
                       return 'Indépendant'; // Par défaut
                     }
                   })()}
+                  badges={[
+                    // Badge prioritaire si défini
+                    ...(personne.prioritaire || personne.liaison?.prioritaire ? [{
+                      text: 'Prioritaire',
+                      variant: 'warning',
+                      icon: 'bi-star-fill'
+                    }] : []),
+                    // Badge intéressé si défini
+                    ...(personne.interesse || personne.liaison?.interesse ? [{
+                      text: 'Intéressé',
+                      variant: 'info',
+                      icon: 'bi-heart'
+                    }] : []),
+                    // Badge inactif si la liaison est inactive
+                    ...((personne.actif === false || personne.liaison?.actif === false) ? [{
+                      text: 'Inactif',
+                      variant: 'secondary',
+                      icon: 'bi-pause-circle'
+                    }] : [])
+                  ]}
                   onClick={() => {
                     console.log('[ContactPersonsSection] Clic sur personne:', personne);
                   }}
@@ -74,6 +96,21 @@ function ContactPersonsSection({
                       variant: 'Secondary',
                       onClick: () => onAddCommentToPerson(personne)
                     },
+                    // Actions pour les statuts relationnels
+                    ...(onTogglePrioritaire ? [{
+                      icon: personne.prioritaire || personne.liaison?.prioritaire ? 'bi-star-fill' : 'bi-star',
+                      label: personne.prioritaire || personne.liaison?.prioritaire ? 'Retirer priorité' : 'Marquer prioritaire',
+                      tooltip: personne.prioritaire || personne.liaison?.prioritaire ? 'Retirer de la priorité' : 'Marquer comme prioritaire',
+                      variant: personne.prioritaire || personne.liaison?.prioritaire ? 'warning' : 'outline-warning',
+                      onClick: () => onTogglePrioritaire(personne)
+                    }] : []),
+                    ...(onToggleActif ? [{
+                      icon: (personne.actif === false || personne.liaison?.actif === false) ? 'bi-play-circle' : 'bi-pause-circle',
+                      label: (personne.actif === false || personne.liaison?.actif === false) ? 'Réactiver' : 'Désactiver',
+                      tooltip: (personne.actif === false || personne.liaison?.actif === false) ? 'Réactiver cette liaison' : 'Désactiver cette liaison',
+                      variant: (personne.actif === false || personne.liaison?.actif === false) ? 'success' : 'outline-secondary',
+                      onClick: () => onToggleActif(personne)
+                    }] : []),
                     {
                       icon: 'bi-link-45deg',
                       label: 'Dissocier',
@@ -96,51 +133,103 @@ function ContactPersonsSection({
       </div>
     );
   } else {
-    // Pour les personnes, afficher la structure associée - VERSION ENRICHIE
+    // Pour les personnes, afficher les structures associées
+    const structures = structureData?.structures || [];
+    
     return (
       <div className={styles.structureContent}>
-        {structureData?.structureRaisonSociale ? (
+        {structures.length > 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', maxHeight: '100%', overflowY: 'auto' }}>
+            {structures.map((structure) => (
+              <EntityCard
+                key={structure.id}
+                entityType="structure"
+                name={structure.raisonSociale || 'Structure sans nom'}
+                subtitle={(() => {
+                  const parts = [];
+                  if (structure.type) parts.push(structure.type);
+                  if (structure.fonction) parts.push(`Fonction: ${structure.fonction}`);
+                  return parts.join(' • ') || 'Structure';
+                })()}
+                onClick={() => {
+                  if (structure.id) {
+                    navigateToEntity('structure', structure.id, structure.raisonSociale);
+                  }
+                }}
+                icon={<i className="bi bi-building" style={{ fontSize: '1.2rem' }}></i>}
+                compact={true}
+                badges={[
+                  ...(structure.prioritaire ? [{
+                    text: 'Prioritaire',
+                    variant: 'warning',
+                    icon: 'bi-star-fill'
+                  }] : []),
+                  ...(structure.interesse ? [{
+                    text: 'Intéressé',
+                    variant: 'success',
+                    icon: 'bi-hand-thumbs-up'
+                  }] : []),
+                  ...(structure.actif === false ? [{
+                    text: 'Inactif',
+                    variant: 'secondary',
+                    icon: 'bi-pause-circle'
+                  }] : [])
+                ]}
+                actions={[
+                  {
+                    icon: 'bi-eye',
+                    label: 'Ouvrir',
+                    tooltip: 'Ouvrir la fiche structure',
+                    variant: 'Primary',
+                    onClick: () => navigateToEntity('structure', structure.id, structure.raisonSociale)
+                  }
+                ]}
+              />
+            ))}
+          </div>
+        ) : structureData?.structureRaisonSociale ? (
+          // Fallback pour l'ancien format (personne dans une structure unique)
           <div style={{ maxWidth: '350px' }}>
             <EntityCard
-            entityType="structure"
-            name={structureData.structureRaisonSociale}
-            subtitle={formatActivityTags(structureData.tags || [], 'Structure')}
-            onClick={() => {
-              if (structureData?.structureId) {
-                navigateToEntity('structure', structureData.structureId, structureData.structureRaisonSociale);
-              } else if (structureData.id) {
-                const originalId = structureData.id?.replace('unified_structure_', '');
-                if (originalId) {
-                  navigateToEntity('structure', originalId, structureData.structureRaisonSociale);
+              entityType="structure"
+              name={structureData.structureRaisonSociale}
+              subtitle={formatActivityTags(structureData.tags || [], 'Structure')}
+              onClick={() => {
+                if (structureData?.structureId) {
+                  navigateToEntity('structure', structureData.structureId, structureData.structureRaisonSociale);
+                } else if (structureData.id) {
+                  const originalId = structureData.id?.replace('unified_structure_', '');
+                  if (originalId) {
+                    navigateToEntity('structure', originalId, structureData.structureRaisonSociale);
+                  }
                 }
-              }
-            }}
-            icon={<i className="bi bi-building" style={{ fontSize: '1.2rem' }}></i>}
-            compact={true}
-            actions={[
-              {
-                icon: 'bi-eye',
-                label: 'Ouvrir',
-                tooltip: 'Ouvrir la fiche structure',
-                variant: 'Primary',
-                onClick: () => onOpenStructureFiche && onOpenStructureFiche(structureData)
-              },
-              {
-                icon: 'bi-pencil',
-                label: 'Modifier',
-                tooltip: 'Modifier cette structure',
-                variant: 'Secondary',
-                onClick: () => onEditStructure && onEditStructure(structureData)
-              },
-              {
-                icon: 'bi-chat-quote',
-                label: 'Commentaire',
-                tooltip: 'Ajouter un commentaire',
-                variant: 'Secondary',
-                onClick: () => onAddCommentToStructure && onAddCommentToStructure(structureData)
-              }
-            ].filter(action => action.onClick)}
-          />
+              }}
+              icon={<i className="bi bi-building" style={{ fontSize: '1.2rem' }}></i>}
+              compact={true}
+              actions={[
+                {
+                  icon: 'bi-eye',
+                  label: 'Ouvrir',
+                  tooltip: 'Ouvrir la fiche structure',
+                  variant: 'Primary',
+                  onClick: () => onOpenStructureFiche && onOpenStructureFiche(structureData)
+                },
+                {
+                  icon: 'bi-pencil',
+                  label: 'Modifier',
+                  tooltip: 'Modifier cette structure',
+                  variant: 'Secondary',
+                  onClick: () => onEditStructure && onEditStructure(structureData)
+                },
+                {
+                  icon: 'bi-chat-quote',
+                  label: 'Commentaire',
+                  tooltip: 'Ajouter un commentaire',
+                  variant: 'Secondary',
+                  onClick: () => onAddCommentToStructure && onAddCommentToStructure(structureData)
+                }
+              ].filter(action => action.onClick)}
+            />
           </div>
         ) : (
           <div className={styles.emptyStructure}>

@@ -16,6 +16,7 @@ function ContactModalsContainer() {
     showPersonneModal,
     showCommentModal,
     commentModalData,
+    personneModalData,
     closeStructureModal,
     closePersonneModal,
     closeCommentModal
@@ -26,8 +27,9 @@ function ContactModalsContainer() {
   // Callback pour la création de structure
   const handleStructureCreated = (newStructure) => {
     console.log('Structure créée depuis modal globale:', newStructure);
-    // Ouvrir l'onglet de la nouvelle structure
-    openContactTab(newStructure.id, newStructure.structureRaisonSociale);
+    // Ouvrir l'onglet de la nouvelle structure avec le viewType structure
+    const displayName = newStructure.raisonSociale || newStructure.structureRaisonSociale || 'Nouvelle structure';
+    openContactTab(newStructure.id, displayName, 'structure');
     // Fermer la modal
     closeStructureModal();
   };
@@ -35,8 +37,10 @@ function ContactModalsContainer() {
   // Callback pour la création de personne
   const handlePersonneCreated = (newPersonne) => {
     console.log('Personne créée depuis modal globale:', newPersonne);
-    // Ouvrir l'onglet de la nouvelle personne
-    openContactTab(newPersonne.id, `${newPersonne.prenom} ${newPersonne.nom}`);
+    // Ouvrir l'onglet de la nouvelle personne avec le viewType approprié
+    const displayName = `${newPersonne.prenom || ''} ${newPersonne.nom || ''}`.trim() || 'Nouvelle personne';
+    const viewType = newPersonne.isPersonneLibre ? 'personne_libre' : 'personne';
+    openContactTab(newPersonne.id, displayName, viewType);
     // Fermer la modal
     closePersonneModal();
   };
@@ -66,6 +70,7 @@ function ContactModalsContainer() {
         show={showPersonneModal}
         onHide={closePersonneModal}
         onCreated={handlePersonneCreated}
+        structureId={personneModalData?.structureId}
       />
 
       {/* Modal de création/édition de commentaire */}

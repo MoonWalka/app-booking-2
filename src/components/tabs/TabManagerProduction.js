@@ -229,6 +229,16 @@ const TabManagerProduction = () => {
             key={activeTab.id}
             id={activeTab.params?.structureId} 
           />;
+        case 'ContactDetailsPage':
+          // Afficher les détails d'un contact (structure ou personne)
+          console.log('[DEBUG TabManager] activeTab pour ContactDetailsPage:', activeTab);
+          console.log('[DEBUG TabManager] contactId passé:', activeTab.params?.contactId);
+          console.log('[DEBUG TabManager] viewType passé:', activeTab.params?.viewType);
+          return <ContactViewTabs 
+            key={activeTab.id}
+            id={activeTab.params?.contactId} 
+            viewType={activeTab.params?.viewType}
+          />;
         case 'ArtistesPage':
           // Afficher directement la liste des artistes
           return <ArtistesList />;

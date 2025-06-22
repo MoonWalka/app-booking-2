@@ -1,18 +1,21 @@
 // src/components/contacts/modal/PersonneCreationModal.js
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
-import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useAuth } from '@/context/AuthContext';
+import { personnesService } from '@/services/contacts/personnesService';
+import liaisonsService from '@/services/contacts/liaisonsService';
 import AddressInput from '@/components/ui/AddressInput';
 import styles from './StructureCreationModal.module.css'; // Réutiliser les styles
 
 /**
- * Modal de création d'une nouvelle personne
+ * Modal de création d'une nouvelle personne - MODÈLE RELATIONNEL
+ * Utilise personnesService pour créer dans la collection 'personnes'
  * Avec système d'onglets : Adresse, Email/Tél
  */
-function PersonneCreationModal({ show, onHide, onCreated, editMode = false, initialData = null }) {
+function PersonneCreationModal({ show, onHide, onCreated, editMode = false, initialData = null, structureId = null }) {
   const { currentOrganization } = useOrganization();
+  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,12 +34,13 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
     pays: 'France',
     
     // Onglet Email/Téléphone
-    mailDirect: '',
+    email: '', // Email principal dans le modèle relationnel
     mailPerso: '',
-    telDirect: '',
-    telPerso: '',
+    telephone: '', // Téléphone principal
+    telephone2: '', // Téléphone secondaire
     mobile: '',
-    fonction: ''
+    fonction: '',
+    notes: ''
   });
 
   // Effet pour initialiser les données en mode édition
@@ -53,12 +57,13 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         departement: initialData.departement || '',
         region: initialData.region || '',
         pays: initialData.pays || 'France',
-        mailDirect: initialData.email || initialData.mailDirect || '',
+        email: initialData.email || initialData.mailDirect || '',
         mailPerso: initialData.mailPerso || '',
-        telDirect: initialData.telephone || initialData.telDirect || '',
-        telPerso: initialData.telPerso || '',
+        telephone: initialData.telephone || initialData.telDirect || '',
+        telephone2: initialData.telephone2 || initialData.telPerso || '',
         mobile: initialData.mobile || '',
-        fonction: initialData.fonction || ''
+        fonction: initialData.fonction || '',
+        notes: initialData.notes || ''
       });
     } else if (!editMode) {
       // Réinitialiser en mode création
@@ -73,12 +78,13 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         departement: '',
         region: '',
         pays: 'France',
-        mailDirect: '',
+        email: '',
         mailPerso: '',
-        telDirect: '',
-        telPerso: '',
+        telephone: '',
+        telephone2: '',
         mobile: '',
-        fonction: ''
+        fonction: '',
+        notes: ''
       });
     }
   }, [editMode, initialData]);
@@ -97,12 +103,12 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
     // Mettre à jour les champs d'adresse avec les données de l'autocomplétion
     setFormData(prev => ({
       ...prev,
-      adresse: addressData.display_name || addressData.road || '',
-      codePostal: addressData.postcode || '',
-      ville: addressData.city || addressData.town || addressData.village || '',
-      departement: addressData.state_district || addressData.county || '',
-      region: addressData.state || '',
-      pays: addressData.country || 'France'
+      adresse: addressData.adresse || '',
+      codePostal: addressData.codePostal || '',
+      ville: addressData.ville || '',
+      departement: addressData.departement || '',
+      region: addressData.region || '',
+      pays: addressData.pays || 'France'
     }));
   };
 
@@ -124,66 +130,111 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
     try {
       if (editMode && initialData) {
         // Mode édition - mettre à jour la personne existante
-        console.log('Mode édition - mise à jour de la personne:', initialData.id);
+        console.log('🔄 [PersonneCreationModal] Mode édition - mise à jour de la personne:', initialData.id);
         
-        // Pour les personnes dans une structure unifiée, on ne peut pas modifier directement
-        // car elles font partie du document structure. On doit passer par le callback
-        const updatedPersonneData = {
-          ...formData,
-          id: initialData.id, // Garder l'ID original
-          updatedAt: new Date() // Date pour l'état local
+        const updatedData = {
+          prenom: formData.prenom,
+          nom: formData.nom,
+          fonction: formData.fonction || undefined,
+          email: formData.email || undefined,
+          telephone: formData.telephone || undefined,
+          telephone2: formData.telephone2 || undefined,
+          mobile: formData.mobile || undefined,
+          adresse: formData.adresse || undefined,
+          suiteAdresse: formData.suiteAdresse || undefined,
+          codePostal: formData.codePostal || undefined,
+          ville: formData.ville || undefined,
+          departement: formData.departement || undefined,
+          region: formData.region || undefined,
+          pays: formData.pays || 'France',
+          notes: formData.notes || undefined
         };
+        
+        // Mettre à jour via le service relationnel
+        const updateResult = await personnesService.updatePersonne(initialData.id, updatedData, currentUser?.uid);
+        
+        if (!updateResult.success) {
+          throw new Error(updateResult.error || 'Erreur lors de la mise à jour');
+        }
+        
+        console.log('✅ [PersonneCreationModal] Personne mise à jour avec succès');
         
         // Callback pour notifier la mise à jour
         if (onCreated) {
-          onCreated(updatedPersonneData);
+          onCreated({
+            id: initialData.id,
+            ...updatedData
+          });
         }
-        
-        console.log('Personne mise à jour:', updatedPersonneData);
       } else {
-        // Mode création - créer une nouvelle personne libre dans contacts_unified
+        // Mode création - créer une nouvelle personne dans la collection 'personnes'
         const personneData = {
-          entityType: 'personne_libre',
-          organizationId: currentOrganization.id,
-          personne: {
-            prenom: formData.prenom,
-            nom: formData.nom,
-            fonction: formData.fonction || '',
-            civilite: '',
-            email: formData.mailDirect || '',
-            mailDirect: formData.mailDirect || '',
-            mailPerso: formData.mailPerso || '',
-            telephone: formData.telDirect || '',
-            telDirect: formData.telDirect || '',
-            telPerso: formData.telPerso || '',
-            mobile: formData.mobile || '',
-            fax: '',
-            adresse: formData.adresse || '',
-            suiteAdresse: formData.suiteAdresse || '',
-            codePostal: formData.codePostal || '',
-            ville: formData.ville || '',
-            departement: formData.departement || '',
-            region: formData.region || '',
-            pays: formData.pays || 'France'
-          },
-          qualification: {
-            tags: [],
-            source: formData.source || 'Prospection'
-          },
-          commentaires: [],
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
+          prenom: formData.prenom,
+          nom: formData.nom,
+          fonction: formData.fonction || undefined,
+          email: formData.email || undefined,
+          telephone: formData.telephone || undefined,
+          telephone2: formData.telephone2 || undefined,
+          mobile: formData.mobile || undefined,
+          adresse: formData.adresse || undefined,
+          suiteAdresse: formData.suiteAdresse || undefined,
+          codePostal: formData.codePostal || undefined,
+          ville: formData.ville || undefined,
+          departement: formData.departement || undefined,
+          region: formData.region || undefined,
+          pays: formData.pays || 'France',
+          tags: [],
+          source: formData.source || 'Prospection',
+          notes: formData.notes || undefined,
+          isPersonneLibre: !structureId, // Personne libre seulement si pas de structureId
+          commentaires: []
         };
 
-        const docRef = await addDoc(collection(db, 'contacts_unified'), personneData);
+        console.log('🆕 [PersonneCreationModal] Création nouvelle personne:', personneData);
+        console.log('📎 [PersonneCreationModal] Structure ID fourni:', structureId);
         
-        console.log('Personne libre créée avec ID:', docRef.id);
+        const result = await personnesService.createPersonne(personneData, currentOrganization.id, currentUser?.uid);
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Erreur lors de la création');
+        }
+        
+        console.log('✅ [PersonneCreationModal] Personne créée avec ID:', result.id);
+        
+        // Si un structureId est fourni, créer automatiquement la liaison
+        if (structureId && result.id) {
+          console.log('🔗 [PersonneCreationModal] Création de la liaison avec la structure:', structureId);
+          
+          const liaisonData = {
+            organizationId: currentOrganization.id,
+            structureId: structureId,
+            personneId: result.id,
+            fonction: formData.fonction || null,
+            actif: true,
+            prioritaire: false,
+            interesse: false,
+            dateDebut: new Date(),
+            dateFin: null,
+            notes: null
+          };
+          
+          const liaisonResult = await liaisonsService.createLiaison(liaisonData, currentUser?.uid);
+          
+          if (!liaisonResult.success) {
+            console.error('❌ [PersonneCreationModal] Erreur lors de la création de la liaison:', liaisonResult.error);
+            // Ne pas bloquer la création de la personne si la liaison échoue
+            alert(`La personne a été créée mais n'a pas pu être associée à la structure: ${liaisonResult.error}`);
+          } else {
+            console.log('✅ [PersonneCreationModal] Liaison créée avec succès');
+          }
+        }
         
         // Callback pour notifier la création
         if (onCreated) {
           onCreated({
-            id: docRef.id,
-            ...personneData
+            id: result.id,
+            ...personneData,
+            structureId: structureId // Inclure le structureId pour que le parent sache qu'il y a une liaison
           });
         }
       }
@@ -200,20 +251,21 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         departement: '',
         region: '',
         pays: 'France',
-        mailDirect: '',
+        email: '',
         mailPerso: '',
-        telDirect: '',
-        telPerso: '',
+        telephone: '',
+        telephone2: '',
         mobile: '',
-        fonction: ''
+        fonction: '',
+        notes: ''
       });
 
       // Fermer la modal
       onHide();
 
     } catch (error) {
-      console.error('Erreur lors de la création de la personne:', error);
-      alert('Erreur lors de la création de la personne');
+      console.error('❌ [PersonneCreationModal] Erreur lors de l\'opération:', error);
+      alert(`Erreur lors de ${editMode ? 'la mise à jour' : 'la création'} de la personne: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -309,12 +361,12 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         </div>
         
         <div className="col-md-6 mb-3">
-          <Form.Label>Email direct</Form.Label>
+          <Form.Label>Email principal</Form.Label>
           <Form.Control
             type="email"
-            placeholder="email.direct@entreprise.com"
-            value={formData.mailDirect}
-            onChange={(e) => handleInputChange('mailDirect', e.target.value)}
+            placeholder="email@entreprise.com"
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
           />
         </div>
         
@@ -329,22 +381,22 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         </div>
         
         <div className="col-md-4 mb-3">
-          <Form.Label>Téléphone direct</Form.Label>
+          <Form.Label>Téléphone principal</Form.Label>
           <Form.Control
             type="tel"
             placeholder="01 23 45 67 89"
-            value={formData.telDirect}
-            onChange={(e) => handleInputChange('telDirect', e.target.value)}
+            value={formData.telephone}
+            onChange={(e) => handleInputChange('telephone', e.target.value)}
           />
         </div>
         
         <div className="col-md-4 mb-3">
-          <Form.Label>Téléphone personnel</Form.Label>
+          <Form.Label>Téléphone secondaire</Form.Label>
           <Form.Control
             type="tel"
             placeholder="01 23 45 67 89"
-            value={formData.telPerso}
-            onChange={(e) => handleInputChange('telPerso', e.target.value)}
+            value={formData.telephone2}
+            onChange={(e) => handleInputChange('telephone2', e.target.value)}
           />
         </div>
         
@@ -355,6 +407,17 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
             placeholder="06 12 34 56 78"
             value={formData.mobile}
             onChange={(e) => handleInputChange('mobile', e.target.value)}
+          />
+        </div>
+        
+        <div className="col-12 mb-3">
+          <Form.Label>Notes</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            placeholder="Notes sur cette personne..."
+            value={formData.notes}
+            onChange={(e) => handleInputChange('notes', e.target.value)}
           />
         </div>
       </div>

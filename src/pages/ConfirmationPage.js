@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Card, Container, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
-import { useSearchParams } from 'react-router-dom';
 import styles from './ConfirmationPage.module.css';
 
 /**

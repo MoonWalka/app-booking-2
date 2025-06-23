@@ -276,7 +276,7 @@ const TabManagerProduction = () => {
           console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
           return <PreContratGenerationPage concertId={activeTab.params?.concertId} />;
         case 'ConfirmationPage':
-          return <ConfirmationPage />;
+          return <ConfirmationPage concertId={activeTab.params?.concertId} />;
         case 'ContratGenerationNewPage':
           console.log('[TabManager] Rendu ContratGenerationNewPage avec activeTab:', activeTab);
           console.log('[TabManager] concertId passé:', activeTab.params?.concertId);

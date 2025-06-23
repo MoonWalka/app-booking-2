@@ -8,17 +8,18 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--tc-bg-light);
-  max-width: 1200px;
-  margin: 0 auto;
-  box-shadow: var(--tc-shadow-lg);
+  background-color: #f5f7fa;
+  position: relative;
 }
 
 .formHeader {
-  background-color: var(--tc-bg-card);
-  padding: var(--tc-space-4) var(--tc-space-8);
-  border-bottom: 1px solid var(--tc-color-gray-200);
-  box-shadow: var(--tc-shadow-sm);
+  background-color: white;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e1e8ed;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .formLogo {
@@ -27,22 +28,34 @@
 
 .formLogo h2 {
   margin: 0;
-  color: var(--tc-text-primary);
-  font-size: var(--tc-font-size-xl);
-  font-weight: var(--tc-font-weight-semibold);
+  color: #2c3e50;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .formContent {
   flex-grow: 1;
-  padding: var(--tc-space-8);
-  background-color: var(--tc-bg-light);
+  padding: 0;
+  background-color: transparent;
+  width: 100%;
 }
 
 .formFooter {
-  padding: var(--tc-space-4) var(--tc-space-8);
-  background-color: var(--tc-bg-card);
-  border-top: 1px solid var(--tc-color-gray-200);
+  padding: 2rem;
+  background-color: white;
+  border-top: 1px solid #e1e8ed;
   text-align: center;
-  color: var(--tc-text-secondary);
-  font-size: var(--tc-font-size-sm);
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-top: auto;
+}
+
+.formFooter p {
+  margin: 0;
+  opacity: 0.8;
 }

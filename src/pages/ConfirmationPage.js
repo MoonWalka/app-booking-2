@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { Card, Container, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Card, Container, Row, Col, Form, Button, Accordion, Alert, Spinner } from 'react-bootstrap';
+import { getPreContratsByConcert, updatePreContrat } from '@/services/preContratService';
 import styles from './ConfirmationPage.module.css';
 
 /**
  * Page de confirmation de pré-contrat
  * Deux colonnes : Mes informations (éditable) | Informations organisateur (lecture seule)
  */
-function ConfirmationPage() {
-  // const [searchParams] = useSearchParams();
-  // const concertId = searchParams.get('concertId');
+function ConfirmationPage({ concertId: propConcertId }) {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const concertId = propConcertId || searchParams.get('concertId');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [preContrat, setPreContrat] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   
   // État pour les données
   const [mesInfos, setMesInfos] = useState({
@@ -87,9 +94,81 @@ function ConfirmationPage() {
     divers: ''
   });
   
-  const [infosOrganisateur] = useState({
-    // Les mêmes champs mais remplis depuis les données du pré-contrat
-  });
+  const [infosOrganisateur, setInfosOrganisateur] = useState({});
+
+  // Charger les données du pré-contrat
+  useEffect(() => {
+    const loadPreContratData = async () => {
+      if (!concertId) {
+        setError('Aucun concert spécifié');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        
+        // Récupérer les pré-contrats du concert
+        const preContrats = await getPreContratsByConcert(concertId);
+        
+        // Prendre le plus récent avec des données du formulaire public
+        const preContratAvecDonnees = preContrats
+          .filter(pc => pc.publicFormData)
+          .sort((a, b) => {
+            const dateA = a.lastPublicFormSave?.toDate() || new Date(0);
+            const dateB = b.lastPublicFormSave?.toDate() || new Date(0);
+            return dateB - dateA;
+          })[0];
+
+        if (!preContratAvecDonnees) {
+          setError('Aucun pré-contrat avec données publiques trouvé');
+          setLoading(false);
+          return;
+        }
+
+        setPreContrat(preContratAvecDonnees);
+        
+        // Charger les données dans les deux colonnes
+        if (preContratAvecDonnees.publicFormData) {
+          // Données de l'organisateur (colonne droite)
+          setInfosOrganisateur(preContratAvecDonnees.publicFormData);
+        }
+        
+        // Données existantes (colonne gauche)
+        setMesInfos(prev => ({
+          ...prev,
+          // Structure
+          raisonSociale: preContratAvecDonnees.raisonSociale || '',
+          adresse: preContratAvecDonnees.adresse || '',
+          suiteAdresse: preContratAvecDonnees.suiteAdresse || '',
+          codePostal: preContratAvecDonnees.cp || '',
+          ville: preContratAvecDonnees.ville || '',
+          pays: preContratAvecDonnees.pays || 'France',
+          tel: preContratAvecDonnees.tel || '',
+          fax: preContratAvecDonnees.fax || '',
+          email: preContratAvecDonnees.email || '',
+          site: preContratAvecDonnees.site || '',
+          siret: preContratAvecDonnees.siret || '',
+          // Négociation
+          cachetHT: preContratAvecDonnees.montantHT || '',
+          acompte: preContratAvecDonnees.acompte || '',
+          frais: preContratAvecDonnees.frais || '',
+          contratPropose: preContratAvecDonnees.contratPropose || 'cession',
+          devise: preContratAvecDonnees.devise || 'EUR',
+          moyenPaiement: preContratAvecDonnees.moyenPaiement || 'virement',
+          // Ajouter les autres champs selon le mapping
+        }));
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Erreur lors du chargement:', error);
+        setError('Erreur lors du chargement des données');
+        setLoading(false);
+      }
+    };
+
+    loadPreContratData();
+  }, [concertId]);
 
   // Fonction pour copier une valeur de droite à gauche
   const copierValeur = (champ) => {
@@ -110,6 +189,62 @@ function ConfirmationPage() {
       ...nouveauxChamps
     }));
   };
+
+  // Fonction pour valider et sauvegarder
+  const validerConfirmation = async () => {
+    if (!preContrat) return;
+    
+    try {
+      setIsSaving(true);
+      
+      // Fusionner les données validées avec les données existantes
+      const donneesValidees = {
+        // Conserver toutes les données existantes
+        ...preContrat,
+        // Remplacer par les données validées dans "Mes infos"
+        ...mesInfos,
+        // Marquer comme confirmé
+        confirmationValidee: true,
+        confirmationDate: new Date(),
+        // Supprimer les données du formulaire public après validation
+        publicFormData: null
+      };
+      
+      await updatePreContrat(preContrat.id, donneesValidees);
+      
+      alert('Confirmation validée avec succès !');
+      navigate(-1); // Retour à la page précédente
+    } catch (error) {
+      console.error('Erreur lors de la validation:', error);
+      alert('Erreur lors de la validation');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Container fluid className={styles.container}>
+        <div className="text-center py-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Chargement...</span>
+          </Spinner>
+          <p className="mt-3">Chargement des données du pré-contrat...</p>
+        </div>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container fluid className={styles.container}>
+        <Alert variant="danger" className="m-3">
+          <Alert.Heading>Erreur</Alert.Heading>
+          <p>{error}</p>
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
     <Container fluid className={styles.container}>
@@ -2653,13 +2788,32 @@ function ConfirmationPage() {
 
           {/* Boutons d'action */}
           <div className={styles.actionButtons}>
-            <Button variant="secondary" size="lg">
+            <Button 
+              variant="secondary" 
+              size="lg"
+              onClick={() => navigate(-1)}
+              disabled={isSaving}
+            >
               <i className="bi bi-arrow-left me-2"></i>
               Annuler
             </Button>
-            <Button variant="primary" size="lg">
-              <i className="bi bi-check-lg me-2"></i>
-              Valider la confirmation
+            <Button 
+              variant="primary" 
+              size="lg"
+              onClick={validerConfirmation}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <>
+                  <Spinner animation="border" size="sm" className="me-2" />
+                  Validation en cours...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-check-lg me-2"></i>
+                  Valider la confirmation
+                </>
+              )}
             </Button>
           </div>
         </Card.Body>

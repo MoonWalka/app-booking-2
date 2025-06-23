@@ -5,6 +5,7 @@ import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { personnesService } from '@/services/contacts/personnesService';
 import { concertsService } from '@/services/concertService';
+import { getPreContratsByConcert } from '@/services/preContratService';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import EntityViewTabs from '@/components/common/EntityViewTabs';
@@ -417,7 +418,36 @@ function ContactViewTabs({ id, viewType = null }) {
         dates = await concertsService.getConcertsByStructure(currentOrganization.id, structureName);
       }
       
-      setDatesData(dates || []);
+      // Enrichir les dates avec les données de pré-contrat
+      const datesWithPreContrat = await Promise.all(
+        (dates || []).map(async (date) => {
+          try {
+            const preContrats = await getPreContratsByConcert(date.id);
+            if (preContrats && preContrats.length > 0) {
+              // Prendre le plus récent
+              const latestPreContrat = preContrats.sort((a, b) => {
+                const dateA = a.createdAt?.toDate() || new Date(0);
+                const dateB = b.createdAt?.toDate() || new Date(0);
+                return dateB - dateA;
+              })[0];
+              
+              // Ajouter les infos de pré-contrat au concert
+              return {
+                ...date,
+                preContratId: latestPreContrat.id,
+                publicFormData: latestPreContrat.publicFormData,
+                publicFormCompleted: latestPreContrat.publicFormCompleted,
+                confirmationValidee: latestPreContrat.confirmationValidee
+              };
+            }
+          } catch (error) {
+            console.error('Erreur chargement pré-contrat pour date', date.id, error);
+          }
+          return date;
+        })
+      );
+      
+      setDatesData(datesWithPreContrat);
     } catch (error) {
       console.error('Erreur chargement dates structure:', error);
       setDatesData([]);

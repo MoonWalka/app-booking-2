@@ -78,7 +78,7 @@ export const publicationConfig = {
       field: 'artiste',
       sortable: true,
       width: '15%',
-      render: (item) => item.artiste || '-',
+      render: (item) => item.artiste?.nom || item.artisteNom || '-',
     },
     {
       id: 'projet',

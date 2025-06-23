@@ -59,11 +59,33 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
         }
 
         // Récupérer les données de la structure si disponible
+        console.log('[PreContratGenerationPage] Concert data:', concertData);
+        console.log('[PreContratGenerationPage] structureId:', concertData.structureId);
+        
+        let structureFound = false;
+        
         if (concertData.structureId) {
           const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
           if (structureDoc.exists()) {
-            setStructure({ id: structureDoc.id, ...structureDoc.data() });
+            const structureData = { id: structureDoc.id, ...structureDoc.data() };
+            console.log('[PreContratGenerationPage] Structure chargée:', structureData);
+            setStructure(structureData);
+            structureFound = true;
+          } else {
+            console.log('[PreContratGenerationPage] Structure non trouvée avec ID:', concertData.structureId);
           }
+        } else {
+          console.log('[PreContratGenerationPage] Pas de structureId dans le concert');
+        }
+        
+        // Si pas de structure trouvée mais qu'on a des infos dans le concert
+        if (!structureFound && concertData.structureRaisonSociale) {
+          console.log('[PreContratGenerationPage] Utilisation des données structure du concert');
+          setStructure({
+            raisonSociale: concertData.structureRaisonSociale,
+            nom: concertData.structureNom || concertData.structureRaisonSociale,
+            // Ajouter d'autres champs si disponibles dans concertData
+          });
         }
 
         // Récupérer les données de l'artiste si disponible

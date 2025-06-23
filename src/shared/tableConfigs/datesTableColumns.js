@@ -242,14 +242,14 @@ export const createDatesTableColumns = (hooks = {}, styles = {}) => {
               className="bi bi-file-earmark-text-fill text-warning" 
               title="Pré-contrat existant"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab && openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab && openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Concert')}
             ></i>
           ) : (
             <i 
               className="bi bi-file-earmark-text text-muted" 
               title="Créer un pré-contrat"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab && openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab && openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Concert')}
             ></i>
           )}
         </div>

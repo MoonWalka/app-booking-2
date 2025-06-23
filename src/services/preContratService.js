@@ -298,6 +298,51 @@ class PreContratService {
   }
 
   /**
+   * Sauvegarde les données du formulaire public
+   * @param {string} preContratId - ID du pré-contrat
+   * @param {Object} formData - Données du formulaire
+   * @returns {Promise<void>}
+   */
+  async savePublicFormData(preContratId, formData) {
+    try {
+      // Récupérer les données existantes
+      const preContratDoc = await getDoc(doc(db, 'preContrats', preContratId));
+      if (!preContratDoc.exists()) {
+        throw new Error('Pré-contrat introuvable');
+      }
+
+      const existingData = preContratDoc.data();
+      
+      // Stocker les données du formulaire public séparément pour validation
+      const updateData = {
+        ...existingData,
+        publicFormData: formData, // Stocké séparément pour validation
+        publicFormCompleted: true,
+        lastPublicFormSave: serverTimestamp(),
+        publicFormSavedBy: formData.publicFormEmail || formData.emailOrga || 'Anonyme'
+      };
+
+      await updateDoc(
+        doc(db, 'preContrats', preContratId),
+        updateData
+      );
+
+      // Ajouter à l'historique
+      await this.addToHistory(preContratId, {
+        action: 'publicFormSaved',
+        date: new Date(),
+        savedBy: formData.publicFormEmail || formData.emailOrga || 'Anonyme',
+        modifications: Object.keys(formData)
+      });
+
+      debugLog('[PreContratService] Formulaire public sauvegardé:', preContratId, 'success');
+    } catch (error) {
+      debugLog('[PreContratService] Erreur sauvegarde formulaire public:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
    * Valide un pré-contrat (soumission du formulaire)
    * @param {string} preContratId - ID du pré-contrat
    * @param {Object} validationData - Données de validation
@@ -305,11 +350,14 @@ class PreContratService {
    */
   async validatePreContrat(preContratId, validationData) {
     try {
+      // D'abord sauvegarder les données
+      await this.savePublicFormData(preContratId, validationData);
+      
+      // Puis marquer comme validé
       const updateData = {
-        ...validationData,
         status: 'validated',
         validatedAt: serverTimestamp(),
-        validatedBy: validationData.email || 'Anonyme'
+        validatedBy: validationData.publicFormEmail || validationData.email || 'Anonyme'
       };
 
       await updateDoc(
@@ -321,7 +369,7 @@ class PreContratService {
       await this.addToHistory(preContratId, {
         action: 'validated',
         date: new Date(),
-        validatedBy: validationData.email || 'Anonyme',
+        validatedBy: validationData.publicFormEmail || validationData.email || 'Anonyme',
         modifications: Object.keys(validationData)
       });
 
@@ -380,6 +428,30 @@ class PreContratService {
   }
 
   /**
+   * Récupère un pré-contrat par son ID
+   * @param {string} preContratId - ID du pré-contrat
+   * @returns {Promise<Object>} - Pré-contrat avec son ID
+   */
+  async getPreContratById(preContratId) {
+    try {
+      const docRef = doc(db, 'preContrats', preContratId);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        throw new Error('Pré-contrat introuvable');
+      }
+      
+      return {
+        id: docSnap.id,
+        ...docSnap.data()
+      };
+    } catch (error) {
+      debugLog('[PreContratService] Erreur récupération pré-contrat:', error, 'error');
+      throw error;
+    }
+  }
+
+  /**
    * Renvoie un pré-contrat (relance)
    * @param {string} preContratId - ID du pré-contrat
    * @param {Array<string>} destinataires - Emails des destinataires (optionnel)
@@ -428,7 +500,9 @@ export const {
   updatePreContrat,
   sendPreContrat,
   validateToken,
+  savePublicFormData,
   validatePreContrat,
   getPreContratsByConcert,
+  getPreContratById,
   resendPreContrat
 } = preContratService;

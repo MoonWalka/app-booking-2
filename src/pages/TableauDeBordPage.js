@@ -8,6 +8,7 @@ import AddButton from '@/components/ui/AddButton';
 import { useOrganization } from '@/context/OrganizationContext';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
+import { getPreContratsByConcert } from '@/services/preContratService';
 import styles from './TableauDeBordPage.module.css';
 
 /**
@@ -55,14 +56,39 @@ const TableauDeBordPage = () => {
         );
         
         const concertsSnapshot = await getDocs(concertsQuery);
-        const concertsData = concertsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          type: 'concert'
-        }));
+        const concertsData = await Promise.all(
+          concertsSnapshot.docs.map(async (doc) => {
+            const concertData = {
+              id: doc.id,
+              ...doc.data(),
+              type: 'concert'
+            };
+            
+            // Charger les données du pré-contrat pour ce concert
+            try {
+              const preContrats = await getPreContratsByConcert(doc.id);
+              if (preContrats && preContrats.length > 0) {
+                // Prendre le plus récent
+                const latestPreContrat = preContrats.sort((a, b) => {
+                  const dateA = a.createdAt?.toDate() || new Date(0);
+                  const dateB = b.createdAt?.toDate() || new Date(0);
+                  return dateB - dateA;
+                })[0];
+                
+                // Ajouter les infos de pré-contrat au concert
+                concertData.preContratId = latestPreContrat.id;
+                concertData.publicFormData = latestPreContrat.publicFormData;
+                concertData.publicFormCompleted = latestPreContrat.publicFormCompleted;
+                concertData.confirmationValidee = latestPreContrat.confirmationValidee;
+              }
+            } catch (error) {
+              console.error('Erreur chargement pré-contrat pour concert', doc.id, error);
+            }
+            
+            return concertData;
+          })
+        );
 
-        // Pour l'exemple, nous utilisons les concerts comme données de base
-        // Vous pouvez ajouter d'autres collections (contrats, factures, etc.)
         setData(concertsData);
         
       } catch (err) {
@@ -293,14 +319,14 @@ const TableauDeBordPage = () => {
               className="bi bi-file-earmark-text-fill text-warning" 
               title="Pré-contrat existant"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Concert')}
             ></i>
           ) : (
             <i 
               className="bi bi-file-earmark-text text-muted" 
               title="Créer un pré-contrat"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab(item.id, item.artiste || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Concert')}
             ></i>
           )}
         </div>
@@ -310,45 +336,80 @@ const TableauDeBordPage = () => {
       label: 'Confirmation',
       key: 'confirmation',
       sortable: false,
-      render: (item) => (
-        <div 
-          className={`${styles.confirmationCell} ${styles.clickable}`}
-          onClick={() => openConfirmationPage(item)}
-          title="Cliquer pour gérer la confirmation"
-        >
-          {item.confirmation || item.statut === 'confirme' ? (
-            <i className="bi bi-check-circle-fill text-success"></i>
-          ) : (
-            <i className="bi bi-clock text-warning"></i>
-          )}
-        </div>
-      )
+      render: (item) => {
+        // Déterminer l'état de confirmation
+        const hasPublicFormData = item.publicFormData || item.publicFormCompleted;
+        const isConfirmed = item.confirmationValidee || item.confirmation || item.statut === 'confirme';
+        
+        let iconClass, colorClass, title, isClickable;
+        
+        if (isConfirmed) {
+          // État 3: Validé (vert)
+          iconClass = 'bi-check-circle-fill';
+          colorClass = 'text-success';
+          title = 'Confirmation validée';
+          isClickable = false;
+        } else if (hasPublicFormData) {
+          // État 2: Complété (orange) - cliquable
+          iconClass = 'bi-exclamation-circle-fill';
+          colorClass = 'text-warning';
+          title = 'Cliquer pour valider la confirmation';
+          isClickable = true;
+        } else {
+          // État 1: À compléter (gris) - non cliquable
+          iconClass = 'bi-circle';
+          colorClass = 'text-muted';
+          title = 'En attente du formulaire public';
+          isClickable = false;
+        }
+        
+        return (
+          <div 
+            className={`${styles.confirmationCell} ${isClickable ? styles.clickable : ''}`}
+            onClick={isClickable ? () => openConfirmationPage(item) : undefined}
+            title={title}
+            style={!isClickable ? { cursor: 'default' } : {}}
+          >
+            <i className={`bi ${iconClass} ${colorClass}`}></i>
+          </div>
+        );
+      }
     },
     {
       label: 'Contrat',
       key: 'contratFinal',
       sortable: false,
       render: (item) => {
-        // Déterminer l'état du contrat basé sur contratStatut
+        // Vérifier si le pré-contrat est validé
+        const isPreContratValide = item.confirmationValidee || item.confirmation || item.statut === 'confirme';
         const contratStatut = item.contratStatut;
         const hasContrat = item.contratId || contratStatut;
         
-        let iconClass, title, action;
+        let iconClass, title, action, isClickable;
         
-        if (contratStatut === 'redige') {
+        if (!isPreContratValide) {
+          // Pré-contrat non validé - icône grise non cliquable
+          iconClass = "bi bi-file-earmark text-muted";
+          title = "Valider le pré-contrat avant de créer le contrat";
+          isClickable = false;
+          action = null;
+        } else if (contratStatut === 'redige') {
           // Contrat rédigé et terminé - icône verte
           iconClass = "bi bi-file-earmark-check-fill text-success";
           title = "Contrat rédigé - Voir";
+          isClickable = true;
           action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         } else if (hasContrat) {
           // Contrat en cours de rédaction - icône orange
           iconClass = "bi bi-file-earmark-text-fill text-warning";
           title = "Contrat en cours - Continuer la rédaction";
+          isClickable = true;
           action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         } else {
-          // Aucun contrat - icône grise
+          // Aucun contrat mais pré-contrat validé - icône grise cliquable
           iconClass = "bi bi-file-earmark text-muted";
           title = "Créer un contrat";
+          isClickable = true;
           action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         }
         
@@ -357,8 +418,8 @@ const TableauDeBordPage = () => {
             <i 
               className={iconClass}
               title={title}
-              style={{ cursor: 'pointer' }}
-              onClick={action}
+              style={{ cursor: isClickable ? 'pointer' : 'default' }}
+              onClick={isClickable ? action : undefined}
             ></i>
           </div>
         );
@@ -368,15 +429,49 @@ const TableauDeBordPage = () => {
       label: 'Facture',
       key: 'facture',
       sortable: false,
-      render: (item) => (
-        <div className={styles.factureCell}>
-          {item.factureId ? (
-            <i className="bi bi-receipt-cutoff text-success" title="Facture existante"></i>
-          ) : (
-            <i className="bi bi-receipt text-muted" title="Pas de facture"></i>
-          )}
-        </div>
-      )
+      render: (item) => {
+        // Vérifier si le contrat est rédigé
+        const isContratRedige = item.contratStatut === 'redige';
+        const hasFacture = item.factureId || item.factureStatut;
+        
+        let iconClass, title, isClickable;
+        
+        if (!isContratRedige) {
+          // Contrat non rédigé - icône grise non cliquable
+          iconClass = "bi bi-receipt text-muted";
+          title = "Finaliser le contrat avant de créer la facture";
+          isClickable = false;
+        } else if (item.factureStatut === 'emise' || item.factureStatut === 'payee') {
+          // Facture émise ou payée - icône verte
+          iconClass = "bi bi-receipt-cutoff text-success";
+          title = item.factureStatut === 'payee' ? "Facture payée" : "Facture émise";
+          isClickable = true;
+        } else if (hasFacture) {
+          // Facture en cours - icône orange
+          iconClass = "bi bi-receipt text-warning";
+          title = "Facture en cours";
+          isClickable = true;
+        } else {
+          // Aucune facture mais contrat rédigé - icône grise cliquable
+          iconClass = "bi bi-receipt text-muted";
+          title = "Créer une facture";
+          isClickable = true;
+        }
+        
+        return (
+          <div className={styles.factureCell}>
+            <i 
+              className={iconClass}
+              title={title}
+              style={{ cursor: isClickable ? 'pointer' : 'default' }}
+              onClick={isClickable ? () => {
+                // TODO: Ouvrir l'onglet facture
+                console.log('Ouvrir facture pour concert', item.id);
+              } : undefined}
+            ></i>
+          </div>
+        );
+      }
     }
   ];
 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useFormTokenValidation } from '@/hooks/forms/useFormTokenValidation';
+import preContratService from '@/services/preContratService';
 import FormLoadingState from './FormLoadingState';
 import FormErrorPanel from './FormErrorPanel';
-import PreContratForm from './PreContratForm';
+import PreContratFormPublic from './PreContratFormPublic';
 import styles from './PreContratFormContainer.module.css';
 
 /**
@@ -18,6 +19,7 @@ function PreContratFormContainer({ concertId, token }) {
     concertData,
     formLinkData,
     existingSubmission,
+    organizationData,
     error
   } = useFormTokenValidation(concertId, token);
 
@@ -76,13 +78,98 @@ function PreContratFormContainer({ concertId, token }) {
 
   return (
     <div className={styles.container}>
-      <PreContratForm
-        concertId={concertId}
-        token={token}
+      <PreContratFormPublic
         concertData={concertData}
-        formLinkData={formLinkData}
-        existingSubmission={existingSubmission}
-        onSubmissionComplete={(status) => setSubmissionStatus(status)}
+        organizationData={organizationData}
+        existingData={existingSubmission || formLinkData}
+        onSubmit={async (formData, action) => {
+          try {
+            // Mapper les données du formulaire public vers le format attendu
+            const mappedData = {
+              // Organisateur
+              raisonSociale: formData.raisonSociale,
+              adresse: formData.adresseOrga,
+              suiteAdresse: formData.suiteAdresseOrga,
+              cp: formData.codePostalOrga,
+              ville: formData.villeOrga,
+              pays: formData.paysOrga,
+              tel: formData.telOrga,
+              fax: formData.faxOrga,
+              email: formData.emailOrga,
+              site: formData.siteWebOrga,
+              siret: formData.siret,
+              codeActivite: formData.codeAPE,
+              numeroTvaIntracommunautaire: formData.tvaIntracom,
+              numeroLicence: formData.licences,
+              nomSignataire: formData.signataire,
+              qualiteSignataire: formData.qualiteSignataire,
+              
+              // Négociation
+              contratPropose: formData.contratPropose,
+              montantHT: formData.cachetMinimum,
+              moyenPaiement: formData.modePaiement,
+              devise: formData.devise,
+              acompte: formData.acompte,
+              frais: formData.frais,
+              precisionsNegoc: formData.precisionNego,
+              
+              // Concert
+              debut: concertData?.date || '',
+              horaireDebut: formData.heureDebut,
+              horaireFin: formData.heureFin,
+              payant: formData.payant === 'payant',
+              nbRepresentations: formData.nombreRepresentations,
+              salle: formData.salle,
+              capacite: formData.capacite,
+              nbAdmins: formData.nombreAdmis,
+              invitations: formData.invitationsExos,
+              festival: formData.festivalEvenement,
+              
+              // Régie
+              responsableRegie: formData.nomRegie,
+              emailProRegie: formData.emailRegie,
+              telProRegie: formData.telRegie,
+              mobileProRegie: formData.mobileRegie,
+              horaires: formData.horairesRegie,
+              
+              // Promo
+              responsablePromo: formData.nomPromo,
+              emailProPromo: formData.emailPromo,
+              telProPromo: formData.telPromo,
+              mobileProPromo: formData.mobilePromo,
+              demandePromo: formData.demandePromo,
+              
+              // Autres
+              prixPlaces: formData.prixPlaces,
+              divers: formData.divers,
+              
+              // Métadonnées
+              publicFormCompleted: true,
+              publicFormCompletedAt: new Date(),
+              publicFormEmail: formData.emailOrga
+            };
+
+            // Sauvegarder ou valider selon l'action
+            if (action === 'send') {
+              // Valider et marquer comme complété
+              await preContratService.validatePreContrat(
+                formLinkData.id,
+                mappedData
+              );
+              setSubmissionStatus('completed');
+            } else {
+              // Sauvegarder seulement (brouillon)
+              await preContratService.savePublicFormData(
+                formLinkData.id,
+                mappedData
+              );
+              alert('Formulaire enregistré avec succès');
+            }
+          } catch (error) {
+            console.error('Erreur lors de la soumission:', error);
+            alert('Une erreur est survenue lors de l\'enregistrement');
+          }
+        }}
       />
     </div>
   );

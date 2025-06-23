@@ -31,7 +31,7 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
     if (searchTerm) {
       filtered = filtered.filter(contrat => 
         contrat.ref?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contrat.artiste?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (typeof contrat.artiste === 'string' ? contrat.artiste : contrat.artiste?.nom)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         contrat.raisonSociale?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         contrat.ville?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         contrat.projet?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -220,7 +220,7 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
       label: 'Artiste',
       key: 'artiste',
       sortable: true,
-      render: (contrat) => <span>{contrat.artiste || '—'}</span>
+      render: (contrat) => <span>{typeof contrat.artiste === 'string' ? contrat.artiste : contrat.artiste?.nom || '—'}</span>
     },
     
     // ===== COLONNE RAISON SOCIALE =====

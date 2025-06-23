@@ -18,6 +18,7 @@ export function useFormTokenValidation(concertId, token) {
     concertData: null,
     formLinkData: null,
     existingSubmission: null,
+    organizationData: null,
     error: null
   });
 
@@ -91,6 +92,19 @@ export function useFormTokenValidation(concertId, token) {
           }
         }
 
+        // Récupérer les données de l'organisation
+        let organizationData = null;
+        if (validationResult.preContrat?.organizationId) {
+          try {
+            const orgDoc = await getDoc(doc(db, 'organizations', validationResult.preContrat.organizationId));
+            if (orgDoc.exists()) {
+              organizationData = { id: orgDoc.id, ...orgDoc.data() };
+            }
+          } catch (error) {
+            debugLog('[useFormTokenValidation] Erreur récupération organisation:', error, 'warn');
+          }
+        }
+
         setState({
           isLoading: false,
           isValid: true,
@@ -99,6 +113,7 @@ export function useFormTokenValidation(concertId, token) {
           concertData,
           formLinkData: validationResult.preContrat,
           existingSubmission: validationResult.alreadyValidated ? validationResult.preContrat : null,
+          organizationData,
           error: null
         });
 

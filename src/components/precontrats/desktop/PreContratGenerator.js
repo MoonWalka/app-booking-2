@@ -101,20 +101,50 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
   const [isSending, setIsSending] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [preContratId, setPreContratId] = useState(null);
+  const [preContratToken, setPreContratToken] = useState(null);
+
+  // Charger le token si on a déjà un preContratId
+  useEffect(() => {
+    const loadPreContratToken = async () => {
+      if (preContratId && !preContratToken) {
+        try {
+          const preContrat = await preContratService.getPreContratById(preContratId);
+          if (preContrat && preContrat.token) {
+            setPreContratToken(preContrat.token);
+          }
+        } catch (error) {
+          console.error('[PreContratGenerator] Erreur chargement token:', error);
+        }
+      }
+    };
+    
+    loadPreContratToken();
+  }, [preContratId, preContratToken]);
 
   // Initialiser les données depuis les props
   useEffect(() => {
+    console.log('[PreContratGenerator] Structure reçue:', structure);
+    
     if (structure) {
+      console.log('[PreContratGenerator] Champs structure:', {
+        raisonSociale: structure.raisonSociale,
+        nom: structure.nom,
+        structureRaisonSociale: structure.structureRaisonSociale
+      });
+      
       setFormData(prev => ({
         ...prev,
-        raisonSociale: structure.nom || structure.structureRaisonSociale || '',
+        raisonSociale: structure.raisonSociale || '',
         adresse: structure.adresse || '',
+        suiteAdresse: structure.suiteAdresse || '',
         ville: structure.ville || '',
         cp: structure.codePostal || '',
         pays: structure.pays || 'France',
         region: structure.region || '',
         departement: structure.departement || '',
-        tel: structure.telephone || '',
+        tel: structure.telephone || structure.telephone1 || '',
+        fax: structure.fax || '',
+        mobilePro: structure.mobile || '',
         email: structure.email || '',
         siret: structure.siret || '',
         site: structure.siteWeb || ''
@@ -238,6 +268,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
           currentOrg.id
         );
         setPreContratId(result.id);
+        setPreContratToken(result.token);
         setAlertType('success');
         setAlertMessage('Pré-contrat enregistré avec succès');
       }
@@ -286,6 +317,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         );
         currentPreContratId = result.id;
         setPreContratId(result.id);
+        setPreContratToken(result.token);
       }
 
       // Envoyer le pré-contrat
@@ -339,7 +371,37 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
       <div className={styles.contentWrapper}>
         {/* Contenu principal */}
         <div className={styles.mainContent}>
-          <h2 className="mb-4">Génération de pré-contrat</h2>
+          <div className={styles.headerSection}>
+            <h2 className="mb-4">Génération de pré-contrat</h2>
+            {preContratId && preContratToken && (
+              <div className={styles.publicLinkContainer}>
+                <i className="bi bi-link-45deg"></i>
+                <a 
+                  href={`${window.location.origin}/pre-contrat/${concert?.id}/${preContratToken}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.publicLink}
+                >
+                  Lien du formulaire public
+                </a>
+                <button
+                  type="button"
+                  className={styles.copyButton}
+                  onClick={() => {
+                    const link = `${window.location.origin}/pre-contrat/${concert?.id}/${preContratToken}`;
+                    navigator.clipboard.writeText(link);
+                    setAlertType('success');
+                    setAlertMessage('Lien copié dans le presse-papier');
+                    setShowAlert(true);
+                    setTimeout(() => setShowAlert(false), 3000);
+                  }}
+                  title="Copier le lien"
+                >
+                  <i className="bi bi-clipboard"></i>
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* Section Structure */}
           <Card className="mb-4">

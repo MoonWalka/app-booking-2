@@ -3,7 +3,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { useTabs } from '@/context/TabsContext';
 import { useContactsRelational } from './useContactsRelational';
-import { structuresService } from '@/services/contacts/structuresService';
 import { personnesService } from '@/services/contacts/personnesService';
 import debug from '@/utils/debugTagsComments';
 
@@ -274,13 +273,14 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         throw new Error('Statut client uniquement pour les structures');
       }
 
-      await structuresService.setClientStatus(contactId, isClient, currentUser.uid);
+      // Utiliser updateStructure au lieu de structuresService
+      await updateStructure(contactId, { isClient, updatedBy: currentUser.uid });
       return true;
     } catch (error) {
       console.error('Erreur lors du changement de statut client:', error);
       throw error;
     }
-  }, [contactId, contactType, currentUser]);
+  }, [contactId, contactType, currentUser, updateStructure]);
 
   // ==================== GESTION DES COMMENTAIRES ====================
 
@@ -294,14 +294,14 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         modifie: false
       };
       
-      // Récupérer les commentaires existants
+      // Récupérer les commentaires existants depuis le cache réactif (comme pour les tags)
       let existingComments = [];
       if (contactType === 'structure') {
-        const structureData = await structuresService.getStructure(contactId);
-        existingComments = structureData.data?.commentaires || [];
+        const structure = getStructureWithPersonnes(contactId);
+        existingComments = structure?.commentaires || [];
       } else {
-        const personneData = await personnesService.getPersonne(contactId);
-        existingComments = personneData.data?.commentaires || [];
+        const personne = getPersonneWithStructures(contactId);
+        existingComments = personne?.commentaires || [];
       }
       
       // DEBUG: Début du flux
@@ -312,6 +312,14 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       
       // DEBUG: Appel au service
       debug.comments.serviceCall(contactId, contactType, updatedComments);
+      
+      // Debug spécifique pour vérifier la date
+      console.log('[DEBUG] Nouveau commentaire avant envoi:', {
+        comment: newComment,
+        dateType: typeof newComment.date,
+        isDate: newComment.date instanceof Date,
+        dateValue: newComment.date
+      });
       
       // Sauvegarder dans Firebase
       if (contactType === 'structure') {
@@ -329,7 +337,7 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       debug.comments.serviceResponse({ success: false, error: error.message });
       throw error;
     }
-  }, [contactId, contactType, currentUser, updateStructure, updatePersonne]);
+  }, [contactId, contactType, currentUser, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);
 
   const handleDeleteComment = useCallback(async (commentaire) => {
     try {
@@ -342,18 +350,24 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         return false;
       }
 
-      // Récupérer les commentaires existants
+      // Récupérer les commentaires existants depuis le cache réactif (comme pour les tags)
       let existingComments = [];
       if (contactType === 'structure') {
-        const structureData = await structuresService.getStructure(contactId);
-        existingComments = structureData.data?.commentaires || [];
+        const structure = getStructureWithPersonnes(contactId);
+        existingComments = structure?.commentaires || [];
       } else {
-        const personneData = await personnesService.getPersonne(contactId);
-        existingComments = personneData.data?.commentaires || [];
+        const personne = getPersonneWithStructures(contactId);
+        existingComments = personne?.commentaires || [];
       }
+      
+      // DEBUG: Début du flux de suppression
+      debug.comments.start(existingComments, { action: 'delete', id: commentaire.id });
       
       // Supprimer le commentaire
       const updatedComments = existingComments.filter(c => c.id !== commentaire.id);
+      
+      // DEBUG: Appel au service
+      debug.comments.serviceCall(contactId, contactType, updatedComments);
       
       // Sauvegarder dans Firebase
       if (contactType === 'structure') {
@@ -362,12 +376,16 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         await updatePersonne(contactId, { commentaires: updatedComments });
       }
       
+      // DEBUG: Succès
+      debug.comments.serviceResponse({ success: true });
+      
       return true;
     } catch (error) {
       console.error('Erreur lors de la suppression du commentaire:', error);
+      debug.comments.serviceResponse({ success: false, error: error.message });
       throw error;
     }
-  }, [contactId, contactType, updateStructure, updatePersonne]);
+  }, [contactId, contactType, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);
 
   const handleAddCommentToPerson = useCallback(async (personne) => {
     const personneNom = `${personne.prenom || ''} ${personne.nom || ''}`.trim() || 'Personne';

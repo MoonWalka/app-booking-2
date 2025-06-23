@@ -97,13 +97,24 @@ class StructuresService {
       // Préparer les données pour la validation (convertir les timestamps Firebase)
       const dataForValidation = prepareDataForValidation(updatedData);
 
+      // Debug spécifique pour les commentaires
+      if (dataForValidation.commentaires && dataForValidation.commentaires.length > 0) {
+        console.log('[StructuresService] Debug commentaires avant validation:', {
+          commentaires: dataForValidation.commentaires,
+          firstCommentDate: dataForValidation.commentaires[0]?.date,
+          firstCommentDateType: typeof dataForValidation.commentaires[0]?.date,
+          isValidDate: dataForValidation.commentaires[0]?.date instanceof Date
+        });
+      }
+
       // Validation
       const validation = await validateStructure(dataForValidation);
       if (!validation.valid) {
         console.error('[StructuresService] Erreur de validation détaillée:', {
           errors: validation.errors,
           dataForValidation: dataForValidation,
-          periodeActivite: dataForValidation.periodeActivite
+          periodeActivite: dataForValidation.periodeActivite,
+          commentaires: dataForValidation.commentaires
         });
         throw new Error(`Validation échouée: ${JSON.stringify(validation.errors)}`);
       }

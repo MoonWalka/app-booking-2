@@ -5,7 +5,7 @@ import styles from './FormErrorPanel.module.css';
  * Component to display error states in forms
  * Migré vers les standards CSS TourCraft - Suppression des classes Bootstrap alert
  */
-const FormErrorPanel = ({ type = 'error', message, actionButton }) => {
+const FormErrorPanel = ({ type = 'error', title, message, details, actionButton }) => {
   // Map of types to CSS classes and titles (utilise CSS Modules au lieu de Bootstrap)
   const typeConfig = {
     error: { 
@@ -32,10 +32,13 @@ const FormErrorPanel = ({ type = 'error', message, actionButton }) => {
   return (
     <div className={`${styles.errorPanel} ${config.className}`}>
       <div className={styles.alertHeader}>
-        <h3 className={styles.alertTitle}>{config.title}</h3>
+        <h3 className={styles.alertTitle}>{title || config.title}</h3>
       </div>
       <div className={styles.alertContent}>
         <p className={styles.alertMessage}>{message}</p>
+        {details && (
+          <p className={styles.alertDetails}>{details}</p>
+        )}
         {actionButton && (
           <div className={styles.actionContainer}>
             {actionButton}

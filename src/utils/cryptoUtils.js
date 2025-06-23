@@ -192,3 +192,23 @@ export const validateEncryptedApiKey = (encryptedApiKey) => {
     return false;
   }
 };
+
+/**
+ * Génère un token sécurisé pour les URLs
+ * @param {number} length - Longueur du token (par défaut 32)
+ * @returns {string} - Token sécurisé
+ */
+export const generateSecureToken = (length = 32) => {
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  let token = '';
+  
+  // Utiliser crypto.getRandomValues pour une génération sécurisée
+  const values = new Uint8Array(length);
+  window.crypto.getRandomValues(values);
+  
+  for (let i = 0; i < length; i++) {
+    token += charset[values[i] % charset.length];
+  }
+  
+  return token;
+};

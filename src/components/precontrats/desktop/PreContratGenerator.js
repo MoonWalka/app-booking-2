@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Row, Col, Card, Alert } from 'react-bootstrap';
+import { Form, Button, Row, Col, Card, Alert, Modal, Spinner } from 'react-bootstrap';
 import { collection, query, where, getDocs } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import RepresentationsSection from '@/components/common/RepresentationsSection';
+import preContratService from '@/services/preContratService';
 import styles from './PreContratGenerator.module.css';
 import '@styles/index.css';
 
@@ -97,6 +98,9 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
   const [alertType, setAlertType] = useState('success');
   const [responsablesAdmin, setResponsablesAdmin] = useState([]);
   const [loadingResponsables, setLoadingResponsables] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [preContratId, setPreContratId] = useState(null);
 
   // Initialiser les données depuis les props
   useEffect(() => {
@@ -216,31 +220,111 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
 
   const handleSave = async () => {
     try {
-      // Logique de sauvegarde
-      setAlertType('success');
-      setAlertMessage('Pré-contrat enregistré avec succès');
+      if (!currentOrg?.id) {
+        throw new Error('Organisation non définie');
+      }
+
+      // Créer ou mettre à jour le pré-contrat
+      if (preContratId) {
+        // Mise à jour
+        await preContratService.updatePreContrat(preContratId, formData);
+        setAlertType('success');
+        setAlertMessage('Pré-contrat mis à jour avec succès');
+      } else {
+        // Création
+        const result = await preContratService.createPreContrat(
+          formData,
+          concert.id,
+          currentOrg.id
+        );
+        setPreContratId(result.id);
+        setAlertType('success');
+        setAlertMessage('Pré-contrat enregistré avec succès');
+      }
+      
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000);
     } catch (error) {
+      console.error('[PreContratGenerator] Erreur sauvegarde:', error);
       setAlertType('danger');
-      setAlertMessage('Erreur lors de l\'enregistrement');
+      setAlertMessage('Erreur lors de l\'enregistrement: ' + error.message);
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
+      setTimeout(() => setShowAlert(false), 5000);
     }
   };
 
   const handleSend = async () => {
+    // Vérifier qu'on a des destinataires
+    if (!formData.destinataires || formData.destinataires.length === 0) {
+      setAlertType('warning');
+      setAlertMessage('Veuillez ajouter au moins un destinataire');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000);
+      return;
+    }
+
+    // Afficher la modale de confirmation
+    setShowConfirmModal(true);
+  };
+
+  const confirmSend = async () => {
+    setShowConfirmModal(false);
+    setIsSending(true);
+    
     try {
-      // Logique d'envoi
-      setAlertType('success');
-      setAlertMessage('Pré-contrat envoyé avec succès');
+      if (!currentOrg?.id) {
+        throw new Error('Organisation non définie');
+      }
+
+      // Sauvegarder d'abord si pas encore fait
+      let currentPreContratId = preContratId;
+      if (!currentPreContratId) {
+        const result = await preContratService.createPreContrat(
+          formData,
+          concert.id,
+          currentOrg.id
+        );
+        currentPreContratId = result.id;
+        setPreContratId(result.id);
+      }
+
+      // Envoyer le pré-contrat
+      const sendResult = await preContratService.sendPreContrat(
+        currentPreContratId,
+        formData.destinataires
+      );
+
+      if (sendResult.success) {
+        setAlertType('success');
+        setAlertMessage(
+          `Pré-contrat envoyé avec succès à ${sendResult.successCount} destinataire(s)`
+        );
+        
+        // Afficher les erreurs s'il y en a
+        if (sendResult.errorCount > 0) {
+          const failedEmails = sendResult.results
+            .filter(r => !r.success)
+            .map(r => r.email)
+            .join(', ');
+          setAlertMessage(prev => 
+            `${prev}\nÉchec pour: ${failedEmails}`
+          );
+        }
+      } else {
+        throw new Error('Aucun email envoyé avec succès');
+      }
+
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
+      setTimeout(() => setShowAlert(false), 5000);
+
     } catch (error) {
+      console.error('[PreContratGenerator] Erreur envoi:', error);
       setAlertType('danger');
-      setAlertMessage('Erreur lors de l\'envoi');
+      setAlertMessage('Erreur lors de l\'envoi: ' + error.message);
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
+      setTimeout(() => setShowAlert(false), 5000);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -870,17 +954,55 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
           size="lg"
           onClick={handleSend}
           className="me-3"
+          disabled={isSending}
         >
-          Envoyer le pré-contrat
+          {isSending ? (
+            <>
+              <Spinner size="sm" animation="border" className="me-2" />
+              Envoi en cours...
+            </>
+          ) : (
+            'Envoyer le pré-contrat'
+          )}
         </Button>
         <Button 
           variant="primary" 
           size="lg"
           onClick={handleSave}
+          disabled={isSending}
         >
-          Enregistrer le pré-contrat
+          {preContratId ? 'Mettre à jour' : 'Enregistrer'} le pré-contrat
         </Button>
       </div>
+
+      {/* Modal de confirmation d'envoi */}
+      <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmer l'envoi</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Vous êtes sur le point d'envoyer le pré-contrat aux destinataires suivants :</p>
+          <ul>
+            {formData.destinataires.map((email, index) => (
+              <li key={index}>{email}</li>
+            ))}
+          </ul>
+          <p className="mb-0">
+            <strong>Concert :</strong> {concert?.titre || concert?.nom || 'Sans titre'}
+          </p>
+          <p className="mb-0">
+            <strong>Structure :</strong> {formData.raisonSociale || 'Non renseignée'}
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+            Annuler
+          </Button>
+          <Button variant="success" onClick={confirmSend}>
+            Confirmer l'envoi
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

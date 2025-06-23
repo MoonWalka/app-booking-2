@@ -15,7 +15,7 @@ import debug from '@/utils/debugTagsComments';
  */
 export const useUnifiedContact = (contactId, contactType = null) => {
   const { currentOrganization } = useOrganization();
-  const { getStructureWithPersonnes, getPersonneWithStructures } = useContactsRelational();
+  const { getStructureWithPersonnes, getPersonneWithStructures, structures, personnes } = useContactsRelational();
   
   const [data, setData] = useState({
     contact: null,
@@ -99,16 +99,16 @@ export const useUnifiedContact = (contactId, contactType = null) => {
       // Charger les données selon le type
       if (detectedEntityType === 'structure') {
         console.log('🏢 [useUnifiedContact] Chargement comme structure');
-        contactData = getStructureWithPersonnes(contactId);
+        let rawContactData = getStructureWithPersonnes(contactId);
         
-        if (contactData) {
-          debug.cache.cacheHit(contactId, contactData);
+        if (rawContactData) {
+          debug.cache.cacheHit(contactId, rawContactData);
         } else {
           debug.cache.cacheMiss(contactId, 'structure');
         }
         
         // Si pas trouvé dans le cache, essayer de charger directement depuis le service
-        if (!contactData) {
+        if (!rawContactData) {
           console.log('🔄 [useUnifiedContact] Structure pas dans le cache, chargement direct depuis le service');
           try {
             const structureResult = await structuresService.getStructure(contactId);
@@ -149,7 +149,7 @@ export const useUnifiedContact = (contactId, contactType = null) => {
               console.log('📋 [useUnifiedContact] Personnes associées trouvées:', personnesAssociees.length);
               
               // Créer un objet complet avec les personnes
-              contactData = {
+              rawContactData = {
                 ...structureResult.data,
                 personnes: personnesAssociees
               };
@@ -159,29 +159,31 @@ export const useUnifiedContact = (contactId, contactType = null) => {
           }
         }
         
-        if (contactData) {
+        if (rawContactData) {
+          console.log('🏷️ [useUnifiedContact] Tags présents dans rawContactData:', rawContactData.tags);
+          
           // Adapter au format attendu par les composants existants
           contactData = {
-            id: contactData.id,
+            id: rawContactData.id,
             entityType: 'structure',
             structure: {
-              raisonSociale: contactData.raisonSociale,
-              type: contactData.type,
-              email: contactData.email,
-              telephone1: contactData.telephone1,
-              telephone2: contactData.telephone2,
-              fax: contactData.fax,
-              siteWeb: contactData.siteWeb,
-              adresse: contactData.adresse,
-              codePostal: contactData.codePostal,
-              ville: contactData.ville,
-              pays: contactData.pays,
-              isClient: contactData.isClient,
-              notes: contactData.notes
+              raisonSociale: rawContactData.raisonSociale,
+              type: rawContactData.type,
+              email: rawContactData.email,
+              telephone1: rawContactData.telephone1,
+              telephone2: rawContactData.telephone2,
+              fax: rawContactData.fax,
+              siteWeb: rawContactData.siteWeb,
+              adresse: rawContactData.adresse,
+              codePostal: rawContactData.codePostal,
+              ville: rawContactData.ville,
+              pays: rawContactData.pays,
+              isClient: rawContactData.isClient,
+              notes: rawContactData.notes
             },
-            tags: contactData.tags || [],
-            commentaires: contactData.commentaires || [],
-            personnes: contactData.personnes?.map(p => ({
+            tags: rawContactData.tags || [],
+            commentaires: rawContactData.commentaires || [],
+            personnes: rawContactData.personnes?.map(p => ({
               id: p.id,
               prenom: p.prenom,
               nom: p.nom,
@@ -199,23 +201,23 @@ export const useUnifiedContact = (contactId, contactType = null) => {
               prioritaire: p.liaison?.prioritaire,
               interesse: p.liaison?.interesse
             })) || [],
-            createdAt: contactData.createdAt,
-            updatedAt: contactData.updatedAt
+            createdAt: rawContactData.createdAt,
+            updatedAt: rawContactData.updatedAt
           };
         }
       } else if (detectedEntityType === 'personne') {
         console.log('👤 [useUnifiedContact] Chargement comme personne avec ID:', contactId);
-        contactData = getPersonneWithStructures(contactId);
-        console.log('📊 [useUnifiedContact] Données personne récupérées du cache:', contactData);
+        let rawContactData = getPersonneWithStructures(contactId);
+        console.log('📊 [useUnifiedContact] Données personne récupérées du cache:', rawContactData);
         
-        if (contactData) {
-          debug.cache.cacheHit(contactId, contactData);
+        if (rawContactData) {
+          debug.cache.cacheHit(contactId, rawContactData);
         } else {
           debug.cache.cacheMiss(contactId, 'personne');
         }
         
         // Si pas trouvé dans le cache, essayer de charger directement depuis le service
-        if (!contactData) {
+        if (!rawContactData) {
           console.log('🔄 [useUnifiedContact] Pas dans le cache, chargement direct depuis le service');
           try {
             const personneResult = await personnesService.getPersonne(contactId);
@@ -253,7 +255,7 @@ export const useUnifiedContact = (contactId, contactType = null) => {
               console.log('📋 [useUnifiedContact] Structures trouvées pour la personne:', structures.length);
               
               // Créer un objet compatible avec les structures
-              contactData = {
+              rawContactData = {
                 ...personneResult.data,
                 structures
               };
@@ -263,26 +265,28 @@ export const useUnifiedContact = (contactId, contactType = null) => {
           }
         }
         
-        if (contactData) {
+        if (rawContactData) {
+          console.log('🏷️ [useUnifiedContact] Tags présents dans rawContactData:', rawContactData.tags);
+          
           // Adapter au format attendu par les composants existants
           contactData = {
-            id: contactData.id,
-            entityType: (contactData.isPersonneLibre && (!contactData.structures || contactData.structures.length === 0)) ? 'personne_libre' : 'personne',
+            id: rawContactData.id,
+            entityType: (rawContactData.isPersonneLibre && (!rawContactData.structures || rawContactData.structures.length === 0)) ? 'personne_libre' : 'personne',
             personne: {
-              prenom: contactData.prenom,
-              nom: contactData.nom,
-              email: contactData.email,
-              telephone: contactData.telephone,
-              mobile: contactData.telephone2,
-              adresse: contactData.adresse,
-              codePostal: contactData.codePostal,
-              ville: contactData.ville,
-              pays: contactData.pays,
-              notes: contactData.notes
+              prenom: rawContactData.prenom,
+              nom: rawContactData.nom,
+              email: rawContactData.email,
+              telephone: rawContactData.telephone,
+              mobile: rawContactData.telephone2,
+              adresse: rawContactData.adresse,
+              codePostal: rawContactData.codePostal,
+              ville: rawContactData.ville,
+              pays: rawContactData.pays,
+              notes: rawContactData.notes
             },
-            tags: contactData.tags || [],
-            commentaires: contactData.commentaires || [],
-            structures: contactData.structures?.map(s => ({
+            tags: rawContactData.tags || [],
+            commentaires: rawContactData.commentaires || [],
+            structures: rawContactData.structures?.map(s => ({
               id: s.id,
               raisonSociale: s.raisonSociale,
               type: s.type,
@@ -291,8 +295,8 @@ export const useUnifiedContact = (contactId, contactType = null) => {
               prioritaire: s.liaison?.prioritaire,
               interesse: s.liaison?.interesse
             })) || [],
-            createdAt: contactData.createdAt,
-            updatedAt: contactData.updatedAt
+            createdAt: rawContactData.createdAt,
+            updatedAt: rawContactData.updatedAt
           };
         }
       }
@@ -345,6 +349,113 @@ export const useUnifiedContact = (contactId, contactType = null) => {
       loadUnifiedContact();
     }
   }, [contactId, loadUnifiedContact]);
+
+  // Utiliser directement les données du cache relationnel qui sont réactives
+  useEffect(() => {
+    if (!contactId || data.loading) return;
+    
+    // Une fois qu'on connaît le type, utiliser directement les données réactives
+    if (data.entityType === 'structure') {
+      const structureData = getStructureWithPersonnes(contactId);
+      if (structureData) {
+        console.log('🔄 [useUnifiedContact] Mise à jour réactive des données structure');
+        debug.tags.hookData(contactId, structureData);
+        
+        // Adapter au format attendu par les composants existants
+        const contactData = {
+          id: structureData.id,
+          entityType: 'structure',
+          structure: {
+            raisonSociale: structureData.raisonSociale,
+            type: structureData.type,
+            email: structureData.email,
+            telephone1: structureData.telephone1,
+            telephone2: structureData.telephone2,
+            fax: structureData.fax,
+            siteWeb: structureData.siteWeb,
+            adresse: structureData.adresse,
+            codePostal: structureData.codePostal,
+            ville: structureData.ville,
+            pays: structureData.pays,
+            isClient: structureData.isClient,
+            notes: structureData.notes
+          },
+          tags: structureData.tags || [],
+          commentaires: structureData.commentaires || [],
+          personnes: structureData.personnes?.map(p => ({
+            id: p.id,
+            prenom: p.prenom,
+            nom: p.nom,
+            fonction: p.liaison?.fonction || '',
+            email: p.email,
+            telephone: p.telephone,
+            mobile: p.telephone2,
+            mailPerso: p.email,
+            adresse: p.adresse,
+            codePostal: p.codePostal,
+            ville: p.ville,
+            pays: p.pays,
+            actif: p.liaison?.actif,
+            prioritaire: p.liaison?.prioritaire,
+            interesse: p.liaison?.interesse
+          })) || [],
+          createdAt: structureData.createdAt,
+          updatedAt: structureData.updatedAt
+        };
+        
+        setData({
+          contact: contactData,
+          loading: false,
+          error: null,
+          entityType: 'structure'
+        });
+      }
+    } else if (data.entityType === 'personne' || data.entityType === 'personne_libre') {
+      const personneData = getPersonneWithStructures(contactId);
+      if (personneData) {
+        console.log('🔄 [useUnifiedContact] Mise à jour réactive des données personne');
+        debug.tags.hookData(contactId, personneData);
+        
+        // Adapter au format attendu par les composants existants
+        const contactData = {
+          id: personneData.id,
+          entityType: (personneData.isPersonneLibre && (!personneData.structures || personneData.structures.length === 0)) ? 'personne_libre' : 'personne',
+          personne: {
+            prenom: personneData.prenom,
+            nom: personneData.nom,
+            email: personneData.email,
+            telephone: personneData.telephone,
+            mobile: personneData.telephone2,
+            adresse: personneData.adresse,
+            codePostal: personneData.codePostal,
+            ville: personneData.ville,
+            pays: personneData.pays,
+            notes: personneData.notes
+          },
+          tags: personneData.tags || [],
+          commentaires: personneData.commentaires || [],
+          structures: personneData.structures?.map(s => ({
+            id: s.id,
+            raisonSociale: s.raisonSociale,
+            type: s.type,
+            fonction: s.liaison?.fonction || '',
+            actif: s.liaison?.actif,
+            prioritaire: s.liaison?.prioritaire,
+            interesse: s.liaison?.interesse
+          })) || [],
+          createdAt: personneData.createdAt,
+          updatedAt: personneData.updatedAt
+        };
+        
+        setData({
+          contact: contactData,
+          loading: false,
+          error: null,
+          entityType: contactData.entityType
+        });
+      }
+    }
+  }, [structures, personnes, contactId, data.entityType, data.loading, getStructureWithPersonnes, getPersonneWithStructures]);
 
   const reload = useCallback(() => {
     console.log('🔄 [useUnifiedContact] Rechargement forcé demandé');

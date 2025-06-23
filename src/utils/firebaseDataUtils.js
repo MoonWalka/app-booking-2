@@ -10,6 +10,11 @@
 export const convertFirebaseTimestamps = (data) => {
   if (!data) return data;
   
+  // Si c'est une Date JavaScript, la garder telle quelle
+  if (data instanceof Date) {
+    return data;
+  }
+  
   // Si c'est un Timestamp Firebase
   if (data && typeof data === 'object' && data.toDate && typeof data.toDate === 'function') {
     return data.toDate();
@@ -59,6 +64,23 @@ export const prepareDataForValidation = (data) => {
     cleaned.periodeActivite = convertFirebaseTimestamps(cleaned.periodeActivite);
   }
   
+  // Traitement spécial pour les commentaires
+  if (cleaned.commentaires && Array.isArray(cleaned.commentaires)) {
+    cleaned.commentaires = cleaned.commentaires.map(comment => {
+      // S'assurer que la date est bien une Date JavaScript
+      if (comment.date && !(comment.date instanceof Date)) {
+        // Si c'est un timestamp Firebase
+        if (comment.date.toDate && typeof comment.date.toDate === 'function') {
+          comment.date = comment.date.toDate();
+        } else if (typeof comment.date === 'string') {
+          // Si c'est une string, la convertir en Date
+          comment.date = new Date(comment.date);
+        }
+      }
+      return comment;
+    });
+  }
+  
   return cleaned;
 };
 
@@ -79,8 +101,20 @@ export const prepareDataForFirestore = (data) => {
     
     if (value === null) {
       cleaned[key] = null; // Keep null values
+    } else if (value instanceof Date) {
+      // Garder les dates JavaScript telles quelles - Firebase les convertira automatiquement
+      cleaned[key] = value;
     } else if (Array.isArray(value)) {
-      cleaned[key] = value; // Keep arrays as is
+      // Nettoyer récursivement les tableaux
+      cleaned[key] = value.map(item => {
+        if (item instanceof Date) {
+          // Préserver les dates dans les tableaux
+          return item;
+        } else if (typeof item === 'object' && item !== null) {
+          return prepareDataForFirestore(item);
+        }
+        return item;
+      });
     } else if (typeof value === 'object' && value !== null) {
       // Recursively clean nested objects
       cleaned[key] = prepareDataForFirestore(value);

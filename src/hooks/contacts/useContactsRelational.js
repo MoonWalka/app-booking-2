@@ -6,6 +6,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 import structuresService from '@/services/contacts/structuresService';
 import personnesService from '@/services/contacts/personnesService';
 import liaisonsService from '@/services/contacts/liaisonsService';
+import debug from '@/utils/debugTagsComments';
 
 /**
  * Hook unifié pour gérer les contacts avec le nouveau modèle relationnel
@@ -51,6 +52,16 @@ export function useContactsRelational() {
           id: doc.id,
           ...doc.data()
         }));
+        
+        // DEBUG: Tracer les mises à jour Firebase pour les structures
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'modified') {
+            const data = change.doc.data();
+            debug.tags.firebaseListener(change.doc.id, data);
+            debug.comments.firebaseListener(change.doc.id, data);
+          }
+        });
+        
         setStructures(structuresData);
       });
       unsubscribers.push(unsubStructures);
@@ -66,6 +77,16 @@ export function useContactsRelational() {
           id: doc.id,
           ...doc.data()
         }));
+        
+        // DEBUG: Tracer les mises à jour Firebase pour les personnes
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'modified') {
+            const data = change.doc.data();
+            debug.tags.firebaseListener(change.doc.id, data);
+            debug.comments.firebaseListener(change.doc.id, data);
+          }
+        });
+        
         setPersonnes(personnesData);
       });
       unsubscribers.push(unsubPersonnes);

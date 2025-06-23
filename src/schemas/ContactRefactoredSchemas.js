@@ -149,6 +149,17 @@ export const structureSchema = Yup.object().shape({
     .of(Yup.string())
     .default([]),
   
+  // Commentaires
+  commentaires: Yup.array()
+    .of(Yup.object().shape({
+      id: Yup.string().required(),
+      contenu: Yup.string().required(),
+      auteur: Yup.string().required(),
+      date: Yup.date().required(),
+      modifie: Yup.boolean().default(false)
+    }))
+    .default([]),
+  
   // Statut client (nouveau)
   isClient: Yup.boolean()
     .default(false),
@@ -296,6 +307,17 @@ export const personneSchema = Yup.object().shape({
   // Qualification
   tags: Yup.array()
     .of(Yup.string())
+    .default([]),
+  
+  // Commentaires
+  commentaires: Yup.array()
+    .of(Yup.object().shape({
+      id: Yup.string().required(),
+      contenu: Yup.string().required(), 
+      auteur: Yup.string().required(),
+      date: Yup.date().required(),
+      modifie: Yup.boolean().default(false)
+    }))
     .default([]),
   
   // Indicateur personne libre (sans structure)

@@ -6,6 +6,7 @@ import { structuresService } from '@/services/contacts/structuresService';
 import { personnesService } from '@/services/contacts/personnesService';
 import { query, collection, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
+import debug from '@/utils/debugTagsComments';
 
 /**
  * Hook pour charger un contact depuis le nouveau modèle relationnel
@@ -100,6 +101,12 @@ export const useUnifiedContact = (contactId, contactType = null) => {
         console.log('🏢 [useUnifiedContact] Chargement comme structure');
         contactData = getStructureWithPersonnes(contactId);
         
+        if (contactData) {
+          debug.cache.cacheHit(contactId, contactData);
+        } else {
+          debug.cache.cacheMiss(contactId, 'structure');
+        }
+        
         // Si pas trouvé dans le cache, essayer de charger directement depuis le service
         if (!contactData) {
           console.log('🔄 [useUnifiedContact] Structure pas dans le cache, chargement direct depuis le service');
@@ -172,9 +179,8 @@ export const useUnifiedContact = (contactId, contactType = null) => {
               isClient: contactData.isClient,
               notes: contactData.notes
             },
-            qualification: {
-              tags: contactData.tags || []
-            },
+            tags: contactData.tags || [],
+            commentaires: contactData.commentaires || [],
             personnes: contactData.personnes?.map(p => ({
               id: p.id,
               prenom: p.prenom,
@@ -201,6 +207,12 @@ export const useUnifiedContact = (contactId, contactType = null) => {
         console.log('👤 [useUnifiedContact] Chargement comme personne avec ID:', contactId);
         contactData = getPersonneWithStructures(contactId);
         console.log('📊 [useUnifiedContact] Données personne récupérées du cache:', contactData);
+        
+        if (contactData) {
+          debug.cache.cacheHit(contactId, contactData);
+        } else {
+          debug.cache.cacheMiss(contactId, 'personne');
+        }
         
         // Si pas trouvé dans le cache, essayer de charger directement depuis le service
         if (!contactData) {
@@ -268,9 +280,8 @@ export const useUnifiedContact = (contactId, contactType = null) => {
               pays: contactData.pays,
               notes: contactData.notes
             },
-            qualification: {
-              tags: contactData.tags || []
-            },
+            tags: contactData.tags || [],
+            commentaires: contactData.commentaires || [],
             structures: contactData.structures?.map(s => ({
               id: s.id,
               raisonSociale: s.raisonSociale,
@@ -293,8 +304,12 @@ export const useUnifiedContact = (contactId, contactType = null) => {
           structureName: contactData.structure?.raisonSociale,
           personnesCount: contactData.personnes?.length || 0,
           structuresCount: contactData.structures?.length || 0,
-          tags: contactData.qualification?.tags?.length || 0
+          tags: contactData.tags?.length || 0
         });
+        
+        // DEBUG: Tracer les données dans le hook
+        debug.tags.hookData(contactId, contactData);
+        debug.comments.hookData(contactId, contactData);
 
         setData({
           contact: contactData,
@@ -336,30 +351,14 @@ export const useUnifiedContact = (contactId, contactType = null) => {
     loadUnifiedContact(true);
   }, [loadUnifiedContact]);
 
-  // Fonction pour invalider le cache (compatibilité)
-  const invalidateCache = useCallback(() => {
-    if (contactId) {
-      console.log('🗑️ [useUnifiedContact] Cache invalidé pour (relationnel):', contactId);
-      // Dans le modèle relationnel, on peut forcer un reload
-      loadUnifiedContact(true);
-    }
-  }, [contactId, loadUnifiedContact]);
-
   // Mémoriser le résultat pour éviter les re-renders inutiles
   const result = useMemo(() => ({
     contact: data.contact,
     loading: data.loading,
     error: data.error,
     entityType: data.entityType,
-    reload,
-    invalidateCache
-  }), [data.contact, data.loading, data.error, data.entityType, reload, invalidateCache]);
+    reload
+  }), [data.contact, data.loading, data.error, data.entityType, reload]);
 
   return result;
-};
-
-// Fonction utilitaire pour nettoyer le cache (compatibilité)
-export const clearContactCache = () => {
-  console.log('🧹 [useUnifiedContact] Cache nettoyé (modèle relationnel)');
-  // Dans le modèle relationnel, le cache est géré par useContactsRelational
 };

@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { validateStructure } from '@/schemas/ContactRefactoredSchemas';
+import { prepareDataForValidation, prepareDataForFirestore } from '@/utils/firebaseDataUtils';
 
 const COLLECTION_NAME = 'structures';
 
@@ -27,8 +28,11 @@ class StructuresService {
    */
   async createStructure(data, organizationId, userId) {
     try {
+      // Préparer les données pour la validation (convertir les timestamps Firebase)
+      const dataForValidation = prepareDataForValidation({ ...data, organizationId });
+      
       // Validation des données
-      const validation = await validateStructure({ ...data, organizationId });
+      const validation = await validateStructure(dataForValidation);
       if (!validation.valid) {
         throw new Error(`Validation échouée: ${JSON.stringify(validation.errors)}`);
       }
@@ -45,13 +49,8 @@ class StructuresService {
         throw new Error(`Une structure avec cette raison sociale existe déjà`);
       }
 
-      // Créer la structure - Nettoyer les undefined pour Firestore
-      const cleanedData = Object.entries(validation.data).reduce((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value;
-        }
-        return acc;
-      }, {});
+      // Créer la structure - Utiliser l'utilitaire pour nettoyer les données
+      const cleanedData = prepareDataForFirestore(validation.data);
       
       const structureData = {
         ...cleanedData,
@@ -95,9 +94,17 @@ class StructuresService {
       const currentData = docSnap.data();
       const updatedData = { ...currentData, ...updates };
 
+      // Préparer les données pour la validation (convertir les timestamps Firebase)
+      const dataForValidation = prepareDataForValidation(updatedData);
+
       // Validation
-      const validation = await validateStructure(updatedData);
+      const validation = await validateStructure(dataForValidation);
       if (!validation.valid) {
+        console.error('[StructuresService] Erreur de validation détaillée:', {
+          errors: validation.errors,
+          dataForValidation: dataForValidation,
+          periodeActivite: dataForValidation.periodeActivite
+        });
         throw new Error(`Validation échouée: ${JSON.stringify(validation.errors)}`);
       }
 
@@ -115,13 +122,8 @@ class StructuresService {
         }
       }
 
-      // Nettoyer les undefined pour Firestore
-      const cleanedUpdates = Object.entries(updates).reduce((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value;
-        }
-        return acc;
-      }, {});
+      // Nettoyer les données pour Firestore
+      const cleanedUpdates = prepareDataForFirestore(updates);
       
       // Mettre à jour
       await updateDoc(docRef, {

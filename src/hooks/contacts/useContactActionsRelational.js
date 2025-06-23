@@ -1,10 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { useTabs } from '@/context/TabsContext';
 import { useContactsRelational } from './useContactsRelational';
-import structuresService from '@/services/contacts/structuresService';
-import personnesService from '@/services/contacts/personnesService';
+import { structuresService } from '@/services/contacts/structuresService';
+import { personnesService } from '@/services/contacts/personnesService';
+import debug from '@/utils/debugTagsComments';
 
 /**
  * Hook pour gérer les actions sur les contacts avec le nouveau modèle relationnel
@@ -24,33 +25,49 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
     getStructureWithPersonnes,
     getPersonneWithStructures
   } = useContactsRelational();
-  
-  // État local pour les modifications optimistes
-  const [localTags, setLocalTags] = useState([]);
-  const [localCommentaires, setLocalCommentaires] = useState([]);
-  const [lastLocalUpdate, setLastLocalUpdate] = useState(null);
 
   // ==================== GESTION DES TAGS ====================
 
   const handleTagsChange = useCallback(async (newTags) => {
     try {
+      // DEBUG: Début du flux
+      const currentTags = contactType === 'structure' 
+        ? getStructureWithPersonnes(contactId)?.tags || []
+        : getPersonneWithStructures(contactId)?.tags || [];
+      debug.tags.start(currentTags, newTags);
+      
+      // DEBUG: Appel au service
+      debug.tags.serviceCall(contactId, contactType, newTags);
+      
       if (contactType === 'structure') {
         await updateStructure(contactId, { tags: newTags });
       } else {
         await updatePersonne(contactId, { tags: newTags });
       }
       
-      setLocalTags(newTags);
+      // DEBUG: Succès
+      debug.tags.serviceResponse({ success: true });
+      
       return true;
     } catch (error) {
       console.error('Erreur lors de la mise à jour des tags:', error);
+      debug.tags.serviceResponse({ success: false, error: error.message });
       throw error;
     }
-  }, [contactId, contactType, updateStructure, updatePersonne]);
+  }, [contactId, contactType, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);
 
   const handleRemoveTag = useCallback(async (tagToRemove) => {
     try {
-      const currentTags = localTags || [];
+      // Récupérer les tags actuels depuis Firebase
+      let currentTags = [];
+      if (contactType === 'structure') {
+        const structure = getStructureWithPersonnes(contactId);
+        currentTags = structure?.tags || [];
+      } else {
+        const personne = getPersonneWithStructures(contactId);
+        currentTags = personne?.tags || [];
+      }
+      
       const newTags = currentTags.filter(tag => tag !== tagToRemove);
       
       return handleTagsChange(newTags);
@@ -58,7 +75,7 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       console.error('Erreur lors de la suppression du tag:', error);
       throw error;
     }
-  }, [localTags, handleTagsChange]);
+  }, [contactId, contactType, handleTagsChange, getStructureWithPersonnes, getPersonneWithStructures]);
 
   // ==================== GESTION DES PERSONNES ASSOCIÉES ====================
 
@@ -269,8 +286,6 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
 
   const handleAddComment = useCallback(async (content) => {
     try {
-      // TODO: Implémenter la gestion des commentaires dans le nouveau modèle
-      // Pour l'instant, on garde la logique locale
       const newComment = {
         id: Date.now().toString(),
         contenu: content || '',
@@ -279,15 +294,42 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         modifie: false
       };
       
-      setLocalCommentaires([...localCommentaires, newComment]);
-      setLastLocalUpdate(Date.now());
+      // Récupérer les commentaires existants
+      let existingComments = [];
+      if (contactType === 'structure') {
+        const structureData = await structuresService.getStructure(contactId);
+        existingComments = structureData.data?.commentaires || [];
+      } else {
+        const personneData = await personnesService.getPersonne(contactId);
+        existingComments = personneData.data?.commentaires || [];
+      }
+      
+      // DEBUG: Début du flux
+      debug.comments.start(existingComments, newComment);
+      
+      // Ajouter le nouveau commentaire
+      const updatedComments = [...existingComments, newComment];
+      
+      // DEBUG: Appel au service
+      debug.comments.serviceCall(contactId, contactType, updatedComments);
+      
+      // Sauvegarder dans Firebase
+      if (contactType === 'structure') {
+        await updateStructure(contactId, { commentaires: updatedComments });
+      } else {
+        await updatePersonne(contactId, { commentaires: updatedComments });
+      }
+      
+      // DEBUG: Succès
+      debug.comments.serviceResponse({ success: true });
       
       return true;
     } catch (error) {
       console.error('Erreur lors de l\'ajout du commentaire:', error);
+      debug.comments.serviceResponse({ success: false, error: error.message });
       throw error;
     }
-  }, [currentUser, localCommentaires]);
+  }, [contactId, contactType, currentUser, updateStructure, updatePersonne]);
 
   const handleDeleteComment = useCallback(async (commentaire) => {
     try {
@@ -300,16 +342,32 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         return false;
       }
 
-      const updatedComments = localCommentaires.filter(c => c.id !== commentaire.id);
-      setLocalCommentaires(updatedComments);
-      setLastLocalUpdate(Date.now());
+      // Récupérer les commentaires existants
+      let existingComments = [];
+      if (contactType === 'structure') {
+        const structureData = await structuresService.getStructure(contactId);
+        existingComments = structureData.data?.commentaires || [];
+      } else {
+        const personneData = await personnesService.getPersonne(contactId);
+        existingComments = personneData.data?.commentaires || [];
+      }
+      
+      // Supprimer le commentaire
+      const updatedComments = existingComments.filter(c => c.id !== commentaire.id);
+      
+      // Sauvegarder dans Firebase
+      if (contactType === 'structure') {
+        await updateStructure(contactId, { commentaires: updatedComments });
+      } else {
+        await updatePersonne(contactId, { commentaires: updatedComments });
+      }
       
       return true;
     } catch (error) {
       console.error('Erreur lors de la suppression du commentaire:', error);
       throw error;
     }
-  }, [localCommentaires]);
+  }, [contactId, contactType, updateStructure, updatePersonne]);
 
   const handleAddCommentToPerson = useCallback(async (personne) => {
     const personneNom = `${personne.prenom || ''} ${personne.nom || ''}`.trim() || 'Personne';
@@ -324,13 +382,6 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
   }, [openCommentModal]);
 
   return {
-    // État local
-    localTags,
-    setLocalTags,
-    localCommentaires,
-    setLocalCommentaires,
-    lastLocalUpdate,
-    
     // Actions sur les tags
     handleTagsChange,
     handleRemoveTag,

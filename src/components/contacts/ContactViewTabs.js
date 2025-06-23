@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useUnifiedContact } from '@/hooks/contacts/useUnifiedContact';
-import { useContactActions } from '@/hooks/contacts/useContactActions';
+import { useContactActionsRelational } from '@/hooks/contacts/useContactActionsRelational';
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
-// Utilisation du modèle relationnel via les services
 import { personnesService } from '@/services/contacts/personnesService';
-// Imports Firestore pour les requêtes directes
-import { query, collection, where, getDocs } from 'firebase/firestore';
-import { db } from '@/services/firebase-service';
+import { concertsService } from '@/services/concertService';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import EntityViewTabs from '@/components/common/EntityViewTabs';
@@ -18,6 +15,7 @@ import CommentListModal from '@/components/common/modals/CommentListModal';
 import { getTagColor, getTagCssClass } from '@/config/tagsConfig';
 import { formatActivityTags, getPersonDisplayType } from '@/utils/contactUtils';
 import { useNavigate } from 'react-router-dom';
+import debug from '@/utils/debugTagsComments';
 
 // Import des nouvelles sections
 import ContactInfoSection from './sections/ContactInfoSection';
@@ -56,7 +54,6 @@ function ContactViewTabs({ id, viewType = null }) {
   const [showCommentListModal, setShowCommentListModal] = useState(false);
   const [selectedPersonForComments, setSelectedPersonForComments] = useState(null);
   const [datesData, setDatesData] = useState([]);
-  const [datesLoading, setDatesLoading] = useState(false);
   
   // Hooks
   const { openDateCreationTab } = useTabs();
@@ -68,15 +65,19 @@ function ContactViewTabs({ id, viewType = null }) {
   // Hook unifié pour les données - passer le viewType pour aider à déterminer le type
   const { contact, loading, error, entityType, reload } = useUnifiedContact(cleanId, forcedViewType);
   
-  // Hook personnalisé pour toute la logique métier
+  // Déterminer le type de contact
+  const contactType = entityType === 'structure' ? 'structure' : 'personne';
+  
+  // DEBUG: Analyser la structure des données quand elles changent
+  React.useEffect(() => {
+    if (contact && !loading) {
+      console.log('🔍 [ContactViewTabs] Données chargées pour:', cleanId);
+      debug.analyze(contact);
+    }
+  }, [contact, loading, cleanId]);
+  
+  // Hook pour les actions avec le modèle relationnel
   const {
-    localTags,
-    setLocalTags,
-    localPersonnes,
-    setLocalPersonnes,
-    localCommentaires,
-    setLocalCommentaires,
-    lastLocalUpdate,
     handleTagsChange,
     handleRemoveTag,
     handleAssociatePersons,
@@ -87,25 +88,43 @@ function ContactViewTabs({ id, viewType = null }) {
     handleDeleteComment,
     handleSetPrioritaire,
     handleToggleActif
-  } = useContactActions(cleanId);
+  } = useContactActionsRelational(cleanId, contactType);
 
-  // Synchronisation initiale et après rechargement
-  useEffect(() => {
-    if (!contact) return;
-    
-    // Synchroniser les tags
-    const newTags = contact?.qualification?.tags || contact?.tags || [];
-    if (JSON.stringify(newTags) !== JSON.stringify(localTags)) {
-      setLocalTags(newTags);
-    }
-    
-    // Synchroniser les personnes
-    const newPersonnes = contact?.personnes || [];
-    if (JSON.stringify(newPersonnes.map(p => p.id)) !== JSON.stringify(localPersonnes.map(p => p.id))) {
-      console.log('🔄 [ContactViewTabs] Mise à jour des personnes locales:', newPersonnes.length);
-      setLocalPersonnes(newPersonnes);
-    }
-  }, [contact, localPersonnes, localTags, setLocalPersonnes, setLocalTags]); // Dépendance sur tout l'objet contact pour détecter les changements
+  // Fonction pour ouvrir la modal de création de commentaire
+  const openCreateCommentModal = useCallback((personneId, personneNom) => {
+    openCommentModal({
+      title: `Nouveau commentaire - ${personneNom}`,
+      onSave: async (content) => {
+        try {
+          const personneData = await personnesService.getPersonne(personneId, currentOrganization.id);
+          
+          if (!personneData) throw new Error('Fiche personne non trouvée');
+          
+          const existingComments = personneData.commentaires || [];
+          
+          const newComment = {
+            id: Date.now().toString(),
+            content,
+            createdAt: new Date(),
+            createdBy: currentUser?.uid || 'anonymous',
+            type: 'general'
+          };
+          
+          const updatedComments = [...existingComments, newComment];
+          
+          await personnesService.updatePersonne(personneId, {
+            commentaires: updatedComments
+          }, currentUser?.uid);
+          
+          console.log('Commentaire ajouté avec succès à la personne');
+          // Les listeners Firebase mettront à jour automatiquement
+        } catch (error) {
+          console.error('Erreur lors de l\'ajout du commentaire:', error);
+          throw error;
+        }
+      }
+    });
+  }, [openCommentModal, currentOrganization.id, currentUser?.uid]);
 
   // Gestion des personnes
   const handleEditPerson = useCallback((personne) => {
@@ -149,37 +168,6 @@ function ContactViewTabs({ id, viewType = null }) {
     }
   }, [currentOrganization, openCreateCommentModal]);
 
-  // Fonction pour ouvrir la modal de création de commentaire
-  const openCreateCommentModal = (personneId, personneNom) => {
-    openCommentModal({
-      title: `Nouveau commentaire - ${personneNom}`,
-      onSave: async (content) => {
-        try {
-          const personneData = await personnesService.getPersonne(personneId, currentOrganization.id);
-          
-          if (!personneData) throw new Error('Fiche personne non trouvée');
-          
-          const existingComments = personneData.commentaires || [];
-          
-          const newComment = {
-            id: Date.now().toString(),
-            contenu: content || '',
-            auteur: currentUser?.displayName || currentUser?.email || 'Utilisateur inconnu',
-            date: new Date(),
-            modifie: false
-          };
-          
-          await personnesService.updatePersonne(personneId, currentOrganization.id, {
-            commentaires: [...existingComments, newComment]
-          });
-        } catch (error) {
-          console.error('Erreur lors de la sauvegarde du commentaire personne:', error);
-          alert(`Erreur: ${error.message}`);
-        }
-      }
-    });
-  };
-
   const navigateToEntity = useCallback((entityType, entityId, entityName) => {
     if (!entityId) return;
     
@@ -202,15 +190,40 @@ function ContactViewTabs({ id, viewType = null }) {
       const result = await handleAssociatePersons(selectedPersons);
       if (result) {
         // Recharger les données pour afficher les personnes nouvellement associées
-        console.log('🔄 [ContactViewTabs] Rechargement après association de personnes');
-        await reload();
+        // Les listeners Firebase mettront à jour automatiquement
+        console.log('✅ [ContactViewTabs] Personnes associées avec succès');
       }
       return result;
     } catch (error) {
       console.error('❌ [ContactViewTabs] Erreur lors de l\'association:', error);
       throw error;
     }
-  }, [handleAssociatePersons, reload]);
+  }, [handleAssociatePersons]);
+
+  // Gestionnaires pour les actions sur la structure
+  const handleEditStructure = useCallback((structureData) => {
+    console.log('[ContactViewTabs] Édition de la structure:', structureData);
+    // Logique pour ouvrir le modal d'édition de structure
+    // À implémenter selon vos besoins
+  }, []);
+
+  const handleOpenStructureFiche = useCallback((structureData) => {
+    console.log('[ContactViewTabs] Ouverture de la fiche structure:', structureData);
+    if (structureData?.structureId) {
+      navigateToEntity('structure', structureData.structureId, structureData.structureRaisonSociale);
+    } else if (structureData.id) {
+      const originalId = structureData.id?.replace('unified_structure_', '');
+      if (originalId) {
+        navigateToEntity('structure', originalId, structureData.structureRaisonSociale);
+      }
+    }
+  }, [navigateToEntity]);
+
+  const handleAddCommentToStructure = useCallback((structureData) => {
+    console.log('[ContactViewTabs] Ajout commentaire à la structure:', structureData);
+    // Logique pour ajouter un commentaire à la structure
+    // À implémenter selon vos besoins
+  }, []);
 
   // Extraction des données selon le type d'entité
   const extractedData = useMemo(() => {
@@ -246,7 +259,7 @@ function ContactViewTabs({ id, viewType = null }) {
           departement: personneData.departement,
           region: personneData.region,
           pays: personneData.pays,
-          tags: localTags,
+          tags: contact?.tags || [],
           commentaires: contact.commentaires || [],
           createdAt: contact.createdAt,
           updatedAt: contact.updatedAt,
@@ -254,10 +267,10 @@ function ContactViewTabs({ id, viewType = null }) {
           structureId: contact.id,
           structureRaisonSociale: contact.structure?.raisonSociale || contact.structureRaisonSociale,
           structureNom: contact.structure?.nom || contact.structureNom,
-          structureTags: contact.qualification?.tags || contact.tags || [],
+          structureTags: contact.tags || [],
           structureData: {
             structureRaisonSociale: contact.structure?.raisonSociale || contact.structureRaisonSociale,
-            tags: contact.qualification?.tags || contact.tags || [],
+            tags: contact.tags || [],
             id: contact.id
           }
         };
@@ -287,7 +300,7 @@ function ContactViewTabs({ id, viewType = null }) {
         structureDepartement: structureData.departement || contact.structureDepartement,
         structureRegion: structureData.region || contact.structureRegion,
         structurePays: structureData.pays || contact.structurePays,
-        tags: localTags,
+        tags: contact?.tags || [],
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,
         updatedAt: contact.updatedAt,
@@ -332,7 +345,7 @@ function ContactViewTabs({ id, viewType = null }) {
         departement: personneData.departement,
         region: personneData.region,
         pays: personneData.pays,
-        tags: localTags,
+        tags: contact?.tags || [],
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,
         updatedAt: contact.updatedAt,
@@ -364,7 +377,7 @@ function ContactViewTabs({ id, viewType = null }) {
         departement: personneData.departement,
         region: personneData.region,
         pays: personneData.pays,
-        tags: localTags,
+        tags: contact?.tags || [],
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,
         updatedAt: contact.updatedAt
@@ -372,67 +385,35 @@ function ContactViewTabs({ id, viewType = null }) {
     }
     
     return contact;
-  }, [contact, entityType, localTags, forcedViewType]);
+  }, [contact, entityType, forcedViewType]);
 
   const structureName = useMemo(() => extractedData?.structureRaisonSociale, [extractedData?.structureRaisonSociale]);
   
-  // Chargement des dates pour les structures
-  useEffect(() => {
-    const loadStructureDates = async () => {
-      const organizationId = currentOrganization?.id;
-      
-      if (!organizationId || !structureName) {
-        if (datesData.length > 0) {
-          setDatesData([]);
-        }
-        return;
-      }
-
-      if (datesLoading) return;
-
-      try {
-        setDatesLoading(true);
-        
-        const concertsQuery = query(
-          collection(db, 'concerts'),
-          where('organizationId', '==', organizationId),
-          where('structureNom', '==', structureName)
-        );
-        
-        const concertsSnapshot = await getDocs(concertsQuery);
-        const structureConcerts = concertsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        setDatesData(structureConcerts);
-      } catch (error) {
-        console.error('Erreur chargement dates structure:', error);
-        setDatesData([]);
-      } finally {
-        setDatesLoading(false);
-      }
-    };
-
-    const timeoutId = setTimeout(loadStructureDates, 100);
-    return () => clearTimeout(timeoutId);
-  }, [currentOrganization?.id, structureName]); // eslint-disable-line react-hooks/exhaustive-deps
-  
-  // Utiliser directement les commentaires locaux après modification, sinon Firebase
-  const commentaires = useMemo(() => {
-    // Si on a des modifications locales récentes, les utiliser
-    if (localCommentaires.length > 0 || lastLocalUpdate) {
-      return localCommentaires;
+  // Charger les dates pour les structures
+  const loadStructureDates = useCallback(async () => {
+    if (!currentOrganization?.id || !structureName) {
+      setDatesData([]);
+      return;
     }
-    // Sinon utiliser les données Firebase
-    return extractedData?.commentaires || [];
-  }, [localCommentaires, lastLocalUpdate, extractedData?.commentaires]);
+
+    try {
+      const dates = await concertsService.getConcertsByStructure(currentOrganization.id, structureName);
+      setDatesData(dates || []);
+    } catch (error) {
+      console.error('Erreur chargement dates structure:', error);
+      setDatesData([]);
+    }
+  }, [currentOrganization?.id, structureName]);
+
+  // Charger les dates au changement de structure
+  React.useEffect(() => {
+    loadStructureDates();
+  }, [loadStructureDates]);
   
-  // Synchronisation initiale des commentaires
-  useEffect(() => {
-    if (!extractedData?.commentaires || localCommentaires.length > 0) return;
-    setLocalCommentaires(extractedData.commentaires);
-  }, [extractedData?.id, extractedData?.commentaires, localCommentaires.length, setLocalCommentaires]); // Dépendance sur l'ID uniquement
+  // Utiliser directement les commentaires du contact
+  const commentaires = useMemo(() => {
+    return extractedData?.commentaires || [];
+  }, [extractedData?.commentaires]);
 
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');
 
@@ -587,12 +568,16 @@ function ContactViewTabs({ id, viewType = null }) {
             onClick: () => setShowTagsModal(true)
           }
         ],
-        render: () => (
-          <ContactTagsSection 
-            tags={extractedData?.tags || []}
-            onRemoveTag={handleRemoveTag}
-          />
-        )
+        render: () => {
+          const tags = extractedData?.tags || contact?.tags || [];
+          debug.tags.componentRender(tags);
+          return (
+            <ContactTagsSection 
+              tags={tags}
+              onRemoveTag={handleRemoveTag}
+            />
+          );
+        }
       },
       {
         className: 'middleLeft',
@@ -667,12 +652,15 @@ function ContactViewTabs({ id, viewType = null }) {
             }
           }
         ],
-        render: () => (
-          <ContactCommentsSection 
-            commentaires={commentaires}
-            onDeleteComment={handleDeleteComment}
-          />
-        )
+        render: () => {
+          debug.comments.componentRender(commentaires);
+          return (
+            <ContactCommentsSection 
+              commentaires={commentaires}
+              onDeleteComment={handleDeleteComment}
+            />
+          );
+        }
       },
     ],
 
@@ -691,38 +679,20 @@ function ContactViewTabs({ id, viewType = null }) {
     entityType,
     forcedViewType,
     activeBottomTab,
-    extractedData?.tags,
+    contact?.tags,
     extractedData?.structureRaisonSociale,
     extractedData?.prenom,
     extractedData?.nom,
     extractedData?.fonction,
-    extractedData?.createdAt
+    extractedData?.createdAt,
+    bottomTabsConfig,
+    commentaires,
+    contact?.personnes,
+    datesData,
+    extractedData,
+    id
     ]);
 
-  // Nouveau: Gestionnaires pour les actions sur la structure
-  const handleEditStructure = useCallback((structureData) => {
-    console.log('[ContactViewTabs] Édition de la structure:', structureData);
-    // Logique pour ouvrir le modal d'édition de structure
-    // À implémenter selon vos besoins
-  }, []);
-
-  const handleOpenStructureFiche = useCallback((structureData) => {
-    console.log('[ContactViewTabs] Ouverture de la fiche structure:', structureData);
-    if (structureData?.structureId) {
-      navigateToEntity('structure', structureData.structureId, structureData.structureRaisonSociale);
-    } else if (structureData.id) {
-      const originalId = structureData.id?.replace('unified_structure_', '');
-      if (originalId) {
-        navigateToEntity('structure', originalId, structureData.structureRaisonSociale);
-      }
-    }
-  }, [navigateToEntity]);
-
-  const handleAddCommentToStructure = useCallback((structureData) => {
-    console.log('[ContactViewTabs] Ajout commentaire à la structure:', structureData);
-    // Logique pour ajouter un commentaire à la structure
-    // À implémenter selon vos besoins
-  }, []);
 
   return (
     <>
@@ -739,7 +709,7 @@ function ContactViewTabs({ id, viewType = null }) {
       <TagsSelectionModal
         show={showTagsModal}
         onHide={() => setShowTagsModal(false)}
-        selectedTags={localTags}
+        selectedTags={extractedData?.tags || contact?.tags || []}
         onTagsChange={handleTagsChange}
         title="Sélectionner des tags"
       />

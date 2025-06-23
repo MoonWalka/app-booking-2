@@ -148,8 +148,11 @@ function ContactBottomTabs({
               contactId={contactId}
               concerts={datesData}
               onAddClick={() => {
-                if (extractedData?.structureRaisonSociale) {
-                  openDateCreationTab(extractedData.structureRaisonSociale);
+                if (extractedData?.structureRaisonSociale || extractedData?.id) {
+                  openDateCreationTab({
+                    structureId: extractedData.id || contactId,
+                    structureName: extractedData.structureRaisonSociale || extractedData.structureNom
+                  });
                 }
               }}
             />

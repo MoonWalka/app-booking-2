@@ -78,8 +78,8 @@ function ContactViewTabs({ id, viewType = null }) {
   
   // Hook pour les actions avec le modèle relationnel
   const {
-    handleTagsChange,
-    handleRemoveTag,
+    handleTagsChange: handleTagsChangeBase,
+    handleRemoveTag: handleRemoveTagBase,
     handleAssociatePersons,
     handleUpdatePerson,
     handleDissociatePerson,
@@ -89,6 +89,11 @@ function ContactViewTabs({ id, viewType = null }) {
     handleSetPrioritaire,
     handleToggleActif
   } = useContactActionsRelational(cleanId, contactType);
+  
+  // Les données se mettent à jour automatiquement via les listeners Firebase
+  // Plus besoin de forcer le rechargement
+  const handleTagsChange = handleTagsChangeBase;
+  const handleRemoveTag = handleRemoveTagBase;
 
   // Fonction pour ouvrir la modal de création de commentaire
   const openCreateCommentModal = useCallback((personneId, personneNom) => {
@@ -104,9 +109,10 @@ function ContactViewTabs({ id, viewType = null }) {
           
           const newComment = {
             id: Date.now().toString(),
-            content,
-            createdAt: new Date(),
-            createdBy: currentUser?.uid || 'anonymous',
+            contenu: content,
+            date: new Date(),
+            auteur: currentUser?.displayName || currentUser?.email || 'Utilisateur inconnu',
+            modifie: false,
             type: 'general'
           };
           
@@ -391,28 +397,66 @@ function ContactViewTabs({ id, viewType = null }) {
   
   // Charger les dates pour les structures
   const loadStructureDates = useCallback(async () => {
-    if (!currentOrganization?.id || !structureName) {
+    if (!currentOrganization?.id) {
       setDatesData([]);
       return;
     }
 
     try {
-      const dates = await concertsService.getConcertsByStructure(currentOrganization.id, structureName);
+      let dates = [];
+      
+      // Essayer d'abord avec l'ID de la structure si disponible
+      if (cleanId && entityType === 'structure') {
+        console.log('[ContactViewTabs] Chargement des dates par structureId:', cleanId);
+        dates = await concertsService.getConcertsByStructureId(currentOrganization.id, cleanId);
+      }
+      
+      // Si pas de résultats ou pas d'ID, essayer avec le nom
+      if (dates.length === 0 && structureName) {
+        console.log('[ContactViewTabs] Chargement des dates par structureName:', structureName);
+        dates = await concertsService.getConcertsByStructure(currentOrganization.id, structureName);
+      }
+      
       setDatesData(dates || []);
     } catch (error) {
       console.error('Erreur chargement dates structure:', error);
       setDatesData([]);
     }
-  }, [currentOrganization?.id, structureName]);
+  }, [currentOrganization?.id, structureName, cleanId, entityType]);
 
   // Charger les dates au changement de structure
   React.useEffect(() => {
     loadStructureDates();
   }, [loadStructureDates]);
   
-  // Utiliser directement les commentaires du contact
+  // Utiliser directement les commentaires du contact avec normalisation du format
   const commentaires = useMemo(() => {
-    return extractedData?.commentaires || [];
+    const rawCommentaires = extractedData?.commentaires || [];
+    
+    console.log('[DEBUG ContactViewTabs] Commentaires bruts:', rawCommentaires);
+    console.log('[DEBUG ContactViewTabs] extractedData complet:', extractedData);
+    
+    // Normaliser le format des commentaires pour gérer les anciens et nouveaux formats
+    const normalized = rawCommentaires.map(comment => {
+      // Si le commentaire a déjà le bon format, le retourner tel quel
+      if (comment.contenu !== undefined && comment.auteur !== undefined && comment.date !== undefined) {
+        return comment;
+      }
+      
+      // Sinon, transformer depuis l'ancien format (content, createdBy, createdAt)
+      return {
+        id: comment.id,
+        contenu: comment.contenu || comment.content || '',
+        auteur: comment.auteur || comment.createdBy || 'Utilisateur inconnu',
+        date: comment.date || comment.createdAt || new Date(),
+        modifie: comment.modifie || false,
+        type: comment.type || 'general',
+        personneContext: comment.personneContext
+      };
+    });
+    
+    console.log('[DEBUG ContactViewTabs] Commentaires normalisés:', normalized);
+    return normalized;
   }, [extractedData?.commentaires]);
 
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');

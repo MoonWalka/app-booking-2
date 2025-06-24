@@ -211,6 +211,73 @@ const DataStructureFixer = () => {
     }
   };
 
+  // Corriger les adresses imbriquées dans les structures
+  const fixNestedAddresses = async () => {
+    if (!results) return;
+    
+    setFixing(true);
+    setError(null);
+    
+    try {
+      const structuresIssues = results.structures;
+      if (!structuresIssues || structuresIssues.nestedAddress.length === 0) {
+        setError('Aucune adresse imbriquée à corriger');
+        return;
+      }
+      
+      let fixed = 0;
+      let errors = 0;
+      
+      for (const item of structuresIssues.nestedAddress) {
+        try {
+          const docRef = doc(db, 'structures', item.id);
+          const data = item.data;
+          
+          // Extraire l'adresse de l'objet imbriqué
+          const addressObj = data.adresseLieu || data.adresse;
+          
+          // Préparer les données aplaties
+          const updateData = {
+            adresse: addressObj.adresse || null,
+            codePostal: addressObj.codePostal || null,
+            ville: addressObj.ville || null,
+            pays: addressObj.pays || 'France',
+            // Supprimer les champs imbriqués
+            adresseLieu: deleteField()
+          };
+          
+          // Si l'adresse était stockée directement comme objet
+          if (data.adresse && typeof data.adresse === 'object') {
+            updateData.adresse = data.adresse.adresse || null;
+            updateData.codePostal = data.adresse.codePostal || null;
+            updateData.ville = data.adresse.ville || null;
+            updateData.pays = data.adresse.pays || 'France';
+          }
+          
+          await updateDoc(docRef, updateData);
+          fixed++;
+          console.log(`✅ Adresse aplatie pour ${item.nom} (${item.id})`);
+          
+        } catch (err) {
+          errors++;
+          console.error(`❌ Erreur correction adresse ${item.id}:`, err);
+        }
+      }
+      
+      setFixResults({ addressesFixes: { fixed, errors } });
+      console.log(`✅ Migration terminée: ${fixed} adresses corrigées, ${errors} erreurs`);
+      
+      // Relancer le scan pour vérifier
+      setTimeout(() => scanCollections(), 1000);
+      
+    } catch (err) {
+      console.error('❌ Erreur migration adresses:', err);
+      setError(err.message);
+    } finally {
+      setFixing(false);
+    }
+  };
+
   // Corriger les organizationId manquants
   const fixMissingOrgIds = async () => {
     if (!results || !currentOrganization?.id) {
@@ -316,6 +383,13 @@ const DataStructureFixer = () => {
                     <span className={styles.statLabel}>Sans organizationId:</span>
                     <span className={styles.statValue}>{issues.missingOrgId.length}</span>
                   </div>
+                  
+                  {collName === 'structures' && issues.nestedAddress && (
+                    <div className={`${styles.stat} ${issues.nestedAddress.length > 0 ? styles.statWarning : styles.statSuccess}`}>
+                      <span className={styles.statLabel}>Adresses imbriquées:</span>
+                      <span className={styles.statValue}>{issues.nestedAddress.length}</span>
+                    </div>
+                  )}
                 </div>
 
                 {issues.nested.length > 0 && (
@@ -329,6 +403,22 @@ const DataStructureFixer = () => {
                       ))}
                       {issues.nested.length > 5 && (
                         <li className={styles.more}>... et {issues.nested.length - 5} autres</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+                
+                {collName === 'structures' && issues.nestedAddress?.length > 0 && (
+                  <div className={styles.issuesList}>
+                    <h6>Structures avec adresse imbriquée:</h6>
+                    <ul>
+                      {issues.nestedAddress.slice(0, 5).map(item => (
+                        <li key={item.id}>
+                          {item.nom} <span className={styles.docId}>({item.id})</span>
+                        </li>
+                      ))}
+                      {issues.nestedAddress.length > 5 && (
+                        <li className={styles.more}>... et {issues.nestedAddress.length - 5} autres</li>
                       )}
                     </ul>
                   </div>
@@ -390,6 +480,18 @@ const DataStructureFixer = () => {
                   >
                     <i className="bi bi-building me-2"></i>
                     OrganizationId seulement
+                  </Button>
+                )}
+                
+                {results.structures?.nestedAddress?.length > 0 && (
+                  <Button
+                    variant="outline-info"
+                    size="sm"
+                    onClick={fixNestedAddresses}
+                    disabled={fixing}
+                  >
+                    <i className="bi bi-geo-alt me-2"></i>
+                    Aplatir adresses seulement
                   </Button>
                 )}
               </div>

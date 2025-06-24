@@ -447,7 +447,12 @@ const StructureFormEnhanced = () => {
     try {
       const structureData = {
         ...formData,
-        adresseLieu,
+        // Sauvegarder l'adresse en champs plats au lieu d'un objet imbriqué
+        adresse: adresseLieu.adresse || null,
+        codePostal: adresseLieu.codePostal || null,
+        ville: adresseLieu.ville || null,
+        pays: adresseLieu.pays || 'France',
+        // Supprimer adresseLieu pour éviter la duplication
         signataire,
         contactIds: contactsAssocies.map(p => p.id), // Format harmonisé
         concertsIds: concertsAssocies.map(c => c.id),
@@ -455,6 +460,9 @@ const StructureFormEnhanced = () => {
         contratsIds: contratsAssocies.map(c => c.id),
         updatedAt: new Date()
       };
+      
+      // Supprimer le champ adresseLieu s'il existe encore
+      delete structureData.adresseLieu;
 
       if (isNewFromUrl) {
         structureData.createdAt = new Date();

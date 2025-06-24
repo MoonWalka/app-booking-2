@@ -105,6 +105,15 @@ export function useFormTokenValidation(concertId, token) {
           }
         }
 
+        // Debug des données du pré-contrat
+        console.log('[useFormTokenValidation] Données du pré-contrat:', validationResult.preContrat);
+        console.log('[useFormTokenValidation] Adresse dans preContrat:', {
+          adresse: validationResult.preContrat?.adresse,
+          cp: validationResult.preContrat?.cp,
+          ville: validationResult.preContrat?.ville,
+          publicFormData: validationResult.preContrat?.publicFormData
+        });
+
         setState({
           isLoading: false,
           isValid: true,

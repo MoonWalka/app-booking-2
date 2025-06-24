@@ -76,6 +76,15 @@ function PreContratFormContainer({ concertId, token }) {
     );
   }
 
+  // Debug des données avant de les passer au formulaire
+  console.log('[PreContratFormContainer] Données disponibles:', {
+    existingSubmission,
+    formLinkData,
+    'existingSubmission?.adresse': existingSubmission?.adresse,
+    'formLinkData?.adresse': formLinkData?.adresse,
+    'existingData passé': existingSubmission || formLinkData
+  });
+
   return (
     <div className={styles.container}>
       <PreContratFormPublic

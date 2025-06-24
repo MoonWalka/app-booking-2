@@ -6,7 +6,32 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Fonction pour mapper les données existantes vers le format du formulaire
   const mapExistingData = (data) => {
-    if (!data) return {};
+    console.log('[PreContratFormPublic] mapExistingData - Données reçues:', data);
+    
+    if (!data) {
+      console.log('[PreContratFormPublic] mapExistingData - Pas de données');
+      return {};
+    }
+    
+    // Debug détaillé des champs d'adresse
+    console.log('[PreContratFormPublic] mapExistingData - Champs adresse:', {
+      'data.adresse': data.adresse,
+      'data.suiteAdresse': data.suiteAdresse,
+      'data.cp': data.cp,
+      'data.ville': data.ville,
+      'data.pays': data.pays,
+      'type de data.adresse': typeof data.adresse
+    });
+    
+    // Si publicFormData existe, regarder dedans aussi
+    if (data.publicFormData) {
+      console.log('[PreContratFormPublic] mapExistingData - publicFormData trouvé:', data.publicFormData);
+      console.log('[PreContratFormPublic] mapExistingData - Adresse dans publicFormData:', {
+        'publicFormData.adresse': data.publicFormData.adresse,
+        'publicFormData.cp': data.publicFormData.cp,
+        'publicFormData.ville': data.publicFormData.ville
+      });
+    }
     
     return {
       // Concert
@@ -68,7 +93,14 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
   };
 
   const [formData, setFormData] = useState(() => {
+    console.log('[PreContratFormPublic] Initialisation - existingData:', existingData);
     const mappedData = mapExistingData(existingData);
+    console.log('[PreContratFormPublic] Initialisation - mappedData:', mappedData);
+    console.log('[PreContratFormPublic] Initialisation - Adresse mappée:', {
+      adresseOrga: mappedData.adresseOrga,
+      codePostalOrga: mappedData.codePostalOrga,
+      villeOrga: mappedData.villeOrga
+    });
     
     return {
       // Concert
@@ -145,12 +177,24 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
 
   // Initialiser avec les données existantes
   useEffect(() => {
+    console.log('[PreContratFormPublic] useEffect - existingData changé:', existingData);
     if (existingData && Object.keys(existingData).length > 0) {
+      console.log('[PreContratFormPublic] useEffect - Mise à jour des données du formulaire');
       const mappedData = mapExistingData(existingData);
-      setFormData(prev => ({
-        ...prev,
-        ...mappedData
-      }));
+      console.log('[PreContratFormPublic] useEffect - Données mappées pour mise à jour:', mappedData);
+      setFormData(prev => {
+        const newData = {
+          ...prev,
+          ...mappedData
+        };
+        console.log('[PreContratFormPublic] useEffect - Nouveau formData:', newData);
+        console.log('[PreContratFormPublic] useEffect - Adresse après mise à jour:', {
+          adresseOrga: newData.adresseOrga,
+          codePostalOrga: newData.codePostalOrga,
+          villeOrga: newData.villeOrga
+        });
+        return newData;
+      });
     }
   }, [existingData]);
 

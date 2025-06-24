@@ -146,9 +146,10 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
   // Initialiser avec les données existantes
   useEffect(() => {
     if (existingData && Object.keys(existingData).length > 0) {
+      const mappedData = mapExistingData(existingData);
       setFormData(prev => ({
         ...prev,
-        ...existingData
+        ...mappedData
       }));
     }
   }, [existingData]);

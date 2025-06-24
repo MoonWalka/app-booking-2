@@ -300,13 +300,50 @@ function ContactViewTabs({ id, viewType = null }) {
         structureSiteWeb: structureData.siteWeb || contact.structureSiteWeb,
         structureSiret: structureData.siret || contact.structureSiret,
         structureType: structureData.type || contact.structureType,
-        structureAdresse: structureData.adresse?.adresse || structureData.adresse || contact.structureAdresse,
-        structureSuiteAdresse1: structureData.adresse?.suiteAdresse || structureData.suiteAdresse || contact.structureSuiteAdresse1,
-        structureCodePostal: structureData.adresse?.codePostal || structureData.codePostal || contact.structureCodePostal,
-        structureVille: structureData.adresse?.ville || structureData.ville || contact.structureVille,
-        structureDepartement: structureData.adresse?.departement || structureData.departement || contact.structureDepartement,
-        structureRegion: structureData.adresse?.region || structureData.region || contact.structureRegion,
-        structurePays: structureData.adresse?.pays || structureData.pays || contact.structurePays,
+        structureAdresse: (() => {
+          // Si structureData.adresse est un objet, extraire la propriété adresse
+          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
+            return structureData.adresse.adresse || '';
+          }
+          // Sinon, utiliser directement la valeur
+          return structureData.adresse || contact.structureAdresse || '';
+        })(),
+        structureSuiteAdresse1: (() => {
+          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
+            return structureData.adresse.suiteAdresse || structureData.suiteAdresse || contact.structureSuiteAdresse1 || '';
+          }
+          return structureData.suiteAdresse || contact.structureSuiteAdresse1 || '';
+        })(),
+        structureCodePostal: (() => {
+          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
+            return structureData.adresse.codePostal || structureData.codePostal || contact.structureCodePostal || '';
+          }
+          return structureData.codePostal || contact.structureCodePostal || '';
+        })(),
+        structureVille: (() => {
+          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
+            return structureData.adresse.ville || structureData.ville || contact.structureVille || '';
+          }
+          return structureData.ville || contact.structureVille || '';
+        })(),
+        structureDepartement: (() => {
+          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
+            return structureData.adresse.departement || structureData.departement || contact.structureDepartement || '';
+          }
+          return structureData.departement || contact.structureDepartement || '';
+        })(),
+        structureRegion: (() => {
+          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
+            return structureData.adresse.region || structureData.region || contact.structureRegion || '';
+          }
+          return structureData.region || contact.structureRegion || '';
+        })(),
+        structurePays: (() => {
+          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
+            return structureData.adresse.pays || structureData.pays || contact.structurePays || '';
+          }
+          return structureData.pays || contact.structurePays || '';
+        })(),
         tags: contact?.tags || [],
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,

@@ -38,10 +38,11 @@ import HybridFormatNormalizer from '@/components/debug/HybridFormatNormalizer';
 import RelationalMigrationFixer from '@/components/debug/RelationalMigrationFixer';
 import CheckStructureMigration from '@/components/debug/CheckStructureMigration';
 import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug';
+import StructureAddressMigration from '@/components/debug/StructureAddressMigration';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
-  const [activeTab, setActiveTab] = useState('system-audit');
+  const [activeTab, setActiveTab] = useState('structure-address-migration');
 
   // Temporairement accessible en production pour corriger les problèmes
   // À retirer une fois les corrections appliquées
@@ -226,6 +227,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="check-structure-migration" title="🔍 Vérifier Migration Structure">
           <CheckStructureMigration />
+        </Tab>
+        
+        <Tab eventKey="structure-address-migration" title="🏠 Migration Adresses Structures">
+          <StructureAddressMigration />
         </Tab>
       </Tabs>
     </div>

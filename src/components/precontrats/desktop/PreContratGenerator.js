@@ -102,73 +102,166 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [preContratId, setPreContratId] = useState(null);
   const [preContratToken, setPreContratToken] = useState(null);
+  const [existingPreContrat, setExistingPreContrat] = useState(null);
 
-  // Charger le token si on a déjà un preContratId
+  // Charger le pré-contrat existant pour ce concert
   useEffect(() => {
-    const loadPreContratToken = async () => {
-      if (preContratId && !preContratToken) {
-        try {
-          const preContrat = await preContratService.getPreContratById(preContratId);
-          if (preContrat && preContrat.token) {
-            setPreContratToken(preContrat.token);
+    const loadExistingPreContrat = async () => {
+      if (!concert?.id || !currentOrg?.id) return;
+
+      try {
+        console.log('[PreContratGenerator] Recherche pré-contrat existant pour concert:', concert.id);
+        
+        // Rechercher un pré-contrat existant pour ce concert
+        const q = query(
+          collection(db, 'preContrats'),
+          where('concertId', '==', concert.id),
+          where('organizationId', '==', currentOrg.id)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          // Prendre le plus récent
+          const preContratDoc = querySnapshot.docs[0];
+          const preContratData = { id: preContratDoc.id, ...preContratDoc.data() };
+          
+          console.log('[PreContratGenerator] Pré-contrat existant trouvé:', preContratData);
+          
+          setExistingPreContrat(preContratData);
+          setPreContratId(preContratData.id);
+          setPreContratToken(preContratData.token);
+          
+          // Si on a des données du formulaire public, les afficher
+          if (preContratData.publicFormData) {
+            console.log('[PreContratGenerator] Données du formulaire public trouvées:', preContratData.publicFormData);
+            
+            // Mettre à jour formData avec les données du formulaire public
+            setFormData(prev => ({
+              ...prev,
+              // Données organisateur du formulaire public
+              raisonSociale: preContratData.publicFormData.raisonSociale || prev.raisonSociale,
+              adresse: preContratData.publicFormData.adresse || prev.adresse,
+              suiteAdresse: preContratData.publicFormData.suiteAdresse || prev.suiteAdresse,
+              ville: preContratData.publicFormData.ville || prev.ville,
+              cp: preContratData.publicFormData.cp || prev.cp,
+              pays: preContratData.publicFormData.pays || prev.pays,
+              tel: preContratData.publicFormData.tel || prev.tel,
+              fax: preContratData.publicFormData.fax || prev.fax,
+              email: preContratData.publicFormData.email || prev.email,
+              site: preContratData.publicFormData.site || prev.site,
+              siret: preContratData.publicFormData.siret || prev.siret,
+              codeActivite: preContratData.publicFormData.codeActivite || prev.codeActivite,
+              numeroTvaIntracommunautaire: preContratData.publicFormData.numeroTvaIntracommunautaire || prev.numeroTvaIntracommunautaire,
+              numeroLicence: preContratData.publicFormData.numeroLicence || prev.numeroLicence,
+              nomSignataire: preContratData.publicFormData.nomSignataire || prev.nomSignataire,
+              qualiteSignataire: preContratData.publicFormData.qualiteSignataire || prev.qualiteSignataire,
+              
+              // Données concert
+              horaireDebut: preContratData.publicFormData.horaireDebut || prev.horaireDebut,
+              horaireFin: preContratData.publicFormData.horaireFin || prev.horaireFin,
+              payant: preContratData.publicFormData.payant || prev.payant,
+              nbRepresentations: preContratData.publicFormData.nbRepresentations || prev.nbRepresentations,
+              salle: preContratData.publicFormData.salle || prev.salle,
+              capacite: preContratData.publicFormData.capacite || prev.capacite,
+              nbAdmins: preContratData.publicFormData.nbAdmins || prev.nbAdmins,
+              invitations: preContratData.publicFormData.invitations || prev.invitations,
+              festival: preContratData.publicFormData.festival || prev.festival,
+              
+              // Données négociation
+              contratPropose: preContratData.publicFormData.contratPropose || prev.contratPropose,
+              montantHT: preContratData.publicFormData.montantHT || prev.montantHT,
+              moyenPaiement: preContratData.publicFormData.moyenPaiement || prev.moyenPaiement,
+              devise: preContratData.publicFormData.devise || prev.devise,
+              acompte: preContratData.publicFormData.acompte || prev.acompte,
+              frais: preContratData.publicFormData.frais || prev.frais,
+              precisionsNegoc: preContratData.publicFormData.precisionsNegoc || prev.precisionsNegoc,
+              
+              // Données régie
+              responsableRegie: preContratData.publicFormData.responsableRegie || prev.responsableRegie,
+              emailProRegie: preContratData.publicFormData.emailProRegie || prev.emailProRegie,
+              telProRegie: preContratData.publicFormData.telProRegie || prev.telProRegie,
+              mobileProRegie: preContratData.publicFormData.mobileProRegie || prev.mobileProRegie,
+              horaires: preContratData.publicFormData.horaires || prev.horaires,
+              
+              // Données promo
+              responsablePromo: preContratData.publicFormData.responsablePromo || prev.responsablePromo,
+              emailProPromo: preContratData.publicFormData.emailProPromo || prev.emailProPromo,
+              telProPromo: preContratData.publicFormData.telProPromo || prev.telProPromo,
+              mobileProPromo: preContratData.publicFormData.mobileProPromo || prev.mobileProPromo,
+              demandePromo: preContratData.publicFormData.demandePromo || prev.demandePromo,
+              
+              // Autres
+              prixPlaces: preContratData.publicFormData.prixPlaces || prev.prixPlaces,
+              divers: preContratData.publicFormData.divers || prev.divers
+            }));
+          } else if (preContratData) {
+            // Si pas de publicFormData, charger les données sauvegardées normalement
+            setFormData(prev => ({
+              ...prev,
+              ...preContratData,
+              destinataires: preContratData.destinataires || []
+            }));
           }
-        } catch (error) {
-          console.error('[PreContratGenerator] Erreur chargement token:', error);
         }
+      } catch (error) {
+        console.error('[PreContratGenerator] Erreur chargement pré-contrat existant:', error);
       }
     };
     
-    loadPreContratToken();
-  }, [preContratId, preContratToken]);
+    loadExistingPreContrat();
+  }, [concert?.id, currentOrg?.id]);
 
-  // Initialiser les données depuis les props
+  // Initialiser les données depuis les props (exécuté une seule fois au chargement)
   useEffect(() => {
-    console.log('[PreContratGenerator] Structure reçue:', structure);
+    console.log('[PreContratGenerator] Initialisation des données depuis les props');
+    
+    // Ne pas écraser les données si on a déjà des données du formulaire public
+    if (existingPreContrat?.publicFormData) {
+      console.log('[PreContratGenerator] Données du formulaire public présentes, pas d\'écrasement avec les props');
+      return;
+    }
     
     if (structure) {
-      console.log('[PreContratGenerator] Champs structure:', {
-        raisonSociale: structure.raisonSociale,
-        nom: structure.nom,
-        structureRaisonSociale: structure.structureRaisonSociale
-      });
+      console.log('[PreContratGenerator] Structure reçue:', structure);
       
       setFormData(prev => ({
         ...prev,
-        raisonSociale: structure.raisonSociale || '',
-        adresse: structure.adresse || '',
-        suiteAdresse: structure.suiteAdresse || '',
-        ville: structure.ville || '',
-        cp: structure.codePostal || '',
-        pays: structure.pays || 'France',
-        region: structure.region || '',
-        departement: structure.departement || '',
-        tel: structure.telephone || structure.telephone1 || '',
-        fax: structure.fax || '',
-        mobilePro: structure.mobile || '',
-        email: structure.email || '',
-        siret: structure.siret || '',
-        site: structure.siteWeb || ''
+        raisonSociale: prev.raisonSociale || structure.raisonSociale || '',
+        adresse: prev.adresse || structure.adresse || '',
+        suiteAdresse: prev.suiteAdresse || structure.suiteAdresse || '',
+        ville: prev.ville || structure.ville || '',
+        cp: prev.cp || structure.codePostal || '',
+        pays: prev.pays || structure.pays || 'France',
+        region: prev.region || structure.region || '',
+        departement: prev.departement || structure.departement || '',
+        tel: prev.tel || structure.telephone || structure.telephone1 || '',
+        fax: prev.fax || structure.fax || '',
+        mobilePro: prev.mobilePro || structure.mobile || '',
+        email: prev.email || structure.email || '',
+        siret: prev.siret || structure.siret || '',
+        site: prev.site || structure.siteWeb || ''
       }));
     }
 
     if (artiste) {
       setFormData(prev => ({
         ...prev,
-        artistes: [artiste.nom || '']
+        artistes: prev.artistes?.length > 0 ? prev.artistes : [artiste.nom || '']
       }));
     }
 
     if (concert) {
       setFormData(prev => ({
         ...prev,
-        projet: concert.propositionArtistique || '',
-        debut: concert.dateDebut || '',
-        fin: concert.dateFin || '',
-        montantHT: concert.montant || '',
-        salle: lieu?.nom || concert.lieuNom || ''
+        projet: prev.projet || concert.propositionArtistique || '',
+        debut: prev.debut || concert.dateDebut || '',
+        fin: prev.fin || concert.dateFin || '',
+        montantHT: prev.montantHT || concert.montant || '',
+        salle: prev.salle || lieu?.nom || concert.lieuNom || ''
       }));
     }
-  }, [structure, artiste, concert, lieu]);
+  }, [structure, artiste, concert, lieu, existingPreContrat]);
 
   // Charger les responsables d'administration liés à la structure
   useEffect(() => {
@@ -365,6 +458,18 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
       {showAlert && (
         <Alert variant={alertType} className="mb-3">
           {alertMessage}
+        </Alert>
+      )}
+
+      {existingPreContrat?.publicFormData && (
+        <Alert variant="info" className="mb-3">
+          <i className="bi bi-info-circle me-2"></i>
+          Ce pré-contrat contient des données soumises par l'organisateur via le formulaire public.
+          {existingPreContrat.validatedAt && (
+            <span className="ms-2">
+              (Validé le {new Date(existingPreContrat.validatedAt.toDate ? existingPreContrat.validatedAt.toDate() : existingPreContrat.validatedAt).toLocaleDateString('fr-FR')})
+            </span>
+          )}
         </Alert>
       )}
 

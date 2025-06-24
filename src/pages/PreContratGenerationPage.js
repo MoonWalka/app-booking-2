@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
 import { db } from '@/services/firebase-service';
-import { doc, getDoc } from '@/services/firebase-service';
+import { doc, getDoc, collection, query, where, getDocs } from '@/services/firebase-service';
 import PreContratGenerator from '@/components/precontrats/desktop/PreContratGenerator';
 import '@styles/index.css';
 
@@ -81,11 +81,64 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
         // Si pas de structure trouvée mais qu'on a des infos dans le concert
         if (!structureFound && concertData.structureRaisonSociale) {
           console.log('[PreContratGenerationPage] Utilisation des données structure du concert');
-          setStructure({
-            raisonSociale: concertData.structureRaisonSociale,
-            nom: concertData.structureNom || concertData.structureRaisonSociale,
-            // Ajouter d'autres champs si disponibles dans concertData
-          });
+          
+          // Essayer de charger depuis contacts_unified
+          try {
+            const contactsRef = collection(db, 'contacts_unified');
+            const q = query(
+              contactsRef,
+              where('organizationId', '==', concertData.organizationId),
+              where('entityType', '==', 'structure'),
+              where('structureRaisonSociale', '==', concertData.structureRaisonSociale)
+            );
+            
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              const contactDoc = querySnapshot.docs[0];
+              const contactData = { id: contactDoc.id, ...contactDoc.data() };
+              console.log('[PreContratGenerationPage] Structure trouvée dans contacts_unified:', contactData);
+              
+              // Extraire les données de la structure
+              setStructure({
+                id: contactDoc.id,
+                raisonSociale: contactData.structureRaisonSociale || concertData.structureRaisonSociale,
+                nom: contactData.structureRaisonSociale || concertData.structureNom,
+                adresse: contactData.structureAdresse || '',
+                suiteAdresse: contactData.structureSuiteAdresse1 || '',
+                codePostal: contactData.structureCodePostal || '',
+                ville: contactData.structureVille || '',
+                departement: contactData.structureDepartement || '',
+                region: contactData.structureRegion || '',
+                pays: contactData.structurePays || 'France',
+                telephone: contactData.structureTelephone1 || '',
+                telephone1: contactData.structureTelephone1 || '',
+                telephone2: contactData.structureTelephone2 || '',
+                mobile: contactData.structureMobile || '',
+                fax: contactData.structureFax || '',
+                email: contactData.structureEmail || '',
+                siteWeb: contactData.structureSiteWeb || '',
+                siret: contactData.structureSiret || '',
+                type: contactData.structureType || ''
+              });
+              structureFound = true;
+            }
+          } catch (error) {
+            console.error('[PreContratGenerationPage] Erreur recherche dans contacts_unified:', error);
+          }
+          
+          // Si toujours pas trouvé, utiliser les données minimales du concert
+          if (!structureFound) {
+            setStructure({
+              raisonSociale: concertData.structureRaisonSociale,
+              nom: concertData.structureNom || concertData.structureRaisonSociale,
+              // Ajouter d'autres champs si disponibles dans concertData
+              adresse: concertData.structureAdresse || '',
+              ville: concertData.structureVille || '',
+              codePostal: concertData.structureCodePostal || '',
+              telephone: concertData.structureTelephone || '',
+              email: concertData.structureEmail || ''
+            });
+          }
         }
 
         // Récupérer les données de l'artiste si disponible

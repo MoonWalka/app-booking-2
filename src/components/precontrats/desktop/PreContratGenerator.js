@@ -135,22 +135,24 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
           // Si on a des données du formulaire public, les afficher
           if (preContratData.publicFormData) {
             console.log('[PreContratGenerator] Données du formulaire public trouvées:', preContratData.publicFormData);
+            console.log('[PreContratGenerator] Adresse dans publicFormData:', preContratData.publicFormData.adresse);
+            console.log('[PreContratGenerator] Adresse dans preContratData:', preContratData.adresse);
             
             // Mettre à jour formData avec les données du formulaire public
             setFormData(prev => ({
               ...prev,
               // Données organisateur du formulaire public
               raisonSociale: preContratData.publicFormData.raisonSociale || prev.raisonSociale,
-              adresse: preContratData.publicFormData.adresse || prev.adresse,
-              suiteAdresse: preContratData.publicFormData.suiteAdresse || prev.suiteAdresse,
-              ville: preContratData.publicFormData.ville || prev.ville,
-              cp: preContratData.publicFormData.cp || prev.cp,
-              pays: preContratData.publicFormData.pays || prev.pays,
-              tel: preContratData.publicFormData.tel || prev.tel,
-              fax: preContratData.publicFormData.fax || prev.fax,
-              email: preContratData.publicFormData.email || prev.email,
-              site: preContratData.publicFormData.site || prev.site,
-              siret: preContratData.publicFormData.siret || prev.siret,
+              adresse: preContratData.publicFormData.adresse || preContratData.adresse || prev.adresse,
+              suiteAdresse: preContratData.publicFormData.suiteAdresse || preContratData.suiteAdresse || prev.suiteAdresse,
+              ville: preContratData.publicFormData.ville || preContratData.ville || prev.ville,
+              cp: preContratData.publicFormData.cp || preContratData.cp || prev.cp,
+              pays: preContratData.publicFormData.pays || preContratData.pays || prev.pays,
+              tel: preContratData.publicFormData.tel || preContratData.tel || prev.tel,
+              fax: preContratData.publicFormData.fax || preContratData.fax || prev.fax,
+              email: preContratData.publicFormData.email || preContratData.email || prev.email,
+              site: preContratData.publicFormData.site || preContratData.site || prev.site,
+              siret: preContratData.publicFormData.siret || preContratData.siret || prev.siret,
               codeActivite: preContratData.publicFormData.codeActivite || prev.codeActivite,
               numeroTvaIntracommunautaire: preContratData.publicFormData.numeroTvaIntracommunautaire || prev.numeroTvaIntracommunautaire,
               numeroLicence: preContratData.publicFormData.numeroLicence || prev.numeroLicence,

@@ -13,7 +13,8 @@ function ContactBottomTabs({
   contactId, 
   extractedData,
   datesData,
-  openDateCreationTab 
+  openDateCreationTab,
+  onDatesUpdate 
 }) {
   
   const renderTabContent = () => {
@@ -153,6 +154,12 @@ function ContactBottomTabs({
                     structureId: extractedData.id || contactId,
                     structureName: extractedData.structureRaisonSociale || extractedData.structureNom
                   });
+                }
+              }}
+              onDeleteSuccess={() => {
+                // Recharger les dates après suppression
+                if (onDatesUpdate) {
+                  onDatesUpdate();
                 }
               }}
             />

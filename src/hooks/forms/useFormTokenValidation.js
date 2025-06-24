@@ -106,6 +106,7 @@ export function useFormTokenValidation(concertId, token) {
         }
 
         // Debug des données du pré-contrat
+        console.log('[WORKFLOW_TEST] 5. Passage des données au formulaire public - chargement dans useFormTokenValidation');
         console.log('[useFormTokenValidation] Données du pré-contrat:', validationResult.preContrat);
         console.log('[useFormTokenValidation] Adresse dans preContrat:', {
           adresse: validationResult.preContrat?.adresse,

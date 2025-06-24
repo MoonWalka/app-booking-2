@@ -53,6 +53,10 @@ export const useConcertForm = (concertId) => {
   // Fonction de transformation des données avant sauvegarde
   const transformConcertData = useCallback((data) => {
     // Transformations spécifiques aux concerts avant sauvegarde
+    console.log('[WORKFLOW_TEST] 2. Sauvegarde du concert avec structureId - transformation des données', {
+      structureId: data.structureId,
+      structureNom: data.structureNom
+    });
     
     const transformedData = {
       ...data,

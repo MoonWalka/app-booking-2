@@ -67,16 +67,68 @@ function PreContratFormContainer({ concertId, token }) {
         type="success"
         title="Pré-contrat déjà soumis"
         message="Vous avez déjà soumis ce pré-contrat. Merci pour votre participation."
-        actionButton={{
-          label: "Modifier ma réponse",
-          onClick: () => setSubmissionStatus('editing'),
-          variant: "outline-primary"
-        }}
+        actionButton={
+          <button 
+            onClick={() => setSubmissionStatus('editing')}
+            style={{
+              padding: '10px 20px',
+              border: '1px solid #28a745',
+              borderRadius: '4px',
+              backgroundColor: 'transparent',
+              color: '#28a745',
+              cursor: 'pointer'
+            }}
+          >
+            Modifier ma réponse
+          </button>
+        }
+      />
+    );
+  }
+
+  // Afficher le message de succès après soumission
+  if (submissionStatus === 'completed') {
+    return (
+      <FormErrorPanel
+        type="success"
+        title="Pré-contrat envoyé avec succès"
+        message="Votre pré-contrat a été envoyé avec succès. Vous recevrez une confirmation par email à l'adresse indiquée."
+        actionButton={
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
+            <button 
+              onClick={() => setSubmissionStatus('editing')}
+              style={{
+                padding: '10px 20px',
+                border: '1px solid #28a745',
+                borderRadius: '4px',
+                backgroundColor: 'transparent',
+                color: '#28a745',
+                cursor: 'pointer'
+              }}
+            >
+              Modifier ma réponse
+            </button>
+            <button 
+              onClick={() => window.close()}
+              style={{
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '4px',
+                backgroundColor: '#28a745',
+                color: 'white',
+                cursor: 'pointer'
+              }}
+            >
+              Fermer cette fenêtre
+            </button>
+          </div>
+        }
       />
     );
   }
 
   // Debug des données avant de les passer au formulaire
+  console.log('[WORKFLOW_TEST] 5. Passage des données au formulaire public - PreContratFormContainer');
   console.log('[PreContratFormContainer] Données disponibles:', {
     existingSubmission,
     formLinkData,
@@ -93,6 +145,12 @@ function PreContratFormContainer({ concertId, token }) {
         existingData={existingSubmission || formLinkData}
         onSubmit={async (formData, action) => {
           try {
+            console.log('[DEBUG PreContratFormContainer] Données reçues du formulaire:', {
+              codePostalOrga: formData.codePostalOrga,
+              adresseOrga: formData.adresseOrga,
+              villeOrga: formData.villeOrga
+            });
+            
             // Mapper les données du formulaire public vers le format attendu
             const mappedData = {
               // Organisateur
@@ -157,6 +215,12 @@ function PreContratFormContainer({ concertId, token }) {
               publicFormCompletedAt: new Date(),
               publicFormEmail: formData.emailOrga
             };
+
+            console.log('[DEBUG PreContratFormContainer] Données mappées à sauvegarder:', {
+              cp: mappedData.cp,
+              adresse: mappedData.adresse,
+              ville: mappedData.ville
+            });
 
             // Sauvegarder ou valider selon l'action
             if (action === 'send') {

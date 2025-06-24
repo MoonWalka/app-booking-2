@@ -35,6 +35,7 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log('[WORKFLOW_TEST] 3. Génération du pré-contrat - début du chargement');
       console.log('[PreContratGenerationPage] Chargement des données pour concertId:', concertId);
       
       try {
@@ -59,22 +60,27 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
         }
 
         // Récupérer les données de la structure si disponible
+        console.log('[WORKFLOW_TEST] 4. Chargement des données de structure dans le pré-contrat');
         console.log('[PreContratGenerationPage] Concert data:', concertData);
         console.log('[PreContratGenerationPage] structureId:', concertData.structureId);
         
         let structureFound = false;
         
         if (concertData.structureId) {
+          console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structureId trouvé:', concertData.structureId);
           const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
           if (structureDoc.exists()) {
             const structureData = { id: structureDoc.id, ...structureDoc.data() };
+            console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structure chargée:', structureData);
             console.log('[PreContratGenerationPage] Structure chargée:', structureData);
             setStructure(structureData);
             structureFound = true;
           } else {
+            console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structure non trouvée avec ID:', concertData.structureId);
             console.log('[PreContratGenerationPage] Structure non trouvée avec ID:', concertData.structureId);
           }
         } else {
+          console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - pas de structureId dans le concert');
           console.log('[PreContratGenerationPage] Pas de structureId dans le concert');
         }
         
@@ -206,6 +212,12 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
     );
   }
 
+  console.log('[WORKFLOW_TEST] 3. Génération du pré-contrat - passage des données au composant PreContratGenerator', {
+    concert: concert?.id,
+    structure: structure?.id || 'aucune',
+    structureData: structure
+  });
+  
   return (
     <div className="container-fluid">
       <PreContratGenerator 

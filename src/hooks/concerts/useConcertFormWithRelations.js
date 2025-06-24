@@ -137,12 +137,14 @@ export const useConcertFormWithRelations = (concertId) => {
   };
   
   const handleStructureChange = (newStructure) => {
+    console.log('[WORKFLOW_TEST] 2. Sauvegarde du concert avec structureId - gestion de la structure:', newStructure);
     setStructure(newStructure);
     // Appeler la méthode de base si elle existe
     if (baseHook.handleStructureChange) {
       baseHook.handleStructureChange(newStructure);
     } else {
       // Sinon, mettre à jour manuellement
+      console.log('[WORKFLOW_TEST] 2. Sauvegarde du concert avec structureId - mise à jour manuelle des données');
       baseHook.setFormData(prev => ({
         ...prev,
         structureId: newStructure?.id || null,

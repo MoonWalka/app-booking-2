@@ -232,8 +232,8 @@ class PersonnesService {
         q = query(q, where('tags', 'array-contains-any', filters.tags));
       }
 
-      // Tri par défaut
-      q = query(q, orderBy('nom', 'asc'), orderBy('prenom', 'asc'));
+      // Retirer le tri Firestore qui peut causer des problèmes d'index
+      // Le tri sera fait côté client dans le composant
 
       const snapshot = await getDocs(q);
       const personnes = snapshot.docs.map(doc => ({
@@ -241,7 +241,7 @@ class PersonnesService {
         ...doc.data()
       }));
 
-      console.log(`[PersonnesService] ${personnes.length} personnes trouvées`);
+      console.log(`[PersonnesService] ${personnes.length} personnes trouvées pour l'organisation ${organizationId}`);
       return {
         success: true,
         data: personnes

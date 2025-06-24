@@ -54,7 +54,7 @@ function DatesList() {
             lieu: concert.lieuNom || '-',
             ville: concert.lieuVille || '-',
             organisateur: concert.contactNom || '-',
-            projet: concert.projet || concert.formule || '-',
+            projet: concert.projet || concert.formule || concert.projetNom || '-',
             dossier: concert.dossier || '-',
             niv: concert.niveau || '1',
             coll: deriveCollaboratorCode(concert.structureNom)

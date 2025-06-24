@@ -128,6 +128,7 @@ const ConcertFormDesktop = () => {
   }, [handleArtisteChange]);
 
   const handleRemoveStructureCallback = useCallback(() => {
+    console.log('[WORKFLOW_TEST] 1. Sélection de structure dans le formulaire de concert - suppression');
     handleStructureChange(null);
   }, [handleStructureChange]);
 
@@ -225,7 +226,10 @@ const ConcertFormDesktop = () => {
               isSearchingStructures={isSearchingStructures}
               structureDropdownRef={structureDropdownRef}
               selectedStructure={structure || (formData.structureId ? { id: formData.structureId, nom: formData.structureNom || 'Structure sélectionnée' } : null)}
-              handleSelectStructure={handleStructureChange}
+              handleSelectStructure={(structure) => {
+                console.log('[WORKFLOW_TEST] 1. Sélection de structure dans le formulaire de concert:', structure);
+                handleStructureChange(structure);
+              }}
               handleRemoveStructure={handleRemoveStructureCallback}
               handleCreateStructure={handleCreateStructure}
             />

@@ -435,7 +435,14 @@ function ContactViewTabs({ id, viewType = null }) {
   
   // Charger les dates pour les structures
   const loadStructureDates = useCallback(async () => {
+    console.log('🔍 [ContactViewTabs] DÉBUT loadStructureDates');
+    console.log('  - currentOrganization?.id:', currentOrganization?.id);
+    console.log('  - cleanId:', cleanId);
+    console.log('  - entityType:', entityType);
+    console.log('  - structureName:', structureName);
+    
     if (!currentOrganization?.id) {
+      console.log('❌ [ContactViewTabs] Pas d\'organisation, arrêt du chargement');
       setDatesData([]);
       return;
     }
@@ -445,15 +452,19 @@ function ContactViewTabs({ id, viewType = null }) {
       
       // Essayer d'abord avec l'ID de la structure si disponible
       if (cleanId && entityType === 'structure') {
-        console.log('[ContactViewTabs] Chargement des dates par structureId:', cleanId);
+        console.log('🔎 [ContactViewTabs] Tentative 1: Chargement par structureId:', cleanId);
         dates = await concertsService.getConcertsByStructureId(currentOrganization.id, cleanId);
+        console.log(`  → Résultat: ${dates.length} dates trouvées`);
       }
       
       // Si pas de résultats ou pas d'ID, essayer avec le nom
       if (dates.length === 0 && structureName) {
-        console.log('[ContactViewTabs] Chargement des dates par structureName:', structureName);
+        console.log('🔎 [ContactViewTabs] Tentative 2: Chargement par structureName:', structureName);
         dates = await concertsService.getConcertsByStructure(currentOrganization.id, structureName);
+        console.log(`  → Résultat: ${dates.length} dates trouvées`);
       }
+      
+      console.log(`📊 [ContactViewTabs] TOTAL: ${dates.length} dates trouvées avant enrichissement`);
       
       // Enrichir les dates avec les données de pré-contrat
       const datesWithPreContrat = await Promise.all(
@@ -484,6 +495,7 @@ function ContactViewTabs({ id, viewType = null }) {
         })
       );
       
+      console.log(`[ContactViewTabs] Définition finale de ${datesWithPreContrat.length} dates dans l'état`);
       setDatesData(datesWithPreContrat);
     } catch (error) {
       console.error('Erreur chargement dates structure:', error);
@@ -782,6 +794,7 @@ function ContactViewTabs({ id, viewType = null }) {
         extractedData={extractedData}
         datesData={datesData}
         openDateCreationTab={openDateCreationTab}
+        onDatesUpdate={loadStructureDates}
       />
     )
   }), [
@@ -801,7 +814,8 @@ function ContactViewTabs({ id, viewType = null }) {
     contact?.personnes,
     datesData,
     extractedData,
-    id
+    id,
+    loadStructureDates
     ]);
 
 

@@ -65,10 +65,17 @@ class PreContratService {
         }]
       };
 
+      console.log('[WORKFLOW_TEST] 3. Génération du pré-contrat - création dans Firebase');
       debugLog('[PreContratService] Création pré-contrat:', {
         concertId,
         organizationId,
-        destinataires: preContratData.destinataires?.length || 0
+        destinataires: preContratData.destinataires?.length || 0,
+        structureData: {
+          raisonSociale: preContratData.raisonSociale,
+          adresse: preContratData.adresse,
+          ville: preContratData.ville,
+          cp: preContratData.cp
+        }
       }, 'info');
 
       const docRef = await addDoc(

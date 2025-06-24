@@ -28,7 +28,8 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
   // Charger les personnes depuis le modèle relationnel
   const loadPersonnes = async (page = 1) => {
     if (!currentOrganization?.id) {
-      console.warn('Organisation manquante pour charger les personnes');
+      console.warn('❌ [AssociatePersonModal] Organisation manquante pour charger les personnes');
+      setError('Aucune organisation sélectionnée');
       return;
     }
 
@@ -36,14 +37,22 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
     setError(null);
     try {
       console.log('🔄 [AssociatePersonModal] Chargement des personnes pour organisation:', currentOrganization.id);
+      console.log('📊 [AssociatePersonModal] Organisation complète:', currentOrganization);
       
       // Charger toutes les personnes de l'organisation
       const result = await personnesService.listPersonnes(currentOrganization.id);
       
+      console.log('📋 [AssociatePersonModal] Résultat complet:', result);
       console.log('📋 [AssociatePersonModal] Personnes trouvées:', result.data?.length || 0);
+      
+      // Log des premières personnes pour debug
+      if (result.data && result.data.length > 0) {
+        console.log('👥 [AssociatePersonModal] Exemple de personnes:', result.data.slice(0, 3));
+      }
       
       // Vérifier si la requête a réussi
       if (!result.success) {
+        console.error('❌ [AssociatePersonModal] Erreur dans la requête:', result.error);
         throw new Error(result.error || 'Erreur lors du chargement des personnes');
       }
       
@@ -67,10 +76,12 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
       
       // Trier par nom après récupération
       personnesData.sort((a, b) => {
+        const nomA = a.nomFamille || '';
+        const nomB = b.nomFamille || '';
         if (sortOrder === 'asc') {
-          return a.nomFamille.localeCompare(b.nomFamille);
+          return nomA.localeCompare(nomB);
         } else {
-          return b.nomFamille.localeCompare(a.nomFamille);
+          return nomB.localeCompare(nomA);
         }
       });
       
@@ -78,6 +89,7 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
       setTotalPages(Math.ceil(personnesData.length / itemsPerPage));
       
       console.log('✅ [AssociatePersonModal] Personnes chargées avec succès');
+      console.log('📊 [AssociatePersonModal] Total personnes affichées:', personnesData.length);
     } catch (error) {
       console.error('❌ [AssociatePersonModal] Erreur lors du chargement des personnes:', error);
       setError(error.message);
@@ -111,7 +123,7 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
       console.log('📋 existingPersonIds à l\'ouverture:', existingPersonIds);
       loadPersonnes();
     }
-  }, [isOpen, sortOrder, currentOrganization?.id, existingPersonIds, loadPersonnes]);
+  }, [isOpen, sortOrder, currentOrganization?.id]);
 
 
   // Gérer la sélection des personnes
@@ -280,57 +292,77 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
                 </tr>
               </thead>
               <tbody>
-                {paginatedPersonnes.map((personne) => {
-                  const isAlreadyAssociated = existingPersonIds.includes(personne.id);
-                  return (
-                    <tr 
-                      key={personne.id}
-                      className={`${selectedPersonnes.includes(personne.id) ? styles.selectedRow : ''} ${isAlreadyAssociated ? styles.disabledRow : ''}`}
-                      onClick={() => !isAlreadyAssociated && handlePersonSelection(personne.id)}
-                      style={{ cursor: isAlreadyAssociated ? 'not-allowed' : 'pointer' }}
-                    >
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedPersonnes.includes(personne.id)}
-                          onChange={() => handlePersonSelection(personne.id)}
-                          disabled={isAlreadyAssociated}
-                        />
-                      </td>
-                      <td>
-                        <div className={styles.personInfo}>
-                          <strong>{personne.nom}</strong>
-                          {personne.fonction && <div className={styles.fonction}>{personne.fonction}</div>}
-                          {personne.ville && <div className={styles.ville}><i className="bi bi-geo-alt"></i> {personne.ville}</div>}
-                          {personne.isPersonneLibre && (
-                            <div className={styles.personneLibre}>
-                              <i className="bi bi-person-dash"></i> Personne libre
-                            </div>
-                          )}
-                          {isAlreadyAssociated && (
-                            <div className={styles.alreadyAssociated}>
-                              <i className="bi bi-check-circle-fill"></i> Déjà associée
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <div className={styles.contactsInfo}>
-                          {personne.email && <div><i className="bi bi-envelope"></i> {personne.email}</div>}
-                          {personne.telephone && <div><i className="bi bi-telephone"></i> {personne.telephone}</div>}
-                          {personne.tags && personne.tags.length > 0 && (
-                            <div className={styles.tags}>
-                              {personne.tags.slice(0, 2).map((tag, idx) => (
-                                <span key={idx} className={styles.tag}>{tag}</span>
-                              ))}
-                              {personne.tags.length > 2 && <span className={styles.moreTags}>+{personne.tags.length - 2}</span>}
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {paginatedPersonnes.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" style={{ textAlign: 'center', padding: '40px' }}>
+                      <div>
+                        <i className="bi bi-people" style={{ fontSize: '3rem', color: '#ccc' }}></i>
+                        <p style={{ marginTop: '10px', color: '#666' }}>
+                          {searchTerm ? 
+                            'Aucune personne ne correspond à votre recherche' : 
+                            'Aucune personne disponible dans votre organisation'}
+                        </p>
+                        {!searchTerm && (
+                          <p style={{ fontSize: '0.9rem', color: '#999' }}>
+                            Cliquez sur "Nouvelle personne" pour créer votre première personne
+                          </p>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedPersonnes.map((personne) => {
+                    const isAlreadyAssociated = existingPersonIds.includes(personne.id);
+                    return (
+                      <tr 
+                        key={personne.id}
+                        className={`${selectedPersonnes.includes(personne.id) ? styles.selectedRow : ''} ${isAlreadyAssociated ? styles.disabledRow : ''}`}
+                        onClick={() => !isAlreadyAssociated && handlePersonSelection(personne.id)}
+                        style={{ cursor: isAlreadyAssociated ? 'not-allowed' : 'pointer' }}
+                      >
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedPersonnes.includes(personne.id)}
+                            onChange={() => handlePersonSelection(personne.id)}
+                            disabled={isAlreadyAssociated}
+                          />
+                        </td>
+                        <td>
+                          <div className={styles.personInfo}>
+                            <strong>{personne.nom}</strong>
+                            {personne.fonction && <div className={styles.fonction}>{personne.fonction}</div>}
+                            {personne.ville && <div className={styles.ville}><i className="bi bi-geo-alt"></i> {personne.ville}</div>}
+                            {personne.isPersonneLibre && (
+                              <div className={styles.personneLibre}>
+                                <i className="bi bi-person-dash"></i> Personne libre
+                              </div>
+                            )}
+                            {isAlreadyAssociated && (
+                              <div className={styles.alreadyAssociated}>
+                                <i className="bi bi-check-circle-fill"></i> Déjà associée
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          <div className={styles.contactsInfo}>
+                            {personne.email && <div><i className="bi bi-envelope"></i> {personne.email}</div>}
+                            {personne.telephone && <div><i className="bi bi-telephone"></i> {personne.telephone}</div>}
+                            {personne.tags && personne.tags.length > 0 && (
+                              <div className={styles.tags}>
+                                {personne.tags.slice(0, 2).map((tag, idx) => (
+                                  <span key={idx} className={styles.tag}>{tag}</span>
+                                ))}
+                                {personne.tags.length > 2 && <span className={styles.moreTags}>+{personne.tags.length - 2}</span>}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           )}

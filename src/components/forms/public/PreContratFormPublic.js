@@ -3,9 +3,15 @@ import { toast } from 'react-toastify';
 import styles from './PreContratFormPublic.module.css';
 
 const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existingData = {} }) => {
+  console.log('[WORKFLOW_TEST] 5. Passage des données au formulaire public - PreContratFormPublic reçoit:', {
+    existingData,
+    hasData: !!existingData && Object.keys(existingData).length > 0
+  });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Fonction pour mapper les données existantes vers le format du formulaire
   const mapExistingData = (data) => {
+    console.log('[WORKFLOW_TEST] 5. Passage des données au formulaire public - mapExistingData');
     console.log('[PreContratFormPublic] mapExistingData - Données reçues:', data);
     
     if (!data) {
@@ -93,6 +99,7 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
   };
 
   const [formData, setFormData] = useState(() => {
+    console.log('[WORKFLOW_TEST] 5. Passage des données au formulaire public - initialisation du state');
     console.log('[PreContratFormPublic] Initialisation - existingData:', existingData);
     const mappedData = mapExistingData(existingData);
     console.log('[PreContratFormPublic] Initialisation - mappedData:', mappedData);
@@ -222,6 +229,11 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
   const handleSend = async () => {
     try {
       setIsSubmitting(true);
+      console.log('[DEBUG PreContratFormPublic] Envoi du formulaire avec les données:', {
+        codePostalOrga: formData.codePostalOrga,
+        adresseOrga: formData.adresseOrga,
+        villeOrga: formData.villeOrga
+      });
       await onSubmit(formData, 'send');
       toast.success('Formulaire envoyé avec succès');
     } catch (error) {

@@ -56,6 +56,7 @@ const TableauDeBordPage = () => {
         );
         
         const concertsSnapshot = await getDocs(concertsQuery);
+        console.log('🔍 DEBUG TableauDeBord - Concerts trouvés:', concertsSnapshot.size, 'pour org:', currentOrg.id);
         const concertsData = await Promise.all(
           concertsSnapshot.docs.map(async (doc) => {
             const concertData = {
@@ -140,7 +141,7 @@ const TableauDeBordPage = () => {
       sortable: true,
       render: (item) => (
         <span className={styles.projetCell}>
-          {item.formule || item.projet || '—'}
+          {item.formule || item.projet || item.projetNom || '—'}
         </span>
       )
     },

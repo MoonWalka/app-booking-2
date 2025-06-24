@@ -2,21 +2,32 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTabs } from '@/context/TabsContext';
 import ContactEntityTable from './ContactEntityTable';
+import useConcertDelete from '@/hooks/concerts/useConcertDelete';
 import tableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
 
 /**
  * Tableau des dates de concerts associées à un contact
  */
-const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
+const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null, onDeleteSuccess = null }) => {
   const navigate = useNavigate();
   const { openTab, openPreContratTab, openContratTab } = useTabs();
+  
+  console.log(`[ContactDatesTable] Rendu avec ${concerts.length} concerts pour contact ${contactId}`);
 
-  // Fonction pour supprimer un concert
+  // Hook pour la suppression des concerts
+  const { handleDeleteConcert: deleteConcert, isDeleting } = useConcertDelete(() => {
+    console.log('[ContactDatesTable] Concert supprimé avec succès');
+    // Appeler le callback parent si fourni pour rafraîchir la liste
+    if (onDeleteSuccess) {
+      onDeleteSuccess();
+    }
+  });
+
+  // Fonction pour supprimer un concert avec confirmation
   const handleDeleteConcert = (concert) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer le concert "${concert.titre || 'sans titre'}" ?`)) {
-      // TODO: Implémenter la suppression via un service
-      console.log('Suppression du concert:', concert.id);
-      // Ici il faudrait appeler un service de suppression
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer le concert "${concert.titre || concert.artisteNom || 'sans titre'}" du ${concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : 'date inconnue'} ?`)) {
+      console.log('[ContactDatesTable] Suppression du concert:', concert.id);
+      deleteConcert(concert.id);
     }
   };
 
@@ -424,18 +435,26 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null }) => {
               padding: '4px 8px',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: isDeleting ? 'not-allowed' : 'pointer',
               backgroundColor: '#dc3545',
               color: 'white',
-              fontSize: '12px'
+              fontSize: '12px',
+              opacity: isDeleting ? 0.6 : 1
             }}
             onClick={(e) => {
               e.stopPropagation();
-              handleDeleteConcert(item);
+              if (!isDeleting) {
+                handleDeleteConcert(item);
+              }
             }}
             title="Supprimer le concert"
+            disabled={isDeleting}
           >
-            <i className="bi bi-trash"></i>
+            {isDeleting ? (
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            ) : (
+              <i className="bi bi-trash"></i>
+            )}
           </button>
         </div>
       )

@@ -1,39 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
+import { useTabs } from '@/context/TabsContext';
 import useGenericEntityList from '../hooks/generics/lists/useGenericEntityList';
+import ProjetCreationModal from '../components/projets/modal/ProjetCreationModal';
 import '@styles/index.css';
 
 const ProjetsPage = () => {
   console.log('📂 ProjetsPage - Composant chargé');
-  const [refreshKey] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [showProjetModal, setShowProjetModal] = useState(false);
+  const [editProjetData, setEditProjetData] = useState(null);
+  const { openDateCreationTab } = useTabs();
   
   // Récupérer la liste des projets
   const { items: projets, loading, error } = useGenericEntityList('projets', {
     sort: { field: 'nom', direction: 'asc' },
     refreshKey
   });
-
-  const handleCreateDate = (projetId) => {
-    // TODO: Implémenter la création d'une date pour le projet
-    console.log('Créer une date pour le projet:', projetId);
-  };
-
-  const handleEdit = (projetId) => {
-    // TODO: Implémenter la modification du projet
-    console.log('Modifier le projet:', projetId);
-  };
-
-  const handleDelete = (projetId) => {
-    // TODO: Implémenter la suppression du projet
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) {
-      console.log('Supprimer le projet:', projetId);
+  
+  // Récupérer la liste des artistes pour mapper les IDs aux noms
+  const { items: artistes } = useGenericEntityList('artistes', {
+    sort: { field: 'nom', direction: 'asc' }
+  });
+  
+  // Fonction pour obtenir les noms des artistes à partir de leurs IDs
+  const getArtistesNames = useCallback((artisteIds) => {
+    if (!artisteIds || !Array.isArray(artisteIds) || artisteIds.length === 0) {
+      return null;
     }
-  };
+    
+    return artisteIds.map(id => {
+      const artiste = artistes.find(a => a.id === id);
+      return artiste ? artiste.nom : id;
+    }).filter(Boolean).join(', ');
+  }, [artistes]);
 
-  const handleCreateProjet = () => {
-    // TODO: Implémenter la création d'un nouveau projet
-    console.log('Créer un nouveau projet');
-  };
+  const handleCreateDate = useCallback((projet) => {
+    // Ouvrir l'onglet de création de date avec les données du projet pré-remplies
+    const prefilledData = {
+      artisteId: projet.artistesSelectionnes?.[0] || '',
+      artisteNom: projet.intitule || '',
+      projetNom: projet.intitule || ''
+    };
+    
+    openDateCreationTab(prefilledData);
+  }, [openDateCreationTab]);
+
+  const handleEdit = useCallback((projet) => {
+    // Ouvrir la modal en mode édition
+    setEditProjetData(projet);
+    setShowProjetModal(true);
+  }, []);
+
+  const handleDelete = useCallback(async (projetId) => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) {
+      try {
+        await deleteDoc(doc(db, 'projets', projetId));
+        console.log('Projet supprimé avec succès');
+        // Rafraîchir la liste
+        setRefreshKey(prev => prev + 1);
+      } catch (error) {
+        console.error('Erreur lors de la suppression du projet:', error);
+        alert('Erreur lors de la suppression du projet');
+      }
+    }
+  }, []);
+
+  const handleCreateProjet = useCallback(() => {
+    // Ouvrir la modal en mode création
+    setEditProjetData(null);
+    setShowProjetModal(true);
+  }, []);
+
+  const handleProjetCreated = useCallback(() => {
+    // Rafraîchir la liste après création/modification
+    setRefreshKey(prev => prev + 1);
+    setEditProjetData(null);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setShowProjetModal(false);
+    setEditProjetData(null);
+  }, []);
 
   if (loading) {
     return (
@@ -96,9 +146,9 @@ const ProjetsPage = () => {
                 <thead className="bg-light">
                   <tr>
                     <th>Projet</th>
-                    <th>Artiste</th>
-                    <th>Genre</th>
-                    <th>Prix de vente</th>
+                    <th>Artiste(s)</th>
+                    <th>Type de contrat</th>
+                    <th>Prix/Montant</th>
                     <th style={{ width: '200px' }}>Actions</th>
                   </tr>
                 </thead>
@@ -107,24 +157,28 @@ const ProjetsPage = () => {
                     <tr key={projet.id}>
                       <td>
                         <div>
-                          <strong>{projet.nom || 'Sans nom'}</strong>
+                          <strong>{projet.intitule || projet.nom || 'Sans nom'}</strong>
                           {projet.description && (
                             <div className="text-muted small">{projet.description}</div>
                           )}
                         </div>
                       </td>
                       <td>
-                        {projet.artiste ? (
-                          <span>{projet.artiste.prenom} {projet.artiste.nom}</span>
-                        ) : (
-                          <span className="text-muted">Non assigné</span>
+                        {getArtistesNames(projet.artistesSelectionnes) || (
+                          projet.artiste ? (
+                            <span>{projet.artiste.prenom} {projet.artiste.nom}</span>
+                          ) : (
+                            <span className="text-muted">Non assigné</span>
+                          )
                         )}
                       </td>
                       <td>
-                        {projet.genre || <span className="text-muted">Non défini</span>}
+                        {projet.typeContrat || projet.genre || <span className="text-muted">Non défini</span>}
                       </td>
                       <td>
-                        {projet.prixVente ? (
+                        {projet.prixPlaces || projet.montantHT ? (
+                          <span className="fw-bold">{projet.prixPlaces || projet.montantHT}€</span>
+                        ) : projet.prixVente ? (
                           <span className="fw-bold">{projet.prixVente}€</span>
                         ) : (
                           <span className="text-muted">Non défini</span>
@@ -135,7 +189,7 @@ const ProjetsPage = () => {
                           <Button
                             size="sm"
                             variant="success"
-                            onClick={() => handleCreateDate(projet.id)}
+                            onClick={() => handleCreateDate(projet)}
                             title="Créer une date"
                           >
                             <i className="bi bi-calendar-plus"></i>
@@ -143,7 +197,7 @@ const ProjetsPage = () => {
                           <Button
                             size="sm"
                             variant="outline-primary"
-                            onClick={() => handleEdit(projet.id)}
+                            onClick={() => handleEdit(projet)}
                             title="Modifier"
                           >
                             <i className="bi bi-pencil"></i>
@@ -174,6 +228,14 @@ const ProjetsPage = () => {
           )}
         </Col>
       </Row>
+      
+      {/* Modal de création/édition de projet */}
+      <ProjetCreationModal
+        show={showProjetModal}
+        onHide={handleCloseModal}
+        onCreated={handleProjetCreated}
+        editProjet={editProjetData}
+      />
     </Container>
   );
 };

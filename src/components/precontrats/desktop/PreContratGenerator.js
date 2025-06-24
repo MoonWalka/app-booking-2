@@ -3,13 +3,20 @@ import { Form, Button, Row, Col, Card, Alert, Modal, Spinner } from 'react-boots
 import { collection, query, where, getDocs } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useTabs } from '@/context/TabsContext';
 import RepresentationsSection from '@/components/common/RepresentationsSection';
 import preContratService from '@/services/preContratService';
 import styles from './PreContratGenerator.module.css';
 import '@styles/index.css';
 
 const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => {
+  console.log('[WORKFLOW_TEST] 4. Chargement des données de structure dans le pré-contrat - PreContratGenerator reçoit:', {
+    structure: structure?.id || 'aucune',
+    structureData: structure
+  });
+  
   const { currentOrg } = useOrganization();
+  const { openTab } = useTabs();
   // État pour l'onglet actif du panneau latéral
   const [activeTab, setActiveTab] = useState('dossier');
   
@@ -103,6 +110,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
   const [preContratId, setPreContratId] = useState(null);
   const [preContratToken, setPreContratToken] = useState(null);
   const [existingPreContrat, setExistingPreContrat] = useState(null);
+  const [hasUnvalidatedPublicData, setHasUnvalidatedPublicData] = useState(false);
 
   // Charger le pré-contrat existant pour ce concert
   useEffect(() => {
@@ -132,13 +140,14 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
           setPreContratId(preContratData.id);
           setPreContratToken(preContratData.token);
           
-          // Si on a des données du formulaire public, les afficher
-          if (preContratData.publicFormData) {
-            console.log('[PreContratGenerator] Données du formulaire public trouvées:', preContratData.publicFormData);
+          // Si on a des données du formulaire public ET qu'elles sont validées, les afficher
+          if (preContratData.publicFormData && preContratData.confirmationValidee) {
+            console.log('[PreContratGenerator] Données du formulaire public VALIDÉES trouvées:', preContratData.publicFormData);
             console.log('[PreContratGenerator] Adresse dans publicFormData:', preContratData.publicFormData.adresse);
+            console.log('[PreContratGenerator] Code postal dans publicFormData:', preContratData.publicFormData.cp);
             console.log('[PreContratGenerator] Adresse dans preContratData:', preContratData.adresse);
             
-            // Mettre à jour formData avec les données du formulaire public
+            // Mettre à jour formData avec les données du formulaire public validées
             setFormData(prev => ({
               ...prev,
               // Données organisateur du formulaire public
@@ -197,6 +206,18 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               prixPlaces: preContratData.publicFormData.prixPlaces || prev.prixPlaces,
               divers: preContratData.publicFormData.divers || prev.divers
             }));
+          } else if (preContratData.publicFormData && !preContratData.confirmationValidee) {
+            // Si on a des données publiques non validées, on les signale mais on ne les charge pas
+            console.log('[PreContratGenerator] Données du formulaire public NON VALIDÉES trouvées');
+            setHasUnvalidatedPublicData(true);
+            // Charger uniquement les données sauvegardées normalement (sans les données publiques)
+            setFormData(prev => ({
+              ...prev,
+              ...preContratData,
+              destinataires: preContratData.destinataires || [],
+              // Exclure explicitement publicFormData
+              publicFormData: undefined
+            }));
           } else if (preContratData) {
             // Si pas de publicFormData, charger les données sauvegardées normalement
             setFormData(prev => ({
@@ -216,6 +237,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
 
   // Initialiser les données depuis les props (exécuté une seule fois au chargement)
   useEffect(() => {
+    console.log('[WORKFLOW_TEST] 4. Chargement des données de structure dans le pré-contrat - initialisation des données');
     console.log('[PreContratGenerator] Initialisation des données depuis les props');
     
     // Ne pas écraser les données si on a déjà des données du formulaire public REMPLIES
@@ -247,6 +269,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     }
     
     if (structure) {
+      console.log('[WORKFLOW_TEST] 4. Chargement des données de structure dans le pré-contrat - structure trouvée, application des données');
       console.log('[PreContratGenerator] Structure reçue:', structure);
       
       setFormData(prev => ({
@@ -266,6 +289,8 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         siret: prev.siret || structure.siret || '',
         site: prev.site || structure.siteWeb || ''
       }));
+      
+      console.log('[WORKFLOW_TEST] 4. Chargement des données de structure dans le pré-contrat - données appliquées');
     }
 
     if (artiste) {
@@ -278,9 +303,9 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     if (concert) {
       setFormData(prev => ({
         ...prev,
-        projet: prev.projet || concert.propositionArtistique || '',
-        debut: prev.debut || concert.dateDebut || '',
-        fin: prev.fin || concert.dateFin || '',
+        projet: prev.projet || concert.projetNom || concert.propositionArtistique || '',
+        debut: prev.debut || concert.date || concert.dateDebut || '',
+        fin: prev.fin || concert.dateFin || concert.date || '',
         montantHT: prev.montantHT || concert.montant || '',
         salle: prev.salle || lieu?.nom || concert.lieuNom || ''
       }));
@@ -485,13 +510,40 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         </Alert>
       )}
 
-      {existingPreContrat?.publicFormData && (
-        <Alert variant="info" className="mb-3">
-          <i className="bi bi-info-circle me-2"></i>
-          Ce pré-contrat contient des données soumises par l'organisateur via le formulaire public.
-          {existingPreContrat.validatedAt && (
+      {hasUnvalidatedPublicData && (
+        <Alert variant="warning" className="mb-3">
+          <i className="bi bi-exclamation-triangle me-2"></i>
+          <strong>Données en attente de validation</strong>
+          <p className="mb-2 mt-2">
+            L'organisateur a soumis des informations via le formulaire public qui n'ont pas encore été validées.
+          </p>
+          <Button 
+            variant="warning" 
+            size="sm"
+            onClick={() => {
+              openTab({
+                id: `confirmation-${concert.id}`,
+                title: `Confirmation - ${concert.artisteNom || 'Concert'}`,
+                path: `/confirmation?concertId=${concert.id}`,
+                component: 'ConfirmationPage',
+                params: { concertId: concert.id },
+                icon: 'bi-check-circle'
+              });
+            }}
+          >
+            <i className="bi bi-check-circle me-2"></i>
+            Aller valider les données
+          </Button>
+        </Alert>
+      )}
+      
+      {existingPreContrat?.confirmationValidee && (
+        <Alert variant="success" className="mb-3">
+          <i className="bi bi-check-circle me-2"></i>
+          Les données du formulaire public ont été validées et intégrées.
+          {existingPreContrat.confirmationDate && (
             <span className="ms-2">
-              (Validé le {new Date(existingPreContrat.validatedAt.toDate ? existingPreContrat.validatedAt.toDate() : existingPreContrat.validatedAt).toLocaleDateString('fr-FR')})
+              (Validé le {new Date(existingPreContrat.confirmationDate.toDate ? existingPreContrat.confirmationDate.toDate() : existingPreContrat.confirmationDate).toLocaleDateString('fr-FR')})
             </span>
           )}
         </Alert>

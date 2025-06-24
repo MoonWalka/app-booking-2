@@ -26,6 +26,20 @@ const BookingParametragePage = () => {
     sort: { field: 'nom', direction: 'asc' },
     refreshKey
   });
+  
+  // Récupérer la liste des projets pour trouver ceux associés à l'artiste
+  const { items: projets } = useGenericEntityList('projets', {
+    sort: { field: 'intitule', direction: 'asc' }
+  });
+  
+  // Fonction pour trouver les projets associés à un artiste
+  const getProjetsForArtiste = useCallback((artisteId) => {
+    if (!artisteId || !projets) return [];
+    return projets.filter(projet => 
+      projet.artistesSelectionnes && 
+      projet.artistesSelectionnes.includes(artisteId)
+    );
+  }, [projets]);
 
   // Déterminer l'onglet actif et l'artiste sélectionné en fonction de l'URL
   useEffect(() => {
@@ -145,6 +159,15 @@ const BookingParametragePage = () => {
   const renderArtistSidebar = () => {
     return (
       <div>
+        <div className="d-grid mb-3">
+          <button 
+            className="btn btn-primary btn-sm"
+            onClick={handleCreateArtiste}
+          >
+            <i className="bi bi-plus-circle me-1"></i>
+            Créer un artiste
+          </button>
+        </div>
         {artistesLoading ? (
           <div className="text-center p-2">
             <div className="spinner-border spinner-border-sm" role="status">
@@ -242,7 +265,7 @@ const BookingParametragePage = () => {
                   <div className="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                     <h6 className="mb-0">
                       <i className="bi bi-folder me-2"></i>
-                      Projet associé
+                      Projets associés
                     </h6>
                     <button 
                       className="btn btn-outline-primary btn-sm"
@@ -252,20 +275,82 @@ const BookingParametragePage = () => {
                       Nouveau projet
                     </button>
                   </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="mb-2">
-                        <strong>Nom du projet :</strong> 
-                        <span className="ms-2">{artiste.projet?.nom || 'Non renseigné'}</span>
+                  
+                  {(() => {
+                    const projetsArtiste = getProjetsForArtiste(selectedArtisteId);
+                    
+                    if (projetsArtiste.length === 0 && !artiste.projet?.nom) {
+                      return (
+                        <div className="text-center py-3">
+                          <p className="text-muted mb-0">Aucun projet associé</p>
+                        </div>
+                      );
+                    }
+                    
+                    return (
+                      <div>
+                        {/* Afficher les projets de la nouvelle collection */}
+                        {projetsArtiste.length > 0 && (
+                          <div className="mb-3">
+                            {projetsArtiste.map((projet, index) => (
+                              <div key={projet.id} className={index > 0 ? "mt-3 pt-3 border-top" : ""}>
+                                <div className="row">
+                                  <div className="col-md-6">
+                                    <div className="mb-2">
+                                      <strong>Projet :</strong> 
+                                      <span className="ms-2">{projet.intitule || 'Sans nom'}</span>
+                                    </div>
+                                  </div>
+                                  <div className="col-md-6">
+                                    <div className="mb-2">
+                                      <strong>Type :</strong> 
+                                      <span className="ms-2">{projet.typeContrat || 'Non défini'}</span>
+                                    </div>
+                                  </div>
+                                  {projet.montantHT && (
+                                    <div className="col-md-6">
+                                      <div className="mb-2">
+                                        <strong>Montant HT :</strong> 
+                                        <span className="ms-2">{projet.montantHT}€</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {projet.prixPlaces && (
+                                    <div className="col-md-6">
+                                      <div className="mb-2">
+                                        <strong>Prix des places :</strong> 
+                                        <span className="ms-2">{projet.prixPlaces}€</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Afficher l'ancien format si présent (pour compatibilité) */}
+                        {artiste.projet?.nom && (
+                          <div className={projetsArtiste.length > 0 ? "mt-3 pt-3 border-top" : ""}>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <div className="mb-2">
+                                  <strong>Projet (ancien) :</strong> 
+                                  <span className="ms-2">{artiste.projet.nom}</span>
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <div className="mb-2">
+                                  <strong>Code :</strong> 
+                                  <span className="ms-2">{artiste.projet.code || 'Non renseigné'}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-2">
-                        <strong>Code du projet :</strong> 
-                        <span className="ms-2">{artiste.projet?.code || 'Non renseigné'}</span>
-                      </div>
-                    </div>
-                  </div>
+                    );
+                  })()}
                 </div>
               </div>
             </div>

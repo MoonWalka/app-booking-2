@@ -218,10 +218,32 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
   useEffect(() => {
     console.log('[PreContratGenerator] Initialisation des données depuis les props');
     
-    // Ne pas écraser les données si on a déjà des données du formulaire public
+    // Ne pas écraser les données si on a déjà des données du formulaire public REMPLIES
     if (existingPreContrat?.publicFormData) {
-      console.log('[PreContratGenerator] Données du formulaire public présentes, pas d\'écrasement avec les props');
-      return;
+      console.log('[PreContratGenerator] Données du formulaire public présentes, vérification si vides');
+      
+      // Vérifier si les données essentielles sont vides
+      const hasEmptyAddress = !existingPreContrat.adresse && 
+                            !existingPreContrat.ville && 
+                            !existingPreContrat.cp;
+      
+      if (hasEmptyAddress && structure) {
+        console.log('[PreContratGenerator] Adresse vide dans le pré-contrat, chargement depuis la structure');
+        // Charger uniquement les données d'adresse depuis la structure
+        setFormData(prev => ({
+          ...prev,
+          adresse: prev.adresse || structure.adresse || '',
+          suiteAdresse: prev.suiteAdresse || structure.suiteAdresse || '',
+          ville: prev.ville || structure.ville || '',
+          cp: prev.cp || structure.codePostal || '',
+          pays: prev.pays || structure.pays || 'France',
+          region: prev.region || structure.region || '',
+          departement: prev.departement || structure.departement || ''
+        }));
+      } else {
+        console.log('[PreContratGenerator] Données non vides ou pas de structure, pas de mise à jour');
+        return;
+      }
     }
     
     if (structure) {

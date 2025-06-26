@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col, Button, Form, Table, Alert } from 'react-bootstrap';
 import RepresentationsSection from '@/components/common/RepresentationsSection';
 import { useTabs } from '@/context/TabsContext';
+import { useOrganization } from '@/context/OrganizationContext';
+import { doc, getDoc } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
 import styles from './ContratGeneratorNew.module.css';
 
 /**
@@ -14,13 +17,21 @@ const ContratGeneratorNew = ({
   contact, 
   artiste, 
   lieu, 
-  structure 
+  structure,
+  preContratData 
 }) => {
   const navigate = useNavigate();
   const { openTab } = useTabs();
+  const { currentOrg } = useOrganization();
   
   // État pour l'onglet actif du panneau latéral
   const [activeTab, setActiveTab] = useState('dossier');
+  
+  // État pour les données de l'entreprise du label
+  const [entrepriseData, setEntrepriseData] = useState(null);
+  
+  // État pour les paramètres de facturation (incluant TVA)
+  const [factureParams, setFactureParams] = useState(null);
   
   // État pour les données du contrat
   const [contratData, setContratData] = useState({
@@ -85,6 +96,19 @@ const ContratGeneratorNew = ({
       capacite: '',
       type: 'Concert'
     },
+    // Négociation
+    negociation: {
+      montantNet: 0,
+      montantBrut: 0,
+      tauxTva: 20, // Taux par défaut
+      montantTva: 0,
+      montantTTC: 0,
+      contratType: 'cession',
+      devise: 'EUR',
+      moyenPaiement: 'virement',
+      acompte: '',
+      frais: ''
+    },
     // Réceptif
     hebergements: [],
     restaurations: [],
@@ -103,9 +127,130 @@ const ContratGeneratorNew = ({
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('success');
 
+  // Charger les données de l'entreprise du label
+  useEffect(() => {
+    const loadEntrepriseData = async () => {
+      if (!currentOrg?.id) return;
+      
+      try {
+        console.log('[ContratGeneratorNew] Chargement des données de l\'entreprise pour org:', currentOrg.id);
+        
+        // Essayer d'abord le chemin principal: organizations/{id}/settings/entreprise
+        const entrepriseRef = doc(db, 'organizations', currentOrg.id, 'settings', 'entreprise');
+        const entrepriseDoc = await getDoc(entrepriseRef);
+        
+        if (entrepriseDoc.exists()) {
+          const entrepriseData = entrepriseDoc.data();
+          console.log('[ContratGeneratorNew] Données entreprise trouvées dans settings/entreprise:', entrepriseData);
+          setEntrepriseData(entrepriseData);
+          return;
+        }
+        
+        // Fallback sur organizations/{id}/parametres/settings
+        const parametresRef = doc(db, 'organizations', currentOrg.id, 'parametres', 'settings');
+        const parametresDoc = await getDoc(parametresRef);
+        
+        if (parametresDoc.exists()) {
+          const parametres = parametresDoc.data();
+          if (parametres.entreprise) {
+            console.log('[ContratGeneratorNew] Données entreprise trouvées dans parametres/settings:', parametres.entreprise);
+            setEntrepriseData(parametres.entreprise);
+            return;
+          }
+        }
+        
+        // Dernier fallback sur l'ancien chemin (pour compatibilité)
+        const oldParametresDoc = await getDoc(doc(db, 'parametres', currentOrg.id));
+        
+        if (oldParametresDoc.exists()) {
+          const parametres = oldParametresDoc.data();
+          if (parametres.entreprise) {
+            console.log('[ContratGeneratorNew] Données entreprise trouvées dans l\'ancien chemin parametres:', parametres.entreprise);
+            setEntrepriseData(parametres.entreprise);
+          }
+        } else {
+          console.warn('[ContratGeneratorNew] Aucune donnée entreprise trouvée pour l\'organisation');
+        }
+      } catch (error) {
+        console.error('[ContratGeneratorNew] Erreur lors du chargement des données entreprise:', error);
+      }
+    };
+    
+    loadEntrepriseData();
+  }, [currentOrg]);
+
+  // Charger les paramètres de facturation (incluant TVA)
+  useEffect(() => {
+    const loadFactureParams = async () => {
+      if (!currentOrg?.id) return;
+      
+      try {
+        console.log('[ContratGeneratorNew] Chargement des paramètres de facturation');
+        
+        // Charger les paramètres de facturation
+        const factureParamsRef = doc(db, 'organizations', currentOrg.id, 'settings', 'factureParameters');
+        const factureParamsDoc = await getDoc(factureParamsRef);
+        
+        if (factureParamsDoc.exists()) {
+          const params = factureParamsDoc.data();
+          console.log('[ContratGeneratorNew] Paramètres de facturation trouvés:', params);
+          if (params.parameters) {
+            setFactureParams(params.parameters);
+          }
+        } else {
+          console.log('[ContratGeneratorNew] Aucun paramètre de facturation trouvé, utilisation des valeurs par défaut');
+        }
+      } catch (error) {
+        console.error('[ContratGeneratorNew] Erreur lors du chargement des paramètres de facturation:', error);
+      }
+    };
+    
+    loadFactureParams();
+  }, [currentOrg]);
+
   // Initialiser les données depuis les props
   useEffect(() => {
-    if (structure) {
+    // Si on a un pré-contrat confirmé, utiliser ses données en priorité
+    if (preContratData && preContratData.confirmationValidee) {
+      console.log('[ContratGeneratorNew] Utilisation des données du pré-contrat confirmé');
+      
+      setContratData(prev => ({
+        ...prev,
+        organisateur: {
+          ...prev.organisateur,
+          raisonSociale: preContratData.raisonSociale || structure?.nom || '',
+          adresse: preContratData.adresse || structure?.adresse || '',
+          suiteAdresse: preContratData.suiteAdresse || '',
+          ville: preContratData.ville || structure?.ville || '',
+          codePostal: preContratData.cp || structure?.codePostal || '',
+          pays: preContratData.pays || structure?.pays || 'France',
+          telephone: preContratData.tel || structure?.telephone || '',
+          fax: preContratData.fax || '',
+          email: preContratData.email || structure?.email || '',
+          siret: preContratData.siret || structure?.siret || '',
+          site: preContratData.site || structure?.siteWeb || '',
+          signataire: preContratData.nomSignataire || '',
+          qualite: preContratData.qualiteSignataire || '',
+          numeroTva: preContratData.numeroTvaIntracommunautaire || '',
+          codeApe: preContratData.codeActivite || '',
+          numeroLicence: preContratData.numeroLicence || ''
+        },
+        negociation: {
+          ...prev.negociation,
+          montantNet: preContratData.montantHT || concert?.montant || 0,
+          montantBrut: preContratData.montantHT || concert?.montant || 0,
+          tauxTva: factureParams?.tauxTva || 20,
+          montantTva: 0, // Sera calculé après
+          montantTTC: 0, // Sera calculé après
+          contratType: preContratData.contratPropose || 'cession',
+          devise: preContratData.devise || 'EUR',
+          moyenPaiement: preContratData.moyenPaiement || 'virement',
+          acompte: preContratData.acompte || '',
+          frais: preContratData.frais || ''
+        }
+      }));
+    } else if (structure) {
+      // Sinon, utiliser les données de base
       setContratData(prev => ({
         ...prev,
         organisateur: {
@@ -135,16 +280,56 @@ const ContratGeneratorNew = ({
       }));
     }
 
-    if (artiste) {
+    // Mapper les données de l'entreprise du label dans producteur (Partie B)
+    if (entrepriseData) {
+      console.log('[ContratGeneratorNew] Mapping des données entreprise dans producteur:', entrepriseData);
+      console.log('[ContratGeneratorNew] Nom entreprise:', entrepriseData.nom);
       setContratData(prev => ({
         ...prev,
         producteur: {
           ...prev.producteur,
-          raisonSociale: artiste.nom || ''
+          raisonSociale: entrepriseData.nom || '',
+          adresse: entrepriseData.adresse || '',
+          suiteAdresse: entrepriseData.adresseComplement || '',
+          ville: entrepriseData.ville || '',
+          codePostal: entrepriseData.codePostal || '',
+          pays: entrepriseData.pays || 'France',
+          telephone: entrepriseData.telephone || '',
+          fax: entrepriseData.fax || '',
+          email: entrepriseData.email || '',
+          siret: entrepriseData.siret || '',
+          site: entrepriseData.siteWeb || '',
+          signataire: entrepriseData.representantLegal || '',
+          qualite: entrepriseData.qualiteRepresentant || '',
+          numeroTva: entrepriseData.numeroTVAIntracommunautaire || '',
+          codeApe: entrepriseData.codeAPE || '',
+          numeroLicence: entrepriseData.licenceSpectacle || ''
+        }
+      }));
+    } else {
+      console.log('[ContratGeneratorNew] Aucune donnée entreprise disponible pour le producteur');
+    }
+  }, [structure, concert, artiste, lieu, preContratData, entrepriseData, factureParams]);
+
+  // Calculer automatiquement les montants TVA
+  useEffect(() => {
+    if (contratData.negociation) {
+      const montantHT = parseFloat(contratData.negociation.montantNet) || 0;
+      const tauxTva = parseFloat(contratData.negociation.tauxTva) || 0;
+      
+      const montantTva = montantHT * (tauxTva / 100);
+      const montantTTC = montantHT + montantTva;
+      
+      setContratData(prev => ({
+        ...prev,
+        negociation: {
+          ...prev.negociation,
+          montantTva: montantTva.toFixed(2),
+          montantTTC: montantTTC.toFixed(2)
         }
       }));
     }
-  }, [structure, concert, artiste, lieu]);
+  }, [contratData.negociation?.montantNet, contratData.negociation?.tauxTva]);
 
   const handleInputChange = (section, field, value) => {
     setContratData(prev => ({
@@ -258,7 +443,7 @@ const ContratGeneratorNew = ({
         id: Date.now(),
         objet: '',
         montantHT: '',
-        tauxTva: '20'
+        tauxTva: factureParams?.tauxTva?.toString() || '20'
       }]
     }));
   };
@@ -969,9 +1154,7 @@ const ContratGeneratorNew = ({
                           />
                         </td>
                         <td>
-                          <Form.Control
-                            type="number"
-                            step="0.01"
+                          <Form.Select
                             value={prestation.tauxTva}
                             onChange={(e) => {
                               const updatedPrestations = contratData.prestations.map(p =>
@@ -980,7 +1163,20 @@ const ContratGeneratorNew = ({
                               setContratData(prev => ({ ...prev, prestations: updatedPrestations }));
                             }}
                             size="sm"
-                          />
+                          >
+                            <option value="0">0% (Exonéré)</option>
+                            <option value="2.1">2.1% (Taux super réduit)</option>
+                            <option value="5.5">5.5% (Taux réduit)</option>
+                            <option value="10">10% (Taux intermédiaire)</option>
+                            <option value="20">20% (Taux normal)</option>
+                            {/* Si un taux personnalisé existe dans les paramètres et n'est pas dans la liste */}
+                            {factureParams?.tauxTva && 
+                             ![0, 2.1, 5.5, 10, 20].includes(parseFloat(factureParams.tauxTva)) && (
+                              <option value={factureParams.tauxTva}>
+                                {factureParams.tauxTva}% (Personnalisé)
+                              </option>
+                            )}
+                          </Form.Select>
                         </td>
                         <td>
                           <Button

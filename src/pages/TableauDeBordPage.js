@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTabs } from '@/context/TabsContext';
-import Table from '@/components/ui/Table';
 import AddButton from '@/components/ui/AddButton';
+import ConcertsTableView from '@/components/concerts/ConcertsTableView';
 // import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
@@ -33,12 +33,9 @@ const TableauDeBordPage = () => {
   };
   
   // État pour les données
-  const [data, setData] = useState([]);
+  const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortField, setSortField] = useState('date');
-  const [sortDirection, setSortDirection] = useState('desc');
 
   // Charger les données du tableau de bord
   useEffect(() => {
@@ -90,7 +87,7 @@ const TableauDeBordPage = () => {
           })
         );
 
-        setData(concertsData);
+        setConcerts(concertsData);
         
       } catch (err) {
         console.error('Erreur lors du chargement des données:', err);
@@ -103,8 +100,22 @@ const TableauDeBordPage = () => {
     loadDashboardData();
   }, [currentOrg?.id]);
 
-  // Configuration des colonnes du tableau
-  const columns = [
+  // Gestion de la suppression
+  const handleDelete = async (item) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer "${item.titre || item.artisteNom}" ?`)) {
+      // TODO: Implémenter la suppression via un service
+      console.log('Suppression de l\'élément:', item.id);
+      // Recharger les données après suppression
+      // await loadDashboardData();
+    }
+  };
+
+  // Gestion de l'édition
+  const handleEdit = (item) => {
+    navigate(`/concerts/${item.id}/edit`);
+  };
+
+  /*
     {
       label: 'Niveau',
       key: 'niveau',
@@ -146,13 +157,27 @@ const TableauDeBordPage = () => {
       )
     },
     {
-      label: 'Lieu',
+      label: 'Lieu/Libellé',
       key: 'lieuNom',
       sortable: true,
       render: (item) => (
         <div className={styles.lieuCell}>
           <div className={styles.lieuNom}>
-            {item.lieuNom || item.lieu?.nom || 'Non spécifié'}
+            {(() => {
+              const lieu = item.lieuNom || item.lieu?.nom;
+              const libelle = item.libelle || item.titre;
+              
+              // Afficher "lieu/libellé" si les deux existent, sinon l'un ou l'autre
+              if (lieu && libelle) {
+                return `${lieu} / ${libelle}`;
+              } else if (lieu) {
+                return lieu;
+              } else if (libelle) {
+                return libelle;
+              } else {
+                return 'Non spécifié';
+              }
+            })()}
           </div>
           {(item.lieuVille || item.lieu?.ville) && (
             <div className={styles.lieuVille}>
@@ -474,7 +499,7 @@ const TableauDeBordPage = () => {
         );
       }
     }
-  ];
+  */
 
   // Fonctions utilitaires (pour usage futur)
   // const getTypeIcon = (type) => {
@@ -508,109 +533,9 @@ const TableauDeBordPage = () => {
   //   }
   // };
 
-  // Filtrage et tri des données
-  const filteredAndSortedData = React.useMemo(() => {
-    let filtered = data;
-
-    // Filtrage par recherche
-    if (searchTerm) {
-      filtered = filtered.filter(item =>
-        (item.titre?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (item.artisteNom?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (item.lieuNom?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (item.contactNom?.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    }
-
-    // Tri
-    if (sortField) {
-      filtered.sort((a, b) => {
-        let aValue = a[sortField];
-        let bValue = b[sortField];
-
-        // Gestion spéciale pour les dates
-        if (sortField === 'date') {
-          aValue = aValue?.toDate ? aValue.toDate() : new Date(aValue || 0);
-          bValue = bValue?.toDate ? bValue.toDate() : new Date(bValue || 0);
-        }
-
-        // Gestion spéciale pour les objets imbriqués
-        if (sortField === 'lieu') {
-          aValue = a.lieuNom || a.lieu?.nom || '';
-          bValue = b.lieuNom || b.lieu?.nom || '';
-        }
-
-        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
-      });
-    }
-
-    return filtered;
-  }, [data, searchTerm, sortField, sortDirection]);
-
-  // Gestion du tri
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
-  // Gestion du clic sur une ligne
-  const handleRowClick = (item) => {
-    switch (item.type) {
-      case 'concert':
-        navigate(`/concerts/${item.id}`);
-        break;
-      case 'contrat':
-        navigate(`/contrats/${item.id}`);
-        break;
-      case 'facture':
-        navigate(`/factures/${item.id}`);
-        break;
-      default:
-        console.log('Type non géré:', item.type);
-    }
-  };
-
-  // Fonction pour supprimer un élément
-  const handleDelete = (item) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer "${item.titre || item.artisteNom}" ?`)) {
-      // TODO: Implémenter la suppression via un service
-      console.log('Suppression de l\'élément:', item.id);
-      // Ici il faudrait appeler un service de suppression
-    }
-  };
-
-  // Actions par ligne
-  const renderActions = (item) => (
-    <div className={styles.actions}>
-      <button
-        className={`btn btn-sm btn-outline-warning ${styles.actionBtn}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          navigate(`/concerts/${item.id}/edit`);
-        }}
-        title="Modifier"
-      >
-        <i className="bi bi-pencil"></i>
-      </button>
-      
-      <button
-        className={`btn btn-sm btn-outline-danger ${styles.actionBtn}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleDelete(item);
-        }}
-        title="Supprimer"
-      >
-        <i className="bi bi-trash"></i>
-      </button>
-    </div>
-  );
+  /*
+  // Toute la logique du tableau est maintenant dans ConcertsTableView
+  */
 
   if (loading) {
     return (
@@ -647,7 +572,7 @@ const TableauDeBordPage = () => {
                   Tableau de bord
                 </h1>
                 <p className={styles.subtitle}>
-                  Vue d'ensemble de vos activités • {filteredAndSortedData.length} éléments
+                  Vue d'ensemble de vos activités • {concerts.length} concerts
                 </p>
               </div>
               
@@ -661,37 +586,15 @@ const TableauDeBordPage = () => {
           </div>
 
           <Card className={styles.tableCard}>
-            <Card.Header className={styles.cardHeader}>
-              <div className={styles.cardHeaderContent}>
-                <h5 className={styles.cardTitle}>
-                  <i className="bi bi-list-ul me-2"></i>
-                  Activités récentes
-                </h5>
-                
-                <div className={styles.searchSection}>
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Rechercher..."
-                    className={`form-control ${styles.searchInput}`}
-                  />
-                </div>
-              </div>
-            </Card.Header>
-            
             <Card.Body className={styles.cardBody}>
-              <div className={styles.tableWrapper}>
-                <Table
-                  columns={columns}
-                  data={filteredAndSortedData}
-                  renderActions={renderActions}
-                  sortField={sortField}
-                  sortDirection={sortDirection}
-                  onSort={handleSort}
-                  onRowClick={handleRowClick}
-                />
-              </div>
+              <ConcertsTableView
+                concerts={concerts}
+                loading={loading}
+                error={error}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                showSearch={true}
+              />
             </Card.Body>
           </Card>
         </Col>

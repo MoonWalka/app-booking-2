@@ -65,7 +65,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
     paysSalle: 'France',
     
     // Négociation
-    cachetHT: '',
+    montantHT: '',
     acompte: '',
     frais: '',
     contratPropose: 'cession',
@@ -110,18 +110,26 @@ function ConfirmationPage({ concertId: propConcertId }) {
         
         // Récupérer les pré-contrats du concert
         const preContrats = await getPreContratsByConcert(concertId);
+        console.log('[ConfirmationPage] Pré-contrats trouvés:', preContrats);
         
-        // Prendre le plus récent avec des données du formulaire public
+        // Prendre le plus récent avec des données du formulaire public OU déjà validé
         const preContratAvecDonnees = preContrats
-          .filter(pc => pc.publicFormData)
+          .filter(pc => pc.publicFormData || pc.confirmationValidee)
           .sort((a, b) => {
-            const dateA = a.lastPublicFormSave?.toDate() || new Date(0);
-            const dateB = b.lastPublicFormSave?.toDate() || new Date(0);
+            const dateA = a.lastPublicFormSave?.toDate() || a.confirmationDate?.toDate() || new Date(0);
+            const dateB = b.lastPublicFormSave?.toDate() || b.confirmationDate?.toDate() || new Date(0);
             return dateB - dateA;
           })[0];
 
         if (!preContratAvecDonnees) {
           setError('Aucun pré-contrat avec données publiques trouvé');
+          setLoading(false);
+          return;
+        }
+        
+        // Si déjà validé, rediriger ou afficher un message
+        if (preContratAvecDonnees.confirmationValidee && !preContratAvecDonnees.publicFormData) {
+          setError('Ce pré-contrat a déjà été validé');
           setLoading(false);
           return;
         }
@@ -150,7 +158,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
           site: preContratAvecDonnees.site || '',
           siret: preContratAvecDonnees.siret || '',
           // Négociation
-          cachetHT: preContratAvecDonnees.montantHT || '',
+          montantHT: preContratAvecDonnees.montantHT || '',
           acompte: preContratAvecDonnees.acompte || '',
           frais: preContratAvecDonnees.frais || '',
           contratPropose: preContratAvecDonnees.contratPropose || 'cession',
@@ -206,8 +214,9 @@ function ConfirmationPage({ concertId: propConcertId }) {
         // Marquer comme confirmé
         confirmationValidee: true,
         confirmationDate: new Date(),
-        // Supprimer les données du formulaire public après validation
-        publicFormData: null
+        // Conserver publicFormData pour historique mais marquer comme validé
+        publicFormData: preContrat.publicFormData,
+        publicFormValidated: true
       };
       
       await updatePreContrat(preContrat.id, donneesValidees);
@@ -1821,7 +1830,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
                   <Button 
                     variant="outline-primary" 
                     size="sm"
-                    onClick={() => copierSection(['cachetHT', 'acompte', 'frais', 'contratPropose', 'devise', 'moyenPaiement', 'precisionsNego'])}
+                    onClick={() => copierSection(['montantHT', 'acompte', 'frais', 'contratPropose', 'devise', 'moyenPaiement', 'precisionsNego'])}
                   >
                     <i className="bi bi-arrow-left-circle me-1"></i>
                     Tout copier
@@ -1852,15 +1861,15 @@ function ConfirmationPage({ concertId: propConcertId }) {
                         type="number"
                         step="0.01"
                         placeholder="Cachet HT"
-                        value={mesInfos.cachetHT}
-                        onChange={(e) => setMesInfos(prev => ({ ...prev, cachetHT: e.target.value }))}
+                        value={mesInfos.montantHT}
+                        onChange={(e) => setMesInfos(prev => ({ ...prev, montantHT: e.target.value }))}
                       />
                     </Form.Group>
                   </Col>
                   <Col md={1} className={styles.arrowCol}>
                     <Button 
                       variant="link" 
-                      onClick={() => copierValeur('cachetHT')}
+                      onClick={() => copierValeur('montantHT')}
                       className={styles.copyButton}
                       title="Copier la valeur"
                     >
@@ -1873,7 +1882,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
                         type="number"
                         step="0.01"
                         placeholder="Cachet HT"
-                        value={infosOrganisateur.cachetHT || ''}
+                        value={infosOrganisateur.montantHT || ''}
                         readOnly
                         className={styles.readOnlyField}
                       />

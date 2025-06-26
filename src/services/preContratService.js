@@ -357,28 +357,17 @@ class PreContratService {
    */
   async validatePreContrat(preContratId, validationData) {
     try {
-      // D'abord sauvegarder les données
+      // Cette fonction ne devrait PAS valider automatiquement
+      // Elle devrait juste sauvegarder les données publiques
+      // La validation réelle se fait dans ConfirmationPage
+      
+      console.log('[PreContratService] validatePreContrat est OBSOLÈTE - utilise savePublicFormData à la place');
+      
+      // Pour compatibilité, on appelle juste savePublicFormData
       await this.savePublicFormData(preContratId, validationData);
       
-      // Puis marquer comme validé
-      const updateData = {
-        status: 'validated',
-        validatedAt: serverTimestamp(),
-        validatedBy: validationData.publicFormEmail || validationData.email || 'Anonyme'
-      };
-
-      await updateDoc(
-        doc(db, 'preContrats', preContratId),
-        updateData
-      );
-
-      // Ajouter à l'historique
-      await this.addToHistory(preContratId, {
-        action: 'validated',
-        date: new Date(),
-        validatedBy: validationData.publicFormEmail || validationData.email || 'Anonyme',
-        modifications: Object.keys(validationData)
-      });
+      // Ne PAS marquer comme validé ici
+      // La validation se fait dans ConfirmationPage avec confirmationValidee
 
       debugLog('[PreContratService] Pré-contrat validé:', preContratId, 'success');
     } catch (error) {
@@ -418,16 +407,29 @@ class PreContratService {
    */
   async getPreContratsByConcert(concertId) {
     try {
+      console.log('[PreContratService] Recherche pré-contrats pour concert:', concertId);
+      
       const q = query(
         collection(db, 'preContrats'),
         where('concertId', '==', concertId)
       );
 
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
+      const preContrats = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      console.log('[PreContratService] Pré-contrats trouvés:', preContrats.length);
+      preContrats.forEach(pc => {
+        console.log(`- Pré-contrat ${pc.id}:`, {
+          hasPublicFormData: !!pc.publicFormData,
+          confirmationValidee: pc.confirmationValidee,
+          publicFormCompleted: pc.publicFormCompleted
+        });
+      });
+      
+      return preContrats;
     } catch (error) {
       debugLog('[PreContratService] Erreur récupération pré-contrats:', error, 'error');
       throw error;

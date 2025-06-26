@@ -4,6 +4,7 @@ import { Alert } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
 import { db } from '@/services/firebase-service';
 import { doc, getDoc } from '@/services/firebase-service';
+import { getPreContratsByConcert } from '@/services/preContratService';
 import ContratGeneratorNew from '@/components/contrats/desktop/ContratGeneratorNew';
 import '@styles/index.css';
 
@@ -30,6 +31,7 @@ const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [structure, setStructure] = useState(null);
+  const [preContratData, setPreContratData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -88,6 +90,25 @@ const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
           }
         }
 
+        // Récupérer les données du pré-contrat confirmé
+        try {
+          const preContrats = await getPreContratsByConcert(concertId);
+          console.log('[ContratGenerationNewPage] Pré-contrats trouvés:', preContrats.length);
+          
+          // Chercher un pré-contrat confirmé
+          const confirmedPreContrat = preContrats.find(pc => pc.confirmationValidee === true);
+          
+          if (confirmedPreContrat) {
+            console.log('[ContratGenerationNewPage] Pré-contrat confirmé trouvé:', confirmedPreContrat);
+            setPreContratData(confirmedPreContrat);
+          } else {
+            console.log('[ContratGenerationNewPage] Aucun pré-contrat confirmé trouvé');
+          }
+        } catch (error) {
+          console.error('[ContratGenerationNewPage] Erreur lors de la récupération du pré-contrat:', error);
+          // Ne pas bloquer si le pré-contrat n'est pas trouvé
+        }
+
         setLoading(false);
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
@@ -140,6 +161,7 @@ const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
         artiste={artiste}
         lieu={lieu}
         structure={structure}
+        preContratData={preContratData}
       />
     </div>
   );

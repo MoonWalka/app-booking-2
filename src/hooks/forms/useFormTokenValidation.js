@@ -119,10 +119,10 @@ export function useFormTokenValidation(concertId, token) {
           isLoading: false,
           isValid: true,
           isExpired: false,
-          isCompleted: validationResult.alreadyValidated || false,
+          isCompleted: validationResult.alreadyValidated || validationResult.preContrat?.publicFormCompleted || false,
           concertData,
           formLinkData: validationResult.preContrat,
-          existingSubmission: validationResult.alreadyValidated ? validationResult.preContrat : null,
+          existingSubmission: validationResult.preContrat?.publicFormData ? validationResult.preContrat.publicFormData : null,
           organizationData,
           error: null
         });

@@ -222,20 +222,18 @@ function PreContratFormContainer({ concertId, token }) {
               ville: mappedData.ville
             });
 
-            // Sauvegarder ou valider selon l'action
+            // Sauvegarder les données dans tous les cas
+            // La validation réelle se fait dans ConfirmationPage
+            await preContratService.savePublicFormData(
+              formLinkData.id,
+              mappedData
+            );
+            
             if (action === 'send') {
-              // Valider et marquer comme complété
-              await preContratService.validatePreContrat(
-                formLinkData.id,
-                mappedData
-              );
+              // Marquer comme envoyé (mais pas validé)
               setSubmissionStatus('completed');
             } else {
-              // Sauvegarder seulement (brouillon)
-              await preContratService.savePublicFormData(
-                formLinkData.id,
-                mappedData
-              );
+              // Sauvegarder comme brouillon
               alert('Formulaire enregistré avec succès');
             }
           } catch (error) {

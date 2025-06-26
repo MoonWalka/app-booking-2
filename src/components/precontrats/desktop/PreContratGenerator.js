@@ -215,6 +215,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               ...prev,
               ...preContratData,
               destinataires: preContratData.destinataires || [],
+              artistes: Array.isArray(preContratData.artistes) ? preContratData.artistes : [],
               // Exclure explicitement publicFormData
               publicFormData: undefined
             }));
@@ -223,7 +224,8 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
             setFormData(prev => ({
               ...prev,
               ...preContratData,
-              destinataires: preContratData.destinataires || []
+              destinataires: preContratData.destinataires || [],
+              artistes: Array.isArray(preContratData.artistes) ? preContratData.artistes : []
             }));
           }
         }
@@ -321,50 +323,77 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         setLoadingResponsables(true);
         console.log('[PreContrat] Chargement responsables admin pour structure:', structure.id);
         
-        // Rechercher dans contacts_unified pour cette structure
-        const contactsRef = collection(db, 'contacts_unified');
+        // Rechercher les liaisons actives pour cette structure
+        const liaisonsRef = collection(db, 'liaisons');
         const q = query(
-          contactsRef,
-          where('organizationId', '==', currentOrg.id)
+          liaisonsRef,
+          where('structureId', '==', structure.id),
+          where('organizationId', '==', currentOrg.id),
+          where('actif', '==', true)
         );
         
-        const querySnapshot = await getDocs(q);
+        const liaisonsSnapshot = await getDocs(q);
+        const personneIds = [];
+        const liaisonsMap = {};
+        
+        // Collecter les IDs des personnes et mapper les liaisons
+        liaisonsSnapshot.forEach((doc) => {
+          const liaison = doc.data();
+          personneIds.push(liaison.personneId);
+          liaisonsMap[liaison.personneId] = liaison;
+        });
+        
         const responsables = [];
         
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          
-          // Si c'est une structure avec des personnes
-          if (data.entityType === 'structure' && data.personnes && Array.isArray(data.personnes)) {
-            // Vérifier si c'est la bonne structure
-            if (doc.id === structure.id || data.structure?.id === structure.id || 
-                data.structure?.raisonSociale === structure.nom ||
-                data.structure?.raisonSociale === structure.structureRaisonSociale) {
+        // Charger les personnes si on a des liaisons
+        if (personneIds.length > 0) {
+          // Charger les personnes par batch (Firestore limite à 10 par requête 'in')
+          for (let i = 0; i < personneIds.length; i += 10) {
+            const batch = personneIds.slice(i, i + 10);
+            const personnesQuery = query(
+              collection(db, 'personnes'),
+              where('__name__', 'in', batch)
+            );
+            
+            const personnesSnapshot = await getDocs(personnesQuery);
+            
+            personnesSnapshot.forEach((doc) => {
+              const personne = doc.data();
+              const liaison = liaisonsMap[doc.id];
               
-              data.personnes.forEach((personne, index) => {
-                responsables.push({
-                  id: `${doc.id}_${index}`,
-                  nom: `${personne.prenom || ''} ${personne.nom || ''}`.trim(),
-                  fonction: personne.fonction || '',
-                  email: personne.email || personne.mailDirect || '',
-                  telephone: personne.telephone || personne.telDirect || '',
-                  structureId: doc.id,
-                  personneIndex: index
-                });
+              responsables.push({
+                id: doc.id,
+                nom: `${personne.prenom || ''} ${personne.nom || ''}`.trim(),
+                fonction: liaison.fonction || '',
+                email: personne.email || '',
+                telephone: personne.telephone || '',
+                structureId: structure.id,
+                prioritaire: liaison.prioritaire || false
               });
-            }
+            });
           }
-          
-          // Si c'est une personne libre liée à cette structure
-          if (data.entityType === 'personne_libre' && data.structureId === structure.id) {
-            const personne = data.personne;
+        }
+        
+        // Chercher aussi les personnes libres (sans liaison) mais créées dans le contexte de cette structure
+        const personnesLibresQuery = query(
+          collection(db, 'personnes'),
+          where('organizationId', '==', currentOrg.id),
+          where('isPersonneLibre', '==', true)
+        );
+        
+        const personnesLibresSnapshot = await getDocs(personnesLibresQuery);
+        
+        personnesLibresSnapshot.forEach((doc) => {
+          const personne = doc.data();
+          // Vérifier si cette personne n'a pas déjà été ajoutée via les liaisons
+          if (!responsables.find(r => r.id === doc.id)) {
             responsables.push({
               id: doc.id,
               nom: `${personne.prenom || ''} ${personne.nom || ''}`.trim(),
-              fonction: personne.fonction || '',
+              fonction: '',
               email: personne.email || '',
               telephone: personne.telephone || '',
-              structureId: structure.id,
+              structureId: null,
               isPersonneLibre: true
             });
           }
@@ -791,7 +820,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                 <Col md={5} className={styles.fieldColumn}>
                   <Form.Control
                     type="text"
-                    value={formData.artistes.join(', ')}
+                    value={Array.isArray(formData.artistes) ? formData.artistes.join(', ') : ''}
                     onChange={(e) => handleInputChange('artistes', e.target.value.split(', '))}
                     placeholder="Séparer par des virgules"
                   />
@@ -1149,7 +1178,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                 <>
                   <div className="mb-3">
                     <h6>Général</h6>
-                    <p className="small mb-1"><strong>Artiste(s):</strong> {formData.artistes.join(', ')}</p>
+                    <p className="small mb-1"><strong>Artiste(s):</strong> {Array.isArray(formData.artistes) ? formData.artistes.join(', ') : ''}</p>
                     <p className="small mb-1"><strong>Projet:</strong> {formData.projet}</p>
                     <p className="small mb-1"><strong>Début:</strong> {formData.debut}</p>
                     <p className="small mb-1"><strong>Fin:</strong> {formData.fin}</p>

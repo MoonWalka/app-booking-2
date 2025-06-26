@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useContactSearch, useDeleteContact } from '@/hooks/contacts';
+import { useContactSearch, useDeleteContactRelational } from '@/hooks/contacts';
 import Spinner from '@/components/common/Spinner';
 import Alert from '@/components/ui/Alert';
 import styles from './ContactsList.module.css';
@@ -31,7 +31,7 @@ const ContactsList = ({ onNavigateToDetails }) => {
   const { 
     handleDelete: handleDeleteContact,
     isDeleting
-  } = useDeleteContact((deletedId) => {
+  } = useDeleteContactRelational((deletedId) => {
     // Supprimer le contact de la liste locale
     setContacts(prevContacts => 
       prevContacts.filter(p => p.id !== deletedId)

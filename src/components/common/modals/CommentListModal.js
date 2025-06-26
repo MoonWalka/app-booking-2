@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/services/firebase-service';
+import { personnesService } from '@/services/contacts/personnesService';
 import styles from './CommentListModal.module.css';
 
 /**
@@ -33,11 +32,10 @@ function CommentListModal({
     try {
       console.log('[CommentListModal] Chargement commentaires pour:', personneId);
       
-      const docRef = doc(db, 'contacts_unified', personneId);
-      const docSnap = await getDoc(docRef);
+      const result = await personnesService.getPersonne(personneId);
       
-      if (docSnap.exists()) {
-        const data = docSnap.data();
+      if (result.success && result.data) {
+        const data = result.data;
         const comments = data.commentaires || [];
         
         // Trier par date (plus récent en premier)
@@ -50,7 +48,7 @@ function CommentListModal({
         setCommentaires(sortedComments);
         console.log('[CommentListModal] Commentaires chargés:', sortedComments.length);
       } else {
-        console.warn('[CommentListModal] Document personne non trouvé');
+        console.warn('[CommentListModal] Personne non trouvée');
         setError('Fiche personne non trouvée');
       }
     } catch (err) {

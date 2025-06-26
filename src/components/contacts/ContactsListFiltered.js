@@ -4,7 +4,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
 import { useContactsRelational } from '@/hooks/contacts/useContactsRelational';
 import ListWithFilters from '@/components/ui/ListWithFilters';
-import { useDeleteContact } from '@/hooks/contacts';
+import { useDeleteContactRelational } from '@/hooks/contacts';
 
 /**
  * Liste des contacts filtrée par tag - MODÈLE RELATIONNEL
@@ -29,7 +29,7 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
     setRefreshKey(prev => prev + 1);
   };
   
-  const { handleDelete: handleDeleteContact } = useDeleteContact(onDeleteSuccess);
+  const { handleDelete: handleDeleteContact } = useDeleteContactRelational(onDeleteSuccess);
 
   // Filtrer les contacts par tag depuis le modèle relationnel
   const filteredContacts = useMemo(() => {

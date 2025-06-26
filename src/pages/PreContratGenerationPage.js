@@ -68,6 +68,8 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
         
         if (concertData.structureId) {
           console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structureId trouvé:', concertData.structureId);
+          
+          // Chercher dans la collection structures (nouveau système)
           const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
           if (structureDoc.exists()) {
             const structureData = { id: structureDoc.id, ...structureDoc.data() };
@@ -88,48 +90,25 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
         if (!structureFound && concertData.structureRaisonSociale) {
           console.log('[PreContratGenerationPage] Utilisation des données structure du concert');
           
-          // Essayer de charger depuis contacts_unified
+          // Essayer de charger depuis structures (nouveau système)
           try {
-            const contactsRef = collection(db, 'contacts_unified');
+            const structuresRef = collection(db, 'structures');
             const q = query(
-              contactsRef,
+              structuresRef,
               where('organizationId', '==', concertData.organizationId),
-              where('entityType', '==', 'structure'),
-              where('structureRaisonSociale', '==', concertData.structureRaisonSociale)
+              where('raisonSociale', '==', concertData.structureRaisonSociale)
             );
             
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
-              const contactDoc = querySnapshot.docs[0];
-              const contactData = { id: contactDoc.id, ...contactDoc.data() };
-              console.log('[PreContratGenerationPage] Structure trouvée dans contacts_unified:', contactData);
-              
-              // Extraire les données de la structure
-              setStructure({
-                id: contactDoc.id,
-                raisonSociale: contactData.structureRaisonSociale || concertData.structureRaisonSociale,
-                nom: contactData.structureRaisonSociale || concertData.structureNom,
-                adresse: contactData.structureAdresse || '',
-                suiteAdresse: contactData.structureSuiteAdresse1 || '',
-                codePostal: contactData.structureCodePostal || '',
-                ville: contactData.structureVille || '',
-                departement: contactData.structureDepartement || '',
-                region: contactData.structureRegion || '',
-                pays: contactData.structurePays || 'France',
-                telephone: contactData.structureTelephone1 || '',
-                telephone1: contactData.structureTelephone1 || '',
-                telephone2: contactData.structureTelephone2 || '',
-                mobile: contactData.structureMobile || '',
-                fax: contactData.structureFax || '',
-                email: contactData.structureEmail || '',
-                siteWeb: contactData.structureSiteWeb || '',
-                siret: contactData.structureSiret || '',
-                type: contactData.structureType || ''
-              });
+              const structureDoc = querySnapshot.docs[0];
+              const structureData = { id: structureDoc.id, ...structureDoc.data() };
+              console.log('[PreContratGenerationPage] Structure trouvée par raison sociale:', structureData);
+              setStructure(structureData);
               structureFound = true;
             }
           } catch (error) {
-            console.error('[PreContratGenerationPage] Erreur recherche dans contacts_unified:', error);
+            console.error('[PreContratGenerationPage] Erreur recherche dans structures:', error);
           }
           
           // Si toujours pas trouvé, utiliser les données minimales du concert

@@ -10,7 +10,6 @@ import PublicationsPage from '@/pages/PublicationsPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
-import FactureGenerationPage from '@/pages/FactureGenerationPage';
 import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import DevisPage from '@/pages/DevisPage';
@@ -255,11 +254,6 @@ const TabManagerProduction = () => {
           return <ContratDetailsPage />;
         case 'FacturesPage':
           return <FacturesPage />;
-        case 'FactureGenerationPage':
-          console.log('[TabManager] Rendu FactureGenerationPage avec activeTab:', activeTab);
-          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
-          console.log('[TabManager] fromContrat:', activeTab.params?.fromContrat);
-          return <FactureGenerationPage />;
         case 'FactureGeneratorPage':
           console.log('[TabManager] Rendu FactureGeneratorPage avec activeTab:', activeTab);
           console.log('[TabManager] concertId passé:', activeTab.params?.concertId);

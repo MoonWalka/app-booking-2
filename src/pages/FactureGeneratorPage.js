@@ -4,6 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useParametres } from '@/context/ParametresContext';
 import { useTabs } from '@/context/TabsContext';
 import contratService from '@/services/contratService';
 import factureService from '@/services/factureService';
@@ -16,6 +17,7 @@ const FactureGeneratorPage = () => {
   const { concertId: concertIdFromParams } = useParams();
   const { user } = useAuth();
   const { currentOrganization } = useOrganization();
+  const { parametres } = useParametres();
   const { getActiveTab, openTab } = useTabs();
   
   // Récupérer les paramètres depuis l'onglet actif
@@ -88,7 +90,7 @@ const FactureGeneratorPage = () => {
             setContrat(contratData);
             
             // Générer les factures basées sur les échéances du contrat
-            const generatedFactures = generateFacturesFromContrat(contratData, concertData);
+            const generatedFactures = generateFacturesFromContrat(contratData, concertData, parametres);
             console.log('[FactureGeneratorPage] Factures générées:', generatedFactures);
             setFactures(generatedFactures);
             
@@ -112,12 +114,14 @@ const FactureGeneratorPage = () => {
     };
 
     loadData();
-  }, [user, currentOrganization?.id, concertId, contratId, fromContrat]);
+  }, [user, currentOrganization?.id, concertId, contratId, fromContrat, parametres]);
 
   // Générer les factures à partir du contrat
-  const generateFacturesFromContrat = (contratData, concertData) => {
+  const generateFacturesFromContrat = (contratData, concertData, parametres) => {
     console.log('[generateFacturesFromContrat] === DÉBUT GÉNÉRATION FACTURES ===');
     console.log('[generateFacturesFromContrat] Données contrat reçues:', contratData);
+    console.log('[generateFacturesFromContrat] Paramètres entreprise:', parametres?.entreprise);
+    console.log('[generateFacturesFromContrat] IBAN depuis paramètres:', parametres?.entreprise?.iban);
     console.log('[generateFacturesFromContrat] TVA dans négociation:', contratData.negociation?.tauxTva);
     console.log('[generateFacturesFromContrat] TVA dans facturation:', contratData.facturation?.tauxTVA);
     console.log('[generateFacturesFromContrat] Échéances dans contrat:', contratData.echeances);
@@ -144,9 +148,9 @@ const FactureGeneratorPage = () => {
       organisationVille: contratData.contractant1?.ville || currentOrganization?.ville,
       
       // Informations bancaires de l'émetteur
-      coordonneesBancaires: contratData.contractant1?.coordonneesBancaires || contratData.coordonneesBancaires || currentOrganization.coordonneesBancaires,
-      iban: contratData.contractant1?.iban || contratData.iban || currentOrganization.iban,
-      bic: contratData.contractant1?.bic || contratData.bic || currentOrganization.bic,
+      coordonneesBancaires: contratData.contractant1?.coordonneesBancaires || contratData.coordonneesBancaires || parametres?.entreprise?.coordonneesBancaires || currentOrganization.coordonneesBancaires,
+      iban: contratData.contractant1?.iban || contratData.iban || parametres?.entreprise?.iban || currentOrganization.iban,
+      bic: contratData.contractant1?.bic || contratData.bic || parametres?.entreprise?.bic || currentOrganization.bic,
       
       // Informations de paiement par défaut
       aLOrdreDe: contratData.contractant1?.nom || contratData.aLOrdreDe || currentOrganization?.nom,
@@ -419,22 +423,10 @@ const FactureGeneratorPage = () => {
           <div class="lignes-facturation">
             <table class="table-lignes">
               <tbody>
-                ${data.type === 'acompte' ? `
-                  <tr>
-                    <td>acompte</td>
-                    <td class="montant-ht">${montantHT.toFixed(2).replace('.', ',')}</td>
-                  </tr>
-                ` : data.type === 'solde' ? `
-                  <tr>
-                    <td>solde</td>
-                    <td class="montant-ht">${montantHT.toFixed(2).replace('.', ',')}</td>
-                  </tr>
-                ` : `
-                  <tr>
-                    <td>prestation complète</td>
-                    <td class="montant-ht">${montantHT.toFixed(2).replace('.', ',')}</td>
-                  </tr>
-                `}
+                <tr>
+                  <td>Prestation artistique</td>
+                  <td class="montant-ht">${montantTotalHT.toFixed(2).replace('.', ',')}</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -493,6 +485,12 @@ const FactureGeneratorPage = () => {
                   <td>${data.echeance ? new Date(data.echeance).toLocaleDateString('fr-FR') : ''}</td>
                   <td>${montantTTC.toFixed(2).replace('.', ',')} EUR</td>
                 </tr>
+                ${data.type === 'acompte' || data.type === 'solde' ? `
+                <tr style="font-size: 0.9em; color: #666;">
+                  <td colspan="2">Montant total de la prestation TTC</td>
+                  <td>${montantTotalTTC.toFixed(2).replace('.', ',')} EUR</td>
+                </tr>
+                ` : ''}
               </tbody>
             </table>
           </div>
@@ -596,7 +594,8 @@ const FactureGeneratorPage = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ backgroundColor: '#90EE90' }}>
+      {/* FOND VERT POUR TEST - FactureGeneratorPage */}
       {/* Header avec navigation et actions */}
       <div className={styles.header}>
         <div className={styles.navigation}>

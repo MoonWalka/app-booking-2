@@ -674,7 +674,7 @@ const TableauDeBordPage = () => {
                     id: `facture-generate-${concertId}`,
                     title: `Nouvelle facture`,
                     path: `/factures/generate/${concertId}?fromContrat=true`,
-                    component: 'FactureGenerationPage',
+                    component: 'FactureGeneratorPage',
                     params: { concertId, fromContrat: true },
                     icon: 'bi-receipt'
                   });

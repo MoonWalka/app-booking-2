@@ -199,12 +199,12 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
     // Mettre à jour les champs d'adresse avec les données de l'autocomplétion
     setFormData(prev => ({
       ...prev,
-      structureAdresse: addressData.adresse || '',
-      structureCodePostal: addressData.codePostal || '',
-      structureVille: addressData.ville || '',
-      structureDepartement: addressData.departement || '',
-      structureRegion: addressData.region || '',
-      structurePays: addressData.pays || 'France'
+      adresse: addressData.adresse || '',
+      codePostal: addressData.codePostal || '',
+      ville: addressData.ville || '',
+      departement: addressData.departement || '',
+      region: addressData.region || '',
+      pays: addressData.pays || 'France'
     }));
   };
 

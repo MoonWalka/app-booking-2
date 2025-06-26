@@ -37,7 +37,7 @@ import DateCreationPage from '@/pages/DateCreationPage';
 import TachesPage from '@/pages/TachesPage';
 import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
 import AdminParametragePage from '@/pages/AdminParametragePage';
-import FactureGenerationPage from '@/pages/FactureGenerationPage';
+import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
 import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
 import MesRecherchesPage from '@/pages/MesRecherchesPage';
@@ -483,7 +483,7 @@ function App() {
                           
                           <Route path="/factures/generate/:concertId" element={
                             <PrivateRoute>
-                              <FactureGenerationPage />
+                              <FactureGeneratorPage />
                             </PrivateRoute>
                           } />
                           

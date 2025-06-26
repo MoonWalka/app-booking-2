@@ -123,6 +123,72 @@
   color: #28a745;
 }
 
+.readOnlyField {
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.readOnlyField strong {
+  color: #212529;
+  font-size: 1rem;
+}
+
+.previewInfo {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #e7f3ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 4px;
+}
+
+.previewInfo h5 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0056b3;
+}
+
+.previewDescription {
+  margin: 0 0 1rem 0;
+  font-size: 0.813rem;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.previewList {
+  margin: 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.previewList li {
+  position: relative;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.previewList li:before {
+  content: "→";
+  position: absolute;
+  left: -1.25rem;
+  color: #007bff;
+}
+
+.previewList li strong {
+  color: #212529;
+}
+
+.totalLine {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #b3d9ff;
+  font-weight: 600;
+}
+
 /* Table des échéances */
 .echeancesTable {
   margin-top: 1rem;

@@ -203,50 +203,90 @@ const FactureEditor = ({ data, onChange }) => {
       <div className={styles.section}>
         <h4>Montants</h4>
         
-        {data.type === 'acompte' && (
+        {/* Afficher le montant total de la prestation pour acompte et solde */}
+        {(data.type === 'acompte' || data.type === 'solde') && data.montantTotalTTC && (
           <div className={styles.field}>
-            <label htmlFor="acompte">
-              Acompte HT
-              <span className={styles.editIndicator}></span>
+            <label>
+              Montant total de la prestation
             </label>
-            <div className={styles.inputGroup}>
-              <input
-                id="acompte"
-                type="number"
-                value={data.montantHT || 0}
-                onChange={(e) => handleFieldChange('montantHT', e.target.value)}
-                className={styles.input}
-                step="0.01"
-              />
-              <span className={styles.currency}>€</span>
+            <div className={styles.readOnlyField}>
+              <strong>{formatCurrency(data.montantTotalTTC)}</strong> TTC
+              {data.tauxTVA > 0 && (
+                <span className={styles.hint}>
+                  ({formatCurrency(data.montantTotalTTC / (1 + data.tauxTVA / 100))} HT)
+                </span>
+              )}
             </div>
           </div>
         )}
         
-        {data.type === 'solde' && (
-          <div className={styles.field}>
-            <label htmlFor="solde">
-              Solde HT
-              <span className={styles.editIndicator}></span>
-            </label>
-            <div className={styles.inputGroup}>
-              <input
-                id="solde"
-                type="number"
-                value={data.montantHT || 0}
-                onChange={(e) => handleFieldChange('montantHT', e.target.value)}
-                className={styles.input}
-                step="0.01"
-              />
-              <span className={styles.currency}>€</span>
+        {data.type === 'acompte' && (
+          <>
+            <div className={styles.field}>
+              <label htmlFor="acompte">
+                Montant de l'acompte HT
+                <span className={styles.editIndicator}></span>
+              </label>
+              <div className={styles.inputGroup}>
+                <input
+                  id="acompte"
+                  type="number"
+                  value={data.montantHT || 0}
+                  onChange={(e) => handleFieldChange('montantHT', e.target.value)}
+                  className={styles.input}
+                  step="0.01"
+                />
+                <span className={styles.currency}>€</span>
+              </div>
+              {data.montantTotalTTC && (
+                <small className={styles.hint}>
+                  Soit {((data.montantHT / (data.montantTotalTTC / (1 + data.tauxTVA / 100))) * 100).toFixed(1)}% du montant total HT
+                </small>
+              )}
             </div>
-          </div>
+            <div className={styles.field}>
+              <label>
+                Reste à payer après cet acompte
+              </label>
+              <div className={styles.readOnlyField}>
+                <strong>{formatCurrency((data.montantTotalTTC / (1 + data.tauxTVA / 100)) - (parseFloat(data.montantHT) || 0))}</strong> HT
+              </div>
+            </div>
+          </>
+        )}
+        
+        {data.type === 'solde' && (
+          <>
+            <div className={styles.field}>
+              <label htmlFor="solde">
+                Montant du solde HT
+                <span className={styles.editIndicator}></span>
+              </label>
+              <div className={styles.inputGroup}>
+                <input
+                  id="solde"
+                  type="number"
+                  value={data.montantHT || 0}
+                  onChange={(e) => handleFieldChange('montantHT', e.target.value)}
+                  className={styles.input}
+                  step="0.01"
+                />
+                <span className={styles.currency}>€</span>
+              </div>
+              {data.montantTotalTTC && (
+                <small className={styles.hint}>
+                  Montant total HT : {formatCurrency(data.montantTotalTTC / (1 + data.tauxTVA / 100))} - 
+                  Acompte déjà versé : {formatCurrency((data.montantTotalTTC / (1 + data.tauxTVA / 100)) - (parseFloat(data.montantHT) || 0))}
+                </small>
+              )}
+            </div>
+          </>
         )}
         
         {data.type === 'complete' && (
           <div className={styles.field}>
             <label htmlFor="montantHT">
-              Montant HT
+              Montant total HT
               <span className={styles.editIndicator}></span>
             </label>
             <div className={styles.inputGroup}>
@@ -297,10 +337,33 @@ const FactureEditor = ({ data, onChange }) => {
             <span>{formatCurrency(calculateTVA())}</span>
           </div>
           <div className={styles.calcRow}>
-            <span>Total TTC :</span>
+            <span>
+              {data.type === 'acompte' ? 'Acompte TTC à payer :' : 
+               data.type === 'solde' ? 'Solde TTC à payer :' : 
+               'Total TTC :'}
+            </span>
             <span className={styles.total}>{formatCurrency(calculateTTC())}</span>
           </div>
         </div>
+        
+        {/* Aperçu de ce qui sera affiché dans la facture */}
+        {(data.type === 'acompte' || data.type === 'solde') && (
+          <div className={styles.previewInfo}>
+            <h5>Aperçu de la facturation :</h5>
+            <p className={styles.previewDescription}>
+              Le tableau principal affichera le montant total de la prestation. 
+              Les informations sur {data.type === 'acompte' ? "l'acompte" : "le solde"} seront indiquées dans la section paiement.
+            </p>
+            <ul className={styles.previewList}>
+              <li>Montant total de la prestation : <strong>{data.montantTotalTTC ? formatCurrency(data.montantTotalTTC / (1 + data.tauxTVA / 100)) : '0,00 €'}</strong> HT</li>
+              <li>TVA sur le total : <strong>{data.montantTotalTTC ? formatCurrency((data.montantTotalTTC / (1 + data.tauxTVA / 100)) * (data.tauxTVA / 100)) : '0,00 €'}</strong></li>
+              <li className={styles.totalLine}>
+                {data.type === 'acompte' ? 'Acompte à payer' : 'Solde à payer'} : 
+                <strong> {formatCurrency(calculateTTC())}</strong> TTC
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Section Paiement */}

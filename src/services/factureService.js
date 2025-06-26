@@ -25,42 +25,50 @@ class FactureService {
 <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; font-size: 13px; line-height: 1.4; position: relative; min-height: calc(297mm - 21.2mm); box-sizing: border-box;">
   <!-- Conteneur principal -->
   <div style="padding: 0; padding-bottom: 60px;">
-    <!-- En-tête avec logo et informations entreprise -->
-    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 25px; border-bottom: 2px solid #333; padding-bottom: 15px;">
+    <!-- Date en haut de page -->
+    <div style="text-align: right; margin-bottom: 30px;">
+      <p style="margin: 0; font-size: 14px; color: #333;">Le {{date_facture}}</p>
+    </div>
+
+    <!-- Titre FACTURE centré -->
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h1 style="color: #333; margin: 0; font-size: 32px; font-weight: bold;">FACTURE</h1>
+      <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">N° {{numero_facture}}</p>
+    </div>
+
+    <!-- Deux blocs côte à côte : Émetteur et Destinataire -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; gap: 40px;">
+      <!-- Bloc Émetteur (gauche) -->
       <div style="flex: 1;">
-        {{#if logo_entreprise}}
-          <img src="{{logo_entreprise}}" alt="Logo" style="max-height: 60px; margin-bottom: 8px;">
-        {{/if}}
-        <div style="font-size: 12px; color: #333; line-height: 1.3;">
-          <strong style="font-size: 16px;">{{nom_entreprise}}</strong><br>
+        <h3 style="margin: 0 0 15px 0; color: #333; font-size: 14px; text-transform: uppercase; border-bottom: 2px solid #333; padding-bottom: 5px;">Émetteur</h3>
+        <div style="font-size: 12px; color: #333; line-height: 1.6;">
+          {{#if logo_entreprise}}
+            <img src="{{logo_entreprise}}" alt="Logo" style="max-height: 50px; margin-bottom: 10px;">
+          {{/if}}
+          <strong style="font-size: 14px;">{{nom_entreprise}}</strong><br>
           {{adresse_entreprise}}<br>
           {{ville_entreprise}}<br>
+          {{#if siret_entreprise}}SIRET : {{siret_entreprise}}<br>{{/if}}
+          {{#if numero_tva_entreprise}}TVA : {{numero_tva_entreprise}}<br>{{/if}}
           {{#if telephone_entreprise}}Tél : {{telephone_entreprise}}<br>{{/if}}
           {{#if email_entreprise}}Email : {{email_entreprise}}<br>{{/if}}
           {{#if site_web_entreprise}}Web : {{site_web_entreprise}}{{/if}}
         </div>
       </div>
-      <div style="text-align: right;">
-        <h1 style="color: #333; margin: 0; font-size: 28px;">FACTURE</h1>
-        <div style="font-size: 14px; color: #666; margin-top: 8px;">
-          <strong>N° {{numero_facture}}</strong><br>
-          Date : {{date_facture}}
-        </div>
-      </div>
-    </div>
 
-    <!-- Informations client -->
-    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-      <h3 style="margin: 0 0 8px 0; color: #333; font-size: 14px;">FACTURER À :</h3>
-      <div style="font-size: 12px; line-height: 1.4;">
-        <strong>{{nom_structure}}</strong><br>
-        {{adresse_structure}}<br>
-        {{ville_structure}}<br>
-        {{#if siret_structure}}SIRET : {{siret_structure}}<br>{{/if}}
-        {{#if tva_structure}}TVA : {{tva_structure}}<br>{{/if}}
-        {{#if contact_nom}}À l'attention de : {{contact_nom}}{{/if}}
-        {{#if contact_telephone}}<br>Tél : {{contact_telephone}}{{/if}}
-        {{#if contact_email}}<br>Email : {{contact_email}}{{/if}}
+      <!-- Bloc Destinataire (droite) -->
+      <div style="flex: 1;">
+        <h3 style="margin: 0 0 15px 0; color: #333; font-size: 14px; text-transform: uppercase; border-bottom: 2px solid #333; padding-bottom: 5px;">Destinataire</h3>
+        <div style="font-size: 12px; color: #333; line-height: 1.6;">
+          <strong style="font-size: 14px;">{{nom_structure}}</strong><br>
+          {{adresse_structure}}<br>
+          {{ville_structure}}<br>
+          {{#if siret_structure}}SIRET : {{siret_structure}}<br>{{/if}}
+          {{#if tva_structure}}TVA : {{tva_structure}}<br>{{/if}}
+          {{#if contact_nom}}<br><em>À l'attention de : {{contact_nom}}</em>{{/if}}
+          {{#if contact_telephone}}<br>Tél : {{contact_telephone}}{{/if}}
+          {{#if contact_email}}<br>Email : {{contact_email}}{{/if}}
+        </div>
       </div>
     </div>
 
@@ -320,6 +328,7 @@ class FactureService {
       concert,
       structure,
       montantHT,
+      montantAcompteADeduire, // Nouveau paramètre
       tauxTVA = parameters.tauxTva || 20,
       dateEcheance,
       lignesSupplementaires = []
@@ -327,7 +336,26 @@ class FactureService {
 
     // Calculer les montants (s'assurer que montantHT est un nombre valide)
     const montantHTNum = parseFloat(montantHT) || 0;
-    const { montantTVA, montantTTC } = this.calculateTVA(montantHTNum, tauxTVA);
+    
+    // Si on a un acompte à déduire, on l'ajoute comme ligne supplémentaire négative
+    let lignesAvecAcompte = [...lignesSupplementaires];
+    if (montantAcompteADeduire && montantAcompteADeduire > 0) {
+      // Ajouter une ligne de déduction pour l'acompte
+      const labelDeduction = factureData.typeFacture === 'solde' ? 'Acompte déjà versé' : `Reste à payer (${factureData.pourcentageAcompte}%)`;
+      lignesAvecAcompte.push({
+        description: labelDeduction,
+        montant: -1 * (parseFloat(montantHTNum) - parseFloat(montantAcompteADeduire)),
+        type: 'montant'
+      });
+    }
+    
+    // Calculer les montants finaux avec les lignes (incluant la déduction d'acompte)
+    let montantHTFinal = montantHTNum;
+    lignesAvecAcompte.forEach(ligne => {
+      montantHTFinal += parseFloat(ligne.montant) || 0;
+    });
+    
+    const { montantTVA, montantTTC } = this.calculateTVA(montantHTFinal, tauxTVA);
 
     // Générer le numéro de facture
     const numeroFacture = await this.generateFactureNumber(organizationId);
@@ -340,10 +368,10 @@ class FactureService {
       montantConcert = montantConcert - totalSupplements;
     }
     
-    // Générer le HTML des lignes supplémentaires
+    // Générer le HTML des lignes supplémentaires (incluant l'acompte)
     let lignesSupplementairesHTML = '';
-    if (lignesSupplementaires && lignesSupplementaires.length > 0) {
-      lignesSupplementaires.forEach(ligne => {
+    if (lignesAvecAcompte && lignesAvecAcompte.length > 0) {
+      lignesAvecAcompte.forEach(ligne => {
         if (ligne.description && ligne.montant) {
           // Ajouter le pourcentage dans la description si c'est une ligne de pourcentage
           let description = ligne.description;
@@ -445,20 +473,20 @@ class FactureService {
 
       // Montants - Formatter sans le symbole € car il est déjà dans le template
       montant_concert: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantConcert),
-      montant_ht: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantHTNum),
-      montant_ht_lettres: toWords(montantHTNum),
+      montant_ht: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantHTNum), // Toujours le montant total
+      montant_ht_lettres: toWords(montantHTFinal), // Montant final à payer en lettres
       taux_tva: parameters.afficherTva ? tauxTVA : 0,
       montant_tva: parameters.afficherTva ? 
         new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantTVA) : 
         '0,00',
       montant_ttc: parameters.afficherTva ? 
         new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantTTC) : 
-        new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantHTNum),
-      montant_lettres: parameters.afficherTva ? toWords(Math.round(montantTTC)) : toWords(Math.round(montantHTNum)),
+        new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantHTFinal),
+      montant_lettres: parameters.afficherTva ? toWords(Math.round(montantTTC)) : toWords(Math.round(montantHTFinal)),
       
       // Lignes supplémentaires
       lignes_supplementaires: lignesSupplementairesHTML,
-      has_lignes_supplementaires: lignesSupplementaires && lignesSupplementaires.length > 0,
+      has_lignes_supplementaires: lignesAvecAcompte && lignesAvecAcompte.length > 0,
 
       // Paiement
       mode_paiement: 'Virement bancaire',

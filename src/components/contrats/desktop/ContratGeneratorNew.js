@@ -311,6 +311,29 @@ const ContratGeneratorNew = ({
     }
   }, [structure, concert, artiste, lieu, preContratData, entrepriseData, factureParams]);
 
+  // Initialiser les champs émetteur et destinataire
+  useEffect(() => {
+    if (entrepriseData?.nom) {
+      // L'émetteur est l'entreprise de l'utilisateur (le producteur)
+      setContratData(prev => ({
+        ...prev,
+        emetteur: entrepriseData.nom
+      }));
+    }
+    
+    // Le destinataire est l'organisateur (le contractant)
+    const destinataireNom = contratData.organisateur.raisonSociale || 
+                           structure?.nom || 
+                           structure?.structureRaisonSociale || 
+                           '';
+    if (destinataireNom) {
+      setContratData(prev => ({
+        ...prev,
+        destinataire: destinataireNom
+      }));
+    }
+  }, [entrepriseData, structure, contratData.organisateur.raisonSociale]);
+
   // Calculer automatiquement les montants TVA
   useEffect(() => {
     if (contratData.negociation) {
@@ -330,6 +353,49 @@ const ContratGeneratorNew = ({
       }));
     }
   }, [contratData.negociation?.montantNet, contratData.negociation?.tauxTva]);
+
+  // Calcul des totaux (déplacé ici pour être utilisable dans les useEffect)
+  const calculerTotaux = () => {
+    const totalHT = contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantHT) || 0), 0);
+    const totalTVA = contratData.prestations.reduce((sum, p) => {
+      const montantHT = parseFloat(p.montantHT) || 0;
+      const tauxTva = parseFloat(p.tauxTva) || 0;
+      return sum + (montantHT * tauxTva / 100);
+    }, 0);
+    const totalTTC = totalHT + totalTVA;
+
+    return { totalHT, totalTVA, totalTTC };
+  };
+
+  // Gérer automatiquement les montants des échéances
+  useEffect(() => {
+    const { totalTTC } = calculerTotaux();
+    
+    // Vérifier s'il y a des échéances de type Solde
+    const echeancesSolde = contratData.echeances.filter(e => e.nature === 'Solde');
+    const echeancesAcompte = contratData.echeances.filter(e => e.nature === 'Acompte');
+    
+    if (echeancesSolde.length > 0) {
+      // Calculer le total des acomptes
+      const totalAcomptes = echeancesAcompte.reduce((sum, e) => sum + (parseFloat(e.montantTTC) || 0), 0);
+      
+      // Le solde doit être égal au totalTTC moins les acomptes
+      const montantSolde = (totalTTC - totalAcomptes).toFixed(2);
+      
+      // Mettre à jour le montant du premier solde trouvé
+      const updatedEcheances = contratData.echeances.map(ech => {
+        if (ech.id === echeancesSolde[0].id) {
+          return { ...ech, montantTTC: montantSolde };
+        }
+        return ech;
+      });
+      
+      // Si le montant a changé, mettre à jour
+      if (echeancesSolde[0].montantTTC !== montantSolde) {
+        setContratData(prev => ({ ...prev, echeances: updatedEcheances }));
+      }
+    }
+  }, [contratData.prestations, contratData.echeances.filter(e => e.nature === 'Acompte').map(e => e.montantTTC).join(','), contratData.echeances.length]);
 
   const handleInputChange = (section, field, value) => {
     setContratData(prev => ({
@@ -475,19 +541,6 @@ const ContratGeneratorNew = ({
       ...prev,
       echeances: prev.echeances.filter(e => e.id !== id)
     }));
-  };
-
-  // Calcul des totaux
-  const calculerTotaux = () => {
-    const totalHT = contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantHT) || 0), 0);
-    const totalTVA = contratData.prestations.reduce((sum, p) => {
-      const montantHT = parseFloat(p.montantHT) || 0;
-      const tauxTva = parseFloat(p.tauxTva) || 0;
-      return sum + (montantHT * tauxTva / 100);
-    }, 0);
-    const totalTTC = totalHT + totalTVA;
-
-    return { totalHT, totalTVA, totalTTC };
   };
 
   const { totalHT, totalTVA, totalTTC } = calculerTotaux();
@@ -1244,17 +1297,12 @@ const ContratGeneratorNew = ({
                 <div className={styles.labelItem}>Destinataire :</div>
               </Col>
               <Col md={5} className={styles.fieldColumn}>
-                <Form.Select
+                <Form.Control
+                  type="text"
                   value={contratData.emetteur}
                   onChange={(e) => setContratData(prev => ({ ...prev, emetteur: e.target.value }))}
-                >
-                  <option value="">Sélectionner un émetteur...</option>
-                  <option value="Organisateur">Organisateur</option>
-                  <option value="Producteur">Producteur</option>
-                  <option value="Agent">Agent</option>
-                  <option value="Diffuseur">Diffuseur</option>
-                  <option value="Tourneur">Tourneur</option>
-                </Form.Select>
+                  placeholder="Émetteur de la facture"
+                />
                 <Form.Control
                   type="text"
                   value={contratData.destinataire}
@@ -1312,30 +1360,73 @@ const ContratGeneratorNew = ({
                 {contratData.echeances.map((echeance) => (
                   <tr key={echeance.id}>
                     <td>
-                      <Form.Control
-                        type="text"
+                      <Form.Select
                         value={echeance.nature}
                         onChange={(e) => {
-                          const updatedEcheances = contratData.echeances.map(ech =>
-                            ech.id === echeance.id ? { ...ech, nature: e.target.value } : ech
-                          );
+                          const newValue = e.target.value;
+                          
+                          // Vérifier s'il y a déjà un Solde et si on essaie d'en ajouter un autre
+                          if (newValue === 'Solde') {
+                            const existingSolde = contratData.echeances.find(ech => 
+                              ech.nature === 'Solde' && ech.id !== echeance.id
+                            );
+                            
+                            if (existingSolde) {
+                              alert('Il ne peut y avoir qu\'une seule ligne de type Solde');
+                              return;
+                            }
+                          }
+                          
+                          let updatedEcheances = contratData.echeances.map(ech => {
+                            if (ech.id === echeance.id) {
+                              // Si on sélectionne "Acompte", calculer le montant basé sur le pourcentage négocié
+                              if (newValue === 'Acompte') {
+                                const pourcentageAcompte = parseFloat(contratData.negociation?.acompte) || 0;
+                                const { totalTTC } = calculerTotaux();
+                                const montantAcompte = pourcentageAcompte > 0 ? (totalTTC * pourcentageAcompte / 100).toFixed(2) : '';
+                                return { ...ech, nature: newValue, montantTTC: montantAcompte };
+                              }
+                              // Si on sélectionne "Solde", calculer automatiquement le montant
+                              if (newValue === 'Solde') {
+                                const { totalTTC } = calculerTotaux();
+                                const totalAcomptes = contratData.echeances
+                                  .filter(e => e.nature === 'Acompte' && e.id !== echeance.id)
+                                  .reduce((sum, e) => sum + (parseFloat(e.montantTTC) || 0), 0);
+                                const montantSolde = (totalTTC - totalAcomptes).toFixed(2);
+                                return { ...ech, nature: newValue, montantTTC: montantSolde };
+                              }
+                              return { ...ech, nature: newValue };
+                            }
+                            return ech;
+                          });
+                          
                           setContratData(prev => ({ ...prev, echeances: updatedEcheances }));
                         }}
                         size="sm"
-                      />
+                      >
+                        <option value="">Sélectionner...</option>
+                        <option value="Acompte">Acompte</option>
+                        <option value="Solde">Solde</option>
+                        <option value="Facture">Facture</option>
+                      </Form.Select>
                     </td>
                     <td>
                       <Form.Control
                         type="number"
                         step="0.01"
                         value={echeance.montantTTC}
+                        readOnly={echeance.nature === 'Solde'}
                         onChange={(e) => {
+                          // Ne pas permettre la modification si c'est un Solde
+                          if (echeance.nature === 'Solde') return;
+                          
                           const updatedEcheances = contratData.echeances.map(ech =>
                             ech.id === echeance.id ? { ...ech, montantTTC: e.target.value } : ech
                           );
                           setContratData(prev => ({ ...prev, echeances: updatedEcheances }));
                         }}
                         size="sm"
+                        style={echeance.nature === 'Solde' ? { backgroundColor: '#f5f5f5' } : {}}
                       />
                     </td>
                     <td>

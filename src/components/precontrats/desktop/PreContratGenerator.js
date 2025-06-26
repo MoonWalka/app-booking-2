@@ -930,12 +930,21 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                   <div className={styles.labelItem}>Moyen de paiement :</div>
                 </Col>
                 <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="number"
-                    step="0.01"
+                  <Form.Select
                     value={formData.acompte}
                     onChange={(e) => handleInputChange('acompte', e.target.value)}
-                  />
+                  >
+                    <option value="">Sélectionner un acompte...</option>
+                    {[10, 20, 30, 40, 50, 60, 70, 80, 90].map(percentage => {
+                      const montantHT = parseFloat(formData.montantHT) || 0;
+                      const montantAcompte = (montantHT * percentage / 100).toFixed(2);
+                      return (
+                        <option key={percentage} value={percentage}>
+                          {percentage}% - {montantAcompte} {formData.devise}
+                        </option>
+                      );
+                    })}
+                  </Form.Select>
                   <Form.Select
                     value={formData.contratPropose}
                     onChange={(e) => handleInputChange('contratPropose', e.target.value)}

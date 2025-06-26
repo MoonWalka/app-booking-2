@@ -328,7 +328,44 @@ const FactureGeneratorPage = () => {
     }
   };
 
-  // Fonction temporaire pour générer le HTML de la facture
+  // Fonction pour convertir un nombre en lettres (simplifié)
+  const numberToWords = (num) => {
+    // Fonction simplifiée - peut être étendue
+    const ones = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'];
+    const teens = ['dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];
+    const tens = ['', '', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante-dix', 'quatre-vingt', 'quatre-vingt-dix'];
+    const hundreds = ['', 'cent', 'deux cents', 'trois cents', 'quatre cents', 'cinq cents', 'six cents', 'sept cents', 'huit cents', 'neuf cents'];
+    
+    if (num === 0) return 'zéro';
+    
+    let result = '';
+    const intNum = Math.floor(num);
+    
+    if (intNum >= 1000) {
+      result += Math.floor(intNum / 1000) === 1 ? 'mille ' : ones[Math.floor(intNum / 1000)] + ' mille ';
+    }
+    
+    const remainder = intNum % 1000;
+    if (remainder >= 100) {
+      result += hundreds[Math.floor(remainder / 100)] + ' ';
+    }
+    
+    const lastTwo = remainder % 100;
+    if (lastTwo >= 20) {
+      result += tens[Math.floor(lastTwo / 10)];
+      if (lastTwo % 10 !== 0) {
+        result += '-' + ones[lastTwo % 10];
+      }
+    } else if (lastTwo >= 10) {
+      result += teens[lastTwo - 10];
+    } else if (lastTwo > 0) {
+      result += ones[lastTwo];
+    }
+    
+    return result.trim();
+  };
+
+  // Fonction pour générer le HTML de la facture selon votre structure
   const generateFactureHtmlTemplate = (data) => {
     console.log('[generateFactureHtmlTemplate] === GÉNÉRATION HTML FACTURE ===');
     console.log('[generateFactureHtmlTemplate] Données reçues:', data);
@@ -336,23 +373,24 @@ const FactureGeneratorPage = () => {
     
     const tauxTVA = parseFloat(data.tauxTVA || 0);
     const montantHT = parseFloat(data.montantHT || 0);
-    const montantTVA = (montantHT * (tauxTVA / 100)).toFixed(2);
-    const montantTTC = (montantHT + parseFloat(montantTVA)).toFixed(2);
+    const montantTVA = (montantHT * (tauxTVA / 100));
+    const montantTTC = montantHT + montantTVA;
+    
+    // Récupérer le montant total de la prestation
+    const montantTotalTTC = parseFloat(data.montantTotalTTC || 0);
+    const montantTotalHT = tauxTVA > 0 ? montantTotalTTC / (1 + tauxTVA / 100) : montantTotalTTC;
+    const montantTotalTVA = montantTotalTTC - montantTotalHT;
     
     console.log('[generateFactureHtmlTemplate] Calculs:', {
       tauxTVA,
       montantHT,
-      montantTVA,
-      montantTTC
+      montantTVA: montantTVA.toFixed(2),
+      montantTTC: montantTTC.toFixed(2)
     });
-    
-    // Récupérer le montant total directement depuis les données
-    const montantTotalTTC = parseFloat(data.montantTotalTTC || 0);
-    const montantTotalHT = tauxTVA > 0 ? montantTotalTTC / (1 + tauxTVA / 100) : montantTotalTTC;
-    const montantTotalTVA = (montantTotalTTC - montantTotalHT).toFixed(2);
     
     return `
       <div class="facture-container">
+        <!-- En-tête avec coordonnées -->
         <div class="header">
           <div class="diffuseur">
             <h3>${data.emetteurNom || data.organisationNom || currentOrganization?.nom || 'Organisation'}</h3>
@@ -368,90 +406,105 @@ const FactureGeneratorPage = () => {
           </div>
         </div>
         
-        <h1 class="titre-facture">FACTURE ${data.type === 'acompte' ? 'D\'ACOMPTE' : data.type === 'solde' ? 'DE SOLDE' : ''}</h1>
+        <!-- 1. EN-TÊTE -->
+        <h1 class="titre-facture">FACTURE</h1>
         
-        <div class="info-ligne">
-          <div><strong>Réf :</strong> ${data.reference || ''}</div>
-          <div><strong>Date :</strong> ${new Date().toLocaleDateString('fr-FR')}</div>
-          <div><strong>N° Contrat :</strong> ${data.contratNumero || ''}</div>
+        <div class="ref-objet">
+          <p><strong>Réf. :</strong> ${data.reference || 'en attente'}</p>
+          <p><strong>Objet :</strong> ${data.objet || '1 représentation du spectacle'}</p>
         </div>
         
-        <div class="info-ligne">
-          <div><strong>Objet :</strong> ${data.objet || ''}</div>
+        <!-- 2. TABLEAU PRINCIPAL -->
+        <div class="tableau-principal">
+          <div class="lignes-facturation">
+            <table class="table-lignes">
+              <tbody>
+                ${data.type === 'acompte' ? `
+                  <tr>
+                    <td>acompte</td>
+                    <td class="montant-ht">${montantHT.toFixed(2).replace('.', ',')}</td>
+                  </tr>
+                ` : data.type === 'solde' ? `
+                  <tr>
+                    <td>solde</td>
+                    <td class="montant-ht">${montantHT.toFixed(2).replace('.', ',')}</td>
+                  </tr>
+                ` : `
+                  <tr>
+                    <td>prestation complète</td>
+                    <td class="montant-ht">${montantHT.toFixed(2).replace('.', ',')}</td>
+                  </tr>
+                `}
+              </tbody>
+            </table>
+          </div>
+          <div class="total-ht">
+            <strong>TOTAL HT : ${montantTotalHT.toFixed(2).replace('.', ',')} EUR</strong>
+          </div>
         </div>
         
-        ${data.type === 'acompte' || data.type === 'solde' ? `
-          <h3>Détail de la facturation</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Désignation</th>
-                <th class="montant">Montant HT</th>
-                <th class="montant">TVA ${tauxTVA}%</th>
-                <th class="montant">Montant TTC</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Montant total de la prestation</td>
-                <td class="montant">${parseFloat(montantTotalHT).toFixed(2)} €</td>
-                <td class="montant">${montantTotalTVA} €</td>
-                <td class="montant">${montantTotalTTC} €</td>
-              </tr>
-              ${data.type === 'solde' && data.montantAcompte ? `
+        <!-- Layout en bas avec 4 sections -->
+        <div class="bottom-layout">
+          <!-- 3. SECTION TVA (en bas à gauche) -->
+          <div class="section-tva">
+            <h4>CALCUL TVA :</h4>
+            <table class="table-tva">
+              <thead>
                 <tr>
-                  <td>Acompte déjà versé</td>
-                  <td class="montant">- ${parseFloat(data.montantAcompte).toFixed(2)} €</td>
-                  <td class="montant"></td>
-                  <td class="montant">- ${(parseFloat(data.montantAcompte) * (1 + tauxTVA / 100)).toFixed(2)} €</td>
+                  <th>Taux</th>
+                  <th>Base</th>
+                  <th>Montant</th>
                 </tr>
-              ` : ''}
-            </tbody>
-          </table>
-        ` : `
-          <table>
-            <thead>
-              <tr>
-                <th>Désignation</th>
-                <th class="montant">Montant HT</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Prestation</td>
-                <td class="montant">${montantHT.toFixed(2)} €</td>
-              </tr>
-            </tbody>
-          </table>
-        `}
-        
-        <div style="margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 4px;">
-          <h3 style="text-align: center; margin-bottom: 20px;">
-            ${data.type === 'acompte' ? 'ACOMPTE À PAYER' : data.type === 'solde' ? 'SOLDE À PAYER' : 'MONTANT À PAYER'}
-          </h3>
-          <table style="margin: 0 auto; width: 400px;">
-            <tr>
-              <td><strong>Base HT</strong></td>
-              <td class="montant"><strong>${montantHT.toFixed(2)} €</strong></td>
-            </tr>
-            <tr>
-              <td><strong>TVA ${tauxTVA}%</strong></td>
-              <td class="montant"><strong>${montantTVA} €</strong></td>
-            </tr>
-            <tr class="total" style="font-size: 1.2em; border-top: 2px solid #000;">
-              <td><strong>${data.type === 'acompte' ? 'Acompte TTC' : data.type === 'solde' ? 'Solde TTC' : 'Total TTC'}</strong></td>
-              <td class="montant"><strong>${montantTTC} €</strong></td>
-            </tr>
-          </table>
-        </div>
-        
-        <div class="coordonnees-bancaires">
-          <h4>Modalités de paiement</h4>
-          <p><strong>Échéance :</strong> ${data.echeance ? new Date(data.echeance).toLocaleDateString('fr-FR') : ''}</p>
-          <p><strong>Mode de règlement :</strong> ${data.modeReglement || 'Virement'}</p>
-          <p><strong>Délai de paiement :</strong> ${data.delaiPaiement || '30 jours'}</p>
-          <p><strong>À l'ordre de :</strong> ${data.aLOrdreDe || currentOrganization?.nom || ''}</p>
-          ${data.conditionsPaiement ? `<p><strong>Conditions :</strong> ${data.conditionsPaiement}</p>` : ''}
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${tauxTVA.toFixed(1).replace('.', ',')}</td>
+                  <td>${montantTotalHT.toFixed(2).replace('.', ',')}</td>
+                  <td>${montantTotalTVA.toFixed(2).replace('.', ',')}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 4. SECTION ACOMPTE À PAYER (en bas à droite) -->
+          <div class="section-paiement">
+            <div class="montants-paiement">
+              <p>${data.type === 'acompte' ? 'ACOMPTE' : data.type === 'solde' ? 'SOLDE' : 'MONTANT'} HT : ${montantHT.toFixed(2).replace('.', ',')} EUR</p>
+              <p>Montant TVA : ${montantTVA.toFixed(2).replace('.', ',')} EUR</p>
+              <p class="montant-final"><strong>${data.type === 'acompte' ? 'ACOMPTE' : data.type === 'solde' ? 'SOLDE' : 'MONTANT'} À PAYER : ${montantTTC.toFixed(2).replace('.', ',')} EUR</strong></p>
+              <p class="montant-lettres">${numberToWords(montantTTC)} EUR ***</p>
+            </div>
+          </div>
+          
+          <!-- 5. TABLEAU RÉCAPITULATIF (en bas à gauche) -->
+          <div class="section-recapitulatif">
+            <h4>RÉCAPITULATIF DE LA FACTURATION</h4>
+            <table class="table-recapitulatif">
+              <thead>
+                <tr>
+                  <th>Mode</th>
+                  <th>Échéance</th>
+                  <th>Montant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${data.type || 'facture'}</td>
+                  <td>${data.echeance ? new Date(data.echeance).toLocaleDateString('fr-FR') : ''}</td>
+                  <td>${montantTTC.toFixed(2).replace('.', ',')} EUR</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 6. ENCADRÉ MODALITÉS (en bas à droite) -->
+          <div class="section-modalites">
+            <div class="encadre-modalites">
+              <p><strong>Échéance de règlement :</strong> le ${data.echeance ? new Date(data.echeance).toLocaleDateString('fr-FR') : ''}</p>
+              <p><strong>Mode de règlement :</strong> ${data.modeReglement || 'Virement bancaire'}</p>
+              <p><strong>à l'ordre de</strong> ${data.aLOrdreDe || currentOrganization?.nom || ''}</p>
+            </div>
+          </div>
         </div>
         
         ${data.modeReglement === 'Virement' && (data.iban || data.coordonneesBancaires) ? `
@@ -464,7 +517,7 @@ const FactureGeneratorPage = () => {
         ` : ''}
         
         ${data.assujettissementTVA === false ? `
-          <div class="mentions-legales" style="margin-top: 20px; font-size: 10px; font-style: italic;">
+          <div class="mentions-legales">
             <p>TVA non applicable, art. 293 B du CGI</p>
           </div>
         ` : ''}

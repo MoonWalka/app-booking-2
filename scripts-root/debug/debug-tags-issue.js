@@ -3,7 +3,7 @@ const { getFirestore, collection, query, where, getDocs } = require('firebase/fi
 
 // Configuration Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBqk-w_sTt0IU7C8JOtcPXCYKNfqr0zJxY",
+  apiKey: "YOUR_API_KEY_HERE",
   authDomain: "tourcraft-29ee8.firebaseapp.com",
   projectId: "tourcraft-29ee8",
   storageBucket: "tourcraft-29ee8.appspot.com",

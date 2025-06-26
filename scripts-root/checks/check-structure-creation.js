@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD2nrKWoEBvEbjbopk26rrGbCYZDNpJ8BU",
+  apiKey: "YOUR_API_KEY_HERE",
   authDomain: "app-booking-26571.firebaseapp.com",
   projectId: "app-booking-26571",
   storageBucket: "app-booking-26571.firebasestorage.app",

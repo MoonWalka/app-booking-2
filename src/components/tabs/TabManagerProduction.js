@@ -8,7 +8,11 @@ import ContactsPage from '@/pages/ContactsPage';
 import ConcertsPage from '@/pages/ConcertsPage';
 import PublicationsPage from '@/pages/PublicationsPage';
 import ContratsPage from '@/pages/ContratsPage';
+import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
+import FactureGenerationPage from '@/pages/FactureGenerationPage';
+import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
+import FactureDetailsPage from '@/pages/FactureDetailsPage';
 import DevisPage from '@/pages/DevisPage';
 import ParametresPage from '@/pages/ParametresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
@@ -41,6 +45,7 @@ import ContactViewTabs from '@/components/contacts/ContactViewTabs';
 import LieuView from '@/components/lieux/desktop/LieuView';
 // import StructureViewTabs from '@/components/structures/StructureViewTabs'; // Plus utilisé - maintenant tout est des contacts
 import ConcertDetails from '@/components/concerts/ConcertDetails';
+import ContratGeneratorNew from '@/components/contrats/desktop/ContratGeneratorNew';
 
 const TabManagerProduction = () => {
   const { 
@@ -244,8 +249,26 @@ const TabManagerProduction = () => {
           return <ArtistesList />;
         case 'ContratsPage':
           return <ContratsPage />;
+        case 'ContratDetailsPage':
+          console.log('[TabManager] Rendu ContratDetailsPage avec activeTab:', activeTab);
+          console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
+          return <ContratDetailsPage />;
         case 'FacturesPage':
           return <FacturesPage />;
+        case 'FactureGenerationPage':
+          console.log('[TabManager] Rendu FactureGenerationPage avec activeTab:', activeTab);
+          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          console.log('[TabManager] fromContrat:', activeTab.params?.fromContrat);
+          return <FactureGenerationPage />;
+        case 'FactureGeneratorPage':
+          console.log('[TabManager] Rendu FactureGeneratorPage avec activeTab:', activeTab);
+          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
+          return <FactureGeneratorPage />;
+        case 'FactureDetailsPage':
+          console.log('[TabManager] Rendu FactureDetailsPage avec activeTab:', activeTab);
+          console.log('[TabManager] factureId passé:', activeTab.params?.factureId);
+          return <FactureDetailsPage />;
         case 'DevisPage':
           return <DevisPage />;
         case 'ParametresPage':

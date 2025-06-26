@@ -30,13 +30,19 @@ export const TabsProvider = ({ children }) => {
 
   // Ouvrir un nouvel onglet ou activer un existant
   const openTab = useCallback((tabConfig) => {
+    console.log('[TabsContext] === DÉBUT openTab ===');
+    console.log('[TabsContext] Configuration reçue:', tabConfig);
+    
     const { id, title, path, component, params = {}, icon = 'bi-file-earmark', closable = true } = tabConfig;
     
     setTabs(prevTabs => {
+      console.log('[TabsContext] Tabs actuels:', prevTabs.map(t => ({ id: t.id, title: t.title })));
+      
       // Vérifier si l'onglet existe déjà
       const existingTab = prevTabs.find(tab => tab.id === id);
       
       if (existingTab) {
+        console.log('[TabsContext] Onglet existant trouvé, activation:', id);
         // Activer l'onglet existant
         setActiveTabId(id);
         return prevTabs.map(tab => ({
@@ -44,6 +50,7 @@ export const TabsProvider = ({ children }) => {
           isActive: tab.id === id
         }));
       } else {
+        console.log('[TabsContext] Création d\'un nouvel onglet:', id);
         // Créer un nouvel onglet
         const newTab = {
           id,
@@ -57,13 +64,19 @@ export const TabsProvider = ({ children }) => {
           createdAt: Date.now()
         };
         
+        console.log('[TabsContext] Nouvel onglet créé:', newTab);
         setActiveTabId(id);
-        return [
+        
+        const updatedTabs = [
           ...prevTabs.map(tab => ({ ...tab, isActive: false })),
           newTab
         ];
+        console.log('[TabsContext] Tabs après ajout:', updatedTabs.map(t => ({ id: t.id, title: t.title, isActive: t.isActive })));
+        return updatedTabs;
       }
     });
+    
+    console.log('[TabsContext] === FIN openTab ===');
   }, []); // Supprimer tabs des dépendances - utiliser prevTabs dans setter
 
   // Fermer un onglet
@@ -281,15 +294,36 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
-  const openContratTab = useCallback((concertId, concertTitle) => {
-    openTab({
-      id: `contrat-${concertId}`,
-      title: `Contrat - ${concertTitle}`,
-      path: `/contrats/generate/${concertId}`,
-      component: 'ContratGenerationNewPage',
-      params: { concertId },
-      icon: 'bi-file-earmark-check'
-    });
+  const openContratTab = useCallback((concertId, concertTitle, isRedige = false) => {
+    console.log('[TabsContext] openContratTab appelé - concertId:', concertId, 'isRedige:', isRedige);
+    
+    if (isRedige) {
+      // Si le contrat est rédigé, ouvrir directement la page de rédaction/aperçu
+      console.log('[TabsContext] Ouverture en mode aperçu (contrat rédigé)');
+      openTab({
+        id: `contrat-redaction-${concertId}`,
+        title: `Aperçu contrat - ${concertTitle}`,
+        path: `/contrats/${concertId}/redaction`,
+        component: 'ContratRedactionPage',
+        params: { 
+          originalConcertId: concertId,
+          contratId: concertId,
+          readOnly: true // Indiquer qu'on est en mode lecture seule
+        },
+        icon: 'bi-file-earmark-check-fill'
+      });
+    } else {
+      // Sinon, ouvrir le formulaire de génération
+      console.log('[TabsContext] Ouverture en mode formulaire (contrat non rédigé)');
+      openTab({
+        id: `contrat-${concertId}`,
+        title: `Contrat - ${concertTitle}`,
+        path: `/contrats/generate/${concertId}`,
+        component: 'ContratGenerationNewPage',
+        params: { concertId },
+        icon: 'bi-file-earmark-check'
+      });
+    }
   }, [openTab]);
 
   // Fonctions pour gérer l'état des onglets du bas

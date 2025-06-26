@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useParametres } from '@/context/ParametresContext';
+import { useTabs } from '@/context/TabsContext';
 import factureService from '@/services/factureService';
+import contratService from '@/services/contratService';
 import pdfService from '@/services/pdfService';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -15,14 +17,34 @@ import FactureTemplateEditor from '@/components/factures/FactureTemplateEditor';
 import styles from './ContratDetailsPage.module.css';
 
 const FactureGenerationPage = () => {
-  const { concertId } = useParams();
+  const { concertId: concertIdFromParams } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { currentOrganization } = useOrganization();
   const { parametres } = useParametres();
+  const { getActiveTab } = useTabs();
+  
+  console.log('[FactureGenerationPage] === MONTAGE DU COMPOSANT ===');
+  console.log('[FactureGenerationPage] concertId depuis params:', concertIdFromParams);
+  console.log('[FactureGenerationPage] location:', location);
+  
+  // Récupérer l'onglet actif et ses paramètres
+  const activeTab = getActiveTab && getActiveTab();
+  const concertId = activeTab?.params?.concertId || concertIdFromParams;
+  
+  // Vérifier si on vient depuis un contrat
+  const fromContrat = activeTab?.params?.fromContrat || new URLSearchParams(location.search).get('fromContrat') === 'true';
+  const contratId = activeTab?.params?.contratId;
+  
+  console.log('[FactureGenerationPage] fromContrat:', fromContrat);
+  console.log('[FactureGenerationPage] activeTab:', activeTab);
+  console.log('[FactureGenerationPage] concertId final:', concertId);
+  console.log('[FactureGenerationPage] contratId final:', contratId);
   
   const [loading, setLoading] = useState(true);
   const [concert, setConcert] = useState(null);
+  const [contrat, setContrat] = useState(null);
   const [structure, setStructure] = useState(null);
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -37,11 +59,23 @@ const FactureGenerationPage = () => {
   const [factureAcompteId, setFactureAcompteId] = useState(null); // Pour lier la facture de solde
   const [montantAcompte, setMontantAcompte] = useState(0);
   const [lignesSupplementaires, setLignesSupplementaires] = useState([]); // Lignes supplémentaires
+  const [echeances, setEcheances] = useState([]); // Échéances du contrat
 
   // Charger les données nécessaires
   useEffect(() => {
     const loadData = async () => {
-      if (!user || !currentOrganization?.id || !concertId) return;
+      console.log('[FactureGenerationPage] loadData - Vérification des conditions:', {
+        user: !!user,
+        organizationId: currentOrganization?.id,
+        concertId
+      });
+      
+      if (!user || !currentOrganization?.id || !concertId) {
+        console.log('[FactureGenerationPage] Conditions non remplies, arrêt du chargement');
+        setLoading(false);
+        setError('Données manquantes pour charger la facture');
+        return;
+      }
       
       try {
         setLoading(true);
@@ -58,9 +92,50 @@ const FactureGenerationPage = () => {
         const concertData = { id: concertSnap.id, ...concertSnap.data() };
         setConcert(concertData);
         
-        // Définir le montant par défaut si disponible
-        if (concertData.montant) {
-          setMontantHT(concertData.montant.toString());
+        // Si on vient d'un contrat, charger les données du contrat
+        if (fromContrat && contratId) {
+          console.log('[FactureGenerationPage] Chargement des données du contrat:', contratId);
+          const contratData = await contratService.getContratByConcert(concertId);
+          
+          if (contratData) {
+            console.log('[FactureGenerationPage] Contrat trouvé:', contratData);
+            setContrat(contratData);
+            
+            // Utiliser les données du contrat pour pré-remplir les champs
+            if (contratData.negociation?.montantNet) {
+              setMontantHT(contratData.negociation.montantNet.toString());
+            }
+            if (contratData.negociation?.tauxTva) {
+              setTauxTVA(parseFloat(contratData.negociation.tauxTva));
+            }
+            
+            // Charger les échéances du contrat
+            if (contratData.echeances && contratData.echeances.length > 0) {
+              setEcheances(contratData.echeances);
+              console.log('[FactureGenerationPage] Échéances du contrat:', contratData.echeances);
+              
+              // Si des échéances existent, proposer de générer selon les échéances
+              const hasAcompte = contratData.echeances.some(e => e.nature === 'Acompte');
+              const hasSolde = contratData.echeances.some(e => e.nature === 'Solde');
+              
+              if (hasAcompte && !factureAcompteId) {
+                // Proposer de faire la facture d'acompte
+                setTypeFacture('acompte');
+                const acompte = contratData.echeances.find(e => e.nature === 'Acompte');
+                if (acompte && acompte.montantTTC) {
+                  // Calculer le montant HT de l'acompte
+                  const montantTTC = parseFloat(acompte.montantTTC);
+                  const montantHTAcompte = montantTTC / (1 + tauxTVA / 100);
+                  setMontantHT(montantHTAcompte.toFixed(2));
+                }
+              }
+            }
+          }
+        } else {
+          // Sinon, utiliser le montant du concert si disponible
+          if (concertData.montant) {
+            setMontantHT(concertData.montant.toString());
+          }
         }
         
         // Vérifier s'il existe déjà une facture d'acompte pour ce concert
@@ -262,6 +337,7 @@ const FactureGenerationPage = () => {
       const factureId = await factureService.createFacture({
         concertId: concert.id,
         structureId: structure?.id,
+        contratId: fromContrat && contratId ? contratId : null, // Ajouter la référence au contrat
         templateId: selectedTemplate.id || 'standard', // Utiliser 'standard' si pas d'ID
         templateName: selectedTemplate.name || 'Modèle Standard',
         numeroFacture: variables.numero_facture,
@@ -385,6 +461,21 @@ const FactureGenerationPage = () => {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+      
+      // 4.1. Si on vient d'un contrat, mettre à jour le contrat avec l'ID de la facture
+      if (fromContrat && contratId) {
+        try {
+          console.log('[FactureGenerationPage] Mise à jour du contrat avec l\'ID de la facture:', factureId);
+          await contratService.updateContrat(contratId, {
+            factureId: factureId,
+            factureGeneratedAt: new Date(),
+            factureStatus: 'generated'
+          }, currentOrganization.id, user.uid);
+        } catch (error) {
+          console.error('Erreur lors de la mise à jour du contrat:', error);
+          // Ne pas bloquer la suite en cas d'erreur
+        }
+      }
       
       // 5. Attendre que la facture soit disponible dans Firestore avant de naviguer
       console.log('Facture créée avec ID:', factureId);

@@ -19,6 +19,10 @@ const FactureDetailsPage = () => {
   const { user } = useAuth();
   const { currentOrganization } = useOrganization();
   
+  console.log('[FactureDetailsPage] === MONTAGE DU COMPOSANT ===');
+  console.log('[FactureDetailsPage] factureId depuis params:', factureId);
+  console.log('[FactureDetailsPage] currentOrganization:', currentOrganization);
+  
   const [facture, setFacture] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -375,6 +379,12 @@ const FactureDetailsPage = () => {
               <p><strong>Numéro :</strong> {facture.numeroFacture}</p>
               <p><strong>Date de facture :</strong> {new Date(facture.dateFacture?.toDate ? facture.dateFacture.toDate() : facture.dateFacture).toLocaleDateString('fr-FR')}</p>
               <p><strong>Date d'échéance :</strong> {facture.dateEcheance ? new Date(facture.dateEcheance?.toDate ? facture.dateEcheance.toDate() : facture.dateEcheance).toLocaleDateString('fr-FR') : '-'}</p>
+              {facture.contratId && (
+                <p className="text-info">
+                  <i className="bi bi-link-45deg me-1"></i>
+                  <strong>Facture liée au contrat</strong>
+                </p>
+              )}
             </div>
             <div className="col-md-6">
               <p><strong>Montant HT :</strong> {facture.montantHT?.toFixed(2)} €</p>
@@ -388,6 +398,17 @@ const FactureDetailsPage = () => {
         <Card>
           <h4>Actions</h4>
           <div className="d-flex gap-2">
+            {/* Bouton vers le contrat si la facture est liée à un contrat */}
+            {facture.contratId && (
+              <Button
+                variant="secondary"
+                onClick={() => navigate(`/contrats/${facture.contratId}`)}
+              >
+                <i className="bi bi-file-earmark-text me-2"></i>
+                Voir le contrat
+              </Button>
+            )}
+            
             {facture.status === 'generated' && (
               <Button
                 variant="info"

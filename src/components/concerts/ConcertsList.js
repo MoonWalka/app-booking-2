@@ -477,8 +477,15 @@ function ConcertsList() {
         };
       }
       
-      if (hasFacture(concert.id)) {
-        const factureStatusValue = getFactureStatus(concert.id);
+      // Vérifier si le contrat a une facture liée
+      const contractData = getContractData(concert.id);
+      const hasFactureFromContract = contractData && contractData.factureId;
+      
+      if (hasFactureFromContract || hasFacture(concert.id)) {
+        // Utiliser le statut de la facture du contrat si elle existe
+        const factureStatusValue = hasFactureFromContract 
+          ? (contractData.factureStatus || 'generated')
+          : getFactureStatus(concert.id);
         
         switch (factureStatusValue) {
           case 'generated':
@@ -489,11 +496,16 @@ function ConcertsList() {
               tooltip: 'Facture générée',
               disabled: false,
               action: () => {
-                const factureData = getFactureData(concert.id);
-                if (factureData && factureData.id) {
-                  handleViewFacture(factureData.id);
+                // Prioriser la facture du contrat
+                if (hasFactureFromContract) {
+                  handleViewFacture(contractData.factureId);
                 } else {
-                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  const factureData = getFactureData(concert.id);
+                  if (factureData && factureData.id) {
+                    handleViewFacture(factureData.id);
+                  } else {
+                    console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  }
                 }
               }
             };
@@ -505,11 +517,16 @@ function ConcertsList() {
               tooltip: 'Facture envoyée',
               disabled: false,
               action: () => {
-                const factureData = getFactureData(concert.id);
-                if (factureData && factureData.id) {
-                  handleViewFacture(factureData.id);
+                // Prioriser la facture du contrat
+                if (hasFactureFromContract) {
+                  handleViewFacture(contractData.factureId);
                 } else {
-                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  const factureData = getFactureData(concert.id);
+                  if (factureData && factureData.id) {
+                    handleViewFacture(factureData.id);
+                  } else {
+                    console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  }
                 }
               }
             };
@@ -521,11 +538,16 @@ function ConcertsList() {
               tooltip: 'Facture payée',
               disabled: false,
               action: () => {
-                const factureData = getFactureData(concert.id);
-                if (factureData && factureData.id) {
-                  handleViewFacture(factureData.id);
+                // Prioriser la facture du contrat
+                if (hasFactureFromContract) {
+                  handleViewFacture(contractData.factureId);
                 } else {
-                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  const factureData = getFactureData(concert.id);
+                  if (factureData && factureData.id) {
+                    handleViewFacture(factureData.id);
+                  } else {
+                    console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  }
                 }
               }
             };
@@ -537,23 +559,61 @@ function ConcertsList() {
               tooltip: 'Voir facture',
               disabled: false,
               action: () => {
-                const factureData = getFactureData(concert.id);
-                if (factureData && factureData.id) {
-                  handleViewFacture(factureData.id);
+                // Prioriser la facture du contrat
+                if (hasFactureFromContract) {
+                  handleViewFacture(contractData.factureId);
                 } else {
-                  console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  const factureData = getFactureData(concert.id);
+                  if (factureData && factureData.id) {
+                    handleViewFacture(factureData.id);
+                  } else {
+                    console.error('ID de la facture non trouvé pour le concert:', concert.id);
+                  }
                 }
               }
             };
         }
       } else {
+        // Pas de facture générée - vérifier si on peut en générer une
+        if (!hasContract(concert.id)) {
+          return {
+            status: 'no_contract',
+            icon: 'bi-file-earmark-x',
+            color: '#6c757d',
+            tooltip: 'Contrat requis pour facturer',
+            disabled: true,
+            action: null
+          };
+        }
+        
+        const contractStatusValue = getContractStatusFromHook(concert.id);
+        // Un contrat peut être facturé s'il est finalisé, signé ou envoyé
+        const isContractFacturable = contractStatusValue === 'signed' || contractStatusValue === 'finalized' || contractStatusValue === 'sent';
+        
+        if (!isContractFacturable) {
+          return {
+            status: 'contract_not_ready',
+            icon: 'bi-pen',
+            color: '#6c757d',
+            tooltip: 'Contrat en cours',
+            disabled: true,
+            action: null
+          };
+        }
+        
+        // Contrat signé, on peut générer une facture
         return {
           status: 'not_generated',
           icon: 'bi-receipt',
-          color: '#6c757d',
+          color: '#ffc107',
           tooltip: 'Générer facture',
           disabled: false,
-          action: () => handleGenerateFacture(concert.id)
+          action: () => {
+            // Récupérer le contratId s'il existe
+            const contractData = getContractData(concert.id);
+            const contratId = contractData?.id || null;
+            handleGenerateFacture(concert.id, contratId);
+          }
         };
       }
     };

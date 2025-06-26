@@ -9,6 +9,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { getPreContratsByConcert } from '@/services/preContratService';
+import contratService from '@/services/contratService';
 import styles from './TableauDeBordPage.module.css';
 
 /**
@@ -81,6 +82,35 @@ const TableauDeBordPage = () => {
               }
             } catch (error) {
               console.error('Erreur chargement pré-contrat pour concert', doc.id, error);
+            }
+            
+            // Charger les données du contrat pour ce concert
+            try {
+              const contrat = await contratService.getContratByConcert(doc.id);
+              if (contrat) {
+                console.log('[TableauDeBordPage] Contrat trouvé pour concert', doc.id, ':', {
+                  status: contrat.status,
+                  contratStatut: contrat.contratStatut,
+                  hasContent: !!contrat.contratContenu
+                });
+                // Ajouter les infos du contrat au concert
+                concertData.contratId = contrat.id;
+                concertData.contratStatus = contrat.status;
+                concertData.contratNumber = contrat.contratNumber;
+                // Si le contrat a un statut 'redige' dans la collection contrats
+                if (contrat.contratStatut === 'redige') {
+                  concertData.contratStatut = 'redige';
+                  concertData.hasContratRedige = true;
+                }
+                // Ajouter les infos de facture liée au contrat
+                if (contrat.factureId) {
+                  concertData.factureId = contrat.factureId;
+                  concertData.factureStatus = contrat.factureStatus || 'generated';
+                  concertData.hasFacture = true;
+                }
+              }
+            } catch (error) {
+              console.error('Erreur chargement contrat pour concert', doc.id, error);
             }
             
             return concertData;
@@ -594,6 +624,61 @@ const TableauDeBordPage = () => {
                 onDelete={handleDelete}
                 onEdit={handleEdit}
                 showSearch={true}
+                // Props pour gérer les contrats et factures
+                hasContractFunc={(concertId) => {
+                  const concert = concerts.find(c => c.id === concertId);
+                  return concert && (concert.contratId || concert.hasContrat);
+                }}
+                getContractStatus={(concertId) => {
+                  const concert = concerts.find(c => c.id === concertId);
+                  return concert?.contratStatus || null;
+                }}
+                getContractData={(concertId) => {
+                  const concert = concerts.find(c => c.id === concertId);
+                  if (!concert) return null;
+                  return {
+                    id: concert.contratId,
+                    status: concert.contratStatus,
+                    factureId: concert.factureId,
+                    factureStatus: concert.factureStatus
+                  };
+                }}
+                hasFacture={(concertId) => {
+                  const concert = concerts.find(c => c.id === concertId);
+                  return concert && (concert.factureId || concert.hasFacture);
+                }}
+                getFactureStatus={(concertId) => {
+                  const concert = concerts.find(c => c.id === concertId);
+                  return concert?.factureStatus || null;
+                }}
+                getFactureData={(concertId) => {
+                  const concert = concerts.find(c => c.id === concertId);
+                  if (!concert) return null;
+                  return {
+                    id: concert.factureId,
+                    status: concert.factureStatus
+                  };
+                }}
+                handleViewFacture={(factureId) => {
+                  openTab({
+                    id: `facture-${factureId}`,
+                    title: `Facture`,
+                    path: `/factures/${factureId}`,
+                    component: 'FactureDetailsPage',
+                    params: { factureId },
+                    icon: 'bi-receipt'
+                  });
+                }}
+                handleGenerateFacture={(concertId) => {
+                  openTab({
+                    id: `facture-generate-${concertId}`,
+                    title: `Nouvelle facture`,
+                    path: `/factures/generate/${concertId}?fromContrat=true`,
+                    component: 'FactureGenerationPage',
+                    params: { concertId, fromContrat: true },
+                    icon: 'bi-receipt'
+                  });
+                }}
               />
             </Card.Body>
           </Card>

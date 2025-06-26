@@ -23,7 +23,16 @@ const ConcertsTableView = ({
   error = null,
   onDelete,
   onEdit,
-  showSearch = true
+  showSearch = true,
+  // Nouvelles props pour gérer les contrats et factures
+  hasContractFunc,
+  getContractStatus,
+  getContractData,
+  hasFacture,
+  getFactureStatus,
+  getFactureData,
+  handleViewFacture,
+  handleGenerateFacture
 }) => {
   const { openTab, openContactTab, openPreContratTab, openContratTab } = useTabs();
   const [searchTerm, setSearchTerm] = useState('');
@@ -308,18 +317,30 @@ const ConcertsTableView = ({
       key: 'contratFinal',
       sortable: false,
       render: (item) => {
-        const hasContrat = item.contratStatut === 'redige' || item.hasContrat;
+        const hasContrat = item.contratStatut === 'redige' || item.contratStatus || item.hasContrat || item.contratId;
+        // Un contrat est vraiment rédigé seulement s'il a le statut 'redige' (avec contenu)
+        // Le statut 'finalized' signifie juste que le formulaire est finalisé, pas qu'il est rédigé
+        const isRedige = item.contratStatut === 'redige' || item.hasContratRedige;
         
         return (
           <button
             className={datesTableStyles.iconButton}
             onClick={(e) => {
               e.stopPropagation();
+              console.log('[ConcertsTableView] Clic sur icône contrat pour concert:', item.id);
+              console.log('[ConcertsTableView] État du contrat - hasContrat:', hasContrat, 'isRedige:', isRedige);
+              console.log('[ConcertsTableView] Détails item:', {
+                contratStatut: item.contratStatut,
+                contratStatus: item.contratStatus,
+                hasContratRedige: item.hasContratRedige,
+                contratId: item.contratId
+              });
               if (openContratTab) {
-                openContratTab(item.id);
+                const concertTitle = item.artisteNom || item.titre || 'Concert';
+                openContratTab(item.id, concertTitle, isRedige);
               }
             }}
-            title={hasContrat ? 'Contrat rédigé' : 'Rédiger le contrat'}
+            title={isRedige ? 'Contrat rédigé - Voir l\'aperçu' : hasContrat ? 'Modifier le contrat' : 'Créer le contrat'}
           >
             <i className={`bi ${hasContrat ? 'bi-file-text-fill' : 'bi-file-text'} ${hasContrat ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
           </button>
@@ -331,18 +352,119 @@ const ConcertsTableView = ({
       key: 'facture',
       sortable: false,
       render: (item) => {
-        const hasFacture = item.factureId || item.hasFacture;
+        console.log(`[ConcertsTableView] === DÉBUT RENDU BOUTON FACTURE pour concert ${item.id} ===`);
+        
+        // Importer les données de contrat et facture si les fonctions sont disponibles
+        const contractData = getContractData ? getContractData(item.id) : null;
+        const factureData = getFactureData ? getFactureData(item.id) : null;
+        
+        console.log('[ConcertsTableView] Données contrat:', contractData);
+        console.log('[ConcertsTableView] Données facture:', factureData);
+        
+        // Vérifier d'abord si le contrat a une facture
+        const hasFactureFromContract = contractData && contractData.factureId;
+        const hasDirectFacture = item.factureId || item.hasFacture || factureData;
+        const hasFacture = hasFactureFromContract || hasDirectFacture;
+        
+        console.log('[ConcertsTableView] Facture depuis contrat:', hasFactureFromContract);
+        console.log('[ConcertsTableView] Facture directe:', hasDirectFacture);
+        console.log('[ConcertsTableView] A une facture:', hasFacture);
+        
+        // Déterminer l'ID de la facture
+        const factureId = hasFactureFromContract ? contractData.factureId : (factureData?.id || item.factureId);
+        console.log('[ConcertsTableView] ID facture déterminé:', factureId);
+        
+        // Déterminer si on peut générer une facture
+        const hasContract = hasContractFunc ? hasContractFunc(item.id) : false;
+        const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
+        // Un contrat peut être facturé s'il est finalisé, signé ou envoyé
+        const canGenerateFacture = hasContract && (contractStatus === 'signed' || contractStatus === 'finalized' || contractStatus === 'sent');
+        
+        console.log('[ConcertsTableView] A un contrat:', hasContract);
+        console.log('[ConcertsTableView] Statut contrat:', contractStatus);
+        console.log('[ConcertsTableView] Peut générer facture:', canGenerateFacture);
+        
+        let iconClass = 'bi-receipt';
+        let iconColor = datesTableStyles.iconDefault;
+        let title = 'Facture non disponible';
+        let disabled = true;
+        let buttonStatus = 'non_disponible';
+        
+        if (hasFacture) {
+          iconClass = 'bi-receipt-cutoff';
+          iconColor = datesTableStyles.iconSuccess;
+          title = 'Voir la facture';
+          disabled = false;
+          buttonStatus = 'voir_facture';
+        } else if (canGenerateFacture) {
+          iconClass = 'bi-receipt';
+          iconColor = datesTableStyles.iconWarning;
+          title = 'Générer une facture';
+          disabled = false;
+          buttonStatus = 'generer_facture';
+        } else if (!hasContract) {
+          title = 'Contrat requis pour facturer';
+          buttonStatus = 'pas_de_contrat';
+        } else if (!canGenerateFacture) {
+          // Le contrat existe mais n'est pas dans un état facturable
+          title = 'Contrat en cours';
+          buttonStatus = 'contrat_en_cours';
+        }
+        
+        console.log('[ConcertsTableView] État final bouton:', {
+          buttonStatus,
+          iconClass,
+          iconColor,
+          title,
+          disabled
+        });
+        console.log(`[ConcertsTableView] === FIN RENDU BOUTON FACTURE pour concert ${item.id} ===`);
         
         return (
           <button
             className={datesTableStyles.iconButton}
             onClick={(e) => {
               e.stopPropagation();
-              console.log('Ouvrir facture pour concert:', item.id);
+              console.log(`[ConcertsTableView] === DÉBUT CLIC BOUTON FACTURE pour concert ${item.id} ===`);
+              console.log('[ConcertsTableView] État au moment du clic:', {
+                disabled,
+                hasFacture,
+                factureId,
+                canGenerateFacture,
+                buttonStatus,
+                handleViewFacture: !!handleViewFacture,
+                handleGenerateFacture: !!handleGenerateFacture
+              });
+              
+              if (!disabled) {
+                if (hasFacture && factureId && handleViewFacture) {
+                  console.log(`[ConcertsTableView] Action: VOIR FACTURE ${factureId}`);
+                  console.log('[ConcertsTableView] Appel de handleViewFacture avec ID:', factureId);
+                  // Ouvrir la facture existante
+                  handleViewFacture(factureId);
+                  console.log('[ConcertsTableView] handleViewFacture appelé');
+                } else if (canGenerateFacture && handleGenerateFacture) {
+                  console.log(`[ConcertsTableView] Action: GÉNÉRER FACTURE pour concert ${item.id}`);
+                  console.log('[ConcertsTableView] Appel de handleGenerateFacture avec concertId:', item.id);
+                  // Générer une nouvelle facture
+                  // Récupérer le contratId s'il existe
+                  const contractData = getContractData && getContractData(item.id);
+                  const contratId = contractData?.id || null;
+                  console.log('[ConcertsTableView] ContratId trouvé:', contratId);
+                  handleGenerateFacture(item.id, contratId);
+                  console.log('[ConcertsTableView] handleGenerateFacture appelé');
+                } else {
+                  console.log('[ConcertsTableView] Aucune action possible - conditions non remplies');
+                }
+              } else {
+                console.log('[ConcertsTableView] Bouton désactivé - pas d\'action');
+              }
+              console.log(`[ConcertsTableView] === FIN CLIC BOUTON FACTURE pour concert ${item.id} ===`);
             }}
-            title={hasFacture ? 'Facture émise' : 'Créer une facture'}
+            title={title}
+            disabled={disabled}
           >
-            <i className={`bi ${hasFacture ? 'bi-receipt-cutoff' : 'bi-receipt'} ${hasFacture ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
+            <i className={`bi ${iconClass} ${iconColor}`}></i>
           </button>
         );
       }

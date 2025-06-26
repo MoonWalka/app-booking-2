@@ -6,6 +6,7 @@ import { useTabs } from '@/context/TabsContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import { doc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
+import contratService from '@/services/contratService';
 import styles from './ContratGeneratorNew.module.css';
 
 /**
@@ -100,7 +101,7 @@ const ContratGeneratorNew = ({
     negociation: {
       montantNet: 0,
       montantBrut: 0,
-      tauxTva: 20, // Taux par défaut
+      tauxTva: 0, // Calculé automatiquement depuis les prestations
       montantTva: 0,
       montantTTC: 0,
       contratType: 'cession',
@@ -208,6 +209,43 @@ const ContratGeneratorNew = ({
     loadFactureParams();
   }, [currentOrg]);
 
+  // Charger un contrat existant s'il existe
+  useEffect(() => {
+    const loadExistingContrat = async () => {
+      if (!concertId) return;
+      
+      try {
+        console.log('[ContratGeneratorNew] Recherche d\'un contrat existant pour le concert:', concertId);
+        const existingContrat = await contratService.getContratByConcert(concertId);
+        
+        if (existingContrat) {
+          console.log('[ContratGeneratorNew] Contrat existant trouvé:', existingContrat);
+          // Fusionner les données existantes avec l'état initial pour préserver la structure complète
+          setContratData(prev => ({
+            ...prev,
+            ...existingContrat,
+            // Préserver les objets imbriqués en les fusionnant
+            organisateur: { ...prev.organisateur, ...(existingContrat.organisateur || {}) },
+            producteur: { ...prev.producteur, ...(existingContrat.producteur || {}) },
+            representations: { ...prev.representations, ...(existingContrat.representations || {}) },
+            negociation: { ...prev.negociation, ...(existingContrat.negociation || {}) },
+            // Utiliser les arrays du contrat existant s'ils existent, sinon garder les valeurs par défaut
+            hebergements: existingContrat.hebergements || prev.hebergements,
+            restaurations: existingContrat.restaurations || prev.restaurations,
+            prestations: existingContrat.prestations || prev.prestations,
+            echeances: existingContrat.echeances || prev.echeances
+          }));
+        } else {
+          console.log('[ContratGeneratorNew] Aucun contrat existant trouvé');
+        }
+      } catch (error) {
+        console.error('[ContratGeneratorNew] Erreur lors du chargement du contrat existant:', error);
+      }
+    };
+    
+    loadExistingContrat();
+  }, [concertId]);
+
   // Initialiser les données depuis les props
   useEffect(() => {
     // Si on a un pré-contrat confirmé, utiliser ses données en priorité
@@ -239,7 +277,7 @@ const ContratGeneratorNew = ({
           ...prev.negociation,
           montantNet: preContratData.montantHT || concert?.montant || 0,
           montantBrut: preContratData.montantHT || concert?.montant || 0,
-          tauxTva: factureParams?.tauxTva || 20,
+          tauxTva: 0, // Sera calculé depuis les prestations
           montantTva: 0, // Sera calculé après
           montantTTC: 0, // Sera calculé après
           contratType: preContratData.contratPropose || 'cession',
@@ -334,7 +372,60 @@ const ContratGeneratorNew = ({
     }
   }, [entrepriseData, structure, contratData.organisateur.raisonSociale]);
 
-  // Calculer automatiquement les montants TVA
+  // Calculer automatiquement le taux TVA de négociation depuis les prestations
+  useEffect(() => {
+    if (contratData.prestations && contratData.prestations.length > 0) {
+      // Calculer le taux TVA moyen pondéré des prestations
+      let totalHT = 0;
+      let totalTVA = 0;
+      
+      contratData.prestations.forEach(prestation => {
+        const montantHT = parseFloat(prestation.montantHT) || 0;
+        const tauxTva = parseFloat(prestation.tauxTva) || 0;
+        const montantTVA = montantHT * (tauxTva / 100);
+        
+        totalHT += montantHT;
+        totalTVA += montantTVA;
+      });
+      
+      // Calculer le taux moyen (si totalHT > 0)
+      const tauxMoyen = totalHT > 0 ? (totalTVA / totalHT) * 100 : 0;
+      
+      // Mettre à jour la négociation avec le taux calculé
+      if (contratData.negociation && Math.abs(parseFloat(contratData.negociation.tauxTva) - tauxMoyen) > 0.01) {
+        const montantHT = parseFloat(contratData.negociation.montantNet) || 0;
+        const montantTva = montantHT * (tauxMoyen / 100);
+        const montantTTC = montantHT + montantTva;
+        
+        setContratData(prev => ({
+          ...prev,
+          negociation: {
+            ...prev.negociation,
+            tauxTva: tauxMoyen.toFixed(2),
+            montantTva: montantTva.toFixed(2),
+            montantTTC: montantTTC.toFixed(2)
+          }
+        }));
+      }
+    } else {
+      // Si pas de prestations, remettre à 0
+      if (contratData.negociation && parseFloat(contratData.negociation.tauxTva) !== 0) {
+        const montantHT = parseFloat(contratData.negociation.montantNet) || 0;
+        
+        setContratData(prev => ({
+          ...prev,
+          negociation: {
+            ...prev.negociation,
+            tauxTva: 0,
+            montantTva: 0,
+            montantTTC: montantHT.toFixed(2)
+          }
+        }));
+      }
+    }
+  }, [contratData.prestations]);
+
+  // Calculer automatiquement les montants TVA quand le montant net change
   useEffect(() => {
     if (contratData.negociation) {
       const montantHT = parseFloat(contratData.negociation.montantNet) || 0;
@@ -352,7 +443,7 @@ const ContratGeneratorNew = ({
         }
       }));
     }
-  }, [contratData.negociation?.montantNet, contratData.negociation?.tauxTva]);
+  }, [contratData.negociation?.montantNet]);
 
   // Calcul des totaux (déplacé ici pour être utilisable dans les useEffect)
   const calculerTotaux = () => {
@@ -409,30 +500,156 @@ const ContratGeneratorNew = ({
 
   const handleSave = async () => {
     try {
-      // Logique de sauvegarde
+      console.log('[ContratGeneratorNew] Début de la sauvegarde du contrat');
+      
+      // Valider les données requises
+      const validation = contratService.validateContratData(contratData);
+      if (!validation.isValid) {
+        console.error('[ContratGeneratorNew] Validation échouée:', validation.errors);
+        setAlertType('danger');
+        setAlertMessage(`Veuillez remplir les champs obligatoires : ${validation.errors.join(', ')}`);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+        return;
+      }
+
+      // Préparer les données complètes du contrat
+      const dataToSave = {
+        ...contratData,
+        // Ajouter les références aux entités liées
+        concertId: concertId,
+        preContratId: preContratData?.id || null,
+        contactId: contact?.id || null,
+        structureId: structure?.id || null,
+        artisteId: artiste?.id || null,
+        lieuId: lieu?.id || null,
+        // Ajouter les métadonnées
+        organizationId: currentOrg?.id
+      };
+
+      console.log('[ContratGeneratorNew] Données à sauvegarder:', dataToSave);
+
+      // Sauvegarder le contrat
+      const savedContrat = await contratService.saveContrat(concertId, dataToSave, currentOrg?.id);
+      
+      console.log('[ContratGeneratorNew] Contrat sauvegardé avec succès:', savedContrat);
+
+      // Mettre à jour le statut du concert
+      await contratService.updateContratStatus(concertId, 'draft');
+
       setAlertType('success');
       setAlertMessage('Contrat enregistré avec succès');
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000);
     } catch (error) {
+      console.error('[ContratGeneratorNew] Erreur lors de la sauvegarde:', error);
       setAlertType('danger');
-      setAlertMessage('Erreur lors de l\'enregistrement');
+      setAlertMessage(`Erreur lors de l'enregistrement : ${error.message}`);
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
+    }
+  };
+
+  const handleFinalize = async () => {
+    try {
+      console.log('[ContratGeneratorNew] Début de la finalisation du contrat');
+      
+      // Valider les données requises
+      const validation = contratService.validateContratData(contratData);
+      if (!validation.isValid) {
+        console.error('[ContratGeneratorNew] Validation échouée:', validation.errors);
+        setAlertType('danger');
+        setAlertMessage(`Veuillez remplir les champs obligatoires avant de finaliser : ${validation.errors.join(', ')}`);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+        return;
+      }
+
+      // Sauvegarder d'abord le contrat
+      const dataToSave = {
+        ...contratData,
+        concertId: concertId,
+        preContratId: preContratData?.id || null,
+        contactId: contact?.id || null,
+        structureId: structure?.id || null,
+        artisteId: artiste?.id || null,
+        lieuId: lieu?.id || null,
+        organizationId: currentOrg?.id
+      };
+
+      await contratService.saveContrat(concertId, dataToSave, currentOrg?.id);
+      
+      // Générer un numéro de contrat
+      const contratNumber = await contratService.generateContratNumber(currentOrg?.id);
+      console.log('[ContratGeneratorNew] Numéro de contrat généré:', contratNumber);
+      
+      // Finaliser le contrat
+      await contratService.finalizeContrat(concertId, contratNumber);
+      
+      setAlertType('success');
+      setAlertMessage(`Contrat finalisé avec succès. Numéro : ${contratNumber}`);
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000);
+      
+      // Recharger les données
+      const updatedContrat = await contratService.getContratByConcert(concertId);
+      if (updatedContrat) {
+        setContratData(updatedContrat);
+      }
+    } catch (error) {
+      console.error('[ContratGeneratorNew] Erreur lors de la finalisation:', error);
+      setAlertType('danger');
+      setAlertMessage(`Erreur lors de la finalisation : ${error.message}`);
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
     }
   };
 
   const handleGenerate = async () => {
     try {
-      // Générer un ID temporaire pour le contrat (ou utiliser concertId)
+      console.log('[ContratGeneratorNew] Début de handleGenerate');
+      
+      // Validation minimale pour la sauvegarde automatique
+      const validation = contratService.validateMinimalData(contratData);
+      if (!validation.isValid) {
+        console.error('[ContratGeneratorNew] Validation minimale échouée:', validation.errors);
+        setAlertType('danger');
+        setAlertMessage(`Veuillez remplir au minimum : ${validation.errors.join(', ')}`);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+        return;
+      }
+
+      // Sauvegarder automatiquement avant de rédiger
+      console.log('[ContratGeneratorNew] Sauvegarde automatique avant rédaction');
+      
+      const dataToSave = {
+        ...contratData,
+        concertId: concertId,
+        preContratId: preContratData?.id || null,
+        contactId: contact?.id || null,
+        structureId: structure?.id || null,
+        artisteId: artiste?.id || null,
+        lieuId: lieu?.id || null,
+        organizationId: currentOrg?.id
+      };
+
+      // Sauvegarder le contrat
+      const savedContrat = await contratService.saveContrat(concertId, dataToSave, currentOrg?.id);
+      console.log('[ContratGeneratorNew] Contrat sauvegardé automatiquement:', savedContrat);
+
+      // Mettre à jour le statut du concert si c'est la première fois
+      if (!contratData.createdAt) {
+        await contratService.updateContratStatus(concertId, 'draft');
+      }
+      
+      // Générer un ID pour le contrat (utiliser concertId pour maintenir la relation 1:1)
       const contratId = concertId || `nouveau-${Date.now()}`;
       
-      console.log('handleGenerate called with contratId:', contratId);
-      console.log('openTab available:', !!openTab);
+      console.log('[ContratGeneratorNew] Ouverture de la page de rédaction avec contratId:', contratId);
       
       // Ouvrir la page de rédaction dans un nouvel onglet
       if (openTab) {
-        console.log('Opening tab with openTab...');
         openTab({
           id: `contrat-redaction-${contratId}`,
           title: `Rédaction contrat`,
@@ -440,20 +657,20 @@ const ContratGeneratorNew = ({
           component: 'ContratRedactionPage',
           params: { 
             originalConcertId: concertId || null,
-            contratId: contratId
+            contratId: contratId,
+            fromGenerator: true // Indique qu'on vient du générateur
           }
         });
       } else {
         // Fallback si pas de système d'onglets
-        console.log('Fallback to navigate...');
         navigate(`/contrats/${contratId}/redaction`);
       }
     } catch (error) {
-      console.error('Error in handleGenerate:', error);
+      console.error('[ContratGeneratorNew] Erreur dans handleGenerate:', error);
       setAlertType('danger');
-      setAlertMessage('Erreur lors de l\'ouverture de la page de rédaction');
+      setAlertMessage(`Erreur lors de l'ouverture de la page de rédaction : ${error.message}`);
       setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
+      setTimeout(() => setShowAlert(false), 5000);
     }
   };
 
@@ -509,7 +726,7 @@ const ContratGeneratorNew = ({
         id: Date.now(),
         objet: '',
         montantHT: '',
-        tauxTva: factureParams?.tauxTva?.toString() || '20'
+        tauxTva: factureParams?.tauxTva?.toString() || '0'
       }]
     }));
   };
@@ -553,19 +770,38 @@ const ContratGeneratorNew = ({
         </Alert>
       )}
 
+      {/* Bandeau d'état si le contrat est finalisé */}
+      {contratData.status === 'finalized' && (
+        <Alert variant="info" className="mb-3">
+          <i className="bi bi-info-circle me-2"></i>
+          Ce contrat est finalisé (N° {contratData.contratNumber}). Les modifications ne sont plus possibles.
+        </Alert>
+      )}
+
       {/* Boutons d'action en haut */}
       <div className={styles.actionButtons}>
         <Button 
           variant="success" 
           onClick={handleSave}
           className="me-3"
+          disabled={contratData.status === 'finalized'}
         >
           <i className="bi bi-save me-2"></i>
           Enregistrer
         </Button>
         <Button 
+          variant="warning" 
+          onClick={handleFinalize}
+          className="me-3"
+          disabled={contratData.status === 'finalized'}
+        >
+          <i className="bi bi-check-circle me-2"></i>
+          Finaliser
+        </Button>
+        <Button 
           variant="primary" 
           onClick={handleGenerate}
+          className="me-3"
         >
           <i className="bi bi-file-text me-2"></i>
           Rédiger
@@ -1594,30 +1830,32 @@ const ContratGeneratorNew = ({
               {/* Section Pré-contrat */}
               {activeTab === 'precontrat' && (
                 <>
-                  {concert?.preContratId ? (
+                  {preContratData ? (
                     <>
                       <div className="mb-3">
                         <h6>Informations pré-contrat</h6>
-                        <p className="small mb-1"><strong>Statut:</strong> <span className="text-warning">En attente</span></p>
-                        <p className="small mb-1"><strong>Date d'envoi:</strong> {concert?.preContratDateEnvoi ? new Date(concert.preContratDateEnvoi).toLocaleDateString('fr-FR') : 'Non envoyé'}</p>
-                        <p className="small mb-1"><strong>Date de création:</strong> {concert?.preContratDateCreation ? new Date(concert.preContratDateCreation).toLocaleDateString('fr-FR') : 'Non défini'}</p>
+                        <p className="small mb-1"><strong>Statut:</strong> <span className={preContratData.status === 'sent' ? 'text-success' : 'text-warning'}>{preContratData.status === 'sent' ? 'Envoyé' : 'En attente'}</span></p>
+                        <p className="small mb-1"><strong>Date d'envoi:</strong> {preContratData.sentAt ? new Date(preContratData.sentAt).toLocaleDateString('fr-FR') : 'Non envoyé'}</p>
+                        <p className="small mb-1"><strong>Date de création:</strong> {preContratData.createdAt ? new Date(preContratData.createdAt).toLocaleDateString('fr-FR') : 'Non défini'}</p>
                       </div>
                       <div className="mb-3">
                         <h6>Structure organisatrice</h6>
-                        <p className="small mb-1"><strong>Nom:</strong> {concert?.preContratStructureNom || 'Non défini'}</p>
-                        <p className="small mb-1"><strong>Signataire:</strong> {concert?.preContratSignataire || 'Non défini'}</p>
+                        <p className="small mb-1"><strong>Nom:</strong> {preContratData.structure?.nom || 'Non défini'}</p>
+                        <p className="small mb-1"><strong>Signataire:</strong> {preContratData.signataire?.nom || 'Non défini'}</p>
                       </div>
                       <div className="mb-3">
                         <h6>Négociation</h6>
-                        <p className="small mb-1"><strong>Montant HT:</strong> {concert?.preContratMontantHT || concert?.montant || '0.00'} €</p>
-                        <p className="small mb-1"><strong>Devise:</strong> {concert?.preContratDevise || 'EUR'}</p>
-                        <p className="small mb-1"><strong>Conditions:</strong> {concert?.preContratConditions || 'Standard'}</p>
-                        <p className="small mb-1"><strong>Mode de paiement:</strong> {concert?.preContratModePaiement || 'Virement'}</p>
+                        <p className="small mb-1"><strong>Montant HT:</strong> {preContratData.montantHT || preContratData.montant || '0.00'} €</p>
+                        <p className="small mb-1"><strong>TVA:</strong> {preContratData.tauxTVA || '0'}%</p>
+                        <p className="small mb-1"><strong>Montant TTC:</strong> {preContratData.montantTTC || '0.00'} €</p>
+                        <p className="small mb-1"><strong>Devise:</strong> {preContratData.devise || 'EUR'}</p>
+                        <p className="small mb-1"><strong>Mode de paiement:</strong> {preContratData.modePaiement || 'Virement'}</p>
                       </div>
                       <div className="mb-3">
-                        <h6>Communication</h6>
-                        <p className="small mb-1"><strong>Destinataires:</strong> {concert?.preContratDestinataires?.length || 0} personne(s)</p>
-                        <p className="small mb-1"><strong>Statut envoi:</strong> {concert?.preContratEnvoye ? 'Envoyé' : 'Brouillon'}</p>
+                        <h6>Conditions</h6>
+                        <p className="small mb-1"><strong>Frais de déplacement:</strong> {preContratData.fraisDeplacement || 'Non définis'}</p>
+                        <p className="small mb-1"><strong>Hébergement:</strong> {preContratData.hebergement || 'Non défini'}</p>
+                        <p className="small mb-1"><strong>Catering:</strong> {preContratData.catering || 'Non défini'}</p>
                       </div>
                       <Button variant="outline-primary" size="sm" className="w-100">
                         <i className="bi bi-eye me-2"></i>

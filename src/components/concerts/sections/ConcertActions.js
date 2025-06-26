@@ -76,8 +76,24 @@ const ConcertActions = ({
   
   // Fonction pour déterminer le statut de la facture
   const getFactureStatus = () => {
+    // D'abord vérifier si le contrat a une facture liée
+    if (contractData && contractData.factureId) {
+      // Si le contrat a une facture, utiliser le statut de la facture du contrat
+      const factureStatusFromContract = contractData.factureStatus || 'generated';
+      switch (factureStatusFromContract) {
+        case 'paid':
+          return { status: 'paid', icon: 'bi-receipt-cutoff', class: 'paid', tooltip: 'Facture payée' };
+        case 'sent':
+          return { status: 'sent', icon: 'bi-receipt', class: 'sent', tooltip: 'Facture envoyée' };
+        case 'generated':
+        default:
+          return { status: 'generated', icon: 'bi-receipt', class: 'generated', tooltip: 'Facture générée' };
+      }
+    }
+    
+    // Sinon vérifier s'il y a une facture directe
     if (!hasFacture) {
-      // Vérifier si on peut générer une facture (besoin d'un contact et d'une structure au minimum)
+      // Vérifier si on peut générer une facture
       const hasContact = (concert.contactIds && concert.contactIds.length > 0) || concert.contactId;
       if (!hasContact) {
         return { status: 'no_contact', icon: 'bi-person-x', class: 'disabled', tooltip: 'Aucun contact associé' };
@@ -85,10 +101,18 @@ const ConcertActions = ({
       if (!concert.structureId) {
         return { status: 'no_structure', icon: 'bi-building-x', class: 'disabled', tooltip: 'Aucune structure associée' };
       }
+      // Si pas de contrat, on ne peut pas générer de facture
+      if (!hasContract) {
+        return { status: 'no_contract', icon: 'bi-file-earmark-x', class: 'disabled', tooltip: 'Contrat requis pour facturer' };
+      }
+      // Si le contrat n'est pas signé, on ne peut pas facturer
+      if (contractStatus !== 'signed') {
+        return { status: 'contract_not_signed', icon: 'bi-pen', class: 'disabled', tooltip: 'Contrat non signé' };
+      }
       return { status: 'not_generated', icon: 'bi-receipt', class: 'notGenerated', tooltip: 'Générer facture' };
     }
     
-    // Si on a une facture, vérifier son statut
+    // Si on a une facture directe, vérifier son statut
     switch (factureStatus) {
       case 'paid':
         return { status: 'paid', icon: 'bi-receipt-cutoff', class: 'paid', tooltip: 'Facture payée' };
@@ -163,13 +187,17 @@ const ConcertActions = ({
     
     switch (factureStatusInfo.status) {
       case 'not_generated':
+        // Générer la facture depuis le contrat
         handleGenerateFacture(concert.id);
         break;
       case 'generated':
       case 'sent':
       case 'paid':
-        // Utiliser l'ID de la facture depuis factureData
-        if (factureData && factureData.id) {
+        // D'abord vérifier si la facture est liée au contrat
+        if (contractData && contractData.factureId) {
+          handleViewFacture(contractData.factureId);
+        } else if (factureData && factureData.id) {
+          // Sinon utiliser l'ID de la facture directe
           handleViewFacture(factureData.id);
         } else {
           // Fallback si pas d'ID de facture (ne devrait pas arriver)
@@ -178,9 +206,14 @@ const ConcertActions = ({
         break;
       case 'no_contact':
       case 'no_structure':
-      default:
         // Rediriger vers l'édition du concert pour ajouter un contact/structure
         window.location.href = `/concerts/${concert.id}/edit`;
+        break;
+      case 'no_contract':
+      case 'contract_not_signed':
+        // Ne rien faire, le bouton est désactivé
+        break;
+      default:
         break;
     }
   };
@@ -212,7 +245,12 @@ const ConcertActions = ({
         className={`${styles.actionButton} ${styles.factureButton} ${styles[factureStatusInfo.class]}`}
         onClick={handleFactureClick}
         title={factureStatusInfo.tooltip}
-        disabled={factureStatusInfo.status === 'no_contact' || factureStatusInfo.status === 'no_structure'}
+        disabled={
+          factureStatusInfo.status === 'no_contact' || 
+          factureStatusInfo.status === 'no_structure' || 
+          factureStatusInfo.status === 'no_contract' || 
+          factureStatusInfo.status === 'contract_not_signed'
+        }
       >
         <i className={factureStatusInfo.icon}></i>
       </button>

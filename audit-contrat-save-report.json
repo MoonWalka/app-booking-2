@@ -1,0 +1,143 @@
+{
+  "timestamp": "2025-06-26T10:08:57.057Z",
+  "summary": {
+    "totalIssues": 4,
+    "criticalIssues": 2,
+    "warnings": 2,
+    "suggestions": 0
+  },
+  "components": {
+    "ContratGeneratorNew": {
+      "file": "src/components/contrats/desktop/ContratGeneratorNew.js",
+      "functions": {
+        "handleSave": {
+          "status": "✅ OK",
+          "details": [
+            "✅ Validation des données avec contratService.validateContratData()",
+            "✅ Sauvegarde dans la collection contrats via contratService.saveContrat()",
+            "✅ Mise à jour du statut du concert avec contratService.updateContratStatus()",
+            "✅ Gestion des erreurs avec try/catch",
+            "✅ Feedback utilisateur avec alertes"
+          ],
+          "issues": []
+        },
+        "handleGenerate": {
+          "status": "✅ OK",
+          "details": [
+            "✅ Validation minimale avec contratService.validateMinimalData()",
+            "✅ Sauvegarde automatique avant rédaction",
+            "✅ Utilise contratService.saveContrat() avec merge: true",
+            "✅ Met à jour le statut si première création",
+            "✅ Passe les bonnes données à la page de rédaction"
+          ],
+          "issues": []
+        },
+        "handleFinalize": {
+          "status": "✅ OK",
+          "details": [
+            "✅ Validation complète des données",
+            "✅ Sauvegarde avant finalisation",
+            "✅ Génération du numéro de contrat",
+            "✅ Appel à contratService.finalizeContrat()",
+            "✅ Rechargement des données après finalisation"
+          ],
+          "issues": []
+        }
+      }
+    },
+    "ContratRedactionPage": {
+      "file": "src/pages/ContratRedactionPage.js",
+      "functions": {
+        "handleFinishContract": {
+          "status": "⚠️ WARNING",
+          "details": [
+            "✅ Sauvegarde dans la collection contrats via contratService.saveContrat()",
+            "✅ Utilise serverTimestamp() pour les dates",
+            "✅ Sauvegarde le contenu rédigé et les modèles",
+            "⚠️ Met aussi à jour la collection concerts pour rétrocompatibilité",
+            "✅ Recharge les données après sauvegarde"
+          ],
+          "issues": [
+            {
+              "type": "warning",
+              "message": "Double sauvegarde dans concerts et contrats - pourrait créer des incohérences",
+              "line": 162
+            }
+          ]
+        }
+      }
+    },
+    "contratService": {
+      "file": "src/services/contratService.js",
+      "functions": {
+        "saveContrat": {
+          "status": "✅ OK",
+          "details": [
+            "✅ Utilise setDoc avec merge: true",
+            "✅ Ajoute les timestamps (createdAt/updatedAt)",
+            "✅ Utilise concertId comme ID du contrat (relation 1:1)",
+            "✅ Retourne le contrat sauvegardé",
+            "✅ Gestion des erreurs appropriée"
+          ],
+          "issues": []
+        },
+        "updateContratStatus": {
+          "status": "⚠️ WARNING",
+          "details": [
+            "✅ Met à jour la collection contrats",
+            "✅ Ajoute les timestamps spécifiques (finalizedAt, signedAt)",
+            "⚠️ Met aussi à jour la collection concerts",
+            "✅ Gestion des erreurs appropriée"
+          ],
+          "issues": [
+            {
+              "type": "warning",
+              "message": "Double mise à jour dans concerts et contrats",
+              "line": 109
+            }
+          ]
+        }
+      }
+    }
+  },
+  "fieldMapping": {
+    "status": "❌ CRITICAL",
+    "details": [
+      "❌ Incohérence majeure dans les noms de champs entre ContratGeneratorNew et contratService",
+      "❌ ContratGeneratorNew utilise \"producteur\" mais contratService cherche \"artiste\"",
+      "❌ ContratGeneratorNew utilise \"negociation\" mais contratService cherche \"conditions\"",
+      "❌ Validation échouera toujours car les champs n'existent pas"
+    ],
+    "issues": [
+      {
+        "type": "critical",
+        "message": "validateContratData cherche \"artiste.raisonSociale\" mais ContratGeneratorNew utilise \"producteur.raisonSociale\"",
+        "file": "contratService.js",
+        "line": 228
+      },
+      {
+        "type": "critical",
+        "message": "validateContratData cherche \"conditions.montantHT\" mais ContratGeneratorNew utilise \"negociation.montantNet\"",
+        "file": "contratService.js",
+        "line": 228
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "recommendation": "Corriger immédiatement le mapping des champs dans contratService.validateContratData()",
+      "details": "Les champs artiste et conditions doivent être remplacés par producteur et negociation"
+    },
+    {
+      "priority": "MEDIUM",
+      "recommendation": "Considérer la suppression de la double sauvegarde dans concerts",
+      "details": "Maintenir uniquement la collection contrats pour éviter les incohérences"
+    },
+    {
+      "priority": "LOW",
+      "recommendation": "Ajouter une validation du tauxTva dans validateContratData",
+      "details": "Le taux TVA est utilisé mais pas validé"
+    }
+  ]
+}

@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConcertsTableView from '@/components/concerts/ConcertsTableView';
 import useConcertDelete from '@/hooks/concerts/useConcertDelete';
+import { useConcertListData } from '@/hooks/concerts/useConcertListData';
+import { useConcertActions } from '@/hooks/concerts/useConcertActions';
 
 /**
  * Tableau des dates de concerts associées à un contact
@@ -11,6 +13,21 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null, onDele
   const navigate = useNavigate();
   
   console.log(`[ContactDatesTable] Rendu avec ${concerts.length} concerts pour contact ${contactId}`);
+
+  // Hooks pour les données et actions des concerts
+  const {
+    hasContract,
+    getContractStatus,
+    getContractData,
+    hasFacture,
+    getFactureStatus,
+    getFactureData
+  } = useConcertListData();
+  
+  const {
+    handleViewFacture,
+    handleGenerateFacture
+  } = useConcertActions();
 
   // Hook pour la suppression des concerts
   const { handleDeleteConcert: deleteConcert, isDeleting } = useConcertDelete(() => {
@@ -60,6 +77,15 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null, onDele
         onDelete={handleDeleteConcert}
         onEdit={handleEditConcert}
         showSearch={false}
+        // Props pour gérer les contrats et factures
+        hasContractFunc={hasContract}
+        getContractStatus={getContractStatus}
+        getContractData={getContractData}
+        hasFacture={hasFacture}
+        getFactureStatus={getFactureStatus}
+        getFactureData={getFactureData}
+        handleViewFacture={handleViewFacture}
+        handleGenerateFacture={handleGenerateFacture}
       />
     </div>
   );

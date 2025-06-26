@@ -16,7 +16,9 @@ const ContratActions = ({
   onMarkAsSigned, 
   onDownloadPdf,
   onDeleteContrat,
-  onNavigateBack
+  onNavigateBack,
+  onViewFacture,
+  onGenerateFacture
 }) => {
   return (
     <div className={styles.contratActions}>
@@ -95,6 +97,33 @@ const ContratActions = ({
               </>
             )}
           </Button>
+        )}
+        
+        {/* Boutons facture */}
+        {contrat && (contrat.status === 'signed' || contrat.status === 'sent') && (
+          <>
+            {contrat.factureId ? (
+              <Button 
+                variant="success" 
+                onClick={() => onViewFacture && onViewFacture(contrat.factureId)}
+                disabled={isLoading}
+                title="Voir la facture générée"
+              >
+                <i className="bi bi-receipt-cutoff"></i>
+                Voir la facture
+              </Button>
+            ) : (
+              <Button 
+                variant="info" 
+                onClick={() => onGenerateFacture && onGenerateFacture(concert.id)}
+                disabled={isLoading}
+                title="Générer une facture depuis ce contrat"
+              >
+                <i className="bi bi-receipt"></i>
+                Générer facture
+              </Button>
+            )}
+          </>
         )}
         
         {contrat && (

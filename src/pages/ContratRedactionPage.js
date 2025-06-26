@@ -4,6 +4,7 @@ import { Container, Row, Col, Alert, Button, Form } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
 import { db } from '@/services/firebase-service';
 import { doc, updateDoc, serverTimestamp } from '@/services/firebase-service';
+import contratService from '@/services/contratService';
 import ContratModelsModal from '@/components/contrats/modals/ContratModelsModal';
 import styles from './ContratRedactionPage.module.css';
 
@@ -11,12 +12,21 @@ import styles from './ContratRedactionPage.module.css';
  * Page de rédaction du contrat
  */
 const ContratRedactionPage = () => {
-  const { id } = useParams();
+  const { id: urlId } = useParams();
   const navigate = useNavigate();
-  const { updateTabTitle, openTab } = useTabs();
+  const { updateTabTitle, openTab, getActiveTab } = useTabs();
   const [showModelModal, setShowModelModal] = useState(false);
   const [selectedModels, setSelectedModels] = useState([]);
   const [hasSelectedModels, setHasSelectedModels] = useState(false);
+  
+  // Récupérer l'ID depuis les params de l'onglet ou l'URL
+  const activeTab = getActiveTab && getActiveTab();
+  const id = activeTab?.params?.contratId || activeTab?.params?.originalConcertId || urlId;
+  
+  // Log pour debug
+  console.log('[ContratRedactionPage] ID final utilisé:', id);
+  console.log('[ContratRedactionPage] ID depuis URL:', urlId);
+  console.log('[ContratRedactionPage] ID depuis params:', activeTab?.params);
   
   // États pour l'édition du contrat
   const [currentModel, setCurrentModel] = useState(null);
@@ -24,6 +34,13 @@ const ContratRedactionPage = () => {
   const [previewContent, setPreviewContent] = useState('');
   const [isContractFinished, setIsContractFinished] = useState(false);
   const [contractRef] = useState('1');
+  const [contratData, setContratData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  // Vérifier si on est en mode lecture seule (activeTab déjà déclaré plus haut)
+  const isReadOnly = activeTab?.params?.readOnly || false;
+  
+  console.log('[ContratRedactionPage] Mode lecture seule:', isReadOnly);
 
   // Mettre à jour le titre de l'onglet
   useEffect(() => {
@@ -32,31 +49,109 @@ const ContratRedactionPage = () => {
     }
   }, [id, updateTabTitle]);
 
-  // Vérifier si des modèles ont été choisis et ouvrir la modale si nécessaire
+  // Charger les données du contrat depuis la collection contrats
   useEffect(() => {
-    // Simulation : vérifier si le projet a déjà des modèles associés
-    // En réalité, il faudrait charger cette info depuis l'API
-    const checkProjectModels = async () => {
-      // Simuler un délai de chargement
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      const projectHasModels = false; // À remplacer par un appel API
-      
-      if (!projectHasModels) {
-        setShowModelModal(true);
-      } else {
-        setHasSelectedModels(true);
+    const loadContratData = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        console.log('[ContratRedactionPage] Début chargement - ID:', id);
+        console.log('[ContratRedactionPage] Chargement du contrat pour concert:', id);
+        const contrat = await contratService.getContratByConcert(id);
+        
+        if (contrat) {
+          console.log('[ContratRedactionPage] Contrat trouvé:', contrat);
+          console.log('[ContratRedactionPage] Contenu du contrat:', contrat.contratContenu ? 'Présent' : 'Absent');
+          console.log('[ContratRedactionPage] Modèles du contrat:', contrat.contratModeles);
+          console.log('[ContratRedactionPage] Statut du contrat:', contrat.status, '/ contratStatut:', contrat.contratStatut);
+          setContratData(contrat);
+          
+          // Si le contrat a déjà du contenu rédigé, le charger
+          if (contrat.contratContenu) {
+            setEditorContent(contrat.contratContenu);
+            setPreviewContent(contrat.contratContenu);
+          }
+          
+          // Si le contrat a des modèles sélectionnés, les charger
+          if (contrat.contratModeles && contrat.contratModeles.length > 0) {
+            setSelectedModels(contrat.contratModeles);
+            setHasSelectedModels(true);
+          }
+          
+          // Un contrat est terminé pour la rédaction seulement s'il a du contenu rédigé
+          // Le statut 'finalized' signifie juste que le formulaire est finalisé
+          if (contrat.contratStatut === 'redige' || contrat.contratContenu) {
+            console.log('[ContratRedactionPage] Contrat marqué comme rédigé - contratStatut:', contrat.contratStatut, 'hasContent:', !!contrat.contratContenu);
+            setIsContractFinished(true);
+          } else {
+            console.log('[ContratRedactionPage] Contrat non rédigé - peut être édité');
+            setIsContractFinished(false);
+          }
+          
+          // Si on est en mode lecture seule et qu'il y a du contenu, l'afficher directement
+          if (isReadOnly && contrat.contratContenu) {
+            console.log('[ContratRedactionPage] Mode lecture seule avec contenu - Affichage direct de l\'aperçu');
+            setPreviewContent(contrat.contratContenu);
+          } else if (isReadOnly && !contrat.contratContenu) {
+            console.log('[ContratRedactionPage] Mode lecture seule SANS contenu - Problème !');
+          }
+        }
+      } catch (error) {
+        console.error('[ContratRedactionPage] Erreur lors du chargement:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    
-    checkProjectModels();
+
+    loadContratData();
   }, [id]);
 
-  const handleModelsValidated = (models) => {
+  // Vérifier si des modèles ont été choisis et ouvrir la modale si nécessaire
+  useEffect(() => {
+    console.log('[ContratRedactionPage] useEffect modale - Conditions:', {
+      loading,
+      hasSelectedModels,
+      isContractFinished,
+      isReadOnly,
+      showModelModal
+    });
+    
+    if (!loading && !hasSelectedModels && !isContractFinished && !isReadOnly) {
+      // Vérifier si on vient du générateur de contrat
+      const activeTab = getActiveTab && getActiveTab();
+      const fromGenerator = activeTab?.params?.fromGenerator;
+      
+      console.log('[ContratRedactionPage] Vérification des modèles, fromGenerator:', fromGenerator);
+      console.log('[ContratRedactionPage] Ouverture de la modale de sélection des modèles');
+      
+      // Ouvrir la modale seulement si on n'a pas de modèles sélectionnés et qu'on n'est pas en lecture seule
+      setShowModelModal(true);
+    }
+  }, [loading, hasSelectedModels, isContractFinished, isReadOnly, getActiveTab]);
+
+  const handleModelsValidated = async (models) => {
     setSelectedModels(models);
     setHasSelectedModels(true);
-    // Ici on sauvegarderait les modèles sélectionnés en base
-    console.log('Modèles sélectionnés:', models);
+    console.log('[ContratRedactionPage] Modèles sélectionnés:', models);
+    
+    // Sauvegarder immédiatement les modèles sélectionnés
+    if (id && contratData) {
+      try {
+        console.log('[ContratRedactionPage] Sauvegarde des modèles sélectionnés');
+        const dataToUpdate = {
+          contratModeles: models.map(m => ({ id: m.id, nom: m.nom, type: m.type })),
+          updatedAt: serverTimestamp()
+        };
+        
+        await contratService.saveContrat(id, dataToUpdate, contratData.organizationId);
+        console.log('[ContratRedactionPage] Modèles sauvegardés avec succès');
+      } catch (error) {
+        console.error('[ContratRedactionPage] Erreur lors de la sauvegarde des modèles:', error);
+      }
+    }
   };
 
   // Gestion de la sélection d'un modèle dans le dropdown
@@ -102,25 +197,42 @@ const ContratRedactionPage = () => {
       
       // Marquer le contrat comme rédigé dans la base de données
       if (id) {
-        console.log('Marquage du contrat comme rédigé pour concert ID:', id);
+        console.log('[ContratRedactionPage] Marquage du contrat comme rédigé pour concert ID:', id);
         
-        // Mettre à jour le document du concert avec le statut contrat rédigé
+        // Préparer les données à sauvegarder
+        const dataToUpdate = {
+          contratContenu: editorContent,
+          contratModeles: selectedModels.map(m => ({ id: m.id, nom: m.nom, type: m.type })),
+          contratStatut: 'redige',
+          contratDateRedaction: serverTimestamp(),
+          status: contratData?.status || 'draft', // Garder le statut existant si déjà finalisé
+          updatedAt: serverTimestamp()
+        };
+
+        // Sauvegarder dans la collection contrats
+        await contratService.saveContrat(id, dataToUpdate, contratData?.organizationId);
+        
+        // Mettre à jour aussi le document du concert pour la rétrocompatibilité
         const concertRef = doc(db, 'concerts', id);
         await updateDoc(concertRef, {
           contratStatut: 'redige',
           contratDateRedaction: serverTimestamp(),
-          contratContenu: editorContent,
-          contratModeles: selectedModels.map(m => ({ id: m.id, nom: m.nom, type: m.type }))
+          contratId: id, // Ajouter la référence au contrat
+          contratStatus: 'redige', // Ajouter aussi ce champ pour être sûr
+          hasContratRedige: true, // Flag supplémentaire pour la détection
+          updatedAt: serverTimestamp()
         });
         
-        console.log('Contrat marqué comme rédigé avec succès');
+        console.log('[ContratRedactionPage] Contrat marqué comme rédigé avec succès');
         
-        // Optionnel : afficher une notification de succès
-        // Vous pouvez ajouter un toast ou une alerte ici
+        // Recharger les données
+        const updatedContrat = await contratService.getContratByConcert(id);
+        if (updatedContrat) {
+          setContratData(updatedContrat);
+        }
       }
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde du statut du contrat:', error);
-      // Optionnel : afficher une notification d'erreur
+      console.error('[ContratRedactionPage] Erreur lors de la sauvegarde du statut du contrat:', error);
     }
   };
 
@@ -152,6 +264,81 @@ const ContratRedactionPage = () => {
     }
   };
 
+  // Afficher un indicateur de chargement
+  if (loading) {
+    return (
+      <Container fluid className="p-4">
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Chargement...</span>
+          </div>
+          <p className="mt-3">Chargement du contrat...</p>
+        </div>
+      </Container>
+    );
+  }
+
+  // En mode lecture seule, afficher directement l'aperçu
+  console.log('[ContratRedactionPage] Conditions de rendu - isReadOnly:', isReadOnly, 'previewContent:', !!previewContent);
+  
+  // Si on est en mode lecture seule mais qu'il n'y a pas de contenu, rediriger vers le formulaire
+  if (isReadOnly && !previewContent && !loading) {
+    console.log('[ContratRedactionPage] Mode lecture seule sans contenu - Redirection vers le formulaire');
+    return (
+      <Container fluid className="p-4">
+        <Alert variant="info">
+          <i className="bi bi-info-circle me-2"></i>
+          Ce contrat n'a pas encore été rédigé. Redirection vers le formulaire...
+        </Alert>
+        {setTimeout(() => {
+          handleFormMode();
+        }, 1500)}
+      </Container>
+    );
+  }
+  
+  if (isReadOnly && previewContent) {
+    console.log('[ContratRedactionPage] Affichage de l\'aperçu en mode lecture seule');
+    return (
+      <Container fluid className="p-4">
+        <div className={styles.editorLayout}>
+          {/* Bandeau d'actions simplifié pour le mode lecture seule */}
+          <div className={styles.actionBar}>
+            <h5 className="mb-0 me-auto">
+              <i className="bi bi-file-earmark-check-fill me-2"></i>
+              Aperçu du contrat
+            </h5>
+            <Button
+              variant="outline-secondary"
+              onClick={handleFormMode}
+              className="me-2"
+            >
+              <i className="bi bi-pencil me-2"></i>
+              Modifier
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => window.print()}
+            >
+              <i className="bi bi-printer me-2"></i>
+              Imprimer
+            </Button>
+          </div>
+
+          {/* Aperçu direct du contrat */}
+          <div className={styles.previewContainer}>
+            <div 
+              className={styles.contractContent}
+              dangerouslySetInnerHTML={{ __html: previewContent }}
+            />
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
+  console.log('[ContratRedactionPage] Rendu final - hasSelectedModels:', hasSelectedModels, 'showModelModal:', showModelModal);
+  
   return (
     <Container fluid className="p-4">
       {/* Contenu principal - masqué si la modale est ouverte */}
@@ -337,9 +524,13 @@ const ContratRedactionPage = () => {
       )}
 
       {/* Modale de sélection des modèles */}
+      {console.log('[ContratRedactionPage] Rendu modale - show:', showModelModal, 'required:', !hasSelectedModels)}
       <ContratModelsModal
         show={showModelModal}
-        onHide={() => setShowModelModal(false)}
+        onHide={() => {
+          console.log('[ContratRedactionPage] Modale fermée par l\'utilisateur');
+          setShowModelModal(false);
+        }}
         onValidate={handleModelsValidated}
         selectedModels={selectedModels}
         required={!hasSelectedModels}

@@ -273,6 +273,8 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
         onNavigateBack={handleNavigateBack}
         // Désactiver le téléchargement si les données ne sont pas prêtes
         isDownloadDisabled={!contact && !lieu && !artiste}
+        onViewFacture={(factureId) => navigate(`/factures/${factureId}`)}
+        onGenerateFacture={(concertId) => navigate(`/factures/generate/${concertId}?fromContrat=true`)}
       />
 
       {/* Display action errors if any */}

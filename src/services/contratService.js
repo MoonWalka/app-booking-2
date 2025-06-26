@@ -1,0 +1,270 @@
+import { 
+  doc, 
+  collection, 
+  setDoc, 
+  getDoc, 
+  getDocs,
+  query, 
+  where, 
+  orderBy,
+  updateDoc,
+  serverTimestamp,
+  Timestamp
+} from 'firebase/firestore';
+import { db } from './firebase-service';
+
+/**
+ * Service de gestion des contrats
+ */
+const contratService = {
+  /**
+   * Sauvegarde ou met à jour un contrat
+   * @param {string} concertId - ID du concert
+   * @param {Object} contratData - Données du contrat
+   * @param {string} organizationId - ID de l'organisation
+   * @returns {Promise<Object>} Le contrat sauvegardé
+   */
+  async saveContrat(concertId, contratData, organizationId) {
+    try {
+      console.log('[ContratService] Sauvegarde du contrat pour concert:', concertId);
+      
+      // Préparer les données du contrat
+      const contratToSave = {
+        ...contratData,
+        concertId,
+        organizationId,
+        updatedAt: serverTimestamp(),
+        // Si c'est une nouvelle création, ajouter createdAt
+        ...(contratData.createdAt ? {} : { createdAt: serverTimestamp() }),
+        // Statut par défaut si non défini
+        status: contratData.status || 'draft'
+      };
+
+      // Utiliser l'ID du concert comme ID du contrat pour maintenir la relation 1:1
+      const contratRef = doc(db, 'contrats', concertId);
+      await setDoc(contratRef, contratToSave, { merge: true });
+
+      console.log('[ContratService] Contrat sauvegardé avec succès');
+      
+      // Retourner le contrat sauvegardé avec son ID
+      return {
+        id: concertId,
+        ...contratToSave,
+        updatedAt: new Date(),
+        createdAt: contratData.createdAt || new Date()
+      };
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la sauvegarde du contrat:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Récupère un contrat par l'ID du concert
+   * @param {string} concertId - ID du concert
+   * @returns {Promise<Object|null>} Le contrat ou null
+   */
+  async getContratByConcert(concertId) {
+    try {
+      console.log('[ContratService] Récupération du contrat pour concert:', concertId);
+      
+      const contratRef = doc(db, 'contrats', concertId);
+      const contratDoc = await getDoc(contratRef);
+      
+      if (contratDoc.exists()) {
+        const contratData = {
+          id: contratDoc.id,
+          ...contratDoc.data()
+        };
+        console.log('[ContratService] Contrat trouvé:', contratData);
+        return contratData;
+      }
+      
+      console.log('[ContratService] Aucun contrat trouvé pour ce concert');
+      return null;
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la récupération du contrat:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Met à jour le statut d'un contrat
+   * @param {string} concertId - ID du concert
+   * @param {string} status - Nouveau statut ('draft', 'finalized', 'signed')
+   * @returns {Promise<void>}
+   */
+  async updateContratStatus(concertId, status) {
+    try {
+      console.log('[ContratService] Mise à jour du statut du contrat:', concertId, status);
+      
+      const contratRef = doc(db, 'contrats', concertId);
+      await updateDoc(contratRef, {
+        status,
+        updatedAt: serverTimestamp(),
+        [`${status}At`]: serverTimestamp() // Ex: finalizedAt, signedAt
+      });
+      
+      // Mettre à jour aussi le statut dans le concert
+      const concertRef = doc(db, 'concerts', concertId);
+      await updateDoc(concertRef, {
+        contratStatus: status,
+        contratId: concertId,
+        updatedAt: serverTimestamp()
+      });
+      
+      console.log('[ContratService] Statut du contrat mis à jour avec succès');
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la mise à jour du statut:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Finalise un contrat (le verrouille)
+   * @param {string} concertId - ID du concert
+   * @param {string} contratNumber - Numéro de contrat généré
+   * @returns {Promise<void>}
+   */
+  async finalizeContrat(concertId, contratNumber) {
+    try {
+      console.log('[ContratService] Finalisation du contrat:', concertId);
+      
+      const contratRef = doc(db, 'contrats', concertId);
+      await updateDoc(contratRef, {
+        status: 'finalized',
+        contratNumber,
+        finalizedAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+      
+      // Mettre à jour le concert
+      const concertRef = doc(db, 'concerts', concertId);
+      await updateDoc(concertRef, {
+        contratStatus: 'finalized',
+        contratNumber,
+        updatedAt: serverTimestamp()
+      });
+      
+      console.log('[ContratService] Contrat finalisé avec succès');
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la finalisation:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Récupère tous les contrats d'une organisation
+   * @param {string} organizationId - ID de l'organisation
+   * @returns {Promise<Array>} Liste des contrats
+   */
+  async getContratsByOrganization(organizationId) {
+    try {
+      console.log('[ContratService] Récupération des contrats pour organisation:', organizationId);
+      
+      const contratsQuery = query(
+        collection(db, 'contrats'),
+        where('organizationId', '==', organizationId),
+        orderBy('updatedAt', 'desc')
+      );
+      
+      const snapshot = await getDocs(contratsQuery);
+      const contrats = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      console.log('[ContratService] Contrats trouvés:', contrats.length);
+      return contrats;
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la récupération des contrats:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Génère un numéro de contrat unique
+   * @param {string} organizationId - ID de l'organisation
+   * @returns {Promise<string>} Numéro de contrat
+   */
+  async generateContratNumber(organizationId) {
+    try {
+      // Format: CONT-YYYY-XXXX (ex: CONT-2024-0001)
+      const year = new Date().getFullYear();
+      
+      // Compter les contrats de l'année en cours
+      const startOfYear = new Date(year, 0, 1);
+      const contratsQuery = query(
+        collection(db, 'contrats'),
+        where('organizationId', '==', organizationId),
+        where('createdAt', '>=', Timestamp.fromDate(startOfYear))
+      );
+      
+      const snapshot = await getDocs(contratsQuery);
+      const count = snapshot.size + 1;
+      const number = String(count).padStart(4, '0');
+      
+      return `CONT-${year}-${number}`;
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la génération du numéro:', error);
+      // Fallback avec timestamp
+      return `CONT-${Date.now()}`;
+    }
+  },
+
+  /**
+   * Valide les données requises pour un contrat
+   * @param {Object} contratData - Données du contrat
+   * @returns {Object} { isValid: boolean, errors: string[] }
+   */
+  validateContratData(contratData) {
+    const errors = [];
+    const requiredFields = [
+      { field: 'organisateur.raisonSociale', label: 'Raison sociale de l\'organisateur' },
+      { field: 'organisateur.adresse', label: 'Adresse de l\'organisateur' },
+      { field: 'organisateur.codePostal', label: 'Code postal de l\'organisateur' },
+      { field: 'organisateur.ville', label: 'Ville de l\'organisateur' },
+      { field: 'producteur.raisonSociale', label: 'Nom du producteur' },
+      { field: 'negociation.montantNet', label: 'Montant net HT' },
+      { field: 'negociation.tauxTva', label: 'Taux de TVA' }
+    ];
+
+    requiredFields.forEach(({ field, label }) => {
+      const value = field.split('.').reduce((obj, key) => obj?.[key], contratData);
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        errors.push(label);
+      }
+    });
+
+    // Validation spécifique pour les montants
+    if (contratData.negociation?.montantNet && isNaN(parseFloat(contratData.negociation.montantNet))) {
+      errors.push('Le montant net HT doit être un nombre valide');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  },
+
+  /**
+   * Valide seulement les données minimales pour la sauvegarde automatique
+   * @param {Object} contratData - Données du contrat
+   * @returns {Object} { isValid: boolean, errors: string[] }
+   */
+  validateMinimalData(contratData) {
+    const errors = [];
+    
+    // Pour la sauvegarde automatique, on vérifie juste qu'on a au moins quelques données de base
+    if (!contratData.organisateur?.raisonSociale && !contratData.producteur?.raisonSociale) {
+      errors.push('Au moins l\'organisateur ou le producteur doit être renseigné');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  }
+};
+
+export default contratService;

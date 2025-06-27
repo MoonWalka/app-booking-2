@@ -7,6 +7,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 import { doc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import contratService from '@/services/contratService';
+import devisService from '@/services/devisService';
 import styles from './ContratGeneratorNew.module.css';
 
 /**
@@ -33,6 +34,9 @@ const ContratGeneratorNew = ({
   
   // État pour les paramètres de facturation (incluant TVA)
   const [factureParams, setFactureParams] = useState(null);
+  
+  // État pour les données du devis
+  const [devisData, setDevisData] = useState(null);
   
   // État pour les données du contrat
   const [contratData, setContratData] = useState({
@@ -244,6 +248,33 @@ const ContratGeneratorNew = ({
     };
     
     loadExistingContrat();
+  }, [concertId]);
+
+  // Charger le devis associé au concert
+  useEffect(() => {
+    const loadDevisDuConcert = async () => {
+      if (!concertId) return;
+
+      try {
+        console.log('[ContratGeneratorNew] Recherche devis pour concert:', concertId);
+        
+        // Chercher les devis pour ce concert
+        const devisList = await devisService.getDevisByConcert(concertId);
+        
+        if (devisList && devisList.length > 0) {
+          // Prendre le devis le plus récent
+          const latestDevis = devisList[0];
+          console.log('[ContratGeneratorNew] Devis trouvé:', latestDevis);
+          setDevisData(latestDevis);
+        } else {
+          console.log('[ContratGeneratorNew] Aucun devis trouvé pour ce concert');
+        }
+      } catch (error) {
+        console.error('[ContratGeneratorNew] Erreur chargement devis:', error);
+      }
+    };
+    
+    loadDevisDuConcert();
   }, [concertId]);
 
   // Initialiser les données depuis les props
@@ -720,15 +751,32 @@ const ContratGeneratorNew = ({
   };
 
   const addPrestation = () => {
-    setContratData(prev => ({
-      ...prev,
-      prestations: [...prev.prestations, {
-        id: Date.now(),
-        objet: '',
-        montantHT: '',
-        tauxTva: factureParams?.tauxTva?.toString() || '0'
-      }]
-    }));
+    // Si on a un devis et qu'on n'a pas encore de prestations
+    if (devisData && devisData.lignesObjet && devisData.lignesObjet.length > 0 && contratData.prestations.length === 0) {
+      // Ajouter toutes les lignes du devis
+      const nouvellesPrestations = devisData.lignesObjet.map((ligne, index) => ({
+        id: Date.now() + index,
+        objet: ligne.objet || 'Prestation',
+        montantHT: ligne.montantHT?.toString() || '0',
+        tauxTva: ligne.tauxTVA?.toString() || factureParams?.tauxTva?.toString() || '20'
+      }));
+      
+      setContratData(prev => ({
+        ...prev,
+        prestations: [...prev.prestations, ...nouvellesPrestations]
+      }));
+    } else {
+      // Comportement par défaut : ajouter une ligne vide
+      setContratData(prev => ({
+        ...prev,
+        prestations: [...prev.prestations, {
+          id: Date.now(),
+          objet: '',
+          montantHT: '',
+          tauxTva: factureParams?.tauxTva?.toString() || '0'
+        }]
+      }));
+    }
   };
 
   const removePrestation = (id) => {
@@ -1790,39 +1838,80 @@ const ContratGeneratorNew = ({
               {/* Section Devis */}
               {activeTab === 'devis' && (
                 <>
-                  {concert?.devisId ? (
+                  {devisData ? (
                     <>
+                      <Alert variant="info" className="small p-2">
+                        <i className="bi bi-file-earmark-text me-2"></i>
+                        Devis {devisData.numero || 'Sans numéro'}
+                      </Alert>
+                      
                       <div className="mb-3">
                         <h6>Informations devis</h6>
-                        <p className="small mb-1"><strong>Statut:</strong> <span className="text-success">Créé</span></p>
-                        <p className="small mb-1"><strong>Date:</strong> {concert?.devisDate ? new Date(concert.devisDate).toLocaleDateString('fr-FR') : 'Non daté'}</p>
-                        <p className="small mb-1"><strong>Référence:</strong> {concert?.devisRef || `DEV-${concert?.devisId?.slice(-6)}`}</p>
+                        <p className="small mb-1"><strong>Statut:</strong> 
+                          <span className={`ms-1 ${
+                            devisData.statut === 'accepte' ? 'text-success' : 
+                            devisData.statut === 'envoye' ? 'text-info' :
+                            devisData.statut === 'refuse' ? 'text-danger' :
+                            'text-warning'
+                          }`}>
+                            {devisData.statut ? devisData.statut.charAt(0).toUpperCase() + devisData.statut.slice(1) : 'Brouillon'}
+                          </span>
+                        </p>
+                        <p className="small mb-1"><strong>Date:</strong> {devisData.createdAt ? new Date(devisData.createdAt).toLocaleDateString('fr-FR') : 'Non daté'}</p>
+                        <p className="small mb-1"><strong>Validité:</strong> {devisData.dateValidite ? new Date(devisData.dateValidite).toLocaleDateString('fr-FR') : '30 jours'}</p>
                       </div>
+                      
                       <div className="mb-3">
-                        <h6>Prestations</h6>
-                        <p className="small mb-1"><strong>Nombre:</strong> {concert?.devisNbPrestations || '0'}</p>
-                        <p className="small mb-1"><strong>Détail:</strong> {concert?.devisDescription || 'Prestation artistique'}</p>
+                        <h6>Destinataire</h6>
+                        <p className="small mb-1"><strong>Structure:</strong> {devisData.structureNom || '-'}</p>
+                        <p className="small mb-1"><strong>Contact:</strong> {devisData.contactNom || '-'}</p>
+                        <p className="small mb-1"><strong>Adresse:</strong> {devisData.adresseAdministrative || '-'}</p>
                       </div>
+                      
+                      {devisData.lignesObjet && devisData.lignesObjet.length > 0 && (
+                        <div className="mb-3">
+                          <h6>Prestations</h6>
+                          {devisData.lignesObjet.map((ligne, index) => (
+                            <div key={index} className="small mb-2 p-2 bg-light rounded">
+                              <p className="mb-1"><strong>{ligne.objet}</strong></p>
+                              <p className="mb-0 text-muted">
+                                {ligne.quantite} {ligne.unite} × {ligne.prixUnitaire ? `${ligne.prixUnitaire.toLocaleString('fr-FR')} €` : '0 €'} 
+                                = {ligne.montantHT ? `${ligne.montantHT.toLocaleString('fr-FR')} € HT` : '0 € HT'}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
                       <div className="mb-3">
                         <h6>Montants</h6>
-                        <p className="small mb-1"><strong>Total HT:</strong> {concert?.devisMontantHT || '0.00'} €</p>
-                        <p className="small mb-1"><strong>TVA:</strong> {concert?.devisTVA || '0.00'} €</p>
-                        <p className="small mb-1"><strong>Total TTC:</strong> {concert?.devisMontantTTC || '0.00'} €</p>
+                        <p className="small mb-1"><strong>Total HT:</strong> {devisData.totalHT ? `${devisData.totalHT.toLocaleString('fr-FR')} €` : '0.00 €'}</p>
+                        <p className="small mb-1"><strong>TVA:</strong> {devisData.totalTVA ? `${devisData.totalTVA.toLocaleString('fr-FR')} €` : '0.00 €'}</p>
+                        <p className="small mb-1 fw-bold"><strong>Total TTC:</strong> {devisData.totalTTC ? `${devisData.totalTTC.toLocaleString('fr-FR')} €` : '0.00 €'}</p>
                       </div>
-                      <div className="mb-3">
-                        <h6>Conditions</h6>
-                        <p className="small mb-1"><strong>Validité:</strong> {concert?.devisValidite || '30 jours'}</p>
-                        <p className="small mb-1"><strong>Conditions:</strong> {concert?.devisConditions || 'Standard'}</p>
-                      </div>
-                      <Button variant="outline-primary" size="sm" className="w-100">
+                      
+                      <Button 
+                        variant="outline-primary" 
+                        size="sm" 
+                        className="w-100"
+                        onClick={() => openTab({
+                          id: `devis-${devisData.id}`,
+                          title: `${devisData.numero || 'Devis'} - ${devisData.structureNom || ''}`,
+                          path: `/devis/${devisData.id}`,
+                          component: 'DevisPage',
+                          params: { devisId: devisData.id },
+                          icon: 'bi-file-earmark-text'
+                        })}
+                      >
                         <i className="bi bi-eye me-2"></i>
-                        Voir le devis
+                        Voir le devis complet
                       </Button>
                     </>
                   ) : (
-                    <p className="text-muted small text-center">
-                      Aucun devis créé pour ce dossier
-                    </p>
+                    <Alert variant="warning" className="small p-2">
+                      <i className="bi bi-exclamation-triangle me-2"></i>
+                      Aucun devis créé pour ce concert
+                    </Alert>
                   )}
                 </>
               )}

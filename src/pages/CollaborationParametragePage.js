@@ -5,7 +5,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import GroupesPermissionsManager from '../components/parametrage/GroupesPermissionsManager';
-import EntreprisesManager from '../components/collaboration/EntreprisesManager';
+import EntreprisesManager from '../components/collaboration/EntreprisesManagerFirebase';
 import CollaborateursManager from '../components/collaboration/CollaborateursManager';
 import styles from './CollaborationParametragePage.module.css';
 

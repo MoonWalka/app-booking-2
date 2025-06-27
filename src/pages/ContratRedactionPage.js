@@ -203,23 +203,19 @@ const ContratRedactionPage = () => {
         const dataToUpdate = {
           contratContenu: editorContent,
           contratModeles: selectedModels.map(m => ({ id: m.id, nom: m.nom, type: m.type })),
-          contratStatut: 'redige',
           contratDateRedaction: serverTimestamp(),
-          status: contratData?.status || 'draft', // Garder le statut existant si déjà finalisé
+          status: 'generated', // Un contrat avec du contenu est au minimum généré
           updatedAt: serverTimestamp()
         };
 
         // Sauvegarder dans la collection contrats
         await contratService.saveContrat(id, dataToUpdate, contratData?.organizationId);
         
-        // Mettre à jour aussi le document du concert pour la rétrocompatibilité
+        // Mettre à jour le statut dans le concert
         const concertRef = doc(db, 'concerts', id);
         await updateDoc(concertRef, {
-          contratStatut: 'redige',
-          contratDateRedaction: serverTimestamp(),
-          contratId: id, // Ajouter la référence au contrat
-          contratStatus: 'redige', // Ajouter aussi ce champ pour être sûr
-          hasContratRedige: true, // Flag supplémentaire pour la détection
+          contratId: id, // Référence au contrat
+          contratStatus: 'generated', // Statut synchronisé avec la collection contrats
           updatedAt: serverTimestamp()
         });
         

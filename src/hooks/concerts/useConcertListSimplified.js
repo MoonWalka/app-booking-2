@@ -82,7 +82,14 @@ export const useConcertListSimplified = () => {
   const hasForm = useCallback((concert) => !!concert.formId, []);
   const hasUnvalidatedForm = useCallback((concert) => concert.formId && !concert.formValidated, []);
   const hasContract = useCallback((concert) => !!concert.contratId, []);
-  const getContractStatus = useCallback((concert) => concert.contratStatus || 'draft', []);
+  const getContractStatus = useCallback((concert) => {
+    // Utiliser le statut du contrat s'il existe
+    if (concert.contratStatus) return concert.contratStatus;
+    // Logique de fallback : si le contrat est rédigé, il est au moins finalisé
+    if (concert.contratStatut === 'redige' || concert.hasContratRedige) return 'finalized';
+    // Sinon, statut par défaut
+    return 'draft';
+  }, []);
 
   return {
     // Données

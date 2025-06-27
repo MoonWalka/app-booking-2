@@ -34,7 +34,7 @@ const ConcertsTableView = ({
   handleViewFacture,
   handleGenerateFacture
 }) => {
-  const { openTab, openContactTab, openPreContratTab, openContratTab, openNewDevisTab } = useTabs();
+  const { openTab, openContactTab, openPreContratTab, openContratTab, openNewDevisTab, openDevisTab } = useTabs();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -218,21 +218,70 @@ const ConcertsTableView = ({
       label: 'Devis',
       key: 'devis',
       sortable: false,
-      render: (item) => (
-        <button
-          className={datesTableStyles.iconButton}
-          onClick={(e) => {
+      render: (item) => {
+        const hasDevis = item.hasDevis || item.devisId;
+        const devisStatut = item.devisStatut || 'brouillon';
+        
+        let iconClass = 'bi-file-earmark-text';
+        let iconColor = datesTableStyles.iconDefault;
+        let title = 'Créer un devis';
+        let onClick;
+        
+        if (hasDevis) {
+          // Le devis existe
+          title = `Voir le devis ${item.devisNumero || ''}`;
+          
+          // Changer l'icône selon le statut
+          switch (devisStatut) {
+            case 'envoye':
+              iconClass = 'bi-file-earmark-text-fill';
+              iconColor = datesTableStyles.iconInfo;
+              break;
+            case 'accepte':
+              iconClass = 'bi-file-earmark-check-fill';
+              iconColor = datesTableStyles.iconSuccess;
+              break;
+            case 'refuse':
+              iconClass = 'bi-file-earmark-x-fill';
+              iconColor = datesTableStyles.iconDanger;
+              break;
+            case 'annule':
+              iconClass = 'bi-file-earmark-x';
+              iconColor = datesTableStyles.iconMuted;
+              break;
+            default: // brouillon
+              iconClass = 'bi-file-earmark-text-fill';
+              iconColor = datesTableStyles.iconDefault;
+          }
+          
+          onClick = (e) => {
+            e.stopPropagation();
+            if (openDevisTab) {
+              const devisTitle = `${item.devisNumero || 'Devis'} - ${item.artisteNom || 'Concert'}`;
+              openDevisTab(item.devisId, devisTitle);
+            }
+          };
+        } else {
+          // Pas de devis, créer un nouveau
+          onClick = (e) => {
             e.stopPropagation();
             if (openNewDevisTab) {
               const title = `Nouveau Devis - ${item.artisteNom || 'Concert'}`;
-              openNewDevisTab(item.id, item.structureId, title);
+              openNewDevisTab(item.id, item.structureId || item.organisateurId, title);
             }
-          }}
-          title="Créer un devis"
-        >
-          <i className={`bi bi-file-earmark-text ${datesTableStyles.iconDevis}`}></i>
-        </button>
-      )
+          };
+        }
+        
+        return (
+          <button
+            className={datesTableStyles.iconButton}
+            onClick={onClick}
+            title={title}
+          >
+            <i className={`bi ${iconClass} ${iconColor}`}></i>
+          </button>
+        );
+      }
     },
     {
       label: 'Pré contrat',
@@ -309,10 +358,11 @@ const ConcertsTableView = ({
       key: 'contratFinal',
       sortable: false,
       render: (item) => {
-        const hasContrat = item.contratStatut === 'redige' || item.contratStatus || item.hasContrat || item.contratId;
-        // Un contrat est vraiment rédigé seulement s'il a le statut 'redige' (avec contenu)
-        // Le statut 'finalized' signifie juste que le formulaire est finalisé, pas qu'il est rédigé
-        const isRedige = item.contratStatut === 'redige' || item.hasContratRedige;
+        // Simplification : utiliser la fonction fournie ou vérifier l'ID du contrat
+        const hasContrat = hasContractFunc ? hasContractFunc(item.id) : (item.contratId ? true : false);
+        // Le contrat est rédigé s'il a un statut (depuis la collection contrats)
+        const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
+        const isRedige = contractStatus && contractStatus !== 'draft';
         
         return (
           <button
@@ -320,12 +370,10 @@ const ConcertsTableView = ({
             onClick={(e) => {
               e.stopPropagation();
               console.log('[ConcertsTableView] Clic sur icône contrat pour concert:', item.id);
-              console.log('[ConcertsTableView] État du contrat - hasContrat:', hasContrat, 'isRedige:', isRedige);
-              console.log('[ConcertsTableView] Détails item:', {
-                contratStatut: item.contratStatut,
-                contratStatus: item.contratStatus,
-                hasContratRedige: item.hasContratRedige,
-                contratId: item.contratId
+              console.log('[ConcertsTableView] État du contrat - hasContrat:', hasContrat, 'isRedige:', isRedige, 'status:', contractStatus);
+              console.log('[ConcertsTableView] Détails:', {
+                contratId: item.contratId,
+                status: contractStatus
               });
               if (openContratTab) {
                 const concertTitle = item.artisteNom || item.titre || 'Concert';
@@ -369,8 +417,8 @@ const ConcertsTableView = ({
         // Déterminer si on peut générer une facture
         const hasContract = hasContractFunc ? hasContractFunc(item.id) : false;
         const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
-        // Un contrat peut être facturé s'il est finalisé, signé ou envoyé
-        const canGenerateFacture = hasContract && (contractStatus === 'signed' || contractStatus === 'finalized' || contractStatus === 'sent');
+        // Un contrat peut être facturé s'il est finalisé, signé, envoyé ou en draft (rédigé)
+        const canGenerateFacture = hasContract && (contractStatus === 'signed' || contractStatus === 'finalized' || contractStatus === 'sent' || contractStatus === 'draft');
         
         console.log('[ConcertsTableView] A un contrat:', hasContract);
         console.log('[ConcertsTableView] Statut contrat:', contractStatus);

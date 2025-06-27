@@ -95,12 +95,24 @@ const TableauDeBordPage = () => {
                 });
                 // Ajouter les infos du contrat au concert
                 concertData.contratId = contrat.id;
-                concertData.contratStatus = contrat.status;
+                // Utiliser le statut réel du contrat depuis la collection 'contrats'
+                concertData.contratStatus = contrat.status || 'draft';
                 concertData.contratNumber = contrat.contratNumber;
+                console.log('[TableauDeBordPage] Statut contrat assigné:', {
+                  concertId: doc.id,
+                  contratId: contrat.id,
+                  status: contrat.status,
+                  assignedStatus: concertData.contratStatus
+                });
                 // Si le contrat a un statut 'redige' dans la collection contrats
                 if (contrat.contratStatut === 'redige') {
                   concertData.contratStatut = 'redige';
                   concertData.hasContratRedige = true;
+                }
+                // Logique de fallback : si le contrat a du contenu et un timestamp de finalisation, c'est finalisé
+                if (!contrat.status && contrat.finalizedAt && contrat.contratContenu) {
+                  console.log('[TableauDeBordPage] Fallback: contrat détecté comme finalisé');
+                  concertData.contratStatus = 'finalized';
                 }
                 // Ajouter les infos de facture liée au contrat
                 if (contrat.factureId) {
@@ -111,6 +123,40 @@ const TableauDeBordPage = () => {
               }
             } catch (error) {
               console.error('Erreur chargement contrat pour concert', doc.id, error);
+            }
+            
+            // Charger les données du devis pour ce concert
+            try {
+              // Requête simplifiée pour éviter l'index composite
+              const devisQuery = query(
+                collection(db, 'devis'),
+                where('concertId', '==', doc.id)
+              );
+              const devisSnapshot = await getDocs(devisQuery);
+              
+              if (!devisSnapshot.empty) {
+                // Trier localement par date de création
+                const devisDocs = devisSnapshot.docs.map(doc => ({
+                  id: doc.id,
+                  ...doc.data()
+                }));
+                
+                devisDocs.sort((a, b) => {
+                  const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                  const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                  return dateB - dateA;
+                });
+                
+                // Prendre le plus récent
+                const latestDevis = devisDocs[0];
+                
+                concertData.devisId = latestDevis.id;
+                concertData.devisStatut = latestDevis.statut || 'brouillon';
+                concertData.devisNumero = latestDevis.numero;
+                concertData.hasDevis = true;
+              }
+            } catch (error) {
+              console.error('Erreur chargement devis pour concert', doc.id, error);
             }
             
             return concertData;
@@ -631,6 +677,16 @@ const TableauDeBordPage = () => {
                 }}
                 getContractStatus={(concertId) => {
                   const concert = concerts.find(c => c.id === concertId);
+                  // Log pour debug
+                  if (concert && concert.contratId) {
+                    console.log('[TableauDeBordPage] getContractStatus pour concert:', concertId, {
+                      contratId: concert.contratId,
+                      contratStatus: concert.contratStatus,
+                      contratStatut: concert.contratStatut,
+                      hasContratRedige: concert.hasContratRedige
+                    });
+                  }
+                  // Utiliser le vrai statut du contrat chargé depuis la collection 'contrats'
                   return concert?.contratStatus || null;
                 }}
                 getContractData={(concertId) => {

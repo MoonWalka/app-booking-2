@@ -278,21 +278,26 @@ export const createDatesTableColumns = (hooks = {}, styles = {}) => {
       key: 'contratFinal',
       sortable: false,
       render: (item) => {
-        // Déterminer l'état du contrat basé sur contratStatut
-        const contratStatut = item.contratStatut;
-        const hasContrat = item.contratId || contratStatut;
+        // Utiliser le statut du contrat pour déterminer l'état
+        const hasContrat = item.contratId;
+        const contratStatus = item.contratStatus;
         
         let iconClass, title, action;
         
-        if (contratStatut === 'redige') {
-          // Contrat rédigé et terminé - icône verte
+        if (contratStatus === 'finalized' || contratStatus === 'sent' || contratStatus === 'signed') {
+          // Contrat finalisé - icône verte
           iconClass = "bi bi-file-earmark-check-fill text-success";
-          title = "Contrat rédigé - Voir";
+          title = "Contrat finalisé - Voir";
+          action = () => openContratTab && openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+        } else if (contratStatus === 'generated' || contratStatus === 'draft') {
+          // Contrat en cours - icône orange
+          iconClass = "bi bi-file-earmark-text-fill text-warning";
+          title = "Contrat en cours - Continuer";
           action = () => openContratTab && openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         } else if (hasContrat) {
-          // Contrat en cours de rédaction - icône orange
+          // Contrat existant mais statut inconnu - icône orange
           iconClass = "bi bi-file-earmark-text-fill text-warning";
-          title = "Contrat en cours - Continuer la rédaction";
+          title = "Voir le contrat";
           action = () => openContratTab && openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
         } else {
           // Aucun contrat - icône grise

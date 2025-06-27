@@ -264,7 +264,15 @@ const TabManagerProduction = () => {
           console.log('[TabManager] factureId passé:', activeTab.params?.factureId);
           return <FactureDetailsPage />;
         case 'DevisPage':
-          return <DevisPage />;
+          console.log('[TabManager] Rendu DevisPage avec activeTab:', activeTab);
+          console.log('[TabManager] devisId passé:', activeTab.params?.devisId);
+          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          console.log('[TabManager] structureId passé:', activeTab.params?.structureId);
+          return <DevisPage 
+            devisId={activeTab.params?.devisId}
+            concertId={activeTab.params?.concertId}
+            structureId={activeTab.params?.structureId}
+          />;
         case 'ParametresPage':
           return <ParametresPage />;
         case 'BookingParametragePage':

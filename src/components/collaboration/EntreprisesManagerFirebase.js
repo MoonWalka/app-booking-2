@@ -54,7 +54,11 @@ const EntreprisesManagerFirebase = () => {
         siret: '',
         ape: '',
         licence: '',
-        tva: ''
+        tva: '',
+        // Informations bancaires détaillées
+        iban: '',
+        bic: '',
+        banque: ''
     });
 
     // Charger les entreprises depuis Firebase
@@ -64,16 +68,15 @@ const EntreprisesManagerFirebase = () => {
             
             setLoading(true);
             try {
+                let loadedEntreprises = [];
+                
                 // Charger depuis collaborationConfig
                 const configDoc = await getDoc(doc(db, 'collaborationConfig', currentOrganization.id));
                 
                 if (configDoc.exists()) {
                     const data = configDoc.data();
                     if (data.entreprises && Array.isArray(data.entreprises)) {
-                        setEntreprisesList(data.entreprises);
-                        if (data.entreprises.length > 0) {
-                            setSelectedEntreprise(data.entreprises[0]);
-                        }
+                        loadedEntreprises = data.entreprises;
                     }
                 }
                 
@@ -90,14 +93,17 @@ const EntreprisesManagerFirebase = () => {
                         ape: entrepriseDoc.data().codeAPE || entrepriseDoc.data().ape
                     };
                     
-                    // Ajouter l'entreprise principale si elle n'est pas déjà dans la liste
-                    const existingMain = entreprisesList.find(e => e.id === 'main');
+                    // Vérifier si l'entreprise principale n'est pas déjà dans la liste chargée
+                    const existingMain = loadedEntreprises.find(e => e.id === 'main');
                     if (!existingMain) {
-                        setEntreprisesList(prev => [mainEntreprise, ...prev]);
-                        if (!selectedEntreprise) {
-                            setSelectedEntreprise(mainEntreprise);
-                        }
+                        loadedEntreprises = [mainEntreprise, ...loadedEntreprises];
                     }
+                }
+                
+                // Mettre à jour l'état une seule fois
+                setEntreprisesList(loadedEntreprises);
+                if (loadedEntreprises.length > 0) {
+                    setSelectedEntreprise(loadedEntreprises[0]);
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des entreprises:', error);
@@ -193,7 +199,9 @@ const EntreprisesManagerFirebase = () => {
             // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
             if (currentEntreprise.principal || currentEntreprise.id === 'main') {
                 const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
-                await setDoc(entrepriseRef, {
+                
+                // Préparer les données en nettoyant les undefined
+                const dataToSave = cleanUndefinedValues({
                     nom: currentEntreprise.raisonSociale,
                     adresse: currentEntreprise.adresse,
                     codePostal: currentEntreprise.codePostal,
@@ -208,8 +216,13 @@ const EntreprisesManagerFirebase = () => {
                     representantLegal: currentEntreprise.signataire,
                     qualiteRepresentant: currentEntreprise.fonction,
                     coordonneesBancaires: currentEntreprise.coordonneesBancaires,
+                    iban: currentEntreprise.iban,
+                    bic: currentEntreprise.bic,
+                    banque: currentEntreprise.banque,
                     updatedAt: new Date().toISOString()
                 });
+                
+                await setDoc(entrepriseRef, dataToSave);
             }
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
@@ -243,6 +256,17 @@ const EntreprisesManagerFirebase = () => {
         }
     };
 
+    // Fonction pour nettoyer les valeurs undefined
+    const cleanUndefinedValues = (obj) => {
+        const cleaned = {};
+        Object.keys(obj).forEach(key => {
+            if (obj[key] !== undefined) {
+                cleaned[key] = obj[key];
+            }
+        });
+        return cleaned;
+    };
+
     const saveEntreprisesToFirebase = async (entreprises) => {
         if (!currentOrganization?.id) return;
         
@@ -251,9 +275,12 @@ const EntreprisesManagerFirebase = () => {
         
         const configData = configDoc.exists() ? configDoc.data() : {};
         
+        // Nettoyer les entreprises avant de sauvegarder
+        const cleanedEntreprises = entreprises.map(e => cleanUndefinedValues(e));
+        
         await setDoc(configRef, {
             ...configData,
-            entreprises: entreprises,
+            entreprises: cleanedEntreprises,
             updatedAt: new Date(),
             organizationId: currentOrganization.id
         }, { merge: true });
@@ -274,7 +301,7 @@ const EntreprisesManagerFirebase = () => {
         }));
     };
 
-    const updateSelectedEntreprise = async (field, value) => {
+    const updateSelectedEntreprise = (field, value) => {
         if (selectedEntreprise) {
             const updated = { ...selectedEntreprise, [field]: value };
             setSelectedEntreprise(updated);
@@ -283,25 +310,52 @@ const EntreprisesManagerFirebase = () => {
                 e.id === selectedEntreprise.id ? updated : e
             );
             setEntreprisesList(updatedList);
+        }
+    };
+
+    // Fonction pour sauvegarder manuellement les modifications
+    const handleSaveEntreprise = async () => {
+        if (!selectedEntreprise) return;
+        
+        try {
+            setLoading(true);
+            await saveEntreprisesToFirebase(entreprisesList);
             
-            // Sauvegarder automatiquement les changements
-            try {
-                await saveEntreprisesToFirebase(updatedList);
+            // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
+            if (selectedEntreprise.principal || selectedEntreprise.id === 'main') {
+                const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
                 
-                // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
-                if (updated.principal || updated.id === 'main') {
-                    const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
-                    const currentData = (await getDoc(entrepriseRef)).data() || {};
-                    
-                    await setDoc(entrepriseRef, {
-                        ...currentData,
-                        [field]: value,
-                        updatedAt: new Date().toISOString()
-                    }, { merge: true });
-                }
-            } catch (error) {
-                console.error('Erreur lors de la mise à jour:', error);
+                // Préparer les données en nettoyant les undefined
+                const dataToSave = cleanUndefinedValues({
+                    nom: selectedEntreprise.raisonSociale,
+                    adresse: selectedEntreprise.adresse,
+                    codePostal: selectedEntreprise.codePostal,
+                    ville: selectedEntreprise.ville,
+                    telephone: selectedEntreprise.telephone,
+                    email: selectedEntreprise.email,
+                    siteWeb: selectedEntreprise.site,
+                    siret: selectedEntreprise.siret,
+                    codeAPE: selectedEntreprise.ape,
+                    numeroTVAIntracommunautaire: selectedEntreprise.tva,
+                    licenceSpectacle: selectedEntreprise.licence,
+                    representantLegal: selectedEntreprise.signataire,
+                    qualiteRepresentant: selectedEntreprise.fonction,
+                    coordonneesBancaires: selectedEntreprise.coordonneesBancaires,
+                    iban: selectedEntreprise.iban,
+                    bic: selectedEntreprise.bic,
+                    banque: selectedEntreprise.banque,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                await setDoc(entrepriseRef, dataToSave);
             }
+            
+            showMessage('Entreprise enregistrée avec succès', 'success');
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+            showMessage('Erreur lors de la sauvegarde', 'danger');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -461,6 +515,27 @@ const EntreprisesManagerFirebase = () => {
                     
                     <div className="p-3">
                         {renderTabContent()}
+                        
+                        {/* Bouton Enregistrer */}
+                        <div className="mt-4 d-flex justify-content-end">
+                            <Button 
+                                variant="primary" 
+                                onClick={handleSaveEntreprise}
+                                disabled={loading || !selectedEntreprise}
+                            >
+                                {loading ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Enregistrement...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="bi bi-save me-2"></i>
+                                        Enregistrer les modifications
+                                    </>
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </Card.Body>
             </Card>
@@ -751,13 +826,61 @@ const EntreprisesManagerFirebase = () => {
                 </Col>
             </Row>
 
+            <h5 className="mt-4 mb-3">Informations bancaires</h5>
+            
+            <Row>
+                <Col md={12}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>IBAN</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={selectedEntreprise.iban || ''}
+                            onChange={(e) => updateSelectedEntreprise('iban', e.target.value)}
+                            placeholder="FR76 1234 5678 9012 3456 7890 123"
+                        />
+                        <Form.Text className="text-muted">
+                            International Bank Account Number
+                        </Form.Text>
+                    </Form.Group>
+                </Col>
+            </Row>
+            
+            <Row>
+                <Col md={6}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>BIC</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={selectedEntreprise.bic || ''}
+                            onChange={(e) => updateSelectedEntreprise('bic', e.target.value)}
+                            placeholder="BNPAFRPP"
+                        />
+                        <Form.Text className="text-muted">
+                            Bank Identifier Code
+                        </Form.Text>
+                    </Form.Group>
+                </Col>
+                <Col md={6}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Nom de la banque</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={selectedEntreprise.banque || ''}
+                            onChange={(e) => updateSelectedEntreprise('banque', e.target.value)}
+                            placeholder="BNP Paribas"
+                        />
+                    </Form.Group>
+                </Col>
+            </Row>
+            
             <Form.Group className="mb-3">
-                <Form.Label>Coordonnées bancaires</Form.Label>
+                <Form.Label>Autres informations bancaires</Form.Label>
                 <Form.Control
                     as="textarea"
-                    rows={3}
+                    rows={2}
                     value={selectedEntreprise.coordonneesBancaires || ''}
                     onChange={(e) => updateSelectedEntreprise('coordonneesBancaires', e.target.value)}
+                    placeholder="Informations complémentaires (agence, adresse...)"
                 />
             </Form.Group>
 

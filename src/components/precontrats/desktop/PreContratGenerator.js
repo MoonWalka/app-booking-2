@@ -6,6 +6,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
 import RepresentationsSection from '@/components/common/RepresentationsSection';
 import preContratService from '@/services/preContratService';
+import devisService from '@/services/devisService';
 import styles from './PreContratGenerator.module.css';
 import '@styles/index.css';
 
@@ -111,6 +112,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
   const [preContratToken, setPreContratToken] = useState(null);
   const [existingPreContrat, setExistingPreContrat] = useState(null);
   const [hasUnvalidatedPublicData, setHasUnvalidatedPublicData] = useState(false);
+  const [devisData, setDevisData] = useState(null);
 
   // Charger le pré-contrat existant pour ce concert
   useEffect(() => {
@@ -181,7 +183,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               
               // Données négociation
               contratPropose: preContratData.publicFormData.contratPropose || prev.contratPropose,
-              montantHT: preContratData.publicFormData.montantHT || prev.montantHT,
+              montantHT: preContratData.publicFormData.montantHT || prev.montantHT || (devisData?.totalHT ? devisData.totalHT.toString() : ''),
               moyenPaiement: preContratData.publicFormData.moyenPaiement || prev.moyenPaiement,
               devise: preContratData.publicFormData.devise || prev.devise,
               acompte: preContratData.publicFormData.acompte || prev.acompte,
@@ -236,6 +238,46 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     
     loadExistingPreContrat();
   }, [concert?.id, currentOrg?.id]);
+
+  // Charger le devis associé au concert
+  useEffect(() => {
+    const loadDevisDuConcert = async () => {
+      if (!concert?.id) return;
+
+      try {
+        console.log('[PreContratGenerator] Recherche devis pour concert:', concert.id);
+        
+        // Chercher les devis pour ce concert
+        const devisList = await devisService.getDevisByConcert(concert.id);
+        
+        if (devisList && devisList.length > 0) {
+          // Prendre le devis le plus récent
+          const latestDevis = devisList[0];
+          console.log('[PreContratGenerator] Devis trouvé:', latestDevis);
+          setDevisData(latestDevis);
+          
+          // Attendre un peu pour laisser le pré-contrat se charger d'abord
+          setTimeout(() => {
+            setFormData(prev => {
+              // Si on n'a pas déjà un montant HT défini, utiliser celui du devis
+              if (!prev.montantHT && latestDevis.totalHT) {
+                console.log('[PreContratGenerator] Application du montant HT du devis:', latestDevis.totalHT);
+                return {
+                  ...prev,
+                  montantHT: latestDevis.totalHT.toString()
+                };
+              }
+              return prev;
+            });
+          }, 500);
+        }
+      } catch (error) {
+        console.error('[PreContratGenerator] Erreur chargement devis:', error);
+      }
+    };
+    
+    loadDevisDuConcert();
+  }, [concert?.id]);
 
   // Initialiser les données depuis les props (exécuté une seule fois au chargement)
   useEffect(() => {
@@ -891,7 +933,12 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
             <Card.Body>
               <Row>
                 <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Montant HT :</div>
+                  <div className={styles.labelItem}>
+                    Montant HT :
+                    {devisData && devisData.totalHT && (
+                      <small className="text-muted d-block">(depuis devis)</small>
+                    )}
+                  </div>
                   <div className={styles.labelItem}>Frais :</div>
                   <div className={styles.labelItem}>Devise :</div>
                   <div className={styles.labelItem}>Précisions négoc :</div>
@@ -902,6 +949,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                     step="0.01"
                     value={formData.montantHT}
                     onChange={(e) => handleInputChange('montantHT', e.target.value)}
+                    placeholder={devisData?.totalHT ? `Montant du devis: ${devisData.totalHT} €` : ''}
                   />
                   <Form.Control
                     type="number"
@@ -1185,42 +1233,63 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               {/* Section Devis */}
               {activeTab === 'devis' && (
                 <>
-                  <div className="mb-3">
-                    <h6>Général</h6>
-                    <p className="small mb-1"><strong>Artiste(s):</strong> {Array.isArray(formData.artistes) ? formData.artistes.join(', ') : ''}</p>
-                    <p className="small mb-1"><strong>Projet:</strong> {formData.projet}</p>
-                    <p className="small mb-1"><strong>Début:</strong> {formData.debut}</p>
-                    <p className="small mb-1"><strong>Fin:</strong> {formData.fin}</p>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <h6>Structure</h6>
-                    <p className="small mb-1"><strong>Nom:</strong> {formData.raisonSociale}</p>
-                    <p className="small mb-1"><strong>Destinataire:</strong> {formData.nomSignataire}</p>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <h6>Entreprise</h6>
-                    <p className="small mb-1"><strong>Nom:</strong> {formData.raisonSociale}</p>
-                    <p className="small mb-1"><strong>Collaborateur:</strong> {formData.nomResponsableAdmin}</p>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <h6>Négociation</h6>
-                    <p className="small mb-1"><strong>Montant:</strong> {formData.montantHT} {formData.devise}</p>
-                    <p className="small mb-1"><strong>Conditions de paiement:</strong> {formData.precisionsNegoc}</p>
-                    <p className="small mb-1"><strong>Modalités de paiement:</strong> {formData.moyenPaiement}</p>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <h6>Conditions financières</h6>
-                    <p className="small mb-1"><strong>Presta:</strong> {formData.montantHT} {formData.devise}</p>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <h6>Règlement devis</h6>
-                    <p className="small mb-1"><strong>Solde et mode de règlement:</strong> {formData.moyenPaiement}</p>
-                  </div>
+                  {devisData ? (
+                    <>
+                      <Alert variant="info" className="small">
+                        <i className="bi bi-file-earmark-text me-2"></i>
+                        Devis associé : {devisData.numero || 'Sans numéro'}
+                      </Alert>
+                      
+                      <div className="mb-3">
+                        <h6>Informations du devis</h6>
+                        <p className="small mb-1"><strong>Statut:</strong> <span className="text-capitalize">{devisData.statut || 'Brouillon'}</span></p>
+                        <p className="small mb-1"><strong>Artiste(s):</strong> {devisData.artisteNom || '-'}</p>
+                        <p className="small mb-1"><strong>Projet:</strong> {devisData.projetNom || '-'}</p>
+                        <p className="small mb-1"><strong>Structure:</strong> {devisData.structureNom || '-'}</p>
+                      </div>
+                      
+                      <div className="mb-3">
+                        <h6>Montants</h6>
+                        <p className="small mb-1"><strong>Montant HT:</strong> {devisData.totalHT ? `${devisData.totalHT.toLocaleString('fr-FR')} €` : '-'}</p>
+                        <p className="small mb-1"><strong>TVA:</strong> {devisData.totalTVA ? `${devisData.totalTVA.toLocaleString('fr-FR')} €` : '-'}</p>
+                        <p className="small mb-1"><strong>Montant TTC:</strong> {devisData.totalTTC ? `${devisData.totalTTC.toLocaleString('fr-FR')} €` : '-'}</p>
+                      </div>
+                      
+                      {devisData.lignesObjet && devisData.lignesObjet.length > 0 && (
+                        <div className="mb-3">
+                          <h6>Détail des prestations</h6>
+                          {devisData.lignesObjet.map((ligne, index) => (
+                            <p key={index} className="small mb-1">
+                              • {ligne.objet} - {ligne.quantite} {ligne.unite} - {ligne.montantHT ? `${ligne.montantHT.toLocaleString('fr-FR')} € HT` : ''}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="d-grid">
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm"
+                          onClick={() => openTab({
+                            id: `devis-${devisData.id}`,
+                            title: `${devisData.numero || 'Devis'} - ${devisData.structureNom || ''}`,
+                            path: `/devis/${devisData.id}`,
+                            component: 'DevisPage',
+                            params: { devisId: devisData.id },
+                            icon: 'bi-file-earmark-text'
+                          })}
+                        >
+                          <i className="bi bi-eye me-2"></i>
+                          Voir le devis complet
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <Alert variant="warning" className="small">
+                      <i className="bi bi-exclamation-triangle me-2"></i>
+                      Aucun devis associé à ce concert
+                    </Alert>
+                  )}
                 </>
               )}
             </Card.Body>

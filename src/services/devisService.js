@@ -5,6 +5,9 @@ const devisService = {
   // Créer un nouveau devis
   async createDevis(devisData) {
     try {
+      console.log('=== CRÉATION DEVIS - DÉBUT ===');
+      console.log('Données reçues:', devisData);
+      
       // Générer un numéro de devis unique
       const year = new Date().getFullYear();
       const count = await this.getDevisCountForYear(devisData.organizationId, year);
@@ -17,13 +20,18 @@ const devisService = {
         updatedAt: new Date()
       };
       
+      console.log('Données à sauvegarder dans Firebase:', newDevis);
+      
       const docRef = await addDoc(collection(db, 'devis'), newDevis);
+      console.log('✅ Devis créé avec succès - ID:', docRef.id);
+      console.log('=== CRÉATION DEVIS - FIN ===');
+      
       return {
         id: docRef.id,
         ...newDevis
       };
     } catch (error) {
-      console.error('Erreur lors de la création du devis:', error);
+      console.error('❌ Erreur lors de la création du devis:', error);
       throw error;
     }
   },
@@ -50,9 +58,13 @@ const devisService = {
   // Récupérer un devis par ID
   async getDevisById(devisId) {
     try {
+      console.log('=== RÉCUPÉRATION DEVIS - DÉBUT ===');
+      console.log('ID recherché:', devisId);
+      
       const devisDoc = await getDoc(doc(db, 'devis', devisId));
       if (devisDoc.exists()) {
         const data = devisDoc.data();
+        console.log('✅ Devis trouvé:', data);
         
         // Convertir les timestamps Firebase en dates ISO
         if (data.createdAt && data.createdAt.toDate) {
@@ -62,14 +74,16 @@ const devisService = {
           data.updatedAt = data.updatedAt.toDate();
         }
         
+        console.log('=== RÉCUPÉRATION DEVIS - FIN ===');
         return {
           id: devisDoc.id,
           ...data
         };
       }
+      console.log('❌ Devis non trouvé avec ID:', devisId);
       return null;
     } catch (error) {
-      console.error('Erreur lors de la récupération du devis:', error);
+      console.error('❌ Erreur lors de la récupération du devis:', error);
       throw error;
     }
   },
@@ -98,16 +112,26 @@ const devisService = {
   async getDevisByConcert(concertId) {
     try {
       const devisRef = collection(db, 'devis');
+      // Requête simplifiée pour éviter l'index composite
       const q = query(
         devisRef,
-        where('concertId', '==', concertId),
-        orderBy('createdAt', 'desc')
+        where('concertId', '==', concertId)
       );
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
+      
+      // Trier localement par date de création
+      const devisList = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      devisList.sort((a, b) => {
+        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+        return dateB - dateA; // Tri décroissant (plus récent en premier)
+      });
+      
+      return devisList;
     } catch (error) {
       console.error('Erreur lors de la récupération des devis du concert:', error);
       return [];
@@ -117,18 +141,29 @@ const devisService = {
   // Compter les devis pour une année donnée (pour la numérotation)
   async getDevisCountForYear(organizationId, year) {
     try {
-      const startDate = new Date(year, 0, 1);
-      const endDate = new Date(year + 1, 0, 1);
-      
+      // Requête simplifiée pour éviter l'index composite
       const devisRef = collection(db, 'devis');
       const q = query(
         devisRef,
-        where('organizationId', '==', organizationId),
-        where('createdAt', '>=', startDate),
-        where('createdAt', '<', endDate)
+        where('organizationId', '==', organizationId)
       );
       const snapshot = await getDocs(q);
-      return snapshot.size;
+      
+      // Filtrer localement par année
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year + 1, 0, 1);
+      
+      let count = 0;
+      snapshot.docs.forEach(doc => {
+        const data = doc.data();
+        const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt || 0);
+        
+        if (createdAt >= startDate && createdAt < endDate) {
+          count++;
+        }
+      });
+      
+      return count;
     } catch (error) {
       console.error('Erreur lors du comptage des devis:', error);
       return 0;

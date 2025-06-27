@@ -31,7 +31,7 @@ function DevisEditor({ concertId, structureId, devisId }) {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showCloseConfirmModal, setShowCloseConfirmModal] = useState(false);
   const [savedSuccessfully, setSavedSuccessfully] = useState(false);
-  const { closeTab, getActiveTab } = useTabs();
+  const { closeTab, getActiveTab, openDevisTab } = useTabs();
 
   // Récupérer les paramètres depuis les props ou l'URL
   const finalConcertId = concertId || searchParams.get('concertId');
@@ -249,6 +249,16 @@ function DevisEditor({ concertId, structureId, devisId }) {
         
         // Mettre à jour l'URL sans recharger la page
         window.history.replaceState(null, '', `/devis/${savedDevis.id}`);
+        
+        // Ouvrir un nouvel onglet avec le devis sauvegardé et fermer l'ancien
+        const activeTab = getActiveTab && getActiveTab();
+        if (openDevisTab && activeTab && activeTab.id.startsWith('nouveau-devis')) {
+          openDevisTab(savedDevis.id, `${savedDevis.numero} - ${savedDevis.structureNom || ''}`);
+          // Fermer l'ancien onglet "nouveau devis" après un court délai
+          setTimeout(() => {
+            if (closeTab) closeTab(activeTab.id);
+          }, 500);
+        }
       } else {
         // Mettre à jour le devis existant
         savedDevis = await devisService.updateDevis(finalDevisId, devisData);

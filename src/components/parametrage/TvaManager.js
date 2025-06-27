@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Table, Modal, Form, Alert } from 'react-bootstrap';
 import { FaPlus, FaSync, FaEdit, FaTrash } from 'react-icons/fa';
+import { useParametres } from '@/context/ParametresContext';
 import './TvaManager.css';
 
 const TvaManager = () => {
+    const { parametres, sauvegarderParametres } = useParametres();
     const [tvaList, setTvaList] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [saving, setSaving] = useState(false);
     const [currentTva, setCurrentTva] = useState({
         id: null,
         libelle: '',
@@ -25,19 +28,50 @@ const TvaManager = () => {
         { label: 'Compte 704', value: '704' }
     ];
 
-    // Chargement initial des données
+    // Chargement initial des données depuis les paramètres
     useEffect(() => {
-        loadTvaList();
-    }, []);
+        if (parametres?.tva) {
+            if (Array.isArray(parametres.tva)) {
+                // Adapter la structure des données pour le composant
+                const adaptedTva = parametres.tva.map(tva => ({
+                    ...tva,
+                    profil: tva.profil || 'Standard',
+                    compte: tva.compte || ''
+                }));
+                setTvaList(adaptedTva);
+            } else {
+                console.error('⚠️ parametres.tva n\'est pas un tableau:', parametres.tva);
+                console.log('ℹ️ Le ParametresContext devrait automatiquement migrer ces données');
+                // Si c'est un objet, essayer de le convertir localement (en attendant la migration automatique)
+                if (typeof parametres.tva === 'object') {
+                    const convertedTva = Object.keys(parametres.tva)
+                        .filter(key => !isNaN(parseInt(key)))
+                        .map(key => ({
+                            ...parametres.tva[key],
+                            profil: parametres.tva[key]?.profil || 'Standard',
+                            compte: parametres.tva[key]?.compte || ''
+                        }))
+                        .filter(item => item && item.libelle && item.taux);
+                    
+                    if (convertedTva.length > 0) {
+                        console.log('✅ Conversion locale réussie, en attente de migration permanente');
+                        setTvaList(convertedTva);
+                    }
+                }
+            }
+        }
+    }, [parametres?.tva]);
 
-    const loadTvaList = () => {
-        // Simulation de données pour l'exemple
-        const mockData = [
-            { id: 1, libelle: 'Billetterie', profil: 'Standard', taux: 2.1, compte: '701' },
-            { id: 2, libelle: 'Réduit', profil: 'Spécial', taux: 5.5, compte: '702' },
-            { id: 3, libelle: 'Normal', profil: 'Standard', taux: 20, compte: '703' }
-        ];
-        setTvaList(mockData);
+    const loadTvaList = async () => {
+        // Rafraîchir depuis les paramètres
+        if (parametres?.tva && Array.isArray(parametres.tva)) {
+            const adaptedTva = parametres.tva.map(tva => ({
+                ...tva,
+                profil: tva.profil || 'Standard',
+                compte: tva.compte || ''
+            }));
+            setTvaList(adaptedTva);
+        }
     };
 
     const handleShowModal = (tva = null) => {
@@ -68,39 +102,75 @@ const TvaManager = () => {
         });
     };
 
-    const handleSave = () => {
-        if (!currentTva.libelle || !currentTva.taux || !currentTva.compte) {
+    const handleSave = async () => {
+        if (!currentTva.libelle || !currentTva.taux) {
+            showSuccessMessage('Le libellé et le taux sont obligatoires', 'danger');
             return;
         }
 
-        if (isEditing) {
-            // Mise à jour d'un taux existant
-            setTvaList(tvaList.map(item => 
-                item.id === currentTva.id ? { ...currentTva, taux: parseFloat(currentTva.taux) } : item
-            ));
-            showSuccessMessage('Taux de TVA modifié avec succès');
-        } else {
-            // Ajout d'un nouveau taux
-            const newTva = {
-                ...currentTva,
-                id: Math.max(...tvaList.map(t => t.id), 0) + 1,
-                taux: parseFloat(currentTva.taux)
-            };
-            setTvaList([...tvaList, newTva]);
-            showSuccessMessage('Taux de TVA ajouté avec succès');
+        setSaving(true);
+        try {
+            let updatedTvaList;
+            
+            if (isEditing) {
+                // Mise à jour d'un taux existant
+                updatedTvaList = tvaList.map(item => 
+                    item.id === currentTva.id ? { ...currentTva, taux: parseFloat(currentTva.taux) } : item
+                );
+            } else {
+                // Ajout d'un nouveau taux
+                const newTva = {
+                    ...currentTva,
+                    id: Date.now(), // Utiliser timestamp comme ID unique
+                    taux: parseFloat(currentTva.taux)
+                };
+                updatedTvaList = [...tvaList, newTva];
+            }
+            
+            // Sauvegarder dans Firebase via ParametresContext
+            await sauvegarderParametres('tva', updatedTvaList);
+            
+            // Mettre à jour l'état local
+            setTvaList(updatedTvaList);
+            
+            showSuccessMessage(
+                isEditing ? 'Taux de TVA modifié avec succès' : 'Taux de TVA ajouté avec succès',
+                'success'
+            );
+            handleCloseModal();
+            
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+            showSuccessMessage('Erreur lors de la sauvegarde des taux TVA', 'danger');
+        } finally {
+            setSaving(false);
         }
-        handleCloseModal();
     };
 
-    const handleDelete = (tva) => {
+    const handleDelete = async (tva) => {
         if (window.confirm(`Êtes-vous sûr de vouloir supprimer le taux "${tva.libelle}" ?`)) {
-            setTvaList(tvaList.filter(item => item.id !== tva.id));
-            showSuccessMessage('Taux de TVA supprimé avec succès');
+            setSaving(true);
+            try {
+                const updatedTvaList = tvaList.filter(item => item.id !== tva.id);
+                
+                // Sauvegarder dans Firebase
+                await sauvegarderParametres('tva', updatedTvaList);
+                
+                // Mettre à jour l'état local
+                setTvaList(updatedTvaList);
+                
+                showSuccessMessage('Taux de TVA supprimé avec succès', 'success');
+            } catch (error) {
+                console.error('Erreur lors de la suppression:', error);
+                showSuccessMessage('Erreur lors de la suppression du taux TVA', 'danger');
+            } finally {
+                setSaving(false);
+            }
         }
     };
 
-    const showSuccessMessage = (message) => {
-        setAlertMessage(message);
+    const showSuccessMessage = (message, type = 'success') => {
+        setAlertMessage({ text: message, type });
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 3000);
     };
@@ -116,8 +186,12 @@ const TvaManager = () => {
     return (
         <div className="tva-manager">
             {showAlert && (
-                <Alert variant="success" dismissible onClose={() => setShowAlert(false)}>
-                    {alertMessage}
+                <Alert 
+                    variant={alertMessage.type || 'success'} 
+                    dismissible 
+                    onClose={() => setShowAlert(false)}
+                >
+                    {alertMessage.text || alertMessage}
                 </Alert>
             )}
 
@@ -137,8 +211,9 @@ const TvaManager = () => {
                                 variant="outline-secondary" 
                                 onClick={loadTvaList}
                                 className="d-flex align-items-center"
+                                disabled={saving}
                             >
-                                <FaSync />
+                                <FaSync className={saving ? 'fa-spin' : ''} />
                             </Button>
                         </div>
                     </div>
@@ -167,6 +242,7 @@ const TvaManager = () => {
                                             size="sm"
                                             onClick={() => handleShowModal(tva)}
                                             className="text-warning p-1"
+                                            disabled={saving}
                                         >
                                             <FaEdit />
                                         </Button>
@@ -175,6 +251,7 @@ const TvaManager = () => {
                                             size="sm"
                                             onClick={() => handleDelete(tva)}
                                             className="text-danger p-1 ms-2"
+                                            disabled={saving}
                                         >
                                             <FaTrash />
                                         </Button>
@@ -236,14 +313,13 @@ const TvaManager = () => {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Compte</Form.Label>
+                            <Form.Label>Compte (optionnel)</Form.Label>
                             <Form.Select
                                 name="compte"
                                 value={currentTva.compte}
                                 onChange={handleInputChange}
-                                required
                             >
-                                <option value="">Sélectionner un compte</option>
+                                <option value="">Aucun compte</option>
                                 {compteOptions.map(option => (
                                     <option key={option.value} value={option.value}>
                                         {option.label}
@@ -260,9 +336,9 @@ const TvaManager = () => {
                     <Button 
                         variant="primary" 
                         onClick={handleSave}
-                        disabled={!currentTva.libelle || !currentTva.taux || !currentTva.compte}
+                        disabled={!currentTva.libelle || !currentTva.taux || saving}
                     >
-                        Enregistrer
+                        {saving ? 'Enregistrement...' : 'Enregistrer'}
                     </Button>
                 </Modal.Footer>
             </Modal>

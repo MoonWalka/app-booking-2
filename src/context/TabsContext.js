@@ -326,6 +326,31 @@ export const TabsProvider = ({ children }) => {
     }
   }, [openTab]);
 
+  const openDevisTab = useCallback((devisId, devisTitle) => {
+    console.log('[TabsContext] openDevisTab appelé - devisId:', devisId);
+    openTab({
+      id: `devis-${devisId}`,
+      title: devisTitle || 'Devis',
+      path: `/devis/${devisId}`,
+      component: 'DevisPage',
+      params: { devisId },
+      icon: 'bi-file-earmark-text'
+    });
+  }, [openTab]);
+
+  const openNewDevisTab = useCallback((concertId, structureId, title) => {
+    console.log('[TabsContext] openNewDevisTab appelé - concertId:', concertId, 'structureId:', structureId);
+    const tabId = concertId ? `nouveau-devis-${concertId}` : 'nouveau-devis';
+    openTab({
+      id: tabId,
+      title: title || 'Nouveau Devis',
+      path: `/devis/nouveau${concertId ? `?concertId=${concertId}&structureId=${structureId}` : ''}`,
+      component: 'DevisPage',
+      params: { concertId, structureId },
+      icon: 'bi-file-earmark-plus'
+    });
+  }, [openTab]);
+
   // Fonctions pour gérer l'état des onglets du bas
   const setBottomTabForEntity = useCallback((entityId, tabId) => {
     setBottomTabsState(prev => ({
@@ -365,7 +390,9 @@ export const TabsProvider = ({ children }) => {
     openTachesTab,
     openDateCreationTab,
     openPreContratTab,
-    openContratTab
+    openContratTab,
+    openDevisTab,
+    openNewDevisTab
   }), [
     tabs,
     activeTabId,
@@ -390,7 +417,9 @@ export const TabsProvider = ({ children }) => {
     openTachesTab,
     openDateCreationTab,
     openPreContratTab,
-    openContratTab
+    openContratTab,
+    openDevisTab,
+    openNewDevisTab
   ]);
 
   return (

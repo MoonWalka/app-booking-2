@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrganization } from '@/context/OrganizationContext';
+import { useTabs } from '@/context/TabsContext';
 import { collection, getDocs, query, where } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
 import { Container, Row, Col, Card } from 'react-bootstrap';
@@ -17,6 +18,7 @@ import '@styles/index.css';
 function DevisList() {
   const navigate = useNavigate();
   const { currentOrg } = useOrganization();
+  const { openNewDevisTab, openDevisTab } = useTabs();
   const { isMobile } = useResponsive();
   
   const [devis, setDevis] = useState([]);
@@ -80,7 +82,7 @@ function DevisList() {
             <h2 className="mb-0"><i className="bi bi-file-earmark-text me-2"></i>Devis</h2>
             <Button 
               variant="primary" 
-              onClick={() => navigate('/devis/nouveau')}
+              onClick={() => openNewDevisTab()}
             >
               <i className="bi bi-plus me-2"></i>
               Nouveau devis
@@ -106,7 +108,7 @@ function DevisList() {
             <Button 
               variant="outline-primary" 
               className="mt-3"
-              onClick={() => navigate('/devis/nouveau')}
+              onClick={() => openNewDevisTab()}
             >
               <i className="bi bi-plus me-2"></i>
               Créer un devis
@@ -122,7 +124,10 @@ function DevisList() {
                   <Card.Body 
                     className="p-3" 
                     style={{ cursor: 'pointer' }}
-                    onClick={() => navigate(`/devis/${devisItem.id}`)}
+                    onClick={() => {
+                      const title = `${devisItem.ref || 'Devis'} - ${devisItem.structure || ''}`;
+                      openDevisTab(devisItem.id, title.trim());
+                    }}
                   >
                     <div className="d-flex justify-content-between align-items-start mb-2">
                       <div>

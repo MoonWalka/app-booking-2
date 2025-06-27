@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Table, Modal, Form, Alert, Badge } from 'react-bootstrap';
 import { FaPlus, FaSync, FaEdit, FaTrash } from 'react-icons/fa';
+import { useParametres } from '@/context/ParametresContext';
 import './UnitesManager.css';
 
 const UnitesManager = () => {
+    const { parametres, sauvegarderParametres } = useParametres();
     const [unitesList, setUnitesList] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [saving, setSaving] = useState(false);
     const [currentUnite, setCurrentUnite] = useState({
         id: null,
         nom: '',
@@ -25,25 +28,20 @@ const UnitesManager = () => {
         { value: 'autre', label: 'Autre' }
     ];
 
-    // Chargement initial des données
+    // Chargement initial des données depuis les paramètres
     useEffect(() => {
-        loadUnitesList();
-    }, []);
+        if (parametres?.unites && Array.isArray(parametres.unites)) {
+            setUnitesList(parametres.unites);
+        } else if (parametres?.unites) {
+            console.error('parametres.unites n\'est pas un array:', parametres.unites);
+        }
+    }, [parametres?.unites]);
 
-    const loadUnitesList = () => {
-        // Simulation de données pour l'exemple
-        const mockData = [
-            { id: 1, nom: 'affiche', pluriel: 'affiches', categorie: 'quantite' },
-            { id: 2, nom: 'atelier', pluriel: 'ateliers', categorie: 'service' },
-            { id: 3, nom: 'heure', pluriel: 'heures', categorie: 'temps' },
-            { id: 4, nom: 'jour', pluriel: 'jours', categorie: 'temps' },
-            { id: 5, nom: 'km', pluriel: 'km', categorie: 'distance' },
-            { id: 6, nom: 'nuit', pluriel: 'nuits', categorie: 'temps' },
-            { id: 7, nom: 'personne', pluriel: 'personnes', categorie: 'quantite' },
-            { id: 8, nom: 'repas', pluriel: 'repas', categorie: 'service' },
-            { id: 9, nom: 'représentation', pluriel: 'représentations', categorie: 'service' }
-        ];
-        setUnitesList(mockData);
+    const loadUnitesList = async () => {
+        // Rafraîchir depuis les paramètres
+        if (parametres?.unites && Array.isArray(parametres.unites)) {
+            setUnitesList(parametres.unites);
+        }
     };
 
     const handleShowModal = (unite = null) => {
@@ -72,42 +70,80 @@ const UnitesManager = () => {
         });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!currentUnite.nom || !currentUnite.categorie) {
+            showSuccessMessage('Le nom et la catégorie sont obligatoires', 'danger');
             return;
         }
 
-        // Si pas de pluriel fourni, on utilise le singulier
-        const unite = {
-            ...currentUnite,
-            pluriel: currentUnite.pluriel || currentUnite.nom
-        };
-
-        if (isEditing) {
-            setUnitesList(unitesList.map(item => 
-                item.id === unite.id ? unite : item
-            ));
-            showSuccessMessage('Unité modifiée avec succès');
-        } else {
-            const newUnite = {
-                ...unite,
-                id: Math.max(...unitesList.map(u => u.id), 0) + 1
+        setSaving(true);
+        try {
+            // Si pas de pluriel fourni, on utilise le singulier
+            const unite = {
+                ...currentUnite,
+                pluriel: currentUnite.pluriel || currentUnite.nom
             };
-            setUnitesList([...unitesList, newUnite]);
-            showSuccessMessage('Unité ajoutée avec succès');
+
+            let updatedUnitesList;
+            
+            if (isEditing) {
+                // Mise à jour d'une unité existante
+                updatedUnitesList = unitesList.map(item => 
+                    item.id === unite.id ? unite : item
+                );
+            } else {
+                // Ajout d'une nouvelle unité
+                const newUnite = {
+                    ...unite,
+                    id: Date.now() // Utiliser timestamp comme ID unique
+                };
+                updatedUnitesList = [...unitesList, newUnite];
+            }
+            
+            // Sauvegarder dans Firebase via ParametresContext
+            await sauvegarderParametres('unites', updatedUnitesList);
+            
+            // Mettre à jour l'état local
+            setUnitesList(updatedUnitesList);
+            
+            showSuccessMessage(
+                isEditing ? 'Unité modifiée avec succès' : 'Unité ajoutée avec succès',
+                'success'
+            );
+            handleCloseModal();
+            
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+            showSuccessMessage('Erreur lors de la sauvegarde des unités', 'danger');
+        } finally {
+            setSaving(false);
         }
-        handleCloseModal();
     };
 
-    const handleDelete = (unite) => {
+    const handleDelete = async (unite) => {
         if (window.confirm(`Êtes-vous sûr de vouloir supprimer l'unité "${unite.nom}" ?`)) {
-            setUnitesList(unitesList.filter(item => item.id !== unite.id));
-            showSuccessMessage('Unité supprimée avec succès');
+            setSaving(true);
+            try {
+                const updatedUnitesList = unitesList.filter(item => item.id !== unite.id);
+                
+                // Sauvegarder dans Firebase
+                await sauvegarderParametres('unites', updatedUnitesList);
+                
+                // Mettre à jour l'état local
+                setUnitesList(updatedUnitesList);
+                
+                showSuccessMessage('Unité supprimée avec succès', 'success');
+            } catch (error) {
+                console.error('Erreur lors de la suppression:', error);
+                showSuccessMessage('Erreur lors de la suppression de l\'unité', 'danger');
+            } finally {
+                setSaving(false);
+            }
         }
     };
 
-    const showSuccessMessage = (message) => {
-        setAlertMessage(message);
+    const showSuccessMessage = (message, type = 'success') => {
+        setAlertMessage({ text: message, type });
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 3000);
     };
@@ -139,8 +175,12 @@ const UnitesManager = () => {
     return (
         <div className="unites-manager">
             {showAlert && (
-                <Alert variant="success" dismissible onClose={() => setShowAlert(false)}>
-                    {alertMessage}
+                <Alert 
+                    variant={alertMessage.type || 'success'} 
+                    dismissible 
+                    onClose={() => setShowAlert(false)}
+                >
+                    {alertMessage.text || alertMessage}
                 </Alert>
             )}
 
@@ -160,8 +200,9 @@ const UnitesManager = () => {
                                 variant="outline-secondary" 
                                 onClick={loadUnitesList}
                                 className="d-flex align-items-center"
+                                disabled={saving}
                             >
-                                <FaSync />
+                                <FaSync className={saving ? 'fa-spin' : ''} />
                             </Button>
                         </div>
                     </div>
@@ -192,6 +233,7 @@ const UnitesManager = () => {
                                             size="sm"
                                             onClick={() => handleShowModal(unite)}
                                             className="text-warning p-1"
+                                            disabled={saving}
                                         >
                                             <FaEdit />
                                         </Button>
@@ -200,6 +242,7 @@ const UnitesManager = () => {
                                             size="sm"
                                             onClick={() => handleDelete(unite)}
                                             className="text-danger p-1 ms-2"
+                                            disabled={saving}
                                         >
                                             <FaTrash />
                                         </Button>
@@ -275,9 +318,9 @@ const UnitesManager = () => {
                     <Button 
                         variant="primary" 
                         onClick={handleSave}
-                        disabled={!currentUnite.nom || !currentUnite.categorie}
+                        disabled={!currentUnite.nom || !currentUnite.categorie || saving}
                     >
-                        Enregistrer
+                        {saving ? 'Enregistrement...' : 'Enregistrer'}
                     </Button>
                 </Modal.Footer>
             </Modal>

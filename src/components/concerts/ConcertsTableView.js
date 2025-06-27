@@ -34,7 +34,7 @@ const ConcertsTableView = ({
   handleViewFacture,
   handleGenerateFacture
 }) => {
-  const { openTab, openContactTab, openPreContratTab, openContratTab } = useTabs();
+  const { openTab, openContactTab, openPreContratTab, openContratTab, openNewDevisTab } = useTabs();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -223,17 +223,9 @@ const ConcertsTableView = ({
           className={datesTableStyles.iconButton}
           onClick={(e) => {
             e.stopPropagation();
-            if (openTab) {
-              openTab({
-                id: `devis-${item.id}`,
-                title: `Devis - ${item.artisteNom || 'Concert'}`,
-                path: `/devis/new?concertId=${item.id}${item.structureId ? `&structureId=${item.structureId}` : ''}`,
-                component: 'DevisForm',
-                params: { 
-                  concertId: item.id,
-                  structureId: item.structureId 
-                }
-              });
+            if (openNewDevisTab) {
+              const title = `Nouveau Devis - ${item.artisteNom || 'Concert'}`;
+              openNewDevisTab(item.id, item.structureId, title);
             }
           }}
           title="Créer un devis"

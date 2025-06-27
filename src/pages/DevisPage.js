@@ -22,6 +22,9 @@ function DevisPage() {
     if (activeTab?.params) {
       const { devisId, concertId, structureId } = activeTab.params;
       
+      console.log('[DevisPage] Params de l\'onglet actif:', activeTab.params);
+      console.log('[DevisPage] devisId:', devisId, 'concertId:', concertId, 'structureId:', structureId);
+      
       // Si on a un devisId, afficher l'éditeur pour ce devis
       if (devisId) {
         return <DevisEditor devisId={devisId} />;

@@ -1,9 +1,13 @@
 // src/components/devis/DevisEditor.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Container, Row, Col, Card, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Alert, Modal, Button } from 'react-bootstrap';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useAuth } from '@/context/AuthContext';
+import { useTabs } from '@/context/TabsContext';
+import { doc, getDoc } from '@/services/firebase-service';
+import { db } from '@/services/firebase-service';
+import devisService from '@/services/devisService';
 import DevisForm from './DevisForm';
 import DevisPreview from './DevisPreview';
 import styles from './DevisEditor.module.css';
@@ -13,7 +17,7 @@ import styles from './DevisEditor.module.css';
  * Gauche: Formulaire d'édition
  * Droite: Preview PDF temps réel
  */
-function DevisEditor() {
+function DevisEditor({ concertId, structureId, devisId }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -24,10 +28,24 @@ function DevisEditor() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showCloseConfirmModal, setShowCloseConfirmModal] = useState(false);
+  const [savedSuccessfully, setSavedSuccessfully] = useState(false);
+  const { closeTab, getActiveTab } = useTabs();
 
-  // Récupérer les paramètres optionnels depuis l'URL
-  const concertId = searchParams.get('concertId');
-  const structureId = searchParams.get('structureId');
+  // Récupérer les paramètres depuis les props ou l'URL
+  const finalConcertId = concertId || searchParams.get('concertId');
+  const finalStructureId = structureId || searchParams.get('structureId');
+  const finalDevisId = devisId || id;
+  
+  console.log('🎯 DevisEditor - Paramètres reçus:');
+  console.log('  - concertId (prop):', concertId);
+  console.log('  - structureId (prop):', structureId);
+  console.log('  - devisId (prop):', devisId);
+  console.log('  - id (URL param):', id);
+  console.log('  - finalConcertId:', finalConcertId);
+  console.log('  - finalStructureId:', finalStructureId);
+  console.log('  - finalDevisId:', finalDevisId);
 
   // État du devis
   const [devisData, setDevisData] = useState({
@@ -35,17 +53,23 @@ function DevisEditor() {
     numero: '',
     statut: 'brouillon',
     emetteur: currentUser?.displayName || currentUser?.email || '',
+    entreprise: '',
+    collaborateurId: '',
+    collaborateurNom: '',
     
     // Destinataire
-    structureId: structureId || '',
+    structureId: finalStructureId || '',
     structureNom: '',
     contactId: '',
     contactNom: '',
+    adresseAdministrative: '',
     
     // Événement
-    concertId: concertId || '',
+    concertId: finalConcertId || '',
     artisteNom: '',
-    dateEvenement: '',
+    projetNom: '',
+    dateDebut: '',
+    dateFin: '',
     titreEvenement: '',
     
     // Conditions financières
@@ -63,6 +87,7 @@ function DevisEditor() {
     
     // Règlement
     lignesReglement: [],
+    dateValidite: '',
     
     // Conditions
     conditionsParticulieres: '',
@@ -78,26 +103,37 @@ function DevisEditor() {
     createdAt: new Date(),
     updatedAt: new Date()
   });
+  const [originalDevisData, setOriginalDevisData] = useState(null);
 
   // Charger le devis existant si ID fourni
   useEffect(() => {
     const loadDevis = async () => {
-      if (!id || id === 'nouveau') {
+      if (!finalDevisId || finalDevisId === 'nouveau' || finalDevisId === 'new') {
+        // Pour un nouveau devis, initialiser originalDevisData avec les données initiales
+        setOriginalDevisData(devisData);
         setLoading(false);
         return;
       }
       
       try {
         setLoading(true);
-        // TODO: Charger le devis depuis Firebase
-        console.log('Chargement devis:', id);
+        const loadedDevis = await devisService.getDevisById(finalDevisId);
         
-        // Simulation pour l'instant
-        setDevisData(prev => ({
-          ...prev,
-          id: id,
-          numero: `DEV-${id.substring(0, 6)}`
-        }));
+        if (loadedDevis) {
+          console.log('=== DEVIS CHARGÉ DEPUIS FIREBASE ===');
+          console.log('ID:', loadedDevis.id);
+          console.log('Numéro:', loadedDevis.numero);
+          console.log('Artiste:', loadedDevis.artisteNom);
+          console.log('Structure:', loadedDevis.structureNom);
+          console.log('Lignes objet:', loadedDevis.lignesObjet);
+          console.log('Données complètes:', loadedDevis);
+          console.log('===================================');
+          
+          setDevisData(loadedDevis);
+          setOriginalDevisData(loadedDevis);
+        } else {
+          setError('Devis non trouvé');
+        }
         
       } catch (err) {
         console.error('Erreur lors du chargement du devis:', err);
@@ -108,25 +144,66 @@ function DevisEditor() {
     };
 
     loadDevis();
-  }, [id]);
+  }, [finalDevisId]);
 
   // Charger les données du concert si concertId fourni
   useEffect(() => {
     const loadConcertData = async () => {
-      if (!concertId) return;
+      // Ne charger les données du concert que pour un nouveau devis
+      if (!finalConcertId || (finalDevisId && finalDevisId !== 'nouveau' && finalDevisId !== 'new')) {
+        return;
+      }
       
       try {
-        // TODO: Charger les données du concert depuis Firebase
-        console.log('Chargement concert:', concertId);
+        console.log('=== Début du chargement du concert pour nouveau devis ===');
+        console.log('Concert ID:', finalConcertId);
+        console.log('Structure ID depuis URL:', finalStructureId);
         
-        // Simulation pour l'instant
-        setDevisData(prev => ({
-          ...prev,
-          concertId: concertId,
-          artisteNom: 'Artiste depuis concert',
-          dateEvenement: '2024-06-01',
-          titreEvenement: 'Concert test'
-        }));
+        // Charger les données du concert depuis Firebase
+        const concertDoc = await getDoc(doc(db, 'concerts', finalConcertId));
+        
+        if (!concertDoc.exists()) {
+          console.error('❌ Concert non trouvé:', finalConcertId);
+          setError('Concert non trouvé');
+          return;
+        }
+        
+        const concertData = { id: concertId, ...concertDoc.data() };
+        console.log('✅ Données COMPLÈTES du concert récupérées:', concertData);
+        console.log('🔍 Vérification des champs projet:');
+        console.log('  - projetNom:', concertData.projetNom);
+        console.log('  - projet:', concertData.projet);
+        console.log('  - projetId:', concertData.projetId);
+        console.log('🎨 Artiste du concert:', concertData.artisteNom || 'Aucun artiste');
+        
+        // Mettre à jour les données du devis avec les infos du concert
+        const updatedDevisData = {
+          concertId: finalConcertId,
+          artisteId: concertData.artisteId || '',
+          artisteNom: concertData.artisteNom || '',
+          projetNom: concertData.projetNom || '', // Récupérer le projet depuis le concert
+          dateDebut: concertData.date || '', // Date de début = date du concert
+          dateFin: concertData.dateFin || concertData.date || '', // Si pas de date de fin, utiliser la date de début
+          titreEvenement: concertData.libelle || concertData.titre || '',
+          lieuNom: concertData.lieuNom || '',
+          lieuVille: concertData.lieuVille || '',
+          structureId: concertData.organisateurId || finalStructureId || '',
+          structureNom: concertData.organisateurNom || ''
+        };
+        
+        console.log('📦 Données du devis à mettre à jour:', updatedDevisData);
+        console.log('🎯 Projet transféré au devis:', updatedDevisData.projetNom || 'AUCUN');
+        
+        setDevisData(prev => {
+          const newData = {
+            ...prev,
+            ...updatedDevisData
+          };
+          console.log('🔄 État du devis après mise à jour:', newData);
+          return newData;
+        });
+        
+        console.log('=== Fin du chargement du concert ===');
         
       } catch (err) {
         console.error('Erreur lors du chargement du concert:', err);
@@ -134,17 +211,56 @@ function DevisEditor() {
     };
 
     loadConcertData();
-  }, [concertId]);
+  }, [finalConcertId, finalDevisId]);
+
+  // Surveiller les changements
+  useEffect(() => {
+    // Ne pas marquer comme modifié lors du chargement initial
+    if (!loading && originalDevisData) {
+      // Comparer les données actuelles avec les données originales
+      const hasChanges = JSON.stringify(devisData) !== JSON.stringify(originalDevisData);
+      setHasUnsavedChanges(hasChanges);
+      if (hasChanges) {
+        setSavedSuccessfully(false);
+      }
+    }
+  }, [devisData, originalDevisData, loading]);
 
   // Sauvegarder le devis
   const handleSave = async () => {
     try {
       setSaving(true);
-      // TODO: Sauvegarder dans Firebase
-      console.log('Sauvegarde devis:', devisData);
+      setError(null);
       
-      // Simulation pour l'instant
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      let savedDevis;
+      if (!finalDevisId || finalDevisId === 'nouveau' || finalDevisId === 'new') {
+        // Créer un nouveau devis
+        savedDevis = await devisService.createDevis(devisData);
+        console.log('Nouveau devis créé:', savedDevis);
+        
+        // Mettre à jour l'état local avec l'ID et le numéro
+        const updatedDevisData = {
+          ...devisData,
+          id: savedDevis.id,
+          numero: savedDevis.numero
+        };
+        setDevisData(updatedDevisData);
+        setOriginalDevisData(updatedDevisData);
+        
+        // Mettre à jour l'URL sans recharger la page
+        window.history.replaceState(null, '', `/devis/${savedDevis.id}`);
+      } else {
+        // Mettre à jour le devis existant
+        savedDevis = await devisService.updateDevis(finalDevisId, devisData);
+        console.log('Devis mis à jour:', savedDevis);
+        setOriginalDevisData(devisData);
+      }
+      
+      setHasUnsavedChanges(false);
+      setSavedSuccessfully(true);
+      
+      // Masquer le message de succès après 3 secondes
+      setTimeout(() => setSavedSuccessfully(false), 3000);
       
     } catch (err) {
       console.error('Erreur lors de la sauvegarde:', err);
@@ -169,8 +285,20 @@ function DevisEditor() {
     }
   };
 
+  // Fermer l'onglet ou naviguer
+  const handleClose = () => {
+    const activeTab = getActiveTab && getActiveTab();
+    if (closeTab && activeTab) {
+      // Nous sommes dans un onglet, le fermer
+      closeTab(activeTab.id);
+    } else {
+      // Pas dans un onglet, naviguer
+      navigate('/devis');
+    }
+  };
+
   // Calculer les totaux
-  const calculateTotals = (lignes) => {
+  const calculateTotals = useCallback((lignes) => {
     const totalHT = lignes.reduce((sum, ligne) => sum + (ligne.montantHT || 0), 0);
     const totalTVA = lignes.reduce((sum, ligne) => {
       const montantTVA = (ligne.montantHT || 0) * (ligne.tauxTVA || 0) / 100;
@@ -184,7 +312,7 @@ function DevisEditor() {
       totalTVA,
       totalTTC
     }));
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -217,7 +345,7 @@ function DevisEditor() {
           <Row className="align-items-center">
             <Col md={6}>
               <h3 className="mb-0">
-                {id === 'nouveau' ? 'Nouveau devis' : `Devis ${devisData.numero}`}
+                {!finalDevisId || finalDevisId === 'nouveau' || finalDevisId === 'new' ? 'Nouveau devis' : `Devis ${devisData.numero}`}
               </h3>
             </Col>
             <Col md={6} className="text-end">
@@ -248,7 +376,13 @@ function DevisEditor() {
                 
                 <button
                   className="btn btn-outline-secondary btn-sm"
-                  onClick={() => navigate('/devis')}
+                  onClick={() => {
+                    if (hasUnsavedChanges) {
+                      setShowCloseConfirmModal(true);
+                    } else {
+                      handleClose();
+                    }
+                  }}
                 >
                   Fermer
                 </button>
@@ -298,6 +432,53 @@ function DevisEditor() {
           </Col>
         </Row>
       </Container>
+      
+      {/* Modal de confirmation de fermeture */}
+      <Modal show={showCloseConfirmModal} onHide={() => setShowCloseConfirmModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modifications non sauvegardées</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Vous avez des modifications non sauvegardées. Voulez-vous vraiment fermer sans sauvegarder ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCloseConfirmModal(false)}>
+            Annuler
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={async () => {
+              await handleSave();
+              setShowCloseConfirmModal(false);
+              handleClose();
+            }}
+          >
+            Sauvegarder et fermer
+          </Button>
+          <Button 
+            variant="danger" 
+            onClick={() => {
+              setShowCloseConfirmModal(false);
+              handleClose();
+            }}
+          >
+            Fermer sans sauvegarder
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      
+      {/* Message de succès */}
+      {savedSuccessfully && (
+        <div 
+          className="position-fixed bottom-0 start-50 translate-middle-x mb-3" 
+          style={{ zIndex: 1050 }}
+        >
+          <Alert variant="success" className="mb-0">
+            <i className="bi bi-check-circle me-2"></i>
+            Devis sauvegardé avec succès
+          </Alert>
+        </div>
+      )}
     </div>
   );
 }

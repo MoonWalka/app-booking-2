@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, InputGroup } from 'react-bootstrap';
+import { useTabs } from '@/context/TabsContext';
 import Table from '../../ui/Table';
 import Badge from '../../ui/Badge';
 import styles from './DevisTable.module.css';
@@ -11,6 +12,7 @@ import styles from './DevisTable.module.css';
  */
 const DevisTable = ({ devis = [], onUpdateDevis }) => {
   const navigate = useNavigate();
+  const { openDevisTab } = useTabs();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -299,7 +301,10 @@ const DevisTable = ({ devis = [], onUpdateDevis }) => {
       </button>
       <button 
         className={styles.actionButton}
-        onClick={() => navigate(`/devis/${devisItem.id}`)} 
+        onClick={() => {
+          const title = `${devisItem.ref || 'Devis'} - ${devisItem.structure || ''}`;
+          openDevisTab(devisItem.id, title.trim());
+        }} 
         title="Ouvrir"
       >
         <i className="bi bi-link-45deg"></i>
@@ -320,7 +325,8 @@ const DevisTable = ({ devis = [], onUpdateDevis }) => {
 
   // Gestion du clic sur une ligne
   const handleRowClick = (devisItem) => {
-    navigate(`/devis/${devisItem.id}`);
+    const title = `${devisItem.ref || 'Devis'} - ${devisItem.structure || ''}`;
+    openDevisTab(devisItem.id, title.trim());
   };
 
   return (

@@ -28,6 +28,23 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
   // Charger les données de l'artiste en mode édition
   useEffect(() => {
     if (editArtiste) {
+      // Gérer les deux formats : projets (array) et projet (objet)
+      let projetData = { nom: '', code: '' };
+      
+      if (editArtiste.projets && editArtiste.projets.length > 0) {
+        // Nouveau format : prendre le premier projet de l'array
+        projetData = {
+          nom: editArtiste.projets[0].nom || '',
+          code: editArtiste.projets[0].code || ''
+        };
+      } else if (editArtiste.projet) {
+        // Ancien format : utiliser l'objet projet
+        projetData = {
+          nom: editArtiste.projet.nom || '',
+          code: editArtiste.projet.code || ''
+        };
+      }
+      
       setFormData({
         nom: editArtiste.nom || '',
         code: editArtiste.code || '',
@@ -35,10 +52,7 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
         libelleAnalytique: editArtiste.libelleAnalytique || '',
         actif: editArtiste.actif !== false, // Par défaut true si non défini
         auCatalogue: editArtiste.auCatalogue !== false, // Par défaut true si non défini
-        projet: {
-          nom: editArtiste.projet?.nom || '',
-          code: editArtiste.projet?.code || ''
-        }
+        projet: projetData
       });
     } else {
       // Réinitialiser en mode création
@@ -91,8 +105,22 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
     setLoading(true);
 
     try {
+      // Convertir le projet unique en array de projets
       const artisteData = {
-        ...formData,
+        nom: formData.nom,
+        code: formData.code,
+        codeAnalytique: formData.codeAnalytique,
+        libelleAnalytique: formData.libelleAnalytique,
+        actif: formData.actif,
+        auCatalogue: formData.auCatalogue,
+        // Stocker les projets en tant qu'array
+        projets: formData.projet.nom ? [{
+          nom: formData.projet.nom,
+          code: formData.projet.code,
+          id: Date.now().toString() // ID temporaire
+        }] : [],
+        // Garder aussi projet pour compatibilité temporaire
+        projet: formData.projet.nom ? formData.projet : null,
         organizationId: currentOrganization.id,
         updatedAt: serverTimestamp(),
         status: formData.actif ? 'active' : 'inactive'

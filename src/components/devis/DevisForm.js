@@ -2,8 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Button, Table, Card, Modal, ListGroup } from 'react-bootstrap';
 import { getStructureById } from '@/services/structureService';
+import projetService from '@/services/projetService';
+import contactService from '@/services/contactService';
+import collaborateurService from '@/services/collaborateurService';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useParametres } from '@/context/ParametresContext';
+import { useAuth } from '@/context/AuthContext';
 
 /**
  * Formulaire d'édition de devis
@@ -11,31 +15,54 @@ import { useParametres } from '@/context/ParametresContext';
 function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = false }) {
   const { currentOrg } = useOrganization();
   const { parametres } = useParametres();
+  const { user } = useAuth();
+  
+  // États pour les données dynamiques
+  const [projets, setProjets] = useState([]);
+  const [contacts, setContacts] = useState([]);
+  const [collaborateurs, setCollaborateurs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+  // Log initial pour tracer les données reçues
+  useEffect(() => {
+    console.log('=== DevisForm - Données reçues ===');
+    console.log('Projet du devis:', devisData.projetNom || 'AUCUN');
+    console.log('Concert ID:', devisData.concertId || 'AUCUN');
+    console.log('Artiste:', devisData.artisteNom || 'AUCUN');
+    console.log('Structure:', devisData.structureNom || 'AUCUNE');
+    console.log('Données complètes du devis:', devisData);
+    console.log('=================================');
+  }, [devisData]);
 
-  // Taux de TVA disponibles (correspond à TvaManager)
-  const tauxTvaDisponibles = [
-    { id: 1, libelle: 'Billetterie', taux: 2.1 },
-    { id: 2, libelle: 'Réduit', taux: 5.5 },
-    { id: 3, libelle: 'Normal', taux: 20 }
-  ];
+  // Récupérer les taux de TVA et unités depuis les paramètres
+  const tauxTvaDisponibles = (parametres?.tva && Array.isArray(parametres.tva)) 
+    ? parametres.tva 
+    : [
+      { id: 1, libelle: 'Billetterie', taux: 2.1 },
+      { id: 2, libelle: 'Réduit', taux: 5.5 },
+      { id: 3, libelle: 'Normal', taux: 20 }
+    ];
 
-  // Unités disponibles (correspond à UnitesManager)
-  const unitesDisponibles = [
-    { id: 1, nom: 'affiche', pluriel: 'affiches', categorie: 'quantite' },
-    { id: 2, nom: 'atelier', pluriel: 'ateliers', categorie: 'service' },
-    { id: 3, nom: 'heure', pluriel: 'heures', categorie: 'temps' },
-    { id: 4, nom: 'jour', pluriel: 'jours', categorie: 'temps' },
-    { id: 5, nom: 'km', pluriel: 'km', categorie: 'distance' },
-    { id: 6, nom: 'nuit', pluriel: 'nuits', categorie: 'temps' },
-    { id: 7, nom: 'personne', pluriel: 'personnes', categorie: 'quantite' },
-    { id: 8, nom: 'repas', pluriel: 'repas', categorie: 'service' },
-    { id: 9, nom: 'représentation', pluriel: 'représentations', categorie: 'service' },
-    { id: 10, nom: 'forfait', pluriel: 'forfaits', categorie: 'service' }
-  ];
+  const unitesDisponibles = (parametres?.unites && Array.isArray(parametres.unites)) 
+    ? parametres.unites 
+    : [
+      { id: 1, nom: 'affiche', pluriel: 'affiches', categorie: 'quantite' },
+      { id: 2, nom: 'atelier', pluriel: 'ateliers', categorie: 'service' },
+      { id: 3, nom: 'heure', pluriel: 'heures', categorie: 'temps' },
+      { id: 4, nom: 'jour', pluriel: 'jours', categorie: 'temps' },
+      { id: 5, nom: 'km', pluriel: 'km', categorie: 'distance' },
+      { id: 6, nom: 'nuit', pluriel: 'nuits', categorie: 'temps' },
+      { id: 7, nom: 'personne', pluriel: 'personnes', categorie: 'quantite' },
+      { id: 8, nom: 'repas', pluriel: 'repas', categorie: 'service' },
+      { id: 9, nom: 'représentation', pluriel: 'représentations', categorie: 'service' },
+      { id: 10, nom: 'forfait', pluriel: 'forfaits', categorie: 'service' }
+    ];
 
   // Ajouter une ligne objet
   const addLigneObjet = () => {
     const newId = Math.max(...devisData.lignesObjet.map(l => l.id), 0) + 1;
+    // Utiliser le premier taux TVA des paramètres ou 20 par défaut
+    const defaultTva = tauxTvaDisponibles.length > 0 ? tauxTvaDisponibles[0].taux : 20;
     const newLigne = {
       id: newId,
       objet: '',
@@ -43,7 +70,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
       unite: 'forfait',
       prixUnitaire: 0,
       montantHT: 0,
-      tauxTVA: 20
+      tauxTVA: defaultTva
     };
     
     setDevisData(prev => ({
@@ -148,6 +175,39 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
     }
   }, [devisData.lignesObjet, onCalculateTotals]);
 
+  // Charger les données depuis Firebase
+  useEffect(() => {
+    const loadData = async () => {
+      if (!currentOrg?.id) return;
+      
+      setLoading(true);
+      try {
+        // Charger les projets
+        const projetsData = await projetService.getProjetsByOrganization(currentOrg.id);
+        setProjets(projetsData);
+        
+        // Charger les collaborateurs
+        const collaborateursData = await collaborateurService.getCollaborateursByOrganization(currentOrg.id);
+        setCollaborateurs(collaborateursData);
+        
+        // Charger les contacts (selon la structure si présente)
+        if (devisData.structureId) {
+          const contactsData = await contactService.getContactsByStructure(devisData.structureId);
+          setContacts(contactsData);
+        } else {
+          const contactsData = await contactService.getContactsByOrganization(currentOrg.id);
+          setContacts(contactsData);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadData();
+  }, [currentOrg?.id, devisData.structureId]);
+
   // Auto-remplir le nom de l'entreprise depuis les paramètres
   useEffect(() => {
     if (!devisData.entreprise && (parametres?.entreprise?.nom || currentOrg?.name)) {
@@ -157,7 +217,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
         entreprise: nomEntreprise
       }));
     }
-  }, [parametres?.entreprise?.nom, currentOrg?.name, devisData.entreprise, setDevisData]);
+  }, [parametres?.entreprise?.nom, currentOrg?.name, devisData.entreprise]);
 
   // Auto-remplir l'adresse administrative depuis la structure
   useEffect(() => {
@@ -188,7 +248,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
     };
 
     fetchStructureAddress();
-  }, [devisData.structureId, devisData.adresseAdministrative, setDevisData]);
+  }, [devisData.structureId, devisData.adresseAdministrative]);
 
   // État pour la modal d'adresses alternatives
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -378,18 +438,24 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                 <Form.Group className="mb-3">
                   <Form.Label>Collaborateur</Form.Label>
                   <Form.Select
-                    value={devisData.collaborateurId || ''}
-                    onChange={(e) => setDevisData(prev => ({ 
-                      ...prev, 
-                      collaborateurId: e.target.value,
-                      collaborateurNom: e.target.options[e.target.selectedIndex].text
-                    }))}
-                    disabled={readonly}
+                    value={devisData.collaborateurId || user?.uid || ''}
+                    onChange={(e) => {
+                      const selectedCollab = collaborateurs.find(c => c.id === e.target.value);
+                      setDevisData(prev => ({ 
+                        ...prev, 
+                        collaborateurId: e.target.value,
+                        collaborateurNom: selectedCollab?.displayName || selectedCollab?.email || ''
+                      }))
+                    }}
+                    disabled={readonly || loading}
                   >
                     <option value="">Sélectionner un collaborateur</option>
-                    <option value="1">Utilisateur actuel</option>
-                    <option value="2">Collaborateur 1</option>
-                    <option value="3">Collaborateur 2</option>
+                    {collaborateurs.map(collab => (
+                      <option key={collab.id} value={collab.id}>
+                        {collab.displayName || collab.email || 'Collaborateur sans nom'}
+                        {collab.id === user?.uid && ' (Vous)'}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -406,17 +472,23 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                   <Form.Label>À l'attention de</Form.Label>
                   <Form.Select
                     value={devisData.contactId || ''}
-                    onChange={(e) => setDevisData(prev => ({ 
-                      ...prev, 
-                      contactId: e.target.value,
-                      contactNom: e.target.options[e.target.selectedIndex].text
-                    }))}
-                    disabled={readonly}
+                    onChange={(e) => {
+                      const selectedContact = contacts.find(c => c.id === e.target.value);
+                      setDevisData(prev => ({ 
+                        ...prev, 
+                        contactId: e.target.value,
+                        contactNom: selectedContact ? `${selectedContact.prenom || ''} ${selectedContact.nom || ''}`.trim() : ''
+                      }))
+                    }}
+                    disabled={readonly || loading || contacts.length === 0}
                   >
                     <option value="">Sélectionner un contact</option>
-                    <option value="1">Nom Prénom 1</option>
-                    <option value="2">Nom Prénom 2</option>
-                    <option value="3">Nom Prénom 3</option>
+                    {contacts.map(contact => (
+                      <option key={contact.id} value={contact.id}>
+                        {contact.prenom} {contact.nom}
+                        {contact.fonction && ` - ${contact.fonction}`}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -465,19 +537,44 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
           <Card.Body>
             <Form.Group className="mb-3">
               <Form.Label>Projet</Form.Label>
-              <Form.Select
-                value={devisData.projetId || ''}
-                onChange={(e) => setDevisData(prev => ({ 
-                  ...prev, 
-                  projetId: e.target.value,
-                  projetNom: e.target.options[e.target.selectedIndex].text
-                }))}
-                disabled={readonly}
-              >
-                <option value="">Sélectionner un projet</option>
-                <option value="1">Projet Y</option>
-                <option value="2">Autre projet</option>
-              </Form.Select>
+              {devisData.projetNom && devisData.projetNom !== 'Aucun projet' ? (
+                // Si le projet vient du concert, l'afficher en lecture seule
+                <>
+                  <Form.Control
+                    type="text"
+                    value={devisData.projetNom}
+                    disabled
+                    className="bg-light"
+                  />
+                  <Form.Text className="text-muted">
+                    <i className="bi bi-info-circle me-1"></i>
+                    Projet hérité de la date/concert (ID: {devisData.concertId || 'N/A'})
+                  </Form.Text>
+                  {console.log('🎯 Affichage du projet en lecture seule:', devisData.projetNom)}
+                </>
+              ) : (
+                // Sinon, permettre la sélection
+                <Form.Select
+                  value={devisData.projetId || ''}
+                  onChange={(e) => {
+                    const selectedProjet = projets.find(p => p.id === e.target.value);
+                    console.log('🔄 Sélection manuelle du projet:', selectedProjet?.intitule || 'AUCUN');
+                    setDevisData(prev => ({ 
+                      ...prev, 
+                      projetId: e.target.value,
+                      projetNom: selectedProjet?.intitule || ''
+                    }))
+                  }}
+                  disabled={readonly || loading}
+                >
+                  <option value="">Sélectionner un projet</option>
+                  {projets.map(projet => (
+                    <option key={projet.id} value={projet.id}>
+                      {projet.intitule}
+                    </option>
+                  ))}
+                </Form.Select>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -506,7 +603,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
               <Form.Label>Titre</Form.Label>
               <Form.Control
                 type="text"
-                value={devisData.titre || `1 représentation(s) du spectacle ${devisData.projetNom || 'Projet Y'} le ${devisData.dateDebut ? new Date(devisData.dateDebut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'JJ Mois AAAA'}`}
+                value={devisData.titre || `1 représentation(s) du spectacle ${devisData.projetNom && devisData.projetNom !== 'Aucun projet' ? devisData.projetNom : 'Projet Y'} le ${devisData.dateDebut ? new Date(devisData.dateDebut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'JJ Mois AAAA'}`}
                 onChange={(e) => setDevisData(prev => ({ ...prev, titre: e.target.value, titreModifieManuellement: true }))}
                 disabled={readonly}
                 placeholder="Titre auto-généré, éditable"

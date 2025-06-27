@@ -84,8 +84,13 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
       querySnapshot.forEach((doc) => {
         const artisteData = { id: doc.id, ...doc.data() };
         
-        // Ajouter chaque projet de l'artiste comme une option séparée
+        console.log('🎨 Artiste chargé:', artisteData.nom);
+        console.log('📁 Format projets (array):', artisteData.projets);
+        console.log('📁 Format projet (objet):', artisteData.projet);
+        
+        // Gérer les deux formats : projets (array) et projet (objet)
         if (artisteData.projets && artisteData.projets.length > 0) {
+          // Nouveau format : array de projets
           artisteData.projets.forEach(projet => {
             artistes.push({
               id: doc.id,
@@ -95,12 +100,21 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
               searchText: `${artisteData.nom || artisteData.nomArtiste} ${projet.nom || projet.titre}`.toLowerCase()
             });
           });
+        } else if (artisteData.projet && artisteData.projet.nom) {
+          // Ancien format : objet projet unique
+          artistes.push({
+            id: doc.id,
+            nom: artisteData.nom || artisteData.nomArtiste,
+            projet: artisteData.projet.nom,
+            projetId: null,
+            searchText: `${artisteData.nom || artisteData.nomArtiste} ${artisteData.projet.nom}`.toLowerCase()
+          });
         } else {
           // Si pas de projets, ajouter l'artiste sans projet
           artistes.push({
             id: doc.id,
             nom: artisteData.nom || artisteData.nomArtiste,
-            projet: 'Aucun projet',
+            projet: '',
             projetId: null,
             searchText: (artisteData.nom || artisteData.nomArtiste).toLowerCase()
           });
@@ -187,13 +201,16 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
   );
 
   const handleArtisteSelect = (artiste) => {
+    console.log('🎭 Sélection artiste:', artiste.nom);
+    console.log('🎯 Projet associé:', artiste.projet || 'AUCUN');
+    
     setFormData(prev => ({
       ...prev,
       artisteId: artiste.id,
       artisteNom: artiste.nom,
       projetNom: artiste.projet
     }));
-    setArtisteSearch(`${artiste.nom} - ${artiste.projet}`);
+    setArtisteSearch(artiste.projet ? `${artiste.nom} - ${artiste.projet}` : artiste.nom);
     setShowArtisteDropdown(false);
   };
 
@@ -255,6 +272,11 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
     setLoading(true);
 
     try {
+      console.log('=== Création de date/concert ===');
+      console.log('🎭 Artiste sélectionné:', formData.artisteNom || 'AUCUN');
+      console.log('🎯 Projet sélectionné:', formData.projetNom || 'AUCUN');
+      console.log('🏛️ Structure organisatrice:', formData.organisateurNom || 'AUCUNE');
+      
       // Créer le document date dans la collection concerts
       const dateData = {
         date: formData.date,
@@ -272,10 +294,14 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
         updatedAt: serverTimestamp(),
         statut: 'En cours' // Statut par défaut
       };
+      
+      console.log('💾 Données à sauvegarder:', dateData);
 
       const docRef = await addDoc(collection(db, 'concerts'), dateData);
       
-      console.log('Date créée avec ID:', docRef.id);
+      console.log('✅ Date créée avec succès - ID:', docRef.id);
+      console.log('🎯 Projet stocké dans la date:', dateData.projetNom || 'AUCUN');
+      console.log('==============================');
       
       // Callback pour notifier la création
       if (onCreated) {
@@ -360,7 +386,7 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
                         className={styles.dropdownItem}
                         onClick={() => handleArtisteSelect(artiste)}
                       >
-                        <strong>{artiste.nom}</strong> - {artiste.projet}
+                        <strong>{artiste.nom}</strong>{artiste.projet && ` - ${artiste.projet}`}
                       </div>
                     ))}
                   </div>

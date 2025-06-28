@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 
 /**
- * Hook pour récupérer les factures associées à un contact
- * Les factures sont liées aux contacts via les concerts
+ * Hook pour récupérer les factures associées à un contact ou une structure
+ * Les factures sont liées via les concerts
  */
-export const useContactFactures = (contactId) => {
+export const useContactFactures = (entityId, entityType = 'contact') => {
   const [factures, setFactures] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { organizationId } = useOrganization();
+  const { currentOrganization } = useOrganization();
+  const organizationId = currentOrganization?.id;
 
   useEffect(() => {
-    if (!contactId || !organizationId) {
+    console.log('[useContactFactures] Hook appelé avec:', { entityId, entityType, organizationId });
+    
+    if (!entityId || !organizationId) {
+      console.log('[useContactFactures] Pas d\'entityId ou organizationId, arrêt');
       setFactures([]);
       return;
     }
@@ -24,14 +28,39 @@ export const useContactFactures = (contactId) => {
       setError(null);
 
       try {
-        // 1. Récupérer tous les concerts du contact
+        let structureId = entityId;
+        
+        // Si c'est un contact, récupérer sa structure
+        if (entityType === 'contact') {
+          const contactRef = doc(db, 'contacts', entityId);
+          const contactSnap = await getDoc(contactRef);
+          
+          if (!contactSnap.exists()) {
+            console.warn('Contact non trouvé:', entityId);
+            setFactures([]);
+            return;
+          }
+
+          const contactData = contactSnap.data();
+          structureId = contactData.structureId || contactData.structureReference;
+          
+          if (!structureId) {
+            console.log('Contact sans structure associée');
+            setFactures([]);
+            return;
+          }
+        }
+
+        // 2. Récupérer tous les concerts de la structure
+        console.log('[useContactFactures] Recherche des concerts pour la structure:', structureId);
         const concertsQuery = query(
           collection(db, 'concerts'),
-          where('contactId', '==', contactId)
+          where('structureId', '==', structureId)
         );
         const concertsSnapshot = await getDocs(concertsQuery);
+        console.log('[useContactFactures] Nombre de concerts trouvés:', concertsSnapshot.size);
 
-        // 2. Récupérer les factures pour chaque concert
+        // 3. Récupérer les factures pour chaque concert
         const facturesPromises = concertsSnapshot.docs.map(async (concertDoc) => {
           const concertData = { id: concertDoc.id, ...concertDoc.data() };
           
@@ -40,6 +69,8 @@ export const useContactFactures = (contactId) => {
             where('concertId', '==', concertDoc.id)
           );
           const facturesSnapshot = await getDocs(facturesQuery);
+          
+          console.log(`[useContactFactures] Concert ${concertDoc.id}: ${facturesSnapshot.size} factures trouvées`);
 
           return facturesSnapshot.docs.map(factureDoc => ({
             id: factureDoc.id,
@@ -48,11 +79,12 @@ export const useContactFactures = (contactId) => {
           }));
         });
 
-        // 3. Aplatir le tableau de résultats
+        // 4. Aplatir le tableau de résultats
         const facturesResults = await Promise.all(facturesPromises);
         const allFactures = facturesResults.flat();
+        console.log('[useContactFactures] Nombre total de factures trouvées:', allFactures.length);
 
-        // 4. Trier par date de facture (plus récent en premier)
+        // 5. Trier par date de facture (plus récent en premier)
         allFactures.sort((a, b) => {
           const dateA = a.dateFacture?.toDate?.() || new Date(a.dateFacture);
           const dateB = b.dateFacture?.toDate?.() || new Date(b.dateFacture);
@@ -69,7 +101,7 @@ export const useContactFactures = (contactId) => {
     };
 
     fetchContactFactures();
-  }, [contactId, organizationId]);
+  }, [entityId, entityType, organizationId]);
 
   return { factures, loading, error };
 };

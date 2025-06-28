@@ -2,6 +2,8 @@ import React from 'react';
 import ContactDatesTable from '../ContactDatesTable';
 import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import ContactFacturesTable from '../ContactFacturesTable';
+import { useContactContrats } from '@/hooks/contacts/useContactContrats';
+import { useTabs } from '@/context/TabsContext';
 import styles from '../ContactViewTabs.module.css';
 
 /**
@@ -10,14 +12,74 @@ import styles from '../ContactViewTabs.module.css';
  */
 function ContactBottomTabs({ 
   activeTab, 
-  contactId, 
+  contactId,
+  viewType = 'contact',
   extractedData,
   datesData,
   openDateCreationTab,
   onDatesUpdate 
 }) {
+  // Hook pour récupérer les contrats du contact/structure
+  console.log('[ContactBottomTabs] Appel du hook useContactContrats avec:', { contactId, viewType });
+  const { contrats, loading: contratsLoading } = useContactContrats(contactId, viewType);
   
+  // Hook pour la gestion des onglets (devis, factures, contrats)
+  const { openTab, openDevisTab, openContratTab } = useTabs();
+
+  // Handlers pour les actions sur devis et factures
+  const handleViewDevis = (devisId) => {
+    openTab({
+      id: `devis-${devisId}`,
+      title: `Devis`,
+      path: `/devis/${devisId}`,
+      component: 'DevisPage',
+      params: { devisId },
+      icon: 'bi-file-earmark-check'
+    });
+  };
+
+  const handleGenerateDevis = (concertId, structureId) => {
+    const structureName = extractedData?.structureRaisonSociale || extractedData?.structureNom || 'Structure';
+    openTab({
+      id: `devis-nouveau-${concertId}`,
+      title: `Nouveau devis - ${structureName}`,
+      path: `/devis/nouveau?concertId=${concertId}&structureId=${structureId || contactId}`,
+      component: 'DevisPage',
+      params: { concertId, structureId: structureId || contactId },
+      icon: 'bi-file-earmark-plus'
+    });
+  };
+
+  const handleViewFacture = (factureId) => {
+    openTab({
+      id: `facture-${factureId}`,
+      title: `Facture`,
+      path: `/factures/${factureId}`,
+      component: 'FactureDetailsPage',
+      params: { factureId },
+      icon: 'bi-receipt'
+    });
+  };
+
+  const handleGenerateFacture = (concertId, contratId) => {
+    const structureName = extractedData?.structureRaisonSociale || extractedData?.structureNom || 'Structure';
+    openTab({
+      id: `facture-generate-${concertId}`,
+      title: `Nouvelle facture - ${structureName}`,
+      path: `/factures/generate/${concertId}?fromContrat=true`,
+      component: 'FactureGeneratorPage',
+      params: { concertId, fromContrat: true, contratId },
+      icon: 'bi-receipt'
+    });
+  };
+
+  const handleViewContrat = (concertId, contratTitle) => {
+    openContratTab(concertId, contratTitle);
+  };
+
   const renderTabContent = () => {
+    console.log('[ContactBottomTabs] Onglet actif:', activeTab, 'Nombre de contrats:', contrats.length);
+    
     switch (activeTab) {
       case 'historique':
         return (
@@ -170,10 +232,18 @@ function ContactBottomTabs({
         return (
           <div className={styles.tabContent}>
             <ContratsTableNew 
-              contrats={[]}
+              contrats={contrats}
               onUpdateContrat={(contrat) => {
                 console.log('Mise à jour contrat:', contrat);
+                // TODO: Implémenter la mise à jour du contrat dans Firebase
               }}
+              // Handlers pour les actions sur devis et factures
+              openTab={openTab}
+              handleViewDevis={handleViewDevis}
+              handleGenerateDevis={handleGenerateDevis}
+              handleViewFacture={handleViewFacture}
+              handleGenerateFacture={handleGenerateFacture}
+              handleViewContrat={handleViewContrat}
             />
           </div>
         );
@@ -181,7 +251,10 @@ function ContactBottomTabs({
       case 'factures':
         return (
           <div className={styles.tabContent}>
-            <ContactFacturesTable contactId={contactId} />
+            <ContactFacturesTable 
+              contactId={contactId} 
+              entityType={viewType}
+            />
           </div>
         );
 

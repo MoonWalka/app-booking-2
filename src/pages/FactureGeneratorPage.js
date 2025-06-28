@@ -183,10 +183,10 @@ const FactureGeneratorPage = () => {
       // Informations du destinataire (organisateur) - contractant2 dans le contrat
       structureId: contratData.structureId || concertData.structureId,
       structureNom: contratData.contractant2?.nom || structureData?.nom || contratData.structureNom || concertData.structureNom,
-      structureAdresse: contratData.contractant2?.adresse || structureData?.adresse || contratData.structureAdresse || concertData.structureAdresse,
-      structureCodePostal: contratData.contractant2?.codePostal || structureData?.codePostal || contratData.structureCodePostal || concertData.structureCodePostal,
-      structureVille: contratData.contractant2?.ville || structureData?.ville || contratData.structureVille || concertData.structureVille,
-      structureTVA: contratData.contractant2?.numeroTVA || structureData?.numeroTVA,
+      structureAdresse: contratData.contractant2?.adresse || structureData?.adresse || contratData.structureAdresse || concertData.structureAdresse || '',
+      structureCodePostal: contratData.contractant2?.codePostal || structureData?.codePostal || contratData.structureCodePostal || concertData.structureCodePostal || '',
+      structureVille: contratData.contractant2?.ville || structureData?.ville || contratData.structureVille || concertData.structureVille || '',
+      structureTVA: contratData.contractant2?.numeroTVA || structureData?.numeroTVA || '',
       
       // Informations de l'émetteur (producteur/tourneur) - contractant1 dans le contrat
       organisationNom: contratData.contractant1?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentOrganization?.nom,
@@ -629,13 +629,82 @@ const FactureGeneratorPage = () => {
     }
   };
 
+  // Fonction pour nettoyer les valeurs undefined
+  const cleanUndefinedValues = (obj) => {
+    const cleaned = {};
+    Object.keys(obj).forEach(key => {
+      if (obj[key] !== undefined) {
+        cleaned[key] = obj[key];
+      }
+    });
+    return cleaned;
+  };
+
   // Sauvegarder toutes les factures
   const handleSaveFactures = async () => {
+    if (!user || !currentOrganization?.id) {
+      setError('Impossible de sauvegarder : utilisateur ou organisation manquant');
+      return;
+    }
+
     try {
-      // TODO: Implémenter la sauvegarde des factures
-      console.log('Sauvegarde des factures:', factures);
+      console.log('[handleSaveFactures] Début sauvegarde des factures');
+      
+      // Sauvegarder chaque facture
+      const savedFactureIds = [];
+      for (let i = 0; i < factures.length; i++) {
+        const facture = factures[i];
+        
+        // Générer le numéro de facture si nécessaire
+        let numeroFacture = facture.reference;
+        if (!numeroFacture || numeroFacture.includes('attente')) {
+          numeroFacture = await factureService.generateNumeroFacture(currentOrganization.id);
+        }
+        
+        // Préparer les données de la facture
+        const factureData = {
+          ...facture,
+          numeroFacture: numeroFacture,
+          reference: numeroFacture,
+          status: 'draft', // Statut initial
+          concertId: facture.concertId,
+          contratId: contrat?.id,
+          // Informations calculées
+          montantHT: parseFloat(facture.montantHT) || 0,
+          tauxTVA: parseFloat(facture.tauxTVA) || 0,
+          montantTVA: (parseFloat(facture.montantHT) || 0) * ((parseFloat(facture.tauxTVA) || 0) / 100),
+          montantTTC: (parseFloat(facture.montantHT) || 0) * (1 + (parseFloat(facture.tauxTVA) || 0) / 100),
+          // Date de création
+          dateFacture: new Date().toISOString().split('T')[0],
+          // Échéance
+          dateEcheance: facture.echeance || new Date().toISOString().split('T')[0]
+        };
+        
+        // Nettoyer les valeurs undefined avant la sauvegarde
+        const cleanedFactureData = cleanUndefinedValues(factureData);
+        
+        console.log(`[handleSaveFactures] Sauvegarde facture ${i + 1}:`, cleanedFactureData);
+        
+        const factureId = await factureService.createFacture(
+          cleanedFactureData,
+          currentOrganization.id,
+          user.uid
+        );
+        
+        savedFactureIds.push(factureId);
+        console.log(`[handleSaveFactures] Facture ${i + 1} sauvegardée avec ID:`, factureId);
+      }
+      
+      console.log('[handleSaveFactures] Toutes les factures ont été sauvegardées:', savedFactureIds);
+      
+      // Afficher un message de succès et fermer l'onglet
+      alert(`${factures.length} facture${factures.length > 1 ? 's' : ''} générée${factures.length > 1 ? 's' : ''} avec succès !`);
+      
+      // TODO: Rediriger vers la liste des factures ou fermer l'onglet
+      
     } catch (err) {
-      console.error('Erreur lors de la sauvegarde:', err);
+      console.error('[handleSaveFactures] Erreur lors de la sauvegarde:', err);
+      setError(`Erreur lors de la sauvegarde : ${err.message}`);
     }
   };
 

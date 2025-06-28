@@ -431,3 +431,27 @@
     font-size: 0.8rem;
   }
 }
+
+/* Dropdown styles */
+.dropdownToggle {
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.dropdownToggle::after {
+  display: none !important;
+}
+
+.dropdownToggle:hover,
+.dropdownToggle:focus,
+.dropdownToggle:active {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.dropdownItem {
+  font-size: 0.9rem;
+}

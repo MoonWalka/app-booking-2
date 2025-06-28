@@ -9,7 +9,17 @@ import styles from './ContratsTableNew.module.css';
  * Table component to display contracts list
  * Tableau des contrats selon spécifications TourCraft
  */
-const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
+const ContratsTableNew = ({ 
+  contrats = [], 
+  onUpdateContrat,
+  // Handlers pour les actions intelligentes sur devis et factures
+  openTab,
+  handleViewDevis,
+  handleGenerateDevis,
+  handleViewFacture,
+  handleGenerateFacture,
+  handleViewContrat
+}) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [dateValiditeMin, setDateValiditeMin] = useState('');
@@ -367,81 +377,140 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
       label: 'Contrat',
       key: 'contratIcon',
       sortable: false,
-      render: (contrat) => (
-        <div className={styles.iconCell}>
-          {contrat.contratGenere ? (
+      render: (contrat) => {
+        let iconClass, title, action;
+        
+        // Déterminer l'état du contrat selon le statut
+        if (contrat.status === 'finalized' || contrat.status === 'signed') {
+          iconClass = "bi bi-file-earmark-check-fill text-success";
+          title = "Contrat finalisé - Voir";
+        } else if (contrat.status === 'sent') {
+          iconClass = "bi bi-file-earmark-arrow-up-fill text-info";
+          title = "Contrat envoyé - Voir";
+        } else if (contrat.status === 'generated') {
+          iconClass = "bi bi-file-earmark-text-fill text-primary";
+          title = "Contrat généré - Voir";
+        } else if (contrat.status === 'draft' || contrat.contratGenere) {
+          iconClass = "bi bi-file-earmark-text-fill text-warning";
+          title = "Contrat en cours - Continuer";
+        } else {
+          iconClass = "bi bi-file-earmark text-muted";
+          title = "Pas de contrat";
+        }
+
+        // Action pour ouvrir le contrat
+        if (contrat.status || contrat.contratGenere) {
+          action = () => {
+            if (handleViewContrat && contrat.concertId) {
+              const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
+              handleViewContrat(contrat.concertId, titre);
+            }
+          };
+        }
+
+        return (
+          <div className={styles.iconCell}>
             <i 
-              className="bi bi-file-earmark-check-fill text-success"
-              title="Contrat généré"
-              style={{ cursor: 'pointer' }}
-              onClick={(e) => {
+              className={iconClass}
+              title={title}
+              style={{ cursor: action ? 'pointer' : 'default' }}
+              onClick={action ? (e) => {
                 e.stopPropagation();
-                navigate(`/contrats/${contrat.id}`);
-              }}
+                action();
+              } : undefined}
             ></i>
-          ) : (
-            <i 
-              className="bi bi-file-earmark text-muted"
-              title="Pas de contrat"
-            ></i>
-          )}
-          {/* TODO: Implémenter la logique des couleurs selon l'état :
-              - contrat.statut === 'brouillon' → text-warning (jaune)
-              - contrat.statut === 'genere' → text-primary (bleu)
-              - contrat.statut === 'envoye' → text-info (orange)
-              - contrat.statut === 'signe' → text-success (vert)
-          */}
-        </div>
-      )
+          </div>
+        );
+      }
     },
     
     // ===== COLONNE ICÔNE DEVIS =====
     // Icône qui change de couleur selon l'état d'avancement du devis
     // ÉVOLUTION DES COULEURS SELON L'ÉTAT :
-    // - 🔘 Gris (text-muted) : Pas de devis
-    // - 🟡 Jaune (text-warning) : Devis en brouillon
-    // - 🔵 Bleu (text-primary) : Devis généré mais pas envoyé
-    // - 🟠 Orange (text-info) : Devis envoyé en attente de réponse
-    // - 🟢 Vert (text-success) : Devis accepté par le client
-    // - 🔴 Rouge (text-danger) : Devis refusé
+    // - 🔘 Gris (text-muted) : Pas de devis → Cliquable pour créer
+    // - 🟡 Jaune (text-warning) : Devis en brouillon → Cliquable pour continuer
+    // - 🔵 Bleu (text-primary) : Devis généré → Cliquable pour voir
+    // - 🟠 Orange (text-info) : Devis envoyé → Cliquable pour voir
+    // - 🟢 Vert (text-success) : Devis accepté → Cliquable pour voir
+    // - 🔴 Rouge (text-danger) : Devis refusé → Cliquable pour voir
     {
       label: 'Devis',
       key: 'devisIcon',
       sortable: false,
-      render: (contrat) => (
-        <div className={styles.iconCell}>
-          {contrat.devisId ? (
+      render: (contrat) => {
+        console.log('[ContratsTableNew] Rendu devis pour contrat:', {
+          id: contrat.id,
+          hasDevis: contrat.hasDevis,
+          devisId: contrat.devisId,
+          devisStatus: contrat.devisStatus,
+          concertId: contrat.concertId
+        });
+
+        let iconClass, title, action;
+        
+        if (contrat.hasDevis && contrat.devisId) {
+          // Devis existant - déterminer la couleur selon le statut
+          switch (contrat.devisStatus) {
+            case 'accepte':
+              iconClass = "bi bi-file-earmark-check-fill text-success";
+              title = "Devis accepté - Voir";
+              break;
+            case 'envoye':
+              iconClass = "bi bi-file-earmark-arrow-up-fill text-info";
+              title = "Devis envoyé - Voir";
+              break;
+            case 'genere':
+              iconClass = "bi bi-file-earmark-text-fill text-primary";
+              title = "Devis généré - Voir";
+              break;
+            case 'refuse':
+              iconClass = "bi bi-file-earmark-x-fill text-danger";
+              title = "Devis refusé - Voir";
+              break;
+            case 'brouillon':
+            default:
+              iconClass = "bi bi-file-earmark-text-fill text-warning";
+              title = "Devis en cours - Continuer";
+              break;
+          }
+          
+          action = () => {
+            if (handleViewDevis) {
+              handleViewDevis(contrat.devisId);
+            }
+          };
+        } else {
+          // Pas de devis - icône grise cliquable pour créer
+          iconClass = "bi bi-file-earmark text-muted";
+          title = "Créer un devis";
+          action = () => {
+            if (handleGenerateDevis && contrat.concertId) {
+              handleGenerateDevis(contrat.concertId, contrat.structureId);
+            }
+          };
+        }
+
+        return (
+          <div className={styles.iconCell}>
             <i 
-              className="bi bi-file-earmark-check-fill text-primary"
-              title="Devis généré"
+              className={iconClass}
+              title={title}
               style={{ cursor: 'pointer' }}
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/devis/${contrat.devisId}`);
+                if (action) action();
               }}
             ></i>
-          ) : (
-            <i 
-              className="bi bi-file-earmark text-muted"
-              title="Pas de devis"
-            ></i>
-          )}
-          {/* TODO: Implémenter la logique des couleurs selon l'état du devis :
-              - devis.statut === 'brouillon' → text-warning (jaune)
-              - devis.statut === 'genere' → text-primary (bleu)
-              - devis.statut === 'envoye' → text-info (orange)
-              - devis.statut === 'accepte' → text-success (vert)
-              - devis.statut === 'refuse' → text-danger (rouge)
-          */}
-        </div>
-      )
+          </div>
+        );
+      }
     },
     
     // ===== COLONNE ICÔNE FACTURE =====
     // Icône qui change de couleur selon l'état d'avancement de la facture
     // ÉVOLUTION DES COULEURS SELON L'ÉTAT :
     // - 🔘 Gris (text-muted) : Pas de facture
-    // - 🟡 Jaune (text-warning) : Facture en brouillon
+    // - 🟡 Jaune (text-warning) : Facture en brouillon ou peut être générée
     // - 🔵 Bleu (text-primary) : Facture générée mais pas envoyée
     // - 🟠 Orange (text-info) : Facture envoyée en attente de paiement
     // - 🟢 Vert (text-success) : Facture payée intégralement
@@ -450,38 +519,80 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
       label: 'Facture',
       key: 'factureIcon',
       sortable: false,
-      render: (contrat) => (
-        <div className={styles.iconCell}>
-          {contrat.factureId ? (
+      render: (contrat) => {
+        console.log('[ContratsTableNew] Rendu facture pour contrat:', {
+          id: contrat.id,
+          hasFacture: contrat.hasFacture,
+          factureId: contrat.factureId,
+          factureStatus: contrat.factureStatus,
+          contratStatus: contrat.status,
+          concertId: contrat.concertId
+        });
+
+        let iconClass, title, action, disabled = false;
+
+        if (contrat.hasFacture && contrat.factureId) {
+          // Facture existante - déterminer la couleur selon le statut
+          const factureInfo = contrat.factureInfo || {};
+          const isPayee = factureInfo.montantPaye >= factureInfo.montantTotal;
+          const isEnRetard = factureInfo.dateEcheance && new Date(factureInfo.dateEcheance) < new Date() && !isPayee;
+
+          if (isPayee) {
+            iconClass = "bi bi-receipt-cutoff text-success";
+            title = "Facture payée";
+          } else if (isEnRetard) {
+            iconClass = "bi bi-receipt text-danger";
+            title = "Facture en retard";
+          } else if (factureInfo.envoye) {
+            iconClass = "bi bi-receipt text-info";
+            title = "Facture envoyée";
+          } else {
+            iconClass = "bi bi-receipt text-primary";
+            title = "Facture générée";
+          }
+          
+          action = () => {
+            if (handleViewFacture) {
+              handleViewFacture(contrat.factureId);
+            }
+          };
+        } else {
+          // Pas de facture - vérifier si on peut en générer une
+          const canGenerateFacture = contrat.status && 
+            (contrat.status === 'finalized' || 
+             contrat.status === 'signed' || 
+             contrat.status === 'sent' || 
+             contrat.status === 'draft');
+
+          if (canGenerateFacture) {
+            iconClass = "bi bi-receipt text-warning";
+            title = "Générer une facture";
+            action = () => {
+              if (handleGenerateFacture && contrat.concertId) {
+                handleGenerateFacture(contrat.concertId, contrat.id);
+              }
+            };
+          } else {
+            iconClass = "bi bi-receipt text-muted";
+            title = "Contrat requis pour facturer";
+            disabled = true;
+          }
+        }
+
+        return (
+          <div className={styles.iconCell}>
             <i 
-              className="bi bi-receipt-cutoff text-warning"
-              title="Facture générée"
-              style={{ cursor: 'pointer' }}
-              onClick={(e) => {
+              className={iconClass}
+              title={title}
+              style={{ cursor: disabled ? 'default' : 'pointer' }}
+              onClick={disabled ? undefined : (e) => {
                 e.stopPropagation();
-                navigate(`/factures/${contrat.factureId}`);
+                if (action) action();
               }}
             ></i>
-          ) : (
-            <i 
-              className="bi bi-receipt text-muted"
-              title="Pas de facture"
-            ></i>
-          )}
-          {/* TODO: Implémenter la logique des couleurs selon l'état de la facture :
-              - facture.statut === 'brouillon' → text-warning (jaune)
-              - facture.statut === 'generee' → text-primary (bleu)
-              - facture.statut === 'envoyee' → text-info (orange)
-              - facture.statut === 'payee' → text-success (vert)
-              - facture.statut === 'retard' → text-danger (rouge)
-              
-              Logique de calcul pour le statut de paiement :
-              - Si montantPaye >= montantTotal → 'payee' (vert)
-              - Si dateEcheance < aujourd'hui && montantPaye < montantTotal → 'retard' (rouge)
-              - Si envoyee && montantPaye < montantTotal → 'envoyee' (orange)
-          */}
-        </div>
-      )
+          </div>
+        );
+      }
     }
   ];
 
@@ -490,7 +601,14 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
     <div className={styles.actionButtons} onClick={e => e.stopPropagation()}>
       <button 
         className={styles.actionButton}
-        onClick={() => navigate(`/contrats/${contrat.id}/edit`)} 
+        onClick={() => {
+          if (handleViewContrat && contrat.concertId) {
+            const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
+            handleViewContrat(contrat.concertId, titre);
+          } else {
+            navigate(`/contrats/${contrat.id}/edit`);
+          }
+        }} 
         title="Modifier"
       >
         <i className="bi bi-pencil"></i>
@@ -528,7 +646,13 @@ const ContratsTableNew = ({ contrats = [], onUpdateContrat }) => {
 
   // Gestion du clic sur une ligne
   const handleRowClick = (contrat) => {
-    navigate(`/contrats/${contrat.id}`);
+    if (handleViewContrat && contrat.concertId) {
+      const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
+      handleViewContrat(contrat.concertId, titre);
+    } else {
+      // Fallback vers navigation classique si handlers non disponibles
+      navigate(`/contrats/${contrat.id}`);
+    }
   };
 
   return (

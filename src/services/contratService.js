@@ -37,7 +37,12 @@ const contratService = {
         // Si c'est une nouvelle création, ajouter createdAt
         ...(contratData.createdAt ? {} : { createdAt: serverTimestamp() }),
         // Statut par défaut si non défini
-        status: contratData.status || 'draft'
+        status: contratData.status || 'draft',
+        // Ajouter les montants au niveau racine pour faciliter l'accès
+        montantHT: contratData.negociation?.montantNet || contratData.montantHT || 0,
+        montantTTC: contratData.negociation?.montantTTC || contratData.montantTTC || 0,
+        // S'assurer que l'entrepriseCode est défini
+        entrepriseCode: contratData.entrepriseCode || 'MR' // Utiliser 'MR' pour Meltin Recordz par défaut
       };
 
       // Utiliser l'ID du concert comme ID du contrat pour maintenir la relation 1:1
@@ -264,6 +269,52 @@ const contratService = {
       isValid: errors.length === 0,
       errors
     };
+  },
+
+  /**
+   * Met à jour le lien vers un devis
+   * @param {string} concertId - ID du concert/contrat
+   * @param {string} devisId - ID du devis
+   * @returns {Promise<void>}
+   */
+  async linkDevis(concertId, devisId) {
+    try {
+      console.log('[ContratService] Liaison du devis:', devisId, 'au contrat:', concertId);
+      
+      const contratRef = doc(db, 'contrats', concertId);
+      await updateDoc(contratRef, {
+        devisId,
+        updatedAt: serverTimestamp()
+      });
+      
+      console.log('[ContratService] Devis lié avec succès');
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la liaison du devis:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Met à jour le lien vers une facture
+   * @param {string} concertId - ID du concert/contrat
+   * @param {string} factureId - ID de la facture
+   * @returns {Promise<void>}
+   */
+  async linkFacture(concertId, factureId) {
+    try {
+      console.log('[ContratService] Liaison de la facture:', factureId, 'au contrat:', concertId);
+      
+      const contratRef = doc(db, 'contrats', concertId);
+      await updateDoc(contratRef, {
+        factureId,
+        updatedAt: serverTimestamp()
+      });
+      
+      console.log('[ContratService] Facture liée avec succès');
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la liaison de la facture:', error);
+      throw error;
+    }
   }
 };
 

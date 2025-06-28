@@ -791,6 +791,7 @@ function ContactViewTabs({ id, viewType = null }) {
       <ContactBottomTabs 
         activeTab={activeBottomTab}
         contactId={id}
+        viewType={viewType}
         extractedData={extractedData}
         datesData={datesData}
         openDateCreationTab={openDateCreationTab}

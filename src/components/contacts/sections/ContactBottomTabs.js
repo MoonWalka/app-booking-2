@@ -24,32 +24,14 @@ function ContactBottomTabs({
   const { contrats, loading: contratsLoading } = useContactContrats(contactId, viewType);
   
   // Hook pour la gestion des onglets (devis, factures, contrats)
-  const { openTab, openDevisTab, openContratTab } = useTabs();
+  const { 
+    openTab, 
+    openDevisTab, 
+    openNewDevisTab, 
+    openContratTab 
+  } = useTabs();
 
-  // Handlers pour les actions sur devis et factures
-  const handleViewDevis = (devisId) => {
-    openTab({
-      id: `devis-${devisId}`,
-      title: `Devis`,
-      path: `/devis/${devisId}`,
-      component: 'DevisPage',
-      params: { devisId },
-      icon: 'bi-file-earmark-check'
-    });
-  };
-
-  const handleGenerateDevis = (concertId, structureId) => {
-    const structureName = extractedData?.structureRaisonSociale || extractedData?.structureNom || 'Structure';
-    openTab({
-      id: `devis-nouveau-${concertId}`,
-      title: `Nouveau devis - ${structureName}`,
-      path: `/devis/nouveau?concertId=${concertId}&structureId=${structureId || contactId}`,
-      component: 'DevisPage',
-      params: { concertId, structureId: structureId || contactId },
-      icon: 'bi-file-earmark-plus'
-    });
-  };
-
+  // Helper pour les handlers de factures (garde la logique spécifique contact)
   const handleViewFacture = (factureId) => {
     openTab({
       id: `facture-${factureId}`,
@@ -71,10 +53,6 @@ function ContactBottomTabs({
       params: { concertId, fromContrat: true, contratId },
       icon: 'bi-receipt'
     });
-  };
-
-  const handleViewContrat = (concertId, contratTitle) => {
-    openContratTab(concertId, contratTitle);
   };
 
   const renderTabContent = () => {
@@ -237,13 +215,14 @@ function ContactBottomTabs({
                 console.log('Mise à jour contrat:', contrat);
                 // TODO: Implémenter la mise à jour du contrat dans Firebase
               }}
-              // Handlers pour les actions sur devis et factures
-              openTab={openTab}
-              handleViewDevis={handleViewDevis}
-              handleGenerateDevis={handleGenerateDevis}
+              // Utilisation directe des fonctions du contexte (comme l'onglet dates)
+              openDevisTab={openDevisTab}
+              openNewDevisTab={openNewDevisTab}
+              openContratTab={openContratTab}
               handleViewFacture={handleViewFacture}
               handleGenerateFacture={handleGenerateFacture}
-              handleViewContrat={handleViewContrat}
+              // Helper pour les noms de structure
+              getStructureName={() => extractedData?.structureRaisonSociale || extractedData?.structureNom || 'Structure'}
             />
           </div>
         );

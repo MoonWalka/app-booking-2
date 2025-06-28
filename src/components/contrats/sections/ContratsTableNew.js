@@ -12,13 +12,13 @@ import styles from './ContratsTableNew.module.css';
 const ContratsTableNew = ({ 
   contrats = [], 
   onUpdateContrat,
-  // Handlers pour les actions intelligentes sur devis et factures
-  openTab,
-  handleViewDevis,
-  handleGenerateDevis,
+  // Fonctions directes du contexte (comme ConcertsTableView)
+  openDevisTab,
+  openNewDevisTab,
+  openContratTab,
   handleViewFacture,
   handleGenerateFacture,
-  handleViewContrat
+  getStructureName
 }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -401,9 +401,10 @@ const ContratsTableNew = ({
         // Action pour ouvrir le contrat
         if (contrat.status || contrat.contratGenere) {
           action = () => {
-            if (handleViewContrat && contrat.concertId) {
+            if (openContratTab && contrat.concertId) {
               const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
-              handleViewContrat(contrat.concertId, titre);
+              const isRedige = contrat.status && contrat.status !== 'draft';
+              openContratTab(contrat.concertId, titre, isRedige);
             }
           };
         }
@@ -475,8 +476,9 @@ const ContratsTableNew = ({
           }
           
           action = () => {
-            if (handleViewDevis) {
-              handleViewDevis(contrat.devisId);
+            if (openDevisTab) {
+              const devisTitle = `${contrat.devisNumero || 'Devis'} - ${contrat.artisteNom || 'Concert'}`;
+              openDevisTab(contrat.devisId, devisTitle);
             }
           };
         } else {
@@ -484,8 +486,10 @@ const ContratsTableNew = ({
           iconClass = "bi bi-file-earmark text-muted";
           title = "Créer un devis";
           action = () => {
-            if (handleGenerateDevis && contrat.concertId) {
-              handleGenerateDevis(contrat.concertId, contrat.structureId);
+            if (openNewDevisTab && contrat.concertId) {
+              const structureName = getStructureName ? getStructureName() : 'Structure';
+              const title = `Nouveau Devis - ${structureName}`;
+              openNewDevisTab(contrat.concertId, contrat.structureId, title);
             }
           };
         }
@@ -602,9 +606,10 @@ const ContratsTableNew = ({
       <button 
         className={styles.actionButton}
         onClick={() => {
-          if (handleViewContrat && contrat.concertId) {
+          if (openContratTab && contrat.concertId) {
             const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
-            handleViewContrat(contrat.concertId, titre);
+            const isRedige = contrat.status && contrat.status !== 'draft';
+            openContratTab(contrat.concertId, titre, isRedige);
           } else {
             navigate(`/contrats/${contrat.id}/edit`);
           }
@@ -646,9 +651,10 @@ const ContratsTableNew = ({
 
   // Gestion du clic sur une ligne
   const handleRowClick = (contrat) => {
-    if (handleViewContrat && contrat.concertId) {
+    if (openContratTab && contrat.concertId) {
       const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
-      handleViewContrat(contrat.concertId, titre);
+      const isRedige = contrat.status && contrat.status !== 'draft';
+      openContratTab(contrat.concertId, titre, isRedige);
     } else {
       // Fallback vers navigation classique si handlers non disponibles
       navigate(`/contrats/${contrat.id}`);

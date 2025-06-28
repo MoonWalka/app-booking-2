@@ -262,7 +262,11 @@ const TabManagerProduction = () => {
         case 'FactureDetailsPage':
           console.log('[TabManager] Rendu FactureDetailsPage avec activeTab:', activeTab);
           console.log('[TabManager] factureId passé:', activeTab.params?.factureId);
-          return <FactureDetailsPage />;
+          return <FactureDetailsPage 
+            factureId={activeTab.params?.factureId}
+            concertId={activeTab.params?.concertId}
+            contratId={activeTab.params?.contratId}
+          />;
         case 'DevisPage':
           console.log('[TabManager] Rendu DevisPage avec activeTab:', activeTab);
           console.log('[TabManager] devisId passé:', activeTab.params?.devisId);

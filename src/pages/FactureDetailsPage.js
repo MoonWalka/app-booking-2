@@ -13,14 +13,23 @@ import StatusBadge from '@/components/ui/StatusBadge';
 import Spinner from '@/components/common/Spinner';
 import styles from './ContratDetailsPage.module.css';
 
-const FactureDetailsPage = () => {
-  const { factureId } = useParams();
+const FactureDetailsPage = ({ 
+  factureId: factureIdFromProps,
+  concertId: concertIdFromProps,
+  contratId: contratIdFromProps 
+}) => {
+  const { factureId: factureIdFromParams } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { currentOrganization } = useOrganization();
   
+  // Priorité aux props depuis le TabManager, fallback vers useParams pour navigation directe
+  const factureId = factureIdFromProps || factureIdFromParams;
+  
   console.log('[FactureDetailsPage] === MONTAGE DU COMPOSANT ===');
-  console.log('[FactureDetailsPage] factureId depuis params:', factureId);
+  console.log('[FactureDetailsPage] factureId depuis props:', factureIdFromProps);
+  console.log('[FactureDetailsPage] factureId depuis params:', factureIdFromParams);
+  console.log('[FactureDetailsPage] factureId final utilisé:', factureId);
   console.log('[FactureDetailsPage] currentOrganization:', currentOrganization);
   
   const [facture, setFacture] = useState(null);

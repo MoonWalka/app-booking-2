@@ -30,9 +30,16 @@ const ParametresPage = () => {
   // Déterminer l'onglet actif en fonction de l'URL (sans déclencher de navigation)
   useEffect(() => {
     const path = location.pathname;
+    // Vérifier aussi les paramètres URL pour forcer un onglet (utile pour l'inventaire)
+    const urlParams = new URLSearchParams(location.search);
+    const forceTab = urlParams.get('tab');
+    
     let newActiveTab = 'entreprise'; // valeur par défaut
     
-    if (path.includes('/parametres/contrats')) {
+    // Si un tab est forcé via URL param, l'utiliser en priorité
+    if (forceTab) {
+      newActiveTab = forceTab;
+    } else if (path.includes('/parametres/contrats')) {
       newActiveTab = 'contrats';
     } else if (path.includes('/parametres/factures-modeles')) {
       newActiveTab = 'factures-modeles';
@@ -66,7 +73,7 @@ const ParametresPage = () => {
     if (newActiveTab !== activeTab) {
       setActiveTab(newActiveTab);
     }
-  }, [location.pathname, activeTab]);
+  }, [location.pathname, location.search, activeTab]);
 
   // Gestionnaire pour le changement d'onglet (navigation uniquement) - Stabilisé avec useCallback
   const handleTabChange = useCallback((tab) => {

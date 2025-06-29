@@ -38,7 +38,7 @@ import TachesPage from '@/pages/TachesPage';
 import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
 import AdminParametragePage from '@/pages/AdminParametragePage';
 import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
-import FactureDetailsPage from '@/pages/FactureDetailsPage';
+// import FactureDetailsPage from '@/pages/FactureDetailsPage'; // Remplacé par FactureGeneratorPage
 import FacturesPage from '@/pages/FacturesPage';
 import MesRecherchesPage from '@/pages/MesRecherchesPage';
 import MesSelectionsPage from '@/pages/MesSelectionsPage';
@@ -64,6 +64,8 @@ import DebugButton from '@/components/common/DebugButton';
 import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
 import TabsTestPage from '@/pages/TabsTestPage';
 import InventairePagesPage from '@/pages/InventairePagesPage';
+import ComponentPreviewPage from '@/pages/ComponentPreviewPage';
+import PreviewWrapper from '@/components/preview/PreviewWrapper';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -165,7 +167,6 @@ function App() {
               <ParametresProvider>
                 <ModalProvider>
                   <ContactModalsProvider>
-                    <TabsProvider>
                   <RouterStabilizer />
                   {/* Bouton de debug temporaire */}
                   <DebugButton />
@@ -192,6 +193,13 @@ function App() {
                     <Route path="/inventaire-pages" element={
                       <PrivateRoute>
                         <InventairePagesPage />
+                      </PrivateRoute>
+                    } />
+                    
+                    {/* Route universelle pour preview de composants */}
+                    <Route path="/preview/component/:componentName" element={
+                      <PrivateRoute>
+                        <ComponentPreviewPage />
                       </PrivateRoute>
                     } />
                     
@@ -340,7 +348,19 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    <Route element={<Layout />}>
+                    {/* Route universelle pour preview de composants */}
+                    <Route path="/preview/component/:componentName" element={
+                      <PrivateRoute>
+                        <PreviewWrapper />
+                      </PrivateRoute>
+                    } />
+                    
+                    {/* Routes principales avec système d'onglets */}
+                    <Route element={
+                      <TabsProvider>
+                        <Layout />
+                      </TabsProvider>
+                    }>
                       <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
                       
                       <Route path="/concerts/*" element={
@@ -489,7 +509,7 @@ function App() {
                           
                           <Route path="/factures/:factureId" element={
                             <PrivateRoute>
-                              <FactureDetailsPage />
+                              <FactureGeneratorPage />
                             </PrivateRoute>
                           } />
                           
@@ -541,8 +561,7 @@ function App() {
                           
                           <Route path="*" element={<Navigate to="/concerts" replace />} />
                         </Route>
-                      </Routes>
-                    </TabsProvider>
+                  </Routes>
                   </ContactModalsProvider>
                 </ModalProvider>
               </ParametresProvider>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useParametres } from '@/context/ParametresContext';
-import { useTabs } from '@/context/TabsContext';
+import useTabsSafe from '@/hooks/useTabsSafe';
 import contratService from '@/services/contratService';
 import factureService from '@/services/factureService';
 import Spinner from '@/components/common/Spinner';
@@ -14,17 +14,19 @@ import FacturePreview from '@/components/factures/FacturePreview';
 import styles from './FactureGeneratorPage.module.css';
 
 const FactureGeneratorPage = () => {
-  const { concertId: concertIdFromParams } = useParams();
+  const { concertId: concertIdFromParams, factureId: factureIdFromParams } = useParams();
   const { user } = useAuth();
   const { currentOrganization } = useOrganization();
   const { parametres } = useParametres();
-  const { getActiveTab, openTab } = useTabs();
+  const { getActiveTab, openTab } = useTabsSafe();
   
   // Récupérer les paramètres depuis l'onglet actif
   const activeTab = getActiveTab && getActiveTab();
   const concertId = activeTab?.params?.concertId || concertIdFromParams;
+  const factureId = activeTab?.params?.factureId || factureIdFromParams;
   const contratId = activeTab?.params?.contratId;
   const fromContrat = activeTab?.params?.fromContrat || false;
+  const mode = factureId ? 'edit' : 'create';
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,9 +41,127 @@ const FactureGeneratorPage = () => {
   // Charger les données initiales
   useEffect(() => {
     const loadData = async () => {
-      if (!user || !currentOrganization?.id || !concertId) {
+      if (!user || !currentOrganization?.id) {
         setLoading(false);
-        setError('Données manquantes pour charger la facture');
+        setError('Utilisateur ou organisation manquante');
+        return;
+      }
+      
+      // Si on a un factureId, charger la facture existante
+      if (mode === 'edit' && factureId) {
+        try {
+          setLoading(true);
+          
+          // Charger la facture existante
+          const factureData = await factureService.getFacture(factureId, currentOrganization.id);
+          
+          if (!factureData) {
+            throw new Error('Facture introuvable');
+          }
+          
+          // Charger le concert associé
+          let concertData = null;
+          if (factureData.concertId) {
+            const concertRef = doc(db, 'concerts', factureData.concertId);
+            const concertSnap = await getDoc(concertRef);
+            if (concertSnap.exists()) {
+              concertData = { id: concertSnap.id, ...concertSnap.data() };
+              setConcert(concertData);
+            }
+          }
+          
+          // Charger toutes les factures du même concert/contrat
+          let allFactures = [factureData];
+          let factureIndex = 0;
+          
+          if (factureData.concertId) {
+            try {
+              // Chercher toutes les factures du même concert
+              const facturesRef = collection(db, 'organizations', currentOrganization.id, 'factures');
+              const q = query(facturesRef, where('concertId', '==', factureData.concertId));
+              const snapshot = await getDocs(q);
+              
+              if (!snapshot.empty) {
+                allFactures = [];
+                snapshot.forEach((doc) => {
+                  const facture = { id: doc.id, ...doc.data() };
+                  allFactures.push(facture);
+                  // Trouver l'index de la facture actuelle
+                  if (doc.id === factureId) {
+                    factureIndex = allFactures.length - 1;
+                  }
+                });
+                
+                // Trier les factures par date ou type (acompte avant solde)
+                allFactures.sort((a, b) => {
+                  // D'abord par type (acompte avant solde)
+                  if (a.type === 'acompte' && b.type !== 'acompte') return -1;
+                  if (a.type !== 'acompte' && b.type === 'acompte') return 1;
+                  // Ensuite par date
+                  return new Date(a.dateFacture || 0) - new Date(b.dateFacture || 0);
+                });
+                
+                // Recalculer l'index après le tri
+                factureIndex = allFactures.findIndex(f => f.id === factureId);
+              }
+            } catch (error) {
+              console.error('[FactureGeneratorPage] Erreur lors du chargement des factures associées:', error);
+              // En cas d'erreur, on garde juste la facture actuelle
+            }
+          }
+          
+          // Configurer les données pour l'édition
+          setFactures(allFactures);
+          setCurrentFactureIndex(factureIndex >= 0 ? factureIndex : 0);
+          
+          // Configurer les données éditables de la facture actuelle
+          const currentFacture = allFactures[factureIndex >= 0 ? factureIndex : 0];
+          setEditableData({
+            reference: currentFacture.numeroFacture || currentFacture.reference,
+            objet: currentFacture.objet,
+            montantHT: currentFacture.montantHT,
+            tauxTVA: currentFacture.tauxTVA,
+            echeance: currentFacture.dateEcheance,
+            ...currentFacture
+          });
+          
+          // Générer l'aperçu
+          generatePreview(currentFacture);
+          
+          setLoading(false);
+          return;
+        } catch (err) {
+          console.error('[FactureGeneratorPage] Erreur chargement facture:', err);
+          setError(`Erreur lors du chargement de la facture: ${err.message}`);
+          setLoading(false);
+          return;
+        }
+      }
+      
+      // Si pas de concertId et pas en mode edit, afficher une démo vide
+      if (!concertId) {
+        setLoading(false);
+        // Créer des données de démonstration
+        setConcert({ 
+          id: 'demo', 
+          artisteNom: 'Artiste Démo',
+          structureNom: 'Structure Démo',
+          date: new Date()
+        });
+        setFactures([{
+          type: 'demo',
+          reference: 'DEMO-2024-001',
+          objet: 'Facture de démonstration',
+          montantHT: 1000,
+          tauxTVA: 20,
+          echeance: new Date().toISOString().split('T')[0]
+        }]);
+        setEditableData({
+          reference: 'DEMO-2024-001',
+          objet: 'Facture de démonstration',
+          montantHT: 1000,
+          tauxTVA: 20
+        });
         return;
       }
 
@@ -151,7 +271,7 @@ const FactureGeneratorPage = () => {
     };
 
     loadData();
-  }, [user, currentOrganization?.id, concertId, contratId, fromContrat, parametres]);
+  }, [user, currentOrganization?.id, concertId, contratId, fromContrat, parametres, mode, factureId]);
 
   // Générer les factures à partir du contrat
   const generateFacturesFromContrat = (contratData, concertData, parametres, entrepriseData, currentOrganization, structureData) => {
@@ -614,7 +734,7 @@ const FactureGeneratorPage = () => {
 
   // Ouvrir le formulaire de contrat pour modification
   const handleModifyContract = () => {
-    if (contratId) {
+    if (contratId && openTab) {
       openTab({
         id: `contrat-edit-${contratId}`,
         title: `Modifier contrat`,
@@ -648,59 +768,106 @@ const FactureGeneratorPage = () => {
     }
 
     try {
-      console.log('[handleSaveFactures] Début sauvegarde des factures');
+      console.log('[handleSaveFactures] Début sauvegarde des factures - Mode:', mode);
       
       // Sauvegarder chaque facture
       const savedFactureIds = [];
+      let savedNumeroFacture = ''; // Variable pour stocker le numéro de facture
+      
       for (let i = 0; i < factures.length; i++) {
         const facture = factures[i];
         
-        // Générer le numéro de facture si nécessaire
-        let numeroFacture = facture.reference;
-        if (!numeroFacture || numeroFacture.includes('attente')) {
-          numeroFacture = await factureService.generateNumeroFacture(currentOrganization.id);
+        if (mode === 'edit' && factureId) {
+          // Mode édition : mettre à jour la facture existante
+          const factureData = {
+            ...facture,
+            ...editableData,
+            // Recalculer les montants
+            montantHT: parseFloat(editableData.montantHT) || 0,
+            tauxTVA: parseFloat(editableData.tauxTVA) || 0,
+            montantTVA: (parseFloat(editableData.montantHT) || 0) * ((parseFloat(editableData.tauxTVA) || 0) / 100),
+            montantTTC: (parseFloat(editableData.montantHT) || 0) * (1 + (parseFloat(editableData.tauxTVA) || 0) / 100),
+            // Date de modification
+            dateModification: new Date().toISOString(),
+            modifiePar: user.uid
+          };
+          
+          // Nettoyer les valeurs undefined avant la sauvegarde
+          const cleanedFactureData = cleanUndefinedValues(factureData);
+          
+          console.log(`[handleSaveFactures] Mise à jour facture:`, cleanedFactureData);
+          
+          await factureService.updateFacture(factureId, cleanedFactureData);
+          
+          savedFactureIds.push(factureId);
+          savedNumeroFacture = cleanedFactureData.numeroFacture || cleanedFactureData.reference || '';
+          console.log(`[handleSaveFactures] Facture mise à jour avec ID:`, factureId);
+          
+        } else {
+          // Mode création : créer une nouvelle facture
+          // Générer le numéro de facture si nécessaire
+          let numeroFacture = facture.reference;
+          if (!numeroFacture || numeroFacture.includes('attente')) {
+            numeroFacture = await factureService.generateNumeroFacture(currentOrganization.id);
+          }
+          
+          // Préparer les données de la facture
+          const factureData = {
+            ...facture,
+            numeroFacture: numeroFacture,
+            reference: numeroFacture,
+            status: 'draft', // Statut initial
+            concertId: facture.concertId,
+            contratId: contrat?.id,
+            // Informations calculées
+            montantHT: parseFloat(facture.montantHT) || 0,
+            tauxTVA: parseFloat(facture.tauxTVA) || 0,
+            montantTVA: (parseFloat(facture.montantHT) || 0) * ((parseFloat(facture.tauxTVA) || 0) / 100),
+            montantTTC: (parseFloat(facture.montantHT) || 0) * (1 + (parseFloat(facture.tauxTVA) || 0) / 100),
+            // Date de création
+            dateFacture: new Date().toISOString().split('T')[0],
+            // Échéance
+            dateEcheance: facture.echeance || new Date().toISOString().split('T')[0]
+          };
+          
+          // Nettoyer les valeurs undefined avant la sauvegarde
+          const cleanedFactureData = cleanUndefinedValues(factureData);
+          
+          console.log(`[handleSaveFactures] Sauvegarde facture ${i + 1}:`, cleanedFactureData);
+          
+          const newFactureId = await factureService.createFacture(
+            cleanedFactureData,
+            currentOrganization.id,
+            user.uid
+          );
+          
+          savedFactureIds.push(newFactureId);
+          savedNumeroFacture = numeroFacture;
+          console.log(`[handleSaveFactures] Facture ${i + 1} sauvegardée avec ID:`, newFactureId);
         }
-        
-        // Préparer les données de la facture
-        const factureData = {
-          ...facture,
-          numeroFacture: numeroFacture,
-          reference: numeroFacture,
-          status: 'draft', // Statut initial
-          concertId: facture.concertId,
-          contratId: contrat?.id,
-          // Informations calculées
-          montantHT: parseFloat(facture.montantHT) || 0,
-          tauxTVA: parseFloat(facture.tauxTVA) || 0,
-          montantTVA: (parseFloat(facture.montantHT) || 0) * ((parseFloat(facture.tauxTVA) || 0) / 100),
-          montantTTC: (parseFloat(facture.montantHT) || 0) * (1 + (parseFloat(facture.tauxTVA) || 0) / 100),
-          // Date de création
-          dateFacture: new Date().toISOString().split('T')[0],
-          // Échéance
-          dateEcheance: facture.echeance || new Date().toISOString().split('T')[0]
-        };
-        
-        // Nettoyer les valeurs undefined avant la sauvegarde
-        const cleanedFactureData = cleanUndefinedValues(factureData);
-        
-        console.log(`[handleSaveFactures] Sauvegarde facture ${i + 1}:`, cleanedFactureData);
-        
-        const factureId = await factureService.createFacture(
-          cleanedFactureData,
-          currentOrganization.id,
-          user.uid
-        );
-        
-        savedFactureIds.push(factureId);
-        console.log(`[handleSaveFactures] Facture ${i + 1} sauvegardée avec ID:`, factureId);
       }
       
       console.log('[handleSaveFactures] Toutes les factures ont été sauvegardées:', savedFactureIds);
       
-      // Afficher un message de succès et fermer l'onglet
-      alert(`${factures.length} facture${factures.length > 1 ? 's' : ''} générée${factures.length > 1 ? 's' : ''} avec succès !`);
+      // Afficher un message de succès
+      alert(`${factures.length} facture${factures.length > 1 ? 's' : ''} ${mode === 'edit' ? 'mise à jour' : 'générée'}${factures.length > 1 ? 's' : ''} avec succès !`);
       
-      // TODO: Rediriger vers la liste des factures ou fermer l'onglet
+      // Si on est en mode création et qu'on a sauvé une seule facture, recharger la page en mode édition
+      if (mode === 'create' && savedFactureIds.length === 1) {
+        const newFactureId = savedFactureIds[0];
+        // Ouvrir la facture en mode édition dans le même onglet
+        if (openTab) {
+          openTab({
+            id: activeTab?.id || `facture-${newFactureId}`,
+            title: `Facture ${savedNumeroFacture || ''}`,
+            path: `/factures/${newFactureId}`,
+            component: 'FactureGeneratorPage',
+            params: { factureId: newFactureId },
+            icon: 'bi-receipt',
+            replace: true // Remplacer l'onglet actuel
+          });
+        }
+      }
       
     } catch (err) {
       console.error('[handleSaveFactures] Erreur lors de la sauvegarde:', err);

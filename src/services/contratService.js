@@ -8,6 +8,7 @@ import {
   where, 
   orderBy,
   updateDoc,
+  deleteDoc,
   serverTimestamp,
   Timestamp
 } from 'firebase/firestore';
@@ -313,6 +314,36 @@ const contratService = {
       console.log('[ContratService] Facture liée avec succès');
     } catch (error) {
       console.error('[ContratService] Erreur lors de la liaison de la facture:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Supprime un contrat
+   * @param {string} contratId - ID du contrat à supprimer
+   * @returns {Promise<boolean>}
+   */
+  async deleteContrat(contratId) {
+    try {
+      console.log('[ContratService] === SUPPRESSION CONTRAT - DÉBUT ===');
+      console.log('[ContratService] ID à supprimer:', contratId);
+      
+      // Vérifier que le contrat existe
+      const contratDoc = await getDoc(doc(db, 'contrats', contratId));
+      if (!contratDoc.exists()) {
+        console.log('[ContratService] ❌ Contrat non trouvé avec ID:', contratId);
+        throw new Error('Contrat non trouvé');
+      }
+      
+      // Supprimer le contrat
+      await deleteDoc(doc(db, 'contrats', contratId));
+      
+      console.log('[ContratService] ✅ Contrat supprimé avec succès - ID:', contratId);
+      console.log('[ContratService] === SUPPRESSION CONTRAT - FIN ===');
+      
+      return true;
+    } catch (error) {
+      console.error('[ContratService] ❌ Erreur lors de la suppression du contrat:', error);
       throw error;
     }
   }

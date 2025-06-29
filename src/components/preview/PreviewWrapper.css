@@ -1,0 +1,76 @@
+.preview-wrapper {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-header {
+  background-color: white;
+  border-bottom: 1px solid #dee2e6;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.preview-body {
+  flex: 1;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+.component-preview-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  min-height: 400px;
+}
+
+.preview-info-panel {
+  background-color: white;
+  border-top: 1px solid #dee2e6;
+  margin-top: auto;
+}
+
+.preview-info-panel pre {
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Styles responsifs */
+@media (max-width: 768px) {
+  .preview-body {
+    padding: 1rem 0.5rem;
+  }
+  
+  .component-preview-content {
+    padding: 1rem;
+    border-radius: 0;
+  }
+  
+  .preview-header .d-flex {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* Styles pour les composants sans conteneur */
+.component-preview-content > *:only-child {
+  margin: 0;
+}
+
+/* Animation de chargement */
+.preview-wrapper .spinner-border {
+  color: #0d6efd;
+}
+
+/* Styles pour les alertes */
+.preview-wrapper .alert {
+  max-width: 600px;
+  margin: 2rem auto;
+}

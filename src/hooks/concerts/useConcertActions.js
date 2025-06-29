@@ -70,7 +70,7 @@ export const useConcertActions = () => {
         id: `facture-${factureId}`,
         title: `Facture`,
         path: `/factures/${factureId}`,
-        component: 'FactureDetailsPage',
+        component: 'FactureGeneratorPage', // Remplacement de FactureDetailsPage
         params: { 
           factureId: factureId
         },

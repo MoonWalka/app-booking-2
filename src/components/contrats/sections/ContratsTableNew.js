@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, InputGroup, Dropdown } from 'react-bootstrap';
+import contratService from '@/services/contratService';
 import Table from '../../ui/Table';
 import Badge from '../../ui/Badge';
 import styles from './ContratsTableNew.module.css';
@@ -637,9 +638,17 @@ const ContratsTableNew = ({
       </button>
       <button 
         className={styles.actionButton}
-        onClick={() => {
+        onClick={async () => {
           if (window.confirm('Êtes-vous sûr de vouloir supprimer ce contrat ?')) {
-            console.log('Suppression contrat:', contrat.id);
+            try {
+              await contratService.deleteContrat(contrat.id);
+              // Mettre à jour l'état local immédiatement
+              setLocalContrats(prev => prev.filter(c => c.id !== contrat.id));
+              console.log('Contrat supprimé avec succès:', contrat.id);
+            } catch (error) {
+              console.error('Erreur lors de la suppression du contrat:', error);
+              alert('Erreur lors de la suppression du contrat');
+            }
           }
         }} 
         title="Supprimer"

@@ -37,7 +37,7 @@ function ContactBottomTabs({
       id: `facture-${factureId}`,
       title: `Facture`,
       path: `/factures/${factureId}`,
-      component: 'FactureDetailsPage',
+      component: 'FactureGeneratorPage', // Remplacement de FactureDetailsPage
       params: { factureId },
       icon: 'bi-receipt'
     });

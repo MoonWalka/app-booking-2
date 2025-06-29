@@ -6,7 +6,7 @@ import AddButton from '@/components/ui/AddButton';
 import ConcertsTableView from '@/components/concerts/ConcertsTableView';
 // import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { getPreContratsByConcert } from '@/services/preContratService';
 import contratService from '@/services/contratService';
@@ -179,10 +179,154 @@ const TableauDeBordPage = () => {
   // Gestion de la suppression
   const handleDelete = async (item) => {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimer "${item.titre || item.artisteNom}" ?`)) {
-      // TODO: Implémenter la suppression via un service
-      console.log('Suppression de l\'élément:', item.id);
-      // Recharger les données après suppression
-      // await loadDashboardData();
+      try {
+        console.log('Suppression du concert:', item.id);
+        
+        // Supprimer le concert de la base de données
+        await deleteDoc(doc(db, 'concerts', item.id));
+        
+        // Mettre à jour l'état local immédiatement pour une meilleure UX
+        setConcerts(prevConcerts => prevConcerts.filter(c => c.id !== item.id));
+        
+        console.log('Concert supprimé avec succès:', item.id);
+      } catch (error) {
+        console.error('Erreur lors de la suppression du concert:', error);
+        // Recharger les données en cas d'erreur pour s'assurer de la cohérence
+        const loadDashboardData = async () => {
+          if (!currentOrg?.id) return;
+          
+          try {
+            setLoading(true);
+            
+            // Charger les concerts récents avec leurs informations
+            const concertsQuery = query(
+              collection(db, 'concerts'),
+              where('organizationId', '==', currentOrg.id),
+              orderBy('date', 'desc')
+            );
+            
+            const concertsSnapshot = await getDocs(concertsQuery);
+            console.log('🔍 DEBUG TableauDeBord - Concerts trouvés:', concertsSnapshot.size, 'pour org:', currentOrg.id);
+            const concertsData = await Promise.all(
+              concertsSnapshot.docs.map(async (doc) => {
+                const concertData = {
+                  id: doc.id,
+                  ...doc.data(),
+                  type: 'concert'
+                };
+                
+                // Charger les données du pré-contrat pour ce concert
+                try {
+                  const preContrats = await getPreContratsByConcert(doc.id);
+                  if (preContrats && preContrats.length > 0) {
+                    // Prendre le plus récent
+                    const latestPreContrat = preContrats.sort((a, b) => {
+                      const dateA = a.createdAt?.toDate() || new Date(0);
+                      const dateB = b.createdAt?.toDate() || new Date(0);
+                      return dateB - dateA;
+                    })[0];
+                    
+                    // Ajouter les infos de pré-contrat au concert
+                    concertData.preContratId = latestPreContrat.id;
+                    concertData.publicFormData = latestPreContrat.publicFormData;
+                    concertData.publicFormCompleted = latestPreContrat.publicFormCompleted;
+                    concertData.confirmationValidee = latestPreContrat.confirmationValidee;
+                  }
+                } catch (error) {
+                  console.error('Erreur chargement pré-contrat pour concert', doc.id, error);
+                }
+                
+                // Charger les données du contrat pour ce concert
+                try {
+                  const contrat = await contratService.getContratByConcert(doc.id);
+                  if (contrat) {
+                    console.log('[TableauDeBordPage] Contrat trouvé pour concert', doc.id, ':', {
+                      status: contrat.status,
+                      contratStatut: contrat.contratStatut,
+                      hasContent: !!contrat.contratContenu
+                    });
+                    // Ajouter les infos du contrat au concert
+                    concertData.contratId = contrat.id;
+                    // Utiliser le statut réel du contrat depuis la collection 'contrats'
+                    concertData.contratStatus = contrat.status || 'draft';
+                    concertData.contratNumber = contrat.contratNumber;
+                    console.log('[TableauDeBordPage] Statut contrat assigné:', {
+                      concertId: doc.id,
+                      contratId: contrat.id,
+                      status: contrat.status,
+                      assignedStatus: concertData.contratStatus
+                    });
+                    // Si le contrat a un statut 'redige' dans la collection contrats
+                    if (contrat.contratStatut === 'redige') {
+                      concertData.contratStatut = 'redige';
+                      concertData.hasContratRedige = true;
+                    }
+                    // Logique de fallback : si le contrat a du contenu et un timestamp de finalisation, c'est finalisé
+                    if (!contrat.status && contrat.finalizedAt && contrat.contratContenu) {
+                      console.log('[TableauDeBordPage] Fallback: contrat détecté comme finalisé');
+                      concertData.contratStatus = 'finalized';
+                    }
+                    // Ajouter les infos de facture liée au contrat
+                    if (contrat.factureId) {
+                      concertData.factureId = contrat.factureId;
+                      concertData.factureStatus = contrat.factureStatus || 'generated';
+                      concertData.hasFacture = true;
+                    }
+                  }
+                } catch (error) {
+                  console.error('Erreur chargement contrat pour concert', doc.id, error);
+                }
+                
+                // Charger les données du devis pour ce concert
+                try {
+                  // Requête simplifiée pour éviter l'index composite
+                  const devisQuery = query(
+                    collection(db, 'devis'),
+                    where('concertId', '==', doc.id)
+                  );
+                  const devisSnapshot = await getDocs(devisQuery);
+                  
+                  if (!devisSnapshot.empty) {
+                    // Trier localement par date de création
+                    const devisDocs = devisSnapshot.docs.map(doc => ({
+                      id: doc.id,
+                      ...doc.data()
+                    }));
+                    
+                    devisDocs.sort((a, b) => {
+                      const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+                      const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+                      return dateB - dateA;
+                    });
+                    
+                    // Prendre le plus récent
+                    const latestDevis = devisDocs[0];
+                    
+                    concertData.devisId = latestDevis.id;
+                    concertData.devisStatut = latestDevis.statut || 'brouillon';
+                    concertData.devisNumero = latestDevis.numero;
+                    concertData.hasDevis = true;
+                  }
+                } catch (error) {
+                  console.error('Erreur chargement devis pour concert', doc.id, error);
+                }
+                
+                return concertData;
+              })
+            );
+
+            setConcerts(concertsData);
+            
+          } catch (err) {
+            console.error('Erreur lors du chargement des données:', err);
+            setError('Erreur lors du chargement des données du tableau de bord');
+          } finally {
+            setLoading(false);
+          }
+        };
+        
+        loadDashboardData();
+      }
     }
   };
 
@@ -720,7 +864,7 @@ const TableauDeBordPage = () => {
                     id: `facture-${factureId}`,
                     title: `Facture`,
                     path: `/factures/${factureId}`,
-                    component: 'FactureDetailsPage',
+                    component: 'FactureGeneratorPage', // Remplacement de FactureDetailsPage
                     params: { factureId },
                     icon: 'bi-receipt'
                   });

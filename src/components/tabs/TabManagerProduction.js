@@ -11,7 +11,7 @@ import ContratsPage from '@/pages/ContratsPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
 import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
-import FactureDetailsPage from '@/pages/FactureDetailsPage';
+// import FactureDetailsPage from '@/pages/FactureDetailsPage'; // Remplacé par FactureGeneratorPage
 import DevisPage from '@/pages/DevisPage';
 import ParametresPage from '@/pages/ParametresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
@@ -260,9 +260,11 @@ const TabManagerProduction = () => {
           console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
           return <FactureGeneratorPage />;
         case 'FactureDetailsPage':
-          console.log('[TabManager] Rendu FactureDetailsPage avec activeTab:', activeTab);
+          console.log('[TabManager] Rendu FactureGeneratorPage (remplace FactureDetailsPage) avec activeTab:', activeTab);
           console.log('[TabManager] factureId passé:', activeTab.params?.factureId);
-          return <FactureDetailsPage 
+          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
+          return <FactureGeneratorPage 
             factureId={activeTab.params?.factureId}
             concertId={activeTab.params?.concertId}
             contratId={activeTab.params?.contratId}

@@ -52,7 +52,18 @@ const ContratRedactionPage = () => {
   // Charger les données du contrat depuis la collection contrats
   useEffect(() => {
     const loadContratData = async () => {
+      console.log('[ContratRedactionPage] === DÉBUT CHARGEMENT CONTRAT ===');
+      console.log('[ContratRedactionPage] Variables d\'état initiales:', {
+        id,
+        isReadOnly,
+        loading,
+        hasSelectedModels,
+        isContractFinished,
+        showModelModal
+      });
+      
       if (!id) {
+        console.log('[ContratRedactionPage] Pas d\'ID fourni, arrêt du chargement');
         setLoading(false);
         return;
       }
@@ -79,12 +90,16 @@ const ContratRedactionPage = () => {
           if (contrat.contratModeles && contrat.contratModeles.length > 0) {
             setSelectedModels(contrat.contratModeles);
             setHasSelectedModels(true);
+            // Sélectionner automatiquement le premier modèle
+            if (contrat.contratModeles[0]) {
+              setCurrentModel(contrat.contratModeles[0]);
+            }
           }
           
           // Un contrat est terminé pour la rédaction seulement s'il a du contenu rédigé
-          // Le statut 'finalized' signifie juste que le formulaire est finalisé
-          if (contrat.contratStatut === 'redige' || contrat.contratContenu) {
-            console.log('[ContratRedactionPage] Contrat marqué comme rédigé - contratStatut:', contrat.contratStatut, 'hasContent:', !!contrat.contratContenu);
+          // Utiliser le nouveau système de statuts: draft, generated, finalized
+          if (contrat.status === 'generated' || contrat.status === 'finalized' || contrat.contratContenu) {
+            console.log('[ContratRedactionPage] Contrat marqué comme rédigé - status:', contrat.status, 'hasContent:', !!contrat.contratContenu);
             setIsContractFinished(true);
           } else {
             console.log('[ContratRedactionPage] Contrat non rédigé - peut être édité');
@@ -102,6 +117,12 @@ const ContratRedactionPage = () => {
       } catch (error) {
         console.error('[ContratRedactionPage] Erreur lors du chargement:', error);
       } finally {
+        console.log('[ContratRedactionPage] === FIN DU CHARGEMENT ===');
+        console.log('[ContratRedactionPage] États finaux après chargement:', {
+          hasSelectedModels,
+          isContractFinished,
+          isReadOnly
+        });
         setLoading(false);
       }
     };
@@ -111,6 +132,7 @@ const ContratRedactionPage = () => {
 
   // Vérifier si des modèles ont été choisis et ouvrir la modale si nécessaire
   useEffect(() => {
+    console.log('[ContratRedactionPage] === VÉRIFICATION MODALE ===');
     console.log('[ContratRedactionPage] useEffect modale - Conditions:', {
       loading,
       hasSelectedModels,
@@ -118,6 +140,12 @@ const ContratRedactionPage = () => {
       isReadOnly,
       showModelModal
     });
+    console.log('[ContratRedactionPage] Condition complète:', 
+      `!loading(${!loading}) && !hasSelectedModels(${!hasSelectedModels}) && !isContractFinished(${!isContractFinished}) && !isReadOnly(${!isReadOnly})`
+    );
+    console.log('[ContratRedactionPage] Devrait ouvrir la modale ?', 
+      !loading && !hasSelectedModels && !isContractFinished && !isReadOnly
+    );
     
     if (!loading && !hasSelectedModels && !isContractFinished && !isReadOnly) {
       // Vérifier si on vient du générateur de contrat
@@ -125,10 +153,16 @@ const ContratRedactionPage = () => {
       const fromGenerator = activeTab?.params?.fromGenerator;
       
       console.log('[ContratRedactionPage] Vérification des modèles, fromGenerator:', fromGenerator);
-      console.log('[ContratRedactionPage] Ouverture de la modale de sélection des modèles');
+      console.log('[ContratRedactionPage] ✅ OUVERTURE DE LA MODALE');
       
       // Ouvrir la modale seulement si on n'a pas de modèles sélectionnés et qu'on n'est pas en lecture seule
       setShowModelModal(true);
+    } else {
+      console.log('[ContratRedactionPage] ❌ PAS D\'OUVERTURE DE MODALE');
+      if (loading) console.log('   -> Raison: Encore en chargement');
+      if (hasSelectedModels) console.log('   -> Raison: Des modèles sont déjà sélectionnés');
+      if (isContractFinished) console.log('   -> Raison: Le contrat est déjà terminé');
+      if (isReadOnly) console.log('   -> Raison: Mode lecture seule');
     }
   }, [loading, hasSelectedModels, isContractFinished, isReadOnly, getActiveTab]);
 
@@ -260,8 +294,20 @@ const ContratRedactionPage = () => {
     }
   };
 
+  console.log('[ContratRedactionPage] === DÉBUT DU RENDU ===');
+  console.log('[ContratRedactionPage] États actuels:', {
+    loading,
+    hasSelectedModels,
+    isContractFinished,
+    isReadOnly,
+    showModelModal,
+    previewContent: !!previewContent,
+    editorContent: !!editorContent
+  });
+
   // Afficher un indicateur de chargement
   if (loading) {
+    console.log('[ContratRedactionPage] Rendu: Affichage du spinner de chargement');
     return (
       <Container fluid className="p-4">
         <div className="text-center py-5">

@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, setDoc, updateDoc, query, where, getDocs, orderBy, addDoc } from '@/services/firebase-service';
+import { collection, doc, getDoc, setDoc, updateDoc, query, where, getDocs, orderBy, addDoc, deleteDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
 const devisService = {
@@ -188,6 +188,32 @@ const devisService = {
       });
     } catch (error) {
       console.error('Erreur lors de la duplication du devis:', error);
+      throw error;
+    }
+  },
+
+  // Supprimer un devis
+  async deleteDevis(devisId) {
+    try {
+      console.log('=== SUPPRESSION DEVIS - DÉBUT ===');
+      console.log('ID à supprimer:', devisId);
+      
+      // Vérifier que le devis existe
+      const devisDoc = await getDoc(doc(db, 'devis', devisId));
+      if (!devisDoc.exists()) {
+        console.log('❌ Devis non trouvé avec ID:', devisId);
+        throw new Error('Devis non trouvé');
+      }
+      
+      // Supprimer le devis
+      await deleteDoc(doc(db, 'devis', devisId));
+      
+      console.log('✅ Devis supprimé avec succès - ID:', devisId);
+      console.log('=== SUPPRESSION DEVIS - FIN ===');
+      
+      return true;
+    } catch (error) {
+      console.error('❌ Erreur lors de la suppression du devis:', error);
       throw error;
     }
   }

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
+import devisService from '@/services/devisService';
 import Table from '../../ui/Table';
 import Badge from '../../ui/Badge';
 import styles from './DevisTable.module.css';
@@ -311,9 +312,17 @@ const DevisTable = ({ devis = [], onUpdateDevis }) => {
       </button>
       <button 
         className={styles.actionButton}
-        onClick={() => {
+        onClick={async () => {
           if (window.confirm('Êtes-vous sûr de vouloir supprimer ce devis ?')) {
-            console.log('Suppression devis:', devisItem.id);
+            try {
+              await devisService.deleteDevis(devisItem.id);
+              // Mettre à jour l'état local immédiatement
+              setLocalDevis(prev => prev.filter(d => d.id !== devisItem.id));
+              console.log('Devis supprimé avec succès:', devisItem.id);
+            } catch (error) {
+              console.error('Erreur lors de la suppression du devis:', error);
+              alert('Erreur lors de la suppression du devis');
+            }
           }
         }} 
         title="Supprimer"

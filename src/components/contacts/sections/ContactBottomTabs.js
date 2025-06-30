@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ContactDatesTable from '../ContactDatesTable';
 import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import ContactFacturesTable from '../ContactFacturesTable';
+import ContactFestivalsTable from '../ContactFestivalsTable';
+import FestivalCreationModal from '../FestivalCreationModal';
 import { useContactContrats } from '@/hooks/contacts/useContactContrats';
 import { useTabs } from '@/context/TabsContext';
 import styles from '../ContactViewTabs.module.css';
@@ -19,6 +21,8 @@ function ContactBottomTabs({
   openDateCreationTab,
   onDatesUpdate 
 }) {
+  const [showFestivalModal, setShowFestivalModal] = useState(false);
+  
   // Hook pour récupérer les contrats du contact/structure
   console.log('[ContactBottomTabs] Appel du hook useContactContrats avec:', { contactId, viewType });
   const { contrats, loading: contratsLoading } = useContactContrats(contactId, viewType);
@@ -204,32 +208,10 @@ function ContactBottomTabs({
       case 'festival':
         return (
           <div className={styles.tabContent}>
-            <div className={styles.metadataSection}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3><i className="bi bi-calendar2-week"></i> Festivals</h3>
-                <button 
-                  className="btn btn-primary btn-sm"
-                  onClick={() => {
-                    if (openTab) {
-                      openTab({
-                        id: 'nouveau-festival',
-                        title: 'Nouveau festival',
-                        path: '/festivals/nouveau',
-                        component: 'FestivalCreationPage',
-                        icon: 'bi-calendar2-week'
-                      });
-                    }
-                  }}
-                >
-                  <i className="bi bi-plus-circle me-2"></i>
-                  Nouveau festival
-                </button>
-              </div>
-              <div className={styles.emptyMessage}>
-                <i className="bi bi-calendar2-week" style={{ fontSize: '2rem', color: '#6c757d' }}></i>
-                <p>Aucun festival pour ce diffuseur</p>
-              </div>
-            </div>
+            <ContactFestivalsTable 
+              contactId={contactId}
+              contactName={extractedData?.structureRaisonSociale || extractedData?.structureNom || 'Diffuseur'}
+            />
           </div>
         );
 

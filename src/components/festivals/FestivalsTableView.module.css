@@ -1,0 +1,55 @@
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.festivalsTable {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.festivalsTable th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.festivalsTable th:hover {
+  background-color: #e9ecef;
+}
+
+.festivalsTable td {
+  vertical-align: middle;
+  padding: 0.75rem;
+}
+
+.festivalsTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.genresCell {
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.emptyMessage i {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.emptyMessage p {
+  margin: 0;
+  font-size: 1.1rem;
+}

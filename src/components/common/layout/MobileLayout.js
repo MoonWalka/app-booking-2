@@ -75,6 +75,12 @@ function MobileLayout() {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/festivals/dates" onClick={closeMenu}>
+                <i className="bi bi-calendar-event"></i>
+                <span>Dates des festivals</span>
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/contacts" onClick={closeMenu}>
                 <i className="bi bi-person-badge"></i>
                 <span>{mapTerm("Contacts")}</span>

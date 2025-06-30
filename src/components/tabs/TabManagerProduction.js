@@ -31,6 +31,7 @@ import ContratRedactionPage from '@/pages/ContratRedactionPage';
 import MesRecherchesPage from '@/pages/MesRecherchesPage';
 import MesSelectionsPage from '@/pages/MesSelectionsPage';
 import ContactTagsPage from '@/pages/ContactTagsPage';
+import FestivalsDatesPage from '@/pages/FestivalsDatesPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
 // import ConcertsList from '@/components/concerts/ConcertsList'; // Plus utilisé
@@ -322,6 +323,8 @@ const TabManagerProduction = () => {
           return <MesSelectionsPage />;
         case 'ContactTagsPage':
           return <ContactTagsPage />;
+        case 'FestivalsDatesPage':
+          return <FestivalsDatesPage />;
         default:
           return (
             <div className={styles.tabContent}>

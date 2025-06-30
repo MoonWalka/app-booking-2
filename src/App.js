@@ -66,6 +66,7 @@ import TabsTestPage from '@/pages/TabsTestPage';
 import InventairePagesPage from '@/pages/InventairePagesPage';
 import ComponentPreviewPage from '@/pages/ComponentPreviewPage';
 import PreviewWrapper from '@/components/preview/PreviewWrapper';
+import FestivalsDatesPage from '@/pages/FestivalsDatesPage';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -348,6 +349,14 @@ function App() {
                       </PrivateRoute>
                     } />
                     
+                    <Route path="/preview/festivals/dates" element={
+                      <PrivateRoute>
+                        <div style={{ padding: '1rem' }}>
+                          <FestivalsDatesPage />
+                        </div>
+                      </PrivateRoute>
+                    } />
+                    
                     {/* Route universelle pour preview de composants */}
                     <Route path="/preview/component/:componentName" element={
                       <PrivateRoute>
@@ -417,6 +426,12 @@ function App() {
                           <Route path="/booking/nouvelle-date" element={
                             <PrivateRoute>
                               <DateCreationPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/festivals/dates" element={
+                            <PrivateRoute>
+                              <FestivalsDatesPage />
                             </PrivateRoute>
                           } />
                           

@@ -259,6 +259,16 @@ function DesktopLayout({ children }) {
           icon: 'bi-calendar-plus'
         });
         break;
+      case '/festivals/dates':
+        // Ouvrir la page des dates de festivals dans un nouvel onglet
+        openTab({
+          id: 'festivals-dates',
+          title: 'Dates des festivals',
+          path: '/festivals/dates',
+          component: 'FestivalsDatesPage',
+          icon: 'bi-calendar-event'
+        });
+        break;
       case '/tableau-de-bord':
         openTab({
           id: 'tableau-de-bord',
@@ -339,7 +349,7 @@ function DesktopLayout({ children }) {
         { to: "/publications", icon: "bi-newspaper", label: "Publications" },
         { to: "/projets", icon: "bi-folder", label: "Projets" },
         { to: "/salles", icon: "bi-building", label: "Salle" },
-        { to: "#festivals", icon: "bi-calendar-event", label: "Date des festivals" },
+        { to: "/festivals/dates", icon: "bi-calendar-event", label: "Date des festivals" },
         { to: "/booking/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },

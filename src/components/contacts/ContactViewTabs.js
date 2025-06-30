@@ -565,7 +565,14 @@ function ContactViewTabs({ id, viewType = null }) {
     ];
     
     // Ajouter l'onglet Festival uniquement si le contact a le tag "diffuseur"
-    if (contact?.tags && contact.tags.includes('diffuseur')) {
+    const tags = extractedData?.tags || contact?.tags || [];
+    console.log('[ContactViewTabs] Vérification tag diffuseur:', {
+      tags,
+      hasDiffuseur: tags.includes('diffuseur'),
+      extractedDataTags: extractedData?.tags,
+      contactTags: contact?.tags
+    });
+    if (tags.some(tag => tag.toLowerCase() === 'diffuseur')) {
       tabs.push({ id: 'festival', label: 'Festival', icon: 'bi-calendar2-week', color: '#17a2b8' });
     }
     
@@ -577,7 +584,7 @@ function ContactViewTabs({ id, viewType = null }) {
     );
     
     return tabs;
-  }, [contact?.tags]);
+  }, [extractedData?.tags, contact?.tags]);
   
   // Configuration principale - Dépendances minimales
   const config = useMemo(() => ({

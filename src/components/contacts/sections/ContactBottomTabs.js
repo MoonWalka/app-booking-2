@@ -125,7 +125,26 @@ function ContactBottomTabs({
         return (
           <div className={styles.tabContent}>
             <div className={styles.metadataSection}>
-              <h3><i className="bi bi-building"></i> Informations de salle</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3><i className="bi bi-building"></i> Informations de salle</h3>
+                <button 
+                  className="btn btn-primary btn-sm"
+                  onClick={() => {
+                    if (openTab) {
+                      openTab({
+                        id: 'gerer-salles',
+                        title: 'Gérer les salles',
+                        path: '/parametres/salles',
+                        component: 'SallesPage',
+                        icon: 'bi-building'
+                      });
+                    }
+                  }}
+                >
+                  <i className="bi bi-gear me-2"></i>
+                  Gérer les salles
+                </button>
+              </div>
               <div className={styles.metadataGrid}>
                 {extractedData?.salleNom && (
                   <div className={styles.metadataItem}>
@@ -178,6 +197,38 @@ function ContactBottomTabs({
                   <p>Aucune information de salle</p>
                 </div>
               )}
+            </div>
+          </div>
+        );
+
+      case 'festival':
+        return (
+          <div className={styles.tabContent}>
+            <div className={styles.metadataSection}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3><i className="bi bi-calendar2-week"></i> Festivals</h3>
+                <button 
+                  className="btn btn-primary btn-sm"
+                  onClick={() => {
+                    if (openTab) {
+                      openTab({
+                        id: 'nouveau-festival',
+                        title: 'Nouveau festival',
+                        path: '/festivals/nouveau',
+                        component: 'FestivalCreationPage',
+                        icon: 'bi-calendar2-week'
+                      });
+                    }
+                  }}
+                >
+                  <i className="bi bi-plus-circle me-2"></i>
+                  Nouveau festival
+                </button>
+              </div>
+              <div className={styles.emptyMessage}>
+                <i className="bi bi-calendar2-week" style={{ fontSize: '2rem', color: '#6c757d' }}></i>
+                <p>Aucun festival pour ce diffuseur</p>
+              </div>
             </div>
           </div>
         );

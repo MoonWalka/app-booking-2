@@ -13,18 +13,14 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
   const [loading, setLoading] = useState(false);
   const [artistesData, setArtistesData] = useState([]);
   const [structuresData, setStructuresData] = useState([]);
-  const [lieuxData, setLieuxData] = useState([]);
   const [artisteSearch, setArtisteSearch] = useState('');
   const [organisateurSearch, setOrganisateurSearch] = useState(prefilledData.structureName || '');
-  const [lieuSearch, setLieuSearch] = useState('');
   const [showArtisteDropdown, setShowArtisteDropdown] = useState(false);
   const [showOrganisateurDropdown, setShowOrganisateurDropdown] = useState(false);
-  const [showLieuDropdown, setShowLieuDropdown] = useState(false);
   
   // Refs pour gérer les clics à l'extérieur
   const artisteDropdownRef = useRef(null);
   const organisateurDropdownRef = useRef(null);
-  const lieuDropdownRef = useRef(null);
   
   const [formData, setFormData] = useState({
     date: '',
@@ -33,10 +29,7 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
     projetNom: '',
     organisateurId: prefilledData.structureId || '',
     organisateurNom: prefilledData.structureName || '',
-    libelle: '',
-    lieuId: '',
-    lieuNom: '',
-    lieuVille: ''
+    libelle: ''
   });
 
   // Charger les données au montage du composant
@@ -44,9 +37,8 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
     if (show && currentOrganization?.id) {
       loadArtistes();
       loadStructures();
-      loadLieux();
     }
-  }, [show, currentOrganization, loadArtistes, loadLieux, loadStructures]);
+  }, [show, currentOrganization, loadArtistes, loadStructures]);
 
   // Gérer les clics à l'extérieur des dropdowns
   useEffect(() => {
@@ -56,9 +48,6 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
       }
       if (organisateurDropdownRef.current && !organisateurDropdownRef.current.contains(event.target)) {
         setShowOrganisateurDropdown(false);
-      }
-      if (lieuDropdownRef.current && !lieuDropdownRef.current.contains(event.target)) {
-        setShowLieuDropdown(false);
       }
     };
 
@@ -153,30 +142,6 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
     }
   };
 
-  const loadLieux = async () => {
-    try {
-      const q = query(
-        collection(db, 'lieux'),
-        where('organizationId', '==', currentOrganization.id)
-      );
-      const querySnapshot = await getDocs(q);
-      const lieux = [];
-      
-      querySnapshot.forEach((doc) => {
-        const lieuData = { id: doc.id, ...doc.data() };
-        lieux.push({
-          id: doc.id,
-          nom: lieuData.nom || lieuData.nomLieu,
-          ville: lieuData.ville || lieuData.adresseVille || '',
-          searchText: `${lieuData.nom || lieuData.nomLieu} ${lieuData.ville || lieuData.adresseVille || ''}`.toLowerCase()
-        });
-      });
-      
-      setLieuxData(lieux);
-    } catch (error) {
-      console.error('Erreur lors du chargement des lieux:', error);
-    }
-  };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -193,11 +158,6 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
   // Filtrer les structures selon la recherche
   const filteredStructures = structuresData.filter(structure =>
     structure.searchText.includes(organisateurSearch.toLowerCase())
-  );
-
-  // Filtrer les lieux selon la recherche
-  const filteredLieux = lieuxData.filter(lieu =>
-    lieu.searchText.includes(lieuSearch.toLowerCase())
   );
 
   const handleArtisteSelect = (artiste) => {
@@ -224,16 +184,6 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
     setShowOrganisateurDropdown(false);
   };
 
-  const handleLieuSelect = (lieu) => {
-    setFormData(prev => ({
-      ...prev,
-      lieuId: lieu.id,
-      lieuNom: lieu.nom,
-      lieuVille: lieu.ville
-    }));
-    setLieuSearch(`${lieu.nom}${lieu.ville ? ` - ${lieu.ville}` : ''}`);
-    setShowLieuDropdown(false);
-  };
 
   const resetForm = () => {
     setFormData({
@@ -243,17 +193,12 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
       projetNom: '',
       organisateurId: prefilledData.structureId || '',
       organisateurNom: prefilledData.structureName || '',
-      libelle: '',
-      lieuId: '',
-      lieuNom: '',
-      lieuVille: ''
+      libelle: ''
     });
     setArtisteSearch('');
     setOrganisateurSearch(prefilledData.structureName || '');
-    setLieuSearch('');
     setShowArtisteDropdown(false);
     setShowOrganisateurDropdown(false);
-    setShowLieuDropdown(false);
   };
 
   const handleSubmit = async (e) => {
@@ -286,9 +231,6 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
         organisateurId: formData.organisateurId,
         organisateurNom: formData.organisateurNom,
         libelle: formData.libelle,
-        lieuId: formData.lieuId || null,
-        lieuNom: formData.lieuNom || '',
-        lieuVille: formData.lieuVille || '',
         organizationId: currentOrganization.id,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -353,12 +295,12 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
               />
             </div>
 
-            {/* Libellé */}
+            {/* Lieu/Libellé */}
             <div className="col-md-6 mb-3">
-              <Form.Label>Libellé</Form.Label>
+              <Form.Label>Lieu/Libellé</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Nom ou description de l'événement"
+                placeholder="Salle, festival ou description de l'événement"
                 value={formData.libelle}
                 onChange={(e) => handleInputChange('libelle', e.target.value)}
               />
@@ -425,36 +367,6 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
               </div>
             </div>
 
-            {/* Lieu */}
-            <div className="col-12 mb-3">
-              <Form.Label>Lieu</Form.Label>
-              <div className={styles.dropdownContainer} ref={lieuDropdownRef}>
-                <Form.Control
-                  type="text"
-                  placeholder="Tapez pour rechercher un lieu..."
-                  value={lieuSearch}
-                  onChange={(e) => {
-                    setLieuSearch(e.target.value);
-                    setShowLieuDropdown(true);
-                  }}
-                  onFocus={() => setShowLieuDropdown(true)}
-                />
-                {showLieuDropdown && filteredLieux.length > 0 && (
-                  <div className={styles.dropdown}>
-                    {filteredLieux.slice(0, 10).map((lieu) => (
-                      <div
-                        key={lieu.id}
-                        className={styles.dropdownItem}
-                        onClick={() => handleLieuSelect(lieu)}
-                      >
-                        <strong>{lieu.nom}</strong>
-                        {lieu.ville && <span className="text-muted ms-2">({lieu.ville})</span>}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </Modal.Body>
         

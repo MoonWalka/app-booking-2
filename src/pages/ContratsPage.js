@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button';
 import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import Badge from '@/components/ui/Badge';
 import { useResponsive } from '@/hooks/common';
+import { useTabs } from '@/context/TabsContext';
 import '@styles/index.css';
 
 const ContratsPage = () => {
@@ -16,14 +17,16 @@ const ContratsPage = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { isMobile } = useResponsive();
+  const { openTab, openDevisTab, openNewDevisTab, openContratTab } = useTabs();
 
   useEffect(() => {
     const fetchContrats = async () => {
       setLoading(true);
       try {
+        // Utiliser updatedAt pour le tri car dateGeneration n'existe pas toujours
         const contratsQuery = query(
           collection(db, 'contrats'), 
-          orderBy('dateGeneration', 'desc')
+          orderBy('updatedAt', 'desc')
         );
         const contratsSnapshot = await getDocs(contratsQuery);
         
@@ -95,10 +98,42 @@ const ContratsPage = () => {
             }
           }
           
+          // Mapper les données avec toutes les propriétés nécessaires pour ContratsTableNew
           return {
             id: doc.id,
             ...contratData,
-            concert: concertData
+            // Propriétés essentielles avec valeurs par défaut
+            ref: contratData.ref || contratData.contratNumber || `CONT-${doc.id.slice(0, 6)}`,
+            entrepriseCode: contratData.entrepriseCode || 'MR',
+            collaborateurCode: contratData.collaborateurCode || '--',
+            type: contratData.type || contratData.contratType || 'Standard',
+            raisonSociale: contratData.raisonSociale || 
+                          contratData.organisateur?.raisonSociale || 
+                          concertData?.structureNom || 
+                          '--',
+            // Données de l'artiste et du lieu
+            artiste: contratData.artiste || concertData?.artisteNom || '--',
+            artisteNom: concertData?.artisteNom || contratData.artisteNom || '--',
+            lieu: concertData?.lieuNom || contratData.lieu || '--',
+            ville: contratData.ville || concertData?.ville || '--',
+            // Dates
+            dateEvenement: concertData?.date || contratData.dateEvenement,
+            dateGeneration: contratData.dateGeneration || contratData.createdAt || contratData.updatedAt,
+            dateValidite: contratData.dateValidite || contratData.dateEvenement,
+            // Montants
+            totalHT: contratData.montantHT || contratData.totalHT || 0,
+            totalTTC: contratData.montantTTC || contratData.totalTTC || 0,
+            montantConsolideHT: contratData.montantConsolideHT || contratData.montantHT || 0,
+            // Statut normalisé - IMPORTANT: s'assurer que 'generated' est bien géré
+            status: contratData.status || (contratData.contratGenere ? 'draft' : null),
+            // Statuts d'envoi et signature
+            envoye: contratData.envoye || false,
+            signe: contratData.signe || false,
+            dateSignature: contratData.dateSignature,
+            // Données du concert pour les actions
+            concert: concertData,
+            concertId: contratData.concertId,
+            structureId: concertData?.structureId || contratData.structureId
           };
         });
         
@@ -121,6 +156,45 @@ const ContratsPage = () => {
         contrat.id === contratUpdated.id ? contratUpdated : contrat
       )
     );
+  };
+
+  // Handlers pour les factures
+  const handleViewFacture = (factureId) => {
+    if (openTab) {
+      openTab({
+        id: `facture-${factureId}`,
+        title: `Facture`,
+        path: `/factures/${factureId}`,
+        component: 'FactureGeneratorPage',
+        params: { factureId },
+        icon: 'bi-receipt'
+      });
+    } else {
+      navigate(`/factures/${factureId}`);
+    }
+  };
+
+  const handleGenerateFacture = (concertId, contratId) => {
+    if (openTab) {
+      const contrat = contrats.find(c => c.id === contratId);
+      const structureName = contrat?.raisonSociale || 'Structure';
+      openTab({
+        id: `facture-generate-${concertId}`,
+        title: `Nouvelle facture - ${structureName}`,
+        path: `/factures/generate/${concertId}?fromContrat=true`,
+        component: 'FactureGeneratorPage',
+        params: { concertId, fromContrat: true, contratId },
+        icon: 'bi-receipt'
+      });
+    } else {
+      navigate(`/factures/generate/${concertId}?fromContrat=true`);
+    }
+  };
+
+  // Helper pour obtenir le nom de la structure
+  const getStructureName = () => {
+    // Dans cette vue générale, on ne peut pas déterminer une structure spécifique
+    return 'Structure';
   };
 
   return (
@@ -256,6 +330,12 @@ const ContratsPage = () => {
             <ContratsTableNew 
               contrats={contrats} 
               onUpdateContrat={handleUpdateContrat}
+              openDevisTab={openDevisTab}
+              openNewDevisTab={openNewDevisTab}
+              openContratTab={openContratTab}
+              handleViewFacture={handleViewFacture}
+              handleGenerateFacture={handleGenerateFacture}
+              getStructureName={getStructureName}
             />
           )}
         </>

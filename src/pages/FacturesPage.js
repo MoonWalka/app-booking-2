@@ -6,23 +6,32 @@ import { db } from '@/services/firebase-service';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import FlexContainer from '@/components/ui/FlexContainer';
 import Button from '@/components/ui/Button';
-import ContratsTable from '@/components/contrats/sections/ContratsTable';
+import FacturesTableView from '@/components/factures/FacturesTableView';
+import factureService from '@/services/factureService';
 import { useResponsive } from '@/hooks/common';
+import { useOrganization } from '@/context/OrganizationContext';
 import '@styles/index.css';
 
 const FacturesPage = () => {
   const [factures, setFactures] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { isMobile } = useResponsive();
+  const { currentOrganization } = useOrganization();
 
   useEffect(() => {
     const fetchFactures = async () => {
+      if (!currentOrganization?.id) {
+        setLoading(false);
+        return;
+      }
+      
       setLoading(true);
       try {
-        // Récupérer les factures depuis la collection
+        // Récupérer les factures depuis la collection de l'organisation
         const facturesQuery = query(
-          collection(db, 'factures'), 
+          collection(db, 'organizations', currentOrganization.id, 'factures'), 
           orderBy('dateFacture', 'desc')
         );
         const facturesSnapshot = await getDocs(facturesQuery);
@@ -35,21 +44,28 @@ const FacturesPage = () => {
         setFactures(facturesData);
       } catch (error) {
         console.error('Erreur lors de la récupération des factures:', error);
+        setError('Erreur lors du chargement des factures');
       } finally {
         setLoading(false);
       }
     };
 
     fetchFactures();
-  }, []);
+  }, [currentOrganization?.id]);
 
   const handleUpdateFacture = (factureUpdated) => {
     // Callback pour mettre à jour une facture localement
-    setFactures(prev => 
-      prev.map(facture => 
-        facture.id === factureUpdated.id ? factureUpdated : facture
-      )
-    );
+    if (factureUpdated.deleted) {
+      // Si la facture a été supprimée, la retirer de la liste
+      setFactures(prev => prev.filter(facture => facture.id !== factureUpdated.id));
+    } else {
+      // Sinon, mettre à jour la facture
+      setFactures(prev => 
+        prev.map(facture => 
+          facture.id === factureUpdated.id ? factureUpdated : facture
+        )
+      );
+    }
   };
 
   return (
@@ -94,51 +110,29 @@ const FacturesPage = () => {
           </Card.Body>
         </Card>
       ) : (
-        <>
-          {isMobile ? (
-            <div className="mobile-list">
-              {factures.map(facture => (
-                <Card key={facture.id} className="mb-3 border-0 shadow-sm">
-                  <Card.Body 
-                    className="p-3" 
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => navigate(`/factures/${facture.id}`)}
-                  >
-                    <div className="d-flex justify-content-between align-items-start mb-2">
-                      <div>
-                        <h6 className="mb-1 fw-bold">
-                          {facture.ref || 'N/A'}
-                        </h6>
-                        <small className="text-muted">
-                          {facture.destinataire && `${facture.destinataire} • `}
-                          {facture.dateFacture ? 
-                            new Date(facture.dateFacture).toLocaleDateString('fr-FR') : 
-                            '-'
-                          }
-                        </small>
-                      </div>
-                    </div>
-                    
-                    <div className="small text-muted mb-2">
-                      <i className="bi bi-cash me-1"></i>
-                      {facture.montantTTC ? `${facture.montantTTC} ${facture.devise || 'EUR'}` : 'N/A'}
-                    </div>
-                    
-                    <div className="small text-muted mb-3">
-                      <i className="bi bi-building me-1"></i>
-                      {facture.emetteur || 'N/A'}
-                    </div>
-                  </Card.Body>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <ContratsTable 
-              factures={factures} 
-              onUpdateFacture={handleUpdateFacture}
+        <Card className="border-0 shadow-sm">
+          <Card.Body className="p-0">
+            <FacturesTableView
+              factures={factures}
+              loading={loading}
+              error={error}
+              onDelete={async (facture) => {
+                if (window.confirm(`Êtes-vous sûr de vouloir supprimer la facture ${facture.reference || facture.numeroFacture} ?`)) {
+                  try {
+                    await factureService.deleteFacture(facture.id, currentOrganization.id);
+                    // Mettre à jour l'état local immédiatement
+                    setFactures(prev => prev.filter(f => f.id !== facture.id));
+                  } catch (error) {
+                    console.error('Erreur lors de la suppression:', error);
+                    alert('Erreur lors de la suppression de la facture');
+                  }
+                }
+              }}
+              showSearch={true}
+              showFilters={true}
             />
-          )}
-        </>
+          </Card.Body>
+        </Card>
       )}
     </Container>
   );

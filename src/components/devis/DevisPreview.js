@@ -119,7 +119,7 @@ function DevisPreview({ devisData }) {
             <tfoot>
               <tr className={styles.totalHT}>
                 <td colSpan="6"><strong>Total HT</strong></td>
-                <td><strong>{formatCurrency(devisData.totalHT)}</strong></td>
+                <td><strong>{formatCurrency(devisData.montantHT)}</strong></td>
               </tr>
               <tr className={styles.totalTVA}>
                 <td colSpan="6"><strong>Total TVA</strong></td>
@@ -127,7 +127,7 @@ function DevisPreview({ devisData }) {
               </tr>
               <tr className={styles.totalTTC}>
                 <td colSpan="6"><strong>Total TTC</strong></td>
-                <td><strong>{formatCurrency(devisData.totalTTC)}</strong></td>
+                <td><strong>{formatCurrency(devisData.montantTTC)}</strong></td>
               </tr>
             </tfoot>
           </table>

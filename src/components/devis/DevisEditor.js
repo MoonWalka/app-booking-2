@@ -94,9 +94,9 @@ function DevisEditor({ concertId, structureId, devisId }) {
     modalitesPaiement: '',
     
     // Totaux
-    totalHT: 0,
+    montantHT: 0,
     totalTVA: 0,
-    totalTTC: 0,
+    montantTTC: 0,
     
     // Métadonnées
     organizationId: currentOrg?.id,
@@ -128,6 +128,14 @@ function DevisEditor({ concertId, structureId, devisId }) {
           console.log('Lignes objet:', loadedDevis.lignesObjet);
           console.log('Données complètes:', loadedDevis);
           console.log('===================================');
+          
+          // Migration des anciens devis qui utilisent totalHT/totalTTC
+          if (loadedDevis.totalHT !== undefined && loadedDevis.montantHT === undefined) {
+            loadedDevis.montantHT = loadedDevis.totalHT;
+          }
+          if (loadedDevis.totalTTC !== undefined && loadedDevis.montantTTC === undefined) {
+            loadedDevis.montantTTC = loadedDevis.totalTTC;
+          }
           
           setDevisData(loadedDevis);
           setOriginalDevisData(loadedDevis);
@@ -309,18 +317,18 @@ function DevisEditor({ concertId, structureId, devisId }) {
 
   // Calculer les totaux
   const calculateTotals = useCallback((lignes) => {
-    const totalHT = lignes.reduce((sum, ligne) => sum + (ligne.montantHT || 0), 0);
+    const montantHT = lignes.reduce((sum, ligne) => sum + (ligne.montantHT || 0), 0);
     const totalTVA = lignes.reduce((sum, ligne) => {
       const montantTVA = (ligne.montantHT || 0) * (ligne.tauxTVA || 0) / 100;
       return sum + montantTVA;
     }, 0);
-    const totalTTC = totalHT + totalTVA;
+    const montantTTC = montantHT + totalTVA;
 
     setDevisData(prev => ({
       ...prev,
-      totalHT,
+      montantHT,
       totalTVA,
-      totalTTC
+      montantTTC
     }));
   }, []);
 

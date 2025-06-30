@@ -557,14 +557,27 @@ function ContactViewTabs({ id, viewType = null }) {
   };
 
   // Configuration des onglets du bas
-  const bottomTabsConfig = useMemo(() => [
-    { id: 'historique', label: 'Historique', icon: 'bi-clock-history', color: '#28a745' },
-    { id: 'diffusion', label: 'Diffusion', icon: 'bi-broadcast', color: '#6f42c1' },
-    { id: 'salle', label: 'Salle', icon: 'bi-building', color: '#fd7e14' },
-    { id: 'dates', label: 'Dates', icon: 'bi-calendar-event', color: '#dc3545' },
-    { id: 'contrats', label: 'Contrats', icon: 'bi-file-earmark-text', color: '#007bff' },
-    { id: 'factures', label: 'Factures', icon: 'bi-receipt', color: '#ffc107' }
-  ], []);
+  const bottomTabsConfig = useMemo(() => {
+    const tabs = [
+      { id: 'historique', label: 'Historique', icon: 'bi-clock-history', color: '#28a745' },
+      { id: 'diffusion', label: 'Diffusion', icon: 'bi-broadcast', color: '#6f42c1' },
+      { id: 'salle', label: 'Salle', icon: 'bi-building', color: '#fd7e14' }
+    ];
+    
+    // Ajouter l'onglet Festival uniquement si le contact a le tag "diffuseur"
+    if (contact?.tags && contact.tags.includes('diffuseur')) {
+      tabs.push({ id: 'festival', label: 'Festival', icon: 'bi-calendar2-week', color: '#17a2b8' });
+    }
+    
+    // Ajouter les autres onglets
+    tabs.push(
+      { id: 'dates', label: 'Dates', icon: 'bi-calendar-event', color: '#dc3545' },
+      { id: 'contrats', label: 'Contrats', icon: 'bi-file-earmark-text', color: '#007bff' },
+      { id: 'factures', label: 'Factures', icon: 'bi-receipt', color: '#ffc107' }
+    );
+    
+    return tabs;
+  }, [contact?.tags]);
   
   // Configuration principale - Dépendances minimales
   const config = useMemo(() => ({

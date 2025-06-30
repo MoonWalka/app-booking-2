@@ -11,6 +11,7 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
   const [factures, setFactures] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const { currentOrganization } = useOrganization();
   const organizationId = currentOrganization?.id;
 
@@ -101,7 +102,11 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
     };
 
     fetchContactFactures();
-  }, [entityId, entityType, organizationId]);
+  }, [entityId, entityType, organizationId, refreshKey]);
 
-  return { factures, loading, error };
+  const refetch = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
+  return { factures, loading, error, refetch };
 };

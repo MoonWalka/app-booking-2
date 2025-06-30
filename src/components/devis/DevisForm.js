@@ -138,7 +138,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
     const soldeLigne = {
       id: newId,
       nature: 'solde',
-      montantTTC: devisData.totalTTC,
+      montantTTC: devisData.montantTTC,
       dateFacturation: new Date().toISOString().split('T')[0],
       dateEcheance: new Date().toISOString().split('T')[0],
       modePaiement: 'virement'
@@ -753,7 +753,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                   <Card.Body>
                     <div className="d-flex justify-content-between mb-2">
                       <span>Total HT:</span>
-                      <strong>{devisData.totalHT.toFixed(2)} €</strong>
+                      <strong>{devisData.montantHT.toFixed(2)} €</strong>
                     </div>
                     <div className="d-flex justify-content-between mb-2">
                       <span>Total TVA:</span>
@@ -762,7 +762,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                     <hr />
                     <div className="d-flex justify-content-between">
                       <span className="fw-bold">Total TTC:</span>
-                      <strong className="text-primary fs-5">{devisData.totalTTC.toFixed(2)} €</strong>
+                      <strong className="text-primary fs-5">{devisData.montantTTC.toFixed(2)} €</strong>
                     </div>
                   </Card.Body>
                 </Card>

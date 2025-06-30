@@ -70,7 +70,6 @@ Depuis Mai 2025, une standardisation complète du composant Card a été réalis
 - **Import correct** : `import Card from '@/components/ui/Card';`
 - **Documentation** : Pour l'utilisation correcte et les exemples, consultez la [documentation du composant Card](/docs/components/Card.md)
 - **Standards** : Les règles et standards sont détaillés dans [Standards des Composants](/docs/standards/components-standardises.md)
-- **Rapport** : Le processus de migration est documenté dans le [rapport de migration](/card_migration_report.md)
 
 **À ne jamais faire** :
 - Ne créez pas d'implémentations DIY de cartes avec des `<div className="card">`
@@ -79,7 +78,7 @@ Depuis Mai 2025, une standardisation complète du composant Card a été réalis
 
 ### Hooks standardisés
 
-Depuis Mai 2025, une standardisation complète des hooks a été mise en place. Tous les hooks sont maintenant organisés dans le dossier `/src/hooks/` avec une structure cohérente par entité. Consultez la [documentation de standardisation des hooks](/src/docs/hooks/StandardisationHooks.md) pour les détails complets.
+Depuis Mai 2025, une standardisation complète des hooks a été mise en place. Tous les hooks sont maintenant organisés dans le dossier `/src/hooks/` avec une structure cohérente par entité.
 
 #### Principes clés :
 

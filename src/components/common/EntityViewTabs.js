@@ -11,7 +11,10 @@ function EntityViewTabs({
   config,
   children,
   activeBottomTab,
-  setActiveBottomTab
+  setActiveBottomTab,
+  bottomTabContent, // Nouveau : contenu des onglets passé directement
+  header,           // Nouveau : header passé directement
+  topSections       // Nouveau : sections passées directement
 }) {
 
   // Ne plus retourner directement le spinner pour toute la page
@@ -40,12 +43,18 @@ function EntityViewTabs({
   }
 
   const renderBottomTabContent = () => {
-    const activeTab = config.bottomTabs.find(tab => tab.id === activeBottomTab);
+    // Priorité au contenu passé directement
+    if (bottomTabContent) {
+      return bottomTabContent;
+    }
     
+    // Fallback sur la config pour la compatibilité
     if (config.renderBottomTabContent) {
       return config.renderBottomTabContent();
     }
 
+    // Contenu par défaut
+    const activeTab = config.bottomTabs.find(tab => tab.id === activeBottomTab);
     return (
       <div className={styles.tabContent}>
         <div className={`${styles.tabContentCentered} ${styles.constructionZone}`}>
@@ -64,9 +73,9 @@ function EntityViewTabs({
   return (
     <div className={styles.container}>
       {/* Header optionnel entre les zones du haut et les onglets */}
-      {config.header && !loading && (
+      {(header || config.header) && !loading && (
         <div className={styles.headerSection}>
-          {config.header.render ? config.header.render(entity) : config.header.content}
+          {header || (config.header.render ? config.header.render(entity) : config.header.content)}
         </div>
       )}
 
@@ -76,9 +85,9 @@ function EntityViewTabs({
           <LoadingSpinner />
         </div>
       ) : (
-        config.topSections && (
+        (topSections || config.topSections) && (
           <div className={styles.topSection}>
-            {config.topSections.map((section, index) => (
+            {(topSections || config.topSections).map((section, index) => (
               <div key={index} className={styles[section.className]}>
                 <div className={styles.sectionHeader}>
                   <i className={typeof section.icon === 'function' ? section.icon(entity) : section.icon}></i>

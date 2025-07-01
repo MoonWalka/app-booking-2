@@ -71,9 +71,18 @@ function ContactViewTabs({ id, viewType = null }) {
   // Hook relationnel direct
   const { getStructureWithPersonnes, getPersonneWithStructures, structures, personnes, invalidateContactCache } = useContactsRelational();
   
-  // États locaux
+  // Vérifier si les données sont déjà disponibles pour éviter le flash blanc
+  const hasDataInCache = React.useMemo(() => {
+    if (!cleanId) return false;
+    // Vérifier si on a déjà les données en cache
+    const structureData = getStructureWithPersonnes(cleanId);
+    const personneData = getPersonneWithStructures(cleanId);
+    return !!(structureData || personneData);
+  }, [cleanId, getStructureWithPersonnes, getPersonneWithStructures]);
+  
+  // États locaux - loading initialisé selon la présence de données en cache
   const [entityType, setEntityType] = useState(forcedViewType);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!hasDataInCache); // false si déjà en cache
   const [error, setError] = useState(null);
   
   // Récupération directe des données - SANS setState !
@@ -649,9 +658,15 @@ function ContactViewTabs({ id, viewType = null }) {
     return tabs;
   }, [extractedData?.tags, contact?.tags]);
   
-  // Configuration principale - Dépendances minimales
-  const config = useMemo(() => {
-    console.log('⚙️ [ContactViewTabs] Recalcul config principale');
+  // IDs des personnes existantes - mémorisé pour éviter de recréer l'array
+  const existingPersonIds = useMemo(() => {
+    const personnesFromContact = contact?.personnes || [];
+    return personnesFromContact.map(p => p.id);
+  }, [contact?.personnes]);
+  
+  // Configuration STATIQUE - ne dépend que du type d'entité
+  const staticConfig = useMemo(() => {
+    console.log('⚙️ [ContactViewTabs] Recalcul config statique');
     return {
       defaultBottomTab: 'historique',
       notFoundIcon: isStructure ? 'bi-building-x' : 'bi-person-x',
@@ -659,7 +674,13 @@ function ContactViewTabs({ id, viewType = null }) {
       notFoundMessage: isStructure 
         ? 'La structure demandée n\'existe pas ou n\'est plus disponible.'
         : 'Le contact demandé n\'existe pas ou n\'est plus disponible.',
+      bottomTabs: bottomTabsConfig
 
+    };
+  }, [isStructure, bottomTabsConfig]); // Seulement 2 dépendances !
+  
+  // Props dynamiques pour EntityViewTabs - passées directement, pas dans la config
+  const dynamicProps = {
     header: {
       render: (contact) => {
         const data = extractedData || contact;
@@ -749,8 +770,6 @@ function ContactViewTabs({ id, viewType = null }) {
       }
     },
     
-    bottomTabs: bottomTabsConfig,
-
     topSections: [
       {
         className: 'topLeft',
@@ -870,59 +889,8 @@ function ContactViewTabs({ id, viewType = null }) {
           );
         }
       },
-    ],
-
-    renderBottomTabContent: () => (
-      <ContactBottomTabs 
-        activeTab={activeBottomTab}
-        contactId={id}
-        viewType={viewType}
-        extractedData={extractedData}
-        datesData={datesData}
-        openDateCreationTab={openDateCreationTab}
-        onDatesUpdate={loadStructureDates}
-      />
-    )
+    ]
   };
-  }, [
-    // Dépendances vraiment nécessaires uniquement
-    isStructure,
-    entityType,
-    forcedViewType,
-    activeBottomTab,
-    contact?.tags,
-    extractedData?.structureRaisonSociale,
-    extractedData?.prenom,
-    extractedData?.nom,
-    extractedData?.fonction,
-    extractedData?.createdAt,
-    bottomTabsConfig,
-    commentaires,
-    contact?.personnes,
-    datesData,
-    extractedData,
-    id,
-    loadStructureDates,
-    cleanId,
-    openPersonneModal,
-    handleRemoveTag,
-    handleEditPerson,
-    handleDissociatePerson,
-    handleOpenPersonFiche,
-    handleAddCommentToPersonWithModal,
-    navigateToEntity,
-    handleEditStructure,
-    handleOpenStructureFiche,
-    handleAddCommentToStructure,
-    handleSetPrioritaire,
-    handleToggleActif,
-    handleAddComment,
-    handleDeleteComment,
-    openCommentModal,
-    openDateCreationTab,
-    viewType
-  ]);
-  // Fin de useMemo config
 
 
   return (
@@ -932,9 +900,22 @@ function ContactViewTabs({ id, viewType = null }) {
         loading={loading}
         error={error}
         entityType="contact"
-        config={config}
+        config={staticConfig}
         activeBottomTab={activeBottomTab}
         setActiveBottomTab={handleTabChange}
+        header={dynamicProps.header.render(extractedData)}
+        topSections={dynamicProps.topSections}
+        bottomTabContent={
+          <ContactBottomTabs 
+            activeTab={activeBottomTab}
+            contactId={id}
+            viewType={viewType}
+            extractedData={extractedData}
+            datesData={datesData}
+            openDateCreationTab={openDateCreationTab}
+            onDatesUpdate={loadStructureDates}
+          />
+        }
       />
       
       <TagsSelectionModal
@@ -951,15 +932,7 @@ function ContactViewTabs({ id, viewType = null }) {
         onAssociate={handleAssociatePersonsWithReload}
         structureId={id}
         allowMultiple={true}
-        existingPersonIds={(() => {
-          const personnesFromContact = contact?.personnes || [];
-          const ids = personnesFromContact.map(p => p.id);
-          // 🔍 DEBUG: Tracer les IDs existants passés au modal
-          console.log('🔍 [DEBUG ContactViewTabs] - Passage existingPersonIds au modal');
-          console.log('📋 personnes du contact:', personnesFromContact.map(p => ({ id: p.id, nom: `${p.prenom || ''} ${p.nom || ''}`.trim() })));
-          console.log('🔑 existingPersonIds calculés:', ids);
-          return ids;
-        })()}
+        existingPersonIds={existingPersonIds}
       />
       
       <PersonneCreationModal

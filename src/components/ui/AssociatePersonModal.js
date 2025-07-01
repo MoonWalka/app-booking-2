@@ -123,7 +123,7 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
       console.log('📋 existingPersonIds à l\'ouverture:', existingPersonIds);
       loadPersonnes();
     }
-  }, [isOpen, sortOrder, currentOrganization?.id, existingPersonIds]);
+  }, [isOpen, sortOrder, currentOrganization?.id, existingPersonIds, loadPersonnes]);
   
   // Note: loadPersonnes n'est pas dans les dépendances car elle utilise currentOrganization?.id 
   // qui est déjà dans les dépendances, et cela évite une boucle infinie

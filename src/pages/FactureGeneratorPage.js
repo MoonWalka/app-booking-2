@@ -30,13 +30,11 @@ const FactureGeneratorPage = () => {
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [concert, setConcert] = useState(null);
   const [contrat, setContrat] = useState(null);
   const [factures, setFactures] = useState([]);
   const [currentFactureIndex, setCurrentFactureIndex] = useState(0);
   const [editableData, setEditableData] = useState({});
   const [previewHtml, setPreviewHtml] = useState('');
-  const [entrepriseData, setEntrepriseData] = useState(null);
 
   // Fonction pour convertir un nombre en lettres (simplifié)
   const numberToWords = (num) => {
@@ -499,7 +497,6 @@ const FactureGeneratorPage = () => {
             const concertSnap = await getDoc(concertRef);
             if (concertSnap.exists()) {
               concertData = { id: concertSnap.id, ...concertSnap.data() };
-              setConcert(concertData);
             }
           }
           
@@ -575,12 +572,7 @@ const FactureGeneratorPage = () => {
       if (!concertId) {
         setLoading(false);
         // Créer des données de démonstration
-        setConcert({ 
-          id: 'demo', 
-          artisteNom: 'Artiste Démo',
-          structureNom: 'Structure Démo',
-          date: new Date()
-        });
+        // (les données de concert sont maintenant gérées via contrat)
         setFactures([{
           type: 'demo',
           reference: 'DEMO-2024-001',
@@ -608,7 +600,6 @@ const FactureGeneratorPage = () => {
           const entrepriseSnap = await getDoc(entrepriseRef);
           if (entrepriseSnap.exists()) {
             entrepriseInfo = entrepriseSnap.data();
-            setEntrepriseData(entrepriseInfo);
             console.log('[FactureGeneratorPage] Informations bancaires entreprise chargées:', {
               iban: entrepriseInfo.iban,
               bic: entrepriseInfo.bic,
@@ -631,7 +622,6 @@ const FactureGeneratorPage = () => {
         }
         
         const concertData = { id: concertSnap.id, ...concertSnap.data() };
-        setConcert(concertData);
         
         // Charger les données complètes de la structure si elle existe
         let structureData = null;

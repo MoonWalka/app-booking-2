@@ -474,7 +474,7 @@ const ContratGeneratorNew = ({
         }
       }));
     }
-  }, [contratData.negociation?.montantNet]);
+  }, [contratData.negociation?.montantNet, contratData.negociation]);
 
   // Calcul des totaux (déplacé ici pour être utilisable dans les useEffect)
   const calculerTotaux = useCallback(() => {

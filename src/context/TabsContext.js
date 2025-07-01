@@ -177,13 +177,14 @@ export const TabsProvider = ({ children }) => {
   }, [openTab]);
 
   const openConcertTab = useCallback((concertId, concertTitle) => {
+    console.log('[TabsContext] openConcertTab appelé - ouverture DateDetailsPage');
     openTab({
-      id: `concert-${concertId}`,
-      title: `Concert - ${concertTitle}`,
-      path: `/concerts/${concertId}`,
-      component: 'ConcertDetailsPage',
-      params: { concertId },
-      icon: 'bi-calendar-event'
+      id: `date-details-${concertId}`,
+      title: concertTitle || 'Détails de la date',
+      path: `/dates/${concertId}`,
+      component: 'DateDetailsPage',
+      params: { id: concertId },
+      icon: 'bi-calendar-check'
     });
   }, [openTab]);
 

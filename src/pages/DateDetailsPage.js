@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Form, Card, Row, Col } from 'react-bootstrap';
-import { doc, getDoc, updateDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
@@ -23,6 +23,7 @@ function DateDetailsPage({ params = {} }) {
   const [concertData, setConcertData] = useState(null);
   const [festivals, setFestivals] = useState([]);
   const [collaborateurs, setCollaborateurs] = useState([]);
+  const [contactId, setContactId] = useState(null);
   const [formData, setFormData] = useState({
     date: '',
     artisteNom: '',
@@ -43,6 +44,86 @@ function DateDetailsPage({ params = {} }) {
     notes: ''
   });
 
+  // Charger les données financières depuis les documents liés
+  const loadFinancialData = useCallback(async (concertId) => {
+    if (!concertId || !currentOrganization?.id) return null;
+    
+    try {
+      // 1. Essayer de récupérer le contrat (relation 1:1 avec concertId)
+      const contratDoc = await getDoc(doc(db, 'contrats', concertId));
+      if (contratDoc.exists()) {
+        const contratData = contratDoc.data();
+        console.log('[DateDetailsPage] Contrat trouvé:', contratData);
+        return {
+          montant: contratData.montantHT || contratData.negociation?.montantNet,
+          devise: contratData.devise || contratData.negociation?.devise || 'EUR',
+          frais: contratData.negociation?.frais || '',
+          typeContrat: contratData.negociation?.contratType || 'cession'
+        };
+      }
+
+      // 2. Si pas de contrat, chercher un pré-contrat validé
+      const preContratsQuery = query(
+        collection(db, 'preContrats'),
+        where('concertId', '==', concertId),
+        where('confirmationValidee', '==', true)
+      );
+      const preContratsSnapshot = await getDocs(preContratsQuery);
+      
+      if (!preContratsSnapshot.empty) {
+        const preContrat = preContratsSnapshot.docs[0].data();
+        console.log('[DateDetailsPage] Pré-contrat validé trouvé:', preContrat);
+        if (preContrat.publicFormData) {
+          return {
+            montant: preContrat.publicFormData.montant,
+            frais: preContrat.publicFormData.frais || '',
+            devise: 'EUR'
+          };
+        }
+      }
+
+      // 3. Si pas de pré-contrat, chercher une facture
+      const facturesQuery = query(
+        collection(db, 'organizations', currentOrganization.id, 'factures'),
+        where('concertId', '==', concertId),
+        orderBy('dateFacture', 'desc')
+      );
+      const facturesSnapshot = await getDocs(facturesQuery);
+      
+      if (!facturesSnapshot.empty) {
+        const facture = facturesSnapshot.docs[0].data();
+        console.log('[DateDetailsPage] Facture trouvée:', facture);
+        return {
+          montant: facture.montantHT,
+          devise: 'EUR'
+        };
+      }
+
+      // 4. Si pas de facture, chercher un devis accepté
+      const devisQuery = query(
+        collection(db, 'devis'),
+        where('concertId', '==', concertId),
+        where('statut', '==', 'accepté')
+      );
+      const devisSnapshot = await getDocs(devisQuery);
+      
+      if (!devisSnapshot.empty) {
+        const devis = devisSnapshot.docs[0].data();
+        console.log('[DateDetailsPage] Devis accepté trouvé:', devis);
+        return {
+          montant: devis.montantHT,
+          devise: 'EUR'
+        };
+      }
+
+      console.log('[DateDetailsPage] Aucune donnée financière trouvée dans les documents liés');
+      return null;
+    } catch (error) {
+      console.error('[DateDetailsPage] Erreur lors du chargement des données financières:', error);
+      return null;
+    }
+  }, [currentOrganization?.id]);
+
   // Charger les données du concert
   const loadConcertData = useCallback(async () => {
     if (!concertId) return;
@@ -56,6 +137,25 @@ function DateDetailsPage({ params = {} }) {
         const data = docSnap.data();
         setConcertData({ id: docSnap.id, ...data });
         
+        // Log pour debug des champs disponibles
+        console.log('[DateDetailsPage] Données du concert chargées:', {
+          montant: data.montant,
+          montantPropose: data.montantPropose,
+          prix: data.prix,
+          cachet: data.cachet,
+          priseOption: data.priseOption,
+          dateOption: data.dateOption,
+          statut: data.statut,
+          typeContrat: data.typeContrat
+        });
+        
+        // Récupérer l'ID du contact propriétaire (structureId ou organisateurId)
+        const ownerId = data.structureId || data.organisateurId;
+        setContactId(ownerId);
+        
+        // Charger les données financières depuis les documents liés
+        const financialData = await loadFinancialData(docSnap.id);
+        
         // Initialiser le formulaire avec les données existantes
         setFormData({
           date: data.date || '',
@@ -67,12 +167,13 @@ function DateDetailsPage({ params = {} }) {
           heureDebut: data.heureDebut || '',
           heureFin: data.heureFin || '',
           festivalId: data.festivalId || '',
-          typeContrat: data.typeContrat || 'Cession',
+          typeContrat: financialData?.typeContrat || data.typeContrat || 'Cession',
           collaborateurId: data.collaborateurId || '',
-          montantPropose: data.montantPropose || '',
-          devise: data.devise || 'EUR',
-          priseOption: data.priseOption || '',
-          frais: data.frais || '',
+          // Mapping intelligent des champs financiers - Priorité aux documents liés
+          montantPropose: financialData?.montant || data.montantPropose || data.montant || data.prix || data.cachet || '',
+          devise: financialData?.devise || data.devise || 'EUR',
+          priseOption: data.priseOption || data.dateOption || '',
+          frais: financialData?.frais || data.frais || '',
           dossierSuivi: data.dossierSuivi || '',
           notes: data.notes || ''
         });
@@ -82,16 +183,18 @@ function DateDetailsPage({ params = {} }) {
     } finally {
       setLoading(false);
     }
-  }, [concertId]);
+  }, [concertId, loadFinancialData]);
 
   // Charger les festivals
   const loadFestivals = useCallback(async () => {
-    if (!currentOrganization?.id) return;
+    if (!currentOrganization?.id || !contactId) return;
     
     try {
+      // Charger uniquement les festivals dont le contact est propriétaire
       const q = query(
         collection(db, 'festivals'),
-        where('organizationId', '==', currentOrganization.id)
+        where('organizationId', '==', currentOrganization.id),
+        where('contactId', '==', contactId)
       );
       const querySnapshot = await getDocs(q);
       const festivalsData = [];
@@ -100,11 +203,12 @@ function DateDetailsPage({ params = {} }) {
         festivalsData.push({ id: doc.id, ...doc.data() });
       });
       
+      console.log(`[DateDetailsPage] ${festivalsData.length} festivals trouvés pour le contact ${contactId}`);
       setFestivals(festivalsData);
     } catch (error) {
       console.error('Erreur lors du chargement des festivals:', error);
     }
-  }, [currentOrganization?.id]);
+  }, [currentOrganization?.id, contactId]);
 
   // Charger les collaborateurs
   const loadCollaborateurs = useCallback(async () => {
@@ -130,9 +234,17 @@ function DateDetailsPage({ params = {} }) {
 
   useEffect(() => {
     loadConcertData();
-    loadFestivals();
+  }, [loadConcertData]);
+
+  useEffect(() => {
+    if (contactId) {
+      loadFestivals();
+    }
+  }, [contactId, loadFestivals]);
+
+  useEffect(() => {
     loadCollaborateurs();
-  }, [loadConcertData, loadFestivals, loadCollaborateurs]);
+  }, [loadCollaborateurs]);
 
   // Formater la date pour l'affichage
   const formatDateDisplay = (dateString) => {
@@ -166,11 +278,21 @@ function DateDetailsPage({ params = {} }) {
     setSaving(true);
     try {
       const docRef = doc(db, 'concerts', concertId);
-      await updateDoc(docRef, {
+      
+      // Préparer les données avec mapping intelligent
+      const dataToSave = {
         ...formData,
+        // Sauvegarder aussi dans les champs standards pour compatibilité
+        montant: formData.montantPropose || formData.montant,
+        dateOption: formData.priseOption || formData.dateOption,
+        // Garder aussi les anciens noms pour rétrocompatibilité
+        montantPropose: formData.montantPropose,
+        priseOption: formData.priseOption,
         updatedAt: serverTimestamp(),
         updatedBy: currentUser?.email || 'Utilisateur inconnu'
-      });
+      };
+      
+      await updateDoc(docRef, dataToSave);
       
       alert('Date mise à jour avec succès !');
       
@@ -449,7 +571,7 @@ function DateDetailsPage({ params = {} }) {
                         <option value="">-- Sans titre --</option>
                         {festivals.map(festival => (
                           <option key={festival.id} value={festival.id}>
-                            {festival.nom}
+                            {festival.titre || festival.nom || 'Sans titre'}
                           </option>
                         ))}
                       </Form.Select>
@@ -504,7 +626,7 @@ function DateDetailsPage({ params = {} }) {
                         type="number"
                         value={formData.montantPropose}
                         onChange={(e) => setFormData({ ...formData, montantPropose: e.target.value })}
-                        placeholder="0"
+                        placeholder="Entrez le montant proposé"
                       />
                       <Button variant="link" size="sm" className="mt-1">
                         Voir le détail des recettes
@@ -533,6 +655,7 @@ function DateDetailsPage({ params = {} }) {
                         type="date"
                         value={formData.priseOption}
                         onChange={(e) => setFormData({ ...formData, priseOption: e.target.value })}
+                        placeholder="Date limite de l'option"
                       />
                     </Form.Group>
                   </Col>
@@ -543,7 +666,7 @@ function DateDetailsPage({ params = {} }) {
                         type="text"
                         value={formData.frais}
                         onChange={(e) => setFormData({ ...formData, frais: e.target.value })}
-                        placeholder="Frais supplémentaires"
+                        placeholder="Ex: Transport, hébergement, repas..."
                       />
                     </Form.Group>
                   </Col>

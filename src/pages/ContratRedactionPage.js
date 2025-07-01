@@ -128,7 +128,7 @@ const ContratRedactionPage = () => {
     };
 
     loadContratData();
-  }, [id, isReadOnly]);
+  }, [id, isReadOnly, hasSelectedModels, isContractFinished, loading, showModelModal]);
 
   // Vérifier si des modèles ont été choisis et ouvrir la modale si nécessaire
   useEffect(() => {
@@ -164,7 +164,7 @@ const ContratRedactionPage = () => {
       if (isContractFinished) console.log('   -> Raison: Le contrat est déjà terminé');
       if (isReadOnly) console.log('   -> Raison: Mode lecture seule');
     }
-  }, [loading, hasSelectedModels, isContractFinished, isReadOnly, getActiveTab]);
+  }, [loading, hasSelectedModels, isContractFinished, isReadOnly, getActiveTab, showModelModal]);
 
   const handleModelsValidated = async (models) => {
     setSelectedModels(models);

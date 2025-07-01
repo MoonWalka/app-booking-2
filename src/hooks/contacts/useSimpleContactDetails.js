@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 
@@ -34,7 +34,7 @@ export default function useSimpleContactDetails(id) {
   const [errorStructure, setErrorStructure] = useState(null);
 
   // Fonction pour charger les lieux associés (même logique complexe que l'original)
-  const fetchLieuxAssocies = async (contactEntity) => {
+  const fetchLieuxAssocies = useCallback(async (contactEntity) => {
     try {
       setLoadingLieux(true);
       setErrorLieux(null);
@@ -100,10 +100,10 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingLieux(false);
     }
-  };
+  }, [currentOrganization?.id]);
 
   // Fonction pour charger les concerts associés (même logique complexe que l'original)
-  const fetchConcertsAssocies = async (contactEntity) => {
+  const fetchConcertsAssocies = useCallback(async (contactEntity) => {
     try {
       setLoadingConcerts(true);
       setErrorConcerts(null);
@@ -174,10 +174,10 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingConcerts(false);
     }
-  };
+  }, [currentOrganization?.id]);
 
   // Fonction pour charger les artistes associés (même logique complexe que l'original)
-  const fetchArtistesAssocies = async (contactEntity, concertsData) => {
+  const fetchArtistesAssocies = useCallback(async (contactEntity, concertsData) => {
     try {
       setLoadingArtistes(true);
       setErrorArtistes(null);
@@ -265,10 +265,10 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingArtistes(false);
     }
-  };
+  }, [currentOrganization?.id]);
 
   // Fonction pour charger la structure associée (même logique que l'original)
-  const fetchStructureAssociee = async (contactEntity) => {
+  const fetchStructureAssociee = useCallback(async (contactEntity) => {
     try {
       setLoadingStructure(true);
       setErrorStructure(null);
@@ -299,7 +299,7 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingStructure(false);
     }
-  };
+  }, [currentOrganization?.id]);
 
   // EFFET PRINCIPAL - UNE SEULE DÉPENDANCE STABLE POUR ÉVITER LES BOUCLES
   useEffect(() => {

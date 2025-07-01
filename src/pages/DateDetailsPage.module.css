@@ -1,0 +1,351 @@
+/* DateDetailsPage.module.css */
+
+.container {
+  padding: 0;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+/* Partie gauche */
+.leftPanel {
+  background: #ffffff;
+  border-right: 1px solid #e9ecef;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.artistBanner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.artistName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.structureName {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.dateCard {
+  margin: 1.5rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dateTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.dateInfo {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.dateType {
+  font-size: 0.9rem;
+  color: #495057;
+  margin-bottom: 0.25rem;
+}
+
+.dateTime {
+  font-size: 0.9rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.interestCard {
+  margin: 1.5rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cardHeader h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.cardActions .btn-link {
+  padding: 0.25rem 0.5rem;
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.cardActions .btn-link:hover {
+  color: #495057;
+}
+
+.interestContent {
+  padding: 1rem 0;
+  text-align: center;
+}
+
+/* Partie droite */
+.rightPanel {
+  padding: 0;
+  background: #f5f6fa;
+}
+
+.actionBar {
+  background: white;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.actionBar .btn {
+  font-size: 1.1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+}
+
+.actionBar .btn:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.detailsForm {
+  padding: 1.5rem;
+}
+
+.formSection {
+  margin-bottom: 1.5rem;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formSection .card-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 1.5rem;
+}
+
+.formSection .card-header h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.formSection .card-body {
+  padding: 1.5rem;
+}
+
+.readOnlyField {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  border-top: 1px solid #e9ecef;
+  margin: -1.5rem;
+  margin-top: 1.5rem;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.saveButtons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Labels et inputs */
+.detailsForm .form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.detailsForm .form-control,
+.detailsForm .form-select {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+.detailsForm .form-control:focus,
+.detailsForm .form-select:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.detailsForm textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .leftPanel {
+    min-height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .artistBanner {
+    padding: 1.5rem;
+  }
+  
+  .artistName {
+    font-size: 1.3rem;
+  }
+  
+  .dateCard,
+  .interestCard {
+    margin: 1rem;
+  }
+  
+  .actionBar {
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .detailsForm {
+    padding: 1rem;
+  }
+  
+  .formActions {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .saveButtons {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .saveButtons .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .artistBanner {
+    padding: 1rem;
+  }
+  
+  .artistName {
+    font-size: 1.1rem;
+  }
+  
+  .structureName {
+    font-size: 0.9rem;
+  }
+  
+  .dateCard,
+  .interestCard {
+    margin: 0.75rem;
+  }
+  
+  .dateTitle {
+    font-size: 1rem;
+  }
+  
+  .cardHeader h4 {
+    font-size: 1rem;
+  }
+  
+  .actionBar {
+    gap: 0.25rem;
+  }
+  
+  .actionBar .btn {
+    font-size: 1rem;
+    padding: 0.375rem 0.5rem;
+  }
+  
+  .formSection .card-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .formSection .card-header h5 {
+    font-size: 1rem;
+  }
+  
+  .formSection .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* États hover et focus */
+.btn-link:focus {
+  box-shadow: none;
+}
+
+.formSection:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Indicateurs d'état */
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.statusBadge.confirmed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.statusBadge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.statusBadge.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}

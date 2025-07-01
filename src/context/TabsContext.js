@@ -283,6 +283,18 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
+  const openDateDetailsTab = useCallback((dateId, dateTitle) => {
+    console.log('[TabsContext] openDateDetailsTab appelé - dateId:', dateId);
+    openTab({
+      id: `date-details-${dateId}`,
+      title: dateTitle || 'Détails de la date',
+      path: `/dates/${dateId}`,
+      component: 'DateDetailsPage',
+      params: { id: dateId },
+      icon: 'bi-calendar-check'
+    });
+  }, [openTab]);
+
   const openPreContratTab = useCallback((concertId, concertTitle) => {
     openTab({
       id: `precontrat-${concertId}`,
@@ -389,6 +401,7 @@ export const TabsProvider = ({ children }) => {
     openDebugToolsTab,
     openTachesTab,
     openDateCreationTab,
+    openDateDetailsTab,
     openPreContratTab,
     openContratTab,
     openDevisTab,
@@ -416,6 +429,7 @@ export const TabsProvider = ({ children }) => {
     openDebugToolsTab,
     openTachesTab,
     openDateCreationTab,
+    openDateDetailsTab,
     openPreContratTab,
     openContratTab,
     openDevisTab,

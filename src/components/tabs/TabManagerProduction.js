@@ -20,6 +20,7 @@ import SallesPage from '@/pages/SallesPage';
 import TableauDeBordPage from '@/pages/TableauDeBordPage';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 import DateCreationPage from '@/pages/DateCreationPage';
+import DateDetailsPage from '@/pages/DateDetailsPage';
 import TachesPage from '@/pages/TachesPage';
 import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
 import AdminParametragePage from '@/pages/AdminParametragePage';
@@ -286,6 +287,10 @@ const TabManagerProduction = () => {
           return <DebugToolsPage />;
         case 'DateCreationPage':
           return <DateCreationPage />;
+        case 'DateDetailsPage':
+          console.log('[TabManager] Rendu DateDetailsPage avec activeTab:', activeTab);
+          console.log('[TabManager] concertId passé:', activeTab.params?.id);
+          return <DateDetailsPage params={activeTab.params} />;
         case 'TachesPage':
           return <TachesPage />;
         case 'CollaborationParametragePage':

@@ -1,14 +1,17 @@
 # Plan de mise en place des environnements de développement et production - TourCraft
 
+> ⚠️ **Note de mise à jour (30 juin 2025)** : Ce document a été mis à jour pour refléter l'architecture V2 et la migration programmateurs → contacts.
+
 ## 1. Contexte et objectifs
 
 L'application TourCraft est actuellement déployée en production sans séparation claire des environnements. Ce document détaille un plan pour mettre en place un environnement de développement distinct sans perturber l'environnement de production existant.
 
 ### Objectifs principaux :
-- Permettre aux développeurs de travailler dans un environnement **totalement hors ligne**
+- Permettre aux développeurs de travailler dans un environnement **totalement hors ligne** avec les émulateurs Firebase
 - Maintenir l'intégrité et la stabilité de l'environnement de production
 - Faciliter la collaboration entre les développeurs
 - Établir un pipeline clair pour la promotion du code du développement vers la production
+- Support natif du système multi-organisation
 
 ## 2. État actuel de l'application
 

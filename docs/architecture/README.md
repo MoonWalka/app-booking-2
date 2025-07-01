@@ -1,17 +1,20 @@
 # Documentation Architecture
 
-*Dernière mise à jour : 25 mai 2025*
+*Dernière mise à jour : 30 juin 2025*
 
 Ce dossier contient la documentation de l'architecture du projet TourCraft, incluant les principes techniques, les guides et les plans de refactorisation.
 
 ## 📋 Documents Disponibles
 
 ### Architecture Principale
-- [📐 **GUIDE_ARCHITECTURE.md**](./GUIDE_ARCHITECTURE.md) - Guide détaillé de l'architecture du projet
+- [🎯 **ARCHITECTURE_V2_2025.md**](./ARCHITECTURE_V2_2025.md) - Guide complet de l'architecture V2 actuelle
+- [📋 **CONSOLIDATION_DASHBOARDS_RAPPORT.md**](./CONSOLIDATION_DASHBOARDS_RAPPORT.md) - Rapport de consolidation des dashboards
+- [📝 **recommendations.md**](./recommendations.md) - Recommandations techniques générales
 
-### Plans et Refactorisation
-- [📐 **REFACTORING_STRUCTURE.md**](./REFACTORING_STRUCTURE.md) - Plan de refactorisation de la structure du projet
-- [📋 **plan-environnements-dev-prod.md**](./plan-environnements-dev-prod.md) - Plan des environnements de développement et production
+### Plans et Simplification
+- [🔄 **SIMPLIFICATION_SANS_UI_CHANGE.md**](./SIMPLIFICATION_SANS_UI_CHANGE.md) - Guide de simplification du code
+- [📋 **plan-environnements-dev-prod.md**](./plan-environnements-dev-prod.md) - Plan des environnements avec émulateurs Firebase
+- [📈 **PLAN_REFACTORING_TOURCRAFT_2025.md**](./PLAN_REFACTORING_TOURCRAFT_2025.md) - Plan de refactoring global
 
 ### Sécurité
 - [🔒 **SECURITE.md**](./SECURITE.md) - Documentation de sécurité et bonnes pratiques
@@ -25,16 +28,18 @@ Ce dossier contient la documentation de l'architecture du projet TourCraft, incl
 - **Performance** : Optimisation du bundle et lazy loading
 
 ### Technologies Clés
-- **React** : Framework principal avec hooks
-- **Firebase** : Backend et authentification
+- **React 18.2** : Framework principal avec hooks et contextes
+- **Firebase 10.9** : Backend, auth, et stockage
 - **CSS Modules** : Styles isolés et maintenables
-- **React Router** : Navigation et routing
+- **React Router 6** : Navigation et routing
+- **CRACO** : Configuration personnalisée du build
 
-### Patterns Utilisés
-- **Hooks personnalisés** : Logique métier réutilisable
-- **Context API** : Gestion d'état globale
-- **Composants génériques** : Réutilisabilité maximale
-- **Factory patterns** : Création d'objets standardisée
+### Patterns Architecturaux V2
+- **Hooks génériques** : Architecture unifiée pour toutes les entités
+- **Multi-Organisation** : Support natif avec OrganizationContext
+- **Cache multicouche** : Système de cache avec TTL configurable
+- **Relations bidirectionnelles** : Gestion automatique des relations
+- **Configuration centralisée** : entityConfigurations.js
 
 ## 🎯 Objectifs Architecturaux
 
@@ -46,16 +51,26 @@ Ce dossier contient la documentation de l'architecture du projet TourCraft, incl
 
 ## 🔄 Évolution de l'Architecture
 
-### Accomplissements Récents
-- Migration vers hooks génériques
-- Standardisation CSS avec CSS Modules
-- Simplification Firebase avec Testing SDK
-- Optimisation des performances
+### Accomplissements Architecture V2
+- ✅ Migration complète programmateurs → contacts
+- ✅ Implémentation hooks génériques V2
+- ✅ Système de cache intelligent
+- ✅ Support multi-organisation natif
+- ✅ Relations bidirectionnelles automatiques
+- ✅ Émulateurs Firebase pour développement hors ligne
 
 ### Prochaines Étapes
-- Amélioration de la gestion d'état
-- Optimisation des composants
-- Renforcement de la sécurité
+- Migration vers TypeScript pour la type safety
+- Implémentation GraphQL pour optimiser les requêtes
+- Tests unitaires des hooks génériques
+- Migration vers Vite ou Next.js
+
+## 📦 Documents Archivés
+
+Les documents obsolètes de l'architecture V1 ont été archivés dans `/docs/archive/architecture-v1/` :
+- `GUIDE_ARCHITECTURE.md` - Architecture V1 obsolète
+- `REFACTORING_STRUCTURE.md` - Migration programmateur→contact terminée
+- `ARCHITECTURE_LEGACY.md` - Documentation legacy
 
 ---
 

@@ -1,5 +1,7 @@
 # Rapport de Simplification du Code (sans changement d'UI)
 
+> ⚠️ **Note de mise à jour (30 juin 2025)** : Ce document a été mis à jour pour refléter l'architecture V2 et les hooks génériques actuels.
+
 ## 🎯 Objectif
 Simplifier le code en gardant **exactement la même interface utilisateur** et **toutes les fonctionnalités**.
 
@@ -15,7 +17,7 @@ Simplifier le code en gardant **exactement la même interface utilisateur** et *
   - Élimination des mémorisations excessives
   - Actions de navigation directes (pas de hook wrapper)
 
-### 2. **StructuresList**
+### 2. **ContactsList** (anciennement StructuresList)
 - **Avant** : 479 lignes, 13 états, logique complexe
 - **Après** : 377 lignes, 6 états, logique simplifiée
 - **Réduction** : 21% du code
@@ -27,10 +29,10 @@ Simplifier le code en gardant **exactement la même interface utilisateur** et *
 
 ## 🔧 Patterns de simplification appliqués
 
-### 1. **Réduction des états**
+### 1. **Réduction des états avec Hooks Génériques V2**
 ```javascript
 // ❌ Avant - 13 états
-const [structures, setStructures] = useState([]);
+const [contacts, setContacts] = useState([]);
 const [loading, setLoading] = useState(true);
 const [loadingMore, setLoadingMore] = useState(false);
 const [error, setError] = useState(null);
@@ -38,73 +40,128 @@ const [lastVisible, setLastVisible] = useState(null);
 const [hasMore, setHasMore] = useState(true);
 // ... etc
 
-// ✅ Après - Hook unifié
-const { data: structures, loading, error, loadMore, hasMore } = useMultiOrgQuery('structures');
+// ✅ Après - Hook générique V2
+const { data: contacts, loading, error, loadMore, hasMore } = useGenericEntityList('contacts', {
+  organizationId: currentOrganization.id
+});
 ```
 
 ### 2. **Calculs avec useMemo au lieu d'états**
 ```javascript
 // ❌ Avant - État pour les données filtrées
-const [filteredStructures, setFilteredStructures] = useState([]);
+const [filteredContacts, setFilteredContacts] = useState([]);
 useEffect(() => {
-  setFilteredStructures(filterStructures());
-}, [structures, searchTerm, typeFilter]);
+  setFilteredContacts(filterContacts());
+}, [contacts, searchTerm, filters]);
 
-// ✅ Après - Calcul direct
-const displayedStructures = useMemo(() => {
-  // Logique de filtrage
-}, [structures, searchTerm, typeFilter]);
+// ✅ Après - useMemo
+const filteredContacts = useMemo(() => {
+  return contacts.filter(contact => 
+    contact.nom.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+}, [contacts, searchTerm]);
 ```
 
-### 3. **Actions simplifiées**
+### 3. **Actions directes au lieu de callbacks**
 ```javascript
-// ❌ Avant - Hook dédié pour les actions
-const { handleViewConcert, handleSendForm } = useConcertActions();
+// ❌ Avant - Callbacks complexes
+const handleEdit = useCallback((contactId) => {
+  const callback = () => navigate(`/contacts/${contactId}/edit`);
+  return callback;
+}, [navigate]);
 
-// ✅ Après - Fonctions directes
-const handleViewConcert = (id) => navigate(`/concerts/${id}`);
-const handleSendForm = (id) => navigate(`/concerts/${id}/send-form`);
+// ✅ Après - Action directe
+const handleEdit = (contactId) => navigate(`/contacts/${contactId}/edit`);
 ```
 
-### 4. **Configuration déclarative**
+### 4. **Élimination des mémorisations inutiles**
 ```javascript
-// ❌ Avant - Hook complexe pour les statuts
-const { statusDetailsMap, getStatusDetails } = useConcertStatus();
+// ❌ Avant - Mémorisation excessive
+const tableColumns = useMemo(() => [...], []);
+const tableActions = useMemo(() => [...], []);
+const memoizedData = useMemo(() => data, [data]);
 
-// ✅ Après - Objet de configuration simple
-const STATUS_CONFIG = {
-  'contact-etabli': { label: 'Contact établi', color: 'blue' },
-  // ...
+// ✅ Après - Mémorisation ciblée
+// Mémoriser uniquement les calculs coûteux
+const stats = useMemo(() => calculateStats(contacts), [contacts]);
+```
+
+### 5. **Utilisation des hooks génériques V2**
+```javascript
+// ❌ Avant - Hooks spécifiques avec logique dupliquée
+const useContactDetails = (id) => {
+  // 100+ lignes de logique Firebase
+};
+
+// ✅ Après - Hook générique avec configuration
+const useContactDetails = (id) => {
+  return useGenericEntityDetails('contacts', id, {
+    includeRelations: true,
+    cache: { enabled: true, ttl: 300000 }
+  });
 };
 ```
 
-## 📈 Bénéfices obtenus
+## 🚀 Bénéfices de la simplification
 
-1. **Performance** : Moins de re-renders grâce à la réduction des états
-2. **Maintenabilité** : Code plus lisible et plus facile à comprendre
-3. **Réutilisabilité** : Hooks unifiés utilisables partout
-4. **Robustesse** : Moins de points de défaillance potentiels
-5. **UI inchangée** : Exactement la même expérience utilisateur
+### Performance
+- **Moins de re-renders** : Élimination des états inutiles
+- **Calculs optimisés** : useMemo uniquement où nécessaire
+- **Cache intelligent** : Système de cache V2 avec TTL
 
-## 🚀 Prochaines étapes
+### Maintenabilité
+- **Code plus lisible** : Logique centralisée dans les hooks génériques
+- **Moins de bugs** : Moins d'états = moins de synchronisation
+- **Réutilisabilité** : Hooks génériques pour toutes les entités
 
-1. **Simplifier les autres listes** :
-   - ArtistesList (déjà migrée mais peut être simplifiée davantage)
-   - LieuxList
-   - ProgrammateursList
+### Évolutivité
+- **Nouvelles entités** : Configuration simple sans code dupliqué
+- **Multi-organisation** : Support natif dans les hooks V2
+- **Relations** : Gestion automatique bidirectionnelle
 
-2. **Simplifier les vues détaillées** :
-   - Remplacer `useConcertDetails` (916 lignes) par `useConcertDetailsSimple` (237 lignes)
-   - Appliquer le même pattern aux autres détails
+## 📋 Exemples concrets
 
-3. **Créer des hooks génériques** :
-   - `useEntityList` pour toutes les listes
-   - `useEntityDetails` pour tous les détails
-   - `useEntityForm` pour tous les formulaires
+### Avant (V1)
+```javascript
+// 200+ lignes pour gérer une liste
+function ContactsList() {
+  const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  // ... 10+ autres états
+  
+  useEffect(() => {
+    // Logique Firebase complexe
+  }, []);
+  
+  // ... beaucoup de code
+}
+```
 
-## 📝 Notes importantes
+### Après (V2)
+```javascript
+// 50 lignes pour la même fonctionnalité
+function ContactsList() {
+  const { data: contacts, loading, error } = useGenericEntityList('contacts');
+  const filteredContacts = useMemo(() => 
+    filterContacts(contacts, filters), [contacts, filters]
+  );
+  
+  if (loading) return <Spinner />;
+  if (error) return <ErrorMessage error={error} />;
+  
+  return <ContactTable data={filteredContacts} />;
+}
+```
 
-- **Aucun changement visuel** : L'interface reste identique
-- **Toutes les fonctionnalités conservées** : Stats, filtres, tri, pagination, etc.
-- **Code 40-70% plus court** selon les composants
-- **Tests existants** : Continuent de passer sans modification
+## 🎯 Prochaines étapes
+
+1. **Terminer la migration** des derniers composants V1
+2. **Documenter** les patterns de simplification
+3. **Former l'équipe** aux hooks génériques V2
+4. **Mesurer** les gains de performance
+
+---
+
+*Document maintenu par l'équipe TourCraft*  
+*Dernière mise à jour : 30 juin 2025*

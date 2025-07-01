@@ -34,7 +34,7 @@ const ConcertsTableView = ({
   handleViewFacture,
   handleGenerateFacture
 }) => {
-  const { openTab, openPreContratTab, openContratTab, openNewDevisTab, openDevisTab } = useTabs();
+  const { openTab, openPreContratTab, openContratTab, openNewDevisTab, openDevisTab, openDateDetailsTab } = useTabs();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -563,14 +563,11 @@ const ConcertsTableView = ({
 
   // Gestion du clic sur une ligne
   const handleRowClick = (concert) => {
-    if (openTab) {
-      openTab({
-        id: `concert-${concert.id}`,
-        title: `Concert - ${concert.artisteNom || 'Sans nom'}`,
-        path: `/concerts/${concert.id}`,
-        component: 'ConcertDetails',
-        params: { concertId: concert.id }
-      });
+    if (openDateDetailsTab) {
+      const dateTitle = concert.artisteNom 
+        ? `${concert.artisteNom} - ${concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : 'Date'}`
+        : 'Détails de la date';
+      openDateDetailsTab(concert.id, dateTitle);
     }
   };
 

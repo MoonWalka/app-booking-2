@@ -14,7 +14,7 @@ function DateCreationPage({ params = {} }) {
   const DEBUG_MODE = false;
   
   const { currentOrganization } = useOrganization();
-  const { openConcertsListTab, getActiveTab, closeTab } = useTabs();
+  const { openConcertsListTab, openDateDetailsTab, getActiveTab, closeTab } = useTabs();
   
   // Récupérer les données pré-remplies depuis les paramètres de l'onglet
   const activeTab = getActiveTab();
@@ -327,9 +327,14 @@ function DateCreationPage({ params = {} }) {
       alert('Date créée avec succès !');
 
       if (shouldContinue) {
-        // TODO: Ouvrir la fiche détaillée de la date créée
-        // openConcertDetailsTab(docRef.id, `${formData.artisteNom} - ${formData.date}`);
-        console.log('TODO: Ouvrir la fiche de la date', docRef.id);
+        // Ouvrir la fiche détaillée de la date créée
+        const dateTitle = formData.artisteNom 
+          ? `${formData.artisteNom} - ${new Date(formData.date).toLocaleDateString('fr-FR')}`
+          : 'Détails de la date';
+        openDateDetailsTab(docRef.id, dateTitle);
+      } else {
+        // Ouvrir l'onglet des concerts pour voir la nouvelle date
+        openConcertsListTab();
       }
       
       // Fermer l'onglet actuel
@@ -337,9 +342,6 @@ function DateCreationPage({ params = {} }) {
       if (currentTab) {
         closeTab(currentTab.id);
       }
-      
-      // Ouvrir l'onglet des concerts pour voir la nouvelle date
-      openConcertsListTab();
 
     } catch (error) {
       console.error('Erreur lors de la création de la date:', error);

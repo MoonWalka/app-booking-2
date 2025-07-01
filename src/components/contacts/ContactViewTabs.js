@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { useUnifiedContact } from '@/hooks/contacts/useUnifiedContact';
+import { useContactsRelational } from '@/hooks/contacts/useContactsRelational';
 import { useContactActionsRelational } from '@/hooks/contacts/useContactActionsRelational';
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
@@ -32,6 +32,11 @@ import styles from './ContactViewTabs.module.css';
  * Utilise des sous-composants modulaires pour une meilleure maintenabilité
  */
 function ContactViewTabs({ id, viewType = null }) {
+  // Log de debug pour tracker les re-renders
+  const renderCount = React.useRef(0);
+  renderCount.current++;
+  console.log(`🔄 [ContactViewTabs] RENDER #${renderCount.current} - id:`, id, 'viewType:', viewType, 'timestamp:', new Date().toISOString());
+  console.log('✅ [ContactViewTabs] useMemo corrigé - Plus de setState dans useMemo!');
   // Nettoyer l'ID en enlevant les suffixes ajoutés par la liste (_structure, _personne_libre, etc.)
   // Amélioration: gérer aussi les cas comme _in_structureId
   let cleanId = id;
@@ -63,8 +68,86 @@ function ContactViewTabs({ id, viewType = null }) {
   const { currentOrganization } = useOrganization();
   const navigate = useNavigate();
   
-  // Hook unifié pour les données - passer le viewType pour aider à déterminer le type
-  const { contact, loading, error, entityType } = useUnifiedContact(cleanId, forcedViewType);
+  // Hook relationnel direct
+  const { getStructureWithPersonnes, getPersonneWithStructures, structures, personnes, invalidateContactCache } = useContactsRelational();
+  
+  // États locaux
+  const [entityType, setEntityType] = useState(forcedViewType);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Récupération directe des données - SANS setState !
+  const contact = useMemo(() => {
+    if (!cleanId || !currentOrganization?.id) {
+      return null;
+    }
+    
+    // Détection du type et récupération des données
+    let data = null;
+    
+    // Si le type est fourni ou déjà déterminé
+    if (entityType === 'structure') {
+      data = getStructureWithPersonnes(cleanId);
+      if (data) {
+        return data;
+      }
+    } else if (entityType === 'personne' || entityType === 'personne_libre') {
+      data = getPersonneWithStructures(cleanId);
+      if (data) {
+        return data;
+      }
+    } else {
+      // Type non déterminé, essayer les deux
+      console.log('🔍 [ContactViewTabs] Appel getStructureWithPersonnes pour:', cleanId);
+      data = getStructureWithPersonnes(cleanId);
+      if (data) {
+        console.log('✅ [ContactViewTabs] Structure trouvée:', data.id);
+        return data;
+      }
+      
+      data = getPersonneWithStructures(cleanId);
+      if (data) {
+        return data;
+      }
+    }
+    
+    return null;
+  }, [cleanId, currentOrganization?.id, entityType, getStructureWithPersonnes, getPersonneWithStructures]);
+  
+  // Effet pour gérer le type d'entité automatiquement
+  React.useEffect(() => {
+    if (!entityType && contact) {
+      // Déterminer le type basé sur les données
+      if (contact.raisonSociale !== undefined) {
+        setEntityType('structure');
+      } else if (contact.isPersonneLibre && (!contact.structures || contact.structures.length === 0)) {
+        setEntityType('personne_libre');
+      } else {
+        setEntityType('personne');
+      }
+    }
+  }, [contact, entityType]);
+  
+  // Effet pour gérer loading et error
+  React.useEffect(() => {
+    if (!cleanId || !currentOrganization?.id) {
+      setLoading(false);
+      setError(!cleanId ? 'ID manquant' : 'Organisation manquante');
+      return;
+    }
+    
+    // Si on a un contact, pas de loading
+    if (contact) {
+      setLoading(false);
+      setError(null);
+    } else if (structures.length > 0 || personnes.length > 0) {
+      // Les données sont chargées mais contact non trouvé
+      setLoading(false);
+      setError('Contact non trouvé');
+    }
+    // Sinon, on est toujours en loading
+  }, [cleanId, currentOrganization?.id, contact, structures.length, personnes.length]);
+  
   
   // Déterminer le type de contact
   const contactType = entityType === 'structure' ? 'structure' : 'personne';
@@ -73,9 +156,10 @@ function ContactViewTabs({ id, viewType = null }) {
   React.useEffect(() => {
     if (contact && !loading) {
       console.log('🔍 [ContactViewTabs] Données chargées pour:', cleanId);
-      debug.analyze(contact);
+      console.log('[ContactViewTabs] Type détecté:', entityType);
+      console.log('[ContactViewTabs] Contact:', contact);
     }
-  }, [contact, loading, cleanId]);
+  }, [contact?.id, loading, entityType, cleanId]); // FIX: Ajout de cleanId manquant
   
   // Hook pour les actions avec le modèle relationnel
   const {
@@ -232,7 +316,7 @@ function ContactViewTabs({ id, viewType = null }) {
     // À implémenter selon vos besoins
   }, []);
 
-  // Extraction des données selon le type d'entité
+  // Adaptation des données pour maintenir la compatibilité
   const extractedData = useMemo(() => {
     if (!contact) return null;
     
@@ -272,11 +356,11 @@ function ContactViewTabs({ id, viewType = null }) {
           updatedAt: contact.updatedAt,
           // Ajouter les infos de la structure associée
           structureId: contact.id,
-          structureRaisonSociale: contact.structure?.raisonSociale || contact.structureRaisonSociale,
-          structureNom: contact.structure?.nom || contact.structureNom,
+          structureRaisonSociale: contact.raisonSociale,
+          structureNom: contact.nom,
           structureTags: contact.tags || [],
           structureData: {
-            structureRaisonSociale: contact.structure?.raisonSociale || contact.structureRaisonSociale,
+            structureRaisonSociale: contact.raisonSociale,
             tags: contact.tags || [],
             id: contact.id
           }
@@ -285,111 +369,73 @@ function ContactViewTabs({ id, viewType = null }) {
     }
     
     if (entityType === 'structure' && forcedViewType !== 'personne') {
-      const structureData = contact.structure || {};
+      // Données directes de la structure
       
       return {
         id: contact.id,
         entityType: 'structure',
-        structureRaisonSociale: structureData.raisonSociale || contact.structureRaisonSociale,
-        structureNom: structureData.nom || contact.structureNom,
-        structureEmail: structureData.email || contact.structureEmail,
-        structureTelephone1: structureData.telephone1 || contact.structureTelephone1,
-        structureTelephone2: structureData.telephone2 || contact.structureTelephone2,
-        structureMobile: structureData.mobile || contact.structureMobile,
-        structureFax: structureData.fax || contact.structureFax,
-        structureSiteWeb: structureData.siteWeb || contact.structureSiteWeb,
-        structureSiret: structureData.siret || contact.structureSiret,
-        structureType: structureData.type || contact.structureType,
-        structureAdresse: (() => {
-          // Si structureData.adresse est un objet, extraire la propriété adresse
-          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
-            return structureData.adresse.adresse || '';
-          }
-          // Sinon, utiliser directement la valeur
-          return structureData.adresse || contact.structureAdresse || '';
-        })(),
-        structureSuiteAdresse1: (() => {
-          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
-            return structureData.adresse.suiteAdresse || structureData.suiteAdresse || contact.structureSuiteAdresse1 || '';
-          }
-          return structureData.suiteAdresse || contact.structureSuiteAdresse1 || '';
-        })(),
-        structureCodePostal: (() => {
-          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
-            return structureData.adresse.codePostal || structureData.codePostal || contact.structureCodePostal || '';
-          }
-          return structureData.codePostal || contact.structureCodePostal || '';
-        })(),
-        structureVille: (() => {
-          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
-            return structureData.adresse.ville || structureData.ville || contact.structureVille || '';
-          }
-          return structureData.ville || contact.structureVille || '';
-        })(),
-        structureDepartement: (() => {
-          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
-            return structureData.adresse.departement || structureData.departement || contact.structureDepartement || '';
-          }
-          return structureData.departement || contact.structureDepartement || '';
-        })(),
-        structureRegion: (() => {
-          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
-            return structureData.adresse.region || structureData.region || contact.structureRegion || '';
-          }
-          return structureData.region || contact.structureRegion || '';
-        })(),
-        structurePays: (() => {
-          if (structureData.adresse && typeof structureData.adresse === 'object' && !Array.isArray(structureData.adresse)) {
-            return structureData.adresse.pays || structureData.pays || contact.structurePays || '';
-          }
-          return structureData.pays || contact.structurePays || '';
-        })(),
-        tags: contact?.tags || [],
+        structureRaisonSociale: contact.raisonSociale,
+        structureNom: contact.nom,
+        structureEmail: contact.email,
+        structureTelephone1: contact.telephone1,
+        structureTelephone2: contact.telephone2,
+        structureMobile: contact.mobile,
+        structureFax: contact.fax,
+        structureSiteWeb: contact.siteWeb,
+        structureSiret: contact.siret,
+        structureType: contact.type,
+        structureAdresse: contact.adresse || '',
+        structureSuiteAdresse1: contact.suiteAdresse || '',
+        structureCodePostal: contact.codePostal || '',
+        structureVille: contact.ville || '',
+        structureDepartement: contact.departement || '',
+        structureRegion: contact.region || '',
+        structurePays: contact.pays || '',
+        tags: contact.tags || [],
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,
         updatedAt: contact.updatedAt,
-        salleNom: structureData.salle?.nom,
-        salleAdresse: structureData.salle?.adresse,
-        salleCodePostal: structureData.salle?.codePostal,
-        salleVille: structureData.salle?.ville,
-        salleDepartement: structureData.salle?.departement,
-        salleRegion: structureData.salle?.region,
-        sallePays: structureData.salle?.pays,
-        salleTelephone: structureData.salle?.telephone,
-        salleJauge1: structureData.salle?.jauge1,
-        salleJauge2: structureData.salle?.jauge2,
-        salleJauge3: structureData.salle?.jauge3,
-        nomFestival: structureData.nomFestival,
-        periodeFestivalMois: structureData.periodeFestivalMois,
-        periodeFestivalComplete: structureData.periodeFestivalComplete
+        salleNom: contact.salle?.nom,
+        salleAdresse: contact.salle?.adresse,
+        salleCodePostal: contact.salle?.codePostal,
+        salleVille: contact.salle?.ville,
+        salleDepartement: contact.salle?.departement,
+        salleRegion: contact.salle?.region,
+        sallePays: contact.salle?.pays,
+        salleTelephone: contact.salle?.telephone,
+        salleJauge1: contact.salle?.jauge1,
+        salleJauge2: contact.salle?.jauge2,
+        salleJauge3: contact.salle?.jauge3,
+        nomFestival: contact.nomFestival,
+        periodeFestivalMois: contact.periodeFestivalMois,
+        periodeFestivalComplete: contact.periodeFestivalComplete
       };
     } else if (entityType === 'personne') {
       // Cas d'une personne liée à des structures
-      const personneData = contact.personne || {};
       
       return {
         id: contact.id,
         entityType: 'personne',
-        prenom: personneData.prenom,
-        nom: personneData.nom,
-        fonction: personneData.fonction,
-        civilite: personneData.civilite,
-        email: personneData.email,
-        mailDirect: personneData.email,
-        mailPerso: personneData.mailPerso,
-        telephone: personneData.telephone,
-        telDirect: personneData.telDirect,
-        telPerso: personneData.telPerso,
-        mobile: personneData.mobile,
-        fax: personneData.fax,
-        adresse: personneData.adresse,
-        suiteAdresse: personneData.suiteAdresse,
-        codePostal: personneData.codePostal,
-        ville: personneData.ville,
-        departement: personneData.departement,
-        region: personneData.region,
-        pays: personneData.pays,
-        tags: contact?.tags || [],
+        prenom: contact.prenom,
+        nom: contact.nom,
+        fonction: contact.fonction,
+        civilite: contact.civilite,
+        email: contact.email,
+        mailDirect: contact.email,
+        mailPerso: contact.mailPerso,
+        telephone: contact.telephone,
+        telDirect: contact.telDirect,
+        telPerso: contact.telPerso,
+        mobile: contact.telephone2,
+        fax: contact.fax,
+        adresse: contact.adresse,
+        suiteAdresse: contact.suiteAdresse,
+        codePostal: contact.codePostal,
+        ville: contact.ville,
+        departement: contact.departement,
+        region: contact.region,
+        pays: contact.pays,
+        tags: contact.tags || [],
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,
         updatedAt: contact.updatedAt,
@@ -397,31 +443,30 @@ function ContactViewTabs({ id, viewType = null }) {
         structures: contact.structures || []
       };
     } else if (entityType === 'personne_libre') {
-      const personneData = contact.personne || {};
       
       return {
         id: contact.id,
         entityType: 'contact',
-        prenom: personneData.prenom,
-        nom: personneData.nom,
-        fonction: personneData.fonction,
-        civilite: personneData.civilite,
-        email: personneData.email,
-        mailDirect: personneData.email,
-        mailPerso: personneData.mailPerso,
-        telephone: personneData.telephone,
-        telDirect: personneData.telDirect,
-        telPerso: personneData.telPerso,
-        mobile: personneData.mobile,
-        fax: personneData.fax,
-        adresse: personneData.adresse,
-        suiteAdresse: personneData.suiteAdresse,
-        codePostal: personneData.codePostal,
-        ville: personneData.ville,
-        departement: personneData.departement,
-        region: personneData.region,
-        pays: personneData.pays,
-        tags: contact?.tags || [],
+        prenom: contact.prenom,
+        nom: contact.nom,
+        fonction: contact.fonction,
+        civilite: contact.civilite,
+        email: contact.email,
+        mailDirect: contact.email,
+        mailPerso: contact.mailPerso,
+        telephone: contact.telephone,
+        telDirect: contact.telDirect,
+        telPerso: contact.telPerso,
+        mobile: contact.telephone2,
+        fax: contact.fax,
+        adresse: contact.adresse,
+        suiteAdresse: contact.suiteAdresse,
+        codePostal: contact.codePostal,
+        ville: contact.ville,
+        departement: contact.departement,
+        region: contact.region,
+        pays: contact.pays,
+        tags: contact.tags || [],
         commentaires: contact.commentaires || [],
         createdAt: contact.createdAt,
         updatedAt: contact.updatedAt
@@ -431,7 +476,12 @@ function ContactViewTabs({ id, viewType = null }) {
     return contact;
   }, [contact, entityType, forcedViewType]);
 
-  const structureName = useMemo(() => extractedData?.structureRaisonSociale, [extractedData?.structureRaisonSociale]);
+  const structureName = useMemo(() => {
+    if (entityType === 'structure' && contact) {
+      return contact.raisonSociale;
+    }
+    return extractedData?.structureRaisonSociale;
+  }, [entityType, contact?.raisonSociale, extractedData?.structureRaisonSociale]);
   
   // Charger les dates pour les structures
   const loadStructureDates = useCallback(async () => {
@@ -503,10 +553,22 @@ function ContactViewTabs({ id, viewType = null }) {
     }
   }, [currentOrganization?.id, structureName, cleanId, entityType]);
 
-  // Charger les dates au changement de structure
+  // Charger les dates au changement de structure avec debouncing
   React.useEffect(() => {
-    loadStructureDates();
-  }, [loadStructureDates]);
+    // Éviter rechargements si pas de structure
+    if (entityType !== 'structure' || !structureName) {
+      console.log('📅 [ContactViewTabs] Pas de structure, skip chargement dates');
+      return;
+    }
+    
+    // Debouncing pour éviter les appels multiples
+    const timeoutId = setTimeout(() => {
+      console.log('📅 [ContactViewTabs] Déclenchement chargement dates après debounce');
+      loadStructureDates();
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, [entityType, structureName, loadStructureDates]);
   
   // Utiliser directement les commentaires du contact avec normalisation du format
   const commentaires = useMemo(() => {
@@ -558,6 +620,7 @@ function ContactViewTabs({ id, viewType = null }) {
 
   // Configuration des onglets du bas
   const bottomTabsConfig = useMemo(() => {
+    console.log('📋 [ContactViewTabs] Recalcul bottomTabsConfig');
     const tabs = [
       { id: 'historique', label: 'Historique', icon: 'bi-clock-history', color: '#28a745' },
       { id: 'diffusion', label: 'Diffusion', icon: 'bi-broadcast', color: '#6f42c1' },
@@ -587,13 +650,15 @@ function ContactViewTabs({ id, viewType = null }) {
   }, [extractedData?.tags, contact?.tags]);
   
   // Configuration principale - Dépendances minimales
-  const config = useMemo(() => ({
-    defaultBottomTab: 'historique',
-    notFoundIcon: isStructure ? 'bi-building-x' : 'bi-person-x',
-    notFoundTitle: isStructure ? 'Structure non trouvée' : 'Contact non trouvé',
-    notFoundMessage: isStructure 
-      ? 'La structure demandée n\'existe pas ou n\'est plus disponible.'
-      : 'Le contact demandé n\'existe pas ou n\'est plus disponible.',
+  const config = useMemo(() => {
+    console.log('⚙️ [ContactViewTabs] Recalcul config principale');
+    return {
+      defaultBottomTab: 'historique',
+      notFoundIcon: isStructure ? 'bi-building-x' : 'bi-person-x',
+      notFoundTitle: isStructure ? 'Structure non trouvée' : 'Contact non trouvé',
+      notFoundMessage: isStructure 
+        ? 'La structure demandée n\'existe pas ou n\'est plus disponible.'
+        : 'Le contact demandé n\'existe pas ou n\'est plus disponible.',
 
     header: {
       render: (contact) => {
@@ -818,7 +883,8 @@ function ContactViewTabs({ id, viewType = null }) {
         onDatesUpdate={loadStructureDates}
       />
     )
-  }), [
+  };
+  }, [
     // Dépendances vraiment nécessaires uniquement
     isStructure,
     entityType,
@@ -855,7 +921,8 @@ function ContactViewTabs({ id, viewType = null }) {
     openCommentModal,
     openDateCreationTab,
     viewType
-    ]);
+  ]);
+  // Fin de useMemo config
 
 
   return (
@@ -922,4 +989,5 @@ function ContactViewTabs({ id, viewType = null }) {
   );
 }
 
-export default ContactViewTabs;
+// Optimisation avec React.memo pour éviter les re-renders inutiles
+export default React.memo(ContactViewTabs);

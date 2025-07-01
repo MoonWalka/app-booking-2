@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
@@ -7,6 +7,16 @@ import structuresService from '@/services/contacts/structuresService';
 import personnesService from '@/services/contacts/personnesService';
 import liaisonsService from '@/services/contacts/liaisonsService';
 import debug from '@/utils/debugTagsComments';
+
+// Cache global pour les contacts
+const contactCache = new Map();
+const CACHE_DURATION = 30000; // 30 secondes
+
+// Fonction pour nettoyer le cache
+export const clearContactCache = () => {
+  console.log('🗑️ [ContactCache] Cache vidé');
+  contactCache.clear();
+};
 
 /**
  * Hook unifié pour gérer les contacts avec le nouveau modèle relationnel
@@ -23,6 +33,9 @@ export function useContactsRelational() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  // Référence pour tracker les données initiales
+  const initialDataLoaded = useRef(false);
+  
   // États pour les filtres
   const [filters, setFilters] = useState({
     showInactive: false,
@@ -36,6 +49,12 @@ export function useContactsRelational() {
     if (!currentOrganization?.id) {
       setLoading(false);
       return;
+    }
+
+    // Au premier chargement, vérifier si on a des données en cache
+    if (!initialDataLoaded.current) {
+      console.log('🔍 [ContactCache] Vérification du cache au démarrage');
+      initialDataLoaded.current = true;
     }
 
     const unsubscribers = [];
@@ -59,10 +78,22 @@ export function useContactsRelational() {
             const data = change.doc.data();
             debug.tags.firebaseListener(change.doc.id, data);
             debug.comments.firebaseListener(change.doc.id, data);
+            
+            // Invalider le cache pour cette structure
+            const cacheKey = `structure_${change.doc.id}_${currentOrganization.id}`;
+            if (contactCache.has(cacheKey)) {
+              contactCache.delete(cacheKey);
+              console.log('🗑️ [ContactCache] Cache invalidé pour structure:', change.doc.id);
+            }
           }
         });
         
         setStructures(structuresData);
+        
+        // Désactiver le loading après le premier chargement
+        if (loading && structuresData.length > 0) {
+          setLoading(false);
+        }
       });
       unsubscribers.push(unsubStructures);
 
@@ -84,6 +115,13 @@ export function useContactsRelational() {
             const data = change.doc.data();
             debug.tags.firebaseListener(change.doc.id, data);
             debug.comments.firebaseListener(change.doc.id, data);
+            
+            // Invalider le cache pour cette personne
+            const cacheKey = `personne_${change.doc.id}_${currentOrganization.id}`;
+            if (contactCache.has(cacheKey)) {
+              contactCache.delete(cacheKey);
+              console.log('🗑️ [ContactCache] Cache invalidé pour personne:', change.doc.id);
+            }
           }
         });
         
@@ -286,6 +324,15 @@ export function useContactsRelational() {
    * Récupérer une structure avec ses personnes associées
    */
   const getStructureWithPersonnes = useCallback((structureId) => {
+    // Vérifier le cache d'abord
+    const cacheKey = `structure_${structureId}_${currentOrganization?.id}`;
+    const cached = contactCache.get(cacheKey);
+    
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      console.log('💾 [ContactCache] Structure trouvée en cache:', structureId);
+      return cached.data;
+    }
+    
     const structure = structures.find(s => s.id === structureId);
     if (!structure) return null;
 
@@ -323,16 +370,34 @@ export function useContactsRelational() {
       return `${a.nom} ${a.prenom}`.localeCompare(`${b.nom} ${b.prenom}`);
     });
 
-    return {
+    const result = {
       ...structure,
       personnes: structurePersonnes
     };
-  }, [structures, personnes, liaisons, filters.showInactive]);
+    
+    // Mettre en cache
+    contactCache.set(cacheKey, {
+      data: result,
+      timestamp: Date.now()
+    });
+    console.log('💾 [ContactCache] Structure mise en cache:', structureId);
+    
+    return result;
+  }, [structures, personnes, liaisons, filters.showInactive, currentOrganization?.id]);
 
   /**
    * Récupérer une personne avec ses structures associées
    */
   const getPersonneWithStructures = useCallback((personneId) => {
+    // Vérifier le cache d'abord
+    const cacheKey = `personne_${personneId}_${currentOrganization?.id}`;
+    const cached = contactCache.get(cacheKey);
+    
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      console.log('💾 [ContactCache] Personne trouvée en cache:', personneId);
+      return cached.data;
+    }
+    
     console.log('🔍 [getPersonneWithStructures] Recherche personne ID:', personneId);
     console.log('📚 [getPersonneWithStructures] Personnes disponibles:', personnes.map(p => ({ id: p.id, nom: p.nom, prenom: p.prenom })));
     const personne = personnes.find(p => p.id === personneId);
@@ -367,11 +432,20 @@ export function useContactsRelational() {
       };
     }).filter(Boolean);
 
-    return {
+    const result = {
       ...personne,
       structures: personneStructures
     };
-  }, [structures, personnes, liaisons, filters.showInactive]);
+    
+    // Mettre en cache
+    contactCache.set(cacheKey, {
+      data: result,
+      timestamp: Date.now()
+    });
+    console.log('💾 [ContactCache] Personne mise en cache:', personneId);
+    
+    return result;
+  }, [structures, personnes, liaisons, filters.showInactive, currentOrganization?.id]);
 
   /**
    * Récupérer les personnes libres (sans structure)
@@ -480,6 +554,25 @@ export function useContactsRelational() {
     };
   }, [structures, personnes, liaisons, getPersonnesLibres]);
 
+  // Méthode pour invalider le cache d'un contact spécifique
+  const invalidateContactCache = useCallback((contactId, type = 'all') => {
+    if (type === 'all' || type === 'structure') {
+      const structureCacheKey = `structure_${contactId}_${currentOrganization?.id}`;
+      if (contactCache.has(structureCacheKey)) {
+        contactCache.delete(structureCacheKey);
+        console.log('🗑️ [ContactCache] Cache invalidé pour structure:', contactId);
+      }
+    }
+    
+    if (type === 'all' || type === 'personne') {
+      const personneCacheKey = `personne_${contactId}_${currentOrganization?.id}`;
+      if (contactCache.has(personneCacheKey)) {
+        contactCache.delete(personneCacheKey);
+        console.log('🗑️ [ContactCache] Cache invalidé pour personne:', contactId);
+      }
+    }
+  }, [currentOrganization?.id]);
+
   return {
     // Données
     structures,
@@ -514,6 +607,8 @@ export function useContactsRelational() {
     getStructureWithPersonnes,
     getPersonneWithStructures,
     getPersonnesLibres,
-    searchContacts
+    searchContacts,
+    invalidateContactCache,
+    clearCache: clearContactCache
   };
 }

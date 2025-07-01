@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTabs } from '@/context/TabsContext';
 import AddButton from '@/components/ui/AddButton';
 import ConcertsTableView from '@/components/concerts/ConcertsTableView';
-// import { useAuth } from '@/context/AuthContext';
+// useAuth import retiré car non utilisé
 import { useOrganization } from '@/context/OrganizationContext';
 import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -17,21 +17,10 @@ import styles from './TableauDeBordPage.module.css';
  */
 const TableauDeBordPage = () => {
   const navigate = useNavigate();
-  const { openPreContratTab, openContratTab, openTab } = useTabs();
-  // const { } = useAuth();
+  const { openTab } = useTabs();
   const { currentOrg } = useOrganization();
   
-  // Fonction pour ouvrir la page de confirmation
-  const openConfirmationPage = (item) => {
-    openTab({
-      id: `confirmation-${item.id}`,
-      title: `Confirmation - ${item.artisteNom || item.titre || 'Concert'}`,
-      path: `/confirmation?concertId=${item.id}`,
-      component: 'ConfirmationPage',
-      params: { concertId: item.id },
-      icon: 'bi-check-circle'
-    });
-  };
+  // Fonction openConfirmationPage retirée car non utilisée
   
   // État pour les données
   const [concerts, setConcerts] = useState([]);

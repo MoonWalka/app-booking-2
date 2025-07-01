@@ -128,7 +128,7 @@ const ContratRedactionPage = () => {
     };
 
     loadContratData();
-  }, [id]);
+  }, [id, isReadOnly]);
 
   // Vérifier si des modèles ont été choisis et ouvrir la modale si nécessaire
   useEffect(() => {

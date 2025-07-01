@@ -20,44 +20,44 @@ function CommentListModal({
 
   // Charger les commentaires de la personne
   useEffect(() => {
+    const loadCommentaires = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        console.log('[CommentListModal] Chargement commentaires pour:', personneId);
+        
+        const result = await personnesService.getPersonne(personneId);
+        
+        if (result.success && result.data) {
+          const data = result.data;
+          const comments = data.commentaires || [];
+          
+          // Trier par date (plus récent en premier)
+          const sortedComments = comments.sort((a, b) => {
+            const dateA = a.date?.toDate ? a.date.toDate() : new Date(a.date);
+            const dateB = b.date?.toDate ? b.date.toDate() : new Date(b.date);
+            return dateB - dateA;
+          });
+          
+          setCommentaires(sortedComments);
+          console.log('[CommentListModal] Commentaires chargés:', sortedComments.length);
+        } else {
+          console.warn('[CommentListModal] Personne non trouvée');
+          setError('Fiche personne non trouvée');
+        }
+      } catch (err) {
+        console.error('[CommentListModal] Erreur chargement commentaires:', err);
+        setError('Erreur lors du chargement des commentaires');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (show && personneId) {
       loadCommentaires();
     }
   }, [show, personneId]);
-
-  const loadCommentaires = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      console.log('[CommentListModal] Chargement commentaires pour:', personneId);
-      
-      const result = await personnesService.getPersonne(personneId);
-      
-      if (result.success && result.data) {
-        const data = result.data;
-        const comments = data.commentaires || [];
-        
-        // Trier par date (plus récent en premier)
-        const sortedComments = comments.sort((a, b) => {
-          const dateA = a.date?.toDate ? a.date.toDate() : new Date(a.date);
-          const dateB = b.date?.toDate ? b.date.toDate() : new Date(b.date);
-          return dateB - dateA;
-        });
-        
-        setCommentaires(sortedComments);
-        console.log('[CommentListModal] Commentaires chargés:', sortedComments.length);
-      } else {
-        console.warn('[CommentListModal] Personne non trouvée');
-        setError('Fiche personne non trouvée');
-      }
-    } catch (err) {
-      console.error('[CommentListModal] Erreur chargement commentaires:', err);
-      setError('Erreur lors du chargement des commentaires');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleAddComment = () => {
     console.log('[CommentListModal] Ajout nouveau commentaire');

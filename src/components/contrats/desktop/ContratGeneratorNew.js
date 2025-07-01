@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col, Button, Form, Table, Alert } from 'react-bootstrap';
 import RepresentationsSection from '@/components/common/RepresentationsSection';
@@ -24,7 +24,7 @@ const ContratGeneratorNew = ({
 }) => {
   const navigate = useNavigate();
   const { openTab } = useTabs();
-  const { currentOrg } = useOrganization();
+  const { currentOrganization: currentOrg } = useOrganization();
   
   // État pour l'onglet actif du panneau latéral
   const [activeTab, setActiveTab] = useState('dossier');
@@ -182,7 +182,7 @@ const ContratGeneratorNew = ({
     };
     
     loadEntrepriseData();
-  }, [currentOrg]);
+  }, [currentOrg?.id]);
 
   // Charger les paramètres de facturation (incluant TVA)
   useEffect(() => {
@@ -211,7 +211,7 @@ const ContratGeneratorNew = ({
     };
     
     loadFactureParams();
-  }, [currentOrg]);
+  }, [currentOrg?.id]);
 
   // Charger un contrat existant s'il existe
   useEffect(() => {
@@ -378,7 +378,7 @@ const ContratGeneratorNew = ({
     } else {
       console.log('[ContratGeneratorNew] Aucune donnée entreprise disponible pour le producteur');
     }
-  }, [structure, concert, artiste, lieu, preContratData, entrepriseData, factureParams]);
+  }, [structure, concert, artiste, lieu, preContratData, entrepriseData]);
 
   // Initialiser les champs émetteur et destinataire
   useEffect(() => {
@@ -401,7 +401,7 @@ const ContratGeneratorNew = ({
         destinataire: destinataireNom
       }));
     }
-  }, [entrepriseData, structure, contratData.organisateur.raisonSociale]);
+  }, [entrepriseData?.nom, structure?.nom, structure?.structureRaisonSociale, contratData.organisateur.raisonSociale]);
 
   // Calculer automatiquement le taux TVA de négociation depuis les prestations
   useEffect(() => {
@@ -454,7 +454,7 @@ const ContratGeneratorNew = ({
         }));
       }
     }
-  }, [contratData.prestations]);
+  }, [contratData.prestations, contratData.negociation]);
 
   // Calculer automatiquement les montants TVA quand le montant net change
   useEffect(() => {
@@ -477,7 +477,7 @@ const ContratGeneratorNew = ({
   }, [contratData.negociation?.montantNet]);
 
   // Calcul des totaux (déplacé ici pour être utilisable dans les useEffect)
-  const calculerTotaux = () => {
+  const calculerTotaux = useCallback(() => {
     const totalHT = contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantHT) || 0), 0);
     const totalTVA = contratData.prestations.reduce((sum, p) => {
       const montantHT = parseFloat(p.montantHT) || 0;
@@ -487,7 +487,7 @@ const ContratGeneratorNew = ({
     const totalTTC = totalHT + totalTVA;
 
     return { totalHT, totalTVA, totalTTC };
-  };
+  }, [contratData.prestations]);
 
   // Gérer automatiquement les montants des échéances
   useEffect(() => {
@@ -517,7 +517,7 @@ const ContratGeneratorNew = ({
         setContratData(prev => ({ ...prev, echeances: updatedEcheances }));
       }
     }
-  }, [contratData.prestations, contratData.echeances.filter(e => e.nature === 'Acompte').map(e => e.montantTTC).join(','), contratData.echeances.length]);
+  }, [contratData.prestations, contratData.echeances, calculerTotaux]);
 
   const handleInputChange = (section, field, value) => {
     setContratData(prev => ({

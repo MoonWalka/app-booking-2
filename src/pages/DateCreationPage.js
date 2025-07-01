@@ -10,6 +10,9 @@ import styles from './DateCreationPage.module.css';
  * Page de création d'une nouvelle date de concert
  */
 function DateCreationPage({ params = {} }) {
+  // Mode debug (à activer temporairement)
+  const DEBUG_MODE = false;
+  
   const { currentOrganization } = useOrganization();
   const { openConcertsListTab, getActiveTab, closeTab } = useTabs();
   
@@ -65,7 +68,7 @@ function DateCreationPage({ params = {} }) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [DEBUG_MODE]);
 
   const loadArtistes = useCallback(async () => {
     try {
@@ -345,9 +348,6 @@ function DateCreationPage({ params = {} }) {
       setLoading(false);
     }
   };
-
-  // Mode debug (à activer temporairement)
-  const DEBUG_MODE = false;
 
   return (
     <div className={styles.container}>

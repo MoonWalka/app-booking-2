@@ -229,10 +229,12 @@ export const withDebugTracing = (fn, type = 'tags') => {
 };
 
 // Export par défaut pour usage facile
-export default {
+const debugUtils = {
   tags: debugTagsUpdate,
   comments: debugCommentsUpdate,
   cache: debugCache,
   analyze: analyzeDataStructure,
   withTracing: withDebugTracing
 };
+
+export default debugUtils;

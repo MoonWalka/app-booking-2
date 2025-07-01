@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Container, Alert, Spinner } from 'react-bootstrap';
 
@@ -27,7 +27,6 @@ const componentRegistry = {
   
   // Pages principales
   'FactureGeneratorPage': () => import('./FactureGeneratorPage'),
-  // 'FactureDetailsPage': () => import('./FactureDetailsPage'), // Remplacé par FactureGeneratorPage
   'FacturesPage': () => import('./FacturesPage'),
   
   // Ajouter d'autres composants ici au besoin

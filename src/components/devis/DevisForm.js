@@ -217,7 +217,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
         entreprise: nomEntreprise
       }));
     }
-  }, [parametres?.entreprise?.nom, currentOrg?.name, devisData.entreprise]);
+  }, [parametres?.entreprise?.nom, currentOrg?.name, devisData.entreprise, setDevisData]);
 
   // Auto-remplir l'adresse administrative depuis la structure
   useEffect(() => {
@@ -248,7 +248,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
     };
 
     fetchStructureAddress();
-  }, [devisData.structureId, devisData.adresseAdministrative]);
+  }, [devisData.structureId, devisData.adresseAdministrative, setDevisData]);
 
   // État pour la modal d'adresses alternatives
   const [showAddressModal, setShowAddressModal] = useState(false);

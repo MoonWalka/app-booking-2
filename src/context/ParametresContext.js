@@ -149,7 +149,7 @@ export const ParametresProvider = ({ children }) => {
                   } else {
                     // Utiliser les valeurs par défaut si invalide
                     console.error(`❌ ${section} a un format invalide, utilisation des valeurs par défaut`);
-                    newParams[section] = newParams[section];
+                    // Garder les valeurs par défaut de newParams[section]
                   }
                 } else {
                   // Fusionner la section avec les valeurs par défaut

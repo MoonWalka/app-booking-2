@@ -8,7 +8,7 @@ import FlexContainer from '@/components/ui/FlexContainer';
 import Button from '@/components/ui/Button';
 import FacturesTableView from '@/components/factures/FacturesTableView';
 import factureService from '@/services/factureService';
-import { useResponsive } from '@/hooks/common';
+// useResponsive retiré car isMobile non utilisé
 import { useOrganization } from '@/context/OrganizationContext';
 import '@styles/index.css';
 
@@ -17,7 +17,7 @@ const FacturesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { isMobile } = useResponsive();
+  // isMobile retiré car non utilisé
   const { currentOrganization } = useOrganization();
 
   useEffect(() => {
@@ -53,20 +53,7 @@ const FacturesPage = () => {
     fetchFactures();
   }, [currentOrganization?.id]);
 
-  const handleUpdateFacture = (factureUpdated) => {
-    // Callback pour mettre à jour une facture localement
-    if (factureUpdated.deleted) {
-      // Si la facture a été supprimée, la retirer de la liste
-      setFactures(prev => prev.filter(facture => facture.id !== factureUpdated.id));
-    } else {
-      // Sinon, mettre à jour la facture
-      setFactures(prev => 
-        prev.map(facture => 
-          facture.id === factureUpdated.id ? factureUpdated : facture
-        )
-      );
-    }
-  };
+  // Fonction retirée car non utilisée
 
   return (
     <Container fluid className="p-4">

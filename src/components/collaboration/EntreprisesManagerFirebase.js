@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Button, Form, Modal, Alert, Nav } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import { collection, doc, getDoc, setDoc, deleteDoc, getDocs, query, where } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import './EntreprisesManager.css';

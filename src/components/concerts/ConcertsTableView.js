@@ -34,7 +34,7 @@ const ConcertsTableView = ({
   handleViewFacture,
   handleGenerateFacture
 }) => {
-  const { openTab, openContactTab, openPreContratTab, openContratTab, openNewDevisTab, openDevisTab } = useTabs();
+  const { openTab, openPreContratTab, openContratTab, openNewDevisTab, openDevisTab } = useTabs();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');

@@ -12,55 +12,55 @@ const PreviewWrapper = () => {
   const [mockData, setMockData] = useState(null);
 
   useEffect(() => {
+    const loadComponent = async () => {
+      setLoading(true);
+      setError(null);
+      setComponent(null);
+
+      try {
+        if (!componentName) {
+          throw new Error('Aucun nom de composant fourni');
+        }
+
+        const componentConfig = getComponentConfig(componentName);
+        
+        if (!componentConfig) {
+          throw new Error(`Composant "${componentName}" non trouvé dans le registre`);
+        }
+
+        // Import dynamique du composant
+        const module = await componentConfig.path();
+        const LoadedComponent = module.default || module[componentName];
+        
+        if (!LoadedComponent) {
+          throw new Error(`Impossible de charger le composant "${componentName}"`);
+        }
+
+        // Créer un wrapper pour gérer les props si nécessaire
+        const ComponentWrapper = (props) => {
+          // Utiliser les props par défaut du registre
+          const defaultProps = componentConfig.defaultProps || {};
+          return <LoadedComponent {...defaultProps} {...props} />;
+        };
+
+        setComponent(() => ComponentWrapper);
+        
+        // Charger les données mock si nécessaire
+        const mockDataForComponent = getMockDataForComponent(componentName);
+        if (mockDataForComponent) {
+          setMockData(mockDataForComponent);
+        }
+        
+      } catch (err) {
+        console.error('Erreur lors du chargement du composant:', err);
+        setError(err.message || 'Erreur inconnue');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadComponent();
   }, [componentName]);
-
-  const loadComponent = async () => {
-    setLoading(true);
-    setError(null);
-    setComponent(null);
-
-    try {
-      if (!componentName) {
-        throw new Error('Aucun nom de composant fourni');
-      }
-
-      const componentConfig = getComponentConfig(componentName);
-      
-      if (!componentConfig) {
-        throw new Error(`Composant "${componentName}" non trouvé dans le registre`);
-      }
-
-      // Import dynamique du composant
-      const module = await componentConfig.path();
-      const LoadedComponent = module.default || module[componentName];
-      
-      if (!LoadedComponent) {
-        throw new Error(`Impossible de charger le composant "${componentName}"`);
-      }
-
-      // Créer un wrapper pour gérer les props si nécessaire
-      const ComponentWrapper = (props) => {
-        // Utiliser les props par défaut du registre
-        const defaultProps = componentConfig.defaultProps || {};
-        return <LoadedComponent {...defaultProps} {...props} />;
-      };
-
-      setComponent(() => ComponentWrapper);
-      
-      // Charger les données mock si nécessaire
-      const mockDataForComponent = getMockDataForComponent(componentName);
-      if (mockDataForComponent) {
-        setMockData(mockDataForComponent);
-      }
-      
-    } catch (err) {
-      console.error('Erreur lors du chargement du composant:', err);
-      setError(err.message || 'Erreur inconnue');
-    } finally {
-      setLoading(false);
-    }
-  };
 
 
   // Fonction pour obtenir des données mock selon le composant

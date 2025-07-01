@@ -11,7 +11,7 @@ import ContratsPage from '@/pages/ContratsPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import FacturesPage from '@/pages/FacturesPage';
 import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
-// import FactureDetailsPage from '@/pages/FactureDetailsPage'; // Remplacé par FactureGeneratorPage
+// FactureDetailsPage remplacé par FactureGeneratorPage
 import DevisPage from '@/pages/DevisPage';
 import ParametresPage from '@/pages/ParametresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
@@ -45,7 +45,7 @@ import ContactViewTabs from '@/components/contacts/ContactViewTabs';
 import LieuView from '@/components/lieux/desktop/LieuView';
 // import StructureViewTabs from '@/components/structures/StructureViewTabs'; // Plus utilisé - maintenant tout est des contacts
 import ConcertDetails from '@/components/concerts/ConcertDetails';
-import ContratGeneratorNew from '@/components/contrats/desktop/ContratGeneratorNew';
+// ContratGeneratorNew retiré car non utilisé
 
 const TabManagerProduction = () => {
   const { 
@@ -234,16 +234,7 @@ const TabManagerProduction = () => {
             key={activeTab.id}
             id={activeTab.params?.structureId} 
           />;
-        case 'ContactDetailsPage':
-          // Afficher les détails d'un contact (structure ou personne)
-          console.log('[DEBUG TabManager] activeTab pour ContactDetailsPage:', activeTab);
-          console.log('[DEBUG TabManager] contactId passé:', activeTab.params?.contactId);
-          console.log('[DEBUG TabManager] viewType passé:', activeTab.params?.viewType);
-          return <ContactViewTabs 
-            key={activeTab.id}
-            id={activeTab.params?.contactId} 
-            viewType={activeTab.params?.viewType}
-          />;
+        // Note: ContactDetailsPage est déjà géré plus haut dans le switch
         case 'ArtistesPage':
           // Afficher directement la liste des artistes
           return <ArtistesList />;

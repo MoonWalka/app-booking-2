@@ -364,7 +364,7 @@ export default function useSimpleContactDetails(id) {
     };
 
     loadAllContactData();
-  }, [id, currentOrganization?.id]); // DÉPENDANCES STABLES = PAS DE BOUCLES DE RECHARGEMENT
+  }, [id, currentOrganization?.id, fetchLieuxAssocies, fetchConcertsAssocies, fetchStructureAssociee, fetchArtistesAssocies]); // DÉPENDANCES STABLES = PAS DE BOUCLES DE RECHARGEMENT
 
   // 🔍 DEBUG: Log du retour
   console.log('[DEBUG useSimpleContactDetails] Données retournées:', {

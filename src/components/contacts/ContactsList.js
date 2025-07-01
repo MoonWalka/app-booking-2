@@ -169,7 +169,7 @@ function ContactsList({ filterType = 'all' }) {
     }
     
     return processedContacts;
-  }, [structures, personnes, currentOrganization, filterType, getStructureWithPersonnes]);
+  }, [structures, personnes, currentOrganization, filterType, getStructureWithPersonnes, liaisons]);
 
   // Fonction pour ouvrir la modal d'édition - gère personnes et structures
   const handleEditContact = (item) => {

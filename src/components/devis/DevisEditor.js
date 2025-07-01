@@ -24,7 +24,7 @@ function DevisEditor({ concertId, structureId, devisId }) {
   const { currentOrg } = useOrganization();
   const { currentUser } = useAuth();
   
-  const [devis] = useState(null);
+  // Variable devis retirée car non utilisée
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -152,7 +152,7 @@ function DevisEditor({ concertId, structureId, devisId }) {
     };
 
     loadDevis();
-  }, [finalDevisId]);
+  }, [finalDevisId, devisData, currentOrg?.id, currentUser]);
 
   // Charger les données du concert si concertId fourni
   useEffect(() => {
@@ -176,7 +176,7 @@ function DevisEditor({ concertId, structureId, devisId }) {
           return;
         }
         
-        const concertData = { id: concertId, ...concertDoc.data() };
+        const concertData = { id: finalConcertId, ...concertDoc.data() };
         console.log('✅ Données COMPLÈTES du concert récupérées:', concertData);
         console.log('🔍 Vérification des champs projet:');
         console.log('  - projetNom:', concertData.projetNom);
@@ -219,7 +219,7 @@ function DevisEditor({ concertId, structureId, devisId }) {
     };
 
     loadConcertData();
-  }, [finalConcertId, finalDevisId]);
+  }, [finalConcertId, finalDevisId, finalStructureId]);
 
   // Surveiller les changements
   useEffect(() => {

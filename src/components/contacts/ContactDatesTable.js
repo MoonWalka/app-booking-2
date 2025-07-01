@@ -30,7 +30,7 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null, onDele
   } = useConcertActions();
 
   // Hook pour la suppression des concerts
-  const { handleDeleteConcert: deleteConcert, isDeleting } = useConcertDelete(() => {
+  const { handleDeleteConcert: deleteConcert } = useConcertDelete(() => {
     console.log('[ContactDatesTable] Concert supprimé avec succès');
     if (onDeleteSuccess) {
       onDeleteSuccess();

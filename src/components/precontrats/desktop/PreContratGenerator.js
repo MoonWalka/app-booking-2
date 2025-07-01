@@ -237,7 +237,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     };
     
     loadExistingPreContrat();
-  }, [concert?.id, currentOrg?.id]);
+  }, [concert?.id, currentOrg?.id, devisData]);
 
   // Charger le devis associé au concert
   useEffect(() => {

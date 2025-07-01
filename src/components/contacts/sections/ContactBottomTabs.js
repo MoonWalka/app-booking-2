@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ContactDatesTable from '../ContactDatesTable';
 import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import ContactFacturesTable from '../ContactFacturesTable';
 import ContactFestivalsTable from '../ContactFestivalsTable';
-import FestivalCreationModal from '../FestivalCreationModal';
 import { useContactContrats } from '@/hooks/contacts/useContactContrats';
 import { useTabs } from '@/context/TabsContext';
 import styles from '../ContactViewTabs.module.css';
@@ -21,11 +20,9 @@ function ContactBottomTabs({
   openDateCreationTab,
   onDatesUpdate 
 }) {
-  const [showFestivalModal, setShowFestivalModal] = useState(false);
-  
   // Hook pour récupérer les contrats du contact/structure
   console.log('[ContactBottomTabs] Appel du hook useContactContrats avec:', { contactId, viewType });
-  const { contrats, loading: contratsLoading } = useContactContrats(contactId, viewType);
+  const { contrats } = useContactContrats(contactId, viewType);
   
   // Hook pour la gestion des onglets (devis, factures, contrats)
   const { 

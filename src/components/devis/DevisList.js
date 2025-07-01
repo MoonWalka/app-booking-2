@@ -1,6 +1,5 @@
 // src/components/devis/DevisList.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
 import { collection, getDocs, query, where } from '@/services/firebase-service';
@@ -16,7 +15,6 @@ import '@styles/index.css';
  * Liste des devis
  */
 function DevisList() {
-  const navigate = useNavigate();
   const { currentOrg } = useOrganization();
   const { openNewDevisTab, openDevisTab } = useTabs();
   const { isMobile } = useResponsive();
@@ -65,14 +63,7 @@ function DevisList() {
     loadData();
   }, [currentOrg?.id]);
 
-  const handleUpdateDevis = (devisUpdated) => {
-    // Callback pour mettre à jour un devis localement
-    setDevis(prev => 
-      prev.map(devisItem => 
-        devisItem.id === devisUpdated.id ? devisUpdated : devisItem
-      )
-    );
-  };
+  // Fonction handleUpdateDevis retirée car non utilisée actuellement
 
   return (
     <Container fluid className="p-4">
@@ -160,7 +151,7 @@ function DevisList() {
           ) : (
             <DevisTable 
               devis={devis} 
-              onUpdateDevis={handleUpdateDevis}
+              // onUpdateDevis prop retirée car handleUpdateDevis n'est pas défini
             />
           )}
         </>

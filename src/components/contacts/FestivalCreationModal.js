@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Modal, Form, Button, Nav, Tab, Row, Col } from 'react-bootstrap';
 import { useOrganization } from '@/context/OrganizationContext';
 import { db } from '@/services/firebase-service';
@@ -47,8 +47,6 @@ const FestivalCreationModal = ({ show, onHide, contactId, contactName }) => {
     }));
   }, []);
 
-  // Utilisation de la vraie base de genres de l'application
-  const genresTree = GENRES_HIERARCHY;
 
   // Gestion de la sélection des genres
   const toggleGenre = useCallback((genreId) => {
@@ -303,7 +301,7 @@ const FestivalCreationModal = ({ show, onHide, contactId, contactName }) => {
             {/* Onglet Genre */}
             <Tab.Pane eventKey="genre">
               <div className="p-3">
-                {genresTree.map(genre => renderGenreItem(genre))}
+                {GENRES_HIERARCHY.map(genre => renderGenreItem(genre))}
               </div>
             </Tab.Pane>
 

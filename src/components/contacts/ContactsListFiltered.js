@@ -14,7 +14,6 @@ import { useDeleteContactRelational } from '@/hooks/contacts';
 function ContactsListFiltered({ filterTag, filterType, usageCount }) {
   useOrganization(); // Pour le contexte
   const { openContactTab } = useTabs();
-  const [refreshKey, setRefreshKey] = useState(0);
   
   // Utiliser le hook relationnel
   const { 
@@ -26,7 +25,7 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
 
   // Callback après suppression
   const onDeleteSuccess = () => {
-    setRefreshKey(prev => prev + 1);
+    // Les données se mettront à jour automatiquement via les listeners Firebase
   };
   
   const { handleDelete: handleDeleteContact } = useDeleteContactRelational(onDeleteSuccess);
@@ -83,7 +82,7 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
     
     console.log(`✅ ${contacts.length} contacts trouvés avec tag "${filterTag}"`);
     return contacts;
-  }, [structures, personnes, filterTag, filterType, refreshKey]);
+  }, [structures, personnes, filterTag, filterType]);
 
   // Configuration pour ListWithFilters
   const listConfig = {

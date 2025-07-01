@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, orderBy } from '@/services/firebase-service';
+import { collection, query, where, getDocs, doc, getDoc, updateDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
 const collaborateurService = {

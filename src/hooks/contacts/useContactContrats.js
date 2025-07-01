@@ -254,7 +254,7 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
     };
 
     fetchContactContrats();
-  }, [entityId, entityType, organizationId]);
+  }, [entityId, entityType, organizationId, currentOrganization]);
 
   return { contrats, loading, error };
 };

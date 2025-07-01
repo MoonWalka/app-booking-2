@@ -64,7 +64,7 @@ function ContactViewTabs({ id, viewType = null }) {
   const navigate = useNavigate();
   
   // Hook unifié pour les données - passer le viewType pour aider à déterminer le type
-  const { contact, loading, error, entityType, reload } = useUnifiedContact(cleanId, forcedViewType);
+  const { contact, loading, error, entityType } = useUnifiedContact(cleanId, forcedViewType);
   
   // Déterminer le type de contact
   const contactType = entityType === 'structure' ? 'structure' : 'personne';
@@ -131,7 +131,7 @@ function ContactViewTabs({ id, viewType = null }) {
         }
       }
     });
-  }, [openCommentModal, currentOrganization.id, currentUser?.uid]);
+  }, [openCommentModal, currentOrganization?.id, currentUser?.uid, currentUser?.displayName, currentUser?.email]);
 
   // Gestion des personnes
   const handleEditPerson = useCallback((personne) => {
@@ -173,7 +173,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('Erreur lors de la gestion du commentaire personne:', error);
       alert('Erreur lors de l\'ouverture du commentaire pour cette personne');
     }
-  }, [currentOrganization, openCreateCommentModal]);
+  }, [currentOrganization?.id, openCreateCommentModal]);
 
   const navigateToEntity = useCallback((entityType, entityId, entityName) => {
     if (!entityId) return;
@@ -836,7 +836,25 @@ function ContactViewTabs({ id, viewType = null }) {
     datesData,
     extractedData,
     id,
-    loadStructureDates
+    loadStructureDates,
+    cleanId,
+    openPersonneModal,
+    handleRemoveTag,
+    handleEditPerson,
+    handleDissociatePerson,
+    handleOpenPersonFiche,
+    handleAddCommentToPersonWithModal,
+    navigateToEntity,
+    handleEditStructure,
+    handleOpenStructureFiche,
+    handleAddCommentToStructure,
+    handleSetPrioritaire,
+    handleToggleActif,
+    handleAddComment,
+    handleDeleteComment,
+    openCommentModal,
+    openDateCreationTab,
+    viewType
     ]);
 
 

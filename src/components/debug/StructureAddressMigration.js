@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { collection, getDocs, doc, updateDoc, deleteField } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 import styles from './DataStructureFixer.module.css';
 
 const StructureAddressMigration = () => {
-  const { currentOrganization } = useOrganization();
   const [scanning, setScanning] = useState(false);
   const [fixing, setFixing] = useState(false);
   const [results, setResults] = useState(null);

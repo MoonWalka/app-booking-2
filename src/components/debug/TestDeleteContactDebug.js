@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Button, Alert, Badge } from 'react-bootstrap';
 import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -16,13 +16,13 @@ function TestDeleteContactDebug() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const addLog = (message, type = 'info') => {
+  const addLog = useCallback((message, type = 'info') => {
     const timestamp = new Date().toLocaleTimeString();
     setLogs(prev => [...prev, { timestamp, message, type }]);
-  };
+  }, []);
 
   // Charger des données de test
-  const loadTestData = async () => {
+  const loadTestData = useCallback(async () => {
     if (!currentOrganization?.id) {
       addLog('Aucune organisation sélectionnée', 'error');
       return;
@@ -84,7 +84,7 @@ function TestDeleteContactDebug() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentOrganization?.id, addLog]);
 
   // Tester la suppression d'une structure
   const testDeleteStructure = async () => {
@@ -133,8 +133,10 @@ function TestDeleteContactDebug() {
   };
 
   useEffect(() => {
-    loadTestData();
-  }, [currentOrganization?.id]);
+    if (currentOrganization?.id) {
+      loadTestData();
+    }
+  }, [currentOrganization?.id, loadTestData]);
 
   return (
     <div className="p-3">

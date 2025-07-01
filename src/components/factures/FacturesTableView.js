@@ -16,7 +16,6 @@ import datesTableStyles from '@/shared/tableConfigs/datesTableStyles.module.css'
  * @param {boolean} loading - État de chargement
  * @param {string} error - Message d'erreur éventuel
  * @param {Function} onDelete - Callback pour supprimer une facture
- * @param {Function} onEdit - Callback pour éditer une facture
  * @param {boolean} showSearch - Afficher la barre de recherche (true par défaut)
  * @param {boolean} showFilters - Afficher les filtres avancés (true par défaut)
  * @param {string} emptyMessage - Message personnalisé quand pas de factures
@@ -26,7 +25,6 @@ const FacturesTableView = ({
   loading = false, 
   error = null,
   onDelete,
-  onEdit,
   showSearch = true,
   showFilters = true,
   emptyMessage = "Aucune facture n'a été générée."
@@ -55,18 +53,7 @@ const FacturesTableView = ({
     return dateObj.toLocaleDateString('fr-FR');
   };
 
-  // Fonction pour obtenir le badge de statut
-  const getStatusBadge = (status) => {
-    const statusMap = {
-      'draft': { label: 'Brouillon', variant: 'secondary' },
-      'sent': { label: 'Envoyée', variant: 'info' },
-      'paid': { label: 'Payée', variant: 'success' },
-      'overdue': { label: 'En retard', variant: 'danger' },
-      'cancelled': { label: 'Annulée', variant: 'dark' }
-    };
-    const config = statusMap[status] || { label: status || 'Brouillon', variant: 'secondary' };
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
+  // getStatusBadge retiré car non utilisé
 
   // Configuration des colonnes du tableau
   const columns = [

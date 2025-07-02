@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Alert, Button, Form } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
 import { db } from '@/services/firebase-service';
-import { doc, updateDoc, serverTimestamp } from '@/services/firebase-service';
+import { doc, updateDoc, serverTimestamp, getDoc } from '@/services/firebase-service';
 import contratService from '@/services/contratService';
 import ContratModelsModal from '@/components/contrats/modals/ContratModelsModal';
 import styles from './ContratRedactionPage.module.css';
@@ -105,11 +105,12 @@ const ContratRedactionPage = () => {
           
           // Un contrat est terminé pour la rédaction seulement s'il a du contenu rédigé
           // Utiliser le nouveau système de statuts: draft, generated, finalized
-          if (contrat.status === 'generated' || contrat.status === 'finalized' || contrat.contratContenu) {
-            console.log('[ContratRedactionPage] Contrat marqué comme rédigé - status:', contrat.status, 'hasContent:', !!contrat.contratContenu);
+          // Pour les anciens contrats migrés, permettre de re-générer l'aperçu
+          if (contrat.status === 'finalized') {
+            console.log('[ContratRedactionPage] Contrat finalisé - status:', contrat.status);
             setIsContractFinished(true);
           } else {
-            console.log('[ContratRedactionPage] Contrat non rédigé - peut être édité');
+            console.log('[ContratRedactionPage] Contrat en cours - peut être édité');
             setIsContractFinished(false);
           }
           
@@ -222,12 +223,441 @@ const ContratRedactionPage = () => {
   };
 
   // Gestion de l'enregistrement et affichage
-  const handleSaveAndPreview = () => {
+  const handleSaveAndPreview = async () => {
     console.log('[ContratRedactionPage] handleSaveAndPreview appelé');
     console.log('[ContratRedactionPage] editorContent actuel:', editorContent);
     console.log('[ContratRedactionPage] editorContent length:', editorContent?.length || 0);
-    setPreviewContent(editorContent);
-    console.log('[ContratRedactionPage] previewContent défini');
+    console.log('[ContratRedactionPage] contratData:', contratData);
+    
+    // Récupérer les variables de contrat depuis le contratData sauvegardé
+    if (contratData) {
+      try {
+        // Charger les données manquantes depuis Firebase
+        let dataForReplacement = { ...contratData };
+        
+        // Charger les données du concert si nécessaire
+        if (contratData.concertId && !contratData.concert) {
+          console.log('[ContratRedactionPage] Chargement des données du concert...');
+          const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
+          if (concertDoc.exists()) {
+            dataForReplacement.concert = { id: concertDoc.id, ...concertDoc.data() };
+            console.log('[ContratRedactionPage] Données concert chargées:', dataForReplacement.concert);
+          }
+        }
+        
+        // Charger les données de l'artiste si nécessaire
+        if (contratData.artisteId && !contratData.artiste) {
+          console.log('[ContratRedactionPage] Chargement des données de l\'artiste...');
+          const artisteDoc = await getDoc(doc(db, 'artistes', contratData.artisteId));
+          if (artisteDoc.exists()) {
+            dataForReplacement.artiste = { id: artisteDoc.id, ...artisteDoc.data() };
+            console.log('[ContratRedactionPage] Données artiste chargées:', dataForReplacement.artiste);
+          }
+        }
+        
+        // Charger les données du lieu si nécessaire
+        if (contratData.lieuId && !contratData.lieu) {
+          console.log('[ContratRedactionPage] Chargement des données du lieu...');
+          const lieuDoc = await getDoc(doc(db, 'lieux', contratData.lieuId));
+          if (lieuDoc.exists()) {
+            dataForReplacement.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
+            console.log('[ContratRedactionPage] Données lieu chargées:', dataForReplacement.lieu);
+          }
+        } else if (dataForReplacement.concert && dataForReplacement.concert.lieuId && !dataForReplacement.lieu) {
+          // Si le lieu n'est pas dans le contrat mais dans le concert
+          console.log('[ContratRedactionPage] Chargement du lieu depuis le concert...');
+          const lieuDoc = await getDoc(doc(db, 'lieux', dataForReplacement.concert.lieuId));
+          if (lieuDoc.exists()) {
+            dataForReplacement.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
+            console.log('[ContratRedactionPage] Données lieu chargées depuis concert:', dataForReplacement.lieu);
+          }
+        }
+        
+        console.log('[ContratRedactionPage] Données du contrat disponibles pour remplacement:', {
+          hasOrganisateur: !!dataForReplacement.organisateur,
+          hasProducteur: !!dataForReplacement.producteur,
+          hasPrestations: !!dataForReplacement.prestations,
+          hasRepresentations: !!dataForReplacement.representations,
+          hasLogistique: !!dataForReplacement.logistique,
+          hasReglement: !!dataForReplacement.reglement,
+          hasConcert: !!dataForReplacement.concert,
+          hasArtiste: !!dataForReplacement.artiste,
+          hasLieu: !!dataForReplacement.lieu
+        });
+        
+        // Remplacer les variables dans le contenu
+        let processedContent = editorContent;
+        
+        // Log pour voir quelles variables sont présentes dans le contenu
+        const variablesInContent = [];
+        const variableRegex = /{([^}]+)}/g;
+        let match;
+        while ((match = variableRegex.exec(editorContent)) !== null) {
+          variablesInContent.push(match[1]);
+        }
+        console.log('[ContratRedactionPage] Variables trouvées dans le contenu:', variablesInContent);
+        
+        // Variables Organisateur (partie A)
+        if (dataForReplacement.organisateur) {
+          processedContent = processedContent
+            .replace(/{organisateur_raison_sociale}/g, dataForReplacement.organisateur.raisonSociale || '')
+            .replace(/{organisateur_adresse}/g, dataForReplacement.organisateur.adresse || '')
+            .replace(/{organisateur_code_postal}/g, dataForReplacement.organisateur.codePostal || '')
+            .replace(/{organisateur_ville}/g, dataForReplacement.organisateur.ville || '')
+            .replace(/{organisateur_siret}/g, dataForReplacement.organisateur.siret || '')
+            .replace(/{organisateur_numero_tva}/g, dataForReplacement.organisateur.numeroTva || '')
+            .replace(/{organisateur_code_ape}/g, dataForReplacement.organisateur.codeApe || '')
+            .replace(/{organisateur_numero_licence}/g, dataForReplacement.organisateur.numeroLicence || '')
+            .replace(/{organisateur_telephone}/g, dataForReplacement.organisateur.telephone || '')
+            .replace(/{organisateur_email}/g, dataForReplacement.organisateur.email || '')
+            .replace(/{organisateur_site}/g, dataForReplacement.organisateur.site || '')
+            .replace(/{organisateur_signataire}/g, dataForReplacement.organisateur.signataire || '')
+            .replace(/{organisateur_qualite}/g, dataForReplacement.organisateur.qualite || '');
+        }
+        
+        // Variables Producteur (partie B)
+        if (dataForReplacement.producteur) {
+          processedContent = processedContent
+            .replace(/{producteur_raison_sociale}/g, dataForReplacement.producteur.raisonSociale || '')
+            .replace(/{producteur_adresse}/g, dataForReplacement.producteur.adresse || '')
+            .replace(/{producteur_code_postal}/g, dataForReplacement.producteur.codePostal || '')
+            .replace(/{producteur_ville}/g, dataForReplacement.producteur.ville || '')
+            .replace(/{producteur_siret}/g, dataForReplacement.producteur.siret || '')
+            .replace(/{producteur_numero_tva}/g, dataForReplacement.producteur.numeroTva || '')
+            .replace(/{producteur_code_ape}/g, dataForReplacement.producteur.codeApe || '')
+            .replace(/{producteur_numero_licence}/g, dataForReplacement.producteur.numeroLicence || '')
+            .replace(/{producteur_telephone}/g, dataForReplacement.producteur.telephone || '')
+            .replace(/{producteur_email}/g, dataForReplacement.producteur.email || '')
+            .replace(/{producteur_site}/g, dataForReplacement.producteur.site || '')
+            .replace(/{producteur_signataire}/g, dataForReplacement.producteur.signataire || '')
+            .replace(/{producteur_qualite}/g, dataForReplacement.producteur.qualite || '');
+        }
+        
+        // Variables Prestations
+        if (dataForReplacement.prestations) {
+          processedContent = processedContent
+            .replace(/{spectacle_nom}/g, dataForReplacement.prestations.nomSpectacle || '')
+            .replace(/{plateau_duree}/g, dataForReplacement.prestations.dureePlateau || '')
+            .replace(/{plateau_contenu}/g, dataForReplacement.prestations.contenuPlateau || '')
+            .replace(/{intervenants}/g, dataForReplacement.prestations.intervenants || '')
+            .replace(/{conditions_techniques}/g, dataForReplacement.prestations.conditionsTechniques || '')
+            .replace(/{technique_fournie}/g, dataForReplacement.prestations.techniqueFournie || '')
+            .replace(/{technique_demandee}/g, dataForReplacement.prestations.techniqueDemandee || '')
+            .replace(/{dispositions_particulieres}/g, dataForReplacement.prestations.dispositionsParticulieres || '');
+        }
+        
+        // Variables Représentations
+        if (dataForReplacement.representations) {
+          processedContent = processedContent
+            .replace(/{representation_debut}/g, dataForReplacement.representations.debut || '')
+            .replace(/{representation_fin}/g, dataForReplacement.representations.fin || '')
+            .replace(/{representation_detail}/g, dataForReplacement.representations.representation || '')
+            .replace(/{nombre_invitations}/g, dataForReplacement.representations.nbAdmins || '0')
+            .replace(/{salle}/g, dataForReplacement.representations.salle || '')
+            .replace(/{horaire_debut}/g, dataForReplacement.representations.horaireDebut || '')
+            .replace(/{horaire_fin}/g, dataForReplacement.representations.horaireFin || '')
+            .replace(/{nombre_representations}/g, dataForReplacement.representations.nbRepresentations || '1');
+        }
+        
+        // Variables Logistique
+        if (dataForReplacement.logistique) {
+          processedContent = processedContent
+            .replace(/{restauration}/g, dataForReplacement.logistique.restauration || '')
+            .replace(/{hebergement}/g, dataForReplacement.logistique.hebergement || '')
+            .replace(/{transports}/g, dataForReplacement.logistique.transports || '')
+            .replace(/{catering}/g, dataForReplacement.logistique.catering || '')
+            .replace(/{loges}/g, dataForReplacement.logistique.loges || '')
+            .replace(/{parking}/g, dataForReplacement.logistique.parking || '')
+            .replace(/{autres_logistique}/g, dataForReplacement.logistique.autres || '');
+        }
+        
+        // Variables Règlement
+        if (dataForReplacement.reglement) {
+          const montantHT = parseFloat(dataForReplacement.reglement.montantHT) || 0;
+          const montantTVA = parseFloat(dataForReplacement.reglement.montantTVA) || 0;
+          const totalTTC = parseFloat(dataForReplacement.reglement.totalTTC) || 0;
+          
+          processedContent = processedContent
+            .replace(/{montant_ht}/g, montantHT.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{taux_tva}/g, dataForReplacement.reglement.tauxTVA + '%' || '0%')
+            .replace(/{montant_tva}/g, montantTVA.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{total_ttc}/g, totalTTC.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{total_ttc_lettres}/g, montantEnLettres(totalTTC))
+            .replace(/{mode_reglement}/g, dataForReplacement.reglement.modeReglement || '')
+            .replace(/{delai_reglement}/g, dataForReplacement.reglement.delaiReglement || '');
+        }
+        
+        // === MAPPING DES VARIABLES ANCIENNES VERS NOUVELLES ===
+        // Si le template utilise les anciennes variables mais qu'on a les nouvelles données
+        
+        // Variables structure (depuis organisateur si disponible)
+        if (dataForReplacement.organisateur) {
+          processedContent = processedContent
+            .replace(/{structure_nom}/g, contratData.organisateur.raisonSociale || '')
+            .replace(/{structure_siret}/g, contratData.organisateur.siret || '')
+            .replace(/{structure_adresse}/g, contratData.organisateur.adresse || '')
+            .replace(/{structure_code_postal}/g, contratData.organisateur.codePostal || '')
+            .replace(/{structure_ville}/g, contratData.organisateur.ville || '')
+            .replace(/{programmateur_numero_intracommunautaire}/g, contratData.organisateur.numeroTva || '')
+            .replace(/{programmateur_representant}/g, contratData.organisateur.signataire || '')
+            .replace(/{programmateur_qualite_representant}/g, contratData.organisateur.qualite || '');
+        }
+        
+        // Variables concert
+        if (contratData.concertId || contratData.concert) {
+          console.log('[ContratRedactionPage] Données concert:', {
+            concertId: contratData.concertId,
+            concert: contratData.concert
+          });
+          
+          // Si on a les données du concert directement
+          if (contratData.concert) {
+            const concertDate = contratData.concert.date ? 
+              new Date(contratData.concert.date.seconds ? contratData.concert.date.seconds * 1000 : contratData.concert.date).toLocaleDateString('fr-FR') : 
+              '';
+            
+            console.log('[ContratRedactionPage] Date du concert formatée:', concertDate);
+            
+            processedContent = processedContent
+              .replace(/{concert_date}/g, concertDate)
+              .replace(/{concert_titre}/g, contratData.concert.titre || '')
+              .replace(/{concert_heure}/g, contratData.concert.heure || '');
+          }
+        } else {
+          console.log('[ContratRedactionPage] Pas de données concert disponibles');
+        }
+        
+        // Variables artiste - Récupérer les données depuis le contrat
+        if (contratData.artisteId || contratData.artiste) {
+          console.log('[ContratRedactionPage] Données artiste:', {
+            artisteId: contratData.artisteId,
+            artiste: contratData.artiste
+          });
+          
+          // Si on a les données de l'artiste directement
+          if (contratData.artiste) {
+            processedContent = processedContent
+              .replace(/{artiste_nom}/g, contratData.artiste.nom || '')
+              .replace(/{artiste_genre}/g, contratData.artiste.genre || '');
+          }
+        } else {
+          console.log('[ContratRedactionPage] Pas de données artiste disponibles');
+        }
+        
+        // Variables lieu
+        if (contratData.lieuId || contratData.lieu) {
+          console.log('[ContratRedactionPage] Données lieu:', {
+            lieuId: contratData.lieuId,
+            lieu: contratData.lieu
+          });
+          
+          // Si on a les données du lieu directement
+          if (contratData.lieu) {
+            processedContent = processedContent
+              .replace(/{lieu_nom}/g, contratData.lieu.nom || '')
+              .replace(/{lieu_adresse}/g, contratData.lieu.adresse || '')
+              .replace(/{lieu_code_postal}/g, contratData.lieu.codePostal || '')
+              .replace(/{lieu_ville}/g, contratData.lieu.ville || '');
+          } else {
+            // Remplacer par des valeurs vides si pas de lieu
+            processedContent = processedContent
+              .replace(/{lieu_nom}/g, '')
+              .replace(/{lieu_adresse}/g, '')
+              .replace(/{lieu_code_postal}/g, '')
+              .replace(/{lieu_ville}/g, '');
+          }
+        } else {
+          console.log('[ContratRedactionPage] Pas de données lieu disponibles');
+          // Remplacer par des valeurs vides
+          processedContent = processedContent
+            .replace(/{lieu_nom}/g, '')
+            .replace(/{lieu_adresse}/g, '')
+            .replace(/{lieu_code_postal}/g, '')
+            .replace(/{lieu_ville}/g, '');
+        }
+        
+        // Variables de date
+        const today = new Date();
+        const dateJour = today.getDate().toString().padStart(2, '0');
+        const dateMois = (today.getMonth() + 1).toString().padStart(2, '0');
+        const dateAnnee = today.getFullYear().toString();
+        const dateComplete = today.toLocaleDateString('fr-FR');
+        
+        console.log('[ContratRedactionPage] Variables de date:', {
+          date_jour: dateJour,
+          date_mois: dateMois,
+          date_annee: dateAnnee,
+          date_complete: dateComplete
+        });
+        
+        processedContent = processedContent
+          .replace(/{date_jour}/g, dateJour)
+          .replace(/{date_mois}/g, dateMois)
+          .replace(/{date_annee}/g, dateAnnee)
+          .replace(/{date_complete}/g, dateComplete);
+        
+        // Variables montant (depuis concert ou contrat)
+        if (contratData.montantTTC || contratData.totalTTC) {
+          const montant = contratData.montantTTC || contratData.totalTTC || 0;
+          processedContent = processedContent
+            .replace(/{concert_montant}/g, montant.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{concert_montant_lettres}/g, montantEnLettres(montant));
+        }
+        
+        // Variables montant depuis règlement ou prestations
+        console.log('[ContratRedactionPage] Recherche des montants...');
+        console.log('[ContratRedactionPage] contratData.reglement:', contratData.reglement);
+        console.log('[ContratRedactionPage] contratData.prestations:', contratData.prestations);
+        console.log('[ContratRedactionPage] contratData.negociation:', contratData.negociation);
+        
+        let totalTTCTrouve = 0;
+        
+        if (contratData.reglement && dataForReplacement.reglement.totalTTC) {
+          totalTTCTrouve = parseFloat(dataForReplacement.reglement.totalTTC) || 0;
+          console.log('[ContratRedactionPage] Total TTC depuis reglement:', totalTTCTrouve);
+        } else if (contratData.prestations && Array.isArray(contratData.prestations) && dataForReplacement.prestations.length > 0) {
+          // Calculer depuis les prestations
+          totalTTCTrouve = dataForReplacement.prestations.reduce((sum, p) => sum + (parseFloat(p.montantTTC) || 0), 0);
+          console.log('[ContratRedactionPage] Total TTC calculé depuis prestations:', totalTTCTrouve);
+        } else if (contratData.negociation && contratData.negociation.montantTTC) {
+          // Utiliser le montant de la négociation
+          totalTTCTrouve = parseFloat(contratData.negociation.montantTTC) || 0;
+          console.log('[ContratRedactionPage] Total TTC depuis negociation:', totalTTCTrouve);
+        } else if (contratData.montantTTC) {
+          // Utiliser le montant direct du contrat
+          totalTTCTrouve = parseFloat(contratData.montantTTC) || 0;
+          console.log('[ContratRedactionPage] Total TTC depuis contrat:', totalTTCTrouve);
+        } else if (contratData.concert && contratData.concert.montant) {
+          // Utiliser le montant du concert
+          totalTTCTrouve = parseFloat(contratData.concert.montant) || 0;
+          console.log('[ContratRedactionPage] Total TTC depuis concert:', totalTTCTrouve);
+        }
+        
+        if (totalTTCTrouve > 0) {
+          processedContent = processedContent
+            .replace(/{total_ttc}/g, totalTTCTrouve.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{total_ttc_lettres}/g, montantEnLettres(totalTTCTrouve))
+            // Aussi remplacer concert_montant si présent
+            .replace(/{concert_montant}/g, totalTTCTrouve.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{concert_montant_lettres}/g, montantEnLettres(totalTTCTrouve));
+        } else {
+          console.log('[ContratRedactionPage] Aucun montant trouvé - Remplacer par 0');
+          // Remplacer par 0 si aucun montant trouvé
+          processedContent = processedContent
+            .replace(/{total_ttc}/g, '0,00 €')
+            .replace(/{total_ttc_lettres}/g, 'zéro euro')
+            .replace(/{concert_montant}/g, '0,00 €')
+            .replace(/{concert_montant_lettres}/g, 'zéro euro');
+        }
+        
+        // Gérer les sauts de page
+        processedContent = processedContent
+          .replace(/{SAUT_DE_PAGE}/g, '<div style="page-break-after: always;"></div>');
+        
+        // Sauvegarder le contenu avec les variables remplacées
+        const dataToUpdate = {
+          contratContenu: processedContent,
+          updatedAt: serverTimestamp()
+        };
+        
+        await contratService.saveContrat(id, dataToUpdate, contratData?.organizationId);
+        
+        // Vérifier quelles variables n'ont pas été remplacées
+        const variablesNonRemplacees = [];
+        const variableRegexFinal = /{([^}]+)}/g;
+        let matchFinal;
+        while ((matchFinal = variableRegexFinal.exec(processedContent)) !== null) {
+          variablesNonRemplacees.push(matchFinal[1]);
+        }
+        
+        if (variablesNonRemplacees.length > 0) {
+          console.log('[ContratRedactionPage] ⚠️ Variables NON remplacées:', variablesNonRemplacees);
+        } else {
+          console.log('[ContratRedactionPage] ✅ Toutes les variables ont été remplacées');
+        }
+        
+        setPreviewContent(processedContent);
+        console.log('[ContratRedactionPage] Variables remplacées et preview défini');
+      } catch (error) {
+        console.error('[ContratRedactionPage] Erreur lors du remplacement des variables:', error);
+        // En cas d'erreur, afficher quand même le contenu non traité
+        setPreviewContent(editorContent);
+      }
+    } else {
+      // Si pas de contratData, afficher le contenu tel quel
+      setPreviewContent(editorContent);
+    }
+  };
+  
+  // Fonction pour convertir un montant en lettres
+  const montantEnLettres = (montant) => {
+    if (!montant || isNaN(montant)) return 'zéro euro';
+    
+    const unites = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'];
+    const dizaines = ['', '', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante-dix', 'quatre-vingt', 'quatre-vingt-dix'];
+    const exceptions = {
+      10: 'dix', 11: 'onze', 12: 'douze', 13: 'treize', 14: 'quatorze',
+      15: 'quinze', 16: 'seize', 17: 'dix-sept', 18: 'dix-huit', 19: 'dix-neuf',
+      71: 'soixante-et-onze', 91: 'quatre-vingt-onze'
+    };
+    
+    const convertirNombreEnLettres = (nombre) => {
+      if (nombre === 0) return 'zéro';
+      if (nombre < 0) return 'moins ' + convertirNombreEnLettres(-nombre);
+      
+      if (nombre < 10) return unites[nombre];
+      if (exceptions[nombre]) return exceptions[nombre];
+      if (nombre < 20) return 'dix-' + unites[nombre - 10];
+      if (nombre < 100) {
+        const dizaine = Math.floor(nombre / 10);
+        const unite = nombre % 10;
+        if (unite === 0) return dizaines[dizaine];
+        if (unite === 1 && (dizaine === 2 || dizaine === 3 || dizaine === 4 || dizaine === 5 || dizaine === 6)) {
+          return dizaines[dizaine] + '-et-un';
+        }
+        return dizaines[dizaine] + '-' + unites[unite];
+      }
+      if (nombre < 1000) {
+        const centaine = Math.floor(nombre / 100);
+        const reste = nombre % 100;
+        let resultat = '';
+        if (centaine === 1) {
+          resultat = 'cent';
+        } else {
+          resultat = unites[centaine] + ' cent';
+          if (reste === 0) resultat += 's';
+        }
+        if (reste > 0) resultat += ' ' + convertirNombreEnLettres(reste);
+        return resultat;
+      }
+      if (nombre < 1000000) {
+        const milliers = Math.floor(nombre / 1000);
+        const reste = nombre % 1000;
+        let resultat = '';
+        if (milliers === 1) {
+          resultat = 'mille';
+        } else {
+          resultat = convertirNombreEnLettres(milliers) + ' mille';
+        }
+        if (reste > 0) resultat += ' ' + convertirNombreEnLettres(reste);
+        return resultat;
+      }
+      
+      return nombre.toString();
+    };
+    
+    const partieEntiere = Math.floor(montant);
+    const partieDecimale = Math.round((montant - partieEntiere) * 100);
+    
+    let resultat = convertirNombreEnLettres(partieEntiere) + ' euro';
+    if (partieEntiere > 1) resultat += 's';
+    
+    if (partieDecimale > 0) {
+      resultat += ' et ' + convertirNombreEnLettres(partieDecimale) + ' centime';
+      if (partieDecimale > 1) resultat += 's';
+    }
+    
+    return resultat.charAt(0).toUpperCase() + resultat.slice(1);
   };
 
   // Gestion du changement de modèle
@@ -303,6 +733,79 @@ const ContratRedactionPage = () => {
     } else {
       // Fallback vers navigation classique
       navigate(`/contrats/generate/${concertId}`);
+    }
+  };
+  
+  // Regénérer l'aperçu avec les nouvelles variables
+  const handleRegenerateWithVariables = async () => {
+    console.log('[ContratRedactionPage] Regénération avec les nouvelles variables');
+    
+    // Recharger les données du contrat pour avoir les dernières valeurs
+    if (id) {
+      try {
+        const freshContrat = await contratService.getContratByConcert(id);
+        if (freshContrat) {
+          console.log('[ContratRedactionPage] Contrat rechargé:', freshContrat);
+          
+          // Charger les données complètes depuis Firebase si nécessaire
+          const updatedContrat = { ...freshContrat };
+          
+          // Charger les données du concert
+          if (freshContrat.concertId && !freshContrat.concert) {
+            console.log('[ContratRedactionPage] Chargement des données du concert...');
+            const concertDoc = await getDoc(doc(db, 'concerts', freshContrat.concertId));
+            if (concertDoc.exists()) {
+              updatedContrat.concert = { id: concertDoc.id, ...concertDoc.data() };
+              console.log('[ContratRedactionPage] Données concert chargées:', updatedContrat.concert);
+            }
+          }
+          
+          // Charger les données de l'artiste
+          if (freshContrat.artisteId && !freshContrat.artiste) {
+            console.log('[ContratRedactionPage] Chargement des données de l\'artiste...');
+            const artisteDoc = await getDoc(doc(db, 'artistes', freshContrat.artisteId));
+            if (artisteDoc.exists()) {
+              updatedContrat.artiste = { id: artisteDoc.id, ...artisteDoc.data() };
+              console.log('[ContratRedactionPage] Données artiste chargées:', updatedContrat.artiste);
+            }
+          }
+          
+          // Charger les données du lieu
+          if (freshContrat.lieuId && !freshContrat.lieu) {
+            console.log('[ContratRedactionPage] Chargement des données du lieu...');
+            const lieuDoc = await getDoc(doc(db, 'lieux', freshContrat.lieuId));
+            if (lieuDoc.exists()) {
+              updatedContrat.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
+              console.log('[ContratRedactionPage] Données lieu chargées:', updatedContrat.lieu);
+            }
+          } else if (updatedContrat.concert && updatedContrat.concert.lieuId) {
+            // Si le lieu n'est pas dans le contrat mais dans le concert
+            console.log('[ContratRedactionPage] Chargement du lieu depuis le concert...');
+            const lieuDoc = await getDoc(doc(db, 'lieux', updatedContrat.concert.lieuId));
+            if (lieuDoc.exists()) {
+              updatedContrat.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
+              console.log('[ContratRedactionPage] Données lieu chargées depuis concert:', updatedContrat.lieu);
+            }
+          }
+          
+          setContratData(updatedContrat);
+          
+          // Si le contrat a du contenu, le recharger dans l'éditeur
+          if (freshContrat.contratContenu) {
+            setEditorContent(freshContrat.contratContenu);
+          } else if (freshContrat.contratModeles && freshContrat.contratModeles[0] && freshContrat.contratModeles[0].bodyContent) {
+            // Sinon utiliser le contenu du modèle
+            setEditorContent(freshContrat.contratModeles[0].bodyContent);
+          }
+          
+          // Attendre un peu pour que les states se mettent à jour
+          setTimeout(() => {
+            handleSaveAndPreview();
+          }, 100);
+        }
+      } catch (error) {
+        console.error('[ContratRedactionPage] Erreur lors du rechargement:', error);
+      }
     }
   };
 
@@ -423,12 +926,24 @@ const ContratRedactionPage = () => {
             <Button
               variant="success"
               onClick={handleSaveAndPreview}
-              disabled={isContractFinished}
               className="me-2"
             >
               <i className="bi bi-save me-2"></i>
               Enregistrer et afficher
             </Button>
+            
+            {/* Bouton pour regénérer avec les nouvelles variables si contrat existant */}
+            {contratData && (contratData.organisateur || contratData.producteur) && (
+              <Button
+                variant="info"
+                onClick={handleRegenerateWithVariables}
+                className="me-2"
+                title="Regénérer l'aperçu avec les nouvelles variables du formulaire"
+              >
+                <i className="bi bi-arrow-clockwise me-2"></i>
+                Actualiser variables
+              </Button>
+            )}
             
             <Button
               variant="warning"

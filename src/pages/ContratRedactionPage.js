@@ -1070,10 +1070,7 @@ const ContratRedactionPage = () => {
                     </p>
                   </div>
                 ) : (
-                  <div 
-                    className={styles.previewDocument}
-                    dangerouslySetInnerHTML={{ __html: previewContent }}
-                  />
+                  <div className={`${styles.previewDocument} ${styles.a4Preview}`} dangerouslySetInnerHTML={{ __html: previewContent }} />
                 )}
               </div>
             </div>

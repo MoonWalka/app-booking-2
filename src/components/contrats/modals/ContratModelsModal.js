@@ -1,5 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Modal, Form, Button, Table, Badge } from 'react-bootstrap';
+import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
+import { useOrganization } from '@/context/OrganizationContext';
 import styles from './ContratModelsModal.module.css';
 
 /**
@@ -9,9 +12,62 @@ const ContratModelsModal = ({ show, onHide, onValidate, selectedModels = [], req
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedModelIds, setSelectedModelIds] = useState(new Set(selectedModels.map(m => m.id)));
   const [sortConfig, setSortConfig] = useState({ key: 'nom', direction: 'asc' });
+  const [availableModels, setAvailableModels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { currentOrganization } = useOrganization();
 
-  // Données de test des modèles (à remplacer par un appel API)
-  const [availableModels] = useState([
+  // Charger les modèles depuis Firebase
+  useEffect(() => {
+    const loadTemplates = async () => {
+      if (!currentOrganization?.id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        // Temporairement, charger tous les modèles pour debug
+        console.log('[ContratModelsModal] Organization ID actuel:', currentOrganization.id);
+        const templatesQuery = query(
+          collection(db, 'contratTemplates')
+          // where('organizationId', '==', currentOrganization.id) // Désactivé temporairement
+        );
+        
+        const snapshot = await getDocs(templatesQuery);
+        const templates = snapshot.docs.map(doc => {
+          const data = doc.data();
+          console.log('[ContratModelsModal] Modèle trouvé:', {
+            id: doc.id,
+            name: data.name,
+            organizationId: data.organizationId
+          });
+          return {
+            id: doc.id,
+            nom: data.name,
+            type: data.templateType || 'Standard',
+            bodyContent: data.bodyContent,
+            isDefault: data.isDefault || false
+          };
+        });
+        
+        // Trier par nom en JavaScript
+        templates.sort((a, b) => a.nom.localeCompare(b.nom));
+        
+        setAvailableModels(templates);
+      } catch (error) {
+        console.error('Erreur lors du chargement des modèles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (show) {
+      loadTemplates();
+    }
+  }, [show, currentOrganization?.id]);
+
+  // Anciens modèles codés en dur (remplacés par Firebase)
+  const oldHardcodedModels = [
     {
       id: 1,
       nom: 'Cession – date unique',
@@ -48,7 +104,7 @@ const ContratModelsModal = ({ show, onHide, onValidate, selectedModels = [], req
       langue: 'Français',
       type: 'Partenariat'
     }
-  ]);
+  ];
 
   // Synchroniser les modèles sélectionnés au changement des props
   useEffect(() => {
@@ -188,42 +244,64 @@ const ContratModelsModal = ({ show, onHide, onValidate, selectedModels = [], req
             </div>
 
             <div className={styles.tableContainer}>
-              <Table hover className={styles.table}>
-                <thead>
-                  <tr>
-                    <th width="50"></th>
-                    <th 
-                      className={styles.sortableHeader}
-                      onClick={() => handleSort('nom')}
-                    >
-                      Nom
-                      {sortConfig.key === 'nom' && (
-                        <i className={`bi bi-arrow-${sortConfig.direction === 'asc' ? 'up' : 'down'}`}></i>
-                      )}
-                    </th>
-                    <th>Langue</th>
-                    <th>Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAndSortedModels.map(model => (
-                    <tr key={model.id}>
-                      <td>
-                        <Form.Check
-                          type="checkbox"
-                          checked={selectedModelIds.has(model.id)}
-                          onChange={() => toggleModel(model.id)}
-                        />
-                      </td>
-                      <td>{model.nom}</td>
-                      <td>{model.langue}</td>
-                      <td>
-                        <Badge variant="secondary">{model.type}</Badge>
-                      </td>
+              {loading ? (
+                <div className="text-center py-4">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Chargement...</span>
+                  </div>
+                  <p className="text-muted mt-2">Chargement des modèles...</p>
+                </div>
+              ) : availableModels.length === 0 ? (
+                <div className="text-center py-4">
+                  <i className="bi bi-file-earmark-text text-muted" style={{ fontSize: '3rem' }}></i>
+                  <p className="text-muted mt-2">Aucun modèle de contrat disponible</p>
+                  <p className="small text-muted">Créez des modèles depuis Admin {'>'} Paramétrage {'>'} Modèles de contrat</p>
+                </div>
+              ) : (
+                <Table hover className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th width="50"></th>
+                      <th 
+                        className={styles.sortableHeader}
+                        onClick={() => handleSort('nom')}
+                      >
+                        Nom
+                        {sortConfig.key === 'nom' && (
+                          <i className={`bi bi-arrow-${sortConfig.direction === 'asc' ? 'up' : 'down'}`}></i>
+                        )}
+                      </th>
+                      <th>Type</th>
+                      <th>Défaut</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody>
+                    {filteredAndSortedModels.map(model => (
+                      <tr key={model.id}>
+                        <td>
+                          <Form.Check
+                            type="checkbox"
+                            checked={selectedModelIds.has(model.id)}
+                            onChange={() => toggleModel(model.id)}
+                          />
+                        </td>
+                        <td>{model.nom}</td>
+                        <td>
+                          <Badge variant="secondary">{model.type}</Badge>
+                        </td>
+                        <td>
+                          {model.isDefault && (
+                            <Badge bg="success">
+                              <i className="bi bi-star-fill me-1"></i>
+                              Par défaut
+                            </Badge>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
             </div>
           </div>
 

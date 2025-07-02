@@ -40,6 +40,7 @@ import CheckStructureMigration from '@/components/debug/CheckStructureMigration'
 import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug';
 import StructureAddressMigration from '@/components/debug/StructureAddressMigration';
 import FestivalsDebugger from '@/components/debug/FestivalsDebugger';
+import MigrateContractTemplates from '@/components/debug/MigrateContractTemplates';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -236,6 +237,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="festivals-debug" title="🎪 Debug Festivals">
           <FestivalsDebugger />
+        </Tab>
+        
+        <Tab eventKey="contract-templates" title="📄 Migration Modèles Contrat">
+          <MigrateContractTemplates />
         </Tab>
       </Tabs>
     </div>

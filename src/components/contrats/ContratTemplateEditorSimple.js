@@ -184,95 +184,152 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     }
   };
 
-  // Variables disponibles pour l'insertion - Liste exhaustive
+  // Variables disponibles pour l'insertion - Liste mise à jour avec les nouvelles variables
   const variables = [
-    // Variables Entreprise
-    { category: 'Entreprise', label: 'Nom de l\'entreprise', value: '{nom_entreprise}' },
-    { category: 'Entreprise', label: 'Adresse de l\'entreprise', value: '{adresse_entreprise}' },
-    { category: 'Entreprise', label: 'SIRET de l\'entreprise', value: '{siret_entreprise}' },
-    { category: 'Entreprise', label: 'Téléphone de l\'entreprise', value: '{telephone_entreprise}' },
-    { category: 'Entreprise', label: 'Email de l\'entreprise', value: '{email_entreprise}' },
-    { category: 'Entreprise', label: 'Représentant de l\'entreprise', value: '{representant_entreprise}' },
-    { category: 'Entreprise', label: 'Fonction du représentant', value: '{fonction_representant}' },
+    // Variables Organisateur (Partie A du contrat - celui qui achète)
+    { category: 'Organisateur', label: 'Raison sociale', value: 'organisateur_raison_sociale' },
+    { category: 'Organisateur', label: 'Adresse', value: 'organisateur_adresse' },
+    { category: 'Organisateur', label: 'Code postal', value: 'organisateur_code_postal' },
+    { category: 'Organisateur', label: 'Ville', value: 'organisateur_ville' },
+    { category: 'Organisateur', label: 'Pays', value: 'organisateur_pays' },
+    { category: 'Organisateur', label: 'Téléphone', value: 'organisateur_telephone' },
+    { category: 'Organisateur', label: 'Email', value: 'organisateur_email' },
+    { category: 'Organisateur', label: 'SIRET', value: 'organisateur_siret' },
+    { category: 'Organisateur', label: 'N° TVA Intracommunautaire', value: 'organisateur_numero_tva' },
+    { category: 'Organisateur', label: 'Code APE', value: 'organisateur_code_ape' },
+    { category: 'Organisateur', label: 'N° Licence', value: 'organisateur_numero_licence' },
+    { category: 'Organisateur', label: 'Signataire', value: 'organisateur_signataire' },
+    { category: 'Organisateur', label: 'Qualité du signataire', value: 'organisateur_qualite' },
 
-    // Variables contact (nouvelle API)
-    { category: 'Contact', label: 'Nom du contact', value: '{contact_nom}' },
-    { category: 'Contact', label: 'Prénom du contact', value: '{contact_prenom}' },
-    { category: 'Contact', label: 'Structure du contact', value: '{contact_structure}' },
-    { category: 'Contact', label: 'Email du contact', value: '{contact_email}' },
-    { category: 'Contact', label: 'Téléphone du contact', value: '{contact_telephone}' },
-    { category: 'Contact', label: 'Adresse du contact', value: '{contact_adresse}' },
-    { category: 'Contact', label: 'SIRET du contact', value: '{contact_siret}' },
-    { category: 'Contact', label: 'N° TVA du contact', value: '{contact_numero_intracommunautaire}' },
-    { category: 'Contact', label: 'Représentant légal', value: '{contact_representant}' },
-    { category: 'Contact', label: 'Qualité du représentant', value: '{contact_qualite_representant}' },
+    // Variables Producteur (Partie B du contrat - votre entreprise)
+    { category: 'Producteur', label: 'Raison sociale', value: 'producteur_raison_sociale' },
+    { category: 'Producteur', label: 'Adresse', value: 'producteur_adresse' },
+    { category: 'Producteur', label: 'Code postal', value: 'producteur_code_postal' },
+    { category: 'Producteur', label: 'Ville', value: 'producteur_ville' },
+    { category: 'Producteur', label: 'Pays', value: 'producteur_pays' },
+    { category: 'Producteur', label: 'Téléphone', value: 'producteur_telephone' },
+    { category: 'Producteur', label: 'Email', value: 'producteur_email' },
+    { category: 'Producteur', label: 'SIRET', value: 'producteur_siret' },
+    { category: 'Producteur', label: 'N° TVA Intracommunautaire', value: 'producteur_numero_tva' },
+    { category: 'Producteur', label: 'Code APE', value: 'producteur_code_ape' },
+    { category: 'Producteur', label: 'N° Licence', value: 'producteur_numero_licence' },
+    { category: 'Producteur', label: 'Signataire', value: 'producteur_signataire' },
+    { category: 'Producteur', label: 'Qualité du signataire', value: 'producteur_qualite' },
 
-    // Variables programmateur (rétrocompatibilité - maintenant équivalent aux variables contact)
-    { category: 'Contact (Compat.)', label: 'Nom du contact', value: '{programmateur_nom}' },
-    { category: 'Contact (Compat.)', label: 'Prénom du contact', value: '{programmateur_prenom}' },
-    { category: 'Contact (Compat.)', label: 'Structure du contact', value: '{programmateur_structure}' },
-    { category: 'Contact (Compat.)', label: 'Email du contact', value: '{programmateur_email}' },
-    { category: 'Contact (Compat.)', label: 'Téléphone du contact', value: '{programmateur_telephone}' },
-    { category: 'Contact (Compat.)', label: 'Adresse du contact', value: '{programmateur_adresse}' },
-    { category: 'Contact (Compat.)', label: 'SIRET du contact', value: '{programmateur_siret}' },
-    { category: 'Contact (Compat.)', label: 'N° TVA du contact', value: '{programmateur_numero_intracommunautaire}' },
-    { category: 'Contact (Compat.)', label: 'Représentant légal', value: '{programmateur_representant}' },
-    { category: 'Contact (Compat.)', label: 'Qualité du représentant', value: '{programmateur_qualite_representant}' },
+    // Variables Prestations
+    { category: 'Prestations', label: 'Total HT', value: 'total_ht' },
+    { category: 'Prestations', label: 'Total TVA', value: 'total_tva' },
+    { category: 'Prestations', label: 'Total TTC', value: 'total_ttc' },
+    { category: 'Prestations', label: 'Total TTC (lettres)', value: 'total_ttc_lettres' },
+    { category: 'Prestations', label: 'Première prestation - Description', value: 'prestation_1_description' },
+    { category: 'Prestations', label: 'Première prestation - Montant HT', value: 'prestation_1_montant_ht' },
+    { category: 'Prestations', label: 'Première prestation - TVA', value: 'prestation_1_tva' },
+    { category: 'Prestations', label: 'Première prestation - Montant TTC', value: 'prestation_1_montant_ttc' },
+
+    // Variables Représentations
+    { category: 'Représentations', label: 'Date de début', value: 'representation_date_debut' },
+    { category: 'Représentations', label: 'Date de fin', value: 'representation_date_fin' },
+    { category: 'Représentations', label: 'Horaire de début', value: 'representation_horaire_debut' },
+    { category: 'Représentations', label: 'Horaire de fin', value: 'representation_horaire_fin' },
+    { category: 'Représentations', label: 'Nombre de représentations', value: 'representation_nombre' },
+    { category: 'Représentations', label: 'Salle', value: 'representation_salle' },
+    { category: 'Représentations', label: 'Type (payant/gratuit)', value: 'representation_type' },
+    { category: 'Représentations', label: 'Nombre d\'invitations', value: 'representation_invitations' },
+
+    // Variables Logistique
+    { category: 'Logistique', label: 'Hébergement - Nombre total', value: 'hebergement_nombre_total' },
+    { category: 'Logistique', label: 'Hébergement - Singles', value: 'hebergement_singles' },
+    { category: 'Logistique', label: 'Hébergement - Doubles', value: 'hebergement_doubles' },
+    { category: 'Logistique', label: 'Hébergement - Arrivée', value: 'hebergement_arrivee' },
+    { category: 'Logistique', label: 'Hébergement - Départ', value: 'hebergement_depart' },
+    { category: 'Logistique', label: 'Restauration - Nombre de repas', value: 'restauration_nombre' },
+    { category: 'Logistique', label: 'Transport - Type', value: 'transport_type' },
+
+    // Variables Règlement
+    { category: 'Règlement', label: 'Première échéance - Nature', value: 'echeance_1_nature' },
+    { category: 'Règlement', label: 'Première échéance - Date', value: 'echeance_1_date' },
+    { category: 'Règlement', label: 'Première échéance - Montant', value: 'echeance_1_montant' },
+    { category: 'Règlement', label: 'Mode de règlement', value: 'mode_reglement' },
+    { category: 'Règlement', label: 'Délai de paiement', value: 'delai_paiement' },
+
+    // Variables Entreprise (compatibilité)
+    { category: 'Entreprise', label: 'Nom de l\'entreprise', value: 'nom_entreprise' },
+    { category: 'Entreprise', label: 'Adresse de l\'entreprise', value: 'adresse_entreprise' },
+    { category: 'Entreprise', label: 'SIRET de l\'entreprise', value: 'siret_entreprise' },
+    { category: 'Entreprise', label: 'Téléphone de l\'entreprise', value: 'telephone_entreprise' },
+    { category: 'Entreprise', label: 'Email de l\'entreprise', value: 'email_entreprise' },
+    { category: 'Entreprise', label: 'Représentant de l\'entreprise', value: 'representant_entreprise' },
+    { category: 'Entreprise', label: 'Fonction du représentant', value: 'fonction_representant' },
+
+    // Variables contact (pour rétrocompatibilité)
+    { category: 'Contact', label: 'Nom du contact', value: 'contact_nom' },
+    { category: 'Contact', label: 'Prénom du contact', value: 'contact_prenom' },
+    { category: 'Contact', label: 'Structure du contact', value: 'contact_structure' },
+    { category: 'Contact', label: 'Email du contact', value: 'contact_email' },
+    { category: 'Contact', label: 'Téléphone du contact', value: 'contact_telephone' },
+    { category: 'Contact', label: 'Adresse du contact', value: 'contact_adresse' },
+    { category: 'Contact', label: 'SIRET du contact', value: 'contact_siret' },
+    { category: 'Contact', label: 'N° TVA du contact', value: 'contact_numero_intracommunautaire' },
+    { category: 'Contact', label: 'Représentant légal', value: 'contact_representant' },
+    { category: 'Contact', label: 'Qualité du représentant', value: 'contact_qualite_representant' },
+
+    // Variables programmateur (rétrocompatibilité)
+    { category: 'Programmateur', label: 'Nom du programmateur', value: 'programmateur_nom' },
+    { category: 'Programmateur', label: 'Prénom du programmateur', value: 'programmateur_prenom' },
+    { category: 'Programmateur', label: 'Structure du programmateur', value: 'programmateur_structure' },
+    { category: 'Programmateur', label: 'Email du programmateur', value: 'programmateur_email' },
+    { category: 'Programmateur', label: 'Téléphone du programmateur', value: 'programmateur_telephone' },
+    { category: 'Programmateur', label: 'Adresse du programmateur', value: 'programmateur_adresse' },
+    { category: 'Programmateur', label: 'SIRET du programmateur', value: 'programmateur_siret' },
 
     // Variables Structure
-    { category: 'Structure', label: 'Nom de la structure', value: '{structure_nom}' },
-    { category: 'Structure', label: 'SIRET de la structure', value: '{structure_siret}' },
-    { category: 'Structure', label: 'Adresse de la structure', value: '{structure_adresse}' },
-    { category: 'Structure', label: 'Code postal de la structure', value: '{structure_code_postal}' },
-    { category: 'Structure', label: 'Ville de la structure', value: '{structure_ville}' },
-    { category: 'Structure', label: 'Email de la structure', value: '{structure_email}' },
-    { category: 'Structure', label: 'Téléphone de la structure', value: '{structure_telephone}' },
-    { category: 'Structure', label: 'Type de structure', value: '{structure_type}' },
+    { category: 'Structure', label: 'Nom de la structure', value: 'structure_nom' },
+    { category: 'Structure', label: 'SIRET de la structure', value: 'structure_siret' },
+    { category: 'Structure', label: 'Adresse de la structure', value: 'structure_adresse' },
+    { category: 'Structure', label: 'Code postal de la structure', value: 'structure_code_postal' },
+    { category: 'Structure', label: 'Ville de la structure', value: 'structure_ville' },
+    { category: 'Structure', label: 'Email de la structure', value: 'structure_email' },
+    { category: 'Structure', label: 'Téléphone de la structure', value: 'structure_telephone' },
+    { category: 'Structure', label: 'Type de structure', value: 'structure_type' },
 
     // Variables Artiste
-    { category: 'Artiste', label: 'Nom de l\'artiste', value: '{artiste_nom}' },
-    { category: 'Artiste', label: 'Genre musical', value: '{artiste_genre}' },
-    { category: 'Artiste', label: 'Contact de l\'artiste', value: '{artiste_contact}' },
-    { category: 'Artiste', label: 'Représentant de l\'artiste', value: '{artiste_representant}' },
-    { category: 'Artiste', label: 'Structure de l\'artiste', value: '{artiste_structure_nom}' },
-    { category: 'Artiste', label: 'SIRET structure artiste', value: '{artiste_structure_siret}' },
+    { category: 'Artiste', label: 'Nom de l\'artiste', value: 'artiste_nom' },
+    { category: 'Artiste', label: 'Genre musical', value: 'artiste_genre' },
+    { category: 'Artiste', label: 'Contact de l\'artiste', value: 'artiste_contact' },
+    { category: 'Artiste', label: 'Représentant de l\'artiste', value: 'artiste_representant' },
+    { category: 'Artiste', label: 'Structure de l\'artiste', value: 'artiste_structure_nom' },
+    { category: 'Artiste', label: 'SIRET structure artiste', value: 'artiste_structure_siret' },
 
     // Variables Concert
-    { category: 'Concert', label: 'Titre du concert', value: '{concert_titre}' },
-    { category: 'Concert', label: 'Date du concert', value: '{concert_date}' },
-    { category: 'Concert', label: 'Heure du concert', value: '{concert_heure}' },
-    { category: 'Concert', label: 'Montant du concert', value: '{concert_montant}' },
-    { category: 'Concert', label: 'Montant en lettres', value: '{concert_montant_lettres}' },
-    { category: 'Concert', label: 'Type d\'événement', value: '{concert_type}' },
+    { category: 'Concert', label: 'Titre du concert', value: 'concert_titre' },
+    { category: 'Concert', label: 'Date du concert', value: 'concert_date' },
+    { category: 'Concert', label: 'Heure du concert', value: 'concert_heure' },
+    { category: 'Concert', label: 'Montant du concert', value: 'concert_montant' },
+    { category: 'Concert', label: 'Montant en lettres', value: 'concert_montant_lettres' },
+    { category: 'Concert', label: 'Type d\'événement', value: 'concert_type' },
 
     // Variables Lieu
-    { category: 'Lieu', label: 'Nom du lieu', value: '{lieu_nom}' },
-    { category: 'Lieu', label: 'Adresse du lieu', value: '{lieu_adresse}' },
-    { category: 'Lieu', label: 'Code postal du lieu', value: '{lieu_code_postal}' },
-    { category: 'Lieu', label: 'Ville du lieu', value: '{lieu_ville}' },
-    { category: 'Lieu', label: 'Capacité du lieu', value: '{lieu_capacite}' },
-
-    // Variables Financières
-    { category: 'Financier', label: 'Montant cachet', value: '{montant_cache}' },
-    { category: 'Financier', label: 'Montant cachet (lettres)', value: '{montant_cache_lettres}' },
-    { category: 'Financier', label: 'Mode de paiement', value: '{mode_paiement}' },
-    { category: 'Financier', label: 'Délai de paiement', value: '{delai_paiement}' },
+    { category: 'Lieu', label: 'Nom du lieu', value: 'lieu_nom' },
+    { category: 'Lieu', label: 'Adresse du lieu', value: 'lieu_adresse' },
+    { category: 'Lieu', label: 'Code postal du lieu', value: 'lieu_code_postal' },
+    { category: 'Lieu', label: 'Ville du lieu', value: 'lieu_ville' },
+    { category: 'Lieu', label: 'Capacité du lieu', value: 'lieu_capacite' },
 
     // Variables Dates
-    { category: 'Dates', label: 'Jour actuel', value: '{date_jour}' },
-    { category: 'Dates', label: 'Mois actuel', value: '{date_mois}' },
-    { category: 'Dates', label: 'Année actuelle', value: '{date_annee}' },
-    { category: 'Dates', label: 'Date complète', value: '{date_complete}' },
-    { category: 'Dates', label: 'Date de signature', value: '{date_signature}' },
+    { category: 'Dates', label: 'Jour actuel', value: 'date_jour' },
+    { category: 'Dates', label: 'Mois actuel', value: 'date_mois' },
+    { category: 'Dates', label: 'Année actuelle', value: 'date_annee' },
+    { category: 'Dates', label: 'Date complète', value: 'date_complete' },
+    { category: 'Dates', label: 'Date de signature', value: 'date_signature' },
 
     // Variables Signature
-    { category: 'Signature', label: 'Lieu de signature', value: '{lieu_signature}' },
-    { category: 'Signature', label: 'Fonction programmateur', value: '{programmateur_fonction}' },
+    { category: 'Signature', label: 'Lieu de signature', value: 'lieu_signature' },
+    { category: 'Signature', label: 'Fonction programmateur', value: 'programmateur_fonction' },
 
     // Variables Spéciales
-    { category: 'Spécial', label: 'Saut de page', value: '{SAUT_DE_PAGE}' },
-    { category: 'Spécial', label: 'Numéro de page', value: '{page}' },
-    { category: 'Spécial', label: 'Total pages', value: '{total}' }
+    { category: 'Spécial', label: 'Saut de page', value: 'SAUT_DE_PAGE' },
+    { category: 'Spécial', label: 'Numéro de page', value: 'page' },
+    { category: 'Spécial', label: 'Total pages', value: 'total' }
   ];
 
   // Insérer une variable dans l'éditeur
@@ -281,7 +338,8 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
       const editor = editorRef.current.getEditor();
       const range = editor.getSelection();
       const index = range ? range.index : editor.getLength();
-      editor.insertText(index, variable);
+      // Ajouter les accolades autour de la variable
+      editor.insertText(index, `{${variable}}`);
     }
   };
 
@@ -537,7 +595,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
           {showVariables && (
             <div className={styles.variablesContent}>
               <div className={styles.variablesCategories}>
-                {['Entreprise', 'Programmateur', 'Structure', 'Artiste', 'Concert', 'Lieu', 'Financier', 'Dates', 'Signature', 'Spécial'].map(category => (
+                {['Organisateur', 'Producteur', 'Prestations', 'Représentations', 'Logistique', 'Règlement', 'Entreprise', 'Contact', 'Programmateur', 'Structure', 'Artiste', 'Concert', 'Lieu', 'Dates', 'Signature', 'Spécial'].map(category => (
                   <div key={category} className={styles.variableCategory}>
                     <h4 className={styles.categoryTitle}>{category}</h4>
                     <div className={styles.variablesList}>
@@ -551,7 +609,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
                             title={`Insérer ${variable.label}`}
                             type="button"
                           >
-                            {variable.value}
+                            {`{${variable.value}}`}
                           </button>
                         ))}
                     </div>

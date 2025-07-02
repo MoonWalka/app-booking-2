@@ -92,7 +92,14 @@ const ContratRedactionPage = () => {
             setHasSelectedModels(true);
             // Sélectionner automatiquement le premier modèle
             if (contrat.contratModeles[0]) {
-              setCurrentModel(contrat.contratModeles[0]);
+              const firstModel = contrat.contratModeles[0];
+              setCurrentModel(firstModel);
+              
+              // Charger automatiquement le contenu du premier modèle
+              if (firstModel.bodyContent && !contrat.contratContenu) {
+                console.log('[ContratRedactionPage] Chargement automatique du contenu du premier modèle');
+                setEditorContent(firstModel.bodyContent);
+              }
             }
           }
           
@@ -176,7 +183,12 @@ const ContratRedactionPage = () => {
       try {
         console.log('[ContratRedactionPage] Sauvegarde des modèles sélectionnés');
         const dataToUpdate = {
-          contratModeles: models.map(m => ({ id: m.id, nom: m.nom, type: m.type })),
+          contratModeles: models.map(m => ({ 
+            id: m.id, 
+            nom: m.nom, 
+            type: m.type,
+            bodyContent: m.bodyContent 
+          })),
           updatedAt: serverTimestamp()
         };
         
@@ -190,32 +202,32 @@ const ContratRedactionPage = () => {
 
   // Gestion de la sélection d'un modèle dans le dropdown
   const handleModelSelection = (model) => {
+    console.log('[ContratRedactionPage] handleModelSelection appelé avec:', model);
     setCurrentModel(model);
-    // Simuler l'injection du contenu du modèle avec variables fusionnées
-    const modelContent = `
-      <h2>CONTRAT DE ${model.type.toUpperCase()}</h2>
-      <p><strong>Référence:</strong> ${contractRef}</p>
-      <p><strong>Entre les soussignés:</strong></p>
-      <p>D'une part, [ORGANISATEUR] ci-après dénommé "l'Organisateur"</p>
-      <p>Et d'autre part, [ARTISTE] ci-après dénommé "l'Artiste"</p>
-      
-      <h3>Article 1 - Objet du contrat</h3>
-      <p>Le présent contrat a pour objet la prestation artistique de [ARTISTE] lors de l'événement [TITRE_EVENEMENT] qui se déroulera le [DATE_EVENEMENT] à [LIEU_EVENEMENT].</p>
-      
-      <h3>Article 2 - Conditions techniques</h3>
-      <p>L'organisateur s'engage à mettre à disposition de l'artiste tous les moyens techniques nécessaires à la bonne réalisation de la prestation.</p>
-      
-      <h3>Article 3 - Rémunération</h3>
-      <p>En contrepartie de cette prestation, l'organisateur versera à l'artiste la somme de [MONTANT] euros.</p>
-      
-      <p><em>Modèle: ${model.nom}</em></p>
-    `;
-    setEditorContent(modelContent);
+    
+    // Utiliser le vrai contenu du modèle s'il existe
+    if (model.bodyContent) {
+      console.log('[ContratRedactionPage] Définition du contenu du modèle, length:', model.bodyContent.length);
+      setEditorContent(model.bodyContent);
+    } else {
+      // Fallback si pas de contenu (ne devrait plus arriver avec les modèles Firebase)
+      console.warn('Le modèle n\'a pas de bodyContent:', model);
+      const modelContent = `
+        <h2>CONTRAT DE ${model.type?.toUpperCase() || 'TYPE'}</h2>
+        <p><strong>Référence:</strong> ${contractRef}</p>
+        <p><em>Ce modèle n'a pas de contenu. Veuillez le configurer dans Admin > Paramétrage > Modèles de contrat.</em></p>
+      `;
+      setEditorContent(modelContent);
+    }
   };
 
   // Gestion de l'enregistrement et affichage
   const handleSaveAndPreview = () => {
+    console.log('[ContratRedactionPage] handleSaveAndPreview appelé');
+    console.log('[ContratRedactionPage] editorContent actuel:', editorContent);
+    console.log('[ContratRedactionPage] editorContent length:', editorContent?.length || 0);
     setPreviewContent(editorContent);
+    console.log('[ContratRedactionPage] previewContent défini');
   };
 
   // Gestion du changement de modèle

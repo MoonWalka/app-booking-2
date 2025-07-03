@@ -145,3 +145,23 @@ export const useTaches = () => {
     getStats
   };
 };
+
+// Nouvelle structure de tâche (manuel + automatique)
+// {
+//   id: string,
+//   titre: string,
+//   description: string,
+//   type: 'automatique' | 'manuelle',
+//   workflowStep: string, // ex: 'precontrat_envoi', 'contrat_signature', etc.
+//   entiteLiee: { type: 'devis'|'precontrat'|'contrat'|'facture', id: string },
+//   statut: 'a_faire' | 'en_cours' | 'terminee' | 'annulee',
+//   assignee: string, // id utilisateur ou rôle
+//   dateCreation: Date,
+//   dateEcheance: Date,
+//   priorite: 'basse' | 'normale' | 'haute',
+//   automatique: boolean, // true si tâche créée par le système
+//   historique: [
+//     { action: string, date: Date, userId: string, commentaire: string }
+//   ]
+// }
+// Ce modèle permet d'unifier tâches manuelles et automatiques, et d'ajouter des étapes de workflow automatisées.

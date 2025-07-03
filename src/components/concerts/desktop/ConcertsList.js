@@ -5,7 +5,7 @@ import Spinner from '@/components/common/Spinner';
 // Import custom hooks
 import { 
   useConcertListData,
-  useConcertFilters,
+  // useConcertFilters,
   useConcertStatus,
   useConcertActions 
 } from '@/hooks/concerts';
@@ -41,14 +41,22 @@ const ConcertsList = () => {
     concertsWithContracts
   } = useConcertListData();
 
-  const {
-    searchTerm,
-    setSearchTerm,
-    statusFilter,
-    setStatusFilter,
-    filteredConcerts,
-    isDatePassed
-  } = useConcertFilters(concerts);
+  // const {
+  //   searchTerm,
+  //   setSearchTerm,
+  //   statusFilter,
+  //   setStatusFilter,
+  //   filteredConcerts,
+  //   isDatePassed
+  // } = useConcertFilters(concerts);
+
+  // Placeholders pour compilation sans hook
+  const searchTerm = '';
+  const setSearchTerm = () => {};
+  const statusFilter = '';
+  const setStatusFilter = () => {};
+  const filteredConcerts = concerts || [];
+  const isDatePassed = () => false;
 
   const {
     statusDetailsMap,

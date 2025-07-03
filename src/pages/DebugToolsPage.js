@@ -43,6 +43,7 @@ import MigrateContractVariables from '@/components/debug/MigrateContractVariable
 import CleanOldContractContent from '@/components/debug/CleanOldContractContent';
 import ContactsAuditTool from '@/components/debug/ContactsAuditTool';
 import ContactsFixTool from '@/components/debug/ContactsFixTool';
+import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -251,6 +252,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="clean-contracts" title="🧹 Nettoyage Contrats">
           <CleanOldContractContent />
+        </Tab>
+        
+        <Tab eventKey="unused-files" title="🔍 Fichiers Non Utilisés">
+          <UnusedFilesAnalyzer />
         </Tab>
       </Tabs>
     </div>

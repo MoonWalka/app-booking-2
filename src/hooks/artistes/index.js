@@ -1,11 +1,11 @@
 // src/hooks/artistes/index.js
 
 // Export des hooks existants
-export { default as useArtisteSearch } from './useArtisteSearch';
-export { default as useArtistesList } from './useArtistesList';
+// export { default as useArtisteSearch } from './useArtisteSearch'; // SUPPRIMÉ
+// export { default as useArtistesList } from './useArtistesList'; // SUPPRIMÉ
 
 // Export du hook original (maintenant un wrapper)
-export { default as useArtisteDetails } from './useArtisteDetails';
+// export { default as useArtisteDetails } from './useArtisteDetails'; // SUPPRIMÉ
 
 // Export de la version migrée avec son nom original
 
@@ -27,7 +27,7 @@ export { default as useArtisteDetails } from './useArtisteDetails';
  * Ces versions sont conformes au plan de dépréciation qui prévoit la suppression 
  * des hooks spécifiques d'ici novembre 2025.
  */
-export { default as useArtisteForm } from './useArtisteForm';
+// export { default as useArtisteForm } from './useArtisteForm'; // SUPPRIMÉ
 export { default as useDeleteArtiste } from './useDeleteArtiste';
 
 // Export des hooks utilitaires supplémentaires

@@ -1,0 +1,1801 @@
+{
+  "timestamp": "2025-07-03T22:54:20.012Z",
+  "summary": {
+    "totalFiles": 723,
+    "importedFiles": 435,
+    "dynamicallyLoadedFiles": 57,
+    "referencedFiles": 286,
+    "unusedFiles": 0,
+    "potentiallyUnused": 288
+  },
+  "unused": [],
+  "potentially": [
+    {
+      "path": "src/components/admin/DataCompatibilityDashboard.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/api/ContratDownloadAPI.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/ArtistesListSimple.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/desktop/sections/ArtisteBasicInfoSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/desktop/sections/ArtisteContactSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/desktop/sections/ArtisteMembersSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/desktop/sections/ArtisteNotesSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/desktop/sections/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/handlers/paginationHandler.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/artistes/mobile/ArtistesList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/mobile/handlers/deleteHandler.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/mobile/handlers/paginationHandler.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/artistes/mobile/utils/concertUtils.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/artistes/sections/ArtisteRow.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/artistes/utils/concertUtils.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/collaboration/EntreprisesManager.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/ActionButton.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/EnvironmentBanner.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/ErrorDisplay.jsx",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/NotFound.jsx",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/PerformanceMonitor.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/PublicFormLayout.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/layout/MobileLayout.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/modals/DateCreationModal.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/steps/StepNavigation.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/common/steps/StepProgress.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/componentMapping.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/ConcertDetailsWithRoles.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/ConcertForm/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/DatesListSimple.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/PublicationsListSimple.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/TestComponent.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertArtistSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertGeneralInfo.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertHeader.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertLocationSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertOrganizerSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertViewModern.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertViewWrapper.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/concerts/desktop/ConcertsListSimplified.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/mobile/ConcertForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/mobile/ConcertsList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/mobile/handlers/deleteHandler.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/mobile/sections/ActionBarMobile.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/sections/ConcertRow.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/sections/ConcertStatusTabs.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/sections/ContactWithRoleSelector.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/utils/concertFormValidation.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/concerts/utils/entityRelations.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contact/parametrage/HierarchicalTagsManager.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/ContactContratsTable.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/ContactDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/ContactsListRelational.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/desktop/ContactConcertsSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/desktop/handlers/deleteHandler.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/desktop/sections/ContactHeader.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/mobile/ContactDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/mobile/ContactForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/mobile/ContactView.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/mobile/ContactsList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/mobile/handlers/deleteHandler.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/modal/GlobalModalsContainer.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contacts/sections/LieuInfoSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/ContratGenerator.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/ContratVariable.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/QuillPageBreakModule.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/ContratVariable.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/hooks/useContratTemplateForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/hooks/useContratTemplatePreview.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/hooks/useTemplateEditor.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/hooks/useTemplateVariables.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/CollapsibleSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/ContratTemplateBodySection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/ContratTemplateFooterSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/ContratTemplateHeader.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/ContratTemplateHeaderSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/ContratTemplateInfoSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/ContratTemplateSignatureSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/ContratTemplateTitleSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/VariablesDropdown.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/desktop/sections/VariablesPanel.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/fullscreenEditorModal.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/contrats/mobile/ContratGenerator.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/mobile/ContratVariable.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/contrats/mobile/sections/MobileContratAlerts.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/contrats/mobile/sections/MobileContratGenerationActions.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/contrats/mobile/sections/MobileContratTemplatePreview.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/contrats/mobile/sections/MobileContratTemplateSelector.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/dates/DatesTable.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/dates/configs/datesDirectoryConfig.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/debug/ContactMigrationDiagnostic.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/debug/OrganizationIdFixer.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/debug/StructureVariableTest.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/forms/FormSubmissionViewer.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/FormValidationInterface.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/desktop/FormValidationInterface.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/mobile/FormValidationInterface.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/mobile/sections/FormHeader.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/mobile/sections/ValidationActionBar.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/mobile/sections/ValidationModal.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/mobile/sections/ValidationSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/mobile/sections/ValidationSummary.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/validation/FieldValidationRow.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/validation/FormHeader.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/validation/FormValidationInterface.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/validation/FormValidationInterfaceNew.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/forms/validation/ValidationActionBar.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/validation/ValidationModal.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/validation/ValidationSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/forms/validation/ValidationSummary.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/layout/Navbar.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/layout/Sidebar.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/layout/SidebarItem.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/LieuFormOptimized.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/handlers/deleteHandler.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuAddressSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuConcertsSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuContactSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuFormActions.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuInfoSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuMapDisplay.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuOrganizerSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuStructuresSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/desktop/sections/LieuxTableRow.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/mobile/LieuxMobileList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/lieux/mobile/handlers/deleteHandler.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/molecules/GenericList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/molecules/handlers/paginationHandler.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/organization/OnboardingFlow.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/organization/OrganizationSelector.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/organization/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/pdf/ContratPDFBody.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/pdf/ContratPDFFooter.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/pdf/ContratPDFHeader.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/pdf/ContratPDFWrapper-fix.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/components/structures/StructureDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/structures/core/useStructureAddressSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/structures/core/useStructureDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/structures/desktop/StructureFormEnhanced.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/structures/desktop/utils.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/structures/mobile/StructureDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/structures/mobile/StructureForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/structures/mobile/StructuresList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/AddressDisplay.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/ContactDisplay.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/EntityCard.example.js",
+      "reason": "Fichier de test ou d'exemple",
+      "confidence": "medium"
+    },
+    {
+      "path": "src/components/ui/EntityListHeader.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/EntitySearchField.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/Form.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/Layout.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/LegalInfoSection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/ResponsiveList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/SectionTitle.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/TagsInput.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/components/ui/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/config/sidebarConfig.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/context/ModalsContext.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/__tests__/templates/optimizedFormHookTest.template.js",
+      "reason": "Fichier de test ou d'exemple",
+      "confidence": "medium"
+    },
+    {
+      "path": "src/hooks/artistes/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/artistes/useArtisteDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/artistes/useArtisteForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/artistes/useArtisteSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/artistes/useArtistesList.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/artistes/useSearchAndFilter.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useAddressSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useBidirectionalRelations.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useCache.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useDebounce.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useFirestoreSubscription.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useFormSubmission.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useGenericEntityDelete.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useGenericEntityDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useGenericEntityForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useGenericEntitySearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useLocationIQ.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useResponsive.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useSearchAndFilter.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/common/useTheme.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcertAssociations.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcertDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcertDetailsFixed.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcertDetailsWithRoles.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcertFilters.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcertFormsManagement.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcertListSimplified.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useConcerts.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useEntitySearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/concerts/useFormSubmission.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useAddressSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useAdresseValidation.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useCompanySearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useConcertSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useContactActions.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useContactDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useContactDirect.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useContactForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useContactSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useContactSearchRelational.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useDeleteContact.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useDeleteContactRelational.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useFormSubmission.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contacts/useLieuSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/useContractTemplates.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/useContratDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/useContratForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/useContratGenerator.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/useContratGeneratorWithRoles.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/useContratTemplatePreview.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/contrats/usePdfPreview.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useAdminFormValidation.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useFieldActions.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useFormSubmission.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useFormTokenValidation.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useFormValidation.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useFormValidationData.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useLieuFormState.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/forms/useValidationBatchActions.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/generics/actions/useGenericFieldActions.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/generics/actions/useGenericFormAction.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/generics/data/useGenericCachedData.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/generics/forms/useGenericFormPersistence.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/generics/forms/useGenericFormWizard.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/generics/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/generics/utils/useGenericResponsive.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/useAddressSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/useLieuDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/useLieuForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/useLieuSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/useLieuSearchFixed.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/useLieuxFilters.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/lieux/useLieuxQuery.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/parametres/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/parametres/useEntrepriseForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/parametres/useEntrepriseFormRobuste.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/search/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/search/useArtisteSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/search/useConcertSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/search/useLieuSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/search/useSearchAndFilter.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/search/useStructureSearch.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/structures/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/structures/useDeleteStructure.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/structures/useStructureDetails.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/structures/useStructureForm.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/structures/useStructureValidation.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/taches/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/hooks/useSecureRelations.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/schemas/ContactSchemas.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/services/InstanceTracker.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/services/contacts/duplicatesService.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/services/contacts/importExportService.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/services/contacts/qualificationsService.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/services/csrfService.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/services/dataValidationService.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/services/firestoreService.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/services/index.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/services/persistenceService.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/services/syncService.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/setupTests.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/shared/tableConfigs/datesTableColumns.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/shims/firebase-firestore-shim.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/OptimizedRouteWrapper.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/StableRouteWrapper.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/addCoordinatesToLieux.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/auditTagsComments.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/contactMigrationDetection.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/dataCompatibilityHelper.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/dateConversion.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/debug/renderTracker.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/diagnostic/contactDiagnostic.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/diagnostic/debugDashboard.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/firebase-diagnostic.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/fixConcertDates.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/networkStabilizer.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/seedConcerts.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/templateDiagnostic.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/temporaryArtisteSearchFix.js",
+      "reason": "Non importé, chargé dynamiquement, ou référencé",
+      "confidence": "low"
+    },
+    {
+      "path": "src/utils/test-helpers.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/testMapFix.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/testTagsUpdate.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    },
+    {
+      "path": "src/utils/verifyContactStructure.js",
+      "reason": "Référencé mais non importé directement",
+      "confidence": "very_low"
+    }
+  ],
+  "dynamicallyLoaded": [
+    "src/pages/ContratGeneratorNew.js",
+    "src/pages/ContratGeneratorNewPage.js",
+    "src/components/ContratGeneratorNew.js",
+    "src/pages/ContratGenerationNewPage.js",
+    "src/pages/ContratGenerationNewPagePage.js",
+    "src/components/ContratGenerationNewPage.js",
+    "src/pages/DateCreationPage.js",
+    "src/pages/DateCreationPagePage.js",
+    "src/components/DateCreationPage.js",
+    "src/pages/StructuresPage.js",
+    "src/pages/StructuresPagePage.js",
+    "src/components/StructuresPage.js",
+    "src/pages/TachesPage.js",
+    "src/pages/TachesPagePage.js",
+    "src/components/TachesPage.js",
+    "src/pages/DashboardPage.js",
+    "src/pages/DashboardPagePage.js",
+    "src/components/DashboardPage.js",
+    "src/pages/ContactsPage.js",
+    "src/pages/ContactsPagePage.js",
+    "src/components/ContactsPage.js",
+    "src/pages/DebugToolsPage.js",
+    "src/pages/DebugToolsPagePage.js",
+    "src/components/DebugToolsPage.js",
+    "src/pages/ConcertsPage.js",
+    "src/pages/ConcertsPagePage.js",
+    "src/components/ConcertsPage.js",
+    "src/pages/DevisPage.js",
+    "src/pages/DevisPagePage.js",
+    "src/components/DevisPage.js",
+    "src/pages/FactureGeneratorPage.js",
+    "src/pages/FactureGeneratorPagePage.js",
+    "src/components/FactureGeneratorPage.js",
+    "src/pages/FacturesPage.js",
+    "src/pages/FacturesPagePage.js",
+    "src/components/FacturesPage.js",
+    "src/pages/DevisEditor.js",
+    "src/pages/DevisEditorPage.js",
+    "src/components/DevisEditor.js",
+    "src/pages/ArtistesPage.js",
+    "src/pages/ArtistesPagePage.js",
+    "src/components/ArtistesPage.js",
+    "src/pages/ContratsPage.js",
+    "src/pages/ContratsPagePage.js",
+    "src/components/ContratsPage.js",
+    "src/pages/ParametresPage.js",
+    "src/pages/ParametresPagePage.js",
+    "src/components/ParametresPage.js",
+    "src/pages/ContactDetailPage.js",
+    "src/pages/ContactDetailPagePage.js",
+    "src/components/ContactDetailPage.js",
+    "src/pages/ConcertDetailPage.js",
+    "src/pages/ConcertDetailPagePage.js",
+    "src/components/ConcertDetailPage.js",
+    "src/pages/PreContratGenerator.js",
+    "src/pages/PreContratGeneratorPage.js",
+    "src/components/PreContratGenerator.js"
+  ],
+  "referencedFiles": [
+    "src/components/artistes/desktop/ArtisteForm.js",
+    "src/components/artistes/desktop/ArtisteView.js",
+    "src/components/artistes/desktop/ArtistesList.js",
+    "src/components/contacts/desktop/ContactForm.js",
+    "src/components/contacts/desktop/ContactView.js",
+    "src/components/contacts/desktop/ContactsList.js",
+    "src/components/concerts/desktop/ConcertForm.js",
+    "src/components/concerts/desktop/ConcertView.js",
+    "src/components/concerts/desktop/ConcertsList.js",
+    "src/components/contrats/desktop/ContratGenerator.js",
+    "src/components/contrats/desktop/ContratGeneratorNew.js",
+    "src/components/factures/FactureEditor.js",
+    "src/components/factures/FacturePreview.js",
+    "src/components/lieux/desktop/LieuForm.js",
+    "src/components/lieux/desktop/LieuView.js",
+    "src/components/lieux/desktop/LieuxList.js",
+    "src/components/structures/desktop/StructureForm.js",
+    "src/components/structures/desktop/StructureView.js",
+    "src/components/structures/desktop/StructuresList.js",
+    "src/components/ui/Button.js",
+    "src/components/ui/Card.js",
+    "src/components/ui/Table.js",
+    "src/components/tabs/TabManager.js",
+    "src/components/common/EntityViewTabs.js",
+    "src/components/common/GenericDetailView.js",
+    "src/utils/seedEmulator.js",
+    "src/utils/fixNumeroIntracommunautaire.js",
+    "src/components/artistes/desktop/sections/index.js",
+    "src/components/concerts/ConcertForm/index.js",
+    "src/components/organization/index.js",
+    "src/components/ui/index.js",
+    "src/hooks/artistes/index.js",
+    "src/hooks/common/index.js",
+    "src/hooks/concerts/index.js",
+    "src/hooks/contacts/index.js",
+    "src/hooks/contrats/index.js",
+    "src/hooks/forms/index.js",
+    "src/hooks/generics/index.js",
+    "src/hooks/index.js",
+    "src/hooks/lieux/index.js",
+    "src/hooks/parametres/index.js",
+    "src/hooks/search/index.js",
+    "src/hooks/structures/index.js",
+    "src/hooks/taches/index.js",
+    "src/index.js",
+    "src/reportWebVitals.js",
+    "src/services/index.js",
+    "src/setupTests.js",
+    "src/components/admin/DataCompatibilityDashboard.js",
+    "src/components/api/ContratDownloadAPI.js",
+    "src/components/artistes/ArtistesListSimple.js",
+    "src/components/artistes/desktop/sections/ArtisteBasicInfoSection.js",
+    "src/components/artistes/desktop/sections/ArtisteContactSection.js",
+    "src/components/artistes/desktop/sections/ArtisteMembersSection.js",
+    "src/components/artistes/desktop/sections/ArtisteNotesSection.js",
+    "src/components/artistes/mobile/ArtistesList.js",
+    "src/components/artistes/mobile/handlers/deleteHandler.js",
+    "src/components/artistes/sections/ArtisteRow.js",
+    "src/components/collaboration/EntreprisesManager.js",
+    "src/components/common/ActionButton.js",
+    "src/components/common/EnvironmentBanner.js",
+    "src/components/common/ErrorDisplay.jsx",
+    "src/components/common/NotFound.jsx",
+    "src/components/common/PerformanceMonitor.js",
+    "src/components/common/PublicFormLayout.js",
+    "src/components/common/layout/MobileLayout.js",
+    "src/components/common/modals/DateCreationModal.js",
+    "src/components/common/steps/StepNavigation.js",
+    "src/components/common/steps/StepProgress.js",
+    "src/components/componentMapping.js",
+    "src/components/concerts/ConcertDetailsWithRoles.js",
+    "src/components/concerts/DatesListSimple.js",
+    "src/components/concerts/PublicationsListSimple.js",
+    "src/components/concerts/TestComponent.js",
+    "src/components/concerts/desktop/ConcertArtistSection.js",
+    "src/components/concerts/desktop/ConcertGeneralInfo.js",
+    "src/components/concerts/desktop/ConcertHeader.js",
+    "src/components/concerts/desktop/ConcertLocationSection.js",
+    "src/components/concerts/desktop/ConcertOrganizerSection.js",
+    "src/components/concerts/desktop/ConcertViewModern.js",
+    "src/components/concerts/desktop/ConcertsListSimplified.js",
+    "src/components/concerts/mobile/ConcertForm.js",
+    "src/components/concerts/mobile/ConcertsList.js",
+    "src/components/concerts/mobile/handlers/deleteHandler.js",
+    "src/components/concerts/mobile/sections/ActionBarMobile.js",
+    "src/components/concerts/sections/ConcertRow.js",
+    "src/components/concerts/sections/ConcertStatusTabs.js",
+    "src/components/concerts/sections/ContactWithRoleSelector.js",
+    "src/components/concerts/utils/concertFormValidation.js",
+    "src/components/concerts/utils/entityRelations.js",
+    "src/components/contact/parametrage/HierarchicalTagsManager.js",
+    "src/components/contacts/ContactContratsTable.js",
+    "src/components/contacts/ContactDetails.js",
+    "src/components/contacts/ContactsListRelational.js",
+    "src/components/contacts/desktop/ContactConcertsSection.js",
+    "src/components/contacts/desktop/handlers/deleteHandler.js",
+    "src/components/contacts/desktop/sections/ContactHeader.js",
+    "src/components/contacts/mobile/ContactDetails.js",
+    "src/components/contacts/mobile/ContactForm.js",
+    "src/components/contacts/mobile/ContactView.js",
+    "src/components/contacts/mobile/ContactsList.js",
+    "src/components/contacts/mobile/handlers/deleteHandler.js",
+    "src/components/contacts/modal/GlobalModalsContainer.js",
+    "src/components/contacts/sections/LieuInfoSection.js",
+    "src/components/contrats/ContratGenerator.js",
+    "src/components/contrats/ContratVariable.js",
+    "src/components/contrats/QuillPageBreakModule.js",
+    "src/components/contrats/desktop/ContratVariable.js",
+    "src/components/contrats/desktop/hooks/useContratTemplateForm.js",
+    "src/components/contrats/desktop/hooks/useContratTemplatePreview.js",
+    "src/components/contrats/desktop/hooks/useTemplateEditor.js",
+    "src/components/contrats/desktop/hooks/useTemplateVariables.js",
+    "src/components/contrats/desktop/sections/CollapsibleSection.js",
+    "src/components/contrats/desktop/sections/ContratTemplateBodySection.js",
+    "src/components/contrats/desktop/sections/ContratTemplateFooterSection.js",
+    "src/components/contrats/desktop/sections/ContratTemplateHeader.js",
+    "src/components/contrats/desktop/sections/ContratTemplateHeaderSection.js",
+    "src/components/contrats/desktop/sections/ContratTemplateInfoSection.js",
+    "src/components/contrats/desktop/sections/ContratTemplateSignatureSection.js",
+    "src/components/contrats/desktop/sections/ContratTemplateTitleSection.js",
+    "src/components/contrats/desktop/sections/VariablesDropdown.js",
+    "src/components/contrats/desktop/sections/VariablesPanel.js",
+    "src/components/contrats/mobile/ContratGenerator.js",
+    "src/components/contrats/mobile/ContratVariable.js",
+    "src/components/dates/DatesTable.js",
+    "src/components/dates/configs/datesDirectoryConfig.js",
+    "src/components/debug/ContactMigrationDiagnostic.js",
+    "src/components/debug/OrganizationIdFixer.js",
+    "src/components/forms/FormSubmissionViewer.js",
+    "src/components/forms/FormValidationInterface.js",
+    "src/components/forms/desktop/FormValidationInterface.js",
+    "src/components/forms/mobile/FormValidationInterface.js",
+    "src/components/forms/mobile/sections/FormHeader.js",
+    "src/components/forms/mobile/sections/ValidationActionBar.js",
+    "src/components/forms/mobile/sections/ValidationModal.js",
+    "src/components/forms/mobile/sections/ValidationSection.js",
+    "src/components/forms/mobile/sections/ValidationSummary.js",
+    "src/components/forms/validation/FieldValidationRow.js",
+    "src/components/forms/validation/FormHeader.js",
+    "src/components/forms/validation/FormValidationInterface.js",
+    "src/components/forms/validation/ValidationActionBar.js",
+    "src/components/forms/validation/ValidationModal.js",
+    "src/components/forms/validation/ValidationSection.js",
+    "src/components/forms/validation/ValidationSummary.js",
+    "src/components/layout/Navbar.js",
+    "src/components/layout/Sidebar.js",
+    "src/components/layout/SidebarItem.js",
+    "src/components/lieux/desktop/LieuFormOptimized.js",
+    "src/components/lieux/desktop/handlers/deleteHandler.js",
+    "src/components/lieux/desktop/sections/LieuAddressSection.js",
+    "src/components/lieux/desktop/sections/LieuConcertsSection.js",
+    "src/components/lieux/desktop/sections/LieuContactSection.js",
+    "src/components/lieux/desktop/sections/LieuFormActions.js",
+    "src/components/lieux/desktop/sections/LieuInfoSection.js",
+    "src/components/lieux/desktop/sections/LieuMapDisplay.js",
+    "src/components/lieux/desktop/sections/LieuOrganizerSection.js",
+    "src/components/lieux/desktop/sections/LieuStructuresSection.js",
+    "src/components/lieux/desktop/sections/LieuxTableRow.js",
+    "src/components/lieux/mobile/LieuxMobileList.js",
+    "src/components/lieux/mobile/handlers/deleteHandler.js",
+    "src/components/molecules/GenericList.js",
+    "src/components/organization/OnboardingFlow.js",
+    "src/components/organization/OrganizationSelector.js",
+    "src/components/structures/StructureDetails.js",
+    "src/components/structures/core/useStructureAddressSection.js",
+    "src/components/structures/core/useStructureDetails.js",
+    "src/components/structures/desktop/StructureFormEnhanced.js",
+    "src/components/structures/desktop/utils.js",
+    "src/components/structures/mobile/StructureDetails.js",
+    "src/components/structures/mobile/StructureForm.js",
+    "src/components/structures/mobile/StructuresList.js",
+    "src/components/ui/AddressDisplay.js",
+    "src/components/ui/ContactDisplay.js",
+    "src/components/ui/EntityListHeader.js",
+    "src/components/ui/EntitySearchField.js",
+    "src/components/ui/Form.js",
+    "src/components/ui/Layout.js",
+    "src/components/ui/LegalInfoSection.js",
+    "src/components/ui/ResponsiveList.js",
+    "src/components/ui/SectionTitle.js",
+    "src/components/ui/TagsInput.js",
+    "src/config/sidebarConfig.js",
+    "src/context/ModalsContext.js",
+    "src/hooks/artistes/useArtisteDetails.js",
+    "src/hooks/artistes/useArtisteForm.js",
+    "src/hooks/artistes/useArtisteSearch.js",
+    "src/hooks/artistes/useArtistesList.js",
+    "src/hooks/artistes/useSearchAndFilter.js",
+    "src/hooks/common/useAddressSearch.js",
+    "src/hooks/common/useBidirectionalRelations.js",
+    "src/hooks/common/useCache.js",
+    "src/hooks/common/useDebounce.js",
+    "src/hooks/common/useFirestoreSubscription.js",
+    "src/hooks/common/useFormSubmission.js",
+    "src/hooks/common/useGenericEntityDelete.js",
+    "src/hooks/common/useGenericEntityDetails.js",
+    "src/hooks/common/useGenericEntityForm.js",
+    "src/hooks/common/useGenericEntitySearch.js",
+    "src/hooks/common/useLocationIQ.js",
+    "src/hooks/common/useResponsive.js",
+    "src/hooks/common/useSearchAndFilter.js",
+    "src/hooks/common/useTheme.js",
+    "src/hooks/concerts/useConcertAssociations.js",
+    "src/hooks/concerts/useConcertDetails.js",
+    "src/hooks/concerts/useConcertDetailsFixed.js",
+    "src/hooks/concerts/useConcertDetailsWithRoles.js",
+    "src/hooks/concerts/useConcertFilters.js",
+    "src/hooks/concerts/useConcertFormsManagement.js",
+    "src/hooks/concerts/useConcertListSimplified.js",
+    "src/hooks/concerts/useConcerts.js",
+    "src/hooks/concerts/useEntitySearch.js",
+    "src/hooks/concerts/useFormSubmission.js",
+    "src/hooks/contacts/useAddressSearch.js",
+    "src/hooks/contacts/useAdresseValidation.js",
+    "src/hooks/contacts/useCompanySearch.js",
+    "src/hooks/contacts/useConcertSearch.js",
+    "src/hooks/contacts/useContactActions.js",
+    "src/hooks/contacts/useContactDetails.js",
+    "src/hooks/contacts/useContactDirect.js",
+    "src/hooks/contacts/useContactForm.js",
+    "src/hooks/contacts/useContactSearch.js",
+    "src/hooks/contacts/useContactSearchRelational.js",
+    "src/hooks/contacts/useDeleteContact.js",
+    "src/hooks/contacts/useDeleteContactRelational.js",
+    "src/hooks/contacts/useFormSubmission.js",
+    "src/hooks/contacts/useLieuSearch.js",
+    "src/hooks/contrats/useContractTemplates.js",
+    "src/hooks/contrats/useContratDetails.js",
+    "src/hooks/contrats/useContratForm.js",
+    "src/hooks/contrats/useContratGenerator.js",
+    "src/hooks/contrats/useContratGeneratorWithRoles.js",
+    "src/hooks/contrats/useContratTemplatePreview.js",
+    "src/hooks/contrats/usePdfPreview.js",
+    "src/hooks/forms/useAdminFormValidation.js",
+    "src/hooks/forms/useFieldActions.js",
+    "src/hooks/forms/useFormSubmission.js",
+    "src/hooks/forms/useFormTokenValidation.js",
+    "src/hooks/forms/useFormValidation.js",
+    "src/hooks/forms/useFormValidationData.js",
+    "src/hooks/forms/useLieuFormState.js",
+    "src/hooks/forms/useValidationBatchActions.js",
+    "src/hooks/generics/actions/useGenericFieldActions.js",
+    "src/hooks/generics/actions/useGenericFormAction.js",
+    "src/hooks/generics/data/useGenericCachedData.js",
+    "src/hooks/generics/forms/useGenericFormPersistence.js",
+    "src/hooks/generics/forms/useGenericFormWizard.js",
+    "src/hooks/generics/utils/useGenericResponsive.js",
+    "src/hooks/lieux/useAddressSearch.js",
+    "src/hooks/lieux/useLieuDetails.js",
+    "src/hooks/lieux/useLieuForm.js",
+    "src/hooks/lieux/useLieuSearch.js",
+    "src/hooks/lieux/useLieuSearchFixed.js",
+    "src/hooks/lieux/useLieuxFilters.js",
+    "src/hooks/lieux/useLieuxQuery.js",
+    "src/hooks/parametres/useEntrepriseForm.js",
+    "src/hooks/parametres/useEntrepriseFormRobuste.js",
+    "src/hooks/search/useArtisteSearch.js",
+    "src/hooks/search/useConcertSearch.js",
+    "src/hooks/search/useLieuSearch.js",
+    "src/hooks/search/useSearchAndFilter.js",
+    "src/hooks/search/useStructureSearch.js",
+    "src/hooks/structures/useDeleteStructure.js",
+    "src/hooks/structures/useStructureDetails.js",
+    "src/hooks/structures/useStructureForm.js",
+    "src/hooks/structures/useStructureValidation.js",
+    "src/hooks/useSecureRelations.js",
+    "src/services/InstanceTracker.js",
+    "src/services/contacts/qualificationsService.js",
+    "src/services/csrfService.js",
+    "src/services/dataValidationService.js",
+    "src/services/firestoreService.js",
+    "src/services/persistenceService.js",
+    "src/services/syncService.js",
+    "src/utils/OptimizedRouteWrapper.js",
+    "src/utils/StableRouteWrapper.js",
+    "src/utils/addCoordinatesToLieux.js",
+    "src/utils/contactMigrationDetection.js",
+    "src/utils/dataCompatibilityHelper.js",
+    "src/utils/diagnostic/contactDiagnostic.js",
+    "src/utils/networkStabilizer.js",
+    "src/utils/seedConcerts.js",
+    "src/utils/templateDiagnostic.js",
+    "src/utils/test-helpers.js",
+    "src/utils/testMapFix.js",
+    "src/utils/testTagsUpdate.js",
+    "src/utils/verifyContactStructure.js"
+  ]
+}

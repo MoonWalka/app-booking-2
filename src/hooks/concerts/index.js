@@ -9,7 +9,7 @@
 export { default as useConcertForm } from './useConcertForm'; // Version moderne avec contactIds
 
 // export { default as useConcertDetails } from './useConcertDetails'; // Version avec boucles infinies
-export { default as useConcertDetails } from './useConcertDetailsFixed'; // Version corrigée
+// export { default as useConcertDetails } from './useConcertDetailsFixed'; // SUPPRIMÉ
 
 
 // Supprimer cette exportation redondante
@@ -20,9 +20,9 @@ export { default as useConcertStatus } from './useConcertStatus';
 
 // Exports des autres hooks spécifiques aux concerts
 export { default as useConcertListData } from './useConcertListData';
-export { default as useConcertFilters } from './useConcertFilters';
+// export { default as useConcertFilters } from './useConcertFilters'; // SUPPRIMÉ
 export { default as useConcertActions } from './useConcertActions';
-export { default as useConcerts } from './useConcerts';
+// export { default as useConcerts } from './useConcerts'; // SUPPRIMÉ
 export { default as useConcertAssociations } from './useConcertAssociations';
 export { default as useEntitySearch } from './useEntitySearch';
 export { default as useFormSubmission } from './useFormSubmission';
@@ -35,4 +35,4 @@ export { default as useConcertFormWithRelations } from './useConcertFormWithRela
 export { default as useConcertFormsManagement } from './useConcertFormsManagement';
 
 // Hook simplifié pour la liste
-export { useConcertListSimplified } from './useConcertListSimplified';
+// export { useConcertListSimplified } from './useConcertListSimplified'; // SUPPRIMÉ

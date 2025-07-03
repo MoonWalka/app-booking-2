@@ -14,7 +14,7 @@
 
 // Hooks de listes et données
 export { default as useGenericEntityList } from './lists/useGenericEntityList';
-export { default as useGenericCachedData } from './data/useGenericCachedData';
+// export { default as useGenericCachedData } from './data/useGenericCachedData'; // SUPPRIMÉ
 export { default as useGenericDataFetcher } from './data/useGenericDataFetcher';
 
 // Hooks de formulaires
@@ -24,7 +24,7 @@ export { default as useGenericEntityForm } from './forms/useGenericEntityForm';
 export { default as useGenericValidation } from './validation/useGenericValidation';
 
 // Hooks d'actions
-export { default as useGenericFormAction } from './actions/useGenericFormAction';
+// export { default as useGenericFormAction } from './actions/useGenericFormAction'; // SUPPRIMÉ
 export { default as useGenericFieldActions } from './actions/useGenericFieldActions'; // ✅ Phase 2
 
 // Hooks de statut

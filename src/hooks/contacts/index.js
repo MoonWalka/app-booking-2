@@ -1,7 +1,7 @@
 // src/hooks/contacts/index.js
 // Re-export hooks specific to contacts
 export { default as useAddressSearch } from './useAddressSearch';
-export { default as useContactDetails } from './useContactDetails';
+// export { default as useContactDetails } from './useContactDetails'; // SUPPRIMÉ
 export { default as useContactSearch } from './useContactSearch';
 export { useContactContrats } from './useContactContrats';
 export { useContactFactures } from './useContactFactures';
@@ -13,16 +13,16 @@ export { useContactFactures } from './useContactFactures';
 
 
 // Exports des hooks de formulaire
-export { default as useContactForm } from './useContactForm';
+// export { default as useContactForm } from './useContactForm'; // SUPPRIMÉ
 
 
 // Add alias for migrated details hook
 
 // Exports des autres hooks spécifiques aux contacts
-export { default as useAdresseValidation } from './useAdresseValidation';
+// export { default as useAdresseValidation } from './useAdresseValidation'; // SUPPRIMÉ
 export { default as useLieuSearch } from './useLieuSearch';
 export { default as useCompanySearch } from './useCompanySearch';
-export { default as useConcertSearch } from './useConcertSearch';
+// export { default as useConcertSearch } from './useConcertSearch'; // SUPPRIMÉ
 export { default as useFormSubmission } from './useFormSubmission';
 export { default as useDeleteContact } from './useDeleteContact';
 export { default as useDeleteContactRelational } from './useDeleteContactRelational';

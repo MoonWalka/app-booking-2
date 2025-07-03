@@ -7,7 +7,7 @@ export { default as useContratDetails } from './useContratDetails';
 
 
 // Exports des hooks liés aux modèles de contrats
-export { default as useContratTemplatePreview } from './useContratTemplatePreview';
+// export { default as useContratTemplatePreview } from './useContratTemplatePreview'; // SUPPRIMÉ
 
 // Exports des hooks liés à la génération de contrats
 export { default as useContratGenerator } from './useContratGenerator';
@@ -15,7 +15,7 @@ export { default as usePdfPreview } from './usePdfPreview';
 
 // Exports des hooks d'actions et utilitaires
 export { default as useContratActions } from './useContratActions';
-export { default as useContractTemplates } from './useContractTemplates';
+// export { default as useContractTemplates } from './useContractTemplates'; // SUPPRIMÉ
 
 // Export des variables de contrat
 export { 
@@ -26,4 +26,4 @@ export {
   replaceVariablesWithMockData 
 } from './contractVariables';
 
-export { default as useContratForm } from './useContratForm';
+// export { default as useContratForm } from './useContratForm'; // SUPPRIMÉ

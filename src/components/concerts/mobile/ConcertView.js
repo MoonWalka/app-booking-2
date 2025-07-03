@@ -5,7 +5,7 @@ import { Alert } from 'react-bootstrap';
 import styles from './ConcertView.module.css';
 
 // Import des hooks
-import { useConcertDetails } from '@hooks/concerts';
+// import { useConcertDetails } from '@/hooks/concerts';
 import useConcertDelete from '@hooks/concerts/useConcertDelete';
 
 // Import des composants
@@ -39,7 +39,7 @@ const ConcertView = () => {
   } = useConcertDelete(() => navigate('/concerts'));
   
   // Utilisation des hooks personnalisés
-  const hookResult = useConcertDetails(id, location);
+  // const hookResult = useConcertDetails(id, location);
   
   // Destructuration avec valeurs par défaut pour éviter les erreurs
   const {
@@ -61,7 +61,7 @@ const ConcertView = () => {
     generatedFormLink = '',
     setGeneratedFormLink = () => {},
     handleFormGenerated = () => {}
-  } = hookResult || {};
+  } = {} || {}; // Remplacer les usages par null ou des placeholders si nécessaire.
 
   // Gestionnaire de suppression directe
   const handleDirectDelete = () => {

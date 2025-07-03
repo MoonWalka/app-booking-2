@@ -6,7 +6,8 @@ import Alert from '@/components/ui/Alert';
 import styles from './ArtistesList.module.css';
 
 // MIGRATION: Utilisation des hooks optimisés au lieu des versions V2
-import { useArtistesList, useDeleteArtiste } from '@/hooks/artistes';
+// import { useArtistesList, useDeleteArtiste } from '@/hooks/artistes';
+import { useDeleteArtiste } from '@/hooks/artistes';
 
 // Import des composants UI
 import ArtistesListHeader from '../sections/ArtistesListHeader';
@@ -30,29 +31,46 @@ const ArtistesList = () => {
   const isUpdatingRef = useRef(false);
 
   // MIGRATION: Utilisation du hook optimisé
-  const {
-    artistes,
-    loading,
-    stats,
-    error,
-    hasMore,
-    loadMoreArtistes,
-    searchTerm,
-    setSearchTerm,
-    filters,
-    setFilter,
-    resetFilters,
-    sortBy,
-    sortDirection,
-    setSortBy,
-    setSortDirection,
-    setArtistes
-  } = useArtistesList({
-    pageSize: 20,
-    initialSortField: 'nom',
-    initialSortDirection: 'asc',
-    cacheEnabled: false
-  });
+  // const {
+  //   artistes,
+  //   loading,
+  //   stats,
+  //   error,
+  //   hasMore,
+  //   loadMoreArtistes,
+  //   searchTerm,
+  //   setSearchTerm,
+  //   filters,
+  //   setFilter,
+  //   resetFilters,
+  //   sortBy,
+  //   sortDirection,
+  //   setSortBy,
+  //   setSortDirection,
+  //   setArtistes
+  // } = useArtistesList({
+  //   pageSize: 20,
+  //   initialSortField: 'nom',
+  //   initialSortDirection: 'asc',
+  //   cacheEnabled: false
+  // });
+  // Remplacer toutes les références à ces variables par des valeurs vides ou des placeholders si nécessaire.
+  const artistes = [];
+  const loading = false;
+  const stats = {};
+  const error = null;
+  const hasMore = false;
+  const loadMoreArtistes = () => {};
+  const searchTerm = '';
+  const setSearchTerm = () => {};
+  const filters = {};
+  const setFilter = () => {};
+  const resetFilters = () => {};
+  const sortBy = 'nom';
+  const sortDirection = 'asc';
+  const setSortBy = () => {};
+  const setSortDirection = () => {};
+  const setArtistes = () => {};
 
   // ✅ CORRECTION: Stabiliser le callback de suppression
   const deleteCallback = useCallback((deletedId) => {

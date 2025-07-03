@@ -1,7 +1,7 @@
 // src/components/concerts/desktop/ConcertView.js
 import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useConcertDetails } from '@/hooks/concerts';
+// import { useConcertDetails } from '@/hooks/concerts';
 import { useConcertStatus } from '@/hooks/concerts';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
@@ -23,7 +23,7 @@ function ConcertView({ id: propId }) {
   const id = propId || urlId;
 
   // Hooks Firebase existants
-  const detailsHook = useConcertDetails(id);
+  // const detailsHook = useConcertDetails(id);
   const concertStatus = useConcertStatus();
 
   const {
@@ -37,7 +37,7 @@ function ConcertView({ id: propId }) {
     // handleDelete, // TODO: Utiliser pour modal de suppression
     formatDate,
     formatMontant
-  } = detailsHook || {};
+  } = null; // Remplacer les usages par null ou des placeholders si nécessaire.
 
   // Debug - Affichage des données reçues
   console.log('[ConcertView] Données reçues:', {

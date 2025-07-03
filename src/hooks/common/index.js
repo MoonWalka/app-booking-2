@@ -4,7 +4,6 @@ export { default as useCompanySearch } from './useCompanySearch';
 export { useEntitySearch } from './useEntitySearch';
 export { useLocationIQ } from './useLocationIQ';
 export { default as useResponsive } from './useResponsive';
-export { default as useTheme } from './useTheme';
 // Add an alias for useResponsiveComponent to maintain backward compatibility during transition
 export { default as useResponsiveComponent } from './useResponsive';
 export { default as useGenericEntityForm } from './useGenericEntityForm';

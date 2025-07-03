@@ -41,6 +41,8 @@ import FestivalsDebugger from '@/components/debug/FestivalsDebugger';
 import MigrateContractTemplates from '@/components/debug/MigrateContractTemplates';
 import MigrateContractVariables from '@/components/debug/MigrateContractVariables';
 import CleanOldContractContent from '@/components/debug/CleanOldContractContent';
+import ContactsAuditTool from '@/components/debug/ContactsAuditTool';
+import ContactsFixTool from '@/components/debug/ContactsFixTool';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -93,6 +95,14 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="concert-contacts" title="👥 Contacts Concerts">
           <ConcertContactsDebug />
+        </Tab>
+        
+        <Tab eventKey="contacts-audit" title="🔍 Audit Contacts Manquants">
+          <ContactsAuditTool />
+        </Tab>
+        
+        <Tab eventKey="contacts-fix" title="🔧 Corriger Contacts Manquants">
+          <ContactsFixTool />
         </Tab>
         
         <Tab eventKey="test-delete" title="🗑️ Test Suppression">

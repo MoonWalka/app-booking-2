@@ -41,6 +41,8 @@ import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug';
 import StructureAddressMigration from '@/components/debug/StructureAddressMigration';
 import FestivalsDebugger from '@/components/debug/FestivalsDebugger';
 import MigrateContractTemplates from '@/components/debug/MigrateContractTemplates';
+import MigrateContractVariables from '@/components/debug/MigrateContractVariables';
+import CleanOldContractContent from '@/components/debug/CleanOldContractContent';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -241,6 +243,14 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="contract-templates" title="📄 Migration Modèles Contrat">
           <MigrateContractTemplates />
+        </Tab>
+        
+        <Tab eventKey="contract-variables" title="🔄 Migration Variables Contrat">
+          <MigrateContractVariables />
+        </Tab>
+        
+        <Tab eventKey="clean-contracts" title="🧹 Nettoyage Contrats">
+          <CleanOldContractContent />
         </Tab>
       </Tabs>
     </div>

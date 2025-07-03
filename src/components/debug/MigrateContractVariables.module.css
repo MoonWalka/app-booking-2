@@ -1,0 +1,154 @@
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.description {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.actions {
+  margin-bottom: 20px;
+}
+
+.templateList {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.templateList h4 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.selectActions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.templateItem {
+  padding: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.templateItem:last-child {
+  border-bottom: none;
+}
+
+.templateItem label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 0;
+}
+
+.templateItem input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.templateName {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.templateType {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.migrationActions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.log {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.log h4 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.logEntry {
+  padding: 8px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.logEntry.info {
+  background: #e7f3ff;
+  color: #0066cc;
+}
+
+.logEntry.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.logEntry.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.logEntry.warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.timestamp {
+  margin-right: 10px;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.message {
+  flex: 1;
+}
+
+.info {
+  background: #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.info h4 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.info ul {
+  margin-bottom: 15px;
+}
+
+.info li {
+  margin-bottom: 8px;
+}
+
+.warning {
+  background: #fff3cd;
+  color: #856404;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-top: 15px;
+}

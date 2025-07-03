@@ -1,5 +1,6 @@
 import { collection, doc, getDoc, updateDoc, query, where, getDocs, orderBy, addDoc, deleteDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
+import tachesService from '@/services/tachesService';
 
 const devisService = {
   // Créer un nouveau devis
@@ -24,6 +25,29 @@ const devisService = {
       
       const docRef = await addDoc(collection(db, 'devis'), newDevis);
       console.log('✅ Devis créé avec succès - ID:', docRef.id);
+      
+      // Créer automatiquement une tâche pour le pré-contrat
+      try {
+        await tachesService.creerTache({
+          titre: `Créer le pré-contrat pour ${devisData.nomContact || 'le client'}`,
+          description: `Un devis (${numero}) a été créé. Il faut maintenant créer le pré-contrat.`,
+          type: 'pre_contrat',
+          priorite: 'normale',
+          dateEcheance: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours
+          organizationId: devisData.organizationId,
+          concertId: devisData.concertId,
+          contactId: devisData.contactId,
+          entityType: 'devis',
+          entityId: docRef.id,
+          automatique: true,
+          createdBy: devisData.createdBy || null
+        });
+        console.log('✅ Tâche automatique créée pour le pré-contrat');
+      } catch (error) {
+        console.error('⚠️ Erreur lors de la création de la tâche automatique:', error);
+        // Ne pas bloquer la création du devis si la tâche échoue
+      }
+      
       console.log('=== CRÉATION DEVIS - FIN ===');
       
       return {

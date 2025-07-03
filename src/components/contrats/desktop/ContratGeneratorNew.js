@@ -454,7 +454,7 @@ const ContratGeneratorNew = ({
         }));
       }
     }
-  }, [contratData.prestations, contratData.negociation]);
+  }, [contratData.prestations]);
 
   // Calculer automatiquement les montants TVA quand le montant net change
   useEffect(() => {
@@ -474,7 +474,7 @@ const ContratGeneratorNew = ({
         }
       }));
     }
-  }, [contratData.negociation?.montantNet, contratData.negociation]);
+  }, [contratData.negociation?.montantNet, contratData.negociation?.tauxTva]);
 
   // Calcul des totaux (déplacé ici pour être utilisable dans les useEffect)
   const calculerTotaux = useCallback(() => {
@@ -517,7 +517,7 @@ const ContratGeneratorNew = ({
         setContratData(prev => ({ ...prev, echeances: updatedEcheances }));
       }
     }
-  }, [contratData.prestations, contratData.echeances, calculerTotaux]);
+  }, [calculerTotaux]); // Retiré les dépendances pour éviter la boucle
 
   const handleInputChange = (section, field, value) => {
     setContratData(prev => ({

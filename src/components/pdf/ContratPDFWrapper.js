@@ -84,7 +84,8 @@ const createSafeData = (data) => {
     artiste: artiste || artisteData || {},
     lieu: lieu || lieuData || {},
     structure: structure || structureData || {},
-    entreprise: entreprise || entrepriseInfo || {}
+    entreprise: entreprise || entrepriseInfo || {},
+    contratData: contratData || data.contratData || null  // Ajout du support pour les données du formulaire
   };
 
   console.log('[DEBUG ContratPDFWrapper] createSafeData input:', data);
@@ -226,6 +227,143 @@ const prepareContractVariables = (safeData) => {
     'representant_entreprise': safeData.entreprise?.representant || 'Non spécifié',
     'fonction_representant': safeData.entreprise?.fonctionRepresentant || 'Non spécifiée',
     
+    // Variables Organisateur (Partie A - si contratData est fourni)
+    ...(safeData.contratData?.organisateur && {
+      'organisateur_raison_sociale': safeData.contratData.organisateur.raisonSociale || 'Non spécifié',
+      'organisateur_adresse': safeData.contratData.organisateur.adresse || 'Non spécifiée',
+      'organisateur_code_postal': safeData.contratData.organisateur.codePostal || 'Non spécifié',
+      'organisateur_ville': safeData.contratData.organisateur.ville || 'Non spécifiée',
+      'organisateur_pays': safeData.contratData.organisateur.pays || 'France',
+      'organisateur_telephone': safeData.contratData.organisateur.telephone || 'Non spécifié',
+      'organisateur_email': safeData.contratData.organisateur.email || 'Non spécifié',
+      'organisateur_siret': safeData.contratData.organisateur.siret || 'Non spécifié',
+      'organisateur_numero_tva': safeData.contratData.organisateur.numeroTva || 'Non spécifié',
+      'organisateur_code_ape': safeData.contratData.organisateur.codeApe || 'Non spécifié',
+      'organisateur_numero_licence': safeData.contratData.organisateur.numeroLicence || 'Non spécifié',
+      'organisateur_signataire': safeData.contratData.organisateur.signataire || 'Non spécifié',
+      'organisateur_qualite': safeData.contratData.organisateur.qualite || 'Non spécifiée',
+    }),
+    
+    // Variables Producteur (Partie B - si contratData est fourni)
+    ...(safeData.contratData?.producteur && {
+      'producteur_raison_sociale': safeData.contratData.producteur.raisonSociale || safeData.entreprise?.nom || 'Non spécifié',
+      'producteur_adresse': safeData.contratData.producteur.adresse || safeData.entreprise?.adresse || 'Non spécifiée',
+      'producteur_code_postal': safeData.contratData.producteur.codePostal || 'Non spécifié',
+      'producteur_ville': safeData.contratData.producteur.ville || 'Non spécifiée',
+      'producteur_pays': safeData.contratData.producteur.pays || 'France',
+      'producteur_telephone': safeData.contratData.producteur.telephone || safeData.entreprise?.telephone || 'Non spécifié',
+      'producteur_email': safeData.contratData.producteur.email || safeData.entreprise?.email || 'Non spécifié',
+      'producteur_siret': safeData.contratData.producteur.siret || safeData.entreprise?.siret || 'Non spécifié',
+      'producteur_numero_tva': safeData.contratData.producteur.numeroTva || 'Non spécifié',
+      'producteur_code_ape': safeData.contratData.producteur.codeApe || 'Non spécifié',
+      'producteur_numero_licence': safeData.contratData.producteur.numeroLicence || 'Non spécifié',
+      'producteur_signataire': safeData.contratData.producteur.signataire || safeData.entreprise?.representant || 'Non spécifié',
+      'producteur_qualite': safeData.contratData.producteur.qualite || safeData.entreprise?.fonctionRepresentant || 'Non spécifiée',
+    }),
+    
+    // Variables Prestations (si contratData est fourni)
+    ...(safeData.contratData?.prestations && {
+      'spectacle_nom': safeData.contratData.prestations.nomSpectacle || 'Non spécifié',
+      'plateau_duree': safeData.contratData.prestations.dureePlateau || 'Non spécifiée',
+      'plateau_contenu': safeData.contratData.prestations.contenuPlateau || 'Non spécifié',
+      'intervenants': safeData.contratData.prestations.intervenants || 'Non spécifiés',
+      'conditions_techniques': safeData.contratData.prestations.conditionsTechniques || 'Non spécifiées',
+      'technique_fournie': safeData.contratData.prestations.techniqueFournie || 'Non spécifiée',
+      'technique_demandee': safeData.contratData.prestations.techniqueDemandee || 'Non spécifiée',
+      'dispositions_particulieres': safeData.contratData.prestations.dispositionsParticulieres || 'Non spécifiées',
+    }),
+    
+    // Variables de calcul (si contratData est fourni)
+    ...(safeData.contratData?.prestations && Array.isArray(safeData.contratData.prestations) && {
+      'total_ht': (() => {
+        const total = safeData.contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantHT) || 0), 0);
+        return total.toFixed(2).replace('.', ',') + ' €';
+      })(),
+      'total_tva': (() => {
+        const total = safeData.contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantTVA) || 0), 0);
+        return total.toFixed(2).replace('.', ',') + ' €';
+      })(),
+      'total_ttc': (() => {
+        const total = safeData.contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantTTC) || 0), 0);
+        return total.toFixed(2).replace('.', ',') + ' €';
+      })(),
+      'total_ttc_lettres': (() => {
+        const total = safeData.contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantTTC) || 0), 0);
+        return montantEnLettres(total);
+      })(),
+      // Première prestation
+      ...(safeData.contratData.prestations[0] && {
+        'prestation_1_description': safeData.contratData.prestations[0].description || 'Non spécifiée',
+        'prestation_1_montant_ht': (parseFloat(safeData.contratData.prestations[0].montantHT) || 0).toFixed(2).replace('.', ',') + ' €',
+        'prestation_1_tva': safeData.contratData.prestations[0].tauxTVA ? `${safeData.contratData.prestations[0].tauxTVA}%` : '0%',
+        'prestation_1_montant_ttc': (parseFloat(safeData.contratData.prestations[0].montantTTC) || 0).toFixed(2).replace('.', ',') + ' €',
+      })
+    }),
+    
+    // Variables Règlement - pour le nouveau système
+    ...(safeData.contratData?.reglement && {
+      'montant_ht': safeData.contratData.reglement.montantHT ? `${safeData.contratData.reglement.montantHT.toFixed(2).replace('.', ',')} €` : 'Non spécifié',
+      'taux_tva': safeData.contratData.reglement.tauxTVA ? `${safeData.contratData.reglement.tauxTVA}%` : '0%',
+      'montant_tva': safeData.contratData.reglement.montantTVA ? `${safeData.contratData.reglement.montantTVA.toFixed(2).replace('.', ',')} €` : 'Non spécifié',
+      'total_ttc': safeData.contratData.reglement.totalTTC ? `${safeData.contratData.reglement.totalTTC.toFixed(2).replace('.', ',')} €` : 'Non spécifié',
+      'total_ttc_lettres': safeData.contratData.reglement.totalTTC ? montantEnLettres(safeData.contratData.reglement.totalTTC) : 'Non spécifié',
+      'mode_reglement': safeData.contratData.reglement.modeReglement || 'Non spécifié',
+      'delai_reglement': safeData.contratData.reglement.delaiReglement || 'Non spécifié',
+    }),
+    
+    // Variables Représentations (si contratData est fourni)
+    ...(safeData.contratData?.representations && {
+      'representation_debut': safeData.contratData.representations.debut || 'Non spécifiée',
+      'representation_fin': safeData.contratData.representations.fin || 'Non spécifiée',
+      'representation_detail': safeData.contratData.representations.representation || 'Non spécifié',
+      'nombre_invitations': safeData.contratData.representations.invitations && safeData.contratData.representations.nbAdmins ? safeData.contratData.representations.nbAdmins : '0',
+      'salle': safeData.contratData.representations.salle || 'Non spécifiée',
+      'horaire_debut': safeData.contratData.representations.horaireDebut || 'Non spécifié',
+      'horaire_fin': safeData.contratData.representations.horaireFin || 'Non spécifié',
+      'nombre_representations': safeData.contratData.representations.nbRepresentations || '1',
+      // Variables avec préfixe pour compatibilité
+      'representation_date_debut': safeData.contratData.representations.debut || 'Non spécifiée',
+      'representation_date_fin': safeData.contratData.representations.fin || 'Non spécifiée',
+      'representation_horaire_debut': safeData.contratData.representations.horaireDebut || 'Non spécifié',
+      'representation_horaire_fin': safeData.contratData.representations.horaireFin || 'Non spécifié',
+      'representation_nombre': safeData.contratData.representations.nbRepresentations || '1',
+      'representation_salle': safeData.contratData.representations.salle || 'Non spécifiée',
+      'representation_type': safeData.contratData.representations.type || 'Concert',
+      'representation_invitations': safeData.contratData.representations.invitations ? safeData.contratData.representations.nbAdmins || '0' : '0',
+    }),
+    
+    // Variables Logistique (si contratData est fourni)
+    ...(safeData.contratData?.logistique && {
+      'restauration': safeData.contratData.logistique.restauration || 'Non spécifiée',
+      'hebergement': safeData.contratData.logistique.hebergement || 'Non spécifié',
+      'transports': safeData.contratData.logistique.transports || 'Non spécifiés',
+      'catering': safeData.contratData.logistique.catering || 'Non spécifié',
+      'loges': safeData.contratData.logistique.loges || 'Non spécifiées',
+      'parking': safeData.contratData.logistique.parking || 'Non spécifié',
+      'autres_logistique': safeData.contratData.logistique.autres || 'Non spécifié',
+    }),
+    // Variables hébergement détaillées (si disponibles)
+    ...(safeData.contratData?.hebergements && safeData.contratData.hebergements.length > 0 && {
+      'hebergement_nombre_total': safeData.contratData.hebergements.reduce((sum, h) => sum + (parseInt(h.singles || 0) + parseInt(h.doubles || 0) * 2), 0).toString(),
+      'hebergement_singles': safeData.contratData.hebergements.reduce((sum, h) => sum + parseInt(h.singles || 0), 0).toString(),
+      'hebergement_doubles': safeData.contratData.hebergements.reduce((sum, h) => sum + parseInt(h.doubles || 0), 0).toString(),
+      'hebergement_arrivee': safeData.contratData.hebergements[0]?.dateArrivee || 'Non spécifiée',
+      'hebergement_depart': safeData.contratData.hebergements[0]?.dateDepart || 'Non spécifiée',
+    }),
+    ...(safeData.contratData?.restaurations && safeData.contratData.restaurations.length > 0 && {
+      'restauration_nombre': safeData.contratData.restaurations.reduce((sum, r) => sum + parseInt(r.nombre || 0), 0).toString(),
+    }),
+    'transport_type': 'Non spécifié', // À mapper si les données sont disponibles
+    
+    // Variables Règlement (si contratData est fourni)
+    ...(safeData.contratData?.echeances && safeData.contratData.echeances.length > 0 && {
+      'echeance_1_nature': safeData.contratData.echeances[0]?.nature || 'Non spécifiée',
+      'echeance_1_date': safeData.contratData.echeances[0]?.date || 'Non spécifiée',
+      'echeance_1_montant': safeData.contratData.echeances[0]?.montant ? `${safeData.contratData.echeances[0].montant} €` : 'Non spécifié',
+    }),
+    'mode_reglement': safeData.contratData?.negociation?.moyenPaiement || 'virement',
+    'delai_paiement': '30 jours', // Valeur par défaut, à ajuster selon les besoins
+    
     // Variables contact (ex-contact) - Support rétrocompatibilité
     'contact_nom': safeData.contact?.nom || safeData.programmateur?.nom || 'Non spécifié',
     'contact_prenom': safeData.contact?.prenom || safeData.programmateur?.prenom || '',
@@ -254,6 +392,9 @@ const prepareContractVariables = (safeData) => {
     'artiste_nom': safeData.artiste?.nom || 'Non spécifié',
     'artiste_genre': safeData.artiste?.genre || 'Non spécifié',
     'artiste_contact': safeData.artiste?.contact || 'Non spécifié',
+    'artiste_representant': safeData.artiste?.representant || safeData.artiste?.contact || 'Non spécifié',
+    'artiste_structure_nom': safeData.artiste?.structureNom || safeData.artiste?.structure || 'Non spécifiée',
+    'artiste_structure_siret': safeData.artiste?.structureSiret || 'Non spécifié',
     
     // Variables concert
     'concert_titre': safeData.concert?.titre || 'Non spécifié',
@@ -263,6 +404,7 @@ const prepareContractVariables = (safeData) => {
       ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(safeData.concert.montant) 
       : 'Non spécifié',
     'concert_montant_lettres': montantEnLettres(safeData.concert?.montant),
+    'concert_type': safeData.concert?.type || 'Concert',
     
     // Variables lieu
     'lieu_nom': safeData.lieu?.nom || 'Non spécifié',
@@ -308,6 +450,16 @@ const prepareContractVariables = (safeData) => {
     'date_mois': format(new Date(), "MMMM", { locale: fr }),
     'date_annee': format(new Date(), "yyyy", { locale: fr }),
     'date_complete': format(new Date(), "dd MMMM yyyy", { locale: fr }),
+    'date_signature': format(new Date(), "dd/MM/yyyy", { locale: fr }),
+    
+    // Variables signature
+    'lieu_signature': safeData.lieu?.ville || 'Non spécifiée',
+    'programmateur_fonction': safeData.contact?.fonction || safeData.programmateur?.fonction || 'Non spécifiée',
+    
+    // Variables spéciales
+    'SAUT_DE_PAGE': '<div style="page-break-after: always;"></div>',
+    'page': '{page}',
+    'total': '{total}',
     
     // Ajouter le type de template comme variable
     'templateType': getTemplateTypeLabel(safeData.template?.type || 'session')

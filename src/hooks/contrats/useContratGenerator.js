@@ -199,7 +199,7 @@ import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 
-export const useContratGenerator = (concert, contact, artiste, lieu) => {
+export const useContratGenerator = (concert, contact, artiste, lieu, contratData = null) => {
   // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
   const programmateur = contact;
   const { currentOrganization } = useOrganization();
@@ -528,6 +528,101 @@ export const useContratGenerator = (concert, contact, artiste, lieu) => {
       representant_entreprise: entrepriseInfo?.representant || 'Non spécifié',
       fonction_representant: entrepriseInfo?.fonctionRepresentant || 'Non spécifiée',
       
+      // Variables Organisateur (Partie A - si contratData est fourni)
+      ...(contratData?.organisateur && {
+        organisateur_raison_sociale: contratData.organisateur.raisonSociale || 'Non spécifié',
+        organisateur_adresse: contratData.organisateur.adresse || 'Non spécifiée',
+        organisateur_code_postal: contratData.organisateur.codePostal || 'Non spécifié',
+        organisateur_ville: contratData.organisateur.ville || 'Non spécifiée',
+        organisateur_pays: contratData.organisateur.pays || 'France',
+        organisateur_telephone: contratData.organisateur.telephone || 'Non spécifié',
+        organisateur_email: contratData.organisateur.email || 'Non spécifié',
+        organisateur_siret: contratData.organisateur.siret || 'Non spécifié',
+        organisateur_numero_tva: contratData.organisateur.numeroTva || 'Non spécifié',
+        organisateur_code_ape: contratData.organisateur.codeApe || 'Non spécifié',
+        organisateur_numero_licence: contratData.organisateur.numeroLicence || 'Non spécifié',
+        organisateur_signataire: contratData.organisateur.signataire || 'Non spécifié',
+        organisateur_qualite: contratData.organisateur.qualite || 'Non spécifiée',
+      }),
+      
+      // Variables Producteur (Partie B - si contratData est fourni)
+      ...(contratData?.producteur && {
+        producteur_raison_sociale: contratData.producteur.raisonSociale || entrepriseInfo?.nom || 'Non spécifié',
+        producteur_adresse: contratData.producteur.adresse || entrepriseInfo?.adresse || 'Non spécifiée',
+        producteur_code_postal: contratData.producteur.codePostal || 'Non spécifié',
+        producteur_ville: contratData.producteur.ville || 'Non spécifiée',
+        producteur_pays: contratData.producteur.pays || 'France',
+        producteur_telephone: contratData.producteur.telephone || entrepriseInfo?.telephone || 'Non spécifié',
+        producteur_email: contratData.producteur.email || entrepriseInfo?.email || 'Non spécifié',
+        producteur_siret: contratData.producteur.siret || entrepriseInfo?.siret || 'Non spécifié',
+        producteur_numero_tva: contratData.producteur.numeroTva || 'Non spécifié',
+        producteur_code_ape: contratData.producteur.codeApe || 'Non spécifié',
+        producteur_numero_licence: contratData.producteur.numeroLicence || 'Non spécifié',
+        producteur_signataire: contratData.producteur.signataire || entrepriseInfo?.representant || 'Non spécifié',
+        producteur_qualite: contratData.producteur.qualite || entrepriseInfo?.fonctionRepresentant || 'Non spécifiée',
+      }),
+      
+      // Variables Prestations (si contratData est fourni)
+      ...(contratData?.prestations && {
+        total_ht: (() => {
+          const total = contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantHT) || 0), 0);
+          return total.toFixed(2).replace('.', ',') + ' €';
+        })(),
+        total_tva: (() => {
+          const total = contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantTVA) || 0), 0);
+          return total.toFixed(2).replace('.', ',') + ' €';
+        })(),
+        total_ttc: (() => {
+          const total = contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantTTC) || 0), 0);
+          return total.toFixed(2).replace('.', ',') + ' €';
+        })(),
+        total_ttc_lettres: (() => {
+          const total = contratData.prestations.reduce((sum, p) => sum + (parseFloat(p.montantTTC) || 0), 0);
+          return montantEnLettres(total);
+        })(),
+        // Première prestation
+        ...(contratData.prestations[0] && {
+          prestation_1_description: contratData.prestations[0].description || 'Non spécifiée',
+          prestation_1_montant_ht: (parseFloat(contratData.prestations[0].montantHT) || 0).toFixed(2).replace('.', ',') + ' €',
+          prestation_1_tva: contratData.prestations[0].tauxTVA ? `${contratData.prestations[0].tauxTVA}%` : '0%',
+          prestation_1_montant_ttc: (parseFloat(contratData.prestations[0].montantTTC) || 0).toFixed(2).replace('.', ',') + ' €',
+        })
+      }),
+      
+      // Variables Représentations (si contratData est fourni)
+      ...(contratData?.representations && {
+        representation_date_debut: contratData.representations.debut || 'Non spécifiée',
+        representation_date_fin: contratData.representations.fin || 'Non spécifiée',
+        representation_horaire_debut: contratData.representations.horaireDebut || 'Non spécifié',
+        representation_horaire_fin: contratData.representations.horaireFin || 'Non spécifié',
+        representation_nombre: contratData.representations.nbRepresentations || '1',
+        representation_salle: contratData.representations.salle || 'Non spécifiée',
+        representation_type: contratData.representations.type || 'Concert',
+        representation_invitations: contratData.representations.invitations ? contratData.representations.nbAdmins || '0' : '0',
+      }),
+      
+      // Variables Logistique (si contratData est fourni)
+      ...(contratData?.hebergements && contratData.hebergements.length > 0 && {
+        hebergement_nombre_total: contratData.hebergements.reduce((sum, h) => sum + (parseInt(h.singles || 0) + parseInt(h.doubles || 0) * 2), 0).toString(),
+        hebergement_singles: contratData.hebergements.reduce((sum, h) => sum + parseInt(h.singles || 0), 0).toString(),
+        hebergement_doubles: contratData.hebergements.reduce((sum, h) => sum + parseInt(h.doubles || 0), 0).toString(),
+        hebergement_arrivee: contratData.hebergements[0]?.dateArrivee || 'Non spécifiée',
+        hebergement_depart: contratData.hebergements[0]?.dateDepart || 'Non spécifiée',
+      }),
+      ...(contratData?.restaurations && contratData.restaurations.length > 0 && {
+        restauration_nombre: contratData.restaurations.reduce((sum, r) => sum + parseInt(r.nombre || 0), 0).toString(),
+      }),
+      transport_type: 'Non spécifié', // À mapper si les données sont disponibles
+      
+      // Variables Règlement (si contratData est fourni)
+      ...(contratData?.echeances && contratData.echeances.length > 0 && {
+        echeance_1_nature: contratData.echeances[0]?.nature || 'Non spécifiée',
+        echeance_1_date: contratData.echeances[0]?.date || 'Non spécifiée',
+        echeance_1_montant: contratData.echeances[0]?.montant ? `${contratData.echeances[0].montant} €` : 'Non spécifié',
+      }),
+      mode_reglement: contratData?.negociation?.moyenPaiement || 'virement',
+      delai_paiement: '30 jours', // Valeur par défaut, à ajuster selon les besoins
+      
       // Variables contact (nouvelle nomenclature)
       contact_nom: contact?.nom || 'Non spécifié',
       contact_prenom: contact?.prenom || '',
@@ -580,6 +675,9 @@ export const useContratGenerator = (concert, contact, artiste, lieu) => {
       artiste_nom: artiste?.nom || 'Non spécifié',
       artiste_genre: artiste?.genre || 'Non spécifié',
       artiste_contact: artiste?.contact || 'Non spécifié',
+      artiste_representant: artiste?.representant || artiste?.contact || 'Non spécifié',
+      artiste_structure_nom: artiste?.structureNom || artiste?.structure || 'Non spécifiée',
+      artiste_structure_siret: artiste?.structureSiret || 'Non spécifié',
       
       // Variables concert
       concert_titre: concert?.titre || 'Non spécifié',
@@ -620,6 +718,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu) => {
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
         : 'Non spécifié',
       concert_montant_lettres: montantEnLettres(concert?.montant),
+      concert_type: contratData?.representations?.type || concert?.type || 'Concert',
       
       // Variables lieu
       lieu_nom: lieu?.nom || 'Non spécifié',
@@ -669,6 +768,16 @@ export const useContratGenerator = (concert, contact, artiste, lieu) => {
         month: 'long', 
         year: 'numeric' 
       }),
+      date_signature: new Date().toLocaleDateString('fr-FR'),
+      
+      // Variables signature
+      lieu_signature: lieu?.ville || 'Non spécifiée',
+      programmateur_fonction: contact?.fonction || 'Non spécifiée',
+      
+      // Variables spéciales
+      SAUT_DE_PAGE: '<div style="page-break-after: always;"></div>',
+      page: '{page}',
+      total: '{total}',
       
       // Variables anciennes pour compatibilité (à supprimer plus tard)
       nomProgrammateur: contact?.nom || 'Non spécifié',
@@ -724,7 +833,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu) => {
         : 'Non spécifié',
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [structureData, programmateur, artiste, lieu, concert, entrepriseInfo]);
+  }, [structureData, programmateur, artiste, lieu, concert, entrepriseInfo, contratData]);
   
   // Fonction pour sauvegarder le contrat généré
   const saveGeneratedContract = async (url) => {

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, Container, Row, Col, Form, Button, Accordion, Alert, Spinner } from 'react-bootstrap';
 import { getPreContratsByConcert, updatePreContrat } from '@/services/preContratService';
+import tachesService from '@/services/tachesService';
+import { auth } from '@/services/firebase-service';
 import styles from './ConfirmationPage.module.css';
 
 /**
@@ -220,6 +222,28 @@ function ConfirmationPage({ concertId: propConcertId }) {
       };
       
       await updatePreContrat(preContrat.id, donneesValidees);
+      
+      // Créer automatiquement une tâche pour la création du contrat
+      try {
+        const user = auth.currentUser;
+        await tachesService.creerTache({
+          titre: `Créer le contrat pour ${mesInfos.raisonSociale || infosOrganisateur.raisonSociale || 'l\'organisateur'}`,
+          description: `Le pré-contrat a été validé. Il faut maintenant créer le contrat définitif.`,
+          type: 'contrat',
+          priorite: 'haute',
+          dateEcheance: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 jours
+          organizationId: preContrat.organizationId,
+          concertId: preContrat.concertId,
+          contactId: preContrat.contactId || null,
+          entityType: 'pre_contrat',
+          entityId: preContrat.id,
+          automatique: true,
+          createdBy: user?.uid || null
+        });
+        console.log('[ConfirmationPage] Tâche automatique créée pour la création du contrat');
+      } catch (error) {
+        console.error('[ConfirmationPage] Erreur création tâche automatique:', error);
+      }
       
       alert('Confirmation validée avec succès !');
       navigate(-1); // Retour à la page précédente

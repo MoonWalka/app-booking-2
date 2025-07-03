@@ -18,6 +18,7 @@ import { db, auth } from './firebase-service';
 import emailService from './emailService';
 import { debugLog } from '@/utils/logUtils';
 import { generateSecureToken } from '@/utils/cryptoUtils';
+import tachesService from '@/services/tachesService';
 
 class PreContratService {
   /**
@@ -82,6 +83,27 @@ class PreContratService {
         collection(db, 'preContrats'),
         preContrat
       );
+
+      // Créer automatiquement une tâche pour l'envoi du pré-contrat
+      try {
+        await tachesService.creerTache({
+          titre: `Envoyer le pré-contrat à ${preContratData.raisonSociale || 'la structure'}`,
+          description: `Le pré-contrat a été créé. Il faut maintenant l'envoyer aux destinataires.`,
+          type: 'envoi_document',
+          priorite: 'haute',
+          dateEcheance: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 jours
+          organizationId,
+          concertId,
+          contactId: preContratData.contactId || null,
+          entityType: 'pre_contrat',
+          entityId: docRef.id,
+          automatique: true,
+          createdBy: user.uid
+        });
+        debugLog('[PreContratService] Tâche automatique créée pour l\'envoi du pré-contrat', 'success');
+      } catch (error) {
+        debugLog('[PreContratService] Erreur création tâche automatique:', error, 'warning');
+      }
 
       return {
         id: docRef.id,
@@ -223,6 +245,27 @@ class PreContratService {
             messageId: r.messageId
           }))]
         });
+
+        // Créer automatiquement une tâche pour la validation du pré-contrat
+        try {
+          await tachesService.creerTache({
+            titre: `Faire valider le pré-contrat par ${preContrat.raisonSociale || 'la structure'}`,
+            description: `Le pré-contrat a été envoyé. En attente de validation par le destinataire.`,
+            type: 'validation',
+            priorite: 'normale',
+            dateEcheance: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours
+            organizationId: preContrat.organizationId,
+            concertId: preContrat.concertId,
+            contactId: preContrat.contactId || null,
+            entityType: 'pre_contrat',
+            entityId: preContratId,
+            automatique: true,
+            createdBy: user.uid
+          });
+          debugLog('[PreContratService] Tâche automatique créée pour la validation du pré-contrat', 'success');
+        } catch (error) {
+          debugLog('[PreContratService] Erreur création tâche automatique:', error, 'warning');
+        }
       }
 
       return {

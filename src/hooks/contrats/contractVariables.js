@@ -8,7 +8,37 @@
 
 // Variables disponibles pour les templates de contrat
 export const CONTRACT_VARIABLES = {
-  // Variables entreprise
+  // Variables Organisateur (nouveau système - partie A)
+  'organisateur_raison_sociale': { label: 'Raison sociale de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.raisonSociale' },
+  'organisateur_adresse': { label: 'Adresse de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.adresse' },
+  'organisateur_code_postal': { label: 'Code postal de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.codePostal' },
+  'organisateur_ville': { label: 'Ville de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.ville' },
+  'organisateur_siret': { label: 'SIRET de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.siret' },
+  'organisateur_numero_tva': { label: 'N° TVA de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.numeroTva' },
+  'organisateur_code_ape': { label: 'Code APE de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.codeApe' },
+  'organisateur_numero_licence': { label: 'N° licence de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.numeroLicence' },
+  'organisateur_telephone': { label: 'Téléphone de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.telephone' },
+  'organisateur_email': { label: 'Email de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.email' },
+  'organisateur_site': { label: 'Site web de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.site' },
+  'organisateur_signataire': { label: 'Signataire de l\'organisateur', category: 'organisateur', source: 'contratData.organisateur.signataire' },
+  'organisateur_qualite': { label: 'Qualité du signataire', category: 'organisateur', source: 'contratData.organisateur.qualite' },
+  
+  // Variables Producteur (nouveau système - partie B)
+  'producteur_raison_sociale': { label: 'Raison sociale du producteur', category: 'producteur', source: 'contratData.producteur.raisonSociale' },
+  'producteur_adresse': { label: 'Adresse du producteur', category: 'producteur', source: 'contratData.producteur.adresse' },
+  'producteur_code_postal': { label: 'Code postal du producteur', category: 'producteur', source: 'contratData.producteur.codePostal' },
+  'producteur_ville': { label: 'Ville du producteur', category: 'producteur', source: 'contratData.producteur.ville' },
+  'producteur_siret': { label: 'SIRET du producteur', category: 'producteur', source: 'contratData.producteur.siret' },
+  'producteur_numero_tva': { label: 'N° TVA du producteur', category: 'producteur', source: 'contratData.producteur.numeroTva' },
+  'producteur_code_ape': { label: 'Code APE du producteur', category: 'producteur', source: 'contratData.producteur.codeApe' },
+  'producteur_numero_licence': { label: 'N° licence du producteur', category: 'producteur', source: 'contratData.producteur.numeroLicence' },
+  'producteur_telephone': { label: 'Téléphone du producteur', category: 'producteur', source: 'contratData.producteur.telephone' },
+  'producteur_email': { label: 'Email du producteur', category: 'producteur', source: 'contratData.producteur.email' },
+  'producteur_site': { label: 'Site web du producteur', category: 'producteur', source: 'contratData.producteur.site' },
+  'producteur_signataire': { label: 'Signataire du producteur', category: 'producteur', source: 'contratData.producteur.signataire' },
+  'producteur_qualite': { label: 'Qualité du signataire', category: 'producteur', source: 'contratData.producteur.qualite' },
+  
+  // Variables entreprise (ancien système - rétrocompatibilité)
   'nom_entreprise': { label: 'Nom de votre entreprise', category: 'entreprise', source: 'entreprise.nom' },
   'adresse_entreprise': { label: 'Adresse de votre entreprise', category: 'entreprise', source: 'entreprise.adresse' },
   'siret_entreprise': { label: 'SIRET de votre entreprise', category: 'entreprise', source: 'entreprise.siret' },
@@ -62,6 +92,44 @@ export const CONTRACT_VARIABLES = {
   'concert_heure': { label: 'Heure du concert', category: 'concert', source: 'concert.heure' },
   'concert_montant': { label: 'Montant (en chiffres)', category: 'concert', source: 'concert.montant', format: 'currency' },
   'concert_montant_lettres': { label: 'Montant (en lettres)', category: 'concert', source: 'concert.montant', format: 'currency_letters' },
+  
+  // Variables Prestations (nouveau système)
+  'spectacle_nom': { label: 'Nom du spectacle', category: 'prestations', source: 'contratData.prestations.nomSpectacle' },
+  'plateau_duree': { label: 'Durée du plateau', category: 'prestations', source: 'contratData.prestations.dureePlateau' },
+  'plateau_contenu': { label: 'Contenu du plateau', category: 'prestations', source: 'contratData.prestations.contenuPlateau' },
+  'intervenants': { label: 'Intervenants', category: 'prestations', source: 'contratData.prestations.intervenants' },
+  'conditions_techniques': { label: 'Conditions techniques', category: 'prestations', source: 'contratData.prestations.conditionsTechniques' },
+  'technique_fournie': { label: 'Technique fournie', category: 'prestations', source: 'contratData.prestations.techniqueFournie' },
+  'technique_demandee': { label: 'Technique demandée', category: 'prestations', source: 'contratData.prestations.techniqueDemandee' },
+  'dispositions_particulieres': { label: 'Dispositions particulières', category: 'prestations', source: 'contratData.prestations.dispositionsParticulieres' },
+  
+  // Variables Représentations (nouveau système)
+  'representation_debut': { label: 'Début représentation', category: 'representations', source: 'contratData.representations.debut' },
+  'representation_fin': { label: 'Fin représentation', category: 'representations', source: 'contratData.representations.fin' },
+  'representation_detail': { label: 'Détail représentation', category: 'representations', source: 'contratData.representations.representation' },
+  'nombre_invitations': { label: 'Nombre d\'invitations', category: 'representations', source: 'contratData.representations.nbAdmins' },
+  'salle': { label: 'Salle', category: 'representations', source: 'contratData.representations.salle' },
+  'horaire_debut': { label: 'Horaire début', category: 'representations', source: 'contratData.representations.horaireDebut' },
+  'horaire_fin': { label: 'Horaire fin', category: 'representations', source: 'contratData.representations.horaireFin' },
+  'nombre_representations': { label: 'Nombre de représentations', category: 'representations', source: 'contratData.representations.nbRepresentations' },
+  
+  // Variables Logistique (nouveau système)
+  'restauration': { label: 'Restauration', category: 'logistique', source: 'contratData.logistique.restauration' },
+  'hebergement': { label: 'Hébergement', category: 'logistique', source: 'contratData.logistique.hebergement' },
+  'transports': { label: 'Transports', category: 'logistique', source: 'contratData.logistique.transports' },
+  'catering': { label: 'Catering', category: 'logistique', source: 'contratData.logistique.catering' },
+  'loges': { label: 'Loges', category: 'logistique', source: 'contratData.logistique.loges' },
+  'parking': { label: 'Parking', category: 'logistique', source: 'contratData.logistique.parking' },
+  'autres_logistique': { label: 'Autres (logistique)', category: 'logistique', source: 'contratData.logistique.autres' },
+  
+  // Variables Règlement (nouveau système)
+  'montant_ht': { label: 'Montant HT', category: 'reglement', source: 'contratData.reglement.montantHT', format: 'currency' },
+  'taux_tva': { label: 'Taux TVA', category: 'reglement', source: 'contratData.reglement.tauxTVA' },
+  'montant_tva': { label: 'Montant TVA', category: 'reglement', source: 'contratData.reglement.montantTVA', format: 'currency' },
+  'total_ttc': { label: 'Total TTC', category: 'reglement', source: 'contratData.reglement.totalTTC', format: 'currency' },
+  'total_ttc_lettres': { label: 'Total TTC en lettres', category: 'reglement', source: 'contratData.reglement.totalTTC', format: 'currency_letters' },
+  'mode_reglement': { label: 'Mode de règlement', category: 'reglement', source: 'contratData.reglement.modeReglement' },
+  'delai_reglement': { label: 'Délai de règlement', category: 'reglement', source: 'contratData.reglement.delaiReglement' },
   
   // Variables lieu
   'lieu_nom': { label: 'Nom du lieu', category: 'lieu', source: 'lieu.nom' },
@@ -241,7 +309,37 @@ export const replaceVariablesWithMockData = (content) => {
   
   // Support des deux formats : {variable} et [variable]
   return content
-    // Format avec accolades
+    // Variables Organisateur (nouveau système)
+    .replace(/{organisateur_raison_sociale}/g, 'Association Culturelle ABC')
+    .replace(/{organisateur_adresse}/g, '123 Avenue des Arts')
+    .replace(/{organisateur_code_postal}/g, '75001')
+    .replace(/{organisateur_ville}/g, 'Paris')
+    .replace(/{organisateur_siret}/g, '123 456 789 00012')
+    .replace(/{organisateur_numero_tva}/g, 'FR12345678901')
+    .replace(/{organisateur_code_ape}/g, '9001Z')
+    .replace(/{organisateur_numero_licence}/g, '2-123456')
+    .replace(/{organisateur_telephone}/g, '01 23 45 67 89')
+    .replace(/{organisateur_email}/g, 'contact@organisateur.fr')
+    .replace(/{organisateur_site}/g, 'www.organisateur.fr')
+    .replace(/{organisateur_signataire}/g, 'Marie Martin')
+    .replace(/{organisateur_qualite}/g, 'Présidente')
+    
+    // Variables Producteur (nouveau système)
+    .replace(/{producteur_raison_sociale}/g, 'Productions XYZ')
+    .replace(/{producteur_adresse}/g, '456 Rue du Spectacle')
+    .replace(/{producteur_code_postal}/g, '75009')
+    .replace(/{producteur_ville}/g, 'Paris')
+    .replace(/{producteur_siret}/g, '987 654 321 00098')
+    .replace(/{producteur_numero_tva}/g, 'FR98765432101')
+    .replace(/{producteur_code_ape}/g, '9002Z')
+    .replace(/{producteur_numero_licence}/g, '3-987654')
+    .replace(/{producteur_telephone}/g, '01 98 76 54 32')
+    .replace(/{producteur_email}/g, 'contact@producteur.fr')
+    .replace(/{producteur_site}/g, 'www.producteur.fr')
+    .replace(/{producteur_signataire}/g, 'Jean Dupont')
+    .replace(/{producteur_qualite}/g, 'Gérant')
+    
+    // Variables contact (ancien format)
     .replace(/{contact_nom}/g, 'Jean Dupont')
     .replace(/{contact_structure}/g, 'Association Culturelle XYZ')
     .replace(/{contact_email}/g, 'contact@asso-xyz.fr')
@@ -274,6 +372,44 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{structure_email}/g, 'structure@asso-xyz.fr')
     .replace(/{structure_telephone}/g, '01 23 45 67 89')
     .replace(/{structure_type}/g, 'Association')
+    
+    // Variables Prestations
+    .replace(/{spectacle_nom}/g, 'Concert Rock Alternatif')
+    .replace(/{plateau_duree}/g, '90 minutes')
+    .replace(/{plateau_contenu}/g, 'Concert avec 12 morceaux originaux')
+    .replace(/{intervenants}/g, '4 musiciens (guitare, basse, batterie, chant)')
+    .replace(/{conditions_techniques}/g, 'Fiche technique détaillée fournie')
+    .replace(/{technique_fournie}/g, 'Sonorisation et éclairage complets')
+    .replace(/{technique_demandee}/g, 'Plateau 8m x 6m minimum')
+    .replace(/{dispositions_particulieres}/g, 'Accès véhicule pour déchargement')
+    
+    // Variables Représentations
+    .replace(/{representation_debut}/g, '20h30')
+    .replace(/{representation_fin}/g, '22h00')
+    .replace(/{representation_detail}/g, 'Concert unique le samedi soir')
+    .replace(/{nombre_invitations}/g, '10')
+    .replace(/{salle}/g, 'Grande salle')
+    .replace(/{horaire_debut}/g, '20h30')
+    .replace(/{horaire_fin}/g, '22h00')
+    .replace(/{nombre_representations}/g, '1')
+    
+    // Variables Logistique
+    .replace(/{restauration}/g, 'Repas pour 4 personnes')
+    .replace(/{hebergement}/g, '2 chambres doubles')
+    .replace(/{transports}/g, 'Défraiement kilométrique')
+    .replace(/{catering}/g, 'Fruits et boissons en loge')
+    .replace(/{loges}/g, '1 loge avec sanitaires')
+    .replace(/{parking}/g, 'Place pour un véhicule utilitaire')
+    .replace(/{autres_logistique}/g, 'Accès dès 16h pour installation')
+    
+    // Variables Règlement
+    .replace(/{montant_ht}/g, '800,00')
+    .replace(/{taux_tva}/g, '5,5%')
+    .replace(/{montant_tva}/g, '44,00')
+    .replace(/{total_ttc}/g, '844,00')
+    .replace(/{total_ttc_lettres}/g, 'Huit cent quarante-quatre euros')
+    .replace(/{mode_reglement}/g, 'Virement bancaire')
+    .replace(/{delai_reglement}/g, '30 jours après réception de facture')
     // Format avec crochets (pour compatibilité)
     .replace(/\[contact_nom\]/g, 'Jean Dupont')
     .replace(/\[contact_structure\]/g, 'Association Culturelle XYZ')
@@ -306,5 +442,16 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/\[structure_ville\]/g, 'Paris')
     .replace(/\[structure_email\]/g, 'structure@asso-xyz.fr')
     .replace(/\[structure_telephone\]/g, '01 23 45 67 89')
-    .replace(/\[structure_type\]/g, 'Association');
+    .replace(/\[structure_type\]/g, 'Association')
+    
+    // Nouvelles variables avec crochets (rétrocompatibilité)
+    .replace(/\[organisateur_raison_sociale\]/g, 'Association Culturelle ABC')
+    .replace(/\[organisateur_adresse\]/g, '123 Avenue des Arts')
+    .replace(/\[organisateur_siret\]/g, '123 456 789 00012')
+    .replace(/\[producteur_raison_sociale\]/g, 'Productions XYZ')
+    .replace(/\[producteur_siret\]/g, '987 654 321 00098')
+    .replace(/\[total_ttc\]/g, '844,00')
+    .replace(/\[total_ttc_lettres\]/g, 'Huit cent quarante-quatre euros')
+    .replace(/\[montant_ht\]/g, '800,00')
+    .replace(/\[mode_reglement\]/g, 'Virement bancaire');
 };

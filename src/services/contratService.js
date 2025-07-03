@@ -13,6 +13,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from './firebase-service';
+import tachesService from '@/services/tachesService';
 
 /**
  * Service de gestion des contrats
@@ -51,6 +52,32 @@ const contratService = {
       await setDoc(contratRef, contratToSave, { merge: true });
 
       console.log('[ContratService] Contrat sauvegardé avec succès');
+      
+      // Si c'est une nouvelle création de contrat, créer une tâche automatique
+      if (!contratData.createdAt && contratData.status === 'draft') {
+        try {
+          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
+          const concertData = concertDoc.exists() ? concertDoc.data() : {};
+          
+          await tachesService.creerTache({
+            titre: `Envoyer le contrat à ${contratData.organisateur?.raisonSociale || 'l\'organisateur'}`,
+            description: `Le contrat pour ${concertData.titre || 'le concert'} a été créé. Il faut maintenant l'envoyer pour signature.`,
+            type: 'envoi_document',
+            priorite: 'haute',
+            dateEcheance: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 jours
+            organizationId,
+            concertId,
+            contactId: contratData.organisateur?.contactId || null,
+            entityType: 'contrat',
+            entityId: concertId,
+            automatique: true,
+            createdBy: contratData.createdBy || null
+          });
+          console.log('[ContratService] Tâche automatique créée pour l\'envoi du contrat');
+        } catch (error) {
+          console.error('[ContratService] Erreur création tâche automatique:', error);
+        }
+      }
       
       // Retourner le contrat sauvegardé avec son ID
       return {
@@ -118,6 +145,34 @@ const contratService = {
         contratId: concertId,
         updatedAt: serverTimestamp()
       });
+      
+      // Créer une tâche automatique si le contrat est signé
+      if (status === 'signed') {
+        try {
+          const concertDoc = await getDoc(concertRef);
+          const concertData = concertDoc.exists() ? concertDoc.data() : {};
+          const contratDoc = await getDoc(contratRef);
+          const contratData = contratDoc.exists() ? contratDoc.data() : {};
+          
+          await tachesService.creerTache({
+            titre: `Créer la facture pour ${contratData.organisateur?.raisonSociale || 'l\'organisateur'}`,
+            description: `Le contrat pour ${concertData.titre || 'le concert'} a été signé. Il faut maintenant créer la facture.`,
+            type: 'facture',
+            priorite: 'normale',
+            dateEcheance: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 jours
+            organizationId: contratData.organizationId,
+            concertId,
+            contactId: contratData.organisateur?.contactId || null,
+            entityType: 'contrat',
+            entityId: concertId,
+            automatique: true,
+            createdBy: contratData.updatedBy || null
+          });
+          console.log('[ContratService] Tâche automatique créée pour la création de la facture');
+        } catch (error) {
+          console.error('[ContratService] Erreur création tâche automatique:', error);
+        }
+      }
       
       console.log('[ContratService] Statut du contrat mis à jour avec succès');
     } catch (error) {

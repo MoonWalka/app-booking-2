@@ -1,6 +1,7 @@
 import { db, collection, doc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, query, where, orderBy, limit, serverTimestamp } from './firebase-service';
 import { formatMontant, formatDate } from '@/utils/formatters';
 import { toWords } from '@/utils/numberToWords';
+import tachesService from '@/services/tachesService';
 
 /**
  * Service de gestion des factures
@@ -650,6 +651,48 @@ class FactureService {
       };
 
       const docRef = await addDoc(facturesRef, newFacture);
+      
+      // Créer automatiquement une tâche pour l'envoi de la facture
+      try {
+        // Récupérer les infos du concert si disponible
+        let concertInfo = '';
+        let structureName = 'le client';
+        if (factureData.concertId) {
+          try {
+            const concertRef = doc(db, 'concerts', factureData.concertId);
+            const concertDoc = await getDoc(concertRef);
+            if (concertDoc.exists()) {
+              const concertData = concertDoc.data();
+              concertInfo = concertData.titre || concertData.nom || '';
+            }
+          } catch (e) {
+            console.log('Impossible de récupérer les infos du concert');
+          }
+        }
+        
+        if (factureData.structure?.nom) {
+          structureName = factureData.structure.nom;
+        }
+        
+        await tachesService.creerTache({
+          titre: `Envoyer la facture ${factureData.numeroFacture} à ${structureName}`,
+          description: `La facture pour ${concertInfo || 'la prestation'} a été créée. Il faut maintenant l'envoyer au client.`,
+          type: 'envoi_document',
+          priorite: 'haute',
+          dateEcheance: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 jours
+          organizationId: organizationId,
+          concertId: factureData.concertId || null,
+          contactId: factureData.contactId || null,
+          entityType: 'facture',
+          entityId: docRef.id,
+          automatique: true,
+          createdBy: userId
+        });
+        console.log('[FactureService] Tâche automatique créée pour l\'envoi de la facture');
+      } catch (error) {
+        console.error('[FactureService] Erreur création tâche automatique:', error);
+      }
+      
       return docRef.id;
     } catch (error) {
       console.error('Erreur lors de la création de la facture:', error);

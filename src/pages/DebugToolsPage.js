@@ -7,7 +7,6 @@ import ContactCreationTester from '@/components/debug/ContactCreationTester';
 import EntityCreationTester from '@/components/debug/EntityCreationTester';
 import LieuMapDebug from '@/components/debug/LieuMapDebug';
 import RIBDebugger from '@/components/debug/RIBDebugger';
-import RelancesAuditTool from '@/components/debug/RelancesAuditTool';
 import ContactEmailDebug from '@/components/debug/ContactEmailDebug';
 import ArtisteSearchDebug from '@/components/debug/ArtisteSearchDebug';
 import ArtisteSearchLiveDebug from '@/components/debug/ArtisteSearchLiveDebug';
@@ -22,7 +21,6 @@ import ConcertContactsDebug from '@/components/debug/ConcertContactsDebug';
 import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic';
 import UnifiedContactSelectorTest from '@/components/debug/UnifiedContactSelectorTest';
 import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest';
-import RelancesCompleteDiagnostic from '@/components/debug/RelancesCompleteDiagnostic';
 import BrevoDiagnostic from '@/components/debug/BrevoDiagnostic';
 import ParametresMigration from '@/components/debug/ParametresMigration';
 import BrevoKeyRecovery from '@/components/debug/BrevoKeyRecovery';
@@ -127,14 +125,6 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="rib" title="Debug RIB">
           <RIBDebugger />
-        </Tab>
-        
-        <Tab eventKey="relances" title="Audit Relances">
-          <RelancesAuditTool />
-        </Tab>
-        
-        <Tab eventKey="relances-diagnostic" title="🔍 Diagnostic Relances Complet">
-          <RelancesCompleteDiagnostic />
         </Tab>
         
         <Tab eventKey="contact-email" title="Debug Email Contact">

@@ -2,10 +2,8 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useResponsive } from '@/hooks/common';
-import { useConcertWatcher } from '@/hooks/concerts/useConcertWatcher';
-
 // Imports directs des composants
-import ConcertsDesktopView from './desktop/ConcertViewWithRelances';
+import ConcertsDesktopView from './desktop/ConcertView';
 import ConcertsMobileView from './mobile/ConcertView';
 
 /**
@@ -26,10 +24,6 @@ const ConcertDetails = ({ id: propId }) => {
 
   // LOG DEBUG : montage du composant ConcertDetails
   console.log('[DEBUG][ConcertDetails] Montage avec id:', id, '| propId:', propId, '| paramId:', paramId, '| isMobile:', isMobile, '| isEditMode:', isEditMode);
-  
-  // Surveiller les changements du concert pour déclencher les relances automatiques
-  // Note: on passe l'ID même s'il est null, le hook gère les cas d'ID invalide
-  useConcertWatcher(id, { enabled: !isEditMode && !!id });
   
   // Vérifier qu'on a un ID valide
   if (!id) {

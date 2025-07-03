@@ -1,8 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import useConcertDetailsWithRoles from '@/hooks/concerts/useConcertDetailsWithRoles';
-import ConcertViewWithRelancesWithRoles from './desktop/ConcertViewWithRelancesWithRoles';
-import ConcertViewWithRelances from './desktop/ConcertViewWithRelances';
+import ConcertView from './desktop/ConcertView';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import ErrorDisplay from '@/components/common/ErrorDisplay';
 
@@ -57,7 +56,7 @@ const ConcertDetailsWithRoles = () => {
   // Utiliser la vue avec rôles si on a plusieurs contacts ou des contacts avec rôles
   if (hasMultipleContacts || (allContacts && allContacts.length > 0)) {
     return (
-      <ConcertViewWithRelancesWithRoles
+      <ConcertView
         {...commonProps}
         allContacts={allContacts}
         getRoleLabel={getRoleLabel}
@@ -66,7 +65,7 @@ const ConcertDetailsWithRoles = () => {
   }
 
   // Sinon, utiliser la vue classique pour la compatibilité
-  return <ConcertViewWithRelances {...commonProps} />;
+  return <ConcertView {...commonProps} />;
 };
 
 export default ConcertDetailsWithRoles;

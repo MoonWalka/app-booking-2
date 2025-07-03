@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { APP_NAME } from '@/config.js';
 import { mapTerm } from '@/utils/terminologyMapping';
-import RelancesNotification from '@/components/relances/RelancesNotification';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -40,8 +39,7 @@ const Navbar = () => {
             </li>
           </ul>
           <div className={styles.dFlex}>
-            <RelancesNotification />
-            <span className={`${styles.navbarText} ${styles.me3} ${styles.ms3}`}>Utilisateur test</span>
+            <span className={`${styles.navbarText} ${styles.me3}`}>Utilisateur test</span>
             <Link className={styles.btnOutlineLight} to="/login">Déconnexion</Link>
           </div>
         </div>

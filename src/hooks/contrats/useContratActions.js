@@ -6,7 +6,6 @@ import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 // import brevoTemplateService from '@/services/brevoTemplateService'; // TEMPORAIREMENT DÉSACTIVÉ
 import { debugLog } from '@/utils/logUtils';
-import relancesAutomatiquesService from '@/services/relancesAutomatiquesService';
 
 /**
  * Hook to manage contract actions (mark as sent, signed, deletion)
@@ -16,20 +15,6 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
   const [isActionLoading, setIsActionLoading] = useState(false);
   const navigate = useNavigate();
   const { currentOrganization } = useOrganization();
-
-  // Fonction helper pour réévaluer les relances après changement de statut
-  const reevaluerRelances = async () => {
-    try {
-      if (concert?.id && currentOrganization?.id) {
-        debugLog('[useContratActions] Réévaluation des relances après changement de statut contrat');
-        await relancesAutomatiquesService.reevaluerRelancesConcert(concert.id, currentOrganization.id);
-        debugLog('[useContratActions] Relances réévaluées avec succès');
-      }
-    } catch (error) {
-      console.error('Erreur lors de la réévaluation des relances:', error);
-      // Ne pas faire échouer l'action principale si les relances échouent
-    }
-  };
 
   // Vérifier l'appartenance du contrat à l'organisation
   const verifyContratOwnership = async () => {
@@ -84,9 +69,6 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
         }
         
         alert('Envoi annulé. Le contrat est maintenant marqué comme généré.');
-        
-        // Réévaluer les relances automatiques
-        await reevaluerRelances();
         
         // Forcer le rechargement des données pour mettre à jour l'affichage
         if (refreshData && typeof refreshData === 'function') {
@@ -183,9 +165,6 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
       
       alert('Le contrat a été marqué comme envoyé. N\'oubliez pas de l\'envoyer manuellement au contact.');
       
-      // Réévaluer les relances automatiques
-      await reevaluerRelances();
-      
       // Forcer le rechargement des données pour mettre à jour l'affichage
       if (refreshData && typeof refreshData === 'function') {
         refreshData();
@@ -227,9 +206,6 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
         
         alert('Signature annulée. Le contrat est maintenant marqué comme envoyé.');
         
-        // Réévaluer les relances automatiques
-        await reevaluerRelances();
-        
         // Forcer le rechargement des données
         if (refreshData && typeof refreshData === 'function') {
           refreshData();
@@ -251,9 +227,6 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
         }
         
         alert('Le contrat a été marqué comme signé');
-        
-        // Réévaluer les relances automatiques
-        await reevaluerRelances();
         
         // Forcer le rechargement des données
         if (refreshData && typeof refreshData === 'function') {

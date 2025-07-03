@@ -68,20 +68,6 @@ class LiaisonsService {
 
       const docRef = await addDoc(collection(db, COLLECTION_NAME), liaisonData);
       console.log('[LiaisonsService] Liaison créée:', docRef.id);
-      
-      // Mettre à jour le statut isPersonneLibre de la personne
-      try {
-        const personneRef = doc(db, 'personnes', validation.data.personneId);
-        await updateDoc(personneRef, {
-          isPersonneLibre: false,
-          updatedAt: serverTimestamp(),
-          updatedBy: userId
-        });
-        console.log('[LiaisonsService] Statut isPersonneLibre mis à jour pour la personne:', validation.data.personneId);
-      } catch (error) {
-        console.error('[LiaisonsService] Erreur mise à jour isPersonneLibre:', error);
-        // On ne fait pas échouer la création de la liaison pour ça
-      }
 
       return {
         success: true,
@@ -259,30 +245,6 @@ class LiaisonsService {
 
       console.log('[LiaisonsService] Liaison désactivée:', liaisonId);
       
-      // Vérifier si la personne n'a plus aucune liaison active
-      try {
-        const activeLiaisonsQuery = query(
-          collection(db, COLLECTION_NAME),
-          where('personneId', '==', liaisonData.personneId),
-          where('actif', '==', true)
-        );
-        const activeLiaisonsSnapshot = await getDocs(activeLiaisonsQuery);
-        
-        // Si plus aucune liaison active, marquer la personne comme libre
-        if (activeLiaisonsSnapshot.empty) {
-          const personneRef = doc(db, 'personnes', liaisonData.personneId);
-          await updateDoc(personneRef, {
-            isPersonneLibre: true,
-            updatedAt: serverTimestamp(),
-            updatedBy: userId
-          });
-          console.log('[LiaisonsService] Personne marquée comme libre:', liaisonData.personneId);
-        }
-      } catch (error) {
-        console.error('[LiaisonsService] Erreur vérification personne libre:', error);
-        // On ne fait pas échouer la dissociation pour ça
-      }
-      
       return {
         success: true,
         id: liaisonId
@@ -317,21 +279,6 @@ class LiaisonsService {
         dateFin: null,
         dateDebut: new Date()
       }, userId);
-      
-      // Marquer la personne comme non libre
-      if (result.success) {
-        try {
-          const personneRef = doc(db, 'personnes', liaisonData.personneId);
-          await updateDoc(personneRef, {
-            isPersonneLibre: false,
-            updatedAt: serverTimestamp(),
-            updatedBy: userId
-          });
-          console.log('[LiaisonsService] Personne marquée comme non libre après réactivation:', liaisonData.personneId);
-        } catch (error) {
-          console.error('[LiaisonsService] Erreur mise à jour isPersonneLibre:', error);
-        }
-      }
       
       return result;
     } catch (error) {

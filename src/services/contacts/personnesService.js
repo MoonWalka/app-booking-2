@@ -223,9 +223,6 @@ class PersonnesService {
       );
 
       // Appliquer les filtres
-      if (filters.isPersonneLibre !== undefined) {
-        q = query(q, where('isPersonneLibre', '==', filters.isPersonneLibre));
-      }
 
       if (filters.tags && filters.tags.length > 0) {
         q = query(q, where('tags', 'array-contains-any', filters.tags));
@@ -393,12 +390,6 @@ class PersonnesService {
     }
   }
 
-  /**
-   * Marquer une personne comme personne libre
-   */
-  async setPersonneLibreStatus(personneId, isPersonneLibre, userId) {
-    return this.updatePersonne(personneId, { isPersonneLibre }, userId);
-  }
 
   /**
    * Import en masse de personnes

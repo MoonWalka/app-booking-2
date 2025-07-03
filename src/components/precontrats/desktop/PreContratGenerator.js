@@ -183,7 +183,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               
               // Données négociation
               contratPropose: preContratData.publicFormData.contratPropose || prev.contratPropose,
-              montantHT: preContratData.publicFormData.montantHT || prev.montantHT || (devisData?.totalHT ? devisData.totalHT.toString() : ''),
+              montantHT: preContratData.publicFormData.montantHT || prev.montantHT || (devisData?.montantHT ? devisData.montantHT.toString() : ''),
               moyenPaiement: preContratData.publicFormData.moyenPaiement || prev.moyenPaiement,
               devise: preContratData.publicFormData.devise || prev.devise,
               acompte: preContratData.publicFormData.acompte || prev.acompte,
@@ -259,15 +259,61 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
           // Attendre un peu pour laisser le pré-contrat se charger d'abord
           setTimeout(() => {
             setFormData(prev => {
-              // Si on n'a pas déjà un montant HT défini, utiliser celui du devis
-              if (!prev.montantHT && latestDevis.totalHT) {
-                console.log('[PreContratGenerator] Application du montant HT du devis:', latestDevis.totalHT);
-                return {
-                  ...prev,
-                  montantHT: latestDevis.totalHT.toString()
-                };
+              console.log('[PreContratGenerator] Application des données du devis au pré-contrat');
+              
+              // Récupérer toutes les données pertinentes du devis
+              const updatedData = { ...prev };
+              
+              // Montant et devise
+              if (!prev.montantHT && latestDevis.montantHT) {
+                updatedData.montantHT = latestDevis.montantHT.toString();
               }
-              return prev;
+              if (!prev.devise && latestDevis.devise) {
+                updatedData.devise = latestDevis.devise;
+              }
+              
+              // Infos du projet/spectacle
+              if (!prev.nomSpectacle && latestDevis.titre) {
+                updatedData.nomSpectacle = latestDevis.titre;
+              }
+              
+              // Dates
+              if (!prev.debut && latestDevis.dateDebut) {
+                updatedData.debut = latestDevis.dateDebut;
+              }
+              if (!prev.fin && latestDevis.dateFin) {
+                updatedData.fin = latestDevis.dateFin;
+              }
+              
+              // Responsable admin (si présent dans le devis)
+              if (!prev.nomResponsableAdmin && latestDevis.destinataireNom) {
+                updatedData.nomResponsableAdmin = latestDevis.destinataireNom;
+              }
+              if (!prev.emailPro && latestDevis.destinataireEmail) {
+                updatedData.emailPro = latestDevis.destinataireEmail;
+              }
+              if (!prev.telPro && latestDevis.destinataireTel) {
+                updatedData.telPro = latestDevis.destinataireTel;
+              }
+              
+              // TVA et conditions de paiement
+              if (latestDevis.totalTVA !== undefined) {
+                updatedData.montantTVA = latestDevis.totalTVA.toString();
+              }
+              if (latestDevis.montantTTC !== undefined) {
+                updatedData.montantTTC = latestDevis.montantTTC.toString();
+              }
+              
+              // Moyens de paiement et acompte si définis dans le devis
+              if (!prev.moyenPaiement && latestDevis.conditionsPaiement) {
+                updatedData.moyenPaiement = latestDevis.conditionsPaiement;
+              }
+              if (!prev.acompte && latestDevis.acompte) {
+                updatedData.acompte = latestDevis.acompte;
+              }
+              
+              console.log('[PreContratGenerator] Données mises à jour depuis le devis:', updatedData);
+              return updatedData;
             });
           }, 500);
         }
@@ -416,30 +462,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
           }
         }
         
-        // Chercher aussi les personnes libres (sans liaison) mais créées dans le contexte de cette structure
-        const personnesLibresQuery = query(
-          collection(db, 'personnes'),
-          where('organizationId', '==', currentOrg.id),
-          where('isPersonneLibre', '==', true)
-        );
-        
-        const personnesLibresSnapshot = await getDocs(personnesLibresQuery);
-        
-        personnesLibresSnapshot.forEach((doc) => {
-          const personne = doc.data();
-          // Vérifier si cette personne n'a pas déjà été ajoutée via les liaisons
-          if (!responsables.find(r => r.id === doc.id)) {
-            responsables.push({
-              id: doc.id,
-              nom: `${personne.prenom || ''} ${personne.nom || ''}`.trim(),
-              fonction: '',
-              email: personne.email || '',
-              telephone: personne.telephone || '',
-              structureId: null,
-              isPersonneLibre: true
-            });
-          }
-        });
+        // Ne plus chercher les personnes libres - on affiche uniquement les personnes liées à la structure
         
         console.log('[PreContrat] Responsables trouvés:', responsables);
         setResponsablesAdmin(responsables);
@@ -935,7 +958,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                 <Col md={1} className={styles.labelColumn}>
                   <div className={styles.labelItem}>
                     Montant HT :
-                    {devisData && devisData.totalHT && (
+                    {devisData && devisData.montantHT && (
                       <small className="text-muted d-block">(depuis devis)</small>
                     )}
                   </div>
@@ -949,7 +972,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                     step="0.01"
                     value={formData.montantHT}
                     onChange={(e) => handleInputChange('montantHT', e.target.value)}
-                    placeholder={devisData?.totalHT ? `Montant du devis: ${devisData.totalHT} €` : ''}
+                    placeholder={devisData?.montantHT ? `Montant du devis: ${devisData.montantHT} €` : ''}
                   />
                   <Form.Control
                     type="number"
@@ -1250,9 +1273,9 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                       
                       <div className="mb-3">
                         <h6>Montants</h6>
-                        <p className="small mb-1"><strong>Montant HT:</strong> {devisData.totalHT ? `${devisData.totalHT.toLocaleString('fr-FR')} €` : '-'}</p>
+                        <p className="small mb-1"><strong>Montant HT:</strong> {devisData.montantHT ? `${devisData.montantHT.toLocaleString('fr-FR')} €` : '-'}</p>
                         <p className="small mb-1"><strong>TVA:</strong> {devisData.totalTVA ? `${devisData.totalTVA.toLocaleString('fr-FR')} €` : '-'}</p>
-                        <p className="small mb-1"><strong>Montant TTC:</strong> {devisData.totalTTC ? `${devisData.totalTTC.toLocaleString('fr-FR')} €` : '-'}</p>
+                        <p className="small mb-1"><strong>Montant TTC:</strong> {devisData.montantTTC ? `${devisData.montantTTC.toLocaleString('fr-FR')} €` : '-'}</p>
                       </div>
                       
                       {devisData.lignesObjet && devisData.lignesObjet.length > 0 && (

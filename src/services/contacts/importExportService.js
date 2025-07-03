@@ -499,10 +499,8 @@ class ImportExportService {
           if (liaisonResult.success) {
             result.liaisons.push(liaisonResult.id);
           }
-        } else {
-          // Marquer comme personne libre
-          await personnesService.setPersonneLibreStatus(personneResult.id, true, userId);
         }
+        // Plus besoin de marquer comme personne libre
       }
     }
 

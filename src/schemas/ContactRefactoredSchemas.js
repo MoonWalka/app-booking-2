@@ -320,10 +320,6 @@ export const personneSchema = Yup.object().shape({
     }))
     .default([]),
   
-  // Indicateur personne libre (sans structure)
-  isPersonneLibre: Yup.boolean()
-    .default(true),
-  
   // Métadonnées
   createdAt: Yup.date().default(() => new Date()),
   updatedAt: Yup.date().default(() => new Date()),

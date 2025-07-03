@@ -90,10 +90,17 @@ export const useContactSearchRelational = ({
       });
     }
 
-    // Ajouter les personnes libres
+    // Ajouter les personnes sans liaison (anciennement "libres")
     if (includePersonnesLibres) {
+      // Trouver les personnes qui n'ont pas de liaison active
+      const personnesAvecLiaison = new Set(
+        liaisons
+          .filter(l => l.actif !== false)
+          .map(l => l.personneId)
+      );
+      
       personnes
-        .filter(personne => personne.isPersonneLibre)
+        .filter(personne => !personnesAvecLiaison.has(personne.id))
         .forEach(personne => {
           contacts.push({
             id: personne.id,
@@ -104,7 +111,9 @@ export const useContactSearchRelational = ({
             email: personne.email || '',
             telephone: personne.telephone || '',
             ville: personne.ville || '',
-            tags: personne.tags || [],
+            tags: personne.tags?.includes('indépendant') 
+              ? personne.tags 
+              : [...(personne.tags || []), 'indépendant'],
             displayName: personne.nom ? 
               `${personne.prenom || ''} ${personne.nom}`.trim() : 
               'Personne sans nom',
@@ -130,10 +139,17 @@ export const useContactSearchRelational = ({
         });
     }
 
-    // Ajouter les personnes non libres (si demandé)
+    // Ajouter les personnes avec liaison (si demandé)
     if (includePersonnes) {
+      // On a déjà la liste des personnes avec liaison
+      const personnesAvecLiaisonSet = new Set(
+        liaisons
+          .filter(l => l.actif !== false)
+          .map(l => l.personneId)
+      );
+      
       personnes
-        .filter(personne => !personne.isPersonneLibre)
+        .filter(personne => personnesAvecLiaisonSet.has(personne.id))
         .forEach(personne => {
           // Trouver les structures associées
           const personneStructures = liaisons

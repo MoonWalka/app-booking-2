@@ -186,7 +186,6 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
           tags: [],
           source: formData.source || 'Prospection',
           notes: formData.notes || undefined,
-          isPersonneLibre: !structureId, // Personne libre seulement si pas de structureId
           commentaires: []
         };
 

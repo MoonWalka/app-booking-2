@@ -122,6 +122,29 @@ const contratService = {
   },
 
   /**
+   * Met à jour un contrat
+   * @param {string} contratId - ID du contrat
+   * @param {Object} updates - Champs à mettre à jour
+   * @returns {Promise<void>}
+   */
+  async updateContrat(contratId, updates) {
+    try {
+      console.log('[ContratService] Mise à jour du contrat:', contratId, updates);
+      
+      const contratRef = doc(db, 'contrats', contratId);
+      await updateDoc(contratRef, {
+        ...updates,
+        updatedAt: serverTimestamp()
+      });
+      
+      console.log('[ContratService] Contrat mis à jour avec succès');
+    } catch (error) {
+      console.error('[ContratService] Erreur lors de la mise à jour du contrat:', error);
+      throw error;
+    }
+  },
+
+  /**
    * Met à jour le statut d'un contrat
    * @param {string} concertId - ID du concert
    * @param {string} status - Nouveau statut ('draft', 'finalized', 'signed')

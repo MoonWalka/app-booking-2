@@ -10,6 +10,7 @@ import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import Badge from '@/components/ui/Badge';
 import { useResponsive } from '@/hooks/common';
 import { useTabs } from '@/context/TabsContext';
+import contratService from '@/services/contratService';
 import '@styles/index.css';
 
 const ContratsPage = () => {
@@ -19,143 +20,239 @@ const ContratsPage = () => {
   const { isMobile } = useResponsive();
   const { openTab, openDevisTab, openNewDevisTab, openContratTab } = useTabs();
 
-  useEffect(() => {
-    const fetchContrats = async () => {
-      setLoading(true);
-      try {
-        // Utiliser updatedAt pour le tri car dateGeneration n'existe pas toujours
-        const contratsQuery = query(
-          collection(db, 'contrats'), 
-          orderBy('updatedAt', 'desc')
-        );
-        const contratsSnapshot = await getDocs(contratsQuery);
+  const fetchContrats = async () => {
+    setLoading(true);
+    try {
+      // Utiliser updatedAt pour le tri car dateGeneration n'existe pas toujours
+      const contratsQuery = query(
+        collection(db, 'contrats'), 
+        orderBy('updatedAt', 'desc')
+      );
+      const contratsSnapshot = await getDocs(contratsQuery);
+      
+      const contratsPromises = contratsSnapshot.docs.map(async (doc) => {
+        const contratData = doc.data();
         
-        const contratsPromises = contratsSnapshot.docs.map(async (doc) => {
-          const contratData = doc.data();
-          
-          // Récupérer les données du concert associé
-          let concertData = null;
-          if (contratData.concertId) {
-            try {
-              const concertDoc = await getDocs(query(
-                collection(db, 'concerts'),
-                where('__name__', '==', contratData.concertId)
-              ));
+        // Récupérer les données du concert associé
+        let concertData = null;
+        let devisData = null;
+        let factureData = null;
+        
+        if (contratData.concertId) {
+          try {
+            const concertDoc = await getDocs(query(
+              collection(db, 'concerts'),
+              where('__name__', '==', contratData.concertId)
+            ));
+            
+            if (!concertDoc.empty) {
+              concertData = {
+                id: concertDoc.docs[0].id,
+                ...concertDoc.docs[0].data()
+              };
               
-              if (!concertDoc.empty) {
-                concertData = {
-                  id: concertDoc.docs[0].id,
-                  ...concertDoc.docs[0].data()
-                };
-                
-                // 🔧 CORRECTION: Charger les noms des entités liées si manquants
-                const promises = [];
-                
-                // Charger le nom du lieu si manquant
-                if (concertData.lieuId && !concertData.lieuNom) {
-                  promises.push(
-                    getDocs(query(collection(db, 'lieux'), where('__name__', '==', concertData.lieuId)))
-                      .then(snapshot => {
-                        if (!snapshot.empty) {
-                          concertData.lieuNom = snapshot.docs[0].data().nom;
-                        }
-                      })
-                      .catch(err => console.error('Erreur chargement lieu:', err))
-                  );
-                }
-                
-                // Charger le nom du contact si manquant
-                if (concertData.contactId && !concertData.contactNom) {
-                  promises.push(
-                    getDocs(query(collection(db, 'contacts'), where('__name__', '==', concertData.contactId)))
-                      .then(snapshot => {
-                        if (!snapshot.empty) {
-                          concertData.contactNom = snapshot.docs[0].data().nom;
-                        }
-                      })
-                      .catch(err => console.error('Erreur chargement contact:', err))
-                  );
-                }
-                
-                // Charger le nom de l'artiste si manquant
-                if (concertData.artisteId && !concertData.artisteNom) {
-                  promises.push(
-                    getDocs(query(collection(db, 'artistes'), where('__name__', '==', concertData.artisteId)))
-                      .then(snapshot => {
-                        if (!snapshot.empty) {
-                          concertData.artisteNom = snapshot.docs[0].data().nom;
-                        }
-                      })
-                      .catch(err => console.error('Erreur chargement artiste:', err))
-                  );
-                }
-                
-                // Attendre que tous les chargements soient terminés
-                await Promise.all(promises);
+              // 🔧 CORRECTION: Charger les noms des entités liées si manquants
+              const promises = [];
+              
+              // Charger le nom du lieu si manquant
+              if (concertData.lieuId && !concertData.lieuNom) {
+                promises.push(
+                  getDocs(query(collection(db, 'lieux'), where('__name__', '==', concertData.lieuId)))
+                    .then(snapshot => {
+                      if (!snapshot.empty) {
+                        concertData.lieuNom = snapshot.docs[0].data().nom;
+                      }
+                    })
+                    .catch(err => console.error('Erreur chargement lieu:', err))
+                );
               }
-            } catch (err) {
-              console.error('Erreur lors de la récupération du concert:', err);
+              
+              // Charger le nom du contact si manquant
+              if (concertData.contactId && !concertData.contactNom) {
+                promises.push(
+                  getDocs(query(collection(db, 'contacts'), where('__name__', '==', concertData.contactId)))
+                    .then(snapshot => {
+                      if (!snapshot.empty) {
+                        concertData.contactNom = snapshot.docs[0].data().nom;
+                      }
+                    })
+                    .catch(err => console.error('Erreur chargement contact:', err))
+                );
+              }
+              
+              // Charger le nom de l'artiste si manquant
+              if (concertData.artisteId && !concertData.artisteNom) {
+                promises.push(
+                  getDocs(query(collection(db, 'artistes'), where('__name__', '==', concertData.artisteId)))
+                    .then(snapshot => {
+                      if (!snapshot.empty) {
+                        concertData.artisteNom = snapshot.docs[0].data().nom;
+                      }
+                    })
+                    .catch(err => console.error('Erreur chargement artiste:', err))
+                );
+              }
+              
+              // Attendre que tous les chargements soient terminés
+              await Promise.all(promises);
             }
+          } catch (err) {
+            console.error('Erreur lors de la récupération du concert:', err);
           }
-          
-          // Mapper les données avec toutes les propriétés nécessaires pour ContratsTableNew
-          return {
-            id: doc.id,
-            ...contratData,
-            // Propriétés essentielles avec valeurs par défaut
-            ref: contratData.ref || contratData.contratNumber || `CONT-${doc.id.slice(0, 6)}`,
-            entrepriseCode: contratData.entrepriseCode || 'MR',
-            collaborateurCode: contratData.collaborateurCode || '--',
-            type: contratData.type || contratData.contratType || 'Standard',
-            raisonSociale: contratData.raisonSociale || 
-                          contratData.organisateur?.raisonSociale || 
-                          concertData?.structureNom || 
-                          '--',
-            // Données de l'artiste et du lieu
-            artiste: contratData.artiste || concertData?.artisteNom || '--',
-            artisteNom: concertData?.artisteNom || contratData.artisteNom || '--',
-            lieu: concertData?.lieuNom || contratData.lieu || '--',
-            ville: contratData.ville || concertData?.ville || '--',
-            // Dates
-            dateEvenement: concertData?.date || contratData.dateEvenement,
-            dateGeneration: contratData.dateGeneration || contratData.createdAt || contratData.updatedAt,
-            dateValidite: contratData.dateValidite || contratData.dateEvenement,
-            // Montants
-            totalHT: contratData.montantHT || contratData.totalHT || 0,
-            totalTTC: contratData.montantTTC || contratData.totalTTC || 0,
-            montantConsolideHT: contratData.montantConsolideHT || contratData.montantHT || 0,
-            // Statut normalisé - IMPORTANT: s'assurer que 'generated' est bien géré
-            status: contratData.status || (contratData.contratGenere ? 'draft' : null),
-            // Statuts d'envoi et signature
-            envoye: contratData.envoye || false,
-            signe: contratData.signe || false,
-            dateSignature: contratData.dateSignature,
-            // Données du concert pour les actions
-            concert: concertData,
-            concertId: contratData.concertId,
-            structureId: concertData?.structureId || contratData.structureId
-          };
-        });
+        }
         
-        const contratsWithData = await Promise.all(contratsPromises);
-        setContrats(contratsWithData);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des contrats:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        // Récupérer les données du devis associé si présent
+        if (contratData.devisId || concertData?.devisId) {
+          try {
+            const devisId = contratData.devisId || concertData?.devisId;
+            const devisQuery = query(
+              collection(db, 'devis'),
+              where('__name__', '==', devisId)
+            );
+            const devisSnapshot = await getDocs(devisQuery);
+            
+            if (!devisSnapshot.empty) {
+              devisData = {
+                id: devisSnapshot.docs[0].id,
+                ...devisSnapshot.docs[0].data()
+              };
+            }
+          } catch (err) {
+            console.error('Erreur lors de la récupération du devis:', err);
+          }
+        }
+        
+        // Récupérer les données de la facture associée si présente
+        if (contratData.factureId || concertData?.factureId) {
+          try {
+            const factureId = contratData.factureId || concertData?.factureId;
+            const factureQuery = query(
+              collection(db, 'factures'),
+              where('__name__', '==', factureId)
+            );
+            const factureSnapshot = await getDocs(factureQuery);
+            
+            if (!factureSnapshot.empty) {
+              factureData = {
+                id: factureSnapshot.docs[0].id,
+                ...factureSnapshot.docs[0].data()
+              };
+            }
+          } catch (err) {
+            console.error('Erreur lors de la récupération de la facture:', err);
+          }
+        }
+        
+        // Mapper les données avec toutes les propriétés nécessaires pour ContratsTableNew
+        return {
+          id: doc.id,
+          ...contratData,
+          // Propriétés essentielles avec valeurs par défaut
+          ref: contratData.ref || contratData.contratNumber || `CONT-${doc.id.slice(0, 6)}`,
+          entrepriseCode: contratData.entrepriseCode || 'MR',
+          collaborateurCode: contratData.collaborateurCode || '--',
+          type: contratData.type || contratData.contratType || 'Standard',
+          raisonSociale: contratData.raisonSociale || 
+                        contratData.organisateur?.raisonSociale || 
+                        concertData?.structureNom || 
+                        '--',
+          // Données de l'artiste et du lieu
+          artiste: contratData.artiste || concertData?.artisteNom || '--',
+          artisteNom: concertData?.artisteNom || contratData.artisteNom || '--',
+          lieu: concertData?.lieuNom || contratData.lieu || '--',
+          ville: contratData.ville || concertData?.ville || '--',
+          // Dates
+          dateEvenement: concertData?.date || contratData.dateEvenement,
+          dateGeneration: contratData.dateGeneration || contratData.createdAt || contratData.updatedAt,
+          dateValidite: contratData.dateValidite || contratData.dateEvenement,
+          // Montants - Gérer toutes les structures possibles
+          totalHT: contratData.montantHT || 
+                   contratData.totalHT || 
+                   contratData.negociation?.montantNet || 
+                   contratData.reglement?.montantHT || 
+                   0,
+          totalTTC: contratData.montantTTC || 
+                    contratData.totalTTC || 
+                    contratData.negociation?.montantTTC || 
+                    contratData.reglement?.totalTTC || 
+                    0,
+          montantConsolideHT: contratData.montantConsolideHT || 
+                              contratData.montantHT || 
+                              contratData.totalHT || 
+                              contratData.negociation?.montantNet || 
+                              contratData.reglement?.montantHT || 
+                              0,
+          // Statut normalisé - IMPORTANT: s'assurer que 'generated' est bien géré
+          status: contratData.status || (contratData.contratGenere ? 'draft' : null),
+          // Statuts d'envoi et signature
+          envoye: contratData.envoye || false,
+          signe: contratData.signe || false,
+          dateSignature: contratData.dateSignature,
+          // Données du concert pour les actions
+          concert: concertData,
+          concertId: contratData.concertId,
+          structureId: concertData?.structureId || contratData.structureId,
+          // Informations du devis
+          hasDevis: !!devisData,
+          devisId: devisData?.id || contratData.devisId,
+          devisStatus: devisData?.statut || null,
+          devisNumero: devisData?.numero || null,
+          // Informations de la facture
+          hasFacture: !!factureData,
+          factureId: factureData?.id || contratData.factureId,
+          factureStatus: factureData?.statut || null,
+          factureInfo: factureData ? {
+            montantTotal: factureData.montantTTC || factureData.totalTTC || 0,
+            montantPaye: factureData.montantPaye || 0,
+            dateEcheance: factureData.dateEcheance,
+            envoye: factureData.envoye || false
+          } : null
+        };
+      });
+      
+      const contratsWithData = await Promise.all(contratsPromises);
+      setContrats(contratsWithData);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des contrats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchContrats();
   }, []);
 
-  const handleUpdateContrat = (contratUpdated) => {
-    // Callback pour mettre à jour un contrat localement
-    setContrats(prev => 
-      prev.map(contrat => 
-        contrat.id === contratUpdated.id ? contratUpdated : contrat
-      )
-    );
+  const handleUpdateContrat = async (contratUpdated) => {
+    try {
+      // Préparer les données à mettre à jour
+      const updates = {
+        envoye: contratUpdated.envoye,
+        signe: contratUpdated.signe,
+        updatedAt: new Date()
+      };
+      
+      // Ajouter dateSignature seulement si elle est définie
+      if (contratUpdated.dateSignature !== undefined) {
+        updates.dateSignature = contratUpdated.dateSignature;
+      }
+      
+      // Mettre à jour le contrat dans Firebase
+      await contratService.updateContrat(contratUpdated.id, updates);
+      
+      // Mettre à jour l'état local après la sauvegarde réussie
+      setContrats(prev => 
+        prev.map(contrat => 
+          contrat.id === contratUpdated.id ? contratUpdated : contrat
+        )
+      );
+      
+      console.log('[ContratsPage] Contrat mis à jour:', contratUpdated.id);
+    } catch (error) {
+      console.error('[ContratsPage] Erreur mise à jour contrat:', error);
+      // En cas d'erreur, recharger les contrats pour s'assurer que l'état est correct
+      fetchContrats();
+    }
   };
 
   // Handlers pour les factures

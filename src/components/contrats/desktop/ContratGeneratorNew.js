@@ -550,6 +550,7 @@ const ContratGeneratorNew = ({
         // Ajouter les références aux entités liées
         concertId: concertId,
         preContratId: preContratData?.id || null,
+        devisId: devisData?.id || null,
         contactId: contact?.id || null,
         structureId: structure?.id || null,
         artisteId: artiste?.id || null,
@@ -601,6 +602,7 @@ const ContratGeneratorNew = ({
         ...contratData,
         concertId: concertId,
         preContratId: preContratData?.id || null,
+        devisId: devisData?.id || null,
         contactId: contact?.id || null,
         structureId: structure?.id || null,
         artisteId: artiste?.id || null,

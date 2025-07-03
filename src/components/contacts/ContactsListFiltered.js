@@ -65,7 +65,7 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
       .forEach(personne => {
         contacts.push({
           id: personne.id,
-          entityType: personne.isPersonneLibre ? 'personne_libre' : 'personne',
+          entityType: 'personne',
           type: 'personne',
           nom: personne.nom || '',
           prenom: personne.prenom || '',
@@ -74,7 +74,6 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
           telephone: personne.telephone || '',
           ville: personne.ville || '',
           tags: personne.tags || [],
-          isPersonneLibre: personne.isPersonneLibre,
           createdAt: personne.createdAt,
           updatedAt: personne.updatedAt
         });
@@ -109,11 +108,6 @@ function ContactsListFiltered({ filterTag, filterType, usageCount }) {
         {contact.isClient && (
           <Badge bg="success" className="small ms-1">
             Client
-          </Badge>
-        )}
-        {contact.isPersonneLibre && (
-          <Badge bg="warning" className="small ms-1">
-            Libre
           </Badge>
         )}
       </div>

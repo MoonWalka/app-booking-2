@@ -129,7 +129,7 @@ function ContactViewTabs({ id, viewType = null }) {
       // Déterminer le type basé sur les données
       if (contact.raisonSociale !== undefined) {
         setEntityType('structure');
-      } else if (contact.isPersonneLibre && (!contact.structures || contact.structures.length === 0)) {
+      } else if (!contact.structures || contact.structures.length === 0) {
         setEntityType('personne_libre');
       } else {
         setEntityType('personne');

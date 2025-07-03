@@ -139,10 +139,10 @@ function ContactsList({ filterType = 'all' }) {
       .filter(l => l.actif && l.organizationId === currentOrganization.id)
       .forEach(l => personnesAvecStructure.add(l.personneId));
     
-    // Ajouter les personnes libres (celles qui n'ont aucune liaison active)
+    // Ajouter les personnes sans liaison active (anciennement "personnes libres")
     if (filterType === 'all' || filterType === 'personnes_libres') {
       personnes
-        .filter(personne => personne.isPersonneLibre && !personnesAvecStructure.has(personne.id))
+        .filter(personne => !personnesAvecStructure.has(personne.id))
         .forEach(personne => {
           processedContacts.push({
             id: personne.id,
@@ -155,7 +155,9 @@ function ContactsList({ filterType = 'all' }) {
             email: personne.email,
             telephone: personne.telephone,
             ville: personne.ville,
-            tags: personne.tags || [],
+            tags: personne.tags?.includes('indépendant') 
+              ? personne.tags 
+              : [...(personne.tags || []), 'indépendant'],
             createdAt: personne.createdAt,
             updatedAt: personne.updatedAt,
             // Données complètes pour l'édition
@@ -246,7 +248,7 @@ function ContactsList({ filterType = 'all' }) {
         if (item.entityType === 'structure') {
           subInfo = item.type || '';
         } else {
-          subInfo = item.fonction || (item._viewType === 'personne_libre' ? 'Personne libre' : '');
+          subInfo = item.fonction || (item._viewType === 'personne_libre' ? 'Sans structure' : '');
         }
 
         return (
@@ -418,7 +420,7 @@ function ContactsList({ filterType = 'all' }) {
         value: personnes,
         icon: 'bi bi-person',
         variant: 'success',
-        subtext: `${personnesEnStructure} liées + ${personnesLibres} libres`
+        subtext: `${personnesEnStructure} liées + ${personnesLibres} sans structure`
       },
       {
         id: 'contact',
@@ -506,7 +508,7 @@ function ContactsList({ filterType = 'all' }) {
     { value: 'all', label: 'Tous', icon: 'bi-list' },
     { value: 'structures', label: 'Structures', icon: 'bi-building' },
     { value: 'personnes', label: 'Personnes', icon: 'bi-person' },
-    { value: 'personnes_libres', label: 'Personnes libres', icon: 'bi-person-dash' },
+    { value: 'personnes_libres', label: 'Sans structure', icon: 'bi-person-dash' },
     { value: 'avec_email', label: 'Avec email', icon: 'bi-envelope' },
     { value: 'avec_telephone', label: 'Avec téléphone', icon: 'bi-telephone' }
   ];

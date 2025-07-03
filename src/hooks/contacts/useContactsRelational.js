@@ -458,7 +458,13 @@ export function useContactsRelational() {
         .map(l => l.personneId)
     );
 
-    return personnes.filter(p => !personnesAvecLiaisons.has(p.id));
+    return personnes
+      .filter(p => !personnesAvecLiaisons.has(p.id))
+      .map(p => ({
+        ...p,
+        // Ajouter automatiquement le tag "indépendant" si pas déjà présent
+        tags: p.tags?.includes('indépendant') ? p.tags : [...(p.tags || []), 'indépendant']
+      }));
   }, [personnes, liaisons]);
 
   /**

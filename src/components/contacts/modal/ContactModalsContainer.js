@@ -39,7 +39,7 @@ function ContactModalsContainer() {
     console.log('Personne créée depuis modal globale:', newPersonne);
     // Ouvrir l'onglet de la nouvelle personne avec le viewType approprié
     const displayName = `${newPersonne.prenom || ''} ${newPersonne.nom || ''}`.trim() || 'Nouvelle personne';
-    const viewType = newPersonne.isPersonneLibre ? 'personne_libre' : 'personne';
+    const viewType = 'personne';
     openContactTab(newPersonne.id, displayName, viewType);
     // Fermer la modal
     closePersonneModal();

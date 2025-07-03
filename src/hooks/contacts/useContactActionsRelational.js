@@ -185,13 +185,7 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       // Dissocier (soft delete)
       await dissociatePersonFromStructure(personneWithLiaison.liaison.id);
 
-      // Marquer la personne comme personne libre si elle n'a plus de structure
-      const personneStructures = getPersonneWithStructures(personne.id);
-      const activeLiaisons = personneStructures?.structures?.filter(s => s.liaison.actif) || [];
-      
-      if (activeLiaisons.length === 0) {
-        await personnesService.setPersonneLibreStatus(personne.id, true, currentUser.uid);
-      }
+      // Plus besoin de marquer comme personne libre - le système détecte automatiquement
 
       alert(`"${personDisplayName}" a été dissocié(e) de la structure avec succès.`);
       return true;

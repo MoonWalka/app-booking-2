@@ -68,7 +68,6 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
         email: personne.email || '',
         telephone: personne.telephone || personne.telephone2 || '',
         ville: personne.ville || '',
-        isPersonneLibre: personne.isPersonneLibre || false,
         tags: personne.tags || [],
         // Données complètes pour référence
         _originalData: personne
@@ -336,11 +335,6 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
                             <strong>{personne.nom}</strong>
                             {personne.fonction && <div className={styles.fonction}>{personne.fonction}</div>}
                             {personne.ville && <div className={styles.ville}><i className="bi bi-geo-alt"></i> {personne.ville}</div>}
-                            {personne.isPersonneLibre && (
-                              <div className={styles.personneLibre}>
-                                <i className="bi bi-person-dash"></i> Personne libre
-                              </div>
-                            )}
                             {isAlreadyAssociated && (
                               <div className={styles.alreadyAssociated}>
                                 <i className="bi bi-check-circle-fill"></i> Déjà associée

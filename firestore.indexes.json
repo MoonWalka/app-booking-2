@@ -97,20 +97,6 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "isPersonneLibre",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "personnes",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "organizationId",
-          "order": "ASCENDING"
-        },
-        {
           "fieldPath": "tags",
           "arrayConfig": "CONTAINS"
         }
@@ -263,6 +249,34 @@
         {
           "fieldPath": "createdAt",
           "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "organizationId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "intitule",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "contacts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "structureId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nom",
+          "order": "ASCENDING"
         }
       ]
     }

@@ -23,7 +23,7 @@ function TachesPage() {
   const [selectedTache, setSelectedTache] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [filters, setFilters] = useState({
-    statut: '',
+    statut: 'en_cours',
     important: '',
     search: ''
   });
@@ -381,6 +381,16 @@ function TachesPage() {
           </div>
           
           <div className={styles.actionGroup}>
+            {filters.statut && (
+              <Button 
+                variant="outline-secondary" 
+                onClick={() => setFilters(prev => ({ ...prev, statut: '' }))}
+                className="me-2"
+              >
+                <i className="bi bi-list me-2"></i>
+                Voir toutes
+              </Button>
+            )}
             <Button variant="primary" onClick={handleCreateTache}>
               <i className="bi bi-plus-lg me-2"></i>
               Nouvelle tâche

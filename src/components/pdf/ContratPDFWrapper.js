@@ -406,11 +406,11 @@ const prepareContractVariables = (safeData) => {
     'concert_montant_lettres': montantEnLettres(safeData.concert?.montant),
     'concert_type': safeData.concert?.type || 'Concert',
     
-    // Variables lieu
-    'lieu_nom': safeData.lieu?.nom || 'Non spécifié',
+    // Variables lieu - Utiliser le libellé du concert si pas de lieu référencé
+    'lieu_nom': safeData.lieu?.nom || safeData.concert?.libelle || 'Non spécifié',
     'lieu_adresse': safeData.lieu?.adresse || 'Non spécifiée',
     'lieu_code_postal': safeData.lieu?.codePostal || safeData.lieu?.code_postal || 'Non spécifié',
-    'lieu_ville': safeData.lieu?.ville || 'Non spécifiée',
+    'lieu_ville': safeData.lieu?.ville || safeData.concert?.lieuVille || 'Non spécifiée',
     'lieu_capacite': safeData.lieu?.capacite || 'Non spécifiée',
     
     // Variables structure (utiliser les données du contact si pas de structure séparée)
@@ -453,7 +453,7 @@ const prepareContractVariables = (safeData) => {
     'date_signature': format(new Date(), "dd/MM/yyyy", { locale: fr }),
     
     // Variables signature
-    'lieu_signature': safeData.lieu?.ville || 'Non spécifiée',
+    'lieu_signature': safeData.lieu?.ville || safeData.concert?.lieuVille || 'Non spécifiée',
     'programmateur_fonction': safeData.contact?.fonction || safeData.programmateur?.fonction || 'Non spécifiée',
     
     // Variables spéciales

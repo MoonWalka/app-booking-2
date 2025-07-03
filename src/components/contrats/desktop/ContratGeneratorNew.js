@@ -342,9 +342,9 @@ const ContratGeneratorNew = ({
         ...prev,
         representations: {
           ...prev.representations,
-          debut: concert.dateDebut || '',
-          fin: concert.dateFin || '',
-          salle: lieu?.nom || concert.lieuNom || ''
+          debut: concert.dateDebut || concert.date || '',
+          fin: concert.dateFin || concert.date || '',
+          salle: lieu?.nom || concert.libelle || concert.lieuNom || ''
         }
       }));
     }

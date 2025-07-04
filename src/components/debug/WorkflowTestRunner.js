@@ -16,7 +16,9 @@ import {
   getDocs, 
   deleteDoc,
   getDoc,
-  doc
+  doc,
+  setDoc,
+  updateDoc
 } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,7 +38,9 @@ function WorkflowTestRunner() {
     lieu: null,
     concert: null,
     formSubmission: null,
-    preContrat: null
+    contrat: null,
+    devis: null,
+    facture: null
   });
 
   const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -172,6 +176,109 @@ function WorkflowTestRunner() {
         },
         status: 'completed',
         submittedAt: serverTimestamp()
+      },
+      
+      contrat: {
+        titre: `[TEST] Contrat ${randomElement(['Festival', 'Salle', 'Bar'])} ${new Date().getFullYear()}`,
+        dateDebut: new Date(Date.now() + randomInt(30, 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        dateFin: new Date(Date.now() + randomInt(31, 91) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'draft',
+        entrepriseCode: 'MR',
+        numeroContrat: `TEST-${new Date().getFullYear()}-${randomInt(1000, 9999)}`,
+        
+        // Données artiste
+        artiste: {
+          nom: testData.artiste.nom,
+          contactNom: testData.artiste.contactNom,
+          contactEmail: testData.artiste.contactEmail,
+          contactTelephone: testData.artiste.contactTelephone
+        },
+        
+        // Données organisateur
+        organisateur: {
+          raisonSociale: testData.structure.structureRaisonSociale,
+          adresse: testData.structure.structureAdresse,
+          codePostal: testData.structure.structureCodePostal,
+          ville: testData.structure.structureVille,
+          siret: testData.structure.structureSiret,
+          numeroTva: testData.structure.structureNumeroTva,
+          licence: testData.structure.structureLicence,
+          signataire: {
+            nom: testData.structure.personneNom,
+            prenom: testData.structure.personnePrenom,
+            fonction: testData.structure.personneFonction,
+            email: testData.structure.personneEmail,
+            telephone: testData.structure.personneTelephone
+          }
+        },
+        
+        // Données négociation
+        negociation: {
+          montantBrut: testData.concert.cachetBrut,
+          montantNet: testData.concert.cachetBrut,
+          montantTTC: Math.round(testData.concert.cachetBrut * 1.055), // TVA 5.5%
+          fraisTechniques: testData.concert.fraisTechniques,
+          fraisDeplacements: testData.concert.fraisDeplacements,
+          fraisHebergement: testData.concert.fraisHebergement,
+          montantTotal: testData.concert.cachetBrut + testData.concert.fraisTechniques + testData.concert.fraisDeplacements + testData.concert.fraisHebergement
+        },
+        
+        // Informations du concert
+        representation: {
+          date: testData.concert.date,
+          heure: testData.concert.heure,
+          lieu: testData.lieu.nom,
+          adresse: testData.lieu.adresse,
+          codePostal: testData.lieu.codePostal,
+          ville: testData.lieu.ville
+        },
+        
+        isTest: true,
+        testId,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      },
+      
+      devis: {
+        numero: `DEV-TEST-${new Date().getFullYear()}-${randomInt(1000, 9999)}`,
+        dateEmission: new Date().toISOString().split('T')[0],
+        dateValidite: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'draft',
+        montantHT: testData.concert.cachetBrut,
+        tauxTVA: 5.5,
+        montantTVA: Math.round(testData.concert.cachetBrut * 0.055),
+        montantTTC: Math.round(testData.concert.cachetBrut * 1.055),
+        lignes: [{
+          description: `Prestation artistique - ${testData.artiste.nom}`,
+          quantite: 1,
+          prixUnitaire: testData.concert.cachetBrut,
+          montant: testData.concert.cachetBrut
+        }],
+        isTest: true,
+        testId,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      },
+      
+      facture: {
+        numero: `FAC-TEST-${new Date().getFullYear()}-${randomInt(1000, 9999)}`,
+        dateEmission: new Date().toISOString().split('T')[0],
+        dateEcheance: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'draft',
+        montantHT: testData.concert.cachetBrut,
+        tauxTVA: 5.5,
+        montantTVA: Math.round(testData.concert.cachetBrut * 0.055),
+        montantTTC: Math.round(testData.concert.cachetBrut * 1.055),
+        lignes: [{
+          description: `Prestation artistique - ${testData.artiste.nom}`,
+          quantite: 1,
+          prixUnitaire: testData.concert.cachetBrut,
+          montant: testData.concert.cachetBrut
+        }],
+        isTest: true,
+        testId,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       }
     };
   };
@@ -185,7 +292,10 @@ function WorkflowTestRunner() {
       structure: null,
       lieu: null,
       concert: null,
-      formSubmission: null
+      formSubmission: null,
+      contrat: null,
+      devis: null,
+      facture: null
     };
 
     try {
@@ -245,6 +355,66 @@ function WorkflowTestRunner() {
       results.formSubmission = { id: formRef.id, ...formSubmissionData };
       console.log('✅ Formulaire soumis:', formRef.id);
 
+      // 6. Créer le contrat
+      console.log('📄 Création du contrat...');
+      const contratData = {
+        ...testData.contrat,
+        concertId: concertRef.id,
+        artisteId: artisteRef.id,
+        structureId: structureRef.id,
+        lieuId: lieuRef.id,
+        organizationId: currentOrganization.id,
+        montantHT: testData.contrat.negociation.montantNet,
+        montantTTC: testData.contrat.negociation.montantTTC
+      };
+      
+      // Les contrats utilisent l'ID du concert comme ID
+      await setDoc(doc(db, 'contrats', concertRef.id), contratData);
+      results.contrat = { id: concertRef.id, ...contratData };
+      console.log('✅ Contrat créé:', concertRef.id);
+
+      // 7. Créer le devis
+      console.log('💰 Création du devis...');
+      const devisData = {
+        ...testData.devis,
+        concertId: concertRef.id,
+        contratId: concertRef.id,
+        artisteId: artisteRef.id,
+        structureId: structureRef.id,
+        organizationId: currentOrganization.id
+      };
+      
+      const devisRef = await addDoc(collection(db, 'devis'), devisData);
+      results.devis = { id: devisRef.id, ...devisData };
+      console.log('✅ Devis créé:', devisRef.id);
+
+      // 8. Créer la facture
+      console.log('🧾 Création de la facture...');
+      const factureData = {
+        ...testData.facture,
+        concertId: concertRef.id,
+        contratId: concertRef.id,
+        devisId: devisRef.id,
+        artisteId: artisteRef.id,
+        structureId: structureRef.id,
+        organizationId: currentOrganization.id
+      };
+      
+      const factureRef = await addDoc(collection(db, 'factures'), factureData);
+      results.facture = { id: factureRef.id, ...factureData };
+      console.log('✅ Facture créée:', factureRef.id);
+
+      // Mettre à jour le concert avec les références
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        hasContrat: true,
+        contratId: concertRef.id,
+        hasDevis: true,
+        devisId: devisRef.id,
+        hasFacture: true,
+        factureId: factureRef.id,
+        updatedAt: serverTimestamp()
+      });
+
       // Émettre l'événement de création
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('concertCreated', { 
@@ -270,6 +440,9 @@ function WorkflowTestRunner() {
       concertVisible: false,
       relationsEtablies: false,
       formulaireRempli: false,
+      contratCree: false,
+      devisCree: false,
+      factureCree: false,
       errors: []
     };
 
@@ -327,6 +500,39 @@ function WorkflowTestRunner() {
         console.log('✅ Formulaire vérifié');
       } else {
         verifications.errors.push('Formulaire non trouvé');
+      }
+
+      // Vérifier le contrat
+      if (entities.contrat?.id) {
+        const contratDoc = await getDoc(doc(db, 'contrats', entities.contrat.id));
+        if (contratDoc.exists()) {
+          verifications.contratCree = true;
+          console.log('✅ Contrat vérifié');
+        } else {
+          verifications.errors.push('Contrat non trouvé');
+        }
+      }
+
+      // Vérifier le devis
+      if (entities.devis?.id) {
+        const devisDoc = await getDoc(doc(db, 'devis', entities.devis.id));
+        if (devisDoc.exists()) {
+          verifications.devisCree = true;
+          console.log('✅ Devis vérifié');
+        } else {
+          verifications.errors.push('Devis non trouvé');
+        }
+      }
+
+      // Vérifier la facture
+      if (entities.facture?.id) {
+        const factureDoc = await getDoc(doc(db, 'factures', entities.facture.id));
+        if (factureDoc.exists()) {
+          verifications.factureCree = true;
+          console.log('✅ Facture vérifiée');
+        } else {
+          verifications.errors.push('Facture non trouvée');
+        }
       }
 
       return verifications;
@@ -394,10 +600,25 @@ function WorkflowTestRunner() {
           formSubmission: {
             id: entities.formSubmission.id,
             status: entities.formSubmission.status
-          }
+          },
+          contrat: entities.contrat ? { 
+            id: entities.contrat.id, 
+            numero: entities.contrat.numeroContrat,
+            status: entities.contrat.status 
+          } : null,
+          devis: entities.devis ? { 
+            id: entities.devis.id, 
+            numero: entities.devis.numero,
+            status: entities.devis.status 
+          } : null,
+          facture: entities.facture ? { 
+            id: entities.facture.id, 
+            numero: entities.facture.numero,
+            status: entities.facture.status 
+          } : null
         },
         verifications,
-        success: Object.values(verifications).filter(v => v === true).length === 6,
+        success: Object.values(verifications).filter(v => v === true).length === 9,
         errors: verifications.errors
       };
 
@@ -445,7 +666,7 @@ function WorkflowTestRunner() {
     try {
       console.log('🧹 Nettoyage des données de test...');
       
-      const collections = ['concerts', 'lieux', 'contacts', 'artistes', 'formSubmissions'];
+      const collections = ['concerts', 'lieux', 'contacts', 'artistes', 'formSubmissions', 'contrats', 'devis', 'factures'];
       let totalDeleted = 0;
 
       for (const collectionName of collections) {
@@ -474,7 +695,10 @@ function WorkflowTestRunner() {
         structure: null,
         lieu: null,
         concert: null,
-        formSubmission: null
+        formSubmission: null,
+        contrat: null,
+        devis: null,
+        facture: null
       });
       setTestReport(null);
       

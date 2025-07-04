@@ -53,7 +53,8 @@ function WorkflowTestRunner() {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const testId = `test_${timestamp}`;
     
-    return {
+    // D'abord créer les données de base
+    const baseData = {
       testId,
       artiste: {
         nom: `[TEST] Les ${randomElement(['Rockeurs', 'Jazzmen', 'Électros'])} ${randomElement(['Fantastiques', 'Magiques', 'Cosmiques'])}`,
@@ -176,8 +177,12 @@ function WorkflowTestRunner() {
         },
         status: 'completed',
         submittedAt: serverTimestamp()
-      },
-      
+      }
+    };
+    
+    // Ensuite créer les données qui dépendent des données de base
+    const testData = {
+      ...baseData,
       contrat: {
         titre: `[TEST] Contrat ${randomElement(['Festival', 'Salle', 'Bar'])} ${new Date().getFullYear()}`,
         dateDebut: new Date(Date.now() + randomInt(30, 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -188,49 +193,49 @@ function WorkflowTestRunner() {
         
         // Données artiste
         artiste: {
-          nom: testData.artiste.nom,
-          contactNom: testData.artiste.contactNom,
-          contactEmail: testData.artiste.contactEmail,
-          contactTelephone: testData.artiste.contactTelephone
+          nom: baseData.artiste.nom,
+          contactNom: baseData.artiste.contactNom,
+          contactEmail: baseData.artiste.contactEmail,
+          contactTelephone: baseData.artiste.contactTelephone
         },
         
         // Données organisateur
         organisateur: {
-          raisonSociale: testData.structure.structureRaisonSociale,
-          adresse: testData.structure.structureAdresse,
-          codePostal: testData.structure.structureCodePostal,
-          ville: testData.structure.structureVille,
-          siret: testData.structure.structureSiret,
-          numeroTva: testData.structure.structureNumeroTva,
-          licence: testData.structure.structureLicence,
+          raisonSociale: baseData.structure.structureRaisonSociale,
+          adresse: baseData.structure.structureAdresse,
+          codePostal: baseData.structure.structureCodePostal,
+          ville: baseData.structure.structureVille,
+          siret: baseData.structure.structureSiret,
+          numeroTva: baseData.structure.structureNumeroTva,
+          licence: baseData.structure.structureLicence,
           signataire: {
-            nom: testData.structure.personneNom,
-            prenom: testData.structure.personnePrenom,
-            fonction: testData.structure.personneFonction,
-            email: testData.structure.personneEmail,
-            telephone: testData.structure.personneTelephone
+            nom: baseData.structure.personneNom,
+            prenom: baseData.structure.personnePrenom,
+            fonction: baseData.structure.personneFonction,
+            email: baseData.structure.personneEmail,
+            telephone: baseData.structure.personneTelephone
           }
         },
         
         // Données négociation
         negociation: {
-          montantBrut: testData.concert.cachetBrut,
-          montantNet: testData.concert.cachetBrut,
-          montantTTC: Math.round(testData.concert.cachetBrut * 1.055), // TVA 5.5%
-          fraisTechniques: testData.concert.fraisTechniques,
-          fraisDeplacements: testData.concert.fraisDeplacements,
-          fraisHebergement: testData.concert.fraisHebergement,
-          montantTotal: testData.concert.cachetBrut + testData.concert.fraisTechniques + testData.concert.fraisDeplacements + testData.concert.fraisHebergement
+          montantBrut: baseData.concert.cachetBrut,
+          montantNet: baseData.concert.cachetBrut,
+          montantTTC: Math.round(baseData.concert.cachetBrut * 1.055), // TVA 5.5%
+          fraisTechniques: baseData.concert.fraisTechniques,
+          fraisDeplacements: baseData.concert.fraisDeplacements,
+          fraisHebergement: baseData.concert.fraisHebergement,
+          montantTotal: baseData.concert.cachetBrut + baseData.concert.fraisTechniques + baseData.concert.fraisDeplacements + baseData.concert.fraisHebergement
         },
         
         // Informations du concert
         representation: {
-          date: testData.concert.date,
-          heure: testData.concert.heure,
-          lieu: testData.lieu.nom,
-          adresse: testData.lieu.adresse,
-          codePostal: testData.lieu.codePostal,
-          ville: testData.lieu.ville
+          date: baseData.concert.date,
+          heure: baseData.concert.heure,
+          lieu: baseData.lieu.nom,
+          adresse: baseData.lieu.adresse,
+          codePostal: baseData.lieu.codePostal,
+          ville: baseData.lieu.ville
         },
         
         isTest: true,
@@ -244,15 +249,15 @@ function WorkflowTestRunner() {
         dateEmission: new Date().toISOString().split('T')[0],
         dateValidite: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'draft',
-        montantHT: testData.concert.cachetBrut,
+        montantHT: baseData.concert.cachetBrut,
         tauxTVA: 5.5,
-        montantTVA: Math.round(testData.concert.cachetBrut * 0.055),
-        montantTTC: Math.round(testData.concert.cachetBrut * 1.055),
+        montantTVA: Math.round(baseData.concert.cachetBrut * 0.055),
+        montantTTC: Math.round(baseData.concert.cachetBrut * 1.055),
         lignes: [{
-          description: `Prestation artistique - ${testData.artiste.nom}`,
+          description: `Prestation artistique - ${baseData.artiste.nom}`,
           quantite: 1,
-          prixUnitaire: testData.concert.cachetBrut,
-          montant: testData.concert.cachetBrut
+          prixUnitaire: baseData.concert.cachetBrut,
+          montant: baseData.concert.cachetBrut
         }],
         isTest: true,
         testId,
@@ -265,15 +270,15 @@ function WorkflowTestRunner() {
         dateEmission: new Date().toISOString().split('T')[0],
         dateEcheance: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'draft',
-        montantHT: testData.concert.cachetBrut,
+        montantHT: baseData.concert.cachetBrut,
         tauxTVA: 5.5,
-        montantTVA: Math.round(testData.concert.cachetBrut * 0.055),
-        montantTTC: Math.round(testData.concert.cachetBrut * 1.055),
+        montantTVA: Math.round(baseData.concert.cachetBrut * 0.055),
+        montantTTC: Math.round(baseData.concert.cachetBrut * 1.055),
         lignes: [{
-          description: `Prestation artistique - ${testData.artiste.nom}`,
+          description: `Prestation artistique - ${baseData.artiste.nom}`,
           quantite: 1,
-          prixUnitaire: testData.concert.cachetBrut,
-          montant: testData.concert.cachetBrut
+          prixUnitaire: baseData.concert.cachetBrut,
+          montant: baseData.concert.cachetBrut
         }],
         isTest: true,
         testId,
@@ -281,6 +286,8 @@ function WorkflowTestRunner() {
         updatedAt: serverTimestamp()
       }
     };
+    
+    return testData;
   };
 
   /**

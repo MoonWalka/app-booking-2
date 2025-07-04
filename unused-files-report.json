@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-07-03T22:46:26.763Z",
+  "timestamp": "2025-07-03T23:17:42.837Z",
   "summary": {
-    "totalFiles": 723,
+    "totalFiles": 573,
     "usedFiles": 435,
     "unusedFiles": 1,
-    "potentiallyUnused": 287
+    "potentiallyUnused": 137
   },
   "unused": [
     {
@@ -14,21 +14,6 @@
     }
   ],
   "potentially": [
-    {
-      "path": "src/components/admin/DataCompatibilityDashboard.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/api/ContratDownloadAPI.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/artistes/ArtistesListSimple.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
     {
       "path": "src/components/artistes/desktop/sections/ArtisteBasicInfoSection.js",
       "reason": "Non importé dans le graphe de dépendances",
@@ -55,37 +40,7 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/artistes/handlers/paginationHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/artistes/mobile/ArtistesList.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/artistes/mobile/handlers/deleteHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/artistes/mobile/handlers/paginationHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/artistes/mobile/utils/concertUtils.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/artistes/sections/ArtisteRow.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/artistes/utils/concertUtils.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -100,22 +55,7 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/common/EnvironmentBanner.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/common/ErrorDisplay.jsx",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/common/NotFound.jsx",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/common/PerformanceMonitor.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -125,22 +65,7 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/common/layout/MobileLayout.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/common/steps/StepNavigation.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/common/steps/StepProgress.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/componentMapping.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -151,21 +76,6 @@
     },
     {
       "path": "src/components/concerts/ConcertForm/index.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/DatesListSimple.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/PublicationsListSimple.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/TestComponent.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -195,21 +105,6 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/concerts/desktop/ConcertViewModern.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/desktop/ConcertViewWrapper.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/desktop/ConcertsListSimplified.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/concerts/mobile/ConcertForm.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
@@ -220,72 +115,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/concerts/mobile/handlers/deleteHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/mobile/sections/ActionBarMobile.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/sections/ConcertRow.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/sections/ConcertStatusTabs.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/sections/ContactWithRoleSelector.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/utils/concertFormValidation.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/concerts/utils/entityRelations.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contact/parametrage/HierarchicalTagsManager.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contacts/ContactContratsTable.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/contacts/ContactDetails.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
-      "path": "src/components/contacts/ContactsListRelational.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/contacts/desktop/ContactConcertsSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contacts/desktop/handlers/deleteHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contacts/desktop/sections/ContactHeader.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -310,21 +145,6 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/contacts/mobile/handlers/deleteHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contacts/modal/GlobalModalsContainer.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contacts/sections/LieuInfoSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/contrats/ContratGenerator.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
@@ -335,32 +155,7 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/contrats/QuillPageBreakModule.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/contrats/desktop/ContratVariable.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/hooks/useContratTemplateForm.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/hooks/useContratTemplatePreview.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/hooks/useTemplateEditor.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/hooks/useTemplateVariables.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -370,52 +165,7 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/contrats/desktop/sections/ContratTemplateBodySection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/sections/ContratTemplateFooterSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/sections/ContratTemplateHeader.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/sections/ContratTemplateHeaderSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/sections/ContratTemplateInfoSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/sections/ContratTemplateSignatureSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/sections/ContratTemplateTitleSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/desktop/sections/VariablesDropdown.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/contrats/desktop/sections/VariablesPanel.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/fullscreenEditorModal.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -430,52 +180,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/contrats/mobile/sections/MobileContratAlerts.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/mobile/sections/MobileContratGenerationActions.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/mobile/sections/MobileContratTemplatePreview.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/contrats/mobile/sections/MobileContratTemplateSelector.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/dates/DatesTable.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
-      "path": "src/components/dates/configs/datesDirectoryConfig.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/debug/ContactMigrationDiagnostic.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/debug/OrganizationIdFixer.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/debug/StructureVariableTest.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/forms/FormSubmissionViewer.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -535,11 +245,6 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/forms/validation/FormValidationInterfaceNew.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/forms/validation/ValidationActionBar.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
@@ -560,92 +265,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/layout/Navbar.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/layout/Sidebar.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
       "path": "src/components/layout/SidebarItem.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/LieuFormOptimized.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/handlers/deleteHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuAddressSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuConcertsSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuContactSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuFormActions.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuInfoSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuMapDisplay.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuOrganizerSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuStructuresSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/desktop/sections/LieuxTableRow.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/mobile/LieuxMobileList.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/lieux/mobile/handlers/deleteHandler.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/molecules/GenericList.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/molecules/handlers/paginationHandler.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -665,42 +290,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/pdf/ContratPDFBody.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/pdf/ContratPDFFooter.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/pdf/ContratPDFHeader.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/pdf/ContratPDFWrapper-fix.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/structures/StructureDetails.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
-      "path": "src/components/structures/core/useStructureAddressSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/structures/core/useStructureDetails.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/structures/desktop/StructureFormEnhanced.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -725,47 +320,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/components/ui/AddressDisplay.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/ui/ContactDisplay.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/ui/EntityCard.example.js",
-      "reason": "Fichier de test ou d'exemple",
-      "confidence": "medium"
-    },
-    {
-      "path": "src/components/ui/EntityListHeader.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/ui/EntitySearchField.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/components/ui/Form.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
       "path": "src/components/ui/Layout.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/ui/LegalInfoSection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/components/ui/ResponsiveList.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -795,27 +355,7 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/__tests__/templates/optimizedFormHookTest.template.js",
-      "reason": "Fichier de test ou d'exemple",
-      "confidence": "medium"
-    },
-    {
       "path": "src/hooks/artistes/index.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/artistes/useArtisteDetails.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/artistes/useArtisteForm.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/artistes/useArtisteSearch.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -836,11 +376,6 @@
     },
     {
       "path": "src/hooks/common/useAddressSearch.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/common/useBidirectionalRelations.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -900,11 +435,6 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/common/useTheme.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/concerts/index.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
@@ -920,32 +450,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/concerts/useConcertDetailsFixed.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/concerts/useConcertDetailsWithRoles.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
-      "path": "src/hooks/concerts/useConcertFilters.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/concerts/useConcertFormsManagement.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/concerts/useConcertListSimplified.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/concerts/useConcerts.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -970,37 +480,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/contacts/useAdresseValidation.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/contacts/useCompanySearch.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
-      "path": "src/hooks/contacts/useConcertSearch.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/contacts/useContactActions.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/contacts/useContactDetails.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/contacts/useContactDirect.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/contacts/useContactForm.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -1040,32 +525,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/contrats/useContractTemplates.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/contrats/useContratDetails.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
-      "path": "src/hooks/contrats/useContratForm.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/contrats/useContratGenerator.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/contrats/useContratGeneratorWithRoles.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/contrats/useContratTemplatePreview.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -1076,16 +541,6 @@
     },
     {
       "path": "src/hooks/forms/index.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/forms/useAdminFormValidation.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/forms/useFieldActions.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -1110,37 +565,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/forms/useLieuFormState.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/forms/useValidationBatchActions.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
       "path": "src/hooks/generics/actions/useGenericFieldActions.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/generics/actions/useGenericFormAction.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/generics/data/useGenericCachedData.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/generics/forms/useGenericFormPersistence.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/generics/forms/useGenericFormWizard.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -1185,11 +615,6 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/lieux/useLieuSearchFixed.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/lieux/useLieuxFilters.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
@@ -1210,22 +635,7 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/parametres/useEntrepriseFormRobuste.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/hooks/search/index.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/search/useArtisteSearch.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/search/useConcertSearch.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -1236,11 +646,6 @@
     },
     {
       "path": "src/hooks/search/useSearchAndFilter.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/hooks/search/useStructureSearch.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -1275,57 +680,12 @@
       "confidence": "low"
     },
     {
-      "path": "src/hooks/useSecureRelations.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/schemas/ContactSchemas.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/services/InstanceTracker.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
     {
-      "path": "src/services/contacts/duplicatesService.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/services/contacts/importExportService.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/services/contacts/qualificationsService.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/services/csrfService.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/services/dataValidationService.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/services/firestoreService.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
       "path": "src/services/index.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/services/persistenceService.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     },
@@ -1336,116 +696,6 @@
     },
     {
       "path": "src/setupTests.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/shared/tableConfigs/datesTableColumns.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/shims/firebase-firestore-shim.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/OptimizedRouteWrapper.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/StableRouteWrapper.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/addCoordinatesToLieux.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/auditTagsComments.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/contactMigrationDetection.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/dataCompatibilityHelper.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/dateConversion.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/debug/renderTracker.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/diagnostic/contactDiagnostic.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/diagnostic/debugDashboard.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/firebase-diagnostic.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/fixConcertDates.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/networkStabilizer.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/seedConcerts.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/templateDiagnostic.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/temporaryArtisteSearchFix.js",
-      "reason": "Non importé dans le graphe de dépendances",
-      "confidence": "low"
-    },
-    {
-      "path": "src/utils/test-helpers.js",
-      "reason": "Fichier de test ou d'exemple",
-      "confidence": "medium"
-    },
-    {
-      "path": "src/utils/testMapFix.js",
-      "reason": "Fichier de test ou d'exemple",
-      "confidence": "medium"
-    },
-    {
-      "path": "src/utils/testTagsUpdate.js",
-      "reason": "Fichier de test ou d'exemple",
-      "confidence": "medium"
-    },
-    {
-      "path": "src/utils/verifyContactStructure.js",
       "reason": "Non importé dans le graphe de dépendances",
       "confidence": "low"
     }

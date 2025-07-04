@@ -6,6 +6,12 @@ import AddressInput from '@/components/ui/AddressInput';
 import Card from '@/components/ui/Card';
 import styles from '@/pages/FormResponsePage.module.css';
 
+// Import conditionnel du bouton de test
+let TestFormButton = null;
+if (process.env.NODE_ENV === 'development') {
+  TestFormButton = require('@/components/debug/TestFormButton').default;
+}
+
 const PublicContactForm = ({ 
   token, 
   concertId, 
@@ -292,6 +298,39 @@ const PublicContactForm = ({
     return errors;
   };
 
+  /**
+   * Remplit le formulaire avec des données de test
+   */
+  const handleTestDataFill = (testData) => {
+    if (!testData) return;
+    
+    setFormData({
+      // Conserver les données du lieu déjà remplies
+      lieuNom: formData.lieuNom,
+      lieuAdresse: formData.lieuAdresse,
+      lieuCodePostal: formData.lieuCodePostal,
+      lieuVille: formData.lieuVille,
+      lieuPays: formData.lieuPays || 'France',
+      
+      // Remplir avec les données de test
+      structureNom: testData.structureRaisonSociale || testData.nom || '',
+      structureSiret: testData.structureSiret || '',
+      structureAdresse: testData.structureAdresse || '',
+      structureCodePostal: testData.structureCodePostal || '',
+      structureVille: testData.structureVille || '',
+      structureNumeroIntracommunautaire: testData.structureNumeroTva || '',
+      
+      signataireNom: testData.personneNom || '',
+      signatairePrenom: testData.personnePrenom || '',
+      signataireFonction: testData.personneFonction || '',
+      signataireEmail: testData.personneEmail || formData.signataireEmail || '',
+      signataireTelephone: testData.personneTelephone || ''
+    });
+    
+    // Remplir aussi le champ SIRET pour la recherche
+    setSiretSearch(testData.structureSiret || '');
+  };
+
   // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -386,6 +425,17 @@ const PublicContactForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Bouton de test - visible uniquement en dev */}
+      {TestFormButton && (
+        <div className="text-end mb-3">
+          <TestFormButton 
+            onFormFill={handleTestDataFill}
+            variant="outline-primary"
+            size="sm"
+          />
+        </div>
+      )}
+      
       {/* Section Adresse du lieu */}
       <Card 
         title="Adresse du lieu de l'événement"

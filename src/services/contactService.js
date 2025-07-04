@@ -1,20 +1,19 @@
-import { collection, query, where, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, orderBy } from '@/services/firebase-service';
-import { db } from '@/services/firebase-service';
+/**
+ * Service de contacts - WRAPPER DE COMPATIBILITÉ
+ * Redirige vers le nouveau service relationnel (structures/personnes)
+ * À SUPPRIMER une fois tous les composants migrés
+ */
+import contactServiceRelational from './contactServiceRelational';
 
 const contactService = {
   async getContactsByOrganization(organizationId) {
     try {
-      const contactsRef = collection(db, 'contacts');
-      const q = query(
-        contactsRef, 
-        where('organizationId', '==', organizationId),
-        orderBy('nom', 'asc')
-      );
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      // Utiliser le nouveau service relationnel
+      const results = await contactServiceRelational.getAllContacts(organizationId, {
+        orderBy: 'nom',
+        orderDirection: 'asc'
+      });
+      return results.all;
     } catch (error) {
       console.error('Erreur lors de la récupération des contacts:', error);
       return [];
@@ -23,17 +22,10 @@ const contactService = {
 
   async getContactsByStructure(structureId) {
     try {
-      const contactsRef = collection(db, 'contacts');
-      const q = query(
-        contactsRef, 
-        where('structureId', '==', structureId),
-        orderBy('nom', 'asc')
-      );
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      // Cette méthode n'est plus pertinente dans le nouveau système
+      // Les personnes liées à une structure sont gérées par les liaisons
+      console.warn('getContactsByStructure est obsolète - utiliser le système de liaisons');
+      return [];
     } catch (error) {
       console.error('Erreur lors de la récupération des contacts par structure:', error);
       return [];
@@ -42,14 +34,7 @@ const contactService = {
 
   async getContactById(contactId) {
     try {
-      const contactDoc = await getDoc(doc(db, 'contacts', contactId));
-      if (contactDoc.exists()) {
-        return {
-          id: contactDoc.id,
-          ...contactDoc.data()
-        };
-      }
-      return null;
+      return await contactServiceRelational.getContactById(contactId);
     } catch (error) {
       console.error('Erreur lors de la récupération du contact:', error);
       return null;
@@ -58,12 +43,10 @@ const contactService = {
 
   async createContact(contactData) {
     try {
-      const docRef = await addDoc(collection(db, 'contacts'), {
-        ...contactData,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-      return docRef.id;
+      // Déterminer le type en fonction des données
+      const type = contactData.type || (contactData.structureRaisonSociale ? 'structure' : 'personne');
+      const result = await contactServiceRelational.createContact(contactData, type);
+      return result.id;
     } catch (error) {
       console.error('Erreur lors de la création du contact:', error);
       throw error;
@@ -72,10 +55,13 @@ const contactService = {
 
   async updateContact(contactId, contactData) {
     try {
-      await updateDoc(doc(db, 'contacts', contactId), {
-        ...contactData,
-        updatedAt: new Date()
-      });
+      // Récupérer d'abord le contact pour connaître son type
+      const existingContact = await contactServiceRelational.getContactById(contactId);
+      if (!existingContact) {
+        throw new Error('Contact non trouvé');
+      }
+      
+      await contactServiceRelational.updateContact(contactId, contactData, existingContact._type);
       return true;
     } catch (error) {
       console.error('Erreur lors de la mise à jour du contact:', error);
@@ -85,7 +71,13 @@ const contactService = {
 
   async deleteContact(contactId) {
     try {
-      await deleteDoc(doc(db, 'contacts', contactId));
+      // Récupérer d'abord le contact pour connaître son type
+      const existingContact = await contactServiceRelational.getContactById(contactId);
+      if (!existingContact) {
+        throw new Error('Contact non trouvé');
+      }
+      
+      await contactServiceRelational.deleteContact(contactId, existingContact._type);
       return true;
     } catch (error) {
       console.error('Erreur lors de la suppression du contact:', error);

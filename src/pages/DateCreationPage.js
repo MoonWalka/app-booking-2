@@ -4,7 +4,15 @@ import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'fire
 import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';
+import { toast } from 'react-toastify';
 import styles from './DateCreationPage.module.css';
+
+// Import conditionnel du bouton de test - DÉSACTIVÉ
+// Le test de workflow est maintenant dans Debug Tools
+// let TestWorkflowButton = null;
+// if (process.env.NODE_ENV === 'development') {
+//   TestWorkflowButton = require('@/components/debug/TestWorkflowButton2').default;
+// }
 
 /**
  * Page de création d'une nouvelle date de concert
@@ -209,6 +217,27 @@ function DateCreationPage({ params = {} }) {
     setShowStructureDropdown(false);
   };
 
+  /**
+   * Gère la création d'un workflow complet de test
+   */
+  const handleTestWorkflow = async (workflowData) => {
+    if (workflowData) {
+      // Le workflow a créé toutes les données, on peut fermer cette page
+      toast.info('📋 Workflow de test créé ! Vous pouvez accéder au formulaire via le lien dans la notification.');
+      
+      // Attendre un peu pour que l'événement de rafraîchissement soit traité
+      setTimeout(() => {
+        // Ouvrir la liste des concerts pour voir le nouveau concert
+        openConcertsListTab();
+        
+        // Fermer l'onglet actuel
+        const currentTab = getActiveTab();
+        if (currentTab) {
+          closeTab(currentTab.id);
+        }
+      }, 100); // 100ms devrait suffire
+    }
+  };
 
   const resetForm = () => {
     setFormData({
@@ -266,6 +295,13 @@ function DateCreationPage({ params = {} }) {
       
       console.log('✅ Date créée avec succès! ID:', docRef.id);
       
+      // Émettre un événement pour forcer le rafraîchissement des listes
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('concertCreated', { 
+          detail: { concertId: docRef.id } 
+        }));
+      }
+      
       // Afficher un message de succès
       alert('Date créée avec succès !');
 
@@ -297,13 +333,17 @@ function DateCreationPage({ params = {} }) {
   return (
     <div className={styles.container}>
       <div className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>
-          <i className="bi bi-calendar-plus me-3"></i>
-          Nouvelle Date de Concert
-        </h1>
-        <p className={styles.pageSubtitle}>
-          Créez une nouvelle date en associant un artiste/projet avec un organisateur
-        </p>
+        <div className="d-flex justify-content-between align-items-start">
+          <div>
+            <h1 className={styles.pageTitle}>
+              <i className="bi bi-calendar-plus me-3"></i>
+              Nouvelle Date de Concert
+            </h1>
+            <p className={styles.pageSubtitle}>
+              Créez une nouvelle date en associant un artiste/projet avec un organisateur
+            </p>
+          </div>
+        </div>
       </div>
       
       {/* PANNEAU DE DEBUG */}

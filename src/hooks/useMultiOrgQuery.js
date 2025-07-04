@@ -267,53 +267,44 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
 
   // Écouter les changements en temps réel si demandé
   useEffect(() => {
-    if (!currentOrg || !realtime) {
-      fetchData();
-      return;
+    fetchData();
+  }, [fetchData]);
+
+  // Fonction utilitaire pour construire les contraintes de requête
+  const buildConstraints = useCallback(() => {
+    const constraints = [];
+    
+    // Ajouter le filtre organisation si disponible
+    if (currentOrg) {
+      constraints.push(where('organizationId', '==', currentOrg.id));
     }
-
-    const orgCollection = collection(db, collectionName);
-    let q = query(orgCollection);
-
-    // Appliquer les filtres pour l'écoute en temps réel
+    
+    // Ajouter les filtres personnalisés
     filters.forEach(filter => {
       if (filter.field && filter.operator && filter.value !== undefined) {
-        q = query(q, where(filter.field, filter.operator, filter.value));
+        constraints.push(where(filter.field, filter.operator, filter.value));
       }
     });
-
+    
+    // Ajouter le tri
     if (orderByField) {
-      q = query(q, orderBy(orderByField, orderDirection));
+      constraints.push(orderBy(orderByField, orderDirection));
     }
-
+    
+    // Ajouter la limite
     if (limitCount) {
-      q = query(q, limit(limitCount));
+      constraints.push(limit(limitCount));
     }
-
-    const unsubscribe = onSnapshot(q, 
-      (snapshot) => {
-        const results = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setData(results);
-        setLoading(false);
-      },
-      (err) => {
-        console.error('❌ Erreur écoute temps réel:', err);
-        setError(err.message);
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe();
-  }, [currentOrg, collectionName, filters, orderByField, orderDirection, limitCount, realtime, fetchData]);
+    
+    return constraints;
+  }, [currentOrg, filters, orderByField, orderDirection, limitCount]);
 
   return {
     data,
     loading,
     error,
-    refetch: fetchData
+    refetch: fetchData,
+    buildConstraints
   };
 };
 

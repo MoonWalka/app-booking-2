@@ -95,6 +95,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "@faker-js/faker": "^9.9.0",
     "@firebase/rules-unit-testing": "^3.0.4",
     "@types/babel__core": "^7.20.5",
     "@types/babel__generator": "^7.27.0",

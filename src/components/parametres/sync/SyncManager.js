@@ -3,7 +3,7 @@ import { Card, Button, Alert, Form, ProgressBar, Badge, ListGroup, Tab, Tabs } f
 import { FaSync, FaCloudUploadAlt, FaCloudDownloadAlt, FaSave, FaUpload, FaClock } from 'react-icons/fa';
 import FlexContainer from '@/components/ui/FlexContainer';
 import { toast } from 'react-toastify';
-import * as syncService from '@services/syncService';
+// import * as syncService from '@services/syncService';
 import { IS_LOCAL_MODE, CURRENT_MODE } from '@services/firebase-service';
 import styles from './SyncManager.module.css';
 
@@ -58,16 +58,16 @@ const SyncManager = () => {
         setExportProgress(prev => Math.min(prev + 5, 90));
       }, 300);
       
-      const success = await syncService.exportLocalDataToFirebase(selectedCollections);
+      // const success = await syncService.exportLocalDataToFirebase(selectedCollections);
       
       clearInterval(progressInterval);
       setExportProgress(100);
       
-      if (success) {
-        toast.success('Exportation réussie vers Firebase');
-      } else {
-        toast.error('Erreur lors de l\'exportation vers Firebase');
-      }
+      // if (success) {
+      //   toast.success('Exportation réussie vers Firebase');
+      // } else {
+      //   toast.error('Erreur lors de l\'exportation vers Firebase');
+      // }
     } catch (error) {
       console.error('Erreur lors de l\'exportation:', error);
       toast.error('Erreur lors de l\'exportation: ' + error.message);
@@ -97,16 +97,16 @@ const SyncManager = () => {
         setImportProgress(prev => Math.min(prev + 5, 90));
       }, 300);
       
-      const success = await syncService.importFirebaseDataToLocal(selectedCollections);
+      // const success = await syncService.importFirebaseDataToLocal(selectedCollections);
       
       clearInterval(progressInterval);
       setImportProgress(100);
       
-      if (success) {
-        toast.success('Importation réussie depuis Firebase');
-      } else {
-        toast.error('Erreur lors de l\'importation depuis Firebase');
-      }
+      // if (success) {
+      //   toast.success('Importation réussie depuis Firebase');
+      // } else {
+      //   toast.error('Erreur lors de l\'importation depuis Firebase');
+      // }
     } catch (error) {
       console.error('Erreur lors de l\'importation:', error);
       toast.error('Erreur lors de l\'importation: ' + error.message);
@@ -121,12 +121,12 @@ const SyncManager = () => {
   // Gérer la sauvegarde des données locales
   const handleBackup = () => {
     try {
-      const success = syncService.backupLocalData();
-      if (success) {
-        toast.success('Sauvegarde des données locales réussie');
-      } else {
-        toast.error('Erreur lors de la sauvegarde des données locales');
-      }
+      // const success = syncService.backupLocalData();
+      // if (success) {
+      //   toast.success('Sauvegarde des données locales réussie');
+      // } else {
+      //   toast.error('Erreur lors de la sauvegarde des données locales');
+      // }
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       toast.error('Erreur lors de la sauvegarde: ' + error.message);
@@ -143,13 +143,13 @@ const SyncManager = () => {
     setLoading(true);
     
     try {
-      const success = await syncService.restoreLocalData(backupFile);
-      if (success) {
-        toast.success('Restauration des données réussie');
-        setBackupFile(null);
-      } else {
-        toast.error('Erreur lors de la restauration des données');
-      }
+      // const success = await syncService.restoreLocalData(backupFile);
+      // if (success) {
+      //   toast.success('Restauration des données réussie');
+      //   setBackupFile(null);
+      // } else {
+      //   toast.error('Erreur lors de la restauration des données');
+      // }
     } catch (error) {
       console.error('Erreur lors de la restauration:', error);
       toast.error('Erreur lors de la restauration: ' + error.message);
@@ -166,8 +166,8 @@ const SyncManager = () => {
       setIsAutoSyncEnabled(false);
       toast.info('Synchronisation automatique désactivée');
     } else {
-      const stop = syncService.enableAutoSync(autoSyncInterval);
-      setStopAutoSync(() => stop);
+      // const stop = syncService.enableAutoSync(autoSyncInterval);
+      // setStopAutoSync(() => stop);
       setIsAutoSyncEnabled(true);
       toast.info(`Synchronisation automatique activée (${autoSyncInterval} minutes)`);
     }

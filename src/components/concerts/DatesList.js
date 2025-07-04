@@ -23,54 +23,71 @@ function DatesList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fonction de chargement des données
+  const loadData = async () => {
+    if (!currentOrg?.id) {
+      setLoading(false);
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Même requête que TableauDeBordPage pour éviter les problèmes d'index
+      const concertsQuery = query(
+        collection(db, 'concerts'),
+        where('organizationId', '==', currentOrg.id),
+        orderBy('date', 'desc') // Même ordre que TableauDeBordPage
+      );
+      
+      const concertsSnapshot = await getDocs(concertsQuery);
+      const concertsData = concertsSnapshot.docs.map(doc => {
+        const concert = { id: doc.id, ...doc.data() };
+        
+        // Mapping simple pour les colonnes affichées
+        return {
+          ...concert,
+          entreprise: concert.structureNom || '-',
+          artiste: concert.artisteNom || concert.titre || '-',
+          lieu: concert.lieuNom || '-',
+          ville: concert.lieuVille || '-',
+          organisateur: concert.contactNom || '-',
+          projet: concert.projet || concert.formule || concert.projetNom || '-',
+          dossier: concert.dossier || '-',
+          niv: concert.niveau || '1',
+          coll: deriveCollaboratorCode(concert.structureNom)
+        };
+      });
+      
+      setData(concertsData);
+      console.log('📊 DatesList: Chargement terminé, nombre de dates:', concertsData.length);
+    } catch (err) {
+      console.error('Erreur lors du chargement des dates:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Charger les données Firebase
   useEffect(() => {
-    const loadData = async () => {
-      if (!currentOrg?.id) {
-        setLoading(false);
-        return;
-      }
-      
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Même requête que TableauDeBordPage pour éviter les problèmes d'index
-        const concertsQuery = query(
-          collection(db, 'concerts'),
-          where('organizationId', '==', currentOrg.id),
-          orderBy('date', 'desc') // Même ordre que TableauDeBordPage
-        );
-        
-        const concertsSnapshot = await getDocs(concertsQuery);
-        const concertsData = concertsSnapshot.docs.map(doc => {
-          const concert = { id: doc.id, ...doc.data() };
-          
-          // Mapping simple pour les colonnes affichées
-          return {
-            ...concert,
-            entreprise: concert.structureNom || '-',
-            artiste: concert.artisteNom || concert.titre || '-',
-            lieu: concert.lieuNom || '-',
-            ville: concert.lieuVille || '-',
-            organisateur: concert.contactNom || '-',
-            projet: concert.projet || concert.formule || concert.projetNom || '-',
-            dossier: concert.dossier || '-',
-            niv: concert.niveau || '1',
-            coll: deriveCollaboratorCode(concert.structureNom)
-          };
-        });
-        
-        setData(concertsData);
-      } catch (err) {
-        console.error('Erreur lors du chargement des dates:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+    loadData();
+  }, [currentOrg?.id]);
+
+  // Écouter les événements de création de concert pour rafraîchir
+  useEffect(() => {
+    const handleConcertCreated = (event) => {
+      console.log('🔄 DatesList: Événement concertCreated reçu:', event.detail);
+      // Recharger les données
+      loadData();
     };
 
-    loadData();
+    window.addEventListener('concertCreated', handleConcertCreated);
+    
+    return () => {
+      window.removeEventListener('concertCreated', handleConcertCreated);
+    };
   }, [currentOrg?.id]);
 
   // Helper pour dériver le code collaborateur

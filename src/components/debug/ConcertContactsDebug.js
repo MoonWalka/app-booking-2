@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, limit, db } from '@/services/firebase-service';
+import { collection, getDocs, query, limit, where, db } from '@/services/firebase-service';
 import styles from './DebugController.module.css';
-import { useMultiOrgQuery } from '@/hooks/useMultiOrgQuery';
+import { useOrganization } from '@/context/OrganizationContext';
 
 const ConcertContactsDebug = () => {
   const [concerts, setConcerts] = useState([]);
@@ -14,15 +14,21 @@ const ConcertContactsDebug = () => {
     withNoContact: 0
   });
   
-  // Hook pour les requêtes multi-organisation
-  const { buildConstraints } = useMultiOrgQuery('concerts');
+  // Récupérer l'organisation courante
+  const { currentOrg } = useOrganization();
 
   useEffect(() => {
     const analyzeContactStructure = async () => {
       setLoading(true);
       try {
-        const constraints = buildConstraints();
-        const q = query(collection(db, 'concerts'), ...constraints, limit(50));
+        // Construire la requête en fonction de l'organisation courante
+        let constraints = [];
+        if (currentOrg) {
+          constraints.push(where('organizationId', '==', currentOrg.id));
+        }
+        constraints.push(limit(50));
+        
+        const q = query(collection(db, 'concerts'), ...constraints);
         const snapshot = await getDocs(q);
         
         const concertData = [];
@@ -76,7 +82,7 @@ const ConcertContactsDebug = () => {
     };
     
     analyzeContactStructure();
-  }, [buildConstraints]);
+  }, [currentOrg?.id]); // Dépendance stable sur l'ID de l'organisation
 
   return (
     <div className={styles.debugSection}>

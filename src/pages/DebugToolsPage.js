@@ -44,10 +44,12 @@ import CleanOldContractContent from '@/components/debug/CleanOldContractContent'
 import ContactsAuditTool from '@/components/debug/ContactsAuditTool';
 import ContactsFixTool from '@/components/debug/ContactsFixTool';
 import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer';
+import WorkflowTestRunner from '@/components/debug/WorkflowTestRunner';
+import ContactsMigrationFinal from '@/components/debug/ContactsMigrationFinal';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
-  const [activeTab, setActiveTab] = useState('festivals-debug');
+  const [activeTab, setActiveTab] = useState('migration-finale');
 
   // Temporairement accessible en production pour corriger les problèmes
   // À retirer une fois les corrections appliquées
@@ -82,6 +84,14 @@ const DebugToolsPage = () => {
         onSelect={(k) => setActiveTab(k)}
         className={styles.tabs}
       >
+        <Tab eventKey="migration-finale" title="🚨 MIGRATION FINALE CONTACTS">
+          <ContactsMigrationFinal />
+        </Tab>
+        
+        <Tab eventKey="workflow-test" title="🚀 Test Workflow Complet">
+          <WorkflowTestRunner />
+        </Tab>
+        
         <Tab eventKey="system-audit" title="🔬 Audit Système">
           <SystemAuditTool />
         </Tab>

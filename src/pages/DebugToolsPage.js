@@ -46,6 +46,7 @@ import ContactsFixTool from '@/components/debug/ContactsFixTool';
 import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer';
 import WorkflowTestRunner from '@/components/debug/WorkflowTestRunner';
 import ContactsMigrationFinal from '@/components/debug/ContactsMigrationFinal';
+import QuickContactCreator from '@/components/debug/QuickContactCreator';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -90,6 +91,10 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="workflow-test" title="🚀 Test Workflow Complet">
           <WorkflowTestRunner />
+        </Tab>
+        
+        <Tab eventKey="quick-contact" title="👤 Création Rapide Contact">
+          <QuickContactCreator />
         </Tab>
         
         <Tab eventKey="system-audit" title="🔬 Audit Système">

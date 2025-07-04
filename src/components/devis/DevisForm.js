@@ -8,6 +8,7 @@ import collaborateurService from '@/services/collaborateurService';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useParametres } from '@/context/ParametresContext';
 import { useAuth } from '@/context/AuthContext';
+import DevisAutoFillButton from '@/components/debug/DevisAutoFillButton';
 
 /**
  * Formulaire d'édition de devis
@@ -396,6 +397,31 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
       }));
       setShowAddressModal(false);
       setSelectedAddress(null);
+    }
+  };
+
+  // Fonction pour remplir automatiquement le devis (DEV uniquement)
+  const handleAutoFill = (autoFillData) => {
+    setDevisData(prev => ({
+      ...prev,
+      montantHT: autoFillData.montantHT,
+      tauxTVA: autoFillData.tauxTVA,
+      montantTVA: autoFillData.montantTVA,
+      montantTTC: autoFillData.montantTTC,
+      lignes: autoFillData.lignes || [],
+      fraisTechniques: autoFillData.fraisTechniques || 0,
+      fraisDeplacements: autoFillData.fraisDeplacements || 0,
+      fraisHebergement: autoFillData.fraisHebergement || 0,
+      fraisRestauration: autoFillData.fraisRestauration || 0,
+      delaiPaiement: autoFillData.delaiPaiement || '30',
+      modePaiement: autoFillData.modePaiement || 'Virement',
+      conditions: autoFillData.conditions || '',
+      notes: autoFillData.notes || ''
+    }));
+    
+    // Recalculer les totaux
+    if (onCalculateTotals) {
+      onCalculateTotals();
     }
   };
 
@@ -1032,6 +1058,9 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
           </Button>
         </Modal.Footer>
       </Modal>
+      
+      {/* Bouton de remplissage automatique (DEV uniquement) */}
+      {!readonly && <DevisAutoFillButton onAutoFill={handleAutoFill} />}
     </div>
   );
 }

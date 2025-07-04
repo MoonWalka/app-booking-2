@@ -284,7 +284,8 @@ function WorkflowTestRunner() {
   };
 
   /**
-   * Crée toutes les entités du workflow
+   * Crée toutes les entités du workflow DE MANIÈRE SÉQUENTIELLE
+   * Simule le vrai workflow de l'application
    */
   const createWorkflowEntities = async (testData) => {
     const results = {
@@ -334,15 +335,28 @@ function WorkflowTestRunner() {
         lieuId: lieuRef.id,
         lieuNom: testData.lieu.nom,
         lieuVille: testData.lieu.ville,
-        lieuCapacite: testData.lieu.capacite
+        lieuCapacite: testData.lieu.capacite,
+        // WORKFLOW: Commencer au statut "contact" (première étape)
+        statut: 'contact',
+        statutFormulaire: 'non_envoye'
       };
       
       const concertRef = await addDoc(collection(db, 'concerts'), concertData);
       results.concert = { id: concertRef.id, ...concertData };
-      console.log('✅ Concert créé:', concertRef.id);
+      console.log('✅ Concert créé avec statut "contact":', concertRef.id);
 
-      // 5. Simuler la soumission du formulaire public
-      console.log('📝 Simulation de la soumission du formulaire...');
+      // 5. WORKFLOW ÉTAPE 1: Simuler l'envoi puis la soumission du formulaire
+      console.log('📝 WORKFLOW: Envoi et soumission du formulaire...');
+      
+      // D'abord, mettre à jour le concert pour indiquer que le formulaire a été envoyé
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        statutFormulaire: 'envoye',
+        formToken: concertData.formToken,
+        updatedAt: serverTimestamp()
+      });
+      console.log('✉️ Formulaire marqué comme envoyé');
+      
+      // Ensuite, simuler la soumission du formulaire
       const formSubmissionData = {
         ...testData.formSubmission,
         concertId: concertRef.id,
@@ -353,10 +367,28 @@ function WorkflowTestRunner() {
       
       const formRef = await addDoc(collection(db, 'formSubmissions'), formSubmissionData);
       results.formSubmission = { id: formRef.id, ...formSubmissionData };
-      console.log('✅ Formulaire soumis:', formRef.id);
+      
+      // Mettre à jour le concert pour indiquer que le formulaire a été rempli
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        statutFormulaire: 'complete',
+        hasFormSubmission: true,
+        lastFormSubmissionId: formRef.id,
+        updatedAt: serverTimestamp()
+      });
+      console.log('✅ Formulaire soumis et concert mis à jour');
 
-      // 6. Créer le contrat
-      console.log('📄 Création du contrat...');
+      // 6. WORKFLOW ÉTAPE 2: Créer le contrat APRÈS validation du formulaire
+      console.log('📄 WORKFLOW: Création du contrat après validation formulaire...');
+      
+      // Simuler la validation du formulaire d'abord
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        formValidated: true,
+        statut: 'negociation', // Passer au statut négociation
+        updatedAt: serverTimestamp()
+      });
+      console.log('✅ Formulaire validé, statut passé à "negociation"');
+      
+      // Maintenant créer le contrat
       const contratData = {
         ...testData.contrat,
         concertId: concertRef.id,
@@ -365,31 +397,91 @@ function WorkflowTestRunner() {
         lieuId: lieuRef.id,
         organizationId: currentOrganization.id,
         montantHT: testData.contrat.negociation.montantNet,
-        montantTTC: testData.contrat.negociation.montantTTC
+        montantTTC: testData.contrat.negociation.montantTTC,
+        status: 'draft' // Commence en brouillon
       };
       
       // Les contrats utilisent l'ID du concert comme ID
       await setDoc(doc(db, 'contrats', concertRef.id), contratData);
       results.contrat = { id: concertRef.id, ...contratData };
-      console.log('✅ Contrat créé:', concertRef.id);
+      
+      // Mettre à jour le concert pour indiquer qu'il a un contrat
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        hasContrat: true,
+        contratId: concertRef.id,
+        contratStatus: 'draft',
+        updatedAt: serverTimestamp()
+      });
+      console.log('✅ Contrat créé en mode brouillon');
 
-      // 7. Créer le devis
-      console.log('💰 Création du devis...');
+      // 7. WORKFLOW ÉTAPE 3: Simuler l'envoi et la signature du contrat
+      console.log('📮 WORKFLOW: Envoi et signature du contrat...');
+      
+      // Simuler l'envoi du contrat
+      await updateDoc(doc(db, 'contrats', concertRef.id), {
+        status: 'sent',
+        sentAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+      
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        contratStatus: 'sent',
+        updatedAt: serverTimestamp()
+      });
+      console.log('✉️ Contrat envoyé');
+      
+      // Simuler la signature du contrat
+      await new Promise(resolve => setTimeout(resolve, 500)); // Petit délai pour simuler le temps réel
+      
+      await updateDoc(doc(db, 'contrats', concertRef.id), {
+        status: 'signed',
+        signedAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+      
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        statut: 'confirme', // Le concert passe en confirmé après signature
+        contratStatus: 'signed',
+        updatedAt: serverTimestamp()
+      });
+      console.log('✍️ Contrat signé, concert confirmé');
+
+      // 8. WORKFLOW ÉTAPE 4: Créer le devis BASÉ sur le contrat signé
+      console.log('💰 WORKFLOW: Création du devis basé sur le contrat signé...');
       const devisData = {
         ...testData.devis,
         concertId: concertRef.id,
         contratId: concertRef.id,
         artisteId: artisteRef.id,
         structureId: structureRef.id,
-        organizationId: currentOrganization.id
+        organizationId: currentOrganization.id,
+        // Reprendre les montants du contrat
+        montantHT: contratData.montantHT,
+        montantTTC: contratData.montantTTC,
+        status: 'draft'
       };
       
       const devisRef = await addDoc(collection(db, 'devis'), devisData);
       results.devis = { id: devisRef.id, ...devisData };
-      console.log('✅ Devis créé:', devisRef.id);
+      
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        hasDevis: true,
+        devisId: devisRef.id,
+        devisStatus: 'draft',
+        updatedAt: serverTimestamp()
+      });
+      console.log('✅ Devis créé à partir du contrat');
 
-      // 8. Créer la facture
-      console.log('🧾 Création de la facture...');
+      // 9. WORKFLOW ÉTAPE 5: Créer la facture APRÈS le concert (normalement)
+      console.log('🧾 WORKFLOW: Création de la facture après prestation...');
+      
+      // Simuler que le concert a eu lieu
+      await updateDoc(doc(db, 'concerts', concertRef.id), {
+        statut: 'realise', // Concert réalisé
+        updatedAt: serverTimestamp()
+      });
+      console.log('🎤 Concert marqué comme réalisé');
+      
       const factureData = {
         ...testData.facture,
         concertId: concertRef.id,
@@ -397,23 +489,23 @@ function WorkflowTestRunner() {
         devisId: devisRef.id,
         artisteId: artisteRef.id,
         structureId: structureRef.id,
-        organizationId: currentOrganization.id
+        organizationId: currentOrganization.id,
+        // Reprendre les montants du contrat/devis
+        montantHT: contratData.montantHT,
+        montantTTC: contratData.montantTTC,
+        status: 'draft'
       };
       
       const factureRef = await addDoc(collection(db, 'factures'), factureData);
       results.facture = { id: factureRef.id, ...factureData };
-      console.log('✅ Facture créée:', factureRef.id);
-
-      // Mettre à jour le concert avec les références
+      
       await updateDoc(doc(db, 'concerts', concertRef.id), {
-        hasContrat: true,
-        contratId: concertRef.id,
-        hasDevis: true,
-        devisId: devisRef.id,
         hasFacture: true,
         factureId: factureRef.id,
+        factureStatus: 'draft',
         updatedAt: serverTimestamp()
       });
+      console.log('✅ Facture créée après réalisation du concert');
 
       // Émettre l'événement de création
       if (typeof window !== 'undefined') {
@@ -443,6 +535,9 @@ function WorkflowTestRunner() {
       contratCree: false,
       devisCree: false,
       factureCree: false,
+      // Vérifications du workflow
+      workflowStatuts: false,
+      workflowDependances: false,
       errors: []
     };
 
@@ -535,6 +630,60 @@ function WorkflowTestRunner() {
         }
       }
 
+      // VÉRIFICATIONS DU WORKFLOW
+      console.log('🔄 Vérification du workflow et des statuts...');
+      
+      // Re-récupérer le concert pour avoir les derniers statuts
+      const concertFinalDoc = await getDoc(doc(db, 'concerts', entities.concert.id));
+      if (concertFinalDoc.exists()) {
+        const concertFinal = concertFinalDoc.data();
+        
+        // Vérifier les statuts du workflow
+        const statutsCorrects = 
+          concertFinal.statut === 'realise' && // Concert réalisé
+          concertFinal.statutFormulaire === 'complete' && // Formulaire complété
+          concertFinal.formValidated === true && // Formulaire validé
+          concertFinal.contratStatus === 'signed' && // Contrat signé
+          concertFinal.hasContrat === true &&
+          concertFinal.hasDevis === true &&
+          concertFinal.hasFacture === true;
+          
+        if (statutsCorrects) {
+          verifications.workflowStatuts = true;
+          console.log('✅ Statuts du workflow corrects');
+        } else {
+          verifications.errors.push('Statuts du workflow incorrects');
+          console.log('❌ Statuts incorrects:', {
+            statut: concertFinal.statut,
+            statutFormulaire: concertFinal.statutFormulaire,
+            formValidated: concertFinal.formValidated,
+            contratStatus: concertFinal.contratStatus
+          });
+        }
+        
+        // Vérifier les dépendances (que chaque document pointe vers les précédents)
+        const contratFinalDoc = await getDoc(doc(db, 'contrats', entities.contrat.id));
+        const devisFinalDoc = await getDoc(doc(db, 'devis', entities.devis.id));
+        const factureFinalDoc = await getDoc(doc(db, 'factures', entities.facture.id));
+        
+        if (contratFinalDoc.exists() && devisFinalDoc.exists() && factureFinalDoc.exists()) {
+          const devisFinal = devisFinalDoc.data();
+          const factureFinal = factureFinalDoc.data();
+          
+          const dependancesCorrectes = 
+            devisFinal.contratId === entities.contrat.id && // Devis lié au contrat
+            factureFinal.contratId === entities.contrat.id && // Facture liée au contrat
+            factureFinal.devisId === entities.devis.id; // Facture liée au devis
+            
+          if (dependancesCorrectes) {
+            verifications.workflowDependances = true;
+            console.log('✅ Dépendances du workflow correctes');
+          } else {
+            verifications.errors.push('Dépendances entre documents incorrectes');
+          }
+        }
+      }
+
       return verifications;
     } catch (error) {
       console.error('❌ Erreur lors de la vérification:', error);
@@ -618,8 +767,28 @@ function WorkflowTestRunner() {
           } : null
         },
         verifications,
-        success: Object.values(verifications).filter(v => v === true).length === 9,
-        errors: verifications.errors
+        success: Object.values(verifications).filter(v => v === true).length === 11, // 11 vérifications au total maintenant
+        errors: verifications.errors,
+        // Détails du workflow pour le rapport
+        workflowDetails: {
+          etapes: [
+            '1. Concert créé avec statut "contact"',
+            '2. Formulaire envoyé puis soumis',
+            '3. Formulaire validé → statut "negociation"',
+            '4. Contrat créé → envoyé → signé',
+            '5. Concert confirmé après signature',
+            '6. Devis créé basé sur le contrat',
+            '7. Concert réalisé',
+            '8. Facture créée après prestation'
+          ],
+          statutsFinals: {
+            concert: 'realise',
+            formulaire: 'complete + validé',
+            contrat: 'signed',
+            devis: 'draft',
+            facture: 'draft'
+          }
+        }
       };
 
       setTestReport(report);
@@ -928,6 +1097,30 @@ function WorkflowTestRunner() {
                           ))}
                         </ul>
                       </Alert>
+                    )}
+
+                    {testReport.workflowDetails && (
+                      <div className={styles.workflowDetails}>
+                        <h5>Détails du Workflow</h5>
+                        <div className="mb-3">
+                          <h6>Étapes exécutées :</h6>
+                          <ol className="mb-0">
+                            {testReport.workflowDetails.etapes.map((etape, idx) => (
+                              <li key={idx} className="mb-1">{etape}</li>
+                            ))}
+                          </ol>
+                        </div>
+                        <div className="mb-3">
+                          <h6>Statuts finaux :</h6>
+                          <ul className="list-unstyled mb-0">
+                            {Object.entries(testReport.workflowDetails.statutsFinals).map(([key, value]) => (
+                              <li key={key}>
+                                <strong>{key}:</strong> <span className="badge bg-info">{value}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
                     )}
 
                     <div className={styles.reportJson}>

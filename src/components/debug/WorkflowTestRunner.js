@@ -693,6 +693,19 @@ function WorkflowTestRunner() {
           verifications.errors.push('Structure incomplète (manque raison sociale ou organizationId)');
           console.log('❌ Structure incomplète:', structureData);
         }
+        
+        // Vérifier les champs essentiels pour l'affichage
+        const champsEssentiels = [
+          'structureRaisonSociale', 'nom', 'type', 'organizationId',
+          'structureAdresse', 'structureCodePostal', 'structureVille'
+        ];
+        const champsManquants = champsEssentiels.filter(champ => !structureData[champ]);
+        if (champsManquants.length > 0) {
+          verifications.errors.push(`Structure manque des champs: ${champsManquants.join(', ')}`);
+          console.log('⚠️ Champs manquants dans la structure:', champsManquants);
+        }
+      } else {
+        verifications.errors.push('Structure non trouvée dans la base');
       }
       
       // Re-récupérer le concert pour avoir les derniers statuts
@@ -725,8 +738,12 @@ function WorkflowTestRunner() {
         
         // Vérifier les dépendances (que chaque document pointe vers les précédents)
         const contratFinalDoc = await getDoc(doc(db, 'contrats', entities.contrat.id));
-        const devisFinalDoc = await getDoc(doc(db, 'devis', entities.devis.id));
-        const factureFinalDoc = await getDoc(doc(db, 'factures', entities.facture.id));
+        const devisFinalDoc = await getDoc(
+          doc(db, 'organizations', organizationId, 'devis', entities.devis.id)
+        );
+        const factureFinalDoc = await getDoc(
+          doc(db, 'organizations', organizationId, 'factures', entities.facture.id)
+        );
         
         if (contratFinalDoc.exists() && devisFinalDoc.exists() && factureFinalDoc.exists()) {
           const devisFinal = devisFinalDoc.data();
@@ -742,7 +759,16 @@ function WorkflowTestRunner() {
             console.log('✅ Dépendances du workflow correctes');
           } else {
             verifications.errors.push('Dépendances entre documents incorrectes');
+            console.log('❌ Dépendances incorrectes:', {
+              devisContratId: devisFinal.contratId,
+              expectedContratId: entities.contrat.id,
+              factureContratId: factureFinal.contratId,
+              factureDevisId: factureFinal.devisId,
+              expectedDevisId: entities.devis.id
+            });
           }
+        } else {
+          verifications.errors.push('Documents manquants pour vérifier les dépendances');
         }
       }
 
@@ -1213,6 +1239,36 @@ function WorkflowTestRunner() {
                             ⚠️ Les devis et factures sont dans des sous-collections de l'organisation
                           </p>
                         </div>
+                        
+                        {!testReport.success && (
+                          <div className="mb-3">
+                            <h6>🔍 Diagnostic des problèmes :</h6>
+                            <div className="small">
+                              {!testReport.verifications.workflowDependances && (
+                                <p className="text-danger">
+                                  ❌ Les dépendances entre documents ne sont pas correctes.
+                                  Vérifiez que le devis pointe vers le contrat et que la facture pointe vers le devis.
+                                </p>
+                              )}
+                              {!testReport.verifications.workflowStatuts && (
+                                <p className="text-danger">
+                                  ❌ Les statuts du workflow ne sont pas corrects.
+                                  Le concert devrait être "réalisé", le contrat "signé", etc.
+                                </p>
+                              )}
+                              {testReport.errors && testReport.errors.length > 0 && (
+                                <div>
+                                  <p className="text-warning">⚠️ Erreurs détectées :</p>
+                                  <ul>
+                                    {testReport.errors.map((err, idx) => (
+                                      <li key={idx} className="text-danger">{err}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 

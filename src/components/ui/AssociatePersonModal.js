@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useOrganization } from '@/context/OrganizationContext';
 import { personnesService } from '@/services/contacts/personnesService';
 import { useTabs } from '@/context/TabsContext';
@@ -12,7 +12,7 @@ import styles from './AssociatePersonModal.module.css';
 function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allowMultiple = true, existingPersonIds = [] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [personnes, setPersonnes] = useState([]);
-  const [filteredPersonnes, setFilteredPersonnes] = useState([]);
+  // État supprimé - on utilise directement le useMemo
   const [selectedPersonnes, setSelectedPersonnes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -26,7 +26,7 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
   const itemsPerPage = 10;
 
   // Charger les personnes depuis le modèle relationnel
-  const loadPersonnes = async (page = 1) => {
+  const loadPersonnes = useCallback(async (page = 1) => {
     if (!currentOrganization?.id) {
       console.warn('❌ [AssociatePersonModal] Organisation manquante pour charger les personnes');
       setError('Aucune organisation sélectionnée');
@@ -95,10 +95,10 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentOrganization, sortOrder]);
 
   // Filtrer les personnes selon le terme de recherche
-  const filterPersonnes = useMemo(() => {
+  const filteredPersonnes = useMemo(() => {
     if (!searchTerm) return personnes;
     
     const term = searchTerm.toLowerCase();
@@ -108,11 +108,10 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
     );
   }, [personnes, searchTerm]);
 
-  // Mettre à jour la liste filtrée
+  // Reset à la première page lors du changement de recherche
   useEffect(() => {
-    setFilteredPersonnes(filterPersonnes);
-    setCurrentPage(1); // Reset à la première page lors du filtrage
-  }, [filterPersonnes]);
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Charger les données au montage du composant
   useEffect(() => {
@@ -122,10 +121,12 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
       console.log('📋 existingPersonIds à l\'ouverture:', existingPersonIds);
       loadPersonnes();
     }
-  }, [isOpen, sortOrder, currentOrganization?.id, existingPersonIds, loadPersonnes]);
+  }, [isOpen, currentOrganization?.id, loadPersonnes]);
   
-  // Note: loadPersonnes n'est pas dans les dépendances car elle utilise currentOrganization?.id 
-  // qui est déjà dans les dépendances, et cela évite une boucle infinie
+  // Note: existingPersonIds est volontairement omis des dépendances pour éviter de recharger
+  // les personnes à chaque changement. Les personnes déjà associées sont gérées visuellement
+  // avec l'état disabled dans le rendu.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
 
   // Gérer la sélection des personnes

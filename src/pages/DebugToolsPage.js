@@ -44,7 +44,6 @@ import CleanOldContractContent from '@/components/debug/CleanOldContractContent'
 import ContactsAuditTool from '@/components/debug/ContactsAuditTool';
 import ContactsFixTool from '@/components/debug/ContactsFixTool';
 import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer';
-import WorkflowTestRunner from '@/components/debug/WorkflowTestRunner';
 import ContactsMigrationFinal from '@/components/debug/ContactsMigrationFinal';
 import QuickContactCreator from '@/components/debug/QuickContactCreator';
 import styles from './DebugToolsPage.module.css';
@@ -87,10 +86,6 @@ const DebugToolsPage = () => {
       >
         <Tab eventKey="migration-finale" title="🚨 MIGRATION FINALE CONTACTS">
           <ContactsMigrationFinal />
-        </Tab>
-        
-        <Tab eventKey="workflow-test" title="🚀 Test Workflow Complet">
-          <WorkflowTestRunner />
         </Tab>
         
         <Tab eventKey="quick-contact" title="👤 Création Rapide Contact">

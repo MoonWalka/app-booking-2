@@ -29,14 +29,17 @@ function QuickContactCreator() {
       const villes = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nantes', 'Bordeaux', 'Lille'];
       const types = ['Association', 'SARL', 'SAS', 'SCOP', 'EURL'];
       const noms = ['CultureLive', 'ArtScene', 'MusicProd', 'EventPro', 'SpectaclePlus'];
+      const typeChoisi = randomElement(types);
+      const nomChoisi = randomElement(noms);
       
       const structureData = {
         // Type obligatoire
         type: 'structure',
         
-        // Nom et raison sociale
-        nom: `${randomElement(types)} ${randomElement(noms)} ${numero}`,
-        structureRaisonSociale: `${randomElement(types)} ${randomElement(noms)} ${numero}`,
+        // Nom et raison sociale (différents pour plus de réalisme)
+        nom: `${nomChoisi}`, // Nom court
+        raisonSociale: `${typeChoisi} ${nomChoisi} ${numero}`, // Raison sociale complète
+        structureRaisonSociale: `${typeChoisi} ${nomChoisi} ${numero}`, // Pour compatibilité
         
         // Adresse complète
         structureAdresse: `${randomInt(1, 200)} ${randomElement(['rue', 'avenue', 'boulevard'])} ${randomElement(['de la Culture', 'des Arts', 'de la Musique', 'du Théâtre'])}`,
@@ -80,7 +83,8 @@ function QuickContactCreator() {
       setLastCreated({
         type: 'structure',
         id: docRef.id,
-        nom: structureData.nom
+        nom: structureData.nom,
+        raisonSociale: structureData.raisonSociale
       });
 
       toast.success(`Structure "${structureData.nom}" créée avec succès !`);
@@ -223,6 +227,12 @@ function QuickContactCreator() {
           <Alert variant="success" className="mb-0">
             <FaCheck className="me-2" />
             Dernier {lastCreated.type} créé : <strong>{lastCreated.nom}</strong>
+            {lastCreated.raisonSociale && (
+              <>
+                <br />
+                <small className="text-muted">Raison sociale : {lastCreated.raisonSociale}</small>
+              </>
+            )}
             <br />
             <small className="text-muted">ID: {lastCreated.id}</small>
           </Alert>

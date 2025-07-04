@@ -243,13 +243,14 @@ function ContactsList({ filterType = 'all' }) {
           variant = 'primary';
         }
 
-        // Fonction ou type de structure
+        // Fonction ou type de structure - DÉSACTIVÉ
         let subInfo = '';
-        if (item.entityType === 'structure') {
-          subInfo = item.type || '';
-        } else {
-          subInfo = item.fonction || (item._viewType === 'personne_libre' ? 'Sans structure' : '');
-        }
+        // On n'affiche plus le type de structure ou "Sans structure"
+        // if (item.entityType === 'structure') {
+        //   subInfo = item.type || '';
+        // } else {
+        //   subInfo = item.fonction || (item._viewType === 'personne_libre' ? 'Sans structure' : '');
+        // }
 
         return (
           <div className="d-flex align-items-center">

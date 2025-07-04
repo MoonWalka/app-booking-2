@@ -465,10 +465,27 @@ function WorkflowTestRunner() {
         // Reprendre les montants du contrat
         montantHT: contratData.montantHT,
         montantTTC: contratData.montantTTC,
-        status: 'draft'
+        status: 'draft',
+        // Ajouter les données nécessaires pour l'affichage
+        artisteNom: testData.artiste.nom,
+        structureNom: testData.structure.structureRaisonSociale,
+        concertDate: testData.concert.date,
+        concertNom: testData.concert.libelle,
+        // Données pour le PDF
+        structure: {
+          nom: testData.structure.structureRaisonSociale,
+          adresse: testData.structure.structureAdresse,
+          codePostal: testData.structure.structureCodePostal,
+          ville: testData.structure.structureVille,
+          siret: testData.structure.structureSiret
+        }
       };
       
-      const devisRef = await addDoc(collection(db, 'devis'), devisData);
+      // ATTENTION: Les devis sont dans une sous-collection de l'organisation
+      const devisRef = await addDoc(
+        collection(db, 'organizations', currentOrganization.id, 'devis'), 
+        devisData
+      );
       results.devis = { id: devisRef.id, ...devisData };
       
       await updateDoc(doc(db, 'concerts', concertRef.id), {
@@ -500,10 +517,34 @@ function WorkflowTestRunner() {
         // Reprendre les montants du contrat/devis
         montantHT: contratData.montantHT,
         montantTTC: contratData.montantTTC,
-        status: 'draft'
+        status: 'draft',
+        // Ajouter les données nécessaires pour l'affichage
+        artisteNom: testData.artiste.nom,
+        structureNom: testData.structure.structureRaisonSociale,
+        concertDate: testData.concert.date,
+        concertNom: testData.concert.libelle,
+        lieuNom: testData.lieu.nom,
+        lieuVille: testData.lieu.ville,
+        // Données pour le PDF
+        structure: {
+          nom: testData.structure.structureRaisonSociale,
+          adresse: testData.structure.structureAdresse,
+          codePostal: testData.structure.structureCodePostal,
+          ville: testData.structure.structureVille,
+          siret: testData.structure.structureSiret,
+          tva: testData.structure.structureNumeroTva
+        },
+        entreprise: {
+          nom: 'Meltin Recordz',
+          code: 'MR'
+        }
       };
       
-      const factureRef = await addDoc(collection(db, 'factures'), factureData);
+      // ATTENTION: Les factures sont dans une sous-collection de l'organisation
+      const factureRef = await addDoc(
+        collection(db, 'organizations', currentOrganization.id, 'factures'), 
+        factureData
+      );
       results.facture = { id: factureRef.id, ...factureData };
       
       await updateDoc(doc(db, 'concerts', concertRef.id), {
@@ -531,7 +572,7 @@ function WorkflowTestRunner() {
   /**
    * Vérifie que toutes les entités sont visibles et liées correctement
    */
-  const verifyWorkflow = async (entities) => {
+  const verifyWorkflow = async (entities, organizationId) => {
     const verifications = {
       artisteVisible: false,
       structureVisible: false,
@@ -617,7 +658,9 @@ function WorkflowTestRunner() {
 
       // Vérifier le devis
       if (entities.devis?.id) {
-        const devisDoc = await getDoc(doc(db, 'devis', entities.devis.id));
+        const devisDoc = await getDoc(
+          doc(db, 'organizations', organizationId, 'devis', entities.devis.id)
+        );
         if (devisDoc.exists()) {
           verifications.devisCree = true;
           console.log('✅ Devis vérifié');
@@ -628,7 +671,9 @@ function WorkflowTestRunner() {
 
       // Vérifier la facture
       if (entities.facture?.id) {
-        const factureDoc = await getDoc(doc(db, 'factures', entities.facture.id));
+        const factureDoc = await getDoc(
+          doc(db, 'organizations', organizationId, 'factures', entities.facture.id)
+        );
         if (factureDoc.exists()) {
           verifications.factureCree = true;
           console.log('✅ Facture vérifiée');
@@ -639,6 +684,16 @@ function WorkflowTestRunner() {
 
       // VÉRIFICATIONS DU WORKFLOW
       console.log('🔄 Vérification du workflow et des statuts...');
+      
+      // Vérifier que la structure est bien complète et visible
+      const structureFinalDoc = await getDoc(doc(db, 'structures', entities.structure.id));
+      if (structureFinalDoc.exists()) {
+        const structureData = structureFinalDoc.data();
+        if (!structureData.structureRaisonSociale || !structureData.organizationId) {
+          verifications.errors.push('Structure incomplète (manque raison sociale ou organizationId)');
+          console.log('❌ Structure incomplète:', structureData);
+        }
+      }
       
       // Re-récupérer le concert pour avoir les derniers statuts
       const concertFinalDoc = await getDoc(doc(db, 'concerts', entities.concert.id));
@@ -727,7 +782,7 @@ function WorkflowTestRunner() {
 
       // Vérifier le workflow
       console.log('🔍 Vérification du workflow...');
-      const verifications = await verifyWorkflow(entities);
+      const verifications = await verifyWorkflow(entities, currentOrganization.id);
 
       // Créer le rapport
       const report = {
@@ -842,14 +897,14 @@ function WorkflowTestRunner() {
     try {
       console.log('🧹 Nettoyage des données de test...');
       
-      const collections = ['concerts', 'lieux', 'contacts', 'artistes', 'formSubmissions', 'contrats', 'devis', 'factures'];
+      const rootCollections = ['concerts', 'lieux', 'structures', 'artistes', 'formSubmissions', 'contrats'];
+      const orgSubCollections = ['devis', 'factures'];
       let totalDeleted = 0;
 
-      for (const collectionName of collections) {
-        // Adapter pour la nouvelle structure
-        const actualCollection = collectionName === 'contacts' ? 'structures' : collectionName;
+      // Supprimer les collections à la racine
+      for (const collectionName of rootCollections) {
         const q = query(
-          collection(db, actualCollection),
+          collection(db, collectionName),
           where('organizationId', '==', currentOrganization.id),
           where('isTest', '==', true)
         );
@@ -859,7 +914,23 @@ function WorkflowTestRunner() {
         for (const doc of snapshot.docs) {
           await deleteDoc(doc.ref);
           totalDeleted++;
-          console.log(`🗑️ Supprimé: ${actualCollection}/${doc.id}`);
+          console.log(`🗑️ Supprimé: ${collectionName}/${doc.id}`);
+        }
+      }
+      
+      // Supprimer les sous-collections de l'organisation
+      for (const collectionName of orgSubCollections) {
+        const q = query(
+          collection(db, 'organizations', currentOrganization.id, collectionName),
+          where('isTest', '==', true)
+        );
+        
+        const snapshot = await getDocs(q);
+        
+        for (const doc of snapshot.docs) {
+          await deleteDoc(doc.ref);
+          totalDeleted++;
+          console.log(`🗑️ Supprimé: organizations/${currentOrganization.id}/${collectionName}/${doc.id}`);
         }
       }
 
@@ -1126,6 +1197,21 @@ function WorkflowTestRunner() {
                               </li>
                             ))}
                           </ul>
+                        </div>
+                        <div className="mb-3">
+                          <h6>📍 Emplacements des documents :</h6>
+                          <ul className="small mb-0">
+                            <li>✅ Artiste : <code>/artistes/{testReport.entitiesCreated.artiste.id}</code></li>
+                            <li>✅ Structure : <code>/structures/{testReport.entitiesCreated.structure.id}</code></li>
+                            <li>✅ Lieu : <code>/lieux/{testReport.entitiesCreated.lieu.id}</code></li>
+                            <li>✅ Concert : <code>/concerts/{testReport.entitiesCreated.concert.id}</code></li>
+                            <li>✅ Contrat : <code>/contrats/{testReport.entitiesCreated.concert.id}</code></li>
+                            <li>⚠️ Devis : <code>/organizations/{testReport.organizationId}/devis/{testReport.entitiesCreated.devis?.id || 'N/A'}</code></li>
+                            <li>⚠️ Facture : <code>/organizations/{testReport.organizationId}/factures/{testReport.entitiesCreated.facture?.id || 'N/A'}</code></li>
+                          </ul>
+                          <p className="text-muted small mt-2">
+                            ⚠️ Les devis et factures sont dans des sous-collections de l'organisation
+                          </p>
                         </div>
                       </div>
                     )}

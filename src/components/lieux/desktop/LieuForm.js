@@ -14,7 +14,7 @@ import useLieuDelete from '@/hooks/lieux/useLieuDelete';
 import LieuFormHeader from './sections/LieuFormHeader';
 import LieuGeneralInfo from './sections/LieuGeneralInfo';
 import LieuAddressInputSection from './sections/LieuAddressInputSection';
-import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
+import ContactSelectorRelational from '@/components/common/ContactSelectorRelational';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
 
 const LieuForm = () => {
@@ -99,8 +99,8 @@ const LieuForm = () => {
                 handleChange={handleChange}
               />
 
-              {/* Contact section avec UnifiedContactSelector */}
-              <UnifiedContactSelector
+              {/* Contact section avec ContactSelectorRelational */}
+              <ContactSelectorRelational
                 multiple={true}
                 value={lieu.contactIds || []}
                 onChange={(contactIds) => {

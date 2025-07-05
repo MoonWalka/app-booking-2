@@ -1,9 +1,9 @@
 import React from 'react';
-import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
+import ContactSelectorRelational from '@/components/common/ContactSelectorRelational';
 
 /**
  * Section component for managing structure contacts
- * Uses UnifiedContactSelector for consistent UI
+ * Uses ContactSelectorRelational for consistent UI
  * 
  * @param {Object} props - Component props
  * @param {Array} props.contactIds - Array of contact IDs
@@ -18,7 +18,7 @@ const StructureContactsSection = ({
   isEditing = true 
 }) => {
   return (
-    <UnifiedContactSelector
+    <ContactSelectorRelational
         multiple={true}
         value={contactIds}
         onChange={onChange}

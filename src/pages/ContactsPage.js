@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import ContactsList from '@/components/contacts/ContactsList';
 import ContactView from '@/components/contacts/desktop/ContactView';
 import ContactForm from '@/components/contacts/desktop/ContactForm';
-import ContactFormUnified from '@/components/contacts/ContactFormUnified';
 import ContactTypeSelector from '@/components/contacts/ContactTypeSelector';
 
 const ContactsPage = ({ tabPath }) => {
@@ -59,7 +58,6 @@ const ContactsPage = ({ tabPath }) => {
       <Routes>
         <Route path="/" element={<ContactsList />} />
         <Route path="/nouveau" element={<ContactTypeSelector />} />
-        <Route path="/nouveau/:type" element={<ContactFormUnified />} />
         <Route path="/:id/edit" element={<ContactForm />} />
         <Route path="/:id" element={<ContactView />} />
         <Route path="*" element={<Navigate to="/contacts" replace />} />

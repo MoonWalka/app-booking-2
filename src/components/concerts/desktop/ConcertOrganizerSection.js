@@ -95,7 +95,7 @@ const ConcertOrganizerSection = ({
                       >
                         <div className={styles.contactName}>{prog.nom}</div>
                         <div className={styles.contactDetails}>
-                          {prog.structure && <span className={styles.contactStructure}>{prog.structure}</span>}
+                          {(prog.structures?.[0]?.nom || prog.structure) && <span className={styles.contactStructure}>{prog.structures?.[0]?.nom || prog.structure}</span>}
                           {prog.email && <span className={styles.contactContactItem}>{prog.email}</span>}
                         </div>
                       </div>
@@ -116,8 +116,8 @@ const ConcertOrganizerSection = ({
                 <div className={styles.contactCard}>
                   <div className={styles.contactInfo}>
                     <span className={styles.contactName}>{selectedContact.nom}</span>
-                    {selectedContact.structure && (
-                      <span className={styles.contactStructure}>{selectedContact.structure}</span>
+                    {(selectedContact.structures?.[0]?.nom || selectedContact.structure) && (
+                      <span className={styles.contactStructure}>{selectedContact.structures?.[0]?.nom || selectedContact.structure}</span>
                     )}
                     <div className={styles.contactContacts}>
                       {selectedContact.email && (
@@ -160,7 +160,7 @@ const ConcertOrganizerSection = ({
                 </div>
                 <div className="mb-3">
                   <div className="fw-bold">Structure:</div>
-                  <div>{contact.structure || contact.structureNom || 'Non spécifiée'}</div>
+                  <div>{contact.structures?.[0]?.nom || contact.structure || contact.structureNom || 'Non spécifiée'}</div>
                 </div>
                 <div className="mb-3">
                   <div className="fw-bold">Email:</div>
@@ -193,12 +193,17 @@ const ConcertOrganizerSection = ({
                 <div className="mb-3">
                   <div className="fw-bold">Adresse:</div>
                   <div>
-                    {contact.adresse || contact.structureAdresse ? (
+                    {contact.adresse || contact.structures?.[0]?.adresse || contact.structureAdresse ? (
                       <>
                         {typeof contact.adresse === 'string' ? (
                           <>
                             <div>{contact.adresse}</div>
                             <div>{contact.codePostal} {contact.ville}</div>
+                          </>
+                        ) : contact.structures?.[0]?.adresse ? (
+                          <>
+                            <div>{contact.structures[0].adresse}</div>
+                            <div>{contact.structures[0].codePostal} {contact.structures[0].ville}</div>
                           </>
                         ) : contact.structureAdresse ? (
                           <>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Button, Table, Card, Modal, ListGroup } from 'react-bootstrap';
 import { getStructureById } from '@/services/structureService';
 import projetService from '@/services/projetService';
-import contactService from '@/services/contactService';
+import contactServiceRelational from '@/services/contactServiceRelational';
 import collaborateurService from '@/services/collaborateurService';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useParametres } from '@/context/ParametresContext';
@@ -192,10 +192,10 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
         
         // Charger les contacts (selon la structure si présente)
         if (devisData.structureId) {
-          const contactsData = await contactService.getContactsByStructure(devisData.structureId);
+          const contactsData = await contactServiceRelational.getContactsByStructure(devisData.structureId);
           setContacts(contactsData);
         } else {
-          const contactsData = await contactService.getContactsByOrganization(currentOrg.id);
+          const contactsData = await contactServiceRelational.getContactsByOrganization(currentOrg.id);
           setContacts(contactsData);
         }
       } catch (error) {

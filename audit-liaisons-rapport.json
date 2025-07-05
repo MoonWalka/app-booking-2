@@ -1,0 +1,93 @@
+{
+  "timestamp": "2025-07-04T21:10:49.143Z",
+  "composantsVerifies": 46,
+  "liaisonsVerifiees": 21,
+  "problemes": [],
+  "avertissements": [
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "concerts",
+      "entite_cible": "projets",
+      "champs": [
+        "projetId"
+      ]
+    },
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "contacts",
+      "entite_cible": "structures",
+      "champs": [
+        "structureId"
+      ]
+    },
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "factures",
+      "entite_cible": "contacts",
+      "champs": [
+        "clientId"
+      ]
+    },
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "devis",
+      "entite_cible": "concerts",
+      "champs": [
+        "concertId"
+      ]
+    },
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "devis",
+      "entite_cible": "contacts",
+      "champs": [
+        "clientId"
+      ]
+    },
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "festivals",
+      "entite_cible": "contacts",
+      "champs": [
+        "organisateurId"
+      ]
+    },
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "festivals",
+      "entite_cible": "lieux",
+      "champs": [
+        "lieuId"
+      ]
+    },
+    {
+      "type": "liaison_non_verifiee",
+      "entite_source": "lieux",
+      "entite_cible": "structures",
+      "champs": [
+        "structureId"
+      ]
+    }
+  ],
+  "suggestions": [
+    {
+      "type": "cleanup_manquant",
+      "description": "Certains composants utilisent useEffect sans cleanup",
+      "composants": [
+        "ContratDownloadDirect.js",
+        "ArtisteForm.js",
+        "ArtisteView.js",
+        "ArtisteView.js",
+        "ArtisteCreationModal.js"
+      ]
+    }
+  ],
+  "statistiques": {
+    "total_composants": 46,
+    "total_liaisons": 21,
+    "problemes_critiques": 0,
+    "avertissements": 8,
+    "suggestions": 1,
+    "score_sante": 100
+  }
+}

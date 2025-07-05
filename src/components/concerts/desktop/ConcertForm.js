@@ -13,7 +13,7 @@ import ConcertFormHeader from '../sections/ConcertFormHeader';
 import ConcertFormActions from '../sections/ConcertFormActions';
 import ConcertInfoSection from '../sections/ConcertInfoSection';
 import LieuSearchSection from '../sections/LieuSearchSection';
-import UnifiedContactSelector from '@/components/common/UnifiedContactSelector';
+import ContactSelectorRelational from '@/components/common/ContactSelectorRelational';
 import ArtisteSearchSection from '../sections/ArtisteSearchSection';
 // import ArtisteSearchSectionWithFallback from '../sections/ArtisteSearchSectionWithFallback';
 import StructureSearchSection from '../../contacts/sections/StructureSearchSection';
@@ -76,7 +76,7 @@ const ConcertFormDesktop = () => {
     maxResults: 10
   });
 
-  // La recherche de contacts est maintenant gérée par UnifiedContactSelector
+  // La recherche de contacts est maintenant gérée par ContactSelectorRelational
 
   // Recherche d'artistes
   const {
@@ -121,7 +121,7 @@ const ConcertFormDesktop = () => {
   }, [handleChange]);
 
   // DÉFINIR LES CALLBACKS DE SUPPRESSION ICI
-  // Le callback de suppression n'est plus nécessaire car UnifiedContactSelector gère cela en interne
+  // Le callback de suppression n'est plus nécessaire car ContactSelectorRelational gère cela en interne
 
   const handleRemoveArtisteCallback = useCallback(() => {
     handleArtisteChange(null);
@@ -192,7 +192,7 @@ const ConcertFormDesktop = () => {
               handleCreateLieu={handleCreateLieu}
             />
           
-          <UnifiedContactSelector
+          <ContactSelectorRelational
             multiple={true}  // Activer le mode multi-contacts
             value={formData.contactIds || (formData.contactId ? [formData.contactId] : [])}
             onChange={handleContactsChange}

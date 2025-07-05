@@ -1,0 +1,783 @@
+{
+  "titre": "Plan d'audit des liaisons entre composants",
+  "date": "2025-01-04",
+  "objectifs": [
+    "Identifier tous les composants d'affichage principaux",
+    "Analyser les liaisons entre entités",
+    "Vérifier la mise à jour en temps réel",
+    "Détecter les incohérences d'affichage"
+  ],
+  "entites_principales": {
+    "concerts": {
+      "description": "Dates/Concerts - Entité centrale du système",
+      "collections_firebase": ["concerts"],
+      "composants_affichage": {
+        "listes": [
+          {
+            "nom": "ConcertsList",
+            "chemins": [
+              "src/components/concerts/ConcertsList.js",
+              "src/components/concerts/desktop/ConcertsList.js",
+              "src/components/concerts/mobile/ConcertsList.js"
+            ],
+            "description": "Liste principale des concerts"
+          },
+          {
+            "nom": "DatesList",
+            "chemin": "src/components/concerts/DatesList.js",
+            "description": "Liste des dates de concerts"
+          },
+          {
+            "nom": "PublicationsList",
+            "chemin": "src/components/concerts/PublicationsList.js",
+            "description": "Liste des publications"
+          },
+          {
+            "nom": "ConcertsTableView",
+            "chemin": "src/components/concerts/ConcertsTableView.js",
+            "description": "Vue tabulaire des concerts avec workflow complet"
+          }
+        ],
+        "tableaux": [
+          {
+            "nom": "ConcertsTable",
+            "chemin": "src/components/concerts/sections/ConcertsTable.js",
+            "description": "Composant tableau pour afficher les concerts"
+          },
+          {
+            "nom": "DatesTable",
+            "chemin": "src/components/dates/DatesTable.js",
+            "description": "Tableau des dates"
+          }
+        ],
+        "details": [
+          {
+            "nom": "ConcertDetails",
+            "chemin": "src/components/concerts/ConcertDetails.js",
+            "description": "Fiche détail d'un concert"
+          },
+          {
+            "nom": "DateDetailsPage",
+            "chemin": "src/pages/DateDetailsPage.js",
+            "description": "Page détail d'une date"
+          }
+        ],
+        "formulaires": [
+          {
+            "nom": "ConcertForm",
+            "chemins": [
+              "src/components/concerts/mobile/ConcertForm.js"
+            ],
+            "description": "Formulaire de création/édition de concert"
+          },
+          {
+            "nom": "DateCreationPage",
+            "chemin": "src/pages/DateCreationPage.js",
+            "description": "Page de création de date"
+          }
+        ],
+        "stats": [
+          {
+            "nom": "ConcertsStatsCards",
+            "chemin": "src/components/concerts/sections/ConcertsStatsCards.js",
+            "description": "Cartes de statistiques des concerts"
+          }
+        ]
+      },
+      "liaisons_sortantes": [
+        {
+          "entite": "artistes",
+          "champs": ["artisteId", "artisteNom"],
+          "affichage": "Nom de l'artiste dans les listes et détails"
+        },
+        {
+          "entite": "lieux",
+          "champs": ["lieuId", "lieuNom"],
+          "affichage": "Lieu du concert"
+        },
+        {
+          "entite": "structures",
+          "champs": ["structureId"],
+          "affichage": "Structure organisatrice"
+        },
+        {
+          "entite": "contacts",
+          "champs": ["contactId"],
+          "affichage": "Contact principal"
+        },
+        {
+          "entite": "projets",
+          "champs": ["projetId"],
+          "affichage": "Projet associé"
+        },
+        {
+          "entite": "contrats",
+          "champs": ["contratId"],
+          "affichage": "Contrat lié"
+        },
+        {
+          "entite": "devis",
+          "champs": ["devisId"],
+          "affichage": "Devis associé"
+        },
+        {
+          "entite": "factures",
+          "champs": ["factureId"],
+          "affichage": "Facture générée"
+        }
+      ]
+    },
+    "contacts": {
+      "description": "Contacts (Structures et Personnes)",
+      "collections_firebase": ["contacts"],
+      "composants_affichage": {
+        "listes": [
+          {
+            "nom": "ContactsList",
+            "chemins": [
+              "src/components/contacts/ContactsList.js",
+              "src/components/contacts/desktop/ContactsList.js",
+              "src/components/contacts/mobile/ContactsList.js"
+            ],
+            "description": "Liste des contacts"
+          }
+        ],
+        "tableaux": [
+          {
+            "nom": "ContactEntityTable",
+            "chemin": "src/components/contacts/ContactEntityTable.js",
+            "description": "Tableau des entités liées à un contact"
+          },
+          {
+            "nom": "ContactDatesTable",
+            "chemin": "src/components/contacts/ContactDatesTable.js",
+            "description": "Tableau des dates d'un contact"
+          },
+          {
+            "nom": "ContactFacturesTable",
+            "chemin": "src/components/contacts/ContactFacturesTable.js",
+            "description": "Tableau des factures d'un contact"
+          },
+          {
+            "nom": "ContactFestivalsTable",
+            "chemin": "src/components/contacts/ContactFestivalsTable.js",
+            "description": "Tableau des festivals d'un contact"
+          }
+        ],
+        "details": [
+          {
+            "nom": "ContactDetails",
+            "chemins": [
+              "src/components/contacts/ContactDetails.js",
+              "src/components/contacts/mobile/ContactDetails.js"
+            ],
+            "description": "Fiche détail d'un contact"
+          }
+        ],
+        "stats": [
+          {
+            "nom": "ContactsStatsCards",
+            "chemin": "src/components/contacts/desktop/sections/ContactsStatsCards.js",
+            "description": "Statistiques des contacts"
+          }
+        ]
+      },
+      "liaisons_sortantes": [
+        {
+          "entite": "structures",
+          "champs": ["structureId"],
+          "affichage": "Structure parente (pour les personnes)"
+        },
+        {
+          "entite": "tags",
+          "champs": ["tags"],
+          "affichage": "Tags associés"
+        }
+      ],
+      "liaisons_entrantes": [
+        {
+          "entite": "concerts",
+          "affichage": "Concerts où le contact est impliqué"
+        },
+        {
+          "entite": "contrats",
+          "affichage": "Contrats signés"
+        },
+        {
+          "entite": "factures",
+          "affichage": "Factures émises"
+        },
+        {
+          "entite": "festivals",
+          "affichage": "Festivals organisés"
+        }
+      ]
+    },
+    "structures": {
+      "description": "Structures (organisations)",
+      "collections_firebase": ["structures"],
+      "composants_affichage": {
+        "listes": [
+          {
+            "nom": "StructuresList",
+            "chemins": [
+              "src/components/structures/StructuresList.js",
+              "src/components/structures/desktop/StructuresList.js",
+              "src/components/structures/mobile/StructuresList.js"
+            ],
+            "description": "Liste des structures"
+          }
+        ],
+        "details": [
+          {
+            "nom": "StructureDetails",
+            "chemins": [
+              "src/components/structures/StructureDetails.js",
+              "src/components/structures/desktop/StructureDetails.js",
+              "src/components/structures/mobile/StructureDetails.js"
+            ],
+            "description": "Fiche détail d'une structure"
+          }
+        ],
+        "formulaires": [
+          {
+            "nom": "StructureForm",
+            "chemin": "src/components/structures/mobile/StructureForm.js",
+            "description": "Formulaire structure"
+          }
+        ]
+      },
+      "liaisons_entrantes": [
+        {
+          "entite": "contacts",
+          "affichage": "Personnes de la structure"
+        },
+        {
+          "entite": "concerts",
+          "affichage": "Concerts organisés"
+        },
+        {
+          "entite": "lieux",
+          "affichage": "Lieux gérés"
+        }
+      ]
+    },
+    "contrats": {
+      "description": "Contrats",
+      "collections_firebase": ["contrats", "preContrats"],
+      "composants_affichage": {
+        "tableaux": [
+          {
+            "nom": "ContratsTableNew",
+            "chemin": "src/components/contrats/sections/ContratsTableNew.js",
+            "description": "Tableau des contrats"
+          }
+        ],
+        "pages": [
+          {
+            "nom": "ContratsPage",
+            "chemin": "src/pages/ContratsPage.js",
+            "description": "Page liste des contrats"
+          },
+          {
+            "nom": "ContratDetailsPage",
+            "chemin": "src/pages/ContratDetailsPage.js",
+            "description": "Page détail d'un contrat"
+          },
+          {
+            "nom": "ContratGenerationPage",
+            "chemin": "src/pages/ContratGenerationPage.js",
+            "description": "Page de génération de contrat"
+          },
+          {
+            "nom": "ContratRedactionPage",
+            "chemin": "src/pages/ContratRedactionPage.js",
+            "description": "Page de rédaction de contrat"
+          }
+        ]
+      },
+      "liaisons_sortantes": [
+        {
+          "entite": "concerts",
+          "champs": ["concertId"],
+          "affichage": "Concert associé"
+        },
+        {
+          "entite": "contacts",
+          "champs": ["contactId", "structureId"],
+          "affichage": "Signataires"
+        },
+        {
+          "entite": "factures",
+          "champs": ["factureId"],
+          "affichage": "Facture générée"
+        }
+      ]
+    },
+    "factures": {
+      "description": "Factures",
+      "collections_firebase": ["factures"],
+      "composants_affichage": {
+        "tableaux": [
+          {
+            "nom": "FacturesTableView",
+            "chemin": "src/components/factures/FacturesTableView.js",
+            "description": "Tableau des factures"
+          }
+        ],
+        "pages": [
+          {
+            "nom": "FacturesPage",
+            "chemin": "src/pages/FacturesPage.js",
+            "description": "Page liste des factures"
+          },
+          {
+            "nom": "FactureDetailsPage",
+            "chemin": "src/pages/FactureDetailsPage.js",
+            "description": "Page détail d'une facture"
+          },
+          {
+            "nom": "FactureGeneratorPage",
+            "chemin": "src/pages/FactureGeneratorPage.js",
+            "description": "Page de génération de facture"
+          }
+        ]
+      },
+      "liaisons_sortantes": [
+        {
+          "entite": "contrats",
+          "champs": ["contratId"],
+          "affichage": "Contrat source"
+        },
+        {
+          "entite": "concerts",
+          "champs": ["concertId"],
+          "affichage": "Concert facturé"
+        },
+        {
+          "entite": "contacts",
+          "champs": ["clientId"],
+          "affichage": "Client facturé"
+        }
+      ]
+    },
+    "devis": {
+      "description": "Devis",
+      "collections_firebase": ["devis"],
+      "composants_affichage": {
+        "listes": [
+          {
+            "nom": "DevisList",
+            "chemin": "src/components/devis/DevisList.js",
+            "description": "Liste des devis"
+          }
+        ],
+        "tableaux": [
+          {
+            "nom": "DevisTable",
+            "chemin": "src/components/devis/sections/DevisTable.js",
+            "description": "Tableau des devis"
+          }
+        ],
+        "pages": [
+          {
+            "nom": "DevisPage",
+            "chemin": "src/pages/DevisPage.js",
+            "description": "Page gestion des devis"
+          }
+        ]
+      },
+      "liaisons_sortantes": [
+        {
+          "entite": "concerts",
+          "champs": ["concertId"],
+          "affichage": "Concert associé"
+        },
+        {
+          "entite": "contacts",
+          "champs": ["clientId"],
+          "affichage": "Client"
+        }
+      ]
+    },
+    "tags": {
+      "description": "Tags/Étiquettes",
+      "collections_firebase": ["tags"],
+      "composants_affichage": {
+        "pages": [
+          {
+            "nom": "ContactTagsPage",
+            "chemin": "src/pages/ContactTagsPage.js",
+            "description": "Page de gestion des tags"
+          }
+        ]
+      },
+      "liaisons_entrantes": [
+        {
+          "entite": "contacts",
+          "affichage": "Contacts tagués"
+        },
+        {
+          "entite": "concerts",
+          "affichage": "Concerts tagués"
+        }
+      ]
+    },
+    "festivals": {
+      "description": "Festivals",
+      "collections_firebase": ["festivals"],
+      "composants_affichage": {
+        "tableaux": [
+          {
+            "nom": "FestivalsTableView",
+            "chemin": "src/components/festivals/FestivalsTableView.js",
+            "description": "Tableau des festivals"
+          }
+        ],
+        "pages": [
+          {
+            "nom": "FestivalsDatesPage",
+            "chemin": "src/pages/FestivalsDatesPage.js",
+            "description": "Page des dates de festivals"
+          }
+        ]
+      },
+      "liaisons_sortantes": [
+        {
+          "entite": "contacts",
+          "champs": ["organisateurId"],
+          "affichage": "Organisateur"
+        },
+        {
+          "entite": "lieux",
+          "champs": ["lieuId"],
+          "affichage": "Lieu du festival"
+        }
+      ]
+    },
+    "lieux": {
+      "description": "Lieux/Salles",
+      "collections_firebase": ["lieux"],
+      "composants_affichage": {
+        "listes": [
+          {
+            "nom": "LieuxList",
+            "chemins": [
+              "src/components/lieux/LieuxList.js",
+              "src/components/lieux/desktop/LieuxList.js"
+            ],
+            "description": "Liste des lieux"
+          }
+        ],
+        "tableaux": [
+          {
+            "nom": "LieuxResultsTable",
+            "chemin": "src/components/lieux/desktop/sections/LieuxResultsTable.js",
+            "description": "Tableau des résultats de recherche de lieux"
+          }
+        ],
+        "details": [
+          {
+            "nom": "LieuDetails",
+            "chemin": "src/components/lieux/LieuDetails.js",
+            "description": "Fiche détail d'un lieu"
+          }
+        ],
+        "formulaires": [
+          {
+            "nom": "LieuForm",
+            "chemin": "src/components/lieux/LieuForm.js",
+            "description": "Formulaire lieu"
+          }
+        ],
+        "stats": [
+          {
+            "nom": "LieuxStatsCards",
+            "chemin": "src/components/lieux/desktop/sections/LieuxStatsCards.js",
+            "description": "Statistiques des lieux"
+          }
+        ]
+      },
+      "liaisons_sortantes": [
+        {
+          "entite": "structures",
+          "champs": ["structureId"],
+          "affichage": "Structure gestionnaire"
+        }
+      ],
+      "liaisons_entrantes": [
+        {
+          "entite": "concerts",
+          "affichage": "Concerts dans ce lieu"
+        },
+        {
+          "entite": "festivals",
+          "affichage": "Festivals dans ce lieu"
+        }
+      ]
+    },
+    "artistes": {
+      "description": "Artistes",
+      "collections_firebase": ["artistes"],
+      "composants_affichage": {
+        "listes": [
+          {
+            "nom": "ArtistesList",
+            "chemins": [
+              "src/components/artistes/ArtistesList.js",
+              "src/components/artistes/desktop/ArtistesList.js",
+              "src/components/artistes/mobile/ArtistesList.js"
+            ],
+            "description": "Liste des artistes"
+          }
+        ],
+        "tableaux": [
+          {
+            "nom": "ArtistesTable",
+            "chemin": "src/components/artistes/sections/ArtistesTable.js",
+            "description": "Tableau des artistes"
+          }
+        ],
+        "formulaires": [
+          {
+            "nom": "ArtisteForm",
+            "chemins": [
+              "src/components/artistes/ArtisteForm.js",
+              "src/components/artistes/mobile/ArtisteForm.js"
+            ],
+            "description": "Formulaire artiste"
+          }
+        ],
+        "stats": [
+          {
+            "nom": "ArtistesStatsCards",
+            "chemin": "src/components/artistes/sections/ArtistesStatsCards.js",
+            "description": "Statistiques des artistes"
+          }
+        ]
+      },
+      "liaisons_entrantes": [
+        {
+          "entite": "concerts",
+          "affichage": "Concerts de l'artiste"
+        }
+      ]
+    },
+    "projets": {
+      "description": "Projets",
+      "collections_firebase": ["projets"],
+      "composants_affichage": {
+        "pages": [
+          {
+            "nom": "ProjetsPage",
+            "chemin": "src/pages/ProjetsPage.js",
+            "description": "Page de gestion des projets"
+          }
+        ]
+      },
+      "liaisons_entrantes": [
+        {
+          "entite": "concerts",
+          "affichage": "Concerts du projet"
+        }
+      ]
+    }
+  },
+  "composants_transversaux": {
+    "tableau_de_bord": {
+      "description": "Vue d'ensemble avec workflow complet",
+      "pages": [
+        {
+          "nom": "TableauDeBordPage",
+          "chemin": "src/pages/TableauDeBordPage.js",
+          "description": "Dashboard principal avec workflow concerts",
+          "entites_affichees": ["concerts", "contrats", "factures", "devis"],
+          "fonctionnalites": [
+            "Affichage unifié des concerts avec leur statut complet",
+            "Workflow: Devis → Pré-contrat → Confirmation → Contrat → Facture",
+            "Mise à jour en temps réel des statuts",
+            "Actions contextuelles selon l'état"
+          ]
+        },
+        {
+          "nom": "DashboardPage",
+          "chemin": "src/pages/DashboardPage.js",
+          "description": "Redirige vers TachesPage"
+        }
+      ]
+    },
+    "navigation_tabs": {
+      "description": "Système d'onglets pour navigation multi-entités",
+      "context": "TabsContext",
+      "fonctionnalites": [
+        "Ouverture d'onglets dynamiques",
+        "Conservation de l'état entre onglets",
+        "Navigation entre entités liées"
+      ]
+    },
+    "modals": {
+      "description": "Système de modales pour création/édition",
+      "composants": [
+        {
+          "nom": "OptimizedModal",
+          "chemin": "src/components/common/OptimizedModal.js"
+        }
+      ]
+    }
+  },
+  "points_de_verification": {
+    "affichage_relations": [
+      {
+        "point": "Concert → Artiste",
+        "verifier": [
+          "Le nom de l'artiste s'affiche dans ConcertsList",
+          "Le nom de l'artiste s'affiche dans ConcertDetails",
+          "Le nom de l'artiste s'affiche dans TableauDeBordPage"
+        ]
+      },
+      {
+        "point": "Concert → Lieu",
+        "verifier": [
+          "Le nom du lieu s'affiche dans ConcertsList",
+          "L'adresse complète s'affiche dans ConcertDetails",
+          "Le lieu est cliquable et ouvre LieuDetails"
+        ]
+      },
+      {
+        "point": "Concert → Contact",
+        "verifier": [
+          "Le contact s'affiche dans ConcertDetails",
+          "Le contact est cliquable et ouvre ContactDetails",
+          "Les concerts s'affichent dans ContactDetails"
+        ]
+      },
+      {
+        "point": "Contrat → Concert",
+        "verifier": [
+          "Le concert s'affiche dans ContratsTableNew",
+          "Les infos du concert sont dans ContratDetailsPage",
+          "Le statut du contrat s'affiche dans TableauDeBordPage"
+        ]
+      },
+      {
+        "point": "Facture → Contrat → Concert",
+        "verifier": [
+          "La facture est liée au contrat dans FacturesTableView",
+          "Les infos du concert apparaissent dans FactureDetailsPage",
+          "Le workflow est respecté dans TableauDeBordPage"
+        ]
+      }
+    ],
+    "mise_a_jour_temps_reel": [
+      {
+        "action": "Création d'un concert",
+        "verifier": [
+          "Apparaît immédiatement dans ConcertsList",
+          "Apparaît dans TableauDeBordPage",
+          "Les compteurs sont mis à jour",
+          "Apparaît dans les listes filtrées si critères respectés"
+        ]
+      },
+      {
+        "action": "Modification d'un contact",
+        "verifier": [
+          "Le nom est mis à jour partout où il apparaît",
+          "Les concerts liés affichent le nouveau nom",
+          "Les factures liées affichent le nouveau nom"
+        ]
+      },
+      {
+        "action": "Changement de statut contrat",
+        "verifier": [
+          "L'icône change dans TableauDeBordPage",
+          "Le statut est mis à jour dans ContratsTableNew",
+          "Les actions disponibles sont mises à jour"
+        ]
+      }
+    ],
+    "compteurs_statistiques": [
+      {
+        "composant": "ConcertsStatsCards",
+        "verifier": [
+          "Nombre total de concerts",
+          "Concerts par statut",
+          "Concerts ce mois",
+          "Mise à jour après ajout/suppression"
+        ]
+      },
+      {
+        "composant": "ContactsStatsCards",
+        "verifier": [
+          "Nombre de structures",
+          "Nombre de personnes",
+          "Contacts par tag",
+          "Mise à jour après modifications"
+        ]
+      }
+    ],
+    "filtres_recherche": [
+      {
+        "composant": "ConcertsList",
+        "verifier": [
+          "Recherche par nom d'artiste",
+          "Filtrage par statut",
+          "Filtrage par date",
+          "Combinaison de filtres"
+        ]
+      },
+      {
+        "composant": "ContactsList",
+        "verifier": [
+          "Recherche par nom",
+          "Filtrage par type (structure/personne)",
+          "Filtrage par tags",
+          "Recherche dans les champs liés"
+        ]
+      }
+    ]
+  },
+  "problemes_potentiels": [
+    {
+      "type": "Incohérence d'affichage",
+      "description": "Les noms/données peuvent ne pas être synchronisés entre vues",
+      "exemples": [
+        "Nom d'artiste différent entre liste et détail",
+        "Statut de contrat non mis à jour dans tableau de bord"
+      ]
+    },
+    {
+      "type": "Données manquantes",
+      "description": "Les relations peuvent ne pas être chargées",
+      "exemples": [
+        "Contact non affiché dans concert",
+        "Lieu manquant dans les détails"
+      ]
+    },
+    {
+      "type": "Performance",
+      "description": "Chargements multiples des mêmes données",
+      "exemples": [
+        "Requêtes répétées pour les mêmes artistes",
+        "Pas de cache pour les données fréquentes"
+      ]
+    }
+  ],
+  "recommandations": [
+    {
+      "titre": "Implémenter un système de cache centralisé",
+      "description": "Pour éviter les requêtes multiples et assurer la cohérence"
+    },
+    {
+      "titre": "Créer des hooks de synchronisation",
+      "description": "Pour mettre à jour automatiquement les données liées"
+    },
+    {
+      "titre": "Ajouter des tests d'intégration",
+      "description": "Pour vérifier les liaisons entre composants"
+    },
+    {
+      "titre": "Documenter les dépendances",
+      "description": "Créer une matrice de dépendances entre entités"
+    }
+  ]
+}

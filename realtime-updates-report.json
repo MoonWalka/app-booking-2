@@ -1,0 +1,4595 @@
+{
+  "timestamp": "2025-07-04T21:11:29.819Z",
+  "componentsWithRealtimeUpdates": [
+    {
+      "name": "ContratDownloadDirect.js",
+      "path": "src/components/api/ContratDownloadDirect.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "contratId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ArtistesList.js",
+      "path": "src/components/artistes/ArtistesList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ArtisteForm.js",
+      "path": "src/components/artistes/desktop/ArtisteForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "isNewFromUrl"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ArtisteView.js",
+      "path": "src/components/artistes/desktop/ArtisteView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "navigate"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ArtisteView.js",
+      "path": "src/components/artistes/mobile/ArtisteView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "navigate"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ArtisteCreationModal.js",
+      "path": "src/components/artistes/modal/ArtisteCreationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "editArtiste",
+        "show"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PrivateRoute.js",
+      "path": "src/components/auth/PrivateRoute.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntreprisesManagerFirebase.js",
+      "path": "src/components/collaboration/EntreprisesManagerFirebase.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "Layout.js",
+      "path": "src/components/common/Layout.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "layoutError",
+        "retryCount"
+      ],
+      "issues": []
+    },
+    {
+      "name": "UnifiedConcertSelector.js",
+      "path": "src/components/common/UnifiedConcertSelector.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "value"
+      ],
+      "issues": []
+    },
+    {
+      "name": "UnifiedContactSelector.js",
+      "path": "src/components/common/UnifiedContactSelector.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "value",
+        "multiple"
+      ],
+      "issues": []
+    },
+    {
+      "name": "CommentListModal.js",
+      "path": "src/components/common/modals/CommentListModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "show",
+        "personneId"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "CommentModal.js",
+      "path": "src/components/common/modals/CommentModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "comment"
+      ],
+      "issues": []
+    },
+    {
+      "name": "SalleCreationModal.js",
+      "path": "src/components/common/modals/SalleCreationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsTableView.js",
+      "path": "src/components/concerts/ConcertsTableView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "DatesList.js",
+      "path": "src/components/concerts/DatesList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id",
+        "currentOrg?.id"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "PublicationsList.js",
+      "path": "src/components/concerts/PublicationsList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ArtisteSearchSectionWithFallback.js",
+      "path": "src/components/concerts/sections/ArtisteSearchSectionWithFallback.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "searchTerm",
+        "results.length",
+        "isSearching"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ConcertsTable.js",
+      "path": "src/components/concerts/sections/ConcertsTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "MessagerieManager.js",
+      "path": "src/components/contact/parametrage/MessagerieManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "type",
+        "itemsList",
+        "searchTerm"
+      ],
+      "issues": []
+    },
+    {
+      "name": "MessagesTachesManager.js",
+      "path": "src/components/contact/parametrage/MessagesTachesManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "type",
+        "itemsList",
+        "searchTerm"
+      ],
+      "issues": []
+    },
+    {
+      "name": "QualificationsManager.js",
+      "path": "src/components/contact/parametrage/QualificationsManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "type",
+        "itemsList",
+        "searchTerm"
+      ],
+      "issues": []
+    },
+    {
+      "name": "TagsManager.js",
+      "path": "src/components/contact/parametrage/TagsManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "type",
+        "itemsList",
+        "searchTerm",
+        "currentOrganization?.id",
+        "type",
+        "loadRealUsageData"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactFacturesTable.js",
+      "path": "src/components/contacts/ContactFacturesTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "factures"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ContactFormUnified.js",
+      "path": "src/components/contacts/ContactFormUnified.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "isNewFromUrl"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactViewTabs.js",
+      "path": "src/components/contacts/ContactViewTabs.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "contact",
+        "entityType",
+        "cleanId",
+        "currentOrganization?.id",
+        "contact",
+        "structures.length",
+        "personnes.length",
+        "contact?.id",
+        "loading",
+        "entityType",
+        "cleanId",
+        "entityType",
+        "structureName",
+        "loadStructureDates"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactsList.js",
+      "path": "src/components/contacts/ContactsList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ContactForm.js",
+      "path": "src/components/contacts/desktop/ContactForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "isNewFromUrl",
+        "loadAssociations",
+        "concertSearchTerm",
+        "searchConcerts"
+      ],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "ContactsList.js",
+      "path": "src/components/contacts/desktop/ContactsList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ContactForm.js",
+      "path": "src/components/contacts/mobile/ContactForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "searchTerm",
+        "handleAddressSearch",
+        "contactId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PersonneCreationModal.js",
+      "path": "src/components/contacts/modal/PersonneCreationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "editMode",
+        "initialData"
+      ],
+      "issues": []
+    },
+    {
+      "name": "StructureCreationModal.js",
+      "path": "src/components/contacts/modal/StructureCreationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "editMode",
+        "initialData"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratGeneratorNew.js",
+      "path": "src/components/contrats/desktop/ContratGeneratorNew.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id",
+        "currentOrg?.id",
+        "concertId",
+        "concertId",
+        "structure",
+        "concert",
+        "artiste",
+        "lieu",
+        "preContratData",
+        "entrepriseData",
+        "entrepriseData?.nom",
+        "structure?.nom",
+        "structure?.structureRaisonSociale",
+        "contratData.organisateur.raisonSociale",
+        "contratData.prestations",
+        "contratData.negociation?.montantNet",
+        "contratData.negociation?.tauxTva",
+        "calculerTotaux"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratGenerationActions.js",
+      "path": "src/components/contrats/desktop/sections/ContratGenerationActions.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "isGeneratingPdf"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratModelsModal.js",
+      "path": "src/components/contrats/modals/ContratModelsModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "show",
+        "currentOrganization?.id",
+        "selectedModels"
+      ],
+      "issues": []
+    },
+    {
+      "name": "DatesTable.js",
+      "path": "src/components/dates/DatesTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id",
+        "config.sort",
+        "config.testData"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ArtisteFirestoreDiagnostic.js",
+      "path": "src/components/debug/ArtisteFirestoreDiagnostic.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteOrganizationMatcher.js",
+      "path": "src/components/debug/ArtisteOrganizationMatcher.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteSearchDebug.js",
+      "path": "src/components/debug/ArtisteSearchDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization"
+      ],
+      "issues": []
+    },
+    {
+      "name": "BidirectionalRelationsFixer.js",
+      "path": "src/components/debug/BidirectionalRelationsFixer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "BrevoDiagnostic.js",
+      "path": "src/components/debug/BrevoDiagnostic.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "BrevoKeyDiagnostic.js",
+      "path": "src/components/debug/BrevoKeyDiagnostic.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "BrevoKeyRecovery.js",
+      "path": "src/components/debug/BrevoKeyRecovery.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "BrevoTemplateCreator.js",
+      "path": "src/components/debug/BrevoTemplateCreator.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "loadBrevoConfig"
+      ],
+      "issues": []
+    },
+    {
+      "name": "BrevoTemplateCustomizer.js",
+      "path": "src/components/debug/BrevoTemplateCustomizer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "loadBrevoConfig"
+      ],
+      "issues": []
+    },
+    {
+      "name": "CheckStructureMigration.js",
+      "path": "src/components/debug/CheckStructureMigration.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "CleanOldContractContent.js",
+      "path": "src/components/debug/CleanOldContractContent.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertContactsDebug.js",
+      "path": "src/components/debug/ConcertContactsDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ConcertLieuDebug.js",
+      "path": "src/components/debug/ConcertLieuDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "hookResult?.concert?.id",
+        "hookResult"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactCreationTester.js",
+      "path": "src/components/debug/ContactCreationTester.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactEmailDebug.js",
+      "path": "src/components/debug/ContactEmailDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsAuditTool.js",
+      "path": "src/components/debug/ContactsAuditTool.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsFixTool.js",
+      "path": "src/components/debug/ContactsFixTool.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsMigrationDiagnostic.js",
+      "path": "src/components/debug/ContactsMigrationDiagnostic.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntityCreationTester.js",
+      "path": "src/components/debug/EntityCreationTester.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntityRelationsDebugger.js",
+      "path": "src/components/debug/EntityRelationsDebugger.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FestivalsDebugger.js",
+      "path": "src/components/debug/FestivalsDebugger.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "MigrateContractVariables.js",
+      "path": "src/components/debug/MigrateContractVariables.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "OrganizationContextDiagnostic.js",
+      "path": "src/components/debug/OrganizationContextDiagnostic.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "organizationContext",
+        "authContext"
+      ],
+      "issues": []
+    },
+    {
+      "name": "OrganizationIdDebug.js",
+      "path": "src/components/debug/OrganizationIdDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "isDragging",
+        "dragStart.x",
+        "dragStart.y",
+        "handleMouseMove",
+        "currentOrganization",
+        "isVisible"
+      ],
+      "issues": []
+    },
+    {
+      "name": "OrganizationIdFixer.js",
+      "path": "src/components/debug/OrganizationIdFixer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "OrphanArtistesDebug.js",
+      "path": "src/components/debug/OrphanArtistesDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ParametresMigration.js",
+      "path": "src/components/debug/ParametresMigration.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "QuickContactCreator.js",
+      "path": "src/components/debug/QuickContactCreator.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "RIBDebugger.js",
+      "path": "src/components/debug/RIBDebugger.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "RelationalMigrationFixer.js",
+      "path": "src/components/debug/RelationalMigrationFixer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructuresClickDebug.js",
+      "path": "src/components/debug/StructuresClickDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization"
+      ],
+      "issues": []
+    },
+    {
+      "name": "SystemAuditTool.js",
+      "path": "src/components/debug/SystemAuditTool.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TagsHierarchyDebug.js",
+      "path": "src/components/debug/TagsHierarchyDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id",
+        "analyzeTagsUsage"
+      ],
+      "issues": []
+    },
+    {
+      "name": "TestDataButton.js",
+      "path": "src/components/debug/TestDataButton.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TestDeleteContactDebug.js",
+      "path": "src/components/debug/TestDeleteContactDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id",
+        "loadTestData"
+      ],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "TestWorkflowButton.js",
+      "path": "src/components/debug/TestWorkflowButton.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TestWorkflowButton2.js",
+      "path": "src/components/debug/TestWorkflowButton2.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "UnusedFilesAnalyzer.js",
+      "path": "src/components/debug/UnusedFilesAnalyzer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DevisEditor.js",
+      "path": "src/components/devis/DevisEditor.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "finalDevisId",
+        "devisData",
+        "currentOrg?.id",
+        "currentUser",
+        "finalConcertId",
+        "finalDevisId",
+        "finalStructureId",
+        "devisData",
+        "originalDevisData",
+        "loading"
+      ],
+      "issues": []
+    },
+    {
+      "name": "DevisForm.js",
+      "path": "src/components/devis/DevisForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "devisData",
+        "devisData.lignesObjet",
+        "onCalculateTotals",
+        "currentOrg?.id",
+        "devisData.structureId",
+        "parametres?.entreprise?.nom",
+        "currentOrg?.name",
+        "devisData.entreprise",
+        "setDevisData",
+        "devisData.structureId",
+        "devisData.adresseAdministrative",
+        "setDevisData"
+      ],
+      "issues": []
+    },
+    {
+      "name": "DevisList.js",
+      "path": "src/components/devis/DevisList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "DevisTable.js",
+      "path": "src/components/devis/sections/DevisTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "devis"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "FacturesTableView.js",
+      "path": "src/components/factures/FacturesTableView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "FestivalsTableView.js",
+      "path": "src/components/festivals/FestivalsTableView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "FormGenerator.js",
+      "path": "src/components/forms/FormGenerator.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concertId",
+        "contactId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PublicContactForm.js",
+      "path": "src/components/forms/PublicContactForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "lieu",
+        "formLinkId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "LieuxList.js",
+      "path": "src/components/lieux/LieuxList.js",
+      "hasRealtimeUpdates": true,
+      "updateMechanisms": [
+        "firebase-realtime",
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id",
+        "refreshKey"
+      ],
+      "issues": []
+    },
+    {
+      "name": "LieuxListSearchFilter.js",
+      "path": "src/components/lieux/desktop/sections/LieuxListSearchFilter.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "OnboardingFlow.js",
+      "path": "src/components/organization/OnboardingFlow.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "OrganizationSelector.js",
+      "path": "src/components/organization/OrganizationSelector.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "showDropdown",
+        "onDropdownToggle",
+        "showDropdown",
+        "handleKeyDown"
+      ],
+      "issues": []
+    },
+    {
+      "name": "GroupesPermissionsManager.js",
+      "path": "src/components/parametrage/GroupesPermissionsManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "HorairesManager.js",
+      "path": "src/components/parametrage/HorairesManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "MentionsManager.js",
+      "path": "src/components/parametrage/MentionsManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "MetiersManager.js",
+      "path": "src/components/parametrage/MetiersManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ModeleContratContent.js",
+      "path": "src/components/parametrage/ModeleContratContent.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener",
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "ModelesFeuilleRouteManager.js",
+      "path": "src/components/parametrage/ModelesFeuilleRouteManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "MoyensTransportManager.js",
+      "path": "src/components/parametrage/MoyensTransportManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "RegimesManager.js",
+      "path": "src/components/parametrage/RegimesManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "RolesManager.js",
+      "path": "src/components/parametrage/RolesManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TypesEvenementContent.js",
+      "path": "src/components/parametrage/TypesEvenementContent.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TypesSalleContent.js",
+      "path": "src/components/parametrage/TypesSalleContent.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ParametresCompte.js",
+      "path": "src/components/parametres/ParametresCompte.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ParametresEmail.js",
+      "path": "src/components/parametres/ParametresEmail.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "parametres.email",
+        "localState.provider",
+        "localState.brevo.enabled",
+        "localState.brevo.apiKey",
+        "brevoTemplates.length"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresFactures.js",
+      "path": "src/components/parametres/ParametresFactures.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresOrganisations.js",
+      "path": "src/components/parametres/ParametresOrganisations.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener",
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "SyncManager.js",
+      "path": "src/components/parametres/sync/SyncManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "stopAutoSync"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratPDFWrapper.js",
+      "path": "src/components/pdf/ContratPDFWrapper.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "data",
+        "title"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PreContratGenerator.js",
+      "path": "src/components/precontrats/desktop/PreContratGenerator.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concert?.id",
+        "currentOrg?.id",
+        "devisData",
+        "concert?.id",
+        "structure",
+        "artiste",
+        "concert",
+        "lieu",
+        "existingPreContrat",
+        "structure",
+        "currentOrg"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PreviewWrapper.js",
+      "path": "src/components/preview/PreviewWrapper.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "componentName"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ProjetCreationModal.js",
+      "path": "src/components/projets/modal/ProjetCreationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "editProjet",
+        "show"
+      ],
+      "issues": []
+    },
+    {
+      "name": "StructureViewTabs.js",
+      "path": "src/components/structures/StructureViewTabs.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener"
+      ],
+      "dependencies": [
+        "structure?.commentaires",
+        "structure?.updatedAt",
+        "lastLocalUpdate",
+        "localCommentaires.length"
+      ],
+      "issues": []
+    },
+    {
+      "name": "StructuresList.js",
+      "path": "src/components/structures/StructuresList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "useStructureDetails.js",
+      "path": "src/components/structures/core/useStructureDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "navigate"
+      ],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "StructureForm.js",
+      "path": "src/components/structures/desktop/StructureForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "isNewFromUrl",
+        "loadAssociations",
+        "adresseLieu.adresse",
+        "adresseLieu.codePostal",
+        "adresseLieu.ville",
+        "contactsAssocies",
+        "signataire.prenom",
+        "signataire.nom",
+        "signataire.fonction",
+        "lieuSearchTerm",
+        "searchLieux"
+      ],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "StructuresList.js",
+      "path": "src/components/structures/desktop/StructuresList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener",
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "AssociatePersonModal.js",
+      "path": "src/components/ui/AssociatePersonModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "searchTerm",
+        "isOpen",
+        "currentOrganization?.id",
+        "loadPersonnes"
+      ],
+      "issues": []
+    },
+    {
+      "name": "EntityEmptyState.js",
+      "path": "src/components/ui/EntityEmptyState.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntitySelector.js",
+      "path": "src/components/ui/EntitySelector.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "entityType",
+        "currentOrganization?.id",
+        "orderByField",
+        "maxResults",
+        "displayField",
+        "idField",
+        "filterKeys",
+        "entityConfigs"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ListWithFilters.js",
+      "path": "src/components/ui/ListWithFilters.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "initialData",
+        "sort.field",
+        "sort.direction",
+        "externalLoading",
+        "externalError",
+        "filterOptions",
+        "filters",
+        "loadData",
+        "initialData"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "BookingParametragePage.js",
+      "path": "src/pages/BookingParametragePage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "location.pathname",
+        "activeTab",
+        "selectedArtisteId",
+        "activeTab",
+        "selectedArtisteId",
+        "artistes",
+        "artistesLoading",
+        "navigate"
+      ],
+      "issues": []
+    },
+    {
+      "name": "CollaborationParametragePage.js",
+      "path": "src/pages/CollaborationParametragePage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "location.pathname",
+        "activeTab",
+        "currentOrganization?.id",
+        "loadConfiguration"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ComponentPreviewPage.js",
+      "path": "src/pages/ComponentPreviewPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "componentName"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ConfirmationPage.js",
+      "path": "src/pages/ConfirmationPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concertId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratDetailsPage.js",
+      "path": "src/pages/ContratDetailsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "searchParams",
+        "loading",
+        "contrat",
+        "showPdfViewer",
+        "contratId",
+        "navigate",
+        "togglePdfViewer",
+        "setPreviewType",
+        "generatePDFPreview",
+        "concert",
+        "template",
+        "contact",
+        "programmateur",
+        "lieu",
+        "artiste",
+        "entreprise",
+        "structure",
+        "autoDownload",
+        "loading",
+        "contrat",
+        "concert",
+        "template",
+        "contact",
+        "lieu",
+        "artiste",
+        "isDownloading",
+        "autoDownloadTriggered",
+        "handleDownload"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratGenerationNewPage.js",
+      "path": "src/pages/ContratGenerationNewPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concertId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratGenerationPage.js",
+      "path": "src/pages/ContratGenerationPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concertId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratRedactionPage.js",
+      "path": "src/pages/ContratRedactionPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "updateTabTitle",
+        "id",
+        "isReadOnly",
+        "hasSelectedModels",
+        "isContractFinished",
+        "loading",
+        "showModelModal",
+        "loading",
+        "hasSelectedModels",
+        "isContractFinished",
+        "isReadOnly",
+        "getActiveTab",
+        "showModelModal"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratsPage.js",
+      "path": "src/pages/ContratsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "CreateDefaultTemplate.js",
+      "path": "src/pages/CreateDefaultTemplate.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DateCreationPage.js",
+      "path": "src/pages/DateCreationPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "DEBUG_MODE",
+        "currentOrganization",
+        "loadArtistes",
+        "loadStructures"
+      ],
+      "issues": []
+    },
+    {
+      "name": "DateDetailsPage.js",
+      "path": "src/pages/DateDetailsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "loadConcertData",
+        "contactId",
+        "loadFestivals",
+        "loadCollaborateurs"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FactureDetailsPage.js",
+      "path": "src/pages/FactureDetailsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "factureId",
+        "user",
+        "currentOrganization"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FactureGeneratorPage.js",
+      "path": "src/pages/FactureGeneratorPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "user",
+        "currentOrganization?.id",
+        "concertId",
+        "contratId",
+        "fromContrat",
+        "parametres",
+        "mode",
+        "factureId",
+        "generatePreview",
+        "generateFacturesFromContrat"
+      ],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "FacturesPage.js",
+      "path": "src/pages/FacturesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FestivalsDatesPage.js",
+      "path": "src/pages/FestivalsDatesPage.js",
+      "hasRealtimeUpdates": true,
+      "updateMechanisms": [
+        "firebase-realtime",
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrganization?.id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FormResponsePage.js",
+      "path": "src/pages/FormResponsePage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concertId",
+        "token",
+        "id",
+        "isPublicForm",
+        "isAdminValidation"
+      ],
+      "issues": []
+    },
+    {
+      "name": "InventairePagesPage.js",
+      "path": "src/pages/InventairePagesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "showComponents",
+        "searchTerm",
+        "pagesList"
+      ],
+      "issues": []
+    },
+    {
+      "name": "LoginPage.js",
+      "path": "src/pages/LoginPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "PreContratFormResponsePage.js",
+      "path": "src/pages/PreContratFormResponsePage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concertId",
+        "token"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PreContratGenerationPage.js",
+      "path": "src/pages/PreContratGenerationPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "concertId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ProjetsPage.js",
+      "path": "src/pages/ProjetsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "SallesPage.js",
+      "path": "src/pages/SallesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TableauDeBordPage.js",
+      "path": "src/pages/TableauDeBordPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "currentOrg?.id"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "TachesPage.js",
+      "path": "src/pages/TachesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "MigrationPage.js",
+      "path": "src/pages/admin/MigrationPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "contratTemplatesEditPage.js",
+      "path": "src/pages/contratTemplatesEditPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "contratTemplatesPage.js",
+      "path": "src/pages/contratTemplatesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "event-listener",
+        "manual-refresh"
+      ],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "static-data-fetch",
+          "description": "Données chargées une seule fois sans mise à jour"
+        }
+      ]
+    },
+    {
+      "name": "factureTemplatesEditPage.js",
+      "path": "src/pages/factureTemplatesEditPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "id",
+        "user",
+        "currentOrganization"
+      ],
+      "issues": []
+    },
+    {
+      "name": "factureTemplatesPage.js",
+      "path": "src/pages/factureTemplatesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [
+        "manual-refresh"
+      ],
+      "dependencies": [
+        "user",
+        "currentOrganization",
+        "loadParameters"
+      ],
+      "issues": []
+    }
+  ],
+  "componentsWithoutRealtimeUpdates": [
+    {
+      "name": "ArtisteDetail.js",
+      "path": "src/components/artistes/ArtisteDetail.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteForm.js",
+      "path": "src/components/artistes/ArtisteForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtistesList.js",
+      "path": "src/components/artistes/desktop/ArtistesList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ArtisteBasicInfoSection.js",
+      "path": "src/components/artistes/desktop/sections/ArtisteBasicInfoSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteContactSection.js",
+      "path": "src/components/artistes/desktop/sections/ArtisteContactSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteMembersSection.js",
+      "path": "src/components/artistes/desktop/sections/ArtisteMembersSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteNotesSection.js",
+      "path": "src/components/artistes/desktop/sections/ArtisteNotesSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "index.js",
+      "path": "src/components/artistes/desktop/sections/index.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteForm.js",
+      "path": "src/components/artistes/mobile/ArtisteForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtistesList.js",
+      "path": "src/components/artistes/mobile/ArtistesList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteSearchBar.js",
+      "path": "src/components/artistes/sections/ArtisteSearchBar.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtistesEmptyState.js",
+      "path": "src/components/artistes/sections/ArtistesEmptyState.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtistesListHeader.js",
+      "path": "src/components/artistes/sections/ArtistesListHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtistesLoadMore.js",
+      "path": "src/components/artistes/sections/ArtistesLoadMore.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtistesStatsCards.js",
+      "path": "src/components/artistes/sections/ArtistesStatsCards.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtistesTable.js",
+      "path": "src/components/artistes/sections/ArtistesTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "CollaborateursManager.js",
+      "path": "src/components/collaboration/CollaborateursManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntreprisesManager.js",
+      "path": "src/components/collaboration/EntreprisesManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ActionButton.js",
+      "path": "src/components/common/ActionButton.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DebugButton.js",
+      "path": "src/components/common/DebugButton.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DownloadModal.js",
+      "path": "src/components/common/DownloadModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntityViewTabs.js",
+      "path": "src/components/common/EntityViewTabs.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ErrorDisplay.jsx",
+      "path": "src/components/common/ErrorDisplay.jsx",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "GenericDetailView.js",
+      "path": "src/components/common/GenericDetailView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "entityType",
+        "id",
+        "entity",
+        "loading",
+        "error"
+      ],
+      "issues": []
+    },
+    {
+      "name": "Modal.js",
+      "path": "src/components/common/Modal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "isOpen",
+        "children"
+      ],
+      "issues": []
+    },
+    {
+      "name": "OptimizedModal.js",
+      "path": "src/components/common/OptimizedModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "isOpen",
+        "handleKeyDown",
+        "handleFocusTrap",
+        "autoFocus"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PublicFormLayout.js",
+      "path": "src/components/common/PublicFormLayout.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "RelationCard.js",
+      "path": "src/components/common/RelationCard.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "RepresentationsSection.js",
+      "path": "src/components/common/RepresentationsSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Spinner.js",
+      "path": "src/components/common/Spinner.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StatusWithInfo.js",
+      "path": "src/components/common/StatusWithInfo.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TabNavigation.js",
+      "path": "src/components/common/TabNavigation.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "UnderConstruction.js",
+      "path": "src/components/common/UnderConstruction.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "UnifiedContactSelector.test.js",
+      "path": "src/components/common/__tests__/UnifiedContactSelector.test.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DesktopLayout.js",
+      "path": "src/components/common/layout/DesktopLayout.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location.pathname"
+      ],
+      "issues": []
+    },
+    {
+      "name": "StepNavigation.js",
+      "path": "src/components/common/steps/StepNavigation.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertDetails.js",
+      "path": "src/components/concerts/ConcertDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertDetailsWithRoles.js",
+      "path": "src/components/concerts/ConcertDetailsWithRoles.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "index.js",
+      "path": "src/components/concerts/ConcertForm/index.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "id"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ConcertInfoSection.js",
+      "path": "src/components/concerts/ConcertInfoSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsList.js",
+      "path": "src/components/concerts/ConcertsList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertArtistSection.js",
+      "path": "src/components/concerts/desktop/ConcertArtistSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertForm.js",
+      "path": "src/components/concerts/desktop/ConcertForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertGeneralInfo.js",
+      "path": "src/components/concerts/desktop/ConcertGeneralInfo.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertHeader.js",
+      "path": "src/components/concerts/desktop/ConcertHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertLocationSection.js",
+      "path": "src/components/concerts/desktop/ConcertLocationSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertOrganizerSection.js",
+      "path": "src/components/concerts/desktop/ConcertOrganizerSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertStructureSection.js",
+      "path": "src/components/concerts/desktop/ConcertStructureSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertView.js",
+      "path": "src/components/concerts/desktop/ConcertView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsList.js",
+      "path": "src/components/concerts/desktop/ConcertsList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertLieuMap.js",
+      "path": "src/components/concerts/desktop/sections/ConcertLieuMap.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertForm.js",
+      "path": "src/components/concerts/mobile/ConcertForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertView.js",
+      "path": "src/components/concerts/mobile/ConcertView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsList.js",
+      "path": "src/components/concerts/mobile/ConcertsList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertArtistSectionMobile.js",
+      "path": "src/components/concerts/mobile/sections/ConcertArtistSectionMobile.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertGeneralInfoMobile.js",
+      "path": "src/components/concerts/mobile/sections/ConcertGeneralInfoMobile.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertHeaderMobile.js",
+      "path": "src/components/concerts/mobile/sections/ConcertHeaderMobile.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertLocationSectionMobile.js",
+      "path": "src/components/concerts/mobile/sections/ConcertLocationSectionMobile.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertOrganizerSectionMobile.js",
+      "path": "src/components/concerts/mobile/sections/ConcertOrganizerSectionMobile.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteSearchSection.js",
+      "path": "src/components/concerts/sections/ArtisteSearchSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "selectedArtiste",
+        "artistesList"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ConcertActions.js",
+      "path": "src/components/concerts/sections/ConcertActions.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertFormActions.js",
+      "path": "src/components/concerts/sections/ConcertFormActions.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertFormHeader.js",
+      "path": "src/components/concerts/sections/ConcertFormHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertInfoSection.js",
+      "path": "src/components/concerts/sections/ConcertInfoSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertSearchBar.js",
+      "path": "src/components/concerts/sections/ConcertSearchBar.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "showDropdown"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ConcertStatusBadge.js",
+      "path": "src/components/concerts/sections/ConcertStatusBadge.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsEmptyState.js",
+      "path": "src/components/concerts/sections/ConcertsEmptyState.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsListHeader.js",
+      "path": "src/components/concerts/sections/ConcertsListHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsLoadMore.js",
+      "path": "src/components/concerts/sections/ConcertsLoadMore.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsStatsCards.js",
+      "path": "src/components/concerts/sections/ConcertsStatsCards.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuSearchSection.js",
+      "path": "src/components/concerts/sections/LieuSearchSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "selectedLieu?.id",
+        "externalLieuxList",
+        "lieuxList.length"
+      ],
+      "issues": []
+    },
+    {
+      "name": "NotesSection.js",
+      "path": "src/components/concerts/sections/NotesSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "SearchDropdown.js",
+      "path": "src/components/concerts/sections/SearchDropdown.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "SelectedEntityCard.js",
+      "path": "src/components/concerts/sections/SelectedEntityCard.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "entity",
+        "prevEntityId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactDatesTable.js",
+      "path": "src/components/contacts/ContactDatesTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactDetails.js",
+      "path": "src/components/contacts/ContactDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactEntityTable.js",
+      "path": "src/components/contacts/ContactEntityTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ContactFestivalsTable.js",
+      "path": "src/components/contacts/ContactFestivalsTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "ContactTypeSelector.js",
+      "path": "src/components/contacts/ContactTypeSelector.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsListFiltered.js",
+      "path": "src/components/contacts/ContactsListFiltered.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "EchangeForm.js",
+      "path": "src/components/contacts/EchangeForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "echange"
+      ],
+      "issues": []
+    },
+    {
+      "name": "EchangeItem.js",
+      "path": "src/components/contacts/EchangeItem.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FestivalCreationModal.js",
+      "path": "src/components/contacts/FestivalCreationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "HistoriqueEchanges.js",
+      "path": "src/components/contacts/HistoriqueEchanges.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactConcertsSection.js",
+      "path": "src/components/contacts/desktop/ContactConcertsSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactView.js",
+      "path": "src/components/contacts/desktop/ContactView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactNotesSection.js",
+      "path": "src/components/contacts/desktop/sections/ContactNotesSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsListEmptyState.js",
+      "path": "src/components/contacts/desktop/sections/ContactsListEmptyState.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsListHeader.js",
+      "path": "src/components/contacts/desktop/sections/ContactsListHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsListSearchFilter.js",
+      "path": "src/components/contacts/desktop/sections/ContactsListSearchFilter.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsStatsCards.js",
+      "path": "src/components/contacts/desktop/sections/ContactsStatsCards.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactDetails.js",
+      "path": "src/components/contacts/mobile/ContactDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactView.js",
+      "path": "src/components/contacts/mobile/ContactView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsList.js",
+      "path": "src/components/contacts/mobile/ContactsList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactModalsContainer.js",
+      "path": "src/components/contacts/modal/ContactModalsContainer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactBottomTabs.js",
+      "path": "src/components/contacts/sections/ContactBottomTabs.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactCommentsSection.js",
+      "path": "src/components/contacts/sections/ContactCommentsSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactConcertsSection.js",
+      "path": "src/components/contacts/sections/ContactConcertsSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactDiffusionSection.js",
+      "path": "src/components/contacts/sections/ContactDiffusionSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactInfoSection.js",
+      "path": "src/components/contacts/sections/ContactInfoSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactPersonneSection.js",
+      "path": "src/components/contacts/sections/ContactPersonneSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactPersonsSection.js",
+      "path": "src/components/contacts/sections/ContactPersonsSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactQualificationSection.js",
+      "path": "src/components/contacts/sections/ContactQualificationSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactSalleSection.js",
+      "path": "src/components/contacts/sections/ContactSalleSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactStructureSection.js",
+      "path": "src/components/contacts/sections/ContactStructureSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactTagsSection.js",
+      "path": "src/components/contacts/sections/ContactTagsSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureSearchSection.js",
+      "path": "src/components/contacts/sections/StructureSearchSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "selectedStructure"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratGenerator.js",
+      "path": "src/components/contrats/ContratGenerator.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratTemplateEditor.js",
+      "path": "src/components/contrats/ContratTemplateEditor.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratTemplateEditorModal.js",
+      "path": "src/components/contrats/ContratTemplateEditorModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "isOpen"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratTemplateEditorSimple.js",
+      "path": "src/components/contrats/ContratTemplateEditorSimple.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "template",
+        "content"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratVariable.js",
+      "path": "src/components/contrats/ContratVariable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "QuillCustomSizes.js",
+      "path": "src/components/contrats/QuillCustomSizes.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "QuillLineHeight.js",
+      "path": "src/components/contrats/QuillLineHeight.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratGenerator.js",
+      "path": "src/components/contrats/desktop/ContratGenerator.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratVariable.js",
+      "path": "src/components/contrats/desktop/ContratVariable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "CollapsibleSection.js",
+      "path": "src/components/contrats/desktop/sections/CollapsibleSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratAlerts.js",
+      "path": "src/components/contrats/desktop/sections/ContratAlerts.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratDebugPanel.js",
+      "path": "src/components/contrats/desktop/sections/ContratDebugPanel.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratLoadingSpinner.js",
+      "path": "src/components/contrats/desktop/sections/ContratLoadingSpinner.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratNoTemplates.js",
+      "path": "src/components/contrats/desktop/sections/ContratNoTemplates.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratTemplatePreview.js",
+      "path": "src/components/contrats/desktop/sections/ContratTemplatePreview.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratTemplateSelector.js",
+      "path": "src/components/contrats/desktop/sections/ContratTemplateSelector.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "UserGuide.js",
+      "path": "src/components/contrats/desktop/sections/UserGuide.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "VariablesPanel.js",
+      "path": "src/components/contrats/desktop/sections/VariablesPanel.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "isVisible",
+        "searchTerm",
+        "variables"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContratGenerator.js",
+      "path": "src/components/contrats/mobile/ContratGenerator.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratVariable.js",
+      "path": "src/components/contrats/mobile/ContratVariable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratActions.js",
+      "path": "src/components/contrats/sections/ContratActions.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratHeader.js",
+      "path": "src/components/contrats/sections/ContratHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratInfoCard.js",
+      "path": "src/components/contrats/sections/ContratInfoCard.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratPdfTabs.js",
+      "path": "src/components/contrats/sections/ContratPdfTabs.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratPdfViewer.js",
+      "path": "src/components/contrats/sections/ContratPdfViewer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratVariablesCard.js",
+      "path": "src/components/contrats/sections/ContratVariablesCard.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContratsTableNew.js",
+      "path": "src/components/contrats/sections/ContratsTableNew.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "contrats"
+      ],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "publicationConfig.js",
+      "path": "src/components/dates/configs/publicationConfig.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ArtisteSearchLiveDebug.js",
+      "path": "src/components/debug/ArtisteSearchLiveDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactMigrationTool.js",
+      "path": "src/components/debug/ContactMigrationTool.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ContactsMigrationFinal.js",
+      "path": "src/components/debug/ContactsMigrationFinal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DataStructureFixer.js",
+      "path": "src/components/debug/DataStructureFixer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DebugController.js",
+      "path": "src/components/debug/DebugController.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FestitestContactFinder.js",
+      "path": "src/components/debug/FestitestContactFinder.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "currentOrganization",
+        "searchFestitest"
+      ],
+      "issues": []
+    },
+    {
+      "name": "GenericDetailViewTest.js",
+      "path": "src/components/debug/GenericDetailViewTest.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "HybridFormatNormalizer.js",
+      "path": "src/components/debug/HybridFormatNormalizer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuMapDebug.js",
+      "path": "src/components/debug/LieuMapDebug.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "currentOrganization"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ListDebugger.js",
+      "path": "src/components/debug/ListDebugger.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": [
+        {
+          "type": "no-realtime-sync",
+          "description": "Composant de liste sans mise à jour temps réel"
+        }
+      ]
+    },
+    {
+      "name": "MigrateContractTemplates.js",
+      "path": "src/components/debug/MigrateContractTemplates.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "OrganizationIdTest.js",
+      "path": "src/components/debug/OrganizationIdTest.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "SophieMadetMigration.js",
+      "path": "src/components/debug/SophieMadetMigration.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureAddressMigration.js",
+      "path": "src/components/debug/StructureAddressMigration.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TestFormButton.js",
+      "path": "src/components/debug/TestFormButton.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "UnifiedContactSelectorTest.js",
+      "path": "src/components/debug/UnifiedContactSelectorTest.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DevisPreview.js",
+      "path": "src/components/devis/DevisPreview.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FactureEditor.js",
+      "path": "src/components/factures/FactureEditor.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FactureParametersEditor.js",
+      "path": "src/components/factures/FactureParametersEditor.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "config",
+        "generateExampleNumber"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FacturePreview.js",
+      "path": "src/components/factures/FacturePreview.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "html"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FactureTemplateEditor.js",
+      "path": "src/components/factures/FactureTemplateEditor.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "template",
+        "content"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FactureTemplateEditorModal.js",
+      "path": "src/components/factures/FactureTemplateEditorModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "isOpen"
+      ],
+      "issues": []
+    },
+    {
+      "name": "FormHeader.js",
+      "path": "src/components/forms/mobile/sections/FormHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationActionBar.js",
+      "path": "src/components/forms/mobile/sections/ValidationActionBar.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationModal.js",
+      "path": "src/components/forms/mobile/sections/ValidationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationSection.js",
+      "path": "src/components/forms/mobile/sections/ValidationSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationSummary.js",
+      "path": "src/components/forms/mobile/sections/ValidationSummary.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "AdminFormValidation.js",
+      "path": "src/components/forms/public/AdminFormValidation.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertInfoSection.js",
+      "path": "src/components/forms/public/ConcertInfoSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormContentWrapper.js",
+      "path": "src/components/forms/public/FormContentWrapper.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormErrorPanel.js",
+      "path": "src/components/forms/public/FormErrorPanel.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormLoadingState.js",
+      "path": "src/components/forms/public/FormLoadingState.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormPageHeader.js",
+      "path": "src/components/forms/public/FormPageHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormSubmitBlock.js",
+      "path": "src/components/forms/public/FormSubmitBlock.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "PreContratFormContainer.js",
+      "path": "src/components/forms/public/PreContratFormContainer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "PreContratFormPublic.js",
+      "path": "src/components/forms/public/PreContratFormPublic.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "existingData"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PublicFormContainer.js",
+      "path": "src/components/forms/public/PublicFormContainer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "PublicFormLayout.js",
+      "path": "src/components/forms/public/PublicFormLayout.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FieldValidationRow.js",
+      "path": "src/components/forms/validation/FieldValidationRow.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormHeader.js",
+      "path": "src/components/forms/validation/FormHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationActionBar.js",
+      "path": "src/components/forms/validation/ValidationActionBar.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationModal.js",
+      "path": "src/components/forms/validation/ValidationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationSection.js",
+      "path": "src/components/forms/validation/ValidationSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ValidationSummary.js",
+      "path": "src/components/forms/validation/ValidationSummary.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Sidebar.js",
+      "path": "src/components/layout/Sidebar.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "SidebarItem.js",
+      "path": "src/components/layout/SidebarItem.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuDetails.js",
+      "path": "src/components/lieux/LieuDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuForm.js",
+      "path": "src/components/lieux/LieuForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuMapSection.js",
+      "path": "src/components/lieux/LieuMapSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuForm.js",
+      "path": "src/components/lieux/desktop/LieuForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuView.js",
+      "path": "src/components/lieux/desktop/LieuView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuxList.js",
+      "path": "src/components/lieux/desktop/LieuxList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuAddressInputSection.js",
+      "path": "src/components/lieux/desktop/sections/LieuAddressInputSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuFormHeader.js",
+      "path": "src/components/lieux/desktop/sections/LieuFormHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuGeneralInfo.js",
+      "path": "src/components/lieux/desktop/sections/LieuGeneralInfo.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuHeader.js",
+      "path": "src/components/lieux/desktop/sections/LieuHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuxListEmptyState.js",
+      "path": "src/components/lieux/desktop/sections/LieuxListEmptyState.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuxListHeader.js",
+      "path": "src/components/lieux/desktop/sections/LieuxListHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuxResultsTable.js",
+      "path": "src/components/lieux/desktop/sections/LieuxResultsTable.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuxStatsCards.js",
+      "path": "src/components/lieux/desktop/sections/LieuxStatsCards.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuMobileForm.js",
+      "path": "src/components/lieux/mobile/LieuMobileForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LieuView.js",
+      "path": "src/components/lieux/mobile/LieuView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "index.js",
+      "path": "src/components/organization/index.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "CollaborateursModal.js",
+      "path": "src/components/parametrage/CollaborateursModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "show",
+        "groupe"
+      ],
+      "issues": []
+    },
+    {
+      "name": "GroupeFormModal.js",
+      "path": "src/components/parametrage/GroupeFormModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "show",
+        "isEditing",
+        "groupe"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PermissionsTree.js",
+      "path": "src/components/parametrage/PermissionsTree.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TvaManager.js",
+      "path": "src/components/parametrage/TvaManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "parametres?.tva"
+      ],
+      "issues": []
+    },
+    {
+      "name": "UnitesManager.js",
+      "path": "src/components/parametrage/UnitesManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "parametres?.unites"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresApparence.js",
+      "path": "src/components/parametres/ParametresApparence.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "parametres.apparence",
+        "originalAppearance"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresEntreprise.js",
+      "path": "src/components/parametres/ParametresEntreprise.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "searchResultsRef"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresExport.js",
+      "path": "src/components/parametres/ParametresExport.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "parametres.export"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresGeneraux.js",
+      "path": "src/components/parametres/ParametresGeneraux.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "parametres.generaux"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresNotifications.js",
+      "path": "src/components/parametres/ParametresNotifications.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "parametres.notifications"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresEmail.test.js",
+      "path": "src/components/parametres/__tests__/ParametresEmail.test.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntrepriseBankingFields.js",
+      "path": "src/components/parametres/sections/EntrepriseBankingFields.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntrepriseContactFields.js",
+      "path": "src/components/parametres/sections/EntrepriseContactFields.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntrepriseFormFields.js",
+      "path": "src/components/parametres/sections/EntrepriseFormFields.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntrepriseHeader.js",
+      "path": "src/components/parametres/sections/EntrepriseHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntrepriseSearchOptions.js",
+      "path": "src/components/parametres/sections/EntrepriseSearchOptions.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntrepriseSearchResults.js",
+      "path": "src/components/parametres/sections/EntrepriseSearchResults.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntrepriseSubmitActions.js",
+      "path": "src/components/parametres/sections/EntrepriseSubmitActions.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "componentRegistry.js",
+      "path": "src/components/preview/componentRegistry.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureDetails.js",
+      "path": "src/components/structures/StructureDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureDetails.js",
+      "path": "src/components/structures/desktop/StructureDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureLegalSection.js",
+      "path": "src/components/structures/desktop/StructureLegalSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureView.js",
+      "path": "src/components/structures/desktop/StructureView.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureBillingSection.js",
+      "path": "src/components/structures/desktop/sections/StructureBillingSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureConcertsManagementSection.js",
+      "path": "src/components/structures/desktop/sections/StructureConcertsManagementSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureContactsSection.js",
+      "path": "src/components/structures/desktop/sections/StructureContactsSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureIdentitySection.js",
+      "path": "src/components/structures/desktop/sections/StructureIdentitySection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureNotesSection.js",
+      "path": "src/components/structures/desktop/sections/StructureNotesSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureSignataireSection.js",
+      "path": "src/components/structures/desktop/sections/StructureSignataireSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureSiretSearchSection.js",
+      "path": "src/components/structures/desktop/sections/StructureSiretSearchSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "utils.js",
+      "path": "src/components/structures/desktop/utils.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureDetails.js",
+      "path": "src/components/structures/mobile/StructureDetails.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructureForm.js",
+      "path": "src/components/structures/mobile/StructureForm.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StructuresList.js",
+      "path": "src/components/structures/mobile/StructuresList.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TabManager.js",
+      "path": "src/components/tabs/TabManager.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TabManagerProduction.js",
+      "path": "src/components/tabs/TabManagerProduction.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "tabs",
+        "scrollOffset",
+        "updateScrollState",
+        "updateScrollState",
+        "updateScrollState",
+        "updateScrollState"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ActionButtons.js",
+      "path": "src/components/ui/ActionButtons.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "AddButton.js",
+      "path": "src/components/ui/AddButton.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "AddressInput.js",
+      "path": "src/components/ui/AddressInput.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "value"
+      ],
+      "issues": []
+    },
+    {
+      "name": "Alert.js",
+      "path": "src/components/ui/Alert.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Badge.js",
+      "path": "src/components/ui/Badge.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Button.js",
+      "path": "src/components/ui/Button.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Card.js",
+      "path": "src/components/ui/Card.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "CardSection.js",
+      "path": "src/components/ui/CardSection.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConfirmationModal.js",
+      "path": "src/components/ui/ConfirmationModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "EntityCard.js",
+      "path": "src/components/ui/EntityCard.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ErrorMessage.js",
+      "path": "src/components/ui/ErrorMessage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FlexContainer.js",
+      "path": "src/components/ui/FlexContainer.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Form.js",
+      "path": "src/components/ui/Form.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormField.js",
+      "path": "src/components/ui/FormField.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "FormHeader.js",
+      "path": "src/components/ui/FormHeader.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Layout.js",
+      "path": "src/components/ui/Layout.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "LoadingSpinner.js",
+      "path": "src/components/ui/LoadingSpinner.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "SectionTitle.js",
+      "path": "src/components/ui/SectionTitle.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "SectionWithBubbleTitle.js",
+      "path": "src/components/ui/SectionWithBubbleTitle.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StatsCards.js",
+      "path": "src/components/ui/StatsCards.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StatusBadge.js",
+      "path": "src/components/ui/StatusBadge.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "StatutBadge.js",
+      "path": "src/components/ui/StatutBadge.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "Table.js",
+      "path": "src/components/ui/Table.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TagsInput.js",
+      "path": "src/components/ui/TagsInput.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TagsSelectionModal.js",
+      "path": "src/components/ui/TagsSelectionModal.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "show",
+        "selectedTags"
+      ],
+      "issues": []
+    },
+    {
+      "name": "index.js",
+      "path": "src/components/ui/index.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "AdminParametragePage.js",
+      "path": "src/pages/AdminParametragePage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location.pathname",
+        "activeSection",
+        "activeSubOption"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ArtistesPage.js",
+      "path": "src/pages/ArtistesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "ConcertsPage.js",
+      "path": "src/pages/ConcertsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location.pathname"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactParametragePage.js",
+      "path": "src/pages/ContactParametragePage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location.pathname",
+        "activeSection",
+        "activeSubOption"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactTagsPage.js",
+      "path": "src/pages/ContactTagsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ContactsPage.js",
+      "path": "src/pages/ContactsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DashboardPage.js",
+      "path": "src/pages/DashboardPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DebugToolsPage.js",
+      "path": "src/pages/DebugToolsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "DevisPage.js",
+      "path": "src/pages/DevisPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location.pathname",
+        "devisId",
+        "concertId",
+        "structureId"
+      ],
+      "issues": []
+    },
+    {
+      "name": "LieuxPage.js",
+      "path": "src/pages/LieuxPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "MesRecherchesPage.js",
+      "path": "src/pages/MesRecherchesPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location"
+      ],
+      "issues": []
+    },
+    {
+      "name": "MesSelectionsPage.js",
+      "path": "src/pages/MesSelectionsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location"
+      ],
+      "issues": []
+    },
+    {
+      "name": "ParametresPage.js",
+      "path": "src/pages/ParametresPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location.pathname",
+        "location.search",
+        "activeTab"
+      ],
+      "issues": []
+    },
+    {
+      "name": "PublicationsPage.js",
+      "path": "src/pages/PublicationsPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [
+        "location.pathname"
+      ],
+      "issues": []
+    },
+    {
+      "name": "StructuresPage.js",
+      "path": "src/pages/StructuresPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    },
+    {
+      "name": "TabsTestPage.js",
+      "path": "src/pages/TabsTestPage.js",
+      "hasRealtimeUpdates": false,
+      "updateMechanisms": [],
+      "dependencies": [],
+      "issues": []
+    }
+  ],
+  "updateMechanisms": {
+    "manual-refresh": [
+      "ContratDownloadDirect.js",
+      "ArtistesList.js",
+      "ArtisteForm.js",
+      "ArtisteView.js",
+      "ArtisteView.js",
+      "ArtisteCreationModal.js",
+      "PrivateRoute.js",
+      "EntreprisesManagerFirebase.js",
+      "Layout.js",
+      "UnifiedConcertSelector.js",
+      "UnifiedContactSelector.js",
+      "CommentListModal.js",
+      "CommentModal.js",
+      "SalleCreationModal.js",
+      "DatesList.js",
+      "PublicationsList.js",
+      "ArtisteSearchSectionWithFallback.js",
+      "MessagerieManager.js",
+      "MessagesTachesManager.js",
+      "QualificationsManager.js",
+      "TagsManager.js",
+      "ContactFacturesTable.js",
+      "ContactFormUnified.js",
+      "ContactViewTabs.js",
+      "ContactsList.js",
+      "ContactForm.js",
+      "ContactForm.js",
+      "PersonneCreationModal.js",
+      "StructureCreationModal.js",
+      "ContratGeneratorNew.js",
+      "ContratGenerationActions.js",
+      "ContratModelsModal.js",
+      "DatesTable.js",
+      "ArtisteFirestoreDiagnostic.js",
+      "ArtisteOrganizationMatcher.js",
+      "ArtisteSearchDebug.js",
+      "BidirectionalRelationsFixer.js",
+      "BrevoDiagnostic.js",
+      "BrevoKeyDiagnostic.js",
+      "BrevoKeyRecovery.js",
+      "BrevoTemplateCreator.js",
+      "BrevoTemplateCustomizer.js",
+      "CheckStructureMigration.js",
+      "CleanOldContractContent.js",
+      "ConcertContactsDebug.js",
+      "ConcertLieuDebug.js",
+      "ContactEmailDebug.js",
+      "ContactsAuditTool.js",
+      "ContactsFixTool.js",
+      "ContactsMigrationDiagnostic.js",
+      "EntityRelationsDebugger.js",
+      "FestivalsDebugger.js",
+      "MigrateContractVariables.js",
+      "OrganizationContextDiagnostic.js",
+      "OrganizationIdDebug.js",
+      "OrganizationIdFixer.js",
+      "OrphanArtistesDebug.js",
+      "ParametresMigration.js",
+      "QuickContactCreator.js",
+      "RIBDebugger.js",
+      "RelationalMigrationFixer.js",
+      "StructuresClickDebug.js",
+      "SystemAuditTool.js",
+      "TagsHierarchyDebug.js",
+      "TestDataButton.js",
+      "TestDeleteContactDebug.js",
+      "TestWorkflowButton.js",
+      "TestWorkflowButton2.js",
+      "UnusedFilesAnalyzer.js",
+      "DevisEditor.js",
+      "DevisForm.js",
+      "DevisList.js",
+      "DevisTable.js",
+      "FormGenerator.js",
+      "PublicContactForm.js",
+      "LieuxList.js",
+      "OnboardingFlow.js",
+      "OrganizationSelector.js",
+      "GroupesPermissionsManager.js",
+      "HorairesManager.js",
+      "MentionsManager.js",
+      "MetiersManager.js",
+      "ModeleContratContent.js",
+      "ModelesFeuilleRouteManager.js",
+      "MoyensTransportManager.js",
+      "RegimesManager.js",
+      "RolesManager.js",
+      "TypesEvenementContent.js",
+      "TypesSalleContent.js",
+      "ParametresCompte.js",
+      "ParametresEmail.js",
+      "ParametresFactures.js",
+      "ParametresOrganisations.js",
+      "SyncManager.js",
+      "ContratPDFWrapper.js",
+      "PreContratGenerator.js",
+      "PreviewWrapper.js",
+      "ProjetCreationModal.js",
+      "StructuresList.js",
+      "useStructureDetails.js",
+      "StructureForm.js",
+      "StructuresList.js",
+      "AssociatePersonModal.js",
+      "EntityEmptyState.js",
+      "EntitySelector.js",
+      "ListWithFilters.js",
+      "BookingParametragePage.js",
+      "CollaborationParametragePage.js",
+      "ComponentPreviewPage.js",
+      "ConfirmationPage.js",
+      "ContratDetailsPage.js",
+      "ContratGenerationNewPage.js",
+      "ContratGenerationPage.js",
+      "ContratRedactionPage.js",
+      "ContratsPage.js",
+      "CreateDefaultTemplate.js",
+      "DateCreationPage.js",
+      "DateDetailsPage.js",
+      "FactureDetailsPage.js",
+      "FactureGeneratorPage.js",
+      "FacturesPage.js",
+      "FestivalsDatesPage.js",
+      "FormResponsePage.js",
+      "InventairePagesPage.js",
+      "LoginPage.js",
+      "PreContratFormResponsePage.js",
+      "PreContratGenerationPage.js",
+      "ProjetsPage.js",
+      "SallesPage.js",
+      "TableauDeBordPage.js",
+      "TachesPage.js",
+      "MigrationPage.js",
+      "contratTemplatesEditPage.js",
+      "contratTemplatesPage.js",
+      "factureTemplatesEditPage.js",
+      "factureTemplatesPage.js"
+    ],
+    "event-listener": [
+      "ConcertsTableView.js",
+      "ConcertsTable.js",
+      "ContactsList.js",
+      "ContactCreationTester.js",
+      "EntityCreationTester.js",
+      "FacturesTableView.js",
+      "FestivalsTableView.js",
+      "LieuxListSearchFilter.js",
+      "ModeleContratContent.js",
+      "ParametresOrganisations.js",
+      "StructureViewTabs.js",
+      "StructuresList.js",
+      "contratTemplatesPage.js"
+    ],
+    "firebase-realtime": [
+      "LieuxList.js",
+      "FestivalsDatesPage.js"
+    ]
+  },
+  "potentialIssues": [
+    {
+      "type": "orphan-data-components",
+      "description": "Composants de données sans mise à jour temps réel",
+      "components": [
+        "ArtistesList.js",
+        "ArtistesList.js",
+        "ArtistesListHeader.js",
+        "ArtistesTable.js",
+        "ConcertDetails.js",
+        "ConcertDetailsWithRoles.js",
+        "ConcertsList.js",
+        "ConcertsList.js",
+        "ConcertsList.js",
+        "ConcertsListHeader.js",
+        "ContactDatesTable.js",
+        "ContactDetails.js",
+        "ContactEntityTable.js",
+        "ContactFestivalsTable.js",
+        "ContactsListFiltered.js",
+        "ContactsListEmptyState.js",
+        "ContactsListHeader.js",
+        "ContactsListSearchFilter.js",
+        "ContactDetails.js",
+        "ContactsList.js",
+        "ContratsTableNew.js",
+        "ListDebugger.js",
+        "LieuDetails.js",
+        "LieuxList.js",
+        "LieuxListEmptyState.js",
+        "LieuxListHeader.js",
+        "LieuxResultsTable.js",
+        "StructureDetails.js",
+        "StructureDetails.js",
+        "StructureDetails.js",
+        "StructuresList.js",
+        "Table.js"
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "high",
+      "type": "add-realtime",
+      "title": "Ajouter des mises à jour temps réel",
+      "description": "Ces composants de liste devraient utiliser onSnapshot pour les mises à jour temps réel",
+      "components": [
+        "ArtistesList.js",
+        "ArtistesList.js",
+        "ArtistesListHeader.js",
+        "ArtistesTable.js",
+        "ConcertsList.js",
+        "ConcertsList.js",
+        "ConcertsList.js",
+        "ConcertsListHeader.js",
+        "ContactDatesTable.js",
+        "ContactEntityTable.js",
+        "ContactFestivalsTable.js",
+        "ContactsListFiltered.js",
+        "ContactsListEmptyState.js",
+        "ContactsListHeader.js",
+        "ContactsListSearchFilter.js",
+        "ContactsList.js",
+        "ContratsTableNew.js",
+        "ListDebugger.js",
+        "LieuxList.js",
+        "LieuxListEmptyState.js",
+        "LieuxListHeader.js",
+        "LieuxResultsTable.js",
+        "StructuresList.js",
+        "Table.js"
+      ]
+    }
+  ],
+  "statistics": {
+    "totalComponents": 421,
+    "withRealtimeUpdates": 145,
+    "withoutRealtimeUpdates": 276,
+    "percentageWithRealtime": 34,
+    "updateMechanismsUsed": 3,
+    "totalIssues": 1,
+    "criticalRecommendations": 0
+  }
+}

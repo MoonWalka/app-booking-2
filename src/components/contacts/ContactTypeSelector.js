@@ -11,7 +11,12 @@ const ContactTypeSelector = () => {
   const navigate = useNavigate();
 
   const handleSelectType = (type) => {
-    navigate(`/contacts/nouveau/${type}`);
+    // Rediriger vers les nouvelles pages de création
+    if (type === 'structure') {
+      navigate('/structures/nouveau');
+    } else if (type === 'personne') {
+      navigate('/personnes/nouveau');
+    }
   };
 
   return (

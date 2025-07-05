@@ -414,9 +414,15 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
   };
 
   // Fonction pour préparer les variables du contrat
+  // IMPORTANT: Cette fonction supporte deux systèmes de contacts :
+  // 1. Nouveau système relationnel : structures/personnes/liaisons avec contact.type et contact.structures[]
+  // 2. Ancien système unifié : collection contacts avec contact.structure (string) et contact.structureId
   const prepareContractVariables = useCallback(() => {
     console.log("Préparation des variables du contrat");
     console.log("🔍 État actuel de structureData:", structureData);
+    console.log("🔍 contact:", contact);
+    console.log("🔍 contact.type:", contact?.type);
+    console.log("🔍 contact.structures:", contact?.structures);
     console.log("🔍 contact.structureId:", contact?.structureId);
     
     // Log de débogage pour vérifier ce qui est transmis
@@ -622,21 +628,94 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
       delai_paiement: '30 jours', // Valeur par défaut, à ajuster selon les besoins
       
       // Variables contact (nouvelle nomenclature)
-      contact_nom: contact?.nom || 'Non spécifié',
-      contact_prenom: contact?.prenom || '',
-      contact_structure: structureData?.nom || contact?.structure || 'Non spécifiée',
+      // Support du système relationnel (structures/personnes) ET de l'ancien système
+      contact_nom: (() => {
+        // Nouveau système relationnel
+        if (contact?.type === 'personne' && contact?.nom) {
+          return contact.nom;
+        }
+        // Ancien système ou structure
+        return contact?.nom || 'Non spécifié';
+      })(),
+      contact_prenom: (() => {
+        // Nouveau système relationnel
+        if (contact?.type === 'personne' && contact?.prenom) {
+          return contact.prenom;
+        }
+        // Ancien système
+        return contact?.prenom || '';
+      })(),
+      contact_structure: (() => {
+        // Nouveau système relationnel avec structures liées
+        if (contact?.structures && contact.structures.length > 0) {
+          return contact.structures[0].nom || contact.structures[0].raisonSociale || 'Non spécifiée';
+        }
+        // Utilisation de structureData chargée séparément
+        if (structureData?.nom) {
+          return structureData.nom;
+        }
+        // Ancien système
+        return contact?.structure || 'Non spécifiée';
+      })(),
       contact_email: contact?.email || 'Non spécifié',
       contact_telephone: contact?.telephone || 'Non spécifié',
-      contact_siret: structureData?.siret || contact?.siret || 'Non spécifié',
+      contact_siret: (() => {
+        // Nouveau système relationnel
+        if (contact?.structures && contact.structures.length > 0 && contact.structures[0].siret) {
+          return contact.structures[0].siret;
+        }
+        // Structure chargée séparément
+        if (structureData?.siret) {
+          return structureData.siret;
+        }
+        // Ancien système
+        return contact?.siret || 'Non spécifié';
+      })(),
       
       // Variables contact (compatibilité rétrograde - ancienne nomenclature programmateur)
-      programmateur_nom: contact?.nom || 'Non spécifié',
-      programmateur_prenom: contact?.prenom || '',
-      programmateur_structure: structureData?.nom || contact?.structure || 'Non spécifiée',
+      programmateur_nom: (() => {
+        // Même logique que contact_nom pour la compatibilité
+        if (contact?.type === 'personne' && contact?.nom) {
+          return contact.nom;
+        }
+        return contact?.nom || 'Non spécifié';
+      })(),
+      programmateur_prenom: (() => {
+        if (contact?.type === 'personne' && contact?.prenom) {
+          return contact.prenom;
+        }
+        return contact?.prenom || '';
+      })(),
+      programmateur_structure: (() => {
+        // Même logique que contact_structure
+        if (contact?.structures && contact.structures.length > 0) {
+          return contact.structures[0].nom || contact.structures[0].raisonSociale || 'Non spécifiée';
+        }
+        if (structureData?.nom) {
+          return structureData.nom;
+        }
+        return contact?.structure || 'Non spécifiée';
+      })(),
       programmateur_email: contact?.email || 'Non spécifié',
       programmateur_telephone: contact?.telephone || 'Non spécifié',
-      programmateur_siret: structureData?.siret || contact?.siret || 'Non spécifié',
+      programmateur_siret: (() => {
+        // Même logique que contact_siret
+        if (contact?.structures && contact.structures.length > 0 && contact.structures[0].siret) {
+          return contact.structures[0].siret;
+        }
+        if (structureData?.siret) {
+          return structureData.siret;
+        }
+        return contact?.siret || 'Non spécifié';
+      })(),
       contact_adresse: (() => {
+        // Nouveau système relationnel - adresse depuis la structure liée
+        if (contact?.structures && contact.structures.length > 0) {
+          const structure = contact.structures[0];
+          if (structure.adresse) {
+            return structure.adresse;
+          }
+        }
         // Si on a une structure avec des données d'adresse
         if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
           const addr = structureData.adresseLieu;
@@ -646,23 +725,34 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         else if (structureData?.adresse && typeof structureData.adresse === 'string') {
           return structureData.adresse;
         }
-        // Sinon utiliser l'adresse du contact
+        // Système relationnel - personne peut avoir une adresse personnelle
+        if (contact?.type === 'personne' && contact?.adresse) {
+          return contact.adresse;
+        }
+        // Ancien système - utiliser l'adresse du contact
         return contact?.adresse || 'Non spécifiée';
       })(),
       contact_numero_intracommunautaire: structureData?.numeroIntracommunautaire || contact?.numeroIntracommunautaire || contact?.numero_intracommunautaire || 'Non spécifié',
       contact_representant: contact?.representant || contact?.nom || 'Non spécifié',
       contact_qualite_representant: contact?.qualiteRepresentant || contact?.qualite_representant || contact?.fonction || 'Non spécifiée',
       programmateur_adresse: (() => {
-        // Si on a une structure avec des données d'adresse
+        // Même logique que contact_adresse pour la compatibilité
+        if (contact?.structures && contact.structures.length > 0) {
+          const structure = contact.structures[0];
+          if (structure.adresse) {
+            return structure.adresse;
+          }
+        }
         if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
           const addr = structureData.adresseLieu;
           return `${addr.adresse || ''} ${addr.codePostal || ''} ${addr.ville || ''}`.trim() || 'Non spécifiée';
         }
-        // Si l'adresse est directement une chaîne dans structureData
         else if (structureData?.adresse && typeof structureData.adresse === 'string') {
           return structureData.adresse;
         }
-        // Sinon utiliser l'adresse du contact
+        if (contact?.type === 'personne' && contact?.adresse) {
+          return contact.adresse;
+        }
         return contact?.adresse || 'Non spécifiée';
       })(),
       programmateur_numero_intracommunautaire: structureData?.numeroIntracommunautaire || contact?.numeroIntracommunautaire || contact?.numero_intracommunautaire || 'Non spécifié',

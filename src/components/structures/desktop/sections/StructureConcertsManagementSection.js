@@ -1,9 +1,9 @@
 import React from 'react';
-import UnifiedConcertSelector from '@/components/common/UnifiedConcertSelector';
+import ConcertSelectorRelational from '@/components/common/ConcertSelectorRelational';
 
 /**
  * Section component for managing structure concerts
- * Uses UnifiedConcertSelector for consistent UI
+ * Uses ConcertSelectorRelational for consistent UI
  * 
  * @param {Object} props - Component props
  * @param {Array} props.concertIds - Array of concert IDs
@@ -18,7 +18,7 @@ const StructureConcertsManagementSection = ({
   isEditing = true 
 }) => {
   return (
-    <UnifiedConcertSelector
+    <ConcertSelectorRelational
       multiple={true}
       value={concertIds}
       onChange={onChange}

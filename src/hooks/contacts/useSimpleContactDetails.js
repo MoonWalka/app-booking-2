@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
+import contactServiceRelational from '@/services/contactServiceRelational';
 
 /**
  * Hook simplifié pour gérer les détails d'un contact sans boucles de rechargement
@@ -276,7 +277,7 @@ export default function useSimpleContactDetails(id) {
       console.log(`[DEBUG] useSimpleContactDetails - Contact data:`, contactEntity);
       console.log(`[DEBUG] useSimpleContactDetails - structureId:`, contactEntity.structureId);
       
-      // Vérifier si le contact a un structureId
+      // Vérifier si le contact a un structureId (pour les personnes)
       if (contactEntity.structureId) {
         const structureDoc = await getDoc(doc(db, 'structures', contactEntity.structureId));
         if (structureDoc.exists()) {
@@ -287,8 +288,22 @@ export default function useSimpleContactDetails(id) {
           console.log(`[DIAGNOSTIC] useSimpleContactDetails - Structure ${contactEntity.structureId} n'existe pas`);
           setStructure(null);
         }
+      } else if (contactEntity.structures && contactEntity.structures.length > 0) {
+        // Pour la compatibilité avec le nouveau système relationnel
+        const structureId = typeof contactEntity.structures[0] === 'string' 
+          ? contactEntity.structures[0] 
+          : contactEntity.structures[0]?.id;
+        
+        if (structureId) {
+          const structureDoc = await getDoc(doc(db, 'structures', structureId));
+          if (structureDoc.exists()) {
+            const structureData = { id: structureDoc.id, ...structureDoc.data() };
+            setStructure(structureData);
+            console.log(`[DIAGNOSTIC] useSimpleContactDetails - Structure trouvée via array:`, structureData);
+          }
+        }
       } else {
-        console.log(`[DIAGNOSTIC] useSimpleContactDetails - Contact sans structureId`);
+        console.log(`[DIAGNOSTIC] useSimpleContactDetails - Contact sans structure associée`);
         setStructure(null);
       }
       
@@ -315,13 +330,13 @@ export default function useSimpleContactDetails(id) {
 
         // 1. CHARGER LE CONTACT PRINCIPAL
         console.log('[DEBUG] useSimpleContactDetails - Chargement du contact:', id);
-        const contactDoc = await getDoc(doc(db, 'contacts', id));
         
-        if (!contactDoc.exists()) {
+        // Utiliser le service relationnel qui gère structures/personnes et rétrocompatibilité
+        const contactData = await contactServiceRelational.getContactById(id);
+        
+        if (!contactData) {
           throw new Error('Contact non trouvé');
         }
-
-        const contactData = { id: contactDoc.id, ...contactDoc.data() };
         setContact(contactData);
 
         console.log('[DEBUG] useSimpleContactDetails - Contact chargé:', {

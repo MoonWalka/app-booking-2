@@ -6,7 +6,7 @@ import SelectedEntityCard from '@/components/concerts/sections/SelectedEntityCar
 import contactServiceRelational from '@/services/contactServiceRelational';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useNavigate } from 'react-router-dom';
-import styles from './UnifiedContactSelector.module.css'; // Réutiliser les styles existants
+import styles from './ContactSelectorRelational.module.css';
 
 /**
  * Composant pour la sélection de contacts utilisant le système relationnel

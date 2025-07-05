@@ -8,7 +8,7 @@ import SelectedEntityCard from '@/components/concerts/sections/SelectedEntityCar
 import { concertService } from '@/services/concertService';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useNavigate } from 'react-router-dom';
-import styles from './UnifiedConcertSelector.module.css'; // Réutiliser les styles existants
+import styles from './ContactSelectorRelational.module.css'; // Réutiliser les mêmes styles
 
 /**
  * Composant pour la sélection de concerts utilisant le nouveau système

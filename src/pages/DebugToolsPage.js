@@ -19,7 +19,6 @@ import EntityRelationsDebugger from '@/components/debug/EntityRelationsDebugger'
 import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelationsFixer';
 import ConcertContactsDebug from '@/components/debug/ConcertContactsDebug';
 import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic';
-import UnifiedContactSelectorTest from '@/components/debug/UnifiedContactSelectorTest';
 import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest';
 import BrevoDiagnostic from '@/components/debug/BrevoDiagnostic';
 import ParametresMigration from '@/components/debug/ParametresMigration';
@@ -178,10 +177,6 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="contacts-migration" title="🔄 Migration Contacts">
           <ContactsMigrationDiagnostic />
-        </Tab>
-        
-        <Tab eventKey="unified-selector-test" title="🧪 Test UnifiedContactSelector">
-          <UnifiedContactSelectorTest />
         </Tab>
         
         <Tab eventKey="generic-detail-view-test" title="🎨 Test GenericDetailView">

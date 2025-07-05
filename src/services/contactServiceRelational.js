@@ -195,6 +195,58 @@ class ContactServiceRelational {
   }
 
   /**
+   * Récupère un contact par son ID (essaie d'abord structures puis personnes)
+   */
+  async getContactById(contactId, type = null) {
+    if (!contactId) {
+      throw new Error('ID requis pour récupérer un contact');
+    }
+
+    try {
+      // Si le type est fourni, on sait directement où chercher
+      if (type) {
+        const collectionName = type === 'structure' ? 'structures' : 'personnes';
+        const docSnap = await getDoc(doc(db, collectionName, contactId));
+        if (docSnap.exists()) {
+          return { id: docSnap.id, ...docSnap.data(), _type: type };
+        }
+        return null;
+      }
+
+      // Sinon, on essaie d'abord dans structures
+      const structureDoc = await getDoc(doc(db, 'structures', contactId));
+      if (structureDoc.exists()) {
+        return { id: structureDoc.id, ...structureDoc.data(), _type: 'structure' };
+      }
+
+      // Puis dans personnes
+      const personneDoc = await getDoc(doc(db, 'personnes', contactId));
+      if (personneDoc.exists()) {
+        return { id: personneDoc.id, ...personneDoc.data(), _type: 'personne' };
+      }
+
+      // Si toujours pas trouvé, essayer l'ancienne collection contacts pour la rétrocompatibilité
+      const contactDoc = await getDoc(doc(db, 'contacts', contactId));
+      if (contactDoc.exists()) {
+        const data = contactDoc.data();
+        // Déterminer le type basé sur les données
+        const isStructure = data.type === 'structure' || data.siret || data.raisonSociale;
+        return { 
+          id: contactDoc.id, 
+          ...data, 
+          _type: isStructure ? 'structure' : 'personne',
+          _legacy: true 
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Erreur getContactById:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Crée un nouveau contact (structure ou personne)
    */
   async createContact(contactData, type) {

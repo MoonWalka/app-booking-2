@@ -1,0 +1,74 @@
+/**
+ * Styles pour les sections de recherche
+ */
+
+.sectionContent {
+  padding: 1.5rem;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.sectionContent h4 {
+  color: var(--bs-gray-800);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Cards personnalisées */
+.sectionContent .card {
+  border: 1px solid var(--bs-gray-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sectionContent .card-header {
+  background-color: var(--bs-gray-50);
+  border-bottom: 1px solid var(--bs-gray-200);
+  padding: 1rem 1.25rem;
+}
+
+.sectionContent .card-header h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--bs-gray-700);
+}
+
+/* Formulaires */
+.sectionContent .form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--bs-gray-700);
+  margin-bottom: 0.5rem;
+}
+
+.sectionContent .form-control,
+.sectionContent .form-select {
+  font-size: 0.875rem;
+}
+
+.sectionContent .form-control:focus,
+.sectionContent .form-select:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Radio buttons et checkboxes */
+.sectionContent .form-check-inline {
+  margin-right: 1rem;
+}
+
+.sectionContent .form-check-label {
+  font-size: 0.875rem;
+  color: var(--bs-gray-700);
+}
+
+/* Select multiple */
+.sectionContent select[multiple] {
+  height: 100px;
+}
+
+/* Espacement date range */
+.sectionContent .date-range-separator {
+  padding: 0 0.5rem;
+  color: var(--bs-gray-600);
+}

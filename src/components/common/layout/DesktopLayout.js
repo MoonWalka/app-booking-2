@@ -293,6 +293,24 @@ function DesktopLayout({ children }) {
           icon: 'bi-search'
         });
         break;
+      case '/contacts/recherches/nouveau-dossier':
+        openTab({
+          id: 'nouveau-dossier',
+          title: 'Nouveau dossier',
+          path: '/contacts/recherches/nouveau-dossier',
+          component: 'NouveauDossierPage',
+          icon: 'bi-folder-plus'
+        });
+        break;
+      case '/contacts/recherches/dossiers':
+        openTab({
+          id: 'dossiers-enregistres',
+          title: 'Dossiers enregistrés',
+          path: '/contacts/recherches/dossiers',
+          component: 'DossiersEnregistresPage',
+          icon: 'bi-folder2-open'
+        });
+        break;
       case '/contacts/selections':
         openTab({
           id: 'contacts-selections',
@@ -335,7 +353,16 @@ function DesktopLayout({ children }) {
             { to: "/contacts/nouveau/personne", icon: "bi-person-circle", label: "Ajouter une personne" }
           ]
         },
-        { to: "/contacts/recherches", icon: "bi-search", label: "Mes recherches" },
+        { 
+          id: "mes-recherches",
+          icon: "bi-search", 
+          label: "Mes recherches",
+          subItems: [
+            { to: "/contacts/recherches", icon: "bi-search-plus", label: "Nouvelle recherche" },
+            { to: "/contacts/recherches/nouveau-dossier", icon: "bi-folder-plus", label: "Nouveau dossier" },
+            { to: "/contacts/recherches/dossiers", icon: "bi-folder2-open", label: "Dossiers enregistrés" }
+          ]
+        },
         { to: "/contacts/selections", icon: "bi-check2-square", label: "Mes sélections" },
         { to: "/contacts/tags", icon: "bi-tags", label: "Tags" },
         { to: "/contact/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }

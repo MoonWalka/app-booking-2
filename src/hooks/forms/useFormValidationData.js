@@ -102,7 +102,7 @@ const lieuFields = [
  * ```
  * 
  * @dependencies
- * - Firebase Firestore (collections: concerts, formSubmissions, formLinks, lieux, contacts)
+ * - Firebase Firestore (collections: dates, formSubmissions, formLinks, lieux, contacts)
  * - React hooks (useState, useEffect, useCallback)
  * 
  * @complexity HIGH

@@ -121,7 +121,7 @@ export default function useSimpleContactDetails(id) {
           
           // Sinon on charge les détails complets
           const dateId = typeof concertRef === 'object' ? concertRef.id : concertRef;
-          return getDoc(doc(db, 'concerts', dateId)).then(snapshot => {
+          return getDoc(doc(db, 'dates', dateId)).then(snapshot => {
             if (snapshot.exists()) {
               return { id: snapshot.id, ...snapshot.data() };
             }
@@ -134,7 +134,7 @@ export default function useSimpleContactDetails(id) {
         
         setDates(validDates);
       } else {
-        // Méthode 2: Chercher par référence inverse dans la collection concerts
+        // Méthode 2: Chercher par référence inverse dans la collection dates
         
         // Chercher les concerts avec ce contact dans contactIds
         const concertsConstraints = [where('contactIds', 'array-contains', id)];
@@ -349,7 +349,7 @@ export default function useSimpleContactDetails(id) {
         });
 
         // 2. CHARGER LES DONNÉES LIÉES EN PARALLÈLE (sauf artistes)
-        const [, concertsPromise] = await Promise.allSettled([
+        const [, datesPromise] = await Promise.allSettled([
           fetchLieuxAssocies(contactData),
           fetchDatesAssocies(contactData),
           fetchStructureAssociee(contactData)

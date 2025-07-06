@@ -22,7 +22,6 @@ Les composants de mise en page de TourCraft définissent la structure globale de
 
 **Dépendances :**
 - components/layout/Navbar.js
-- components/layout/Sidebar.js
 - components/layout/Footer.js
 - context/AuthContext.js
 - hooks/common/useResponsive.js
@@ -103,53 +102,36 @@ function AppHeader() {
 }
 ```
 
-### Sidebar
+### Navigation (DesktopLayout)
 
-**But :** Barre latérale de navigation principale
+**But :** Système de navigation principal avec support des onglets
 
-**Props :**
-- `isOpen: boolean` - Si la sidebar est ouverte
-- `onClose: () => void` - Callback pour fermer la sidebar
-- `compact: boolean` - Mode d'affichage compact (icônes seulement)
-- `activePath: string` - Chemin actif pour la mise en évidence
-- `items: Array` - Éléments de menu à afficher
+**Localisation :** `components/common/layout/DesktopLayout.js`
+
+**Caractéristiques :**
+- Navigation par onglets via TabsContext
+- Support mobile/desktop responsive
+- Menu latéral avec sous-menus expandables
+- Gestion des profils utilisateur et organisations
 
 **Dépendances :**
-- components/ui/Button.js
-- components/ui/icons
+- context/TabsContext.js
+- components/tabs/TabManagerProduction.js
 - hooks/common/useResponsive.js
 - react-router-dom
-- Modules CSS
+- Modules CSS (Sidebar.module.css pour les styles)
 
-**Exemple d'utilisation :**
-
-```jsx
-import Sidebar from '../components/layout/Sidebar';
-import { useLocation } from 'react-router-dom';
-
-function AppSidebar({ isOpen, onClose }) {
-  const location = useLocation();
-  const isMobile = useResponsive().isMobile;
-  
-  const menuItems = [
-    { label: 'Tableau de bord', path: '/dashboard', icon: 'dashboard' },
-    { label: 'Concerts', path: '/concerts', icon: 'event' },
-    { label: 'Artistes', path: '/artistes', icon: 'music_note' },
-    { label: 'Contrats', path: '/contrats', icon: 'description' },
-    { label: 'Lieux', path: '/lieux', icon: 'place' },
-    { label: 'Programmateurs', path: '/programmateurs', icon: 'people' },
-    { label: 'Paramètres', path: '/parametres', icon: 'settings' }
-  ];
-  
-  return (
-    <Sidebar 
-      isOpen={isOpen} 
-      onClose={onClose}
-      compact={!isMobile && !isOpen}
-      activePath={location.pathname}
-      items={menuItems}
-    />
-  );
+**Structure de navigation :**
+La navigation est définie dans `navigationGroups` avec des éléments comme :
+```javascript
+{
+  id: "contact",
+  icon: "bi-person-badge",
+  label: "Contact",
+  subItems: [
+    { to: "/contacts", icon: "bi-people", label: "Tous les contacts" },
+    // ...
+  ]
 }
 ```
 
@@ -383,7 +365,7 @@ function DetailLayout() {
         <MainContent />
       </GridItem>
       <GridItem xs={12} md={4}>
-        <Sidebar />
+        <AsideContent />
       </GridItem>
     </GridContainer>
   );

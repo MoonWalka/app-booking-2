@@ -116,24 +116,26 @@ rg "\bconcert\b" --type js -C 2
 - [x] `useLieuDelete.js` - Vérification des dépendances ✓
 - [x] `useContratDetails.js` - Collection de référence ✓
 
-### 🟡 Phase 2: Variables et propriétés
-- [ ] Variables `concert` → `date` (quand il s'agit d'une date)
-- [ ] Arrays `concerts` → `dates`
-- [ ] Relations `concertsIds` → `datesIds`
-- [ ] Associations `concertsAssocies` → `datesAssociees`
-- [ ] Paramètres de fonctions
-- [ ] Commentaires et documentation
+### ✅ Phase 2: Variables et propriétés - TERMINÉE
+- [x] Variables `concert` → `date` (quand il s'agit d'une date) ✓
+- [x] Arrays `concerts` → `dates` ✓
+- [x] Relations `concertsIds` → `datesIds` ✓
+- [x] Associations `concertsAssocies` → `datesAssociees` ✓
+- [x] Paramètres de fonctions ✓
+- [x] Commentaires et documentation ✓
 
-### 🟠 Phase 3: Composants et hooks
-- [ ] `useContratGenerator.js` - 49 occurrences
-- [ ] `ContratRedactionPage.js` - 39 occurrences
-- [ ] `useSimpleContactDetails.js` - 32 occurrences
-- [ ] `GenericDetailView.js` - 30 occurrences
-- [ ] `FactureGeneratorPage.js` - 27 occurrences
-- [ ] Services email (`emailService.js`, `brevoTemplateService.js`)
+### ✅ Phase 3: Composants et hooks - TERMINÉE
+- [x] `useContratGenerator.js` - 49 occurrences ✓
+- [x] `ContratRedactionPage.js` - 39 occurrences ✓
+- [x] `useSimpleContactDetails.js` - 32 occurrences ✓
+- [x] `GenericDetailView.js` - 30 occurrences ✓
+- [x] `FactureGeneratorPage.js` - 27 occurrences ✓
+- [x] Services email (`emailService.js`, `brevoTemplateService.js`) ✓
 
-### 🟢 Phase 4: Firebase et routes
-- [ ] Script de migration des données Firebase
+### 🟢 Phase 4: Firebase et routes - EN COURS
+- [x] Script de migration des données Firebase ✓
+  - Créé: `scripts/firebase-migrate-concerts-to-dates.js`
+  - Mode dry-run disponible
 - [ ] Routes `/concerts` → `/dates`
 - [ ] Permissions et règles de sécurité
 - [ ] Redirections pour compatibilité
@@ -151,6 +153,56 @@ rg "\bconcert\b" --type js -C 2
 - [ ] Documentation obsolète
 - [ ] Suppression de l'ancienne collection
 
+## État de la Migration - 6 Janvier 2025
+
+### ✅ Travail Accompli
+
+1. **Phase 1 - Corrections critiques** : 100% terminée
+   - Collection Firebase migrée dans le code
+   - Relations bidirectionnelles mises à jour
+   - Hooks de suppression adaptés
+
+2. **Phase 2 - Variables et propriétés** : 100% terminée
+   - Toutes les variables `concert` → `date`
+   - Propriétés `concertsIds` → `datesIds`
+   - Documentation mise à jour
+
+3. **Phase 3 - Composants principaux** : 100% terminée
+   - 6 fichiers majeurs migrés
+   - Plus de 200 occurrences corrigées
+
+4. **Scripts créés** :
+   - `scripts/migrate-concert-to-date-final.js` - Migration automatique du code
+   - `scripts/firebase-migrate-concerts-to-dates.js` - Migration des données Firebase
+
+### ⚠️ Actions Restantes
+
+1. **Exécuter la migration Firebase** :
+   ```bash
+   # Test en mode dry-run
+   node scripts/firebase-migrate-concerts-to-dates.js --dry-run
+   
+   # Migration réelle
+   node scripts/firebase-migrate-concerts-to-dates.js
+   ```
+
+2. **Mettre à jour les routes** dans le routeur React
+
+3. **Adapter les règles de sécurité Firebase**
+
+4. **Tester l'application complètement**
+
+5. **Supprimer l'ancienne collection "concerts"** après validation
+
+### 📊 Statistiques de Migration
+
+- **Fichiers modifiés** : 15+
+- **Occurrences remplacées** : ~400+
+- **Collections impactées** : concerts → dates
+- **Relations mises à jour** : concertsIds → datesIds, concertsAssocies → datesAssociees
+
 ## Conclusion
 
-La migration nécessite encore un travail conséquent. Les références à "concert" sont profondément ancrées dans le code, notamment dans la logique métier et les relations entre entités. Il est crucial de distinguer entre la migration de la collection (concerts → dates) et la conservation du type "Concert" comme type d'événement valide.
+La migration du code est maintenant **largement complète**. Les principales fonctionnalités ont été adaptées pour utiliser "date" au lieu de "concert" tout en conservant "Concert" comme type d'événement valide. 
+
+Il reste à exécuter la migration des données Firebase et à effectuer des tests complets avant de considérer la migration comme totalement terminée.

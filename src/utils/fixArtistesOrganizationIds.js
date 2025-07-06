@@ -1,173 +1,125 @@
-import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
+/**
+ * Utilitaire pour corriger les organizationIds des artistes
+ * Utilisé pour la migration et la maintenance des données
+ * Version: 2.0
+ */
+
+import { collection, getDocs, updateDoc, doc, where, query } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 
 /**
- * Corrige spécifiquement les artistes sans organizationId
- * @param {string} organizationId - ID de l'organisation à attribuer
- * @returns {Promise<{success: number, errors: Array}>}
+ * Corrige les organizationIds manquants pour les artistes
+ * @param {string} organizationId - L'ID de l'organisation
+ * @returns {Promise<Object>} Résultat de la correction
  */
 export async function fixArtistesOrganizationIds(organizationId) {
-  if (!organizationId) {
-    throw new Error('organizationId est requis');
-  }
-
-  console.log(`🎵 Correction des organizationId manquants pour les artistes...`);
-  console.log(`Organisation ID: ${organizationId}`);
+  console.log('[fixArtistesOrganizationIds] Début de la correction pour:', organizationId);
   
   try {
-    // Récupérer tous les artistes
-    const artistesSnapshot = await getDocs(collection(db, 'artistes'));
+    // Chercher les artistes sans organizationId
+    const artistesQuery = query(
+      collection(db, 'artistes'),
+      where('organizationId', '==', null)
+    );
     
-    // Analyser et filtrer ceux qui n'ont pas d'organizationId
-    const artistesToFix = [];
-    let totalArtistes = 0;
-    let artistesWithOrgId = 0;
+    const snapshot = await getDocs(artistesQuery);
     
-    artistesSnapshot.forEach(docSnapshot => {
-      totalArtistes++;
-      const data = docSnapshot.data();
-      if (!data.organizationId) {
-        artistesToFix.push({ 
-          id: docSnapshot.id, 
-          nom: data.nom || 'Sans nom',
-          style: data.style || 'Non défini'
-        });
-      } else {
-        artistesWithOrgId++;
-      }
+    if (snapshot.empty) {
+      console.log('[fixArtistesOrganizationIds] Aucun artiste à corriger');
+      return {
+        success: true,
+        count: 0,
+        message: 'Aucun artiste à corriger'
+      };
+    }
+    
+    let fixed = 0;
+    const promises = [];
+    
+    snapshot.forEach((artisteDoc) => {
+      const artisteRef = doc(db, 'artistes', artisteDoc.id);
+      promises.push(
+        updateDoc(artisteRef, {
+          organizationId: organizationId,
+          _fixedAt: new Date().toISOString(),
+          _fixedBy: 'fixArtistesOrganizationIds'
+        })
+      );
+      fixed++;
     });
-
-    console.log(`\n📊 Analyse des artistes:`);
-    console.log(`- Total artistes: ${totalArtistes}`);
-    console.log(`- Avec organizationId: ${artistesWithOrgId}`);
-    console.log(`- Sans organizationId: ${artistesToFix.length}`);
-
-    if (artistesToFix.length === 0) {
-      console.log(`✅ Tous les artistes ont déjà un organizationId!`);
-      return { success: 0, errors: [], alreadyFixed: true };
-    }
-
-    // Afficher quelques exemples
-    console.log(`\nExemples d'artistes à corriger:`);
-    artistesToFix.slice(0, 5).forEach(artiste => {
-      console.log(`- ${artiste.nom} (${artiste.style}) - ID: ${artiste.id}`);
-    });
-    if (artistesToFix.length > 5) {
-      console.log(`... et ${artistesToFix.length - 5} autres`);
-    }
-
-    // Demander confirmation
-    const confirmMessage = `\n⚠️  Voulez-vous ajouter l'organizationId "${organizationId}" à ${artistesToFix.length} artistes?\n` +
-                          `Tapez "OUI" pour confirmer ou toute autre touche pour annuler: `;
     
-    const confirmation = window.prompt(confirmMessage);
+    await Promise.all(promises);
     
-    if (confirmation?.toUpperCase() !== 'OUI') {
-      console.log('❌ Correction annulée');
-      return { success: 0, errors: [], cancelled: true };
-    }
-
-    // Procéder à la correction par batch
-    const maxBatchSize = 500;
-    const errors = [];
-    let successCount = 0;
-
-    console.log(`\n🔧 Début de la correction...`);
-
-    for (let i = 0; i < artistesToFix.length; i += maxBatchSize) {
-      const batch = writeBatch(db);
-      const currentBatch = artistesToFix.slice(i, i + maxBatchSize);
-
-      currentBatch.forEach(({ id }) => {
-        const docRef = doc(db, 'artistes', id);
-        batch.update(docRef, { 
-          organizationId,
-          updatedAt: new Date(),
-          organizationIdAddedAt: new Date() // Pour traçabilité
-        });
-      });
-
-      try {
-        await batch.commit();
-        successCount += currentBatch.length;
-        console.log(`✅ Batch ${Math.floor(i / maxBatchSize) + 1}: ${currentBatch.length} artistes corrigés`);
-      } catch (error) {
-        console.error(`❌ Erreur batch:`, error);
-        errors.push(error);
-      }
-    }
-
-    console.log(`\n🎯 Résultat final:`);
-    console.log(`- ${successCount} artistes corrigés avec succès`);
-    console.log(`- ${errors.length} erreurs`);
+    console.log(`[fixArtistesOrganizationIds] ${fixed} artistes corrigés`);
     
-    if (successCount > 0) {
-      console.log(`\n✅ Les artistes devraient maintenant apparaître dans la recherche!`);
-    }
-
-    return { success: successCount, errors };
-
+    return {
+      success: true,
+      count: fixed,
+      message: `${fixed} artistes corrigés avec succès`
+    };
+    
   } catch (error) {
-    console.error(`❌ Erreur lors de la correction des artistes:`, error);
+    console.error('[fixArtistesOrganizationIds] Erreur:', error);
+    return {
+      success: false,
+      count: 0,
+      message: error.message,
+      error
+    };
+  }
+}
+
+/**
+ * Vérifie l'état des organizationIds des artistes
+ * @returns {Promise<Object>} État des artistes
+ */
+export async function checkArtistesOrganizationIds() {
+  try {
+    const snapshot = await getDocs(collection(db, 'artistes'));
+    
+    let withOrgId = 0;
+    let withoutOrgId = 0;
+    const missingOrgIds = [];
+    
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.organizationId) {
+        withOrgId++;
+      } else {
+        withoutOrgId++;
+        missingOrgIds.push({
+          id: doc.id,
+          nom: data.nom
+        });
+      }
+    });
+    
+    return {
+      total: snapshot.size,
+      withOrgId,
+      withoutOrgId,
+      missingOrgIds
+    };
+    
+  } catch (error) {
+    console.error('[checkArtistesOrganizationIds] Erreur:', error);
     throw error;
   }
 }
 
 /**
- * Analyse les artistes pour détecter les doublons
- */
-export async function analyzeArtistesDuplicates() {
-  console.log(`🔍 Analyse des doublons d'artistes...`);
-  
-  const artistesSnapshot = await getDocs(collection(db, 'artistes'));
-  const artistesByName = new Map();
-  
-  artistesSnapshot.forEach(doc => {
-    const data = doc.data();
-    if (data.nom) {
-      const nomLower = data.nom.toLowerCase().trim();
-      if (!artistesByName.has(nomLower)) {
-        artistesByName.set(nomLower, []);
-      }
-      artistesByName.get(nomLower).push({ id: doc.id, ...data });
-    }
-  });
-  
-  const duplicates = [];
-  artistesByName.forEach((artistes, nom) => {
-    if (artistes.length > 1) {
-      duplicates.push({ nom, artistes });
-    }
-  });
-  
-  console.log(`\n📊 Résultat de l'analyse:`);
-  console.log(`- ${duplicates.length} noms d'artistes en double trouvés`);
-  
-  if (duplicates.length > 0) {
-    console.log(`\nDoublons détectés:`);
-    duplicates.forEach(({ nom, artistes }) => {
-      console.log(`\n"${nom}" (${artistes.length} occurrences):`);
-      artistes.forEach(artiste => {
-        console.log(`  - ID: ${artiste.id} | Org: ${artiste.organizationId || 'AUCUN'} | Style: ${artiste.style || 'N/A'}`);
-      });
-    });
-  }
-  
-  return duplicates;
-}
-
-/**
- * Fonction helper pour lancer la correction depuis la console
+ * Installe les fixers pour les artistes
+ * Fonction d'initialisation qui peut installer des listeners ou des hooks
  */
 export function installArtistesFixers() {
-  if (typeof window !== 'undefined') {
-    window.fixArtistesOrganizationIds = fixArtistesOrganizationIds;
-    window.analyzeArtistesDuplicates = analyzeArtistesDuplicates;
-    console.log('🎵 Helpers artistes installés!');
-    console.log('- Correction: await window.fixArtistesOrganizationIds("votre-organization-id")');
-    console.log('- Analyse doublons: await window.analyzeArtistesDuplicates()');
-  }
+  console.log('[installArtistesFixers] Installation des fixers pour les artistes');
+  
+  // Pour l'instant, cette fonction ne fait rien de spécial
+  // Elle pourrait installer des listeners Firebase ou des hooks React
+  // selon les besoins futurs
+  
+  return {
+    checkStatus: checkArtistesOrganizationIds,
+    fix: fixArtistesOrganizationIds
+  };
 }
-
-// Auto-installer les helpers
-installArtistesFixers();

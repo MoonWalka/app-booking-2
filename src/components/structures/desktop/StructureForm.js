@@ -149,7 +149,7 @@ const StructureFormEnhanced = () => {
       // Charger les concerts associés
       if (structure.concertsIds?.length > 0) {
         const concertPromises = structure.concertsIds.map(async (id) => {
-          const docSnap = await getDoc(doc(db, 'concerts', id));
+          const docSnap = await getDoc(doc(db, 'dates', id));
           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
         });
         const concerts = (await Promise.all(concertPromises)).filter(c => c !== null);
@@ -736,7 +736,7 @@ const StructureFormEnhanced = () => {
                     try {
                       const newDates = await Promise.all(
                         idsToLoad.map(async (id) => {
-                          const docSnap = await getDoc(doc(db, 'concerts', id));
+                          const docSnap = await getDoc(doc(db, 'dates', id));
                           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
                         })
                       );

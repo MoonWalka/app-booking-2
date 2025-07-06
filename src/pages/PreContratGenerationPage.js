@@ -40,7 +40,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
       
       try {
         // Récupérer les données du concert
-        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        const dateDoc = await getDoc(doc(db, 'dates', dateId));
         if (!dateDoc.exists()) {
           console.error('[PreContratGenerationPage] Date non trouvé:', dateId);
           setError('Date non trouvé');

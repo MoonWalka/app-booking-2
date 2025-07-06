@@ -20,7 +20,7 @@ const ContratGenerationPage = () => {
     const fetchData = async () => {
       try {
         // Récupérer les données du concert
-        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        const dateDoc = await getDoc(doc(db, 'dates', dateId));
         if (!dateDoc.exists()) {
           setError('Date non trouvé');
           setLoading(false);

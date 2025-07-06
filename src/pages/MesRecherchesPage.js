@@ -1,241 +1,121 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
-import styles from './CollaborationParametragePage.module.css';
+import React from 'react';
+import RechercheLayout from '@/components/recherches/RechercheLayout';
+import IdentificationSection from '@/components/recherches/sections/IdentificationSection';
+import HistoriqueSection from '@/components/recherches/sections/HistoriqueSection';
+import PersonnesSection from '@/components/recherches/sections/PersonnesSection';
+import ActivitesSection from '@/components/recherches/sections/ActivitesSection';
+import ReseauxSection from '@/components/recherches/sections/ReseauxSection';
+import GenresSection from '@/components/recherches/sections/GenresSection';
+import GeolocalisationSection from '@/components/recherches/sections/GeolocalisationSection';
+import FestivalsSection from '@/components/recherches/sections/FestivalsSection';
+import MesSelectionsSection from '@/components/recherches/sections/MesSelectionsSection';
+import SallesSection from '@/components/recherches/sections/SallesSection';
+import InfosArtisteSection from '@/components/recherches/sections/InfosArtisteSection';
+import DatesSection from '@/components/recherches/sections/DatesSection';
 
 /**
- * Page Mes recherches - Système de navigation à plusieurs niveaux
+ * Page Mes recherches - Interface de recherche avancée multi-critères
  */
-const MesRecherchesPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [selectedConfig, setSelectedConfig] = useState('nouvelle-recherche');
-  const [selectedSubOption, setSelectedSubOption] = useState('');
-
-  // Configuration du menu principal
-  const mainSections = [
-    {
-      id: 'nouvelle-recherche',
-      label: 'Nouvelle recherche',
-      icon: 'bi-search-plus'
-    },
-    {
-      id: 'nouveau-dossier',
-      label: 'Nouveau dossier',
-      icon: 'bi-folder-plus'
-    },
-    {
-      id: 'dossiers-enregistres',
-      label: 'Dossiers enregistrés',
-      icon: 'bi-archive',
-      hasSubOptions: true
-    }
-  ];
-
-  // Configuration des sous-options pour chaque section
-  const subOptionsConfig = {
-    'dossiers-enregistres': [
-      {
-        id: 'dossier-20062025',
-        label: 'Dossier du 20/06/2025 01:12',
-        icon: 'bi-folder',
-        subItems: [
-          { id: 'tous-1', label: 'Tous (1)', count: 1 },
-          { id: 'non-localises-0', label: 'Contacts non localisés (0)', count: 0 }
-        ]
-      }
-    ]
-  };
-
-  // Synchronisation avec l'URL
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const config = searchParams.get('section') || 'nouvelle-recherche';
-    const subOption = searchParams.get('sub') || '';
-    
-    setSelectedConfig(config);
-    setSelectedSubOption(subOption);
-  }, [location]);
-
-  // Gestion de la navigation
-  const handleSectionChange = (sectionId) => {
-    setSelectedConfig(sectionId);
-    setSelectedSubOption('');
-    navigate(`/contacts/recherches?section=${sectionId}`);
-  };
-
-  const handleSubOptionChange = (subOptionId) => {
-    setSelectedSubOption(subOptionId);
-    navigate(`/contacts/recherches?section=${selectedConfig}&sub=${subOptionId}`);
-  };
-
-  // Rendu du menu principal
-  const renderMainMenu = () => (
-    <div className={styles.sidebarMenu}>
-      {mainSections.map(section => (
-        <div
-          key={section.id}
-          className={`${styles.menuItem} ${selectedConfig === section.id ? styles.menuItemActive : ''}`}
-          onClick={() => handleSectionChange(section.id)}
-        >
-          <i className={`${section.icon} me-2`}></i>
-          {section.label}
-        </div>
-      ))}
-    </div>
-  );
-
-  // Rendu du sous-menu
-  const renderSubMenu = () => {
-    const currentSection = mainSections.find(s => s.id === selectedConfig);
-    if (!currentSection?.hasSubOptions) return null;
-
-    const subOptions = subOptionsConfig[selectedConfig] || [];
-
-    return (
-      <div className={styles.subMenu}>
-        {subOptions.map(option => (
-          <div key={option.id} className={styles.subMenuSection}>
-            <div
-              className={`${styles.subMenuItem} ${selectedSubOption === option.id ? styles.subMenuItemActive : ''}`}
-              onClick={() => handleSubOptionChange(option.id)}
-            >
-              <i className={`${option.icon} me-2`}></i>
-              {option.label}
-            </div>
-            {option.subItems && selectedSubOption === option.id && (
-              <div className={styles.subMenuItems}>
-                {option.subItems.map(subItem => (
-                  <div
-                    key={subItem.id}
-                    className={styles.subMenuSubItem}
-                    onClick={() => handleSubOptionChange(subItem.id)}
-                  >
-                    <span className="ms-3">{subItem.label}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  // Rendu du contenu principal
-  const renderMainContent = () => {
-    switch (selectedConfig) {
-      case 'nouvelle-recherche':
+const MesRecherchesPage = ({ activeSection, onCriteriaChange, selectedCriteria }) => {
+  // Fonction pour rendre la section appropriée selon la sélection
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'identification':
+        return <IdentificationSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'activites':
+        return <ActivitesSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'reseaux':
+        return <ReseauxSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'genres':
+        return <GenresSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'festivals':
+        return <FestivalsSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'historique':
+        return <HistoriqueSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'personnes':
+        return <PersonnesSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'mots-cles':
         return (
-          <div className={styles.contentArea}>
-            <h3>
-              <i className="bi bi-search-plus me-2"></i>
-              Nouvelle recherche
-            </h3>
-            <p className="text-muted">Interface pour créer une nouvelle recherche de contacts...</p>
-            <div className="mt-4">
-              <div className="card">
-                <div className="card-body">
-                  <h5>Critères de recherche</h5>
-                  <p>Fonctionnalité en développement...</p>
-                </div>
-              </div>
-            </div>
+          <div className="p-4 text-center">
+            <i className="bi bi-tags display-4 text-muted"></i>
+            <h4 className="mt-3">Section Mots-clés</h4>
+            <p className="text-muted">Cette section sera implémentée prochainement</p>
           </div>
         );
-
-      case 'nouveau-dossier':
+      
+      case 'mes-selections':
+        return <MesSelectionsSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'suivi':
         return (
-          <div className={styles.contentArea}>
-            <h3>
-              <i className="bi bi-folder-plus me-2"></i>
-              Nouveau dossier
-            </h3>
-            <p className="text-muted">Interface pour créer un nouveau dossier de recherches...</p>
-            <div className="mt-4">
-              <div className="card">
-                <div className="card-body">
-                  <h5>Créer un dossier</h5>
-                  <p>Fonctionnalité en développement...</p>
-                </div>
-              </div>
-            </div>
+          <div className="p-4 text-center">
+            <i className="bi bi-eye display-4 text-muted"></i>
+            <h4 className="mt-3">Section Suivi</h4>
+            <p className="text-muted">Cette section sera implémentée prochainement</p>
           </div>
         );
-
-      case 'dossiers-enregistres':
-        if (selectedSubOption) {
-          const subOption = subOptionsConfig[selectedConfig]?.find(opt => opt.id === selectedSubOption);
-          if (subOption) {
-            return (
-              <div className={styles.contentArea}>
-                <h3>
-                  <i className="bi bi-folder me-2"></i>
-                  {subOption.label}
-                </h3>
-                <p className="text-muted">Contenu du dossier sélectionné...</p>
-                <div className="mt-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <h5>Recherches dans ce dossier</h5>
-                      {subOption.subItems?.map(item => (
-                        <div key={item.id} className="mb-2">
-                          <span className="badge bg-secondary me-2">{item.count}</span>
-                          {item.label}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          }
-        }
+      
+      case 'geolocalisation':
+        return <GeolocalisationSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'salles':
+        return <SallesSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'docs-promo':
         return (
-          <div className={styles.contentArea}>
-            <h3>
-              <i className="bi bi-archive me-2"></i>
-              Dossiers enregistrés
-            </h3>
-            <p className="text-muted">Sélectionnez un dossier dans le menu de gauche pour voir son contenu.</p>
+          <div className="p-4 text-center">
+            <i className="bi bi-file-earmark-text display-4 text-muted"></i>
+            <h4 className="mt-3">Section Docs promo</h4>
+            <p className="text-muted">Cette section sera implémentée prochainement</p>
           </div>
         );
-
+      
+      case 'infos-artiste':
+        return <InfosArtisteSection onCriteriaChange={onCriteriaChange} />;
+      
+      case 'emailing':
+        return (
+          <div className="p-4 text-center">
+            <i className="bi bi-envelope display-4 text-muted"></i>
+            <h4 className="mt-3">Section eMailing</h4>
+            <p className="text-muted">Cette section sera implémentée prochainement</p>
+          </div>
+        );
+      
+      case 'gestion-projets':
+        return (
+          <div className="p-4 text-center">
+            <i className="bi bi-kanban display-4 text-muted"></i>
+            <h4 className="mt-3">Section Gestion de projets</h4>
+            <p className="text-muted">Cette section sera implémentée prochainement</p>
+          </div>
+        );
+      
+      case 'dates':
+        return <DatesSection onCriteriaChange={onCriteriaChange} />;
+      
       default:
-        return (
-          <div className={styles.contentArea}>
-            <h3>Mes recherches</h3>
-            <p className="text-muted">Sélectionnez une option dans le menu de gauche.</p>
-          </div>
-        );
+        return <IdentificationSection onCriteriaChange={onCriteriaChange} />;
     }
   };
 
-  return (
-    <Container fluid className="p-4">
-      <Row className="mb-4">
-        <Col>
-          <h2 className="mb-0">
-            <i className="bi bi-search me-2"></i>
-            Mes recherches
-          </h2>
-          <p className="text-muted">Gérez vos recherches de contacts sauvegardées</p>
-        </Col>
-      </Row>
+  return renderSection();
+};
 
-      <Row>
-        <Col md={2}>
-          {renderMainMenu()}
-        </Col>
-        <Col md={2}>
-          {renderSubMenu()}
-        </Col>
-        <Col md={8}>
-          {renderMainContent()}
-        </Col>
-      </Row>
-    </Container>
+// Wrapper pour utiliser avec le layout
+const MesRecherchesPageWithLayout = () => {
+  return (
+    <RechercheLayout>
+      <MesRecherchesPage />
+    </RechercheLayout>
   );
 };
 
-export default MesRecherchesPage;
+export default MesRecherchesPageWithLayout;

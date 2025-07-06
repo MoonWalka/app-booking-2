@@ -1,0 +1,245 @@
+/**
+ * Styles pour le layout de recherche
+ * Structure : Menu latéral | Contenu principal | Colonne de critères
+ */
+
+.rechercheLayout {
+  display: flex;
+  height: 100%;
+  min-height: calc(100vh - 200px); /* Ajuster selon votre header/footer */
+  background-color: var(--bs-gray-100);
+}
+
+/* Menu latéral permanent */
+.sideMenu {
+  width: 250px;
+  background-color: white;
+  border-right: 1px solid var(--bs-gray-300);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.menuHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--bs-gray-200);
+  background-color: var(--bs-gray-50);
+}
+
+.menuHeader h5 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--bs-gray-800);
+}
+
+.menuNav {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Scrollbar personnalisée pour le menu */
+.menuNav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menuNav::-webkit-scrollbar-track {
+  background: var(--bs-gray-100);
+}
+
+.menuNav::-webkit-scrollbar-thumb {
+  background: var(--bs-gray-400);
+  border-radius: 3px;
+}
+
+.menuNav::-webkit-scrollbar-thumb:hover {
+  background: var(--bs-gray-500);
+}
+
+.menuItem {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 0.25rem;
+  border: none;
+  background: none;
+  text-align: left;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  color: var(--bs-gray-700);
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menuItem:hover {
+  background-color: var(--bs-gray-100);
+  color: var(--bs-primary);
+}
+
+.menuItem.active {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+.menuItem.active:hover {
+  background-color: var(--bs-primary);
+  opacity: 0.9;
+}
+
+/* Container principal */
+.mainContainer {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.contentArea {
+  flex: 1;
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+/* Zone de contenu principal */
+.content {
+  flex: 1;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+}
+
+/* Colonne de critères */
+.criteriaColumn {
+  width: 300px;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.criteriaHeader {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--bs-gray-200);
+  background-color: var(--bs-gray-50);
+}
+
+.criteriaHeader h6 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bs-gray-800);
+}
+
+.criteriaContent {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Liste des critères */
+.criteriaList {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.criteriaItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--bs-gray-100);
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.criteriaLabel {
+  flex: 1;
+  margin-right: 0.5rem;
+  word-break: break-word;
+}
+
+.removeCriteria {
+  background: none;
+  border: none;
+  color: var(--bs-danger);
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.removeCriteria:hover {
+  background-color: var(--bs-danger);
+  color: white;
+}
+
+/* Boutons d'action */
+.criteriaActions {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--bs-gray-200);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .criteriaColumn {
+    width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .sideMenu {
+    width: 200px;
+  }
+  
+  .contentArea {
+    flex-direction: column;
+  }
+  
+  .criteriaColumn {
+    width: 100%;
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rechercheLayout {
+    flex-direction: column;
+  }
+  
+  .sideMenu {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--bs-gray-300);
+    max-height: 200px;
+  }
+  
+  .menuNav {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    overflow-x: auto;
+  }
+  
+  .menuItem {
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+  
+  .contentArea {
+    padding: 1rem;
+  }
+}

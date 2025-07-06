@@ -45,10 +45,11 @@ import ContactsFixTool from '@/components/debug/ContactsFixTool';
 import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer';
 import ContactsMigrationFinal from '@/components/debug/ContactsMigrationFinal';
 import QuickContactCreator from '@/components/debug/QuickContactCreator';
+import MigrationConcertToDate from '@/components/debug/MigrationConcertToDate';
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
-  const [activeTab, setActiveTab] = useState('migration-finale');
+  const [activeTab, setActiveTab] = useState('migration-concert-date');
 
   // Temporairement accessible en production pour corriger les problèmes
   // À retirer une fois les corrections appliquées
@@ -83,6 +84,10 @@ const DebugToolsPage = () => {
         onSelect={(k) => setActiveTab(k)}
         className={styles.tabs}
       >
+        <Tab eventKey="migration-concert-date" title="🔄 Migration Concerts→Dates">
+          <MigrationConcertToDate />
+        </Tab>
+        
         <Tab eventKey="migration-finale" title="🚨 MIGRATION FINALE CONTACTS">
           <ContactsMigrationFinal />
         </Tab>

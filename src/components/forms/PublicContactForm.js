@@ -402,7 +402,7 @@ const PublicContactForm = ({
       }
 
       // Mettre à jour le concert
-      await updateDoc(doc(db, 'concerts', dateId), {
+      await updateDoc(doc(db, 'dates', dateId), {
         lastFormSubmissionId: submissionRef.id,
         hasFormSubmission: true,
         updatedAt: serverTimestamp()

@@ -1,6 +1,5 @@
 /**
- * Convertir un nombre en lettres (français)
- * Utilisé pour les montants dans les factures
+ * Convertit un nombre en mots français
  */
 
 const units = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'];
@@ -8,118 +7,123 @@ const teens = ['dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 
 const tens = ['', '', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante-dix', 'quatre-vingt', 'quatre-vingt-dix'];
 
 /**
- * Convertir un nombre entre 0 et 99 en lettres
- */
-function convertTens(num) {
-  if (num < 10) return units[num];
-  if (num < 20) return teens[num - 10];
-  
-  const ten = Math.floor(num / 10);
-  const unit = num % 10;
-  
-  if (ten === 7 || ten === 9) {
-    // 70-79 et 90-99
-    return tens[ten - 1] + (unit === 0 ? '-dix' : '-' + teens[unit]);
-  }
-  
-  if (ten === 8 && unit === 0) {
-    return 'quatre-vingts'; // 80 prend un 's'
-  }
-  
-  if (unit === 1 && (ten === 2 || ten === 3 || ten === 4 || ten === 5 || ten === 6)) {
-    return tens[ten] + '-et-un';
-  }
-  
-  return tens[ten] + (unit > 0 ? '-' + units[unit] : '');
-}
-
-/**
- * Convertir un nombre entre 0 et 999 en lettres
+ * Convertit un nombre (0-999) en mots
+ * @param {number} num - Le nombre à convertir
+ * @returns {string} Le nombre en mots
  */
 function convertHundreds(num) {
-  if (num < 100) return convertTens(num);
-  
-  const hundred = Math.floor(num / 100);
-  const remainder = num % 100;
-  
   let result = '';
-  if (hundred === 1) {
-    result = 'cent';
-  } else {
-    result = units[hundred] + '-cent';
-    if (remainder === 0) result += 's'; // cents prend un 's' au pluriel
+  
+  // Centaines
+  const hundreds = Math.floor(num / 100);
+  if (hundreds > 0) {
+    if (hundreds === 1) {
+      result += 'cent';
+    } else {
+      result += units[hundreds] + ' cent';
+    }
+    if (num % 100 === 0 && hundreds > 1) {
+      result += 's';
+    }
   }
   
+  // Dizaines et unités
+  const remainder = num % 100;
   if (remainder > 0) {
-    result += '-' + convertTens(remainder);
+    if (result) result += ' ';
+    
+    if (remainder < 10) {
+      result += units[remainder];
+    } else if (remainder < 20) {
+      result += teens[remainder - 10];
+    } else {
+      const tensDigit = Math.floor(remainder / 10);
+      const unitsDigit = remainder % 10;
+      
+      if (tensDigit === 7 || tensDigit === 9) {
+        // 70-79 et 90-99
+        result += tens[tensDigit - 1];
+        if (unitsDigit === 1 && tensDigit === 7) {
+          result += ' et onze';
+        } else if (unitsDigit === 1 && tensDigit === 9) {
+          result += '-onze';
+        } else {
+          result += '-' + teens[unitsDigit];
+        }
+      } else {
+        result += tens[tensDigit];
+        if (unitsDigit === 1 && tensDigit !== 8) {
+          result += ' et un';
+        } else if (unitsDigit > 0) {
+          result += '-' + units[unitsDigit];
+        }
+      }
+    }
   }
   
   return result;
 }
 
 /**
- * Convertir un nombre entier en lettres
+ * Convertit un nombre en mots français
+ * @param {number} num - Le nombre à convertir
+ * @returns {string} Le nombre en mots
  */
-function convertInteger(num) {
+export function numberToWords(num) {
   if (num === 0) return 'zéro';
+  if (num < 0) return 'moins ' + numberToWords(-num);
   
-  const billion = Math.floor(num / 1000000000);
-  const million = Math.floor((num % 1000000000) / 1000000);
-  const thousand = Math.floor((num % 1000000) / 1000);
-  const remainder = num % 1000;
-  
-  let result = [];
-  
-  if (billion > 0) {
-    result.push(billion === 1 ? 'un-milliard' : convertHundreds(billion) + '-milliards');
+  if (num < 1000) {
+    return convertHundreds(num);
   }
   
-  if (million > 0) {
-    result.push(million === 1 ? 'un-million' : convertHundreds(million) + '-millions');
-  }
-  
-  if (thousand > 0) {
-    if (thousand === 1) {
-      result.push('mille');
+  if (num < 1000000) {
+    const thousands = Math.floor(num / 1000);
+    const remainder = num % 1000;
+    let result = '';
+    
+    if (thousands === 1) {
+      result = 'mille';
     } else {
-      result.push(convertHundreds(thousand) + '-mille');
+      result = convertHundreds(thousands) + ' mille';
     }
+    
+    if (remainder > 0) {
+      result += ' ' + convertHundreds(remainder);
+    }
+    
+    return result;
   }
   
-  if (remainder > 0) {
-    result.push(convertHundreds(remainder));
-  }
-  
-  return result.join('-');
+  // Pour les nombres plus grands, retourner le nombre
+  return num.toString();
 }
 
 /**
- * Convertir un montant en euros en lettres
- * @param {number} amount - Le montant à convertir
- * @returns {string} - Le montant en lettres
+ * Convertit un montant en euros en mots
+ * @param {number} amount - Le montant en euros
+ * @returns {string} Le montant en mots
  */
-export function toWords(amount) {
-  if (typeof amount !== 'number' || isNaN(amount)) {
-    return '';
-  }
-  
-  // Arrondir à 2 décimales
-  amount = Math.round(amount * 100) / 100;
-  
+export function amountToWords(amount) {
   const euros = Math.floor(amount);
   const cents = Math.round((amount - euros) * 100);
   
-  let result = convertInteger(euros) + ' euro';
+  let result = numberToWords(euros) + ' euro';
   if (euros > 1) result += 's';
   
   if (cents > 0) {
-    result += ' et ' + convertInteger(cents) + ' centime';
+    result += ' et ' + numberToWords(cents) + ' centime';
     if (cents > 1) result += 's';
   }
   
-  // Mettre la première lettre en majuscule
-  return result.charAt(0).toUpperCase() + result.slice(1);
+  return result;
 }
 
-// Export par défaut pour compatibilité
-export default toWords;
+/**
+ * Alias pour la compatibilité avec l'ancien code
+ * @param {number} num - Le nombre à convertir
+ * @returns {string} Le nombre en mots
+ */
+export function toWords(num) {
+  return numberToWords(num);
+}

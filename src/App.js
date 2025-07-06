@@ -41,6 +41,8 @@ import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
 // import FactureDetailsPage from '@/pages/FactureDetailsPage'; // Remplacé par FactureGeneratorPage
 import FacturesPage from '@/pages/FacturesPage';
 import MesRecherchesPage from '@/pages/MesRecherchesPage';
+import NouveauDossierPage from '@/pages/NouveauDossierPage';
+import DossiersEnregistresPage from '@/pages/DossiersEnregistresPage';
 import MesSelectionsPage from '@/pages/MesSelectionsPage';
 import ContactTagsPage from '@/pages/ContactTagsPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
@@ -149,8 +151,9 @@ function App() {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       installGlobalFixer();
-      installArtistesFixers();
-      initializeFirebaseInterceptor();
+      // Temporairement désactivé - problème de hot-reload
+      // installArtistesFixers();
+      // initializeFirebaseInterceptor();
     }
   }, []);
 
@@ -393,6 +396,18 @@ function App() {
                       <Route path="/contacts/recherches" element={
                         <PrivateRoute>
                           <MesRecherchesPage />
+                        </PrivateRoute>
+                      } />
+                      
+                      <Route path="/contacts/recherches/nouveau-dossier" element={
+                        <PrivateRoute>
+                          <NouveauDossierPage />
+                        </PrivateRoute>
+                      } />
+                      
+                      <Route path="/contacts/recherches/dossiers" element={
+                        <PrivateRoute>
+                          <DossiersEnregistresPage />
                         </PrivateRoute>
                       } />
                       

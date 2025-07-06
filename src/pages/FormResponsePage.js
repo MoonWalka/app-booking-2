@@ -59,7 +59,7 @@ const FormResponsePage = () => {
             
             // Récupérer le date associé
             if (submissionData.dateId) {
-              const dateDoc = await getDoc(doc(db, 'concerts', submissionData.dateId));
+              const dateDoc = await getDoc(doc(db, 'dates', submissionData.dateId));
               if (dateDoc.exists()) {
                 setDate(dateDoc.data());
                 
@@ -143,7 +143,7 @@ const FormResponsePage = () => {
           console.log("Token validé avec succès, chargement du concert:", dateId);
           
           // Récupérer les données du concert
-          const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+          const dateDoc = await getDoc(doc(db, 'dates', dateId));
           if (dateDoc.exists()) {
             const dateData = dateDoc.data();
             setDate(dateData);

@@ -155,7 +155,7 @@ const FactureDetailsPage = ({
       let structure = null;
       
       if (facture.dateId) {
-        const dateDoc = await getDoc(doc(db, 'concerts', facture.dateId));
+        const dateDoc = await getDoc(doc(db, 'dates', facture.dateId));
         if (dateDoc.exists()) {
           date = { id: dateDoc.id, ...dateDoc.data() };
         }

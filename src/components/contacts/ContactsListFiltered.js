@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Container, Card, Badge, Alert } from 'react-bootstrap';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useTabs } from '@/context/TabsContext';

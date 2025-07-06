@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import PublicationsList from '@/components/concerts/PublicationsList.js';
+import PublicationsList from '@/components/dates/PublicationsList.js';
 
 function PublicationsPage() {
   const location = useLocation();

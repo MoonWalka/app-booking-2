@@ -49,21 +49,21 @@ const BrevoTemplateCustomizer = () => {
     relance: {
       title: 'Documents manquants',
       greeting: 'Bonjour {{params.prenom_programmateur}} {{params.nom_programmateur}},',
-      mainMessage: 'Concernant votre projet {{params.titre_concert}}, il nous manque encore quelques documents pour finaliser votre dossier.',
+      mainMessage: 'Concernant votre projet {{params.titre_date}}, il nous manque encore quelques documents pour finaliser votre dossier.',
       additionalInfo: 'Merci de nous transmettre ces éléments dans les plus brefs délais.',
       signature: 'Cordialement,\nL\'équipe TourCraft'
     },
     contrat: {
       title: 'Contrat finalisé',
       greeting: 'Bonjour {{params.prenom_programmateur}} {{params.nom_programmateur}},',
-      mainMessage: 'Votre contrat concernant {{params.titre_concert}} a été finalisé et est prêt.',
+      mainMessage: 'Votre contrat concernant {{params.titre_date}} a été finalisé et est prêt.',
       additionalInfo: 'Vous pouvez le consulter et le télécharger en cliquant sur le lien ci-dessous.',
       signature: 'Cordialement,\nL\'équipe TourCraft'
     },
     confirmation: {
       title: 'Confirmation de réservation',
       greeting: 'Bonjour {{params.prenom_programmateur}} {{params.nom_programmateur}},',
-      mainMessage: 'Nous confirmons votre réservation pour {{params.titre_concert}}.',
+      mainMessage: 'Nous confirmons votre réservation pour {{params.titre_date}}.',
       additionalInfo: 'Nous vous souhaitons un excellent événement !',
       signature: 'Cordialement,\nL\'équipe TourCraft'
     }
@@ -75,29 +75,29 @@ const BrevoTemplateCustomizer = () => {
       name: 'Formulaire Programmateur',
       description: 'Email envoyé après soumission du formulaire',
       icon: '📝',
-      subject: 'Votre demande d\'informations - {{params.titre_concert}}',
-      variables: ['params.titre_concert', 'params.date_concert', 'params.lieu_nom', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.lien_formulaire']
+      subject: 'Votre demande d\'informations - {{params.titre_date}}',
+      variables: ['params.titre_date', 'params.date_date', 'params.lieu_nom', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.lien_formulaire']
     },
     relance: {
       name: 'Relance Documents',
       description: 'Email de relance pour documents manquants',
       icon: '📬',
-      subject: 'Documents manquants - {{params.titre_concert}}',
-      variables: ['params.titre_concert', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.documents_manquants', 'params.nombre_relance']
+      subject: 'Documents manquants - {{params.titre_date}}',
+      variables: ['params.titre_date', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.documents_manquants', 'params.nombre_relance']
     },
     contrat: {
       name: 'Envoi de Contrat',
       description: 'Email d\'envoi du contrat signé',
       icon: '📄',
-      subject: 'Contrat signé - {{params.titre_concert}}',
-      variables: ['params.titre_concert', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.contrat_type', 'params.date_signature']
+      subject: 'Contrat signé - {{params.titre_date}}',
+      variables: ['params.titre_date', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.contrat_type', 'params.date_signature']
     },
     confirmation: {
       name: 'Confirmation de Réservation',
       description: 'Email de confirmation de réservation',
       icon: '✅',
-      subject: 'Confirmation de réservation - {{params.titre_concert}}',
-      variables: ['params.titre_concert', 'params.date_concert', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.statut_reservation']
+      subject: 'Confirmation de réservation - {{params.titre_date}}',
+      variables: ['params.titre_date', 'params.date_date', 'params.nom_programmateur', 'params.prenom_programmateur', 'params.statut_reservation']
     }
   }), []);
 
@@ -153,8 +153,8 @@ const BrevoTemplateCustomizer = () => {
       const previewVariables = {
         'params.prenom_programmateur': 'Jean',
         'params.nom_programmateur': 'Dupont', 
-        'params.titre_concert': 'Concert de Jazz - Exemple',
-        'params.date_concert': '15 juillet 2024',
+        'params.titre_date': 'Date de Jazz - Exemple',
+        'params.date_date': '15 juillet 2024',
         'params.lieu_nom': 'Salle des Fêtes',
         'params.lien_formulaire': '#',
         'params.documents_manquants': 'RIB, Assurance',
@@ -290,8 +290,8 @@ const BrevoTemplateCustomizer = () => {
               ${templateType === 'formulaire' ? `
                 <div class="highlight-box">
                   <strong>Votre projet :</strong><br>
-                  <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.titre_concert}}</span><br>
-                  <strong>Date :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.date_concert}}</span><br>
+                  <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.titre_date}}</span><br>
+                  <strong>Date :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.date_date}}</span><br>
                   <strong>Lieu :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.lieu_nom}}</span>
                 </div>
                 
@@ -315,7 +315,7 @@ const BrevoTemplateCustomizer = () => {
               ${templateType === 'contrat' ? `
                 <div class="highlight-box">
                   <strong>Détails du contrat :</strong><br>
-                  <strong>Projet :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.titre_concert}}</span><br>
+                  <strong>Projet :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.titre_date}}</span><br>
                   <strong>Type :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.type_contrat}}</span><br>
                   <strong>Montant :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.montant_total}}</span><br>
                   <strong>Date limite signature :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.date_signature_limite}}</span>
@@ -341,8 +341,8 @@ const BrevoTemplateCustomizer = () => {
               ${templateType === 'confirmation' ? `
                 <div class="highlight-box">
                   <strong>Détails de la réservation :</strong><br>
-                  <strong>Événement :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.titre_concert}}</span><br>
-                  <strong>Date :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.date_concert}}</span><br>
+                  <strong>Événement :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.titre_date}}</span><br>
+                  <strong>Date :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.date_date}}</span><br>
                   <strong>Statut :</strong> <span style="color: ${design.secondaryColor}; font-weight: bold;">{{params.statut_reservation}}</span>
                 </div>
               ` : ''}
@@ -406,13 +406,13 @@ const BrevoTemplateCustomizer = () => {
             <h1>Test Variables Simple</h1>
             <p>Nom: {{nom_programmateur}}</p>
             <p>Prénom: {{prenom_programmateur}}</p>
-            <p>Concert: {{titre_concert}}</p>
+            <p>Date: {{titre_date}}</p>
             <p>Email: {{email_programmateur}}</p>
             <p><a href="{{lien_formulaire}}">Lien formulaire</a></p>
             <hr>
             <h2>Test format params</h2>
             <p>params.nom: {{params.nom_programmateur}}</p>
-            <p>params.concert: {{params.titre_concert}}</p>
+            <p>params.concert: {{params.titre_date}}</p>
             <p>params.lien: {{params.lien_formulaire}}</p>
             <hr>
             <h2>Test sans préfixe</h2>
@@ -426,7 +426,7 @@ const BrevoTemplateCustomizer = () => {
 
       const templateData = {
         templateName: '[TourCraft] DEBUG SIMPLE - Variables',
-        subject: 'Test Simple: {{nom_programmateur}} - {{titre_concert}}',
+        subject: 'Test Simple: {{nom_programmateur}} - {{titre_date}}',
         htmlContent: simpleHTML,
         isActive: true,
         tag: 'TourCraft-Debug-Simple',
@@ -496,10 +496,10 @@ const BrevoTemplateCustomizer = () => {
             </div>
             
             <div class="section">
-              <h2>Variables Concert</h2>
-              <div class="variable">titre_concert: {{titre_concert}}</div>
+              <h2>Variables Date</h2>
+              <div class="variable">titre_date: {{titre_date}}</div>
               <div class="variable">concert_nom: {{concert_nom}}</div>
-              <div class="variable">date_concert: {{date_concert}}</div>
+              <div class="variable">date_date: {{date_date}}</div>
               <div class="variable">lieu_nom: {{lieu_nom}}</div>
             </div>
             
@@ -536,7 +536,7 @@ const BrevoTemplateCustomizer = () => {
 
       const templateData = {
         templateName: '[TourCraft] DEBUG - Test Variables',
-        subject: 'DEBUG: Test Variables TourCraft - {{titre_concert}}',
+        subject: 'DEBUG: Test Variables TourCraft - {{titre_date}}',
         htmlContent: debugHTML,
         isActive: true,
         tag: 'TourCraft-Debug',

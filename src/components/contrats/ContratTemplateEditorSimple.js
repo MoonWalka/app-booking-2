@@ -300,13 +300,13 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     { category: 'Artiste', label: 'Structure de l\'artiste', value: 'artiste_structure_nom' },
     { category: 'Artiste', label: 'SIRET structure artiste', value: 'artiste_structure_siret' },
 
-    // Variables Concert
-    { category: 'Concert', label: 'Titre du concert', value: 'concert_titre' },
-    { category: 'Concert', label: 'Date du concert', value: 'concert_date' },
-    { category: 'Concert', label: 'Heure du concert', value: 'concert_heure' },
-    { category: 'Concert', label: 'Montant du concert', value: 'concert_montant' },
-    { category: 'Concert', label: 'Montant en lettres', value: 'concert_montant_lettres' },
-    { category: 'Concert', label: 'Type d\'événement', value: 'concert_type' },
+    // Variables Date
+    { category: 'Date', label: 'Titre du concert', value: 'concert_titre' },
+    { category: 'Date', label: 'Date du concert', value: 'concert_date' },
+    { category: 'Date', label: 'Heure du concert', value: 'concert_heure' },
+    { category: 'Date', label: 'Montant du concert', value: 'concert_montant' },
+    { category: 'Date', label: 'Montant en lettres', value: 'concert_montant_lettres' },
+    { category: 'Date', label: 'Type d\'événement', value: 'concert_type' },
 
     // Variables Lieu
     { category: 'Lieu', label: 'Nom du lieu', value: 'lieu_nom' },
@@ -595,7 +595,7 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
           {showVariables && (
             <div className={styles.variablesContent}>
               <div className={styles.variablesCategories}>
-                {['Organisateur', 'Producteur', 'Prestations', 'Représentations', 'Logistique', 'Règlement', 'Entreprise', 'Contact', 'Programmateur', 'Structure', 'Artiste', 'Concert', 'Lieu', 'Dates', 'Signature', 'Spécial'].map(category => (
+                {['Organisateur', 'Producteur', 'Prestations', 'Représentations', 'Logistique', 'Règlement', 'Entreprise', 'Contact', 'Programmateur', 'Structure', 'Artiste', 'Date', 'Lieu', 'Dates', 'Signature', 'Spécial'].map(category => (
                   <div key={category} className={styles.variableCategory}>
                     <h4 className={styles.categoryTitle}>{category}</h4>
                     <div className={styles.variablesList}>

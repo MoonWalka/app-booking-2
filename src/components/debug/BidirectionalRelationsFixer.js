@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useOrganization } from '@/context/OrganizationContext';
-import { fixArtisteConcertRelations } from '@/utils/fixBidirectionalRelationsBrowser';
+import { fixArtisteDateRelations } from '@/utils/fixBidirectionalRelationsBrowser';
 import Card from '../ui/Card';
 import Alert from '../ui/Alert';
 import styles from './DebugController.module.css';
@@ -22,7 +22,7 @@ const BidirectionalRelationsFixer = () => {
     setError(null);
 
     try {
-      const stats = await fixArtisteConcertRelations(currentOrganization.id);
+      const stats = await fixArtisteDateRelations(currentOrganization.id);
       setResult(stats);
     } catch (err) {
       setError(err.message);
@@ -39,7 +39,7 @@ const BidirectionalRelationsFixer = () => {
       <div className={styles.section}>
         <p className={styles.description}>
           Cet outil répare les relations manquantes entre les concerts et les artistes.
-          Il s'assure que chaque concert référencé par un artiste existe bien dans 
+          Il s'assure que chaque date référencé par un artiste existe bien dans 
           la liste concertsIds de cet artiste.
         </p>
         
@@ -68,7 +68,7 @@ const BidirectionalRelationsFixer = () => {
         <Alert type="success" className={styles.alert}>
           <h4>✅ Réparation terminée</h4>
           <ul>
-            <li>Concerts vérifiés: {result.checked}</li>
+            <li>Dates vérifiés: {result.checked}</li>
             <li>Relations corrigées: {result.fixed}</li>
             <li>Erreurs: {result.errors}</li>
           </ul>

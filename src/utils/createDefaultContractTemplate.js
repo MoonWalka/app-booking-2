@@ -64,15 +64,15 @@ Ci-après dénommé "<strong>L'ORGANISATEUR</strong>"</p>
 <ul>
 <li>Artiste : <strong>[artiste_nom]</strong></li>
 <li>Genre : [artiste_genre]</li>
-<li>Titre du spectacle : <strong>[concert_titre]</strong></li>
-<li>Date : <strong>[concert_date]</strong></li>
-<li>Heure : [concert_heure]</li>
+<li>Titre du spectacle : <strong>[date_titre]</strong></li>
+<li>Date : <strong>[date_date]</strong></li>
+<li>Heure : [date_heure]</li>
 <li>Lieu : [lieu_nom], [lieu_adresse]</li>
 </ul>
 
 <h4>Article 2 - CONDITIONS FINANCIÈRES</h4>
 <p>En contrepartie de la cession des droits d'exploitation du spectacle, L'ORGANISATEUR s'engage à verser au PRODUCTEUR la somme de :</p>
-<p style="text-align: center; font-size: 18px;"><strong>[concert_montant]</strong></p>
+<p style="text-align: center; font-size: 18px;"><strong>[date_montant]</strong></p>
 <p>Cette somme sera versée par virement bancaire dans les 30 jours suivant la représentation.</p>
 
 <h4>Article 3 - OBLIGATIONS DU PRODUCTEUR</h4>

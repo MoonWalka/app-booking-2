@@ -5,7 +5,7 @@ import { ensureStructureEntity } from '@/services/structureService';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 
-const useValidationBatchActions = ({ formId, concertId, validatedFields, setValidated }) => {
+const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidated }) => {
   const { currentOrganization } = useOrganization();
   const relancesAuto = useRelancesAutomatiques();
   const [validationInProgress, setValidationInProgress] = useState(false);
@@ -82,12 +82,12 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         console.log("Données lieu mappées:", lieuFields);
       }
 
-      // Récupérer les données du concert pour vérifier s'il a déjà un contact
-      const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-      const concertData = concertDoc.data();
+      // Récupérer les données du date pour vérifier s'il a déjà un contact
+      const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+      const dateData = dateDoc.data();
       
-      // Utiliser le contact existant du concert en priorité
-      let programmId = concertData.contactId || formData.programmId;
+      // Utiliser le contact existant du date en priorité
+      let programmId = dateData.contactId || formData.programmId;
       let structureId = null;
       
       // Gestion du contact principal (préservation)
@@ -113,12 +113,12 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           const newProgRef = await addDoc(collection(db, 'contacts'), newContactData);
           programmId = newProgRef.id;
           
-          // Mettre à jour la soumission et le concert avec l'ID du contact créé
+          // Mettre à jour la soumission et le date avec l'ID du contact créé
           await updateDoc(doc(db, 'formSubmissions', formId), {
             programmId: programmId
           });
           
-          await updateDoc(doc(db, 'concerts', concertId), {
+          await updateDoc(doc(db, 'concerts', dateId), {
             contactId: programmId
           });
           
@@ -136,8 +136,8 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       if (formData.signataireData) {
         const signataireData = formData.signataireData;
         
-        // Vérifier si le concert a déjà un contact avec le rôle signataire
-        const existingSignataire = concertData.contactsWithRoles?.find(c => c.role === 'signataire');
+        // Vérifier si le date a déjà un contact avec le rôle signataire
+        const existingSignataire = dateData.contactsWithRoles?.find(c => c.role === 'signataire');
         
         if (existingSignataire) {
           // Mettre à jour le signataire existant
@@ -164,7 +164,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
             telephone: signataireData.telephone || '',
             fonction: signataireData.fonction || '',
             // Relations
-            concertsIds: [concertId],
+            concertsIds: [dateId],
             lieuxIds: [],
             structureId: structureId || '',
             structureNom: structureFields.nom || '',
@@ -181,9 +181,9 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           
           console.log("Nouveau contact signataire créé:", newSignataireData);
           
-          // Mettre à jour le concert avec le nouveau contact signataire
+          // Mettre à jour le date avec le nouveau contact signataire
           const updatedContactsWithRoles = [
-            ...(concertData.contactsWithRoles || []),
+            ...(dateData.contactsWithRoles || []),
             {
               contactId: signataireId,
               role: 'signataire',
@@ -192,20 +192,20 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           ];
           
           // Mettre à jour contactIds pour les relations bidirectionnelles
-          const currentContactIds = concertData.contactIds && Array.isArray(concertData.contactIds) 
-            ? [...concertData.contactIds] 
-            : (concertData.contactId ? [concertData.contactId] : []);
+          const currentContactIds = dateData.contactIds && Array.isArray(dateData.contactIds) 
+            ? [...dateData.contactIds] 
+            : (dateData.contactId ? [dateData.contactId] : []);
           
           if (!currentContactIds.includes(signataireId)) {
             currentContactIds.push(signataireId);
           }
           
-          await updateDoc(doc(db, 'concerts', concertId), {
+          await updateDoc(doc(db, 'concerts', dateId), {
             contactsWithRoles: updatedContactsWithRoles,
             contactIds: currentContactIds // ✅ AJOUT CRUCIAL pour les relations bidirectionnelles
           });
           
-          console.log("Concert mis à jour avec le nouveau contact signataire");
+          console.log("Date mis à jour avec le nouveau contact signataire");
         }
       }
 
@@ -308,7 +308,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       // 4. GESTION DU LIEU (COMME AVANT)
       // ==========================================
       
-      if (concertData.lieuId && Object.keys(lieuFields).length > 0) {
+      if (dateData.lieuId && Object.keys(lieuFields).length > 0) {
         // Mise à jour lieu existant
         const lieuUpdateData = {
           ...lieuFields,
@@ -327,7 +327,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           if (progDoc.exists()) {
             const progData = progDoc.data();
             
-            const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+            const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
             const lieuData = lieuDoc.data();
             
             const contactsAssocies = lieuData.contactsAssocies || [];
@@ -345,10 +345,10 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           }
         }
         
-        await updateDoc(doc(db, 'lieux', concertData.lieuId), lieuUpdateData);
+        await updateDoc(doc(db, 'lieux', dateData.lieuId), lieuUpdateData);
         console.log("Lieu existant mis à jour:", lieuUpdateData);
         
-      } else if (!concertData.lieuId && lieuFields.nom && lieuFields.ville) {
+      } else if (!dateData.lieuId && lieuFields.nom && lieuFields.ville) {
         // Création nouveau lieu
         const newLieuData = {
           ...lieuFields,
@@ -381,8 +381,8 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         
         const newLieuRef = await addDoc(collection(db, 'lieux'), newLieuData);
         
-        // Mettre à jour le concert avec l'ID du lieu
-        await updateDoc(doc(db, 'concerts', concertId), {
+        // Mettre à jour le date avec l'ID du lieu
+        await updateDoc(doc(db, 'concerts', dateId), {
           lieuId: newLieuRef.id,
           lieuNom: newLieuData.nom,
           lieuVille: newLieuData.ville
@@ -406,9 +406,9 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         concertUpdates.contactId = programmId;
         
         // ✅ CORRECTION: Assurer que contactIds est mis à jour pour les relations bidirectionnelles
-        const currentContactIds = concertData.contactIds && Array.isArray(concertData.contactIds) 
-          ? [...concertData.contactIds] 
-          : (concertData.contactId ? [concertData.contactId] : []);
+        const currentContactIds = dateData.contactIds && Array.isArray(dateData.contactIds) 
+          ? [...dateData.contactIds] 
+          : (dateData.contactId ? [dateData.contactId] : []);
         
         if (!currentContactIds.includes(programmId)) {
           currentContactIds.push(programmId);
@@ -440,8 +440,8 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
         }
       });
       
-      await updateDoc(doc(db, 'concerts', concertId), concertUpdates);
-      console.log("Concert mis à jour avec les références:", concertUpdates);
+      await updateDoc(doc(db, 'concerts', dateId), concertUpdates);
+      console.log("Date mis à jour avec les références:", concertUpdates);
 
       if (setValidated) {
         setValidated(true);
@@ -449,10 +449,10 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       
       // Déclencher les relances automatiques après validation du formulaire
       try {
-        // Récupérer les données du concert mis à jour
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists()) {
-          const concertData = { id: concertId, ...concertDoc.data() };
+        // Récupérer les données du date mis à jour
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (dateDoc.exists()) {
+          const dateData = { id: dateId, ...dateDoc.data() };
           const formulaireData = { 
             id: formId, 
             ...formData, 
@@ -461,7 +461,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
           };
           
           console.log("🔄 Déclenchement des relances automatiques après validation formulaire");
-          await relancesAuto.onFormulaireValide(concertData, formulaireData);
+          await relancesAuto.onFormulaireValide(dateData, formulaireData);
         }
       } catch (relanceError) {
         console.error("⚠️ Erreur lors de la gestion des relances automatiques:", relanceError);
@@ -474,7 +474,7 @@ const useValidationBatchActions = ({ formId, concertId, validatedFields, setVali
       console.log("- Contact principal ID:", programmId);
       console.log("- Contact signataire ID:", signataireId);
       console.log("- Structure ID:", structureId);
-      console.log("- Concert ID:", concertId);
+      console.log("- Date ID:", dateId);
       
       return true;
     } catch (err) {

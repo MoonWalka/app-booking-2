@@ -100,7 +100,7 @@ const TypesEvenementContent = () => {
                     type="text"
                     value={formData.nom}
                     onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-                    placeholder="Ex: Concert, Festival, Showcase..."
+                    placeholder="Ex: Date, Festival, Showcase..."
                     required
                   />
                 </Form.Group>
@@ -150,7 +150,7 @@ const TypesEvenementContent = () => {
                   
                   // Types prédéfinis
                   const spectaclePredefinis = [
-                    'Animation scolaire', 'Ateliers', 'Concert', 'Conférence', 
+                    'Animation scolaire', 'Ateliers', 'Date', 'Conférence', 
                     'Déambulation', 'Filage', 'Répétition', 'Représentation', 'Résidence'
                   ];
                   const autresPredefinis = [

@@ -86,16 +86,16 @@ class FactureService {
         <tbody>
           <tr>
             <td style="padding: 8px; border-bottom: 1px solid #eee;">
-              <strong style="font-size: 13px;">{{titre_concert}}</strong><br>
+              <strong style="font-size: 13px;">{{titre_date}}</strong><br>
               <span style="color: #666; font-size: 11px; line-height: 1.3;">
                 Artiste : {{artiste_nom}}<br>
-                Date : {{date_concert}}<br>
+                Date : {{date_date}}<br>
                 Lieu : {{lieu_nom}}, {{lieu_ville}}<br>
                 {{#if mention_acompte}}{{mention_acompte}}{{/if}}
               </span>
             </td>
             <td style="padding: 8px; text-align: right; border-bottom: 1px solid #eee; font-weight: bold; font-size: 13px;">
-              {{montant_concert}} €
+              {{montant_date}} €
             </td>
           </tr>
           {{lignes_supplementaires}}
@@ -326,7 +326,7 @@ class FactureService {
     }
     
     const {
-      concert,
+      date,
       structure,
       montantHT,
       montantAcompteADeduire, // Nouveau paramètre
@@ -361,12 +361,12 @@ class FactureService {
     // Générer le numéro de facture
     const numeroFacture = await this.generateFactureNumber(organizationId);
     
-    // Calculer le montant du concert (sans les lignes supplémentaires)
-    let montantConcert = factureData.montantTotal || parseFloat(factureData.montantHT) || 0;
+    // Calculer le montant du date (sans les lignes supplémentaires)
+    let montantDate = factureData.montantTotal || parseFloat(factureData.montantHT) || 0;
     if (lignesSupplementaires && lignesSupplementaires.length > 0) {
-      // Soustraire les montants supplémentaires pour obtenir le montant du concert seul
+      // Soustraire les montants supplémentaires pour obtenir le montant du date seul
       const totalSupplements = lignesSupplementaires.reduce((sum, ligne) => sum + (parseFloat(ligne.montant) || 0), 0);
-      montantConcert = montantConcert - totalSupplements;
+      montantDate = montantDate - totalSupplements;
     }
     
     // Générer le HTML des lignes supplémentaires (incluant l'acompte)
@@ -452,17 +452,17 @@ class FactureService {
       telephone_structure: structure?.telephone || '',
       
       // Contact
-      contact_nom: concert?.contactNom || '',
-      contact_telephone: concert?.contactTelephone || '',
-      contact_email: concert?.contactEmail || '',
+      contact_nom: date?.contactNom || '',
+      contact_telephone: date?.contactTelephone || '',
+      contact_email: date?.contactEmail || '',
 
-      // Concert/Prestation
-      titre_concert: concert?.nom || concert?.titre || '',
-      date_concert: concert?.date ? formatDate(concert.date) : '',
-      lieu_nom: concert?.lieuNom || '',
-      lieu_ville: concert?.lieuVille || '',
-      artiste_nom: concert?.artisteNom || '',
-      description_prestation: `Prestation artistique - ${concert?.nom || concert?.titre || ''} le ${concert?.date ? formatDate(concert.date) : ''}`,
+      // Date/Prestation
+      titre_date: date?.nom || date?.titre || '',
+      date_date: date?.date ? formatDate(date.date) : '',
+      lieu_nom: date?.lieuNom || '',
+      lieu_ville: date?.lieuVille || '',
+      artiste_nom: date?.artisteNom || '',
+      description_prestation: `Prestation artistique - ${date?.nom || date?.titre || ''} le ${date?.date ? formatDate(date.date) : ''}`,
       mention_acompte: (() => {
         if (factureData.typeFacture === 'acompte') {
           return `Acompte de ${factureData.pourcentageAcompte}% sur un montant total de ${new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(factureData.montantTotal)} € HT`;
@@ -473,7 +473,7 @@ class FactureService {
       })(),
 
       // Montants - Formatter sans le symbole € car il est déjà dans le template
-      montant_concert: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantConcert),
+      montant_date: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantDate),
       montant_ht: new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(montantHTNum), // Toujours le montant total
       montant_ht_lettres: toWords(montantHTFinal), // Montant final à payer en lettres
       taux_tva: parameters.afficherTva ? tauxTVA : 0,
@@ -528,7 +528,7 @@ class FactureService {
 
       // Tableau des lignes (pour facturation détaillée)
       TABLEAU_LIGNES: this.generateTableauLignes([{
-        description: `Prestation artistique - ${concert?.nom || ''}`,
+        description: `Prestation artistique - ${date?.nom || ''}`,
         quantite: 1,
         prixUnitaire: montantHTNum,
         total: montantHTNum
@@ -654,19 +654,19 @@ class FactureService {
       
       // Créer automatiquement une tâche pour l'envoi de la facture
       try {
-        // Récupérer les infos du concert si disponible
-        let concertInfo = '';
+        // Récupérer les infos du date si disponible
+        let dateInfo = '';
         let structureName = 'le client';
-        if (factureData.concertId) {
+        if (factureData.dateId) {
           try {
-            const concertRef = doc(db, 'concerts', factureData.concertId);
-            const concertDoc = await getDoc(concertRef);
-            if (concertDoc.exists()) {
-              const concertData = concertDoc.data();
-              concertInfo = concertData.titre || concertData.nom || '';
+            const dateRef = doc(db, 'dates', factureData.dateId);
+            const dateDoc = await getDoc(dateRef);
+            if (dateDoc.exists()) {
+              const dateData = dateDoc.data();
+              dateInfo = dateData.titre || dateData.nom || '';
             }
           } catch (e) {
-            console.log('Impossible de récupérer les infos du concert');
+            console.log('Impossible de récupérer les infos du date');
           }
         }
         
@@ -676,12 +676,12 @@ class FactureService {
         
         await tachesService.creerTache({
           titre: `Envoyer la facture ${factureData.numeroFacture} à ${structureName}`,
-          description: `La facture pour ${concertInfo || 'la prestation'} a été créée. Il faut maintenant l'envoyer au client.`,
+          description: `La facture pour ${dateInfo || 'la prestation'} a été créée. Il faut maintenant l'envoyer au client.`,
           type: 'envoi_document',
           priorite: 'haute',
           dateEcheance: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 jours
           organizationId: organizationId,
-          concertId: factureData.concertId || null,
+          dateId: factureData.dateId || null,
           contactId: factureData.contactId || null,
           entityType: 'facture',
           entityId: docRef.id,

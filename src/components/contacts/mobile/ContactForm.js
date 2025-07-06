@@ -316,7 +316,7 @@ const AddressStep = ({ data, onNext, onBack }) => {
 const ContactFormMobile = ({ 
   // Props pour le mode public
   token,
-  concertId,
+  dateId,
   formLinkId,
   initialLieuData,
   onSubmitSuccess
@@ -326,7 +326,7 @@ const ContactFormMobile = ({
   const { currentOrganization } = useOrganization();
   
   // Détecter le mode public vs normal
-  const isPublicMode = !!(token && concertId);
+  const isPublicMode = !!(token && dateId);
   
   // En mode public, on n'utilise pas l'ID de l'URL
   const contactId = isPublicMode ? null : id;
@@ -359,10 +359,10 @@ const ContactFormMobile = ({
     try {
       if (isPublicMode) {
         // Mode public : créer une soumission de formulaire
-        console.log('Soumission publique (mobile):', { token, concertId, formLinkId, data });
+        console.log('Soumission publique (mobile):', { token, dateId, formLinkId, data });
         
         // TODO: Implémenter la création de formSubmission
-        // await createFormSubmission(token, concertId, formLinkId, data);
+        // await createFormSubmission(token, dateId, formLinkId, data);
         
         // Appeler le callback de succès
         if (onSubmitSuccess) {

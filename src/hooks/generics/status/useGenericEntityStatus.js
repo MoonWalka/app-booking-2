@@ -56,7 +56,7 @@ import { useMemo, useCallback } from 'react';
  * @complexity MEDIUM
  * @businessCritical true
  * @generic true
- * @replaces useConcertStatus, useContratStatus, useArtisteStatus
+ * @replaces useDateStatus, useContratStatus, useArtisteStatus
  */
 const useGenericEntityStatus = (statusConfig = {}, options = {}) => {
   const {

@@ -4,29 +4,29 @@ import { Alert } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
 import { db } from '@/services/firebase-service';
 import { doc, getDoc } from '@/services/firebase-service';
-import { getPreContratsByConcert } from '@/services/preContratService';
+import { getPreContratsByDate } from '@/services/preContratService';
 import ContratGeneratorNew from '@/components/contrats/desktop/ContratGeneratorNew';
 import '@styles/index.css';
 
-const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
-  const { concertId: paramsConcertId } = useParams();
+const ContratGenerationNewPage = ({ dateId: propDateId }) => {
+  const { dateId: paramsDateId } = useParams();
   const { getActiveTab } = useTabs();
   
-  // Récupérer concertId depuis plusieurs sources possibles
-  const getConcertId = () => {
-    if (propConcertId) return propConcertId;
-    if (paramsConcertId) return paramsConcertId;
+  // Récupérer dateId depuis plusieurs sources possibles
+  const getDateId = () => {
+    if (propDateId) return propDateId;
+    if (paramsDateId) return paramsDateId;
     
     // Si on est dans un onglet, récupérer depuis les params du tab
     const activeTab = getActiveTab();
-    if (activeTab?.params?.concertId) return activeTab.params.concertId;
+    if (activeTab?.params?.dateId) return activeTab.params.dateId;
     
     return null;
   };
   
-  const concertId = getConcertId();
+  const dateId = getDateId();
   const navigate = useNavigate();
-  const [concert, setConcert] = useState(null);
+  const [concert, setDate] = useState(null);
   const [contact, setContact] = useState(null);
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
@@ -37,54 +37,54 @@ const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('[ContratGenerationNewPage] Chargement des données pour concertId:', concertId);
+      console.log('[ContratGenerationNewPage] Chargement des données pour dateId:', dateId);
       
       try {
         // Récupérer les données du concert
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (!concertDoc.exists()) {
-          console.error('[ContratGenerationNewPage] Concert non trouvé:', concertId);
-          setError('Concert non trouvé');
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (!dateDoc.exists()) {
+          console.error('[ContratGenerationNewPage] Date non trouvé:', dateId);
+          setError('Date non trouvé');
           setLoading(false);
           return;
         }
         
-        const concertData = { id: concertId, ...concertDoc.data() };
-        setConcert(concertData);
+        const dateData = { id: dateId, ...dateDoc.data() };
+        setDate(dateData);
 
         // Récupérer les données du contact si disponible
-        if (concertData.contactId) {
-          const contactDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
+        if (dateData.contactId) {
+          const contactDoc = await getDoc(doc(db, 'contacts', dateData.contactId));
           if (contactDoc.exists()) {
             setContact({ id: contactDoc.id, ...contactDoc.data() });
           }
         }
 
         // Récupérer les données de la structure si disponible
-        if (concertData.structureId) {
-          const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
+        if (dateData.structureId) {
+          const structureDoc = await getDoc(doc(db, 'structures', dateData.structureId));
           if (structureDoc.exists()) {
             setStructure({ id: structureDoc.id, ...structureDoc.data() });
           }
         }
 
         // Récupérer les données de l'artiste si disponible
-        if (concertData.artisteId) {
-          const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+        if (dateData.artisteId) {
+          const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
           if (artisteDoc.exists()) {
             setArtiste({ id: artisteDoc.id, ...artisteDoc.data() });
           }
-        } else if (concertData.artisteNom) {
+        } else if (dateData.artisteNom) {
           // Si pas d'artisteId, créer un objet artiste avec les données du concert
           setArtiste({
-            nom: concertData.artisteNom,
+            nom: dateData.artisteNom,
             id: null
           });
         }
 
         // Récupérer les données du lieu si disponible
-        if (concertData.lieuId) {
-          const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+        if (dateData.lieuId) {
+          const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
           if (lieuDoc.exists()) {
             setLieu({ id: lieuDoc.id, ...lieuDoc.data() });
           }
@@ -92,7 +92,7 @@ const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
 
         // Récupérer les données du pré-contrat confirmé
         try {
-          const preContrats = await getPreContratsByConcert(concertId);
+          const preContrats = await getPreContratsByDate(dateId);
           console.log('[ContratGenerationNewPage] Pré-contrats trouvés:', preContrats.length);
           
           // Chercher un pré-contrat confirmé
@@ -117,14 +117,14 @@ const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
       }
     };
 
-    if (concertId) {
+    if (dateId) {
       fetchData();
     } else {
-      console.error('[ContratGenerationNewPage] Aucun concertId disponible');
-      setError('Aucun concert spécifié');
+      console.error('[ContratGenerationNewPage] Aucun dateId disponible');
+      setError('Aucun date spécifié');
       setLoading(false);
     }
-  }, [concertId]);
+  }, [dateId]);
 
   if (loading) {
     return (
@@ -155,7 +155,7 @@ const ContratGenerationNewPage = ({ concertId: propConcertId }) => {
   return (
     <div className="container-fluid">
       <ContratGeneratorNew 
-        concertId={concertId}
+        dateId={dateId}
         concert={concert}
         contact={contact}
         artiste={artiste}

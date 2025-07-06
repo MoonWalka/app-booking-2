@@ -26,7 +26,7 @@ const UnusedFilesAnalyzer = () => {
     // Depuis TabsContext et componentRegistry
     'ArtistesPage': { usedIn: ['TabsContext', 'componentRegistry'] },
     'ContactDetailPage': { usedIn: ['TabsContext', 'componentRegistry'] },
-    'ConcertDetailPage': { usedIn: ['TabsContext', 'componentRegistry'] },
+    'DateDetailPage': { usedIn: ['TabsContext', 'componentRegistry'] },
     'ContratGenerationNewPage': { usedIn: ['TabsContext', 'componentRegistry'] },
     'DateCreationPage': { usedIn: ['TabsContext', 'componentRegistry'] },
     'DevisEditor': { usedIn: ['TabsContext', 'componentRegistry'] },

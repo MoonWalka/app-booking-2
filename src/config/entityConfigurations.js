@@ -4,7 +4,7 @@
  */
 
 // Import des composants personnalisés
-import ConcertInfoSection from '../components/concerts/ConcertInfoSection';
+import DateInfoSection from '../components/dates/DateInfoSection';
 import LieuMapSection from '../components/lieux/LieuMapSection';
 
 export const entityConfigurations = {
@@ -44,24 +44,24 @@ export const entityConfigurations = {
         field: 'biographie'
       },
       {
-        id: 'concerts',
-        title: 'Concerts',
+        id: 'dates',
+        title: 'Dates',
         icon: 'bi-calendar-event',
         type: 'relations',
-        relation: 'concerts',
+        relation: 'dates',
         displayType: 'cards',
         maxItems: 10,
-        emptyMessage: 'Aucun concert associé'
+        emptyMessage: 'Aucun date associé'
       }
     ],
     
     // Relations à charger
     relations: {
-      concerts: { 
-        collection: 'concerts', 
-        field: 'concertsIds', 
+      dates: { 
+        collection: 'dates', 
+        field: 'datesIds', 
         isArray: true,
-        displayName: 'Concerts',
+        displayName: 'Dates',
         bidirectional: true,
         inverseField: 'artistesIds'
       }
@@ -134,11 +134,11 @@ export const entityConfigurations = {
         emptyMessage: 'Aucun contact associé'
       },
       {
-        id: 'concerts',
-        title: 'Concerts',
+        id: 'dates',
+        title: 'Dates',
         icon: 'bi-calendar-event',
         type: 'relations',
-        relation: 'concerts',
+        relation: 'dates',
         displayType: 'list',
         maxItems: 20,
         sortBy: 'date',
@@ -155,11 +155,11 @@ export const entityConfigurations = {
         bidirectional: true,
         inverseField: 'lieuxIds'
       },
-      concerts: { 
-        collection: 'concerts', 
-        field: 'concertsIds', 
+      dates: { 
+        collection: 'dates', 
+        field: 'datesIds', 
         isArray: true,
-        displayName: 'Concerts'
+        displayName: 'Dates'
       }
     }
   },
@@ -209,16 +209,16 @@ export const entityConfigurations = {
         maxItems: 10
       },
       {
-        id: 'concerts',
-        title: 'Concerts organisés',
+        id: 'dates',
+        title: 'Dates organisés',
         icon: 'bi-calendar-event',
         type: 'relations',
-        relation: 'concerts',
+        relation: 'dates',
         displayType: 'list',
         maxItems: 20,
         sortBy: 'date',
         sortOrder: 'desc',
-        emptyMessage: 'Aucun concert associé'
+        emptyMessage: 'Aucun date associé'
       },
       {
         id: 'notes',
@@ -246,27 +246,27 @@ export const entityConfigurations = {
         bidirectional: true,
         inverseField: 'contactIds'
       },
-      concerts: { 
-        collection: 'concerts', 
-        field: 'concertsIds', 
+      dates: { 
+        collection: 'dates', 
+        field: 'datesIds', 
         isArray: true,
-        displayName: 'Concerts',
+        displayName: 'Dates',
         bidirectional: true,
         inverseField: 'contactIds'
       }
     }
   },
   
-  // Configuration pour les Concerts
-  concert: {
-    title: 'Concert',
+  // Configuration pour les Dates
+  date: {
+    title: 'Date',
     icon: 'bi-calendar-event',
-    pluralTitle: 'Concerts',
+    pluralTitle: 'Dates',
     
     mainFields: {
       title: 'titre',
-      subtitle: (concert) => concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : '',
-      badge: (concert) => concert.statut || 'brouillon'
+      subtitle: (date) => date.date ? new Date(date.date).toLocaleDateString('fr-FR') : '',
+      badge: (date) => date.statut || 'brouillon'
     },
     
     sections: [
@@ -275,8 +275,8 @@ export const entityConfigurations = {
         title: 'Informations générales',
         icon: 'bi-info-circle',
         type: 'custom',
-        customRenderer: ConcertInfoSection,
-        className: 'concertInfo'
+        customRenderer: DateInfoSection,
+        className: 'dateInfo'
       },
       {
         id: 'artistes',
@@ -319,11 +319,11 @@ export const entityConfigurations = {
     relations: {
       artistes: { 
         collection: 'artistes', 
-        field: 'artisteId',  // Changé de artistesIds à artisteId car un concert n'a qu'un artiste principal
+        field: 'artisteId',  // Changé de artistesIds à artisteId car un date n'a qu'un artiste principal
         isArray: false,
         displayName: 'Artiste',
         bidirectional: true,
-        inverseField: 'concertsIds'
+        inverseField: 'datesIds'
       },
       lieu: { 
         collection: 'lieux', 
@@ -331,7 +331,7 @@ export const entityConfigurations = {
         isArray: false,
         displayName: 'Lieu',
         bidirectional: true,
-        inverseField: 'concertsIds'
+        inverseField: 'datesIds'
       },
       contact: { 
         collection: 'contacts', 
@@ -339,7 +339,7 @@ export const entityConfigurations = {
         isArray: true,      // Changé à true pour supporter plusieurs contacts
         displayName: 'Contacts',
         bidirectional: true,
-        inverseField: 'concertsIds'
+        inverseField: 'datesIds'
       },
       structure: {
         collection: 'structures',
@@ -347,7 +347,7 @@ export const entityConfigurations = {
         isArray: false,
         displayName: 'Structure',
         bidirectional: true,
-        inverseField: 'concertsIds'
+        inverseField: 'datesIds'
       }
     }
   },
@@ -401,16 +401,16 @@ export const entityConfigurations = {
         emptyMessage: 'Aucun contact associé'
       },
       {
-        id: 'concerts',
-        title: 'Concerts',
+        id: 'dates',
+        title: 'Dates',
         icon: 'bi-calendar-event',
         type: 'relations',
-        relation: 'concerts',
+        relation: 'dates',
         displayType: 'list',
         maxItems: 20,
         sortBy: 'date',
         sortOrder: 'desc',
-        emptyMessage: 'Aucun concert organisé'
+        emptyMessage: 'Aucun date organisé'
       },
       {
         id: 'description',
@@ -430,11 +430,11 @@ export const entityConfigurations = {
         inverseField: 'structureId',
         bidirectional: true
       },
-      concerts: {
-        collection: 'concerts',
-        field: 'concertsIds',
+      dates: {
+        collection: 'dates',
+        field: 'datesIds',
         isArray: true,
-        displayName: 'Concerts',
+        displayName: 'Dates',
         inverseField: 'structureId',
         bidirectional: true
       }

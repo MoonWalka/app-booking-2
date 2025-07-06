@@ -10,18 +10,18 @@ import styles from './PreContratFormContainer.module.css';
  * Container pour le formulaire de pré-contrat public
  * Gère la validation du token et les états du formulaire
  */
-function PreContratFormContainer({ concertId, token }) {
+function PreContratFormContainer({ dateId, token }) {
   const {
     isLoading,
     isValid,
     isExpired,
     isCompleted,
-    concertData,
+    dateData,
     formLinkData,
     existingSubmission,
     organizationData,
     error
-  } = useFormTokenValidation(concertId, token);
+  } = useFormTokenValidation(dateId, token);
 
   const [submissionStatus, setSubmissionStatus] = useState(null);
 
@@ -140,7 +140,7 @@ function PreContratFormContainer({ concertId, token }) {
   return (
     <div className={styles.container}>
       <PreContratFormPublic
-        concertData={concertData}
+        dateData={dateData}
         organizationData={organizationData}
         existingData={existingSubmission || formLinkData}
         onSubmit={async (formData, action) => {
@@ -180,8 +180,8 @@ function PreContratFormContainer({ concertId, token }) {
               frais: formData.frais,
               precisionsNegoc: formData.precisionNego,
               
-              // Concert
-              debut: concertData?.date || '',
+              // Date
+              debut: dateData?.date || '',
               horaireDebut: formData.heureDebut,
               horaireFin: formData.heureFin,
               payant: formData.payant === 'payant',

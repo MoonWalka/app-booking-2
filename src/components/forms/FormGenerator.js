@@ -16,7 +16,7 @@ import Alert from '@/components/ui/Alert';
 import brevoTemplateService from '@/services/brevoTemplateService';
 import styles from './FormGenerator.module.css';
 
-const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
+const FormGenerator = ({ dateId, contactId, onFormGenerated }) => {
   const [loading, setLoading] = useState(false);
   const [loadingExisting, setLoadingExisting] = useState(true);
   const [formLink, setFormLink] = useState('');
@@ -26,7 +26,7 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
-  const [concertData, setConcertData] = useState(null);
+  const [dateData, setDateData] = useState(null);
   const [contactData, setContactData] = useState(null);
 
   // Charger un lien existant au démarrage
@@ -35,9 +35,9 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
       try {
         setLoadingExisting(true);
         // Récupérer les données du concert
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists()) {
-          setConcertData({ id: concertDoc.id, ...concertDoc.data() });
+        const dateDoc = await getDoc(doc(db, 'dates', dateId));
+        if (dateDoc.exists()) {
+          setDateData({ id: dateDoc.id, ...dateDoc.data() });
           
           // Récupérer les données du contact si disponible
           if (contactId) {
@@ -47,9 +47,9 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
             }
           }
           
-          // Vérifier si le concert a déjà un formLinkId
-          if (concertDoc.data().formLinkId) {
-            const formLinkId = concertDoc.data().formLinkId;
+          // Vérifier si le date a déjà un formLinkId
+          if (dateDoc.data().formLinkId) {
+            const formLinkId = dateDoc.data().formLinkId;
             const formLinkDoc = await getDoc(doc(db, 'formLinks', formLinkId));
             
             if (formLinkDoc.exists()) {
@@ -66,9 +66,9 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
                 let formUrl;
                 
                 if (useHash) {
-                  formUrl = `${baseUrl}/#/formulaire/${concertId}/${linkData.token}`;
+                  formUrl = `${baseUrl}/#/formulaire/${dateId}/${linkData.token}`;
                 } else {
-                  formUrl = `${baseUrl}/formulaire/${concertId}/${linkData.token}`;
+                  formUrl = `${baseUrl}/formulaire/${dateId}/${linkData.token}`;
                 }
                 
                 setFormLink(formUrl);
@@ -86,7 +86,7 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
     };
     
     fetchExistingLink();
-  }, [concertId, contactId]);
+  }, [dateId, contactId]);
 
   const generateForm = async () => {
     setLoading(true);
@@ -115,7 +115,7 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
       
       // Créer un document dans la collection formLinks
       const formRef = await addDoc(collection(db, 'formLinks'), {
-        concertId,
+        dateId,
         contactId: contactId || null,
         contactEmail: emailToStore, // Stocker l'email du contact
         token,
@@ -124,8 +124,8 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
         completed: false
       });
       
-      // Mettre à jour le concert avec l'ID du formulaire
-      await updateDoc(doc(db, 'concerts', concertId), {
+      // Mettre à jour le date avec l'ID du formulaire
+      await updateDoc(doc(db, 'dates', dateId), {
         formLinkId: formRef.id,
         updatedAt: serverTimestamp()
       });
@@ -136,9 +136,9 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
       let formUrl;
       
       if (useHash) {
-        formUrl = `${baseUrl}/#/formulaire/${concertId}/${token}`;
+        formUrl = `${baseUrl}/#/formulaire/${dateId}/${token}`;
       } else {
-        formUrl = `${baseUrl}/formulaire/${concertId}/${token}`;
+        formUrl = `${baseUrl}/formulaire/${dateId}/${token}`;
       }
       
       // Stocker l'URL dans le document formLinks
@@ -183,8 +183,8 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
       return;
     }
 
-    if (!concertData) {
-      setEmailError('Les données du concert ne sont pas encore chargées. Veuillez patienter...');
+    if (!dateData) {
+      setEmailError('Les données du date ne sont pas encore chargées. Veuillez patienter...');
       return;
     }
 
@@ -199,19 +199,19 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
       setEmailSent(false);
 
       console.log('Envoi email formulaire avec:', {
-        concertData: concertData ? { 
-          id: concertData.id, 
-          nom: concertData.nom,
-          titre: concertData.titre,
-          title: concertData.title,
-          keys: Object.keys(concertData)
+        dateData: dateData ? { 
+          id: dateData.id, 
+          nom: dateData.nom,
+          titre: dateData.titre,
+          title: dateData.title,
+          keys: Object.keys(dateData)
         } : 'null',
         contactData: contactData ? { id: contactData.id, email: contactData.email } : 'null',
         formLink: formLink
       });
 
       await brevoTemplateService.sendFormulaireEmail(
-        concertData,
+        dateData,
         contactData,
         formLink
       );
@@ -301,7 +301,7 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
               <Button
                 variant="primary"
                 onClick={sendFormByEmail}
-                disabled={sendingEmail || !concertData || !formLink || loadingExisting}
+                disabled={sendingEmail || !dateData || !formLink || loadingExisting}
                 className={styles.sendButton}
               >
                 {sendingEmail ? (
@@ -335,7 +335,7 @@ const FormGenerator = ({ concertId, contactId, onFormGenerated }) => {
           
           <div className={styles.alertInfo}>
             <i className="bi bi-info-circle"></i>
-            <span>Ce lien permet au contact de remplir ses informations pour ce concert sans avoir accès au reste de l'application.</span>
+            <span>Ce lien permet au contact de remplir ses informations pour ce date sans avoir accès au reste de l'application.</span>
           </div>
           
           <div className={styles.footerActions}>

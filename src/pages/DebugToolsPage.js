@@ -5,19 +5,19 @@ import OrganizationIdDebug from '@/components/debug/OrganizationIdDebug';
 import ListDebugger from '@/components/debug/ListDebugger';
 import ContactCreationTester from '@/components/debug/ContactCreationTester';
 import EntityCreationTester from '@/components/debug/EntityCreationTester';
-import LieuMapDebug from '@/components/debug/LieuMapDebug';
+// import LieuMapDebug from '@/components/debug/LieuMapDebug'; // Supprimé
 import RIBDebugger from '@/components/debug/RIBDebugger';
 import ContactEmailDebug from '@/components/debug/ContactEmailDebug';
-import ArtisteSearchDebug from '@/components/debug/ArtisteSearchDebug';
+// import ArtisteSearchDebug from '@/components/debug/ArtisteSearchDebug'; // Supprimé
 import ArtisteSearchLiveDebug from '@/components/debug/ArtisteSearchLiveDebug';
 import ArtisteOrganizationMatcher from '@/components/debug/ArtisteOrganizationMatcher';
 import OrphanArtistesDebug from '@/components/debug/OrphanArtistesDebug';
 import OrganizationContextDiagnostic from '@/components/debug/OrganizationContextDiagnostic';
 import ArtisteFirestoreDiagnostic from '@/components/debug/ArtisteFirestoreDiagnostic';
-import SystemAuditTool from '@/components/debug/SystemAuditTool';
+// import SystemAuditTool from '@/components/debug/SystemAuditTool'; // Supprimé
 import EntityRelationsDebugger from '@/components/debug/EntityRelationsDebugger';
 import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelationsFixer';
-import ConcertContactsDebug from '@/components/debug/ConcertContactsDebug';
+import DateContactsDebug from '@/components/debug/DateContactsDebug';
 import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic';
 import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest';
 import BrevoDiagnostic from '@/components/debug/BrevoDiagnostic';
@@ -36,7 +36,7 @@ import RelationalMigrationFixer from '@/components/debug/RelationalMigrationFixe
 import CheckStructureMigration from '@/components/debug/CheckStructureMigration';
 import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug';
 import StructureAddressMigration from '@/components/debug/StructureAddressMigration';
-import FestivalsDebugger from '@/components/debug/FestivalsDebugger';
+// import FestivalsDebugger from '@/components/debug/FestivalsDebugger'; // Supprimé
 import MigrateContractTemplates from '@/components/debug/MigrateContractTemplates';
 import MigrateContractVariables from '@/components/debug/MigrateContractVariables';
 import CleanOldContractContent from '@/components/debug/CleanOldContractContent';
@@ -91,9 +91,9 @@ const DebugToolsPage = () => {
           <QuickContactCreator />
         </Tab>
         
-        <Tab eventKey="system-audit" title="🔬 Audit Système">
+        {/* <Tab eventKey="system-audit" title="🔬 Audit Système">
           <SystemAuditTool />
-        </Tab>
+        </Tab> */}
         
         <Tab eventKey="entity-relations" title="🔗 Relations d'Entité">
           <EntityRelationsDebugger />
@@ -103,8 +103,8 @@ const DebugToolsPage = () => {
           <BidirectionalRelationsFixer />
         </Tab>
         
-        <Tab eventKey="concert-contacts" title="👥 Contacts Concerts">
-          <ConcertContactsDebug />
+        <Tab eventKey="concert-contacts" title="👥 Contacts Dates">
+          <DateContactsDebug />
         </Tab>
         
         <Tab eventKey="contacts-audit" title="🔍 Audit Contacts Manquants">
@@ -139,9 +139,9 @@ const DebugToolsPage = () => {
           <EntityCreationTester />
         </Tab>
         
-        <Tab eventKey="lieu-map" title="Debug Cartes Lieux">
+        {/* <Tab eventKey="lieu-map" title="Debug Cartes Lieux">
           <LieuMapDebug />
-        </Tab>
+        </Tab> */}
         
         <Tab eventKey="rib" title="Debug RIB">
           <RIBDebugger />
@@ -159,9 +159,9 @@ const DebugToolsPage = () => {
           <ArtisteFirestoreDiagnostic />
         </Tab>
         
-        <Tab eventKey="artiste-search" title="Debug Recherche Artistes">
+        {/* <Tab eventKey="artiste-search" title="Debug Recherche Artistes">
           <ArtisteSearchDebug />
-        </Tab>
+        </Tab> */}
         
         <Tab eventKey="artiste-live" title="Test Recherche Live">
           <ArtisteSearchLiveDebug />
@@ -243,9 +243,9 @@ const DebugToolsPage = () => {
           <StructureAddressMigration />
         </Tab>
         
-        <Tab eventKey="festivals-debug" title="🎪 Debug Festivals">
+        {/* <Tab eventKey="festivals-debug" title="🎪 Debug Festivals">
           <FestivalsDebugger />
-        </Tab>
+        </Tab> */}
         
         <Tab eventKey="contract-templates" title="📄 Migration Modèles Contrat">
           <MigrateContractTemplates />

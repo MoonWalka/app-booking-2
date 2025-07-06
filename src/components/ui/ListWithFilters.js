@@ -195,7 +195,7 @@ const ListWithFilters = ({
           // Préserver les relations
           structures: item.structures || item.contact.structures || [],
           lieux: item.lieux || item.contact.lieux || [],
-          concerts: item.concerts || item.contact.concerts || []
+          dates: item.dates || item.contact.dates || []
         };
       }
       
@@ -208,7 +208,7 @@ const ListWithFilters = ({
           // Préserver les relations
           contacts: item.contacts || item.lieu.contacts || [],
           structures: item.structures || item.lieu.structures || [],
-          concerts: item.concerts || item.lieu.concerts || []
+          dates: item.dates || item.lieu.dates || []
         };
       }
       
@@ -218,7 +218,7 @@ const ListWithFilters = ({
           ...item.artiste,
           id: item.id,
           organizationId: item.organizationId || organizationId,
-          concerts: item.concerts || item.artiste.concerts || []
+          dates: item.dates || item.artiste.dates || []
         };
       }
       
@@ -363,7 +363,7 @@ const ListWithFilters = ({
           }
         });
         
-        // DEBUG SPÉCIAL: Comparer concerts vs contacts
+        // DEBUG SPÉCIAL: Comparer dates vs contacts
         if (entityType === 'contacts') {
           console.log('🎯 DEBUG CONTACTS vs CONCERTS:', {
             contactsCount: loadedItems.length,
@@ -472,43 +472,54 @@ const ListWithFilters = ({
             </tr>
           </thead>
           <tbody>
-            {items.map((item, index) => {
-              console.log(`🔍 DEBUG Rendu ligne ${index}:`, {
-                itemId: item.id,
-                itemData: item,
-                columnsCount: columns.length
-              });
-              
-              return (
-                <tr 
-                  key={item.id} 
-                  className={styles.tableRow}
-                  onClick={onRowClick ? () => onRowClick(item) : undefined}
-                  style={{ cursor: onRowClick ? 'pointer' : 'default' }}
-                >
-                  {columns.map(column => {
-                    const value = item[column.field];
-                    console.log(`🔍 DEBUG Cellule ${column.field}:`, {
-                      columnField: column.field,
-                      rawValue: value,
-                      renderedValue: column.render ? column.render(item) : value || '-',
-                      itemId: item.id
-                    });
-                    
-                    return (
-                      <td key={column.id} className={getCellClass(column, value)}>
-                        {column.render ? column.render(item) : value || '-'}
+            {items.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length + (renderActions ? 1 : 0)} className={styles.noDataCell}>
+                  <div className={styles.noDataContent}>
+                    <i className="bi bi-inbox"></i>
+                    <span>Aucune donnée trouvée</span>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              items.map((item, index) => {
+                console.log(`🔍 DEBUG Rendu ligne ${index}:`, {
+                  itemId: item.id,
+                  itemData: item,
+                  columnsCount: columns.length
+                });
+                
+                return (
+                  <tr 
+                    key={item.id} 
+                    className={styles.tableRow}
+                    onClick={onRowClick ? () => onRowClick(item) : undefined}
+                    style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                  >
+                    {columns.map(column => {
+                      const value = item[column.field];
+                      console.log(`🔍 DEBUG Cellule ${column.field}:`, {
+                        columnField: column.field,
+                        rawValue: value,
+                        renderedValue: column.render ? column.render(item) : value || '-',
+                        itemId: item.id
+                      });
+                      
+                      return (
+                        <td key={column.id} className={getCellClass(column, value)}>
+                          {column.render ? column.render(item) : value || '-'}
+                        </td>
+                      );
+                    })}
+                    {renderActions && (
+                      <td className={`${styles.tableCell} ${styles.cellActions}`}>
+                        {renderActions(item)}
                       </td>
-                    );
-                  })}
-                  {renderActions && (
-                    <td className={`${styles.tableCell} ${styles.cellActions}`}>
-                      {renderActions(item)}
-                    </td>
-                  )}
-                </tr>
-              );
-            })}
+                    )}
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
@@ -684,28 +695,30 @@ const ListWithFilters = ({
       )}
 
       {/* Contenu principal */}
-      {items.length === 0 ? (
-        <div className={styles.noData}>
-          <i className="bi bi-inbox"></i>
-          <span>Aucune donnée trouvée</span>
-        </div>
+      {isMobile ? (
+        items.length === 0 ? (
+          <div className={styles.noData}>
+            <i className="bi bi-inbox"></i>
+            <span>Aucune donnée trouvée</span>
+          </div>
+        ) : (
+          renderMobileCards()
+        )
       ) : (
-        <>
-          {isMobile ? renderMobileCards() : renderDesktopTable()}
-          
-          {/* Pagination */}
-          {hasMore && (
-            <div className={styles.loadMoreContainer}>
-              <button
-                onClick={() => loadData(true)}
-                className={styles.loadMoreButton}
-                disabled={loading}
-              >
-                {loading ? 'Chargement...' : 'Charger plus'}
-              </button>
-            </div>
-          )}
-        </>
+        renderDesktopTable()
+      )}
+      
+      {/* Pagination */}
+      {items.length > 0 && hasMore && (
+        <div className={styles.loadMoreContainer}>
+          <button
+            onClick={() => loadData(true)}
+            className={styles.loadMoreButton}
+            disabled={loading}
+          >
+            {loading ? 'Chargement...' : 'Charger plus'}
+          </button>
+        </div>
       )}
     </div>
   );

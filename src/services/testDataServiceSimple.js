@@ -117,7 +117,7 @@ class TestDataServiceSimple {
       
       // Caractéristiques
       capacite: this.randomInt(100, 2000),
-      typesDeLieu: [this.randomElement(['Salle de concert', 'Théâtre', 'Plein air', 'Bar'])],
+      typesDeLieu: [this.randomElement(['Salle de date', 'Théâtre', 'Plein air', 'Bar'])],
       
       // Contact
       contactNom: `${this.randomElement(['Jean', 'Marie', 'Pierre'])} ${this.randomElement(['Dupont', 'Martin'])}`,
@@ -180,9 +180,9 @@ class TestDataServiceSimple {
   }
 
   /**
-   * Génère un concert de test lié à un programmateur et un lieu
+   * Génère un date de test lié à un programmateur et un lieu
    */
-  generateTestConcert(programmateurId, lieuId, artisteData) {
+  generateTestDate(programmateurId, lieuId, artisteData) {
     const futureDate = new Date();
     futureDate.setMonth(futureDate.getMonth() + this.randomInt(1, 6));
     const cachet = this.randomInt(5, 100) * 100; // 500 à 10000 par paliers de 100
@@ -199,8 +199,8 @@ class TestDataServiceSimple {
       artisteNom: artisteData.nom,
       projetNom: artisteData.projets?.[0]?.nom || 'Projet test',
       
-      // Détails du concert
-      libelle: `${this.testDataPrefix} Concert ${artisteData.nom}`,
+      // Détails du date
+      libelle: `${this.testDataPrefix} Date ${artisteData.nom}`,
       genre: artisteData.genre,
       
       // Conditions financières
@@ -225,7 +225,7 @@ class TestDataServiceSimple {
       formToken: uuidv4(),
       
       // Métadonnées
-      tags: ['test', 'concert'],
+      tags: ['test', 'date'],
       isTest: true
     };
   }
@@ -233,17 +233,17 @@ class TestDataServiceSimple {
   /**
    * Génère des données de formulaire pré-remplies
    */
-  generateTestFormData(concertData) {
+  generateTestFormData(dateData) {
     return {
-      // Infos de base reprises du concert
-      artisteNom: concertData.artisteNom,
-      projetNom: concertData.projetNom,
-      date: concertData.date,
-      heure: concertData.heure,
+      // Infos de base reprises du date
+      artisteNom: dateData.artisteNom,
+      projetNom: dateData.projetNom,
+      date: dateData.date,
+      heure: dateData.heure,
       
       // Complément d'infos artiste
       nombreMusiciens: this.randomInt(2, 8),
-      genreMusical: concertData.genre,
+      genreMusical: dateData.genre,
       dureeSpectacle: this.randomElement(['45', '60', '90', '120']),
       
       // Besoins techniques
@@ -254,7 +254,7 @@ class TestDataServiceSimple {
       // Contact tournée
       contactTourneeNom: `${this.randomElement(['Tour', 'Booking'])} Manager`,
       contactTourneeTelephone: this.randomPhone(),
-      contactTourneeEmail: `tour@${concertData.artisteNom.toLowerCase().replace(/\s+/g, '-')}.com`,
+      contactTourneeEmail: `tour@${dateData.artisteNom.toLowerCase().replace(/\s+/g, '-')}.com`,
       
       // Hébergement
       hebergementNecessaire: Math.random() > 0.5,
@@ -314,27 +314,27 @@ class TestDataServiceSimple {
       const lieuId = lieuRef.id;
       console.log('✅ Lieu créé:', lieuId);
 
-      // 4. Créer un concert
-      const concertData = this.generateTestConcert(
+      // 4. Créer un date
+      const dateData = this.generateTestDate(
         programmateurId,
         lieuId,
         { ...artisteData, id: artisteId }
       );
-      concertData.organizationId = organizationId;
-      concertData.createdAt = serverTimestamp();
-      concertData.updatedAt = serverTimestamp();
-      const concertRef = await addDoc(collection(db, 'concerts'), concertData);
-      const concertId = concertRef.id;
-      console.log('✅ Concert créé:', concertId);
+      dateData.organizationId = organizationId;
+      dateData.createdAt = serverTimestamp();
+      dateData.updatedAt = serverTimestamp();
+      const dateRef = await addDoc(collection(db, 'dates'), dateData);
+      const dateId = dateRef.id;
+      console.log('✅ Date créé:', dateId);
 
       // 5. Retourner toutes les données créées
       return {
         artiste: { id: artisteId, ...artisteData },
         programmateur: { id: programmateurId, ...programmateurData },
         lieu: { id: lieuId, ...lieuData },
-        concert: { id: concertId, ...concertData },
-        formToken: concertData.formToken,
-        formUrl: `/formulaire/${concertData.formToken}`
+        date: { id: dateId, ...dateData },
+        formToken: dateData.formToken,
+        formUrl: `/formulaire/${dateData.formToken}`
       };
 
     } catch (error) {
@@ -356,7 +356,7 @@ class TestDataServiceSimple {
       console.log('🧹 Nettoyage des données de test...');
       
       // Collections à nettoyer
-      const collections = ['concerts', 'lieux', 'contacts', 'artistes'];
+      const collections = ['dates', 'lieux', 'contacts', 'artistes'];
       let totalDeleted = 0;
 
       for (const collectionName of collections) {

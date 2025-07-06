@@ -27,7 +27,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
   useEffect(() => {
     console.log('=== DevisForm - Données reçues ===');
     console.log('Projet du devis:', devisData.projetNom || 'AUCUN');
-    console.log('Concert ID:', devisData.concertId || 'AUCUN');
+    console.log('Date ID:', devisData.dateId || 'AUCUN');
     console.log('Artiste:', devisData.artisteNom || 'AUCUN');
     console.log('Structure:', devisData.structureNom || 'AUCUNE');
     console.log('Données complètes du devis:', devisData);
@@ -549,7 +549,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                   />
                   <Form.Text className="text-muted">
                     <i className="bi bi-info-circle me-1"></i>
-                    Projet hérité de la date/concert (ID: {devisData.concertId || 'N/A'})
+                    Projet hérité de la date/concert (ID: {devisData.dateId || 'N/A'})
                   </Form.Text>
                   {console.log('🎯 Affichage du projet en lecture seule:', devisData.projetNom)}
                 </>

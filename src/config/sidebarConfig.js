@@ -14,10 +14,10 @@ export const sidebarConfig = [
     type: 'section',
     items: [
       {
-        id: 'concerts',
-        label: 'Concerts',
+        id: 'dates',
+        label: 'Dates',
         icon: 'bi-music-note-list',
-        path: '/concerts'
+        path: '/dates'
       },
       {
         id: 'contrats',

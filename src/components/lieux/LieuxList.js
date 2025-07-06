@@ -72,8 +72,8 @@ function LieuxList() {
     const total = items.length;
     
     // Compter les lieux avec des concerts (approximation basée sur les données disponibles)
-    const avecConcerts = items.filter(lieu => 
-      lieu.concertsCount > 0 || lieu.lastConcertDate || lieu.totalConcerts
+    const avecDates = items.filter(lieu => 
+      lieu.concertsCount > 0 || lieu.lastDateDate || lieu.totalDates
     ).length;
     
     // Répartition par type
@@ -105,10 +105,10 @@ function LieuxList() {
       {
         id: 'avec_concerts',
         label: 'Avec concerts',
-        value: avecConcerts,
+        value: avecDates,
         icon: 'bi bi-music-note-beamed',
         variant: 'success',
-        subtext: `${Math.round((avecConcerts / total) * 100) || 0}%`
+        subtext: `${Math.round((avecDates / total) * 100) || 0}%`
       },
       {
         id: 'type_populaire',

@@ -3,15 +3,15 @@
  */
 
 /**
- * Génère un identifiant unique pour un concert
- * Préfixé par 'con-' suivi d'un timestamp et d'une chaîne aléatoire
+ * Génère un identifiant unique pour une date
+ * Préfixé par 'dat-' suivi d'un timestamp et d'une chaîne aléatoire
  * 
  * @returns {string} Identifiant unique formaté
  */
-export const generateConcertId = () => {
+export const generateDateId = () => {
   const timestamp = new Date().getTime();
   const randomStr = Math.random().toString(36).substring(2, 8);
-  return `con-${timestamp}-${randomStr}`;
+  return `dat-${timestamp}-${randomStr}`;
 };
 
 /**

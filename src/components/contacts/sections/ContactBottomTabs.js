@@ -44,14 +44,14 @@ function ContactBottomTabs({
     });
   };
 
-  const handleGenerateFacture = (concertId, contratId) => {
+  const handleGenerateFacture = (dateId, contratId) => {
     const structureName = extractedData?.structureRaisonSociale || extractedData?.structureNom || 'Structure';
     openTab({
-      id: `facture-generate-${concertId}`,
+      id: `facture-generate-${dateId}`,
       title: `Nouvelle facture - ${structureName}`,
-      path: `/factures/generate/${concertId}?fromContrat=true`,
+      path: `/factures/generate/${dateId}?fromContrat=true`,
       component: 'FactureGeneratorPage',
-      params: { concertId, fromContrat: true, contratId },
+      params: { dateId, fromContrat: true, contratId },
       icon: 'bi-receipt'
     });
   };

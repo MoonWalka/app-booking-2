@@ -8,17 +8,17 @@ import PublicFormLayout from '@/components/forms/public/PublicFormLayout';
 
 /**
  * Page publique pour le formulaire de pré-contrat
- * Route: /pre-contrat/:concertId/:token
+ * Route: /pre-contrat/:dateId/:token
  */
 function PreContratFormResponsePage() {
-  const { concertId, token } = useParams();
+  const { dateId, token } = useParams();
   const [organizationName, setOrganizationName] = useState('');
 
   useEffect(() => {
     const fetchOrganizationName = async () => {
       try {
         // Valider le token et récupérer le pré-contrat
-        const validationResult = await preContratService.validateToken(concertId, token);
+        const validationResult = await preContratService.validateToken(dateId, token);
         
         if (validationResult.valid && validationResult.preContrat?.organizationId) {
           // Récupérer les données de l'organisation
@@ -33,14 +33,14 @@ function PreContratFormResponsePage() {
       }
     };
 
-    if (concertId && token) {
+    if (dateId && token) {
       fetchOrganizationName();
     }
-  }, [concertId, token]);
+  }, [dateId, token]);
 
   return (
     <PublicFormLayout organizationName={organizationName}>
-      <PreContratFormContainer concertId={concertId} token={token} />
+      <PreContratFormContainer dateId={dateId} token={token} />
     </PublicFormLayout>
   );
 }

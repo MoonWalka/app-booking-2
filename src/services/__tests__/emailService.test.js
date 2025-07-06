@@ -140,7 +140,7 @@ describe('EmailService', () => {
 
       const templateData = {
         nomContact: 'Jean Dupont',
-        nomConcert: 'Festival 2024'
+        nomDate: 'Festival 2024'
       };
 
       const result = await emailService.sendTemplatedMail(

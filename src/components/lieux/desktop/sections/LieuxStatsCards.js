@@ -18,23 +18,23 @@ const LieuxStatsCards = ({ stats }) => {
         </div>
       </div>
       
-      <div className={`${styles.statCard} ${styles.avecConcerts}`}>
+      <div className={`${styles.statCard} ${styles.avecDates}`}>
         <div className={styles.statIcon}>
           <i className="bi bi-music-note-beamed"></i>
         </div>
         <div className={styles.statContent}>
           <div className={styles.statLabel}>Avec concerts</div>
-          <div className={styles.statValue}>{stats.avecConcerts}</div>
+          <div className={styles.statValue}>{stats.avecDates}</div>
         </div>
       </div>
       
-      <div className={`${styles.statCard} ${styles.sansConcerts}`}>
+      <div className={`${styles.statCard} ${styles.sansDates}`}>
         <div className={styles.statIcon}>
           <i className="bi bi-x-circle"></i>
         </div>
         <div className={styles.statContent}>
           <div className={styles.statLabel}>Sans concerts</div>
-          <div className={styles.statValue}>{stats.sansConcerts}</div>
+          <div className={styles.statValue}>{stats.sansDates}</div>
         </div>
       </div>
       

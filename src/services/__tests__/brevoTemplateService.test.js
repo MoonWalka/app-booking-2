@@ -25,7 +25,7 @@ describe('BrevoTemplateService', () => {
     it('devrait valider les variables requises pour le template formulaire', () => {
       const validData = {
         nomContact: 'Jean Dupont',
-        nomConcert: 'Festival 2024',
+        nomDate: 'Festival 2024',
         lienFormulaire: 'https://example.com/form/123',
         dateEcheance: '2024-12-31'
       };
@@ -38,18 +38,18 @@ describe('BrevoTemplateService', () => {
     it('devrait rejeter les données incomplètes pour formulaire', () => {
       const incompleteData = {
         nomContact: 'Jean Dupont'
-        // manque: nomConcert, lienFormulaire
+        // manque: nomDate, lienFormulaire
       };
 
       expect(() => {
         brevoTemplateService.validateTemplateVariables('formulaire', incompleteData);
-      }).toThrow('Variable requise manquante: nomConcert');
+      }).toThrow('Variable requise manquante: nomDate');
     });
 
     it('devrait valider les variables pour le template contrat', () => {
       const validData = {
         nomContact: 'Marie Martin',
-        nomConcert: 'Concert Jazz',
+        nomDate: 'Date Jazz',
         dateSignature: '2024-11-15'
       };
 
@@ -81,7 +81,7 @@ describe('BrevoTemplateService', () => {
     it('devrait formater les variables avec le préfixe params', () => {
       const rawData = {
         nomContact: 'Jean Dupont',
-        nomConcert: 'Festival 2024',
+        nomDate: 'Festival 2024',
         lienFormulaire: 'https://example.com/form'
       };
 
@@ -90,7 +90,7 @@ describe('BrevoTemplateService', () => {
       expect(formatted).toEqual({
         params: {
           nomContact: 'Jean Dupont',
-          nomConcert: 'Festival 2024',
+          nomDate: 'Festival 2024',
           lienFormulaire: 'https://example.com/form'
         }
       });
@@ -99,7 +99,7 @@ describe('BrevoTemplateService', () => {
     it('devrait gérer les valeurs nulles et undefined', () => {
       const rawData = {
         nomContact: 'Jean Dupont',
-        nomConcert: null,
+        nomDate: null,
         lienFormulaire: undefined,
         dateEcheance: ''
       };
@@ -108,7 +108,7 @@ describe('BrevoTemplateService', () => {
 
       expect(formatted.params).toEqual({
         nomContact: 'Jean Dupont',
-        nomConcert: '',
+        nomDate: '',
         lienFormulaire: '',
         dateEcheance: ''
       });
@@ -147,7 +147,7 @@ describe('BrevoTemplateService', () => {
         nom: 'Jean Dupont'
       };
 
-      const concertData = {
+      const dateData = {
         nom: 'Festival Summer 2024',
         date: new Date('2024-07-15')
       };
@@ -157,7 +157,7 @@ describe('BrevoTemplateService', () => {
 
       const result = await brevoTemplateService.sendFormulaireEmail(
         contactData,
-        concertData,
+        dateData,
         lienFormulaire,
         organizationId
       );
@@ -168,10 +168,10 @@ describe('BrevoTemplateService', () => {
         templateData: {
           params: {
             nomContact: 'Jean Dupont',
-            nomConcert: 'Festival Summer 2024',
+            nomDate: 'Festival Summer 2024',
             lienFormulaire: 'https://tourcraft.app/form/abc123',
             dateEcheance: expect.any(String),
-            dateConcert: expect.any(String)
+            dateDate: expect.any(String)
           }
         },
         organizationId: 'org-456'
@@ -187,12 +187,12 @@ describe('BrevoTemplateService', () => {
 
       await expect(
         brevoTemplateService.sendFormulaireEmail({}, null, '', '')
-      ).rejects.toThrow('Données concert requises');
+      ).rejects.toThrow('Données date requises');
 
       await expect(
         brevoTemplateService.sendFormulaireEmail(
           { email: 'test@example.com' },
-          { nom: 'Concert' },
+          { nom: 'Date' },
           '',
           ''
         )
@@ -201,14 +201,14 @@ describe('BrevoTemplateService', () => {
 
     it('devrait valider le format email', async () => {
       const contactData = { email: 'invalid-email', nom: 'Jean Dupont' };
-      const concertData = { nom: 'Concert' };
+      const dateData = { nom: 'Date' };
 
       emailService.validateEmail.mockReturnValue(false);
 
       await expect(
         brevoTemplateService.sendFormulaireEmail(
           contactData,
-          concertData,
+          dateData,
           'https://example.com',
           'org-123'
         )
@@ -219,14 +219,14 @@ describe('BrevoTemplateService', () => {
       emailService.sendUnifiedEmail.mockResolvedValue({ success: true });
 
       const contactData = { email: 'test@example.com', nom: 'Jean Dupont' };
-      const concertData = { 
-        nom: 'Concert', 
+      const dateData = { 
+        nom: 'Date', 
         date: new Date('2024-12-31') 
       };
 
       await brevoTemplateService.sendFormulaireEmail(
         contactData,
-        concertData,
+        dateData,
         'https://example.com',
         'org-123'
       );
@@ -238,8 +238,8 @@ describe('BrevoTemplateService', () => {
       expect(typeof dateEcheance).toBe('string');
       // Vérifier que c'est une date future mais avant le concert
       const echeanceDate = new Date(dateEcheance);
-      const concertDate = new Date('2024-12-31');
-      expect(echeanceDate.getTime()).toBeLessThan(concertDate.getTime());
+      const dateDate = new Date('2024-12-31');
+      expect(echeanceDate.getTime()).toBeLessThan(dateDate.getTime());
     });
   });
 
@@ -249,12 +249,12 @@ describe('BrevoTemplateService', () => {
       emailService.sendUnifiedEmail.mockResolvedValue(mockResponse);
 
       const contactData = { email: 'artist@example.com', nom: 'Artiste Pro' };
-      const concertData = { nom: 'Concert Gala', date: new Date('2024-11-20') };
+      const dateData = { nom: 'Date Gala', date: new Date('2024-11-20') };
       const organizationId = 'org-789';
 
       const result = await brevoTemplateService.sendContratEmail(
         contactData,
-        concertData,
+        dateData,
         organizationId
       );
 
@@ -264,9 +264,9 @@ describe('BrevoTemplateService', () => {
         templateData: {
           params: {
             nomContact: 'Artiste Pro',
-            nomConcert: 'Concert Gala',
+            nomDate: 'Date Gala',
             dateSignature: expect.any(String),
-            dateConcert: expect.any(String)
+            dateDate: expect.any(String)
           }
         },
         organizationId: 'org-789'
@@ -279,14 +279,14 @@ describe('BrevoTemplateService', () => {
       emailService.sendUnifiedEmail.mockResolvedValue({ success: true });
 
       const contactData = { email: 'test@example.com', nom: 'Test' };
-      const concertData = { 
-        nom: 'Concert', 
+      const dateData = { 
+        nom: 'Date', 
         date: new Date('2024-12-25') 
       };
 
       await brevoTemplateService.sendContratEmail(
         contactData,
-        concertData,
+        dateData,
         'org-123'
       );
 
@@ -296,8 +296,8 @@ describe('BrevoTemplateService', () => {
       expect(dateSignature).toBeTruthy();
       // La date de signature devrait être avant le concert
       const signatureDate = new Date(dateSignature);
-      const concertDate = new Date('2024-12-25');
-      expect(signatureDate.getTime()).toBeLessThan(concertDate.getTime());
+      const dateDate = new Date('2024-12-25');
+      expect(signatureDate.getTime()).toBeLessThan(dateDate.getTime());
     });
   });
 
@@ -353,12 +353,12 @@ describe('BrevoTemplateService', () => {
       emailService.sendUnifiedEmail.mockResolvedValue(mockResponse);
 
       const contactData = { email: 'confirmed@example.com', nom: 'Contact Confirmé' };
-      const concertData = { nom: 'Concert Final', date: new Date('2024-10-30') };
+      const dateData = { nom: 'Date Final', date: new Date('2024-10-30') };
       const organizationId = 'org-202';
 
       const result = await brevoTemplateService.sendConfirmationEmail(
         contactData,
-        concertData,
+        dateData,
         organizationId
       );
 
@@ -368,8 +368,8 @@ describe('BrevoTemplateService', () => {
         templateData: {
           params: {
             nomContact: 'Contact Confirmé',
-            nomConcert: 'Concert Final',
-            dateConcert: expect.any(String)
+            nomDate: 'Date Final',
+            dateDate: expect.any(String)
           }
         },
         organizationId: 'org-202'
@@ -471,7 +471,7 @@ describe('BrevoTemplateService', () => {
       const demoData = brevoTemplateService.generateDemoData('formulaire');
 
       expect(demoData).toHaveProperty('nomContact');
-      expect(demoData).toHaveProperty('nomConcert');
+      expect(demoData).toHaveProperty('nomDate');
       expect(demoData).toHaveProperty('lienFormulaire');
       expect(demoData).toHaveProperty('dateEcheance');
       expect(demoData.lienFormulaire).toContain('https://');
@@ -481,7 +481,7 @@ describe('BrevoTemplateService', () => {
       const demoData = brevoTemplateService.generateDemoData('contrat');
 
       expect(demoData).toHaveProperty('nomContact');
-      expect(demoData).toHaveProperty('nomConcert');
+      expect(demoData).toHaveProperty('nomDate');
       expect(demoData).toHaveProperty('dateSignature');
     });
 
@@ -497,8 +497,8 @@ describe('BrevoTemplateService', () => {
       const demoData = brevoTemplateService.generateDemoData('confirmation');
 
       expect(demoData).toHaveProperty('nomContact');
-      expect(demoData).toHaveProperty('nomConcert');
-      expect(demoData).toHaveProperty('dateConcert');
+      expect(demoData).toHaveProperty('nomDate');
+      expect(demoData).toHaveProperty('dateDate');
     });
 
     it('devrait gérer un type de template inconnu', () => {
@@ -513,44 +513,44 @@ describe('BrevoTemplateService', () => {
       emailService.sendUnifiedEmail.mockResolvedValue({ success: true });
 
       const contactData = { email: 'test@example.com', nom: 'Test' };
-      const concertData = { 
-        nom: 'Concert', 
+      const dateData = { 
+        nom: 'Date', 
         date: new Date('2024-12-31T20:00:00Z') 
       };
 
       await brevoTemplateService.sendFormulaireEmail(
         contactData,
-        concertData,
+        dateData,
         'https://example.com',
         'org-123'
       );
 
       const callArgs = emailService.sendUnifiedEmail.mock.calls[0][0];
-      const dateConcert = callArgs.templateData.params.dateConcert;
+      const dateDate = callArgs.templateData.params.dateDate;
       
-      expect(dateConcert).toBeTruthy();
-      expect(typeof dateConcert).toBe('string');
+      expect(dateDate).toBeTruthy();
+      expect(typeof dateDate).toBe('string');
       // Vérifier le format de date française
-      expect(dateConcert).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+      expect(dateDate).toMatch(/\d{2}\/\d{2}\/\d{4}/);
     });
 
     it('devrait gérer les dates nulles ou invalides', async () => {
       emailService.sendUnifiedEmail.mockResolvedValue({ success: true });
 
       const contactData = { email: 'test@example.com', nom: 'Test' };
-      const concertData = { nom: 'Concert', date: null };
+      const dateData = { nom: 'Date', date: null };
 
       await brevoTemplateService.sendFormulaireEmail(
         contactData,
-        concertData,
+        dateData,
         'https://example.com',
         'org-123'
       );
 
       const callArgs = emailService.sendUnifiedEmail.mock.calls[0][0];
-      const dateConcert = callArgs.templateData.params.dateConcert;
+      const dateDate = callArgs.templateData.params.dateDate;
       
-      expect(dateConcert).toBe('Date à définir');
+      expect(dateDate).toBe('Date à définir');
     });
   });
 });

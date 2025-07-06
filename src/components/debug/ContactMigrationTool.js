@@ -160,15 +160,15 @@ const ContactMigrationTool = () => {
         // Rechercher les concerts liés
         if (contactData.concertsIds && contactData.concertsIds.length > 0) {
           addLog(`🎵 Recherche de ${contactData.concertsIds.length} concert(s)...`);
-          for (const concertId of contactData.concertsIds) {
+          for (const dateId of contactData.concertsIds) {
             try {
-              const concertDoc = await getDoc(doc(db, getCollectionName('concerts'), concertId));
-              if (concertDoc.exists()) {
-                relatedData.concerts.push(concertDoc.data());
-                addLog(`✅ Concert trouvé: ${concertDoc.data().title || concertId}`);
+              const dateDoc = await getDoc(doc(db, getCollectionName('concerts'), dateId));
+              if (dateDoc.exists()) {
+                relatedData.concerts.push(dateDoc.data());
+                addLog(`✅ Date trouvé: ${dateDoc.data().title || dateId}`);
               }
             } catch (err) {
-              addLog(`❌ Erreur concert ${concertId}: ${err.message}`, 'error');
+              addLog(`❌ Erreur date ${dateId}: ${err.message}`, 'error');
             }
           }
         }
@@ -271,10 +271,10 @@ const ContactMigrationTool = () => {
           dateDerniereModif: new Date(),
           
           // Section 6: Diffusion (7 champs)
-          nomFestival: relatedData.concerts[0]?.title || relatedData.concerts[0]?.nom || contactData.nomFestival || '',
-          periodeFestivalMois: relatedData.concerts[0]?.periodeMois || contactData.periodeFestivalMois || '',
-          periodeFestivalComplete: relatedData.concerts[0]?.periodeComplete || contactData.periodeFestivalComplete || '',
-          bouclage: relatedData.concerts[0]?.bouclage || contactData.bouclage || '',
+          nomFestival: relatedData.dates[0]?.title || relatedData.dates[0]?.nom || contactData.nomFestival || '',
+          periodeFestivalMois: relatedData.dates[0]?.periodeMois || contactData.periodeFestivalMois || '',
+          periodeFestivalComplete: relatedData.dates[0]?.periodeComplete || contactData.periodeFestivalComplete || '',
+          bouclage: relatedData.dates[0]?.bouclage || contactData.bouclage || '',
           diffusionCommentaires1: contactData.diffusionCommentaires1 || '',
           diffusionCommentaires2: contactData.diffusionCommentaires2 || '',
           diffusionCommentaires3: contactData.diffusionCommentaires3 || '',
@@ -428,7 +428,7 @@ const ContactMigrationTool = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
                   <div><strong>Contact ID:</strong> {migration.contactId}</div>
                   <div><strong>Type détecté:</strong> {migration.contactType}</div>
-                  <div><strong>Concerts liés:</strong> {migration.relatedEntities.concerts}</div>
+                  <div><strong>Dates liés:</strong> {migration.relatedEntities.concerts}</div>
                   <div><strong>Lieux liés:</strong> {migration.relatedEntities.lieux}</div>
                 </div>
                 

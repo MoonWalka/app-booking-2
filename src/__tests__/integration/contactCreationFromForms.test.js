@@ -6,7 +6,7 @@ import { db } from '../../services/firebase-service';
 import { AuthContext } from '../../context/AuthContext';
 import { OrganizationContext } from '../../context/OrganizationContext';
 import LieuForm from '../../components/lieux/LieuForm';
-import ConcertForm from '../../components/concerts/ConcertForm';
+import DateForm from '../../components/dates/DateForm';
 import ContactsList from '../../components/contacts/ContactsList';
 
 // Mock user et organisation pour les tests
@@ -22,7 +22,7 @@ const mockOrganization = {
 
 // Helper pour nettoyer les données de test
 const cleanupTestData = async () => {
-  const collections = ['contacts', 'lieux', 'concerts'];
+  const collections = ['contacts', 'lieux', 'dates'];
   
   for (const collectionName of collections) {
     const q = query(
@@ -74,7 +74,7 @@ describe('Création de contacts depuis différents formulaires', () => {
 
       // Remplir les champs du lieu
       const nomInput = screen.getByLabelText(/nom du lieu/i);
-      await user.type(nomInput, 'Salle de concert Test');
+      await user.type(nomInput, 'Salle de date Test');
 
       // Chercher un contact qui n'existe pas
       const contactSearch = screen.getByPlaceholderText(/rechercher un contact/i);
@@ -103,7 +103,7 @@ describe('Création de contacts depuis différents formulaires', () => {
         // Vérifier que le lieu a été créé
         const lieuxQuery = query(
           collection(db, 'lieux'),
-          where('nom', '==', 'Salle de concert Test'),
+          where('nom', '==', 'Salle de date Test'),
           where('organizationId', '==', mockOrganization.id)
         );
         const lieuxSnapshot = await getDocs(lieuxQuery);
@@ -147,20 +147,20 @@ describe('Création de contacts depuis différents formulaires', () => {
     });
   });
 
-  describe('Création de contact depuis le formulaire Concert', () => {
-    it('devrait créer un contact et l\'associer au concert avec relations bidirectionnelles', async () => {
+  describe('Création de contact depuis le formulaire Date', () => {
+    it('devrait créer un contact et l\'associer au date avec relations bidirectionnelles', async () => {
       const user = userEvent.setup();
-      let concertId = null;
+      let dateId = null;
       let contactId = null;
 
       render(
         <TestWrapper>
-          <ConcertForm />
+          <DateForm />
         </TestWrapper>
       );
 
-      // Remplir les champs du concert
-      const nomInput = screen.getByLabelText(/nom du concert/i);
+      // Remplir les champs du date
+      const nomInput = screen.getByLabelText(/nom du date/i);
       await user.type(nomInput, 'Festival Test 2024');
 
       // Ajouter une date
@@ -185,21 +185,21 @@ describe('Création de contacts depuis différents formulaires', () => {
         expect(screen.getByText('Marie Martin Test')).toBeInTheDocument();
       });
 
-      // Sauvegarder le concert
+      // Sauvegarder le date
       const saveButton = screen.getByText(/enregistrer/i);
       await user.click(saveButton);
 
       // Attendre la création et récupérer les IDs
       await waitFor(async () => {
-        // Vérifier que le concert a été créé
-        const concertsQuery = query(
-          collection(db, 'concerts'),
+        // Vérifier que le date a été créé
+        const datesQuery = query(
+          collection(db, 'dates'),
           where('nom', '==', 'Festival Test 2024'),
           where('organizationId', '==', mockOrganization.id)
         );
-        const concertsSnapshot = await getDocs(concertsQuery);
-        expect(concertsSnapshot.size).toBe(1);
-        concertId = concertsSnapshot.docs[0].id;
+        const datesSnapshot = await getDocs(datesQuery);
+        expect(datesSnapshot.size).toBe(1);
+        dateId = datesSnapshot.docs[0].id;
 
         // Vérifier que le contact a été créé
         const contactsQuery = query(
@@ -214,24 +214,24 @@ describe('Création de contacts depuis différents formulaires', () => {
 
       // Vérifier les relations bidirectionnelles
       await waitFor(async () => {
-        // Vérifier que le concert contient le contact
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        const concertData = concertDoc.data();
-        expect(concertData.contactId).toBe(contactId);
+        // Vérifier que le date contient le contact
+        const dateDoc = await getDoc(doc(db, 'dates', dateId));
+        const dateData = dateDoc.data();
+        expect(dateData.contactId).toBe(contactId);
 
-        // Vérifier que le contact contient le concert
+        // Vérifier que le contact contient le date
         const contactDoc = await getDoc(doc(db, 'contacts', contactId));
         const contactData = contactDoc.data();
-        expect(contactData.concertsIds).toContain(concertId);
+        expect(contactData.datesIds).toContain(dateId);
       });
     });
   });
 
   describe('Création de contact partagé entre plusieurs entités', () => {
-    it('devrait permettre d\'associer le même contact à un lieu ET un concert', async () => {
+    it('devrait permettre d\'associer le même contact à un lieu ET un date', async () => {
       const user = userEvent.setup();
       let lieuId = null;
-      let concertId = null;
+      let dateId = null;
       let contactId = null;
 
       // Étape 1: Créer un lieu avec un nouveau contact
@@ -268,14 +268,14 @@ describe('Création de contacts depuis différents formulaires', () => {
         contactId = contactsSnapshot.docs[0].id;
       });
 
-      // Étape 2: Créer un concert et associer le contact existant
+      // Étape 2: Créer un date et associer le contact existant
       render(
         <TestWrapper>
-          <ConcertForm />
+          <DateForm />
         </TestWrapper>
       );
 
-      await user.type(screen.getByLabelText(/nom du concert/i), 'Concert Partagé Test');
+      await user.type(screen.getByLabelText(/nom du date/i), 'Date Partagé Test');
       await user.type(screen.getByLabelText(/date/i), '2024-12-31');
       
       // Rechercher le contact existant
@@ -291,14 +291,14 @@ describe('Création de contacts depuis différents formulaires', () => {
       await user.click(screen.getByText('Contact Partagé Test'));
       await user.click(screen.getByText(/enregistrer/i));
 
-      // Récupérer l'ID du concert
+      // Récupérer l'ID du date
       await waitFor(async () => {
-        const concertsQuery = query(
-          collection(db, 'concerts'),
-          where('nom', '==', 'Concert Partagé Test')
+        const datesQuery = query(
+          collection(db, 'dates'),
+          where('nom', '==', 'Date Partagé Test')
         );
-        const concertsSnapshot = await getDocs(concertsQuery);
-        concertId = concertsSnapshot.docs[0].id;
+        const datesSnapshot = await getDocs(datesQuery);
+        dateId = datesSnapshot.docs[0].id;
       });
 
       // Vérifier que le contact est associé aux deux entités
@@ -307,7 +307,7 @@ describe('Création de contacts depuis différents formulaires', () => {
         const contactData = contactDoc.data();
         
         expect(contactData.lieuxIds).toContain(lieuId);
-        expect(contactData.concertsIds).toContain(concertId);
+        expect(contactData.datesIds).toContain(dateId);
       });
     });
   });

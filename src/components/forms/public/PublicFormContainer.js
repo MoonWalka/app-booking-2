@@ -2,7 +2,7 @@ import React from 'react';
 import FormPageHeader from './FormPageHeader';
 import FormLoadingState from './FormLoadingState';
 import FormErrorPanel from './FormErrorPanel';
-import ConcertInfoSection from './ConcertInfoSection';
+import DateInfoSection from './DateInfoSection';
 import FormContentWrapper from './FormContentWrapper';
 import FormSubmitBlock from './FormSubmitBlock';
 import styles from './PublicFormContainer.module.css';
@@ -82,7 +82,7 @@ const PublicFormContainer = ({
       />
       
       {concert && (
-        <ConcertInfoSection 
+        <DateInfoSection 
           concert={concert} 
           lieu={lieu} 
         />

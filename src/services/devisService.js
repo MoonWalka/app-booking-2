@@ -35,7 +35,7 @@ const devisService = {
           priorite: 'normale',
           dateEcheance: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours
           organizationId: devisData.organizationId,
-          concertId: devisData.concertId,
+          dateId: devisData.dateId,
           contactId: devisData.contactId,
           entityType: 'devis',
           entityId: docRef.id,
@@ -132,14 +132,14 @@ const devisService = {
     }
   },
 
-  // Récupérer les devis d'un concert
-  async getDevisByConcert(concertId) {
+  // Récupérer les devis d'une date
+  async getDevisByDate(dateId) {
     try {
       const devisRef = collection(db, 'devis');
       // Requête simplifiée pour éviter l'index composite
       const q = query(
         devisRef,
-        where('concertId', '==', concertId)
+        where('dateId', '==', dateId)
       );
       const snapshot = await getDocs(q);
       
@@ -157,7 +157,7 @@ const devisService = {
       
       return devisList;
     } catch (error) {
-      console.error('Erreur lors de la récupération des devis du concert:', error);
+      console.error('Erreur lors de la récupération des devis de la date:', error);
       return [];
     }
   },

@@ -4,16 +4,16 @@ import { useTabs } from '@/context/TabsContext';
 import DevisList from '@/components/devis/DevisList';
 import DevisEditor from '@/components/devis/DevisEditor';
 
-function DevisPage({ devisId, concertId, structureId }) {
+function DevisPage({ devisId, dateId, structureId }) {
   const location = useLocation();
   const { getActiveTab } = useTabs();
   
   useEffect(() => {
     console.log('DevisPage rendered at:', location.pathname);
-    console.log('DevisPage props:', { devisId, concertId, structureId });
+    console.log('DevisPage props:', { devisId, dateId, structureId });
     return () => {
     };
-  }, [location.pathname, devisId, concertId, structureId]);
+  }, [location.pathname, devisId, dateId, structureId]);
 
   // Déterminer le contenu à afficher en fonction des paramètres de l'onglet
   const renderContent = () => {
@@ -21,7 +21,7 @@ function DevisPage({ devisId, concertId, structureId }) {
     
     console.log('[DevisPage] renderContent - activeTab:', activeTab);
     console.log('[DevisPage] renderContent - location.pathname:', location.pathname);
-    console.log('[DevisPage] Props reçues - devisId:', devisId, 'concertId:', concertId, 'structureId:', structureId);
+    console.log('[DevisPage] Props reçues - devisId:', devisId, 'dateId:', dateId, 'structureId:', structureId);
     
     // Priorité 1 : utiliser les props passées directement depuis TabManager
     if (devisId) {
@@ -29,17 +29,17 @@ function DevisPage({ devisId, concertId, structureId }) {
       return <DevisEditor devisId={devisId} />;
     }
     
-    if (concertId) {
-      console.log('[DevisPage] Utilisation du concertId depuis les props:', concertId);
-      return <DevisEditor concertId={concertId} structureId={structureId} />;
+    if (dateId) {
+      console.log('[DevisPage] Utilisation du dateId depuis les props:', dateId);
+      return <DevisEditor dateId={dateId} structureId={structureId} />;
     }
     
     // Priorité 2 : Si on a des paramètres d'onglet (venant du système d'onglets)
     if (activeTab?.params) {
-      const { devisId: tabDevisId, concertId: tabConcertId, structureId: tabStructureId } = activeTab.params;
+      const { devisId: tabDevisId, dateId: tabDateId, structureId: tabStructureId } = activeTab.params;
       
       console.log('[DevisPage] Params de l\'onglet actif:', activeTab.params);
-      console.log('[DevisPage] tabDevisId:', tabDevisId, 'tabConcertId:', tabConcertId, 'tabStructureId:', tabStructureId);
+      console.log('[DevisPage] tabDevisId:', tabDevisId, 'tabDateId:', tabDateId, 'tabStructureId:', tabStructureId);
       
       // Si on a un devisId, afficher l'éditeur pour ce devis
       if (tabDevisId) {
@@ -47,10 +47,10 @@ function DevisPage({ devisId, concertId, structureId }) {
         return <DevisEditor devisId={tabDevisId} />;
       }
       
-      // Si on a un concertId, créer un nouveau devis
-      if (tabConcertId) {
-        console.log('[DevisPage] Affichage de DevisEditor avec tabConcertId:', tabConcertId);
-        return <DevisEditor concertId={tabConcertId} structureId={tabStructureId} />;
+      // Si on a un dateId, créer un nouveau devis
+      if (tabDateId) {
+        console.log('[DevisPage] Affichage de DevisEditor avec tabDateId:', tabDateId);
+        return <DevisEditor dateId={tabDateId} structureId={tabStructureId} />;
       }
     }
     
@@ -61,11 +61,11 @@ function DevisPage({ devisId, concertId, structureId }) {
     if (path.includes('/nouveau')) {
       // Extraire les paramètres de query string si présents
       const urlParams = new URLSearchParams(path.split('?')[1]);
-      const pathConcertId = urlParams.get('concertId');
+      const pathDateId = urlParams.get('dateId');
       const pathStructureId = urlParams.get('structureId');
-      console.log('[DevisPage] Path nouveau devis - concertId:', pathConcertId, 'structureId:', pathStructureId);
+      console.log('[DevisPage] Path nouveau devis - dateId:', pathDateId, 'structureId:', pathStructureId);
       
-      return <DevisEditor concertId={pathConcertId} structureId={pathStructureId} />;
+      return <DevisEditor dateId={pathDateId} structureId={pathStructureId} />;
     } else if (path.includes('/devis/') && !path.includes('/nouveau')) {
       // Extraire l'ID du devis du path
       const segments = path.split('/');

@@ -60,46 +60,46 @@ function DatesTable({
         setLoading(true);
         setError(null);
         
-        // Charger les concerts depuis Firebase
-        const concertsQuery = query(
-          collection(db, 'concerts'),
+        // Charger les dates depuis Firebase
+        const datesQuery = query(
+          collection(db, 'dates'),
           where('organizationId', '==', currentOrg.id),
           orderBy(config.sort?.field || 'date', config.sort?.direction || 'desc')
         );
         
-        const concertsSnapshot = await getDocs(concertsQuery);
-        const concertsData = concertsSnapshot.docs.map(doc => {
-          const concert = { id: doc.id, ...doc.data() };
+        const datesSnapshot = await getDocs(datesQuery);
+        const datesData = datesSnapshot.docs.map(doc => {
+          const date = { id: doc.id, ...doc.data() };
           
           // Transformer les données Firebase pour correspondre aux configurations
           return {
-            ...concert,
+            ...date,
             // Mapping Firebase → Configurations
-            entreprise: concert.structureNom || '-',
-            artiste: concert.artisteNom || concert.titre || '-',
-            lieu: concert.lieuNom || '-',
-            ville: concert.lieuVille || '-', 
-            organisateur: concert.contactNom || '-',
-            dateDebut: concert.date,
-            dateFin: concert.dateFin,
-            salle: concert.lieuNom || '-',
-            codePostal: concert.lieuCodePostal || '-',
-            nbRepresentations: concert.nbDates || 1,
-            libelle: concert.titre || '-',
-            niv: concert.niveau || '1',
+            entreprise: date.structureNom || '-',
+            artiste: date.artisteNom || date.titre || '-',
+            lieu: date.lieuNom || '-',
+            ville: date.lieuVille || '-', 
+            organisateur: date.contactNom || '-',
+            dateDebut: date.date,
+            dateFin: date.dateFin,
+            salle: date.lieuNom || '-',
+            codePostal: date.lieuCodePostal || '-',
+            nbRepresentations: date.nbDates || 1,
+            libelle: date.titre || '-',
+            niv: date.niveau || '1',
             // Champs dérivés ou par défaut
-            coll: deriveCollaboratorCode(concert.structureNom),
-            type: concert.type || 'concert',
-            isPublic: concert.isPublic || false,
-            communicationStatus: concert.communicationStatus || 'pending',
-            projet: concert.projet || concert.formule || '-',
-            dossier: concert.dossier || '-',
-            priseOption: concert.priseOption || concert.datePriseOption,
-            contratPropose: concert.contratPropose
+            coll: deriveCollaboratorCode(date.structureNom),
+            type: date.type || 'date',
+            isPublic: date.isPublic || false,
+            communicationStatus: date.communicationStatus || 'pending',
+            projet: date.projet || date.formule || '-',
+            dossier: date.dossier || '-',
+            priseOption: date.priseOption || date.datePriseOption,
+            contratPropose: date.contratPropose
           };
         });
         
-        setData(concertsData);
+        setData(datesData);
       } catch (err) {
         console.error('Erreur lors du chargement des données:', err);
         setError(err.message);

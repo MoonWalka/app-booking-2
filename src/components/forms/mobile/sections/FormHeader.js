@@ -6,7 +6,7 @@ import styles from './FormHeader.module.css';
  * En-tête du formulaire de validation pour mobile
  * Affiche le titre et le bouton de retour
  */
-const FormHeader = ({ concertId, isValidated, navigate }) => {
+const FormHeader = ({ dateId, isValidated, navigate }) => {
   return (
     <div className={styles.headerContainer}>
       <div className={styles.titleContainer}>
@@ -17,7 +17,7 @@ const FormHeader = ({ concertId, isValidated, navigate }) => {
           variant="outline-secondary" 
           size="sm"
           className={styles.backButton}
-          onClick={() => navigate(`/concerts/${concertId}`)}
+          onClick={() => navigate(`/dates/${dateId}`)}
         >
           <i className="bi bi-arrow-left me-1"></i>
           Retour au concert

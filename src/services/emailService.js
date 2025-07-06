@@ -169,19 +169,19 @@ class EmailService {
    * @param {Object} contratData - Données du contrat
    * @param {string|Array<string>} contratData.to - Email du/des destinataire(s)
    * @param {string} contratData.nomContact - Nom du contact
-   * @param {string} contratData.nomConcert - Nom du concert
+   * @param {string} contratData.nomDate - Nom de la date
    * @param {string} [contratData.dateSignature] - Date limite de signature
    * @param {Object} [contratData.attachment] - PDF du contrat en pièce jointe
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
   async sendContractEmail(contratData) {
     try {
-      const { to, nomContact, nomConcert, dateSignature, attachment } = contratData;
+      const { to, nomContact, nomDate, dateSignature, attachment } = contratData;
 
       // Utiliser le template 'contrat'
       const templateData = {
         nomContact,
-        nomConcert,
+        nomDate,
         dateSignature
       };
 
@@ -195,7 +195,7 @@ class EmailService {
       if (attachment) {
         // Ajouter la pièce jointe
         emailData.attachments = [{
-          filename: `Contrat_${nomConcert.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+          filename: `Contrat_${nomDate.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
           content: attachment.content,
           encoding: 'base64'
         }];
@@ -213,18 +213,18 @@ class EmailService {
    * @param {Object} formData - Données du formulaire
    * @param {string|Array<string>} formData.to - Email du/des destinataire(s)
    * @param {string} formData.nomContact - Nom du contact
-   * @param {string} formData.nomConcert - Nom du concert
+   * @param {string} formData.nomDate - Nom de la date
    * @param {string} formData.lienFormulaire - URL du formulaire
    * @param {string} [formData.dateEcheance] - Date limite
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
   async sendFormEmail(formData) {
     try {
-      const { to, nomContact, nomConcert, lienFormulaire, dateEcheance } = formData;
+      const { to, nomContact, nomDate, lienFormulaire, dateEcheance } = formData;
 
       const templateData = {
         nomContact,
-        nomConcert,
+        nomDate,
         lienFormulaire,
         dateEcheance
       };
@@ -287,7 +287,7 @@ class EmailService {
   }
 
   /**
-   * Extrait les emails des contacts d'un concert
+   * Extrait les emails des contacts d'une date
    * @param {Array<Object>} contacts - Liste des contacts
    * @returns {Array<string>} - Liste des emails valides
    */
@@ -302,12 +302,12 @@ class EmailService {
   }
 
   /**
-   * Envoie un email à tous les contacts d'un concert
-   * @param {Array<Object>} contacts - Liste des contacts du concert
+   * Envoie un email à tous les contacts d'une date
+   * @param {Array<Object>} contacts - Liste des contacts de la date
    * @param {Object} emailData - Données de l'email (sans le champ 'to')
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendToConcertContacts(contacts, emailData) {
+  async sendToDateContacts(contacts, emailData) {
     try {
       const emails = this.extractContactEmails(contacts);
       
@@ -359,47 +359,47 @@ class EmailService {
 
   /**
    * Envoie un email formulaire avec template Brevo optimisé
-   * @param {Object} concert - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {string} lienFormulaire - URL du formulaire
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendBrevoFormEmail(concert, contact, lienFormulaire) {
-    return await brevoTemplateService.sendFormulaireEmail(concert, contact, lienFormulaire);
+  async sendBrevoFormEmail(date, contact, lienFormulaire) {
+    return await brevoTemplateService.sendFormulaireEmail(date, contact, lienFormulaire);
   }
 
   /**
    * Envoie un email de relance avec template Brevo optimisé
-   * @param {Object} concert - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {Array} documentsManquants - Liste des documents manquants
    * @param {number} nombreRelance - Numéro de la relance
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendBrevoRelanceEmail(concert, contact, documentsManquants, nombreRelance = 1) {
-    return await brevoTemplateService.sendRelanceEmail(concert, contact, documentsManquants, nombreRelance);
+  async sendBrevoRelanceEmail(date, contact, documentsManquants, nombreRelance = 1) {
+    return await brevoTemplateService.sendRelanceEmail(date, contact, documentsManquants, nombreRelance);
   }
 
   /**
    * Envoie un email contrat avec template Brevo optimisé
-   * @param {Object} concert - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {Object} contrat - Données du contrat
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendBrevoContractEmail(concert, contact, contrat) {
-    return await brevoTemplateService.sendContratEmail(concert, contact, contrat);
+  async sendBrevoContractEmail(date, contact, contrat) {
+    return await brevoTemplateService.sendContratEmail(date, contact, contrat);
   }
 
   /**
    * Envoie un email de confirmation avec template Brevo optimisé
-   * @param {Object} concert - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {Object} detailsTechniques - Détails techniques du concert
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendBrevoConfirmationEmail(concert, contact, detailsTechniques = {}) {
-    return await brevoTemplateService.sendConfirmationEmail(concert, contact, detailsTechniques);
+  async sendBrevoConfirmationEmail(date, contact, detailsTechniques = {}) {
+    return await brevoTemplateService.sendConfirmationEmail(date, contact, detailsTechniques);
   }
 
   /**
@@ -463,7 +463,7 @@ export const {
   sendFormEmail,
   sendRelanceEmail,
   sendTestEmail,
-  sendToConcertContacts,
+  sendToDateContacts,
   extractContactEmails,
   validateEmail,
   sanitizeFilename,

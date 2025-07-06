@@ -32,16 +32,16 @@ const ValidationSection = ({
             <div className={styles.concertField}>
               <span className={styles.fieldLabel}>Date :</span>
               <span className={styles.fieldValue}>
-                {new Date(concert.date?.seconds * 1000).toLocaleDateString('fr-FR')}
+                {new Date(date.date?.seconds * 1000).toLocaleDateString('fr-FR')}
               </span>
             </div>
             <div className={styles.concertField}>
               <span className={styles.fieldLabel}>Artiste :</span>
-              <span className={styles.fieldValue}>{concert.artisteName}</span>
+              <span className={styles.fieldValue}>{date.artisteName}</span>
             </div>
             <div className={styles.concertField}>
               <span className={styles.fieldLabel}>Lieu :</span>
-              <span className={styles.fieldValue}>{concert.lieuName}</span>
+              <span className={styles.fieldValue}>{date.lieuName}</span>
             </div>
           </div>
         </Card.Body>

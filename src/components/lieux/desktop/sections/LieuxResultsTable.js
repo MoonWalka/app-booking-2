@@ -47,7 +47,7 @@ const LieuxResultsTable = ({ lieux, onDeleteLieu }) => {
       render: (lieu) => lieu.capacite ? `${lieu.capacite} pers.` : <span className="text-muted">Non spécifiée</span>
     },
     {
-      label: 'Concerts',
+      label: 'Dates',
       key: 'concertsCount',
       sortable: false,
       render: (lieu) => (

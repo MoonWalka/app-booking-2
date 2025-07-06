@@ -281,9 +281,9 @@ const BrevoDiagnostic = () => {
       }
 
       // Générer de vraies variables de test avec les fonctions TourCraft
-      const testConcert = {
-        nom: 'Concert Test Debug',
-        title: 'Concert Test Debug',
+      const testDate = {
+        nom: 'Date Test Debug',
+        title: 'Date Test Debug',
         date: new Date(),
         heure: '20:30',
         lieu: {
@@ -305,7 +305,7 @@ const BrevoDiagnostic = () => {
       // Utiliser les vraies fonctions de génération
       const { formatFormulaireVariables } = await import('@/utils/templateVariables');
       const realVariables = formatFormulaireVariables(
-        testConcert,
+        testDate,
         testContact,
         'https://app.tourcraft.com/formulaire/test-debug-123'
       );
@@ -317,7 +317,7 @@ const BrevoDiagnostic = () => {
         // Variables simples pour test
         nom: 'Martin',
         prenom: 'Jean',
-        concert: 'Concert Test Debug',
+        concert: 'Date Test Debug',
         lien: 'https://app.tourcraft.com/formulaire/test-debug-123',
         test_mode: true,
         organization_name: currentOrganization?.name || 'TourCraft',

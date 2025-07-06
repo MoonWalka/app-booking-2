@@ -17,10 +17,10 @@ function DateDetailsPage({ params = {} }) {
   const { currentUser } = useAuth();
   const { getActiveTab, closeTab, openTab } = useTabs();
   
-  const concertId = params.id;
+  const dateId = params.id;
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [concertData, setConcertData] = useState(null);
+  const [dateData, setDateData] = useState(null);
   const [festivals, setFestivals] = useState([]);
   const [collaborateurs, setCollaborateurs] = useState([]);
   const [contactId, setContactId] = useState(null);
@@ -45,12 +45,12 @@ function DateDetailsPage({ params = {} }) {
   });
 
   // Charger les données financières depuis les documents liés
-  const loadFinancialData = useCallback(async (concertId) => {
-    if (!concertId || !currentOrganization?.id) return null;
+  const loadFinancialData = useCallback(async (dateId) => {
+    if (!dateId || !currentOrganization?.id) return null;
     
     try {
-      // 1. Essayer de récupérer le contrat (relation 1:1 avec concertId)
-      const contratDoc = await getDoc(doc(db, 'contrats', concertId));
+      // 1. Essayer de récupérer le contrat (relation 1:1 avec dateId)
+      const contratDoc = await getDoc(doc(db, 'contrats', dateId));
       if (contratDoc.exists()) {
         const contratData = contratDoc.data();
         console.log('[DateDetailsPage] Contrat trouvé:', contratData);
@@ -65,7 +65,7 @@ function DateDetailsPage({ params = {} }) {
       // 2. Si pas de contrat, chercher un pré-contrat validé
       const preContratsQuery = query(
         collection(db, 'preContrats'),
-        where('concertId', '==', concertId),
+        where('dateId', '==', dateId),
         where('confirmationValidee', '==', true)
       );
       const preContratsSnapshot = await getDocs(preContratsQuery);
@@ -85,7 +85,7 @@ function DateDetailsPage({ params = {} }) {
       // 3. Si pas de pré-contrat, chercher une facture
       const facturesQuery = query(
         collection(db, 'organizations', currentOrganization.id, 'factures'),
-        where('concertId', '==', concertId),
+        where('dateId', '==', dateId),
         orderBy('dateFacture', 'desc')
       );
       const facturesSnapshot = await getDocs(facturesQuery);
@@ -102,7 +102,7 @@ function DateDetailsPage({ params = {} }) {
       // 4. Si pas de facture, chercher un devis accepté
       const devisQuery = query(
         collection(db, 'devis'),
-        where('concertId', '==', concertId),
+        where('dateId', '==', dateId),
         where('statut', '==', 'accepté')
       );
       const devisSnapshot = await getDocs(devisQuery);
@@ -125,20 +125,20 @@ function DateDetailsPage({ params = {} }) {
   }, [currentOrganization?.id]);
 
   // Charger les données du concert
-  const loadConcertData = useCallback(async () => {
-    if (!concertId) return;
+  const loadDateData = useCallback(async () => {
+    if (!dateId) return;
     
     try {
       setLoading(true);
-      const docRef = doc(db, 'concerts', concertId);
+      const docRef = doc(db, 'concerts', dateId);
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
         const data = docSnap.data();
-        setConcertData({ id: docSnap.id, ...data });
+        setDateData({ id: docSnap.id, ...data });
         
         // Log pour debug des champs disponibles
-        console.log('[DateDetailsPage] Données du concert chargées:', {
+        console.log('[DateDetailsPage] Données du date chargées:', {
           montant: data.montant,
           montantPropose: data.montantPropose,
           prix: data.prix,
@@ -183,7 +183,7 @@ function DateDetailsPage({ params = {} }) {
     } finally {
       setLoading(false);
     }
-  }, [concertId, loadFinancialData]);
+  }, [dateId, loadFinancialData]);
 
   // Charger les festivals
   const loadFestivals = useCallback(async () => {
@@ -233,8 +233,8 @@ function DateDetailsPage({ params = {} }) {
   }, [currentOrganization?.id]);
 
   useEffect(() => {
-    loadConcertData();
-  }, [loadConcertData]);
+    loadDateData();
+  }, [loadDateData]);
 
   useEffect(() => {
     if (contactId) {
@@ -273,11 +273,11 @@ function DateDetailsPage({ params = {} }) {
 
   // Gérer la sauvegarde
   const handleSave = async (closeAfter = false) => {
-    if (!concertId) return;
+    if (!dateId) return;
     
     setSaving(true);
     try {
-      const docRef = doc(db, 'concerts', concertId);
+      const docRef = doc(db, 'concerts', dateId);
       
       // Préparer les données avec mapping intelligent
       const dataToSave = {
@@ -319,42 +319,42 @@ function DateDetailsPage({ params = {} }) {
         break;
       case 'devis':
         openTab({
-          id: `devis-${concertId}`,
+          id: `devis-${dateId}`,
           title: `Devis - ${formData.artisteNom}`,
           type: 'devis',
-          params: { concertId }
+          params: { dateId }
         });
         break;
       case 'precontrat':
         openTab({
-          id: `precontrat-${concertId}`,
+          id: `precontrat-${dateId}`,
           title: `Pré-contrat - ${formData.artisteNom}`,
           type: 'precontrat',
-          params: { concertId }
+          params: { dateId }
         });
         break;
       case 'confirmation':
         openTab({
-          id: `confirmation-${concertId}`,
+          id: `confirmation-${dateId}`,
           title: `Confirmation - ${formData.artisteNom}`,
           type: 'confirmation',
-          params: { concertId }
+          params: { dateId }
         });
         break;
       case 'contrat':
         openTab({
-          id: `contrat-${concertId}`,
+          id: `contrat-${dateId}`,
           title: `Contrat - ${formData.artisteNom}`,
           type: 'contrat',
-          params: { concertId }
+          params: { dateId }
         });
         break;
       case 'factures':
         openTab({
-          id: `factures-${concertId}`,
+          id: `factures-${dateId}`,
           title: `Factures - ${formData.artisteNom}`,
           type: 'factures',
-          params: { concertId }
+          params: { dateId }
         });
         break;
       case 'equipe':
@@ -390,7 +390,7 @@ function DateDetailsPage({ params = {} }) {
     );
   }
 
-  if (!concertData) {
+  if (!dateData) {
     return (
       <div className={styles.container}>
         <div className="alert alert-danger">
@@ -421,7 +421,7 @@ function DateDetailsPage({ params = {} }) {
                 {formData.lieuNom || 'Lieu non défini'} / {formData.structureNom}
                 {formData.lieuVille && ` – ${formData.lieuVille}`}
               </p>
-              <p className={styles.dateType}>Concert (1)</p>
+              <p className={styles.dateType}>Date (1)</p>
               {(formData.heureDebut || formData.heureFin) && (
                 <p className={styles.dateTime}>
                   {formData.heureDebut || '00:00'} – {formData.heureFin || '00:00'}

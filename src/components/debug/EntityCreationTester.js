@@ -99,15 +99,15 @@ const EntityCreationTester = () => {
   };
 
   // Test 2: Créer un contact depuis un concert
-  const testContactFromConcert = async () => {
-    addTestResult('Contact via Concert', 'running', 'Test création contact depuis formulaire concert...');
+  const testContactFromDate = async () => {
+    addTestResult('Contact via Date', 'running', 'Test création contact depuis formulaire date...');
     
     try {
       const contactData = {
-        nom: `Contact Test Concert ${Date.now()}`,
-        nomLowercase: `contact test concert ${Date.now()}`.toLowerCase(),
+        nom: `Contact Test Date ${Date.now()}`,
+        nomLowercase: `contact test date ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
-        email: 'test@concert.com',
+        email: 'test@date.com',
         concertsIds: [],
         lieuxIds: [],
         createdAt: new Date(),
@@ -116,8 +116,8 @@ const EntityCreationTester = () => {
 
       const { id: contactId } = await createEntity('contacts', contactData);
       
-      const concertData = {
-        titre: `Concert Test ${Date.now()}`,
+      const dateData = {
+        titre: `Date Test ${Date.now()}`,
         titreLowercase: `concert test ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         contactId: contactId,
@@ -127,31 +127,31 @@ const EntityCreationTester = () => {
         updatedAt: new Date()
       };
 
-      const { id: concertId } = await createEntity('concerts', concertData);
-      await updateBidirectionalRelation('concert', concertId, 'contact', contactId);
+      const { id: dateId } = await createEntity('concerts', dateData);
+      await updateBidirectionalRelation('concert', dateId, 'contact', contactId);
 
-      addTestResult('Contact via Concert', 'success', 
-        `✅ Contact créé (${contactId}) et associé au concert (${concertId})`);
-      await verifyBidirectionalRelation(concertId, contactId, 'concert-contact');
+      addTestResult('Contact via Date', 'success', 
+        `✅ Contact créé (${contactId}) et associé au date (${dateId})`);
+      await verifyBidirectionalRelation(dateId, contactId, 'concert-contact');
 
     } catch (error) {
-      addTestResult('Contact via Concert', 'error', error.message);
+      addTestResult('Contact via Date', 'error', error.message);
     }
   };
 
   // ============== TESTS DE CRÉATION DE LIEUX ==============
 
   // Test 3: Créer un lieu depuis un concert
-  const testLieuFromConcert = async () => {
-    addTestResult('Lieu via Concert', 'running', 'Test création lieu depuis formulaire concert...');
+  const testLieuFromDate = async () => {
+    addTestResult('Lieu via Date', 'running', 'Test création lieu depuis formulaire date...');
     
     try {
       const lieuData = {
-        nom: `Lieu Test Concert ${Date.now()}`,
-        nomLowercase: `lieu test concert ${Date.now()}`.toLowerCase(),
+        nom: `Lieu Test Date ${Date.now()}`,
+        nomLowercase: `lieu test date ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         adresse: '789 Boulevard Test',
-        ville: 'Concert Ville',
+        ville: 'Date Ville',
         codePostal: '75002',
         contactIds: [],
         concertsIds: [],
@@ -161,8 +161,8 @@ const EntityCreationTester = () => {
 
       const { id: lieuId } = await createEntity('lieux', lieuData);
       
-      const concertData = {
-        titre: `Concert avec Lieu ${Date.now()}`,
+      const dateData = {
+        titre: `Date avec Lieu ${Date.now()}`,
         titreLowercase: `concert avec lieu ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         lieuId: lieuId, // Un seul lieu principal (pour la carte)
@@ -173,15 +173,15 @@ const EntityCreationTester = () => {
         updatedAt: new Date()
       };
 
-      const { id: concertId } = await createEntity('concerts', concertData);
-      await updateBidirectionalRelation('concert', concertId, 'lieu', lieuId);
+      const { id: dateId } = await createEntity('concerts', dateData);
+      await updateBidirectionalRelation('concert', dateId, 'lieu', lieuId);
 
-      addTestResult('Lieu via Concert', 'success', 
-        `✅ Lieu créé (${lieuId}) et associé au concert (${concertId})`);
-      await verifyBidirectionalRelation(concertId, lieuId, 'concert-lieu');
+      addTestResult('Lieu via Date', 'success', 
+        `✅ Lieu créé (${lieuId}) et associé au date (${dateId})`);
+      await verifyBidirectionalRelation(dateId, lieuId, 'concert-lieu');
 
     } catch (error) {
-      addTestResult('Lieu via Concert', 'error', error.message);
+      addTestResult('Lieu via Date', 'error', error.message);
     }
   };
 
@@ -344,9 +344,9 @@ const EntityCreationTester = () => {
       };
       const { id: contactId } = await createEntity('contacts', contactData);
 
-      // Créer un concert avec tout ça
-      const concertData = {
-        titre: `Concert Complexe ${Date.now()}`,
+      // Créer un date avec tout ça
+      const dateData = {
+        titre: `Date Complexe ${Date.now()}`,
         titreLowercase: `concert complexe ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         contactId: contactId,
@@ -358,7 +358,7 @@ const EntityCreationTester = () => {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      const { id: concertId } = await createEntity('concerts', concertData);
+      const { id: dateId } = await createEntity('concerts', dateData);
 
       // Mettre à jour toutes les relations
       await updateDoc(doc(db, 'structures', structureId), {
@@ -367,16 +367,16 @@ const EntityCreationTester = () => {
       });
       await updateDoc(doc(db, 'lieux', lieuId), {
         contactIds: [contactId],
-        concertsIds: [concertId],
+        concertsIds: [dateId],
         updatedAt: new Date()
       });
       await updateDoc(doc(db, 'contacts', contactId), {
-        concertsIds: [concertId],
+        concertsIds: [dateId],
         updatedAt: new Date()
       });
 
       addTestResult('Relations Complexes', 'success', 
-        `✅ Création complexe réussie: Concert (${concertId}) + Contact (${contactId}) + Lieu (${lieuId}) + Structure (${structureId})`);
+        `✅ Création complexe réussie: Date (${dateId}) + Contact (${contactId}) + Lieu (${lieuId}) + Structure (${structureId})`);
 
     } catch (error) {
       addTestResult('Relations Complexes', 'error', error.message);
@@ -473,28 +473,28 @@ const EntityCreationTester = () => {
       }
 
       if (relationType === 'concert-contact') {
-        const concertDoc = await getDoc(doc(db, 'concerts', entityId));
+        const dateDoc = await getDoc(doc(db, 'concerts', entityId));
         const contactDoc = await getDoc(doc(db, 'contacts', targetId));
-        const concertData = concertDoc.data();
+        const dateData = dateDoc.data();
         const contactData = contactDoc.data();
 
-        if (concertData.contactId === targetId && contactData.concertsIds?.includes(entityId)) {
-          addTestResult('Vérification', 'success', '✅ Relations concert ↔ contact OK');
+        if (dateData.contactId === targetId && contactData.concertsIds?.includes(entityId)) {
+          addTestResult('Vérification', 'success', '✅ Relations date ↔ contact OK');
         } else {
-          addTestResult('Vérification', 'error', '❌ Relations concert ↔ contact incomplètes');
+          addTestResult('Vérification', 'error', '❌ Relations date ↔ contact incomplètes');
         }
       }
 
       if (relationType === 'concert-lieu') {
-        const concertDoc = await getDoc(doc(db, 'concerts', entityId));
+        const dateDoc = await getDoc(doc(db, 'concerts', entityId));
         const lieuDoc = await getDoc(doc(db, 'lieux', targetId));
-        const concertData = concertDoc.data();
+        const dateData = dateDoc.data();
         const lieuData = lieuDoc.data();
 
-        if (concertData.lieuIds?.includes(targetId) && lieuData.concertsIds?.includes(entityId)) {
-          addTestResult('Vérification', 'success', '✅ Relations concert ↔ lieu OK');
+        if (dateData.lieuIds?.includes(targetId) && lieuData.concertsIds?.includes(entityId)) {
+          addTestResult('Vérification', 'success', '✅ Relations date ↔ lieu OK');
         } else {
-          addTestResult('Vérification', 'error', '❌ Relations concert ↔ lieu incomplètes');
+          addTestResult('Vérification', 'error', '❌ Relations date ↔ lieu incomplètes');
         }
       }
     } catch (error) {
@@ -519,12 +519,12 @@ const EntityCreationTester = () => {
         await testContactFromLieu();
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        await testContactFromConcert();
+        await testContactFromDate();
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 
       if (selectedTests.lieux) {
-        await testLieuFromConcert();
+        await testLieuFromDate();
         await new Promise(resolve => setTimeout(resolve, 500));
         
         await testLieuFromContact();
@@ -654,7 +654,7 @@ const EntityCreationTester = () => {
               )}
               {testEntities.concerts.length > 0 && (
                 <div>
-                  <strong>Concerts:</strong> {testEntities.concerts.map(c => c.titre || c.nom).join(', ')}
+                  <strong>Dates:</strong> {testEntities.concerts.map(c => c.titre || c.nom).join(', ')}
                 </div>
               )}
               {testEntities.structures.length > 0 && (
@@ -676,7 +676,7 @@ const EntityCreationTester = () => {
           </ul>
           <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '5px', border: '1px solid #ffeaa7' }}>
             <strong>⚠️ Note importante sur les cartes :</strong> Pour qu'une carte s'affiche dans la fiche concert, 
-            le concert doit avoir un champ <code>lieuId</code> (lieu principal) en plus de <code>lieuIds</code> (liste des lieux).
+            le date doit avoir un champ <code>lieuId</code> (lieu principal) en plus de <code>lieuIds</code> (liste des lieux).
             Les concerts créés dans cet outil incluent les deux champs pour assurer l'affichage correct des cartes.
           </div>
         </div>

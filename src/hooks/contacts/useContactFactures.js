@@ -55,28 +55,28 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
         // 2. Récupérer tous les concerts de la structure
         console.log('[useContactFactures] Recherche des concerts pour la structure:', structureId);
         const concertsQuery = query(
-          collection(db, 'concerts'),
+          collection(db, 'dates'),
           where('structureId', '==', structureId)
         );
         const concertsSnapshot = await getDocs(concertsQuery);
         console.log('[useContactFactures] Nombre de concerts trouvés:', concertsSnapshot.size);
 
         // 3. Récupérer les factures pour chaque concert
-        const facturesPromises = concertsSnapshot.docs.map(async (concertDoc) => {
-          const concertData = { id: concertDoc.id, ...concertDoc.data() };
+        const facturesPromises = concertsSnapshot.docs.map(async (dateDoc) => {
+          const dateData = { id: dateDoc.id, ...dateDoc.data() };
           
           const facturesQuery = query(
             collection(db, 'organizations', organizationId, 'factures'),
-            where('concertId', '==', concertDoc.id)
+            where('dateId', '==', dateDoc.id)
           );
           const facturesSnapshot = await getDocs(facturesQuery);
           
-          console.log(`[useContactFactures] Concert ${concertDoc.id}: ${facturesSnapshot.size} factures trouvées`);
+          console.log(`[useContactFactures] Date ${dateDoc.id}: ${facturesSnapshot.size} factures trouvées`);
 
           return facturesSnapshot.docs.map(factureDoc => ({
             id: factureDoc.id,
             ...factureDoc.data(),
-            concert: concertData
+            concert: dateData
           }));
         });
 

@@ -274,7 +274,7 @@ export const publicationConfig = {
       field: 'type',
       type: 'select',
       options: [
-        { value: 'concert', label: 'Concert' },
+        { value: 'date', label: 'Date' },
         { value: 'festival', label: 'Festival' },
         { value: 'showcase', label: 'Showcase' },
         { value: 'conference', label: 'Conférence' }

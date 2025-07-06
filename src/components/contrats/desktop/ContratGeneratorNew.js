@@ -14,7 +14,7 @@ import styles from './ContratGeneratorNew.module.css';
  * Générateur de contrat - Nouveau composant
  */
 const ContratGeneratorNew = ({ 
-  concertId, 
+  dateId, 
   concert, 
   contact, 
   artiste, 
@@ -99,7 +99,7 @@ const ContratGeneratorNew = ({
       payant: false,
       nbRepresentations: '1',
       capacite: '',
-      type: 'Concert'
+      type: 'Date'
     },
     // Négociation
     negociation: {
@@ -216,11 +216,11 @@ const ContratGeneratorNew = ({
   // Charger un contrat existant s'il existe
   useEffect(() => {
     const loadExistingContrat = async () => {
-      if (!concertId) return;
+      if (!dateId) return;
       
       try {
-        console.log('[ContratGeneratorNew] Recherche d\'un contrat existant pour le concert:', concertId);
-        const existingContrat = await contratService.getContratByConcert(concertId);
+        console.log('[ContratGeneratorNew] Recherche d\'un contrat existant pour le concert:', dateId);
+        const existingContrat = await contratService.getContratByDate(dateId);
         
         if (existingContrat) {
           console.log('[ContratGeneratorNew] Contrat existant trouvé:', existingContrat);
@@ -248,18 +248,18 @@ const ContratGeneratorNew = ({
     };
     
     loadExistingContrat();
-  }, [concertId]);
+  }, [dateId]);
 
   // Charger le devis associé au concert
   useEffect(() => {
-    const loadDevisDuConcert = async () => {
-      if (!concertId) return;
+    const loadDevisDuDate = async () => {
+      if (!dateId) return;
 
       try {
-        console.log('[ContratGeneratorNew] Recherche devis pour concert:', concertId);
+        console.log('[ContratGeneratorNew] Recherche devis pour concert:', dateId);
         
         // Chercher les devis pour ce concert
-        const devisList = await devisService.getDevisByConcert(concertId);
+        const devisList = await devisService.getDevisByDate(dateId);
         
         if (devisList && devisList.length > 0) {
           // Prendre le devis le plus récent
@@ -274,8 +274,8 @@ const ContratGeneratorNew = ({
       }
     };
     
-    loadDevisDuConcert();
-  }, [concertId]);
+    loadDevisDuDate();
+  }, [dateId]);
 
   // Initialiser les données depuis les props
   useEffect(() => {
@@ -548,7 +548,7 @@ const ContratGeneratorNew = ({
       const dataToSave = {
         ...contratData,
         // Ajouter les références aux entités liées
-        concertId: concertId,
+        dateId: dateId,
         preContratId: preContratData?.id || null,
         devisId: devisData?.id || null,
         contactId: contact?.id || null,
@@ -562,12 +562,12 @@ const ContratGeneratorNew = ({
       console.log('[ContratGeneratorNew] Données à sauvegarder:', dataToSave);
 
       // Sauvegarder le contrat
-      const savedContrat = await contratService.saveContrat(concertId, dataToSave, currentOrg?.id);
+      const savedContrat = await contratService.saveContrat(dateId, dataToSave, currentOrg?.id);
       
       console.log('[ContratGeneratorNew] Contrat sauvegardé avec succès:', savedContrat);
 
       // Mettre à jour le statut du concert
-      await contratService.updateContratStatus(concertId, 'draft');
+      await contratService.updateContratStatus(dateId, 'draft');
 
       setAlertType('success');
       setAlertMessage('Contrat enregistré avec succès');
@@ -600,7 +600,7 @@ const ContratGeneratorNew = ({
       // Sauvegarder d'abord le contrat
       const dataToSave = {
         ...contratData,
-        concertId: concertId,
+        dateId: dateId,
         preContratId: preContratData?.id || null,
         devisId: devisData?.id || null,
         contactId: contact?.id || null,
@@ -610,14 +610,14 @@ const ContratGeneratorNew = ({
         organizationId: currentOrg?.id
       };
 
-      await contratService.saveContrat(concertId, dataToSave, currentOrg?.id);
+      await contratService.saveContrat(dateId, dataToSave, currentOrg?.id);
       
       // Générer un numéro de contrat
       const contratNumber = await contratService.generateContratNumber(currentOrg?.id);
       console.log('[ContratGeneratorNew] Numéro de contrat généré:', contratNumber);
       
       // Finaliser le contrat
-      await contratService.finalizeContrat(concertId, contratNumber);
+      await contratService.finalizeContrat(dateId, contratNumber);
       
       setAlertType('success');
       setAlertMessage(`Contrat finalisé avec succès. Numéro : ${contratNumber}`);
@@ -625,7 +625,7 @@ const ContratGeneratorNew = ({
       setTimeout(() => setShowAlert(false), 3000);
       
       // Recharger les données
-      const updatedContrat = await contratService.getContratByConcert(concertId);
+      const updatedContrat = await contratService.getContratByDate(dateId);
       if (updatedContrat) {
         setContratData(updatedContrat);
       }
@@ -658,7 +658,7 @@ const ContratGeneratorNew = ({
       
       const dataToSave = {
         ...contratData,
-        concertId: concertId,
+        dateId: dateId,
         preContratId: preContratData?.id || null,
         contactId: contact?.id || null,
         structureId: structure?.id || null,
@@ -668,16 +668,16 @@ const ContratGeneratorNew = ({
       };
 
       // Sauvegarder le contrat
-      const savedContrat = await contratService.saveContrat(concertId, dataToSave, currentOrg?.id);
+      const savedContrat = await contratService.saveContrat(dateId, dataToSave, currentOrg?.id);
       console.log('[ContratGeneratorNew] Contrat sauvegardé automatiquement:', savedContrat);
 
-      // Mettre à jour le statut du concert si c'est la première fois
+      // Mettre à jour le statut du date si c'est la première fois
       if (!contratData.createdAt) {
-        await contratService.updateContratStatus(concertId, 'draft');
+        await contratService.updateContratStatus(dateId, 'draft');
       }
       
-      // Générer un ID pour le contrat (utiliser concertId pour maintenir la relation 1:1)
-      const contratId = concertId || `nouveau-${Date.now()}`;
+      // Générer un ID pour le contrat (utiliser dateId pour maintenir la relation 1:1)
+      const contratId = dateId || `nouveau-${Date.now()}`;
       
       console.log('[ContratGeneratorNew] Ouverture de la page de rédaction avec contratId:', contratId);
       
@@ -689,7 +689,7 @@ const ContratGeneratorNew = ({
           path: `/contrats/${contratId}/redaction`,
           component: 'ContratRedactionPage',
           params: { 
-            originalConcertId: concertId || null,
+            originalDateId: dateId || null,
             contratId: contratId,
             fromGenerator: true // Indique qu'on vient du générateur
           }

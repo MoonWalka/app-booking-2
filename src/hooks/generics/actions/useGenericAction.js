@@ -51,14 +51,14 @@ import { useOrganization } from '@/context/OrganizationContext';
  * @example
  * ```javascript
  * const { loading, error, create, update, remove } = useGenericAction('concerts', {
- *   onCreate: (data) => console.log('Concert créé:', data),
- *   onUpdate: (data) => console.log('Concert mis à jour:', data),
- *   onDelete: (id) => console.log('Concert supprimé:', id)
+ *   onCreate: (data) => console.log('Date créé:', data),
+ *   onUpdate: (data) => console.log('Date mis à jour:', data),
+ *   onDelete: (id) => console.log('Date supprimé:', id)
  * });
  * 
  * // Créer un nouveau concert
  * const handleCreate = async () => {
- *   const newConcert = await create({
+ *   const newDate = await create({
  *     titre: 'Nouveau concert',
  *     date: new Date(),
  *     statut: 'contact'

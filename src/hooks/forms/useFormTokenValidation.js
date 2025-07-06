@@ -9,13 +9,13 @@ import { db } from '@/services/firebase-service';
 import preContratService from '@/services/preContratService';
 import { debugLog } from '@/utils/logUtils';
 
-export function useFormTokenValidation(concertId, token) {
+export function useFormTokenValidation(dateId, token) {
   const [state, setState] = useState({
     isLoading: true,
     isValid: false,
     isExpired: false,
     isCompleted: false,
-    concertData: null,
+    dateData: null,
     formLinkData: null,
     existingSubmission: null,
     organizationData: null,
@@ -24,7 +24,7 @@ export function useFormTokenValidation(concertId, token) {
 
   useEffect(() => {
     const validateToken = async () => {
-      if (!concertId || !token) {
+      if (!dateId || !token) {
         setState(prev => ({
           ...prev,
           isLoading: false,
@@ -36,12 +36,12 @@ export function useFormTokenValidation(concertId, token) {
 
       try {
         debugLog('[useFormTokenValidation] Validation du token:', {
-          concertId,
+          dateId,
           token: token.substring(0, 8) + '...'
         }, 'info');
 
         // Valider le token
-        const validationResult = await preContratService.validateToken(concertId, token);
+        const validationResult = await preContratService.validateToken(dateId, token);
         
         if (!validationResult.valid) {
           setState(prev => ({
@@ -55,25 +55,25 @@ export function useFormTokenValidation(concertId, token) {
         }
 
         // Récupérer les données du concert
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (!concertDoc.exists()) {
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (!dateDoc.exists()) {
           setState(prev => ({
             ...prev,
             isLoading: false,
             isValid: false,
-            error: 'Concert introuvable'
+            error: 'Date introuvable'
           }));
           return;
         }
 
-        const concertData = { id: concertId, ...concertDoc.data() };
+        const dateData = { id: dateId, ...dateDoc.data() };
 
         // Récupérer les données du lieu si disponible
-        if (concertData.lieuId) {
+        if (dateData.lieuId) {
           try {
-            const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+            const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
             if (lieuDoc.exists()) {
-              concertData.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
+              dateData.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
             }
           } catch (error) {
             debugLog('[useFormTokenValidation] Erreur récupération lieu:', error, 'warn');
@@ -81,11 +81,11 @@ export function useFormTokenValidation(concertId, token) {
         }
 
         // Récupérer les données de l'artiste si disponible
-        if (concertData.artisteId) {
+        if (dateData.artisteId) {
           try {
-            const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+            const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
             if (artisteDoc.exists()) {
-              concertData.artiste = { id: artisteDoc.id, ...artisteDoc.data() };
+              dateData.artiste = { id: artisteDoc.id, ...artisteDoc.data() };
             }
           } catch (error) {
             debugLog('[useFormTokenValidation] Erreur récupération artiste:', error, 'warn');
@@ -120,7 +120,7 @@ export function useFormTokenValidation(concertId, token) {
           isValid: true,
           isExpired: false,
           isCompleted: validationResult.alreadyValidated || validationResult.preContrat?.publicFormCompleted || false,
-          concertData,
+          dateData,
           formLinkData: validationResult.preContrat,
           existingSubmission: validationResult.preContrat?.publicFormData ? validationResult.preContrat.publicFormData : null,
           organizationData,
@@ -128,7 +128,7 @@ export function useFormTokenValidation(concertId, token) {
         });
 
         debugLog('[useFormTokenValidation] Validation réussie:', {
-          concertNom: concertData.titre || concertData.nom,
+          concertNom: dateData.titre || dateData.nom,
           isCompleted: validationResult.alreadyValidated
         }, 'success');
 
@@ -144,7 +144,7 @@ export function useFormTokenValidation(concertId, token) {
     };
 
     validateToken();
-  }, [concertId, token]);
+  }, [dateId, token]);
 
   return state;
 }

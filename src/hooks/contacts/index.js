@@ -22,7 +22,7 @@ export { useContactFactures } from './useContactFactures';
 // export { default as useAdresseValidation } from './useAdresseValidation'; // SUPPRIMÉ
 export { default as useLieuSearch } from './useLieuSearch';
 export { default as useCompanySearch } from './useCompanySearch';
-// export { default as useConcertSearch } from './useConcertSearch'; // SUPPRIMÉ
+// export { default as useDateSearch } from './useDateSearch'; // SUPPRIMÉ
 export { default as useFormSubmission } from './useFormSubmission';
 export { default as useDeleteContact } from './useDeleteContact';
 export { default as useDeleteContactRelational } from './useDeleteContactRelational';

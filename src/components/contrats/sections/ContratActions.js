@@ -115,7 +115,7 @@ const ContratActions = ({
             ) : (
               <Button 
                 variant="info" 
-                onClick={() => onGenerateFacture && onGenerateFacture(concert.id)}
+                onClick={() => onGenerateFacture && onGenerateFacture(date.id)}
                 disabled={isLoading}
                 title="Générer une facture depuis ce contrat"
               >

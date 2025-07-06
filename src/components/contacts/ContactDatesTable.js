@@ -1,18 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import ConcertsTableView from '@/components/concerts/ConcertsTableView';
-import useConcertDelete from '@/hooks/concerts/useConcertDelete';
-import { useConcertListData } from '@/hooks/concerts/useConcertListData';
-import { useConcertActions } from '@/hooks/concerts/useConcertActions';
+import DatesTableView from '@/components/dates/DatesTableView';
+import useDateDelete from '@/hooks/dates/useDateDelete';
+import { useDateListData } from '@/hooks/dates/useDateListData';
+import { useDateActions } from '@/hooks/dates/useDateActions';
 
 /**
  * Tableau des dates de concerts associées à un contact
  * Utilise le même composant que le tableau de bord pour garantir la cohérence
  */
-const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null, onDeleteSuccess = null }) => {
+const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteSuccess = null }) => {
   const navigate = useNavigate();
   
-  console.log(`[ContactDatesTable] Rendu avec ${concerts.length} concerts pour contact ${contactId}`);
+  console.log(`[ContactDatesTable] Rendu avec ${dates.length} dates pour contact ${contactId}`);
 
   // Hooks pour les données et actions des concerts
   const {
@@ -22,35 +22,35 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null, onDele
     hasFacture,
     getFactureStatus,
     getFactureData
-  } = useConcertListData();
+  } = useDateListData();
   
   const {
     handleViewFacture,
     handleGenerateFacture
-  } = useConcertActions();
+  } = useDateActions();
 
   // Hook pour la suppression des concerts
-  const { handleDeleteConcert: deleteConcert } = useConcertDelete(() => {
-    console.log('[ContactDatesTable] Concert supprimé avec succès');
+  const { handleDeleteDate: deleteDate } = useDateDelete(() => {
+    console.log('[ContactDatesTable] Date supprimé avec succès');
     if (onDeleteSuccess) {
       onDeleteSuccess();
     }
   });
 
-  // Fonction pour supprimer un concert avec confirmation
-  const handleDeleteConcert = (concert) => {
-    if (window.confirm(`Êtes-vous sûr de vouloir supprimer le concert "${concert.titre || concert.artisteNom || 'sans titre'}" du ${concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : 'date inconnue'} ?`)) {
-      console.log('[ContactDatesTable] Suppression du concert:', concert.id);
-      deleteConcert(concert.id);
+  // Fonction pour supprimer une date avec confirmation
+  const handleDeleteDate = (dateItem) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer la date "${dateItem.titre || dateItem.artisteNom || 'sans titre'}" du ${dateItem.date ? new Date(dateItem.date).toLocaleDateString('fr-FR') : 'date inconnue'} ?`)) {
+      console.log('[ContactDatesTable] Suppression de la date:', dateItem.id);
+      deleteDate(dateItem.id);
     }
   };
 
-  // Fonction pour éditer un concert
-  const handleEditConcert = (concert) => {
-    navigate(`/concerts/${concert.id}/edit`);
+  // Fonction pour éditer une date
+  const handleEditDate = (dateItem) => {
+    navigate(`/dates/${dateItem.id}/edit`);
   };
 
-  // Utiliser le composant commun ConcertsTableView
+  // Utiliser le composant commun DatesTableView
   return (
     <div style={{ marginTop: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
@@ -70,12 +70,12 @@ const ContactDatesTable = ({ contactId, concerts = [], onAddClick = null, onDele
         )}
       </div>
       
-      <ConcertsTableView
-        concerts={concerts}
+      <DatesTableView
+        dates={dates}
         loading={false}
         error={null}
-        onDelete={handleDeleteConcert}
-        onEdit={handleEditConcert}
+        onDelete={handleDeleteDate}
+        onEdit={handleEditDate}
         showSearch={false}
         // Props pour gérer les contrats et factures
         hasContractFunc={hasContract}

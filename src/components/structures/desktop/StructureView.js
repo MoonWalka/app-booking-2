@@ -129,7 +129,7 @@ function StructureView({ id: propId }) {
     
     const routes = {
       contact: `/contacts/${entityId}`,
-      concert: `/concerts/${entityId}`,
+      concert: `/dates/${entityId}`,
       lieu: `/lieux/${entityId}`,
       artiste: `/artistes/${entityId}`
     };
@@ -285,16 +285,16 @@ function StructureView({ id: propId }) {
               />
             ))}
 
-            {/* Concerts */}
-            {concertsList.slice(0, 3).map((concert) => (
+            {/* Dates */}
+            {concertsList.slice(0, 3).map((dateItem) => (
               <EntityCard
-                key={concert.id}
+                key={dateItem.id}
                 entityType="concert"
-                name={concert.titre || 'Concert'}
-                subtitle={`Concert (${concertsList.length})`}
+                name={dateItem.titre || 'Date'}
+                subtitle={`Date (${concertsList.length})`}
                 onClick={() => {
-                  const concertId = concert.id || concert.concertId;
-                  navigateToEntity('concert', concertId);
+                  const dateId = dateItem.id || dateItem.dateId;
+                  navigateToEntity('concert', dateId);
                 }}
               />
             ))}
@@ -370,7 +370,7 @@ function StructureView({ id: propId }) {
             <span className={styles.historyValue}>{contactsList.length}</span>
           </div>
           <div className={styles.historyItem}>
-            <span className={styles.historyLabel}>Concerts organisés</span>
+            <span className={styles.historyLabel}>Dates organisés</span>
             <span className={styles.historyValue}>{concertsList.length}</span>
           </div>
           <div className={styles.historyItem}>

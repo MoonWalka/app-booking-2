@@ -21,7 +21,7 @@ const ContratRedactionPage = () => {
   
   // Récupérer l'ID depuis les params de l'onglet ou l'URL
   const activeTab = getActiveTab && getActiveTab();
-  const id = activeTab?.params?.contratId || activeTab?.params?.originalConcertId || urlId;
+  const id = activeTab?.params?.contratId || activeTab?.params?.originalDateId || urlId;
   
   // Log pour debug
   console.log('[ContratRedactionPage] ID final utilisé:', id);
@@ -71,7 +71,7 @@ const ContratRedactionPage = () => {
       try {
         console.log('[ContratRedactionPage] Début chargement - ID:', id);
         console.log('[ContratRedactionPage] Chargement du contrat pour concert:', id);
-        const contrat = await contratService.getContratByConcert(id);
+        const contrat = await contratService.getContratByDate(id);
         
         if (contrat) {
           console.log('[ContratRedactionPage] Contrat trouvé:', contrat);
@@ -235,13 +235,13 @@ const ContratRedactionPage = () => {
         // Charger les données manquantes depuis Firebase
         let dataForReplacement = { ...contratData };
         
-        // Charger les données du concert si nécessaire
-        if (contratData.concertId && !contratData.concert) {
-          console.log('[ContratRedactionPage] Chargement des données du concert...');
-          const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
-          if (concertDoc.exists()) {
-            dataForReplacement.concert = { id: concertDoc.id, ...concertDoc.data() };
-            console.log('[ContratRedactionPage] Données concert chargées:', dataForReplacement.concert);
+        // Charger les données du date si nécessaire
+        if (contratData.dateId && !contratData.concert) {
+          console.log('[ContratRedactionPage] Chargement des données du date...');
+          const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
+          if (dateDoc.exists()) {
+            dataForReplacement.concert = { id: dateDoc.id, ...dateDoc.data() };
+            console.log('[ContratRedactionPage] Données date chargées:', dataForReplacement.concert);
           }
         }
         
@@ -263,10 +263,10 @@ const ContratRedactionPage = () => {
             dataForReplacement.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
             console.log('[ContratRedactionPage] Données lieu chargées:', dataForReplacement.lieu);
           }
-        } else if (dataForReplacement.concert && dataForReplacement.concert.lieuId && !dataForReplacement.lieu) {
+        } else if (dataForReplacement.concert && dataForReplacement.date.lieuId && !dataForReplacement.lieu) {
           // Si le lieu n'est pas dans le contrat mais dans le concert
-          console.log('[ContratRedactionPage] Chargement du lieu depuis le concert...');
-          const lieuDoc = await getDoc(doc(db, 'lieux', dataForReplacement.concert.lieuId));
+          console.log('[ContratRedactionPage] Chargement du lieu depuis le date...');
+          const lieuDoc = await getDoc(doc(db, 'lieux', dataForReplacement.date.lieuId));
           if (lieuDoc.exists()) {
             dataForReplacement.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
             console.log('[ContratRedactionPage] Données lieu chargées depuis concert:', dataForReplacement.lieu);
@@ -280,7 +280,7 @@ const ContratRedactionPage = () => {
           hasRepresentations: !!dataForReplacement.representations,
           hasLogistique: !!dataForReplacement.logistique,
           hasReglement: !!dataForReplacement.reglement,
-          hasConcert: !!dataForReplacement.concert,
+          hasDate: !!dataForReplacement.concert,
           hasArtiste: !!dataForReplacement.artiste,
           hasLieu: !!dataForReplacement.lieu
         });
@@ -404,27 +404,27 @@ const ContratRedactionPage = () => {
         }
         
         // Variables concert
-        if (contratData.concertId || contratData.concert) {
+        if (contratData.dateId || contratData.concert) {
           console.log('[ContratRedactionPage] Données concert:', {
-            concertId: contratData.concertId,
+            dateId: contratData.dateId,
             concert: contratData.concert
           });
           
-          // Si on a les données du concert directement
+          // Si on a les données du date directement
           if (contratData.concert) {
-            const concertDate = contratData.concert.date ? 
-              new Date(contratData.concert.date.seconds ? contratData.concert.date.seconds * 1000 : contratData.concert.date).toLocaleDateString('fr-FR') : 
+            const dateDate = contratData.date.date ? 
+              new Date(contratData.date.date.seconds ? contratData.date.date.seconds * 1000 : contratData.date.date).toLocaleDateString('fr-FR') : 
               '';
             
-            console.log('[ContratRedactionPage] Date du concert formatée:', concertDate);
+            console.log('[ContratRedactionPage] Date du date formatée:', dateDate);
             
             processedContent = processedContent
-              .replace(/{concert_date}/g, concertDate)
-              .replace(/{concert_titre}/g, contratData.concert.titre || '')
-              .replace(/{concert_heure}/g, contratData.concert.heure || '');
+              .replace(/{concert_date}/g, dateDate)
+              .replace(/{concert_titre}/g, contratData.date.titre || '')
+              .replace(/{concert_heure}/g, contratData.date.heure || '');
           }
         } else {
-          console.log('[ContratRedactionPage] Pas de données concert disponibles');
+          console.log('[ContratRedactionPage] Pas de données date disponibles');
         }
         
         // Variables artiste - Récupérer les données depuis le contrat
@@ -496,7 +496,7 @@ const ContratRedactionPage = () => {
           .replace(/{date_annee}/g, dateAnnee)
           .replace(/{date_complete}/g, dateComplete);
         
-        // Variables montant (depuis concert ou contrat)
+        // Variables montant (depuis date ou contrat)
         if (contratData.montantTTC || contratData.totalTTC) {
           const montant = contratData.montantTTC || contratData.totalTTC || 0;
           processedContent = processedContent
@@ -527,9 +527,9 @@ const ContratRedactionPage = () => {
           // Utiliser le montant direct du contrat
           totalTTCTrouve = parseFloat(contratData.montantTTC) || 0;
           console.log('[ContratRedactionPage] Total TTC depuis contrat:', totalTTCTrouve);
-        } else if (contratData.concert && contratData.concert.montant) {
+        } else if (contratData.concert && contratData.date.montant) {
           // Utiliser le montant du concert
-          totalTTCTrouve = parseFloat(contratData.concert.montant) || 0;
+          totalTTCTrouve = parseFloat(contratData.date.montant) || 0;
           console.log('[ContratRedactionPage] Total TTC depuis concert:', totalTTCTrouve);
         }
         
@@ -673,7 +673,7 @@ const ContratRedactionPage = () => {
       
       // Marquer le contrat comme rédigé dans la base de données
       if (id) {
-        console.log('[ContratRedactionPage] Marquage du contrat comme rédigé pour concert ID:', id);
+        console.log('[ContratRedactionPage] Marquage du contrat comme rédigé pour date ID:', id);
         
         // Préparer les données à sauvegarder
         const dataToUpdate = {
@@ -698,7 +698,7 @@ const ContratRedactionPage = () => {
         console.log('[ContratRedactionPage] Contrat marqué comme rédigé avec succès');
         
         // Recharger les données
-        const updatedContrat = await contratService.getContratByConcert(id);
+        const updatedContrat = await contratService.getContratByDate(id);
         if (updatedContrat) {
           setContratData(updatedContrat);
         }
@@ -710,13 +710,13 @@ const ContratRedactionPage = () => {
 
   // Basculer vers le mode formulaire (page de génération de contrat)
   const handleFormMode = () => {
-    // L'ID dans l'URL est déjà l'ID du concert original
-    const concertId = id;
+    // L'ID dans l'URL est déjà l'ID du date original
+    const dateId = id;
     
     console.log('handleFormMode - id from URL:', id);
-    console.log('handleFormMode - concertId à utiliser:', concertId);
+    console.log('handleFormMode - dateId à utiliser:', dateId);
     
-    if (!concertId) {
+    if (!dateId) {
       console.error('Impossible de retrouver l\'ID du concert');
       return;
     }
@@ -724,15 +724,15 @@ const ContratRedactionPage = () => {
     // Ouvrir la page de génération de contrat dans un nouvel onglet
     if (openTab) {
       openTab({
-        id: `contrat-generation-${concertId}`,
+        id: `contrat-generation-${dateId}`,
         title: `Contrat (formulaire)`,
-        path: `/contrats/generate/${concertId}`,
+        path: `/contrats/generate/${dateId}`,
         component: 'ContratGenerationNewPage',
-        params: { concertId: concertId }
+        params: { dateId: dateId }
       });
     } else {
       // Fallback vers navigation classique
-      navigate(`/contrats/generate/${concertId}`);
+      navigate(`/contrats/generate/${dateId}`);
     }
   };
   
@@ -743,7 +743,7 @@ const ContratRedactionPage = () => {
     // Recharger les données du contrat pour avoir les dernières valeurs
     if (id) {
       try {
-        const freshContrat = await contratService.getContratByConcert(id);
+        const freshContrat = await contratService.getContratByDate(id);
         if (freshContrat) {
           console.log('[ContratRedactionPage] Contrat rechargé:', freshContrat);
           
@@ -751,12 +751,12 @@ const ContratRedactionPage = () => {
           const updatedContrat = { ...freshContrat };
           
           // Charger les données du concert
-          if (freshContrat.concertId && !freshContrat.concert) {
-            console.log('[ContratRedactionPage] Chargement des données du concert...');
-            const concertDoc = await getDoc(doc(db, 'concerts', freshContrat.concertId));
-            if (concertDoc.exists()) {
-              updatedContrat.concert = { id: concertDoc.id, ...concertDoc.data() };
-              console.log('[ContratRedactionPage] Données concert chargées:', updatedContrat.concert);
+          if (freshContrat.dateId && !freshContrat.concert) {
+            console.log('[ContratRedactionPage] Chargement des données du date...');
+            const dateDoc = await getDoc(doc(db, 'concerts', freshContrat.dateId));
+            if (dateDoc.exists()) {
+              updatedContrat.concert = { id: dateDoc.id, ...dateDoc.data() };
+              console.log('[ContratRedactionPage] Données date chargées:', updatedContrat.concert);
             }
           }
           
@@ -778,10 +778,10 @@ const ContratRedactionPage = () => {
               updatedContrat.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
               console.log('[ContratRedactionPage] Données lieu chargées:', updatedContrat.lieu);
             }
-          } else if (updatedContrat.concert && updatedContrat.concert.lieuId) {
+          } else if (updatedContrat.concert && updatedContrat.date.lieuId) {
             // Si le lieu n'est pas dans le contrat mais dans le concert
-            console.log('[ContratRedactionPage] Chargement du lieu depuis le concert...');
-            const lieuDoc = await getDoc(doc(db, 'lieux', updatedContrat.concert.lieuId));
+            console.log('[ContratRedactionPage] Chargement du lieu depuis le date...');
+            const lieuDoc = await getDoc(doc(db, 'lieux', updatedContrat.date.lieuId));
             if (lieuDoc.exists()) {
               updatedContrat.lieu = { id: lieuDoc.id, ...lieuDoc.data() };
               console.log('[ContratRedactionPage] Données lieu chargées depuis concert:', updatedContrat.lieu);

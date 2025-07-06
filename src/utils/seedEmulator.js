@@ -1,10 +1,10 @@
 // Script pour peupler l'émulateur avec des données de test
 import { collection, doc, setDoc } from '@/services/firebase-service';
 
-const sampleConcerts = [
+const sampleDates = [
   {
-    id: 'concert-1',
-    titre: 'Concert Test 1',
+    id: 'date-1',
+    titre: 'Date Test 1',
     dateEvenement: '2024-12-25T20:00:00.000Z',
     montant: 1500,
     statut: 'contact',
@@ -18,8 +18,8 @@ const sampleConcerts = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: 'concert-2',
-    titre: 'Concert Test 2',
+    id: 'date-2',
+    titre: 'Date Test 2',
     dateEvenement: '2024-12-30T21:00:00.000Z',
     montant: 2000,
     statut: 'preaccord',
@@ -95,12 +95,12 @@ export const seedEmulator = async () => {
   try {
     console.log('🌱 Début du peuplement de l\'émulateur...');
     
-    // Peupler les concerts
-    console.log('📅 Ajout des concerts...');
-    for (const concert of sampleConcerts) {
-      const concertRef = doc(collection('concerts'), concert.id);
-      await setDoc(concertRef, concert);
-      console.log(`✅ Concert ajouté: ${concert.titre}`);
+    // Peupler les dates
+    console.log('📅 Ajout des dates...');
+    for (const date of sampleDates) {
+      const dateRef = doc(collection('dates'), date.id);
+      await setDoc(dateRef, date);
+      console.log(`✅ Date ajouté: ${date.titre}`);
     }
     
     // Peupler les lieux

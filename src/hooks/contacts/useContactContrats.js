@@ -112,25 +112,25 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
         // 2. Récupérer tous les concerts de la structure
         console.log('[useContactContrats] Recherche des concerts pour la structure:', structureId);
         const concertsQuery = query(
-          collection(db, 'concerts'),
+          collection(db, 'dates'),
           where('structureId', '==', structureId)
         );
         const concertsSnapshot = await getDocs(concertsQuery);
         console.log('[useContactContrats] Nombre de concerts trouvés:', concertsSnapshot.size);
         
         if (concertsSnapshot.empty) {
-          console.log('[useContactContrats] Aucun concert trouvé pour cette structure');
+          console.log('[useContactContrats] Aucun date trouvé pour cette structure');
           setContrats([]);
           return;
         }
 
         // 3. Récupérer les contrats pour chaque concert
-        const contratsPromises = concertsSnapshot.docs.map(async (concertDoc) => {
-          const concertData = { id: concertDoc.id, ...concertDoc.data() };
+        const contratsPromises = concertsSnapshot.docs.map(async (dateDoc) => {
+          const dateData = { id: dateDoc.id, ...dateDoc.data() };
           
           // Rechercher dans la collection contrats globale
-          // Les contrats utilisent l'ID du concert comme ID de document
-          const contratRef = doc(db, 'contrats', concertDoc.id);
+          // Les contrats utilisent l'ID du date comme ID de document
+          const contratRef = doc(db, 'contrats', dateDoc.id);
           const contratSnap = await getDoc(contratRef);
           
           const contratsFromQuery = [];
@@ -147,7 +147,7 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
             contratsFromQuery.push({ id: contratSnap.id, ...contratData });
           }
           
-          console.log(`[useContactContrats] Concert ${concertDoc.id}: ${contratsFromQuery.length} contrats trouvés`);
+          console.log(`[useContactContrats] Date ${dateDoc.id}: ${contratsFromQuery.length} contrats trouvés`);
 
           // Enrichir chaque contrat avec les données de devis et facture
           const enrichedContrats = await Promise.all(contratsFromQuery.map(async (contrat) => {
@@ -159,15 +159,15 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
 
             return {
               ...contrat,
-              concert: concertData,
-              concertId: concertDoc.id,
+              concert: dateData,
+              dateId: dateDoc.id,
               structureId: structureId, // Ajouter structureId pour les handlers devis
               // Ajouter des champs utiles pour l'affichage
-              dateEvenement: concertData.date,
-              artisteNom: concertData.artisteNom || concertData.artiste?.nom,
-              lieu: concertData.lieu,
-              ville: concertData.ville,
-              artiste: concertData.artiste || { nom: concertData.artisteNom },
+              dateEvenement: dateData.date,
+              artisteNom: dateData.artisteNom || dateData.artiste?.nom,
+              lieu: dateData.lieu,
+              ville: dateData.ville,
+              artiste: dateData.artiste || { nom: dateData.artisteNom },
               // Mapper les montants directement ici aussi
               totalHT: contrat.negociation?.montantNet || contrat.montantHT || 0,
               totalTTC: contrat.negociation?.montantTTC || contrat.montantTTC || 0,

@@ -87,11 +87,11 @@ export const CONTRACT_VARIABLES = {
   'artiste_contact': { label: 'Contact de l\'artiste', category: 'artiste', source: 'artiste.contact' },
   
   // Variables concert
-  'concert_titre': { label: 'Titre du concert', category: 'concert', source: 'concert.titre' },
-  'concert_date': { label: 'Date du concert', category: 'concert', source: 'concert.date', format: 'date' },
-  'concert_heure': { label: 'Heure du concert', category: 'concert', source: 'concert.heure' },
-  'concert_montant': { label: 'Montant (en chiffres)', category: 'concert', source: 'concert.montant', format: 'currency' },
-  'concert_montant_lettres': { label: 'Montant (en lettres)', category: 'concert', source: 'concert.montant', format: 'currency_letters' },
+  'concert_titre': { label: 'Titre du concert', category: 'concert', source: 'date.titre' },
+  'concert_date': { label: 'Date du concert', category: 'concert', source: 'date.date', format: 'date' },
+  'concert_heure': { label: 'Heure du concert', category: 'concert', source: 'date.heure' },
+  'concert_montant': { label: 'Montant (en chiffres)', category: 'concert', source: 'date.montant', format: 'currency' },
+  'concert_montant_lettres': { label: 'Montant (en lettres)', category: 'concert', source: 'date.montant', format: 'currency_letters' },
   
   // Variables Prestations (nouveau système)
   'spectacle_nom': { label: 'Nom du spectacle', category: 'prestations', source: 'contratData.prestations.nomSpectacle' },
@@ -350,7 +350,7 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{contact_qualite_representant}/g, 'Présidente')
     .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
     .replace(/{artiste_genre}/g, 'Rock Alternatif')
-    .replace(/{concert_titre}/g, 'Concert de printemps')
+    .replace(/{concert_titre}/g, 'Date de printemps')
     .replace(/{concert_date}/g, '15/05/2025')
     .replace(/{concert_montant}/g, '800')
     .replace(/{concert_montant_lettres}/g, 'Huit cents euros')
@@ -374,9 +374,9 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{structure_type}/g, 'Association')
     
     // Variables Prestations
-    .replace(/{spectacle_nom}/g, 'Concert Rock Alternatif')
+    .replace(/{spectacle_nom}/g, 'Date Rock Alternatif')
     .replace(/{plateau_duree}/g, '90 minutes')
-    .replace(/{plateau_contenu}/g, 'Concert avec 12 morceaux originaux')
+    .replace(/{plateau_contenu}/g, 'Date avec 12 morceaux originaux')
     .replace(/{intervenants}/g, '4 musiciens (guitare, basse, batterie, chant)')
     .replace(/{conditions_techniques}/g, 'Fiche technique détaillée fournie')
     .replace(/{technique_fournie}/g, 'Sonorisation et éclairage complets')
@@ -386,7 +386,7 @@ export const replaceVariablesWithMockData = (content) => {
     // Variables Représentations
     .replace(/{representation_debut}/g, '20h30')
     .replace(/{representation_fin}/g, '22h00')
-    .replace(/{representation_detail}/g, 'Concert unique le samedi soir')
+    .replace(/{representation_detail}/g, 'Date unique le samedi soir')
     .replace(/{nombre_invitations}/g, '10')
     .replace(/{salle}/g, 'Grande salle')
     .replace(/{horaire_debut}/g, '20h30')
@@ -421,7 +421,7 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/\[contact_qualite_representant\]/g, 'Présidente')
     .replace(/\[artiste_nom\]/g, 'Les Rockeurs du Dimanche')
     .replace(/\[artiste_genre\]/g, 'Rock Alternatif')
-    .replace(/\[concert_titre\]/g, 'Concert de printemps')
+    .replace(/\[concert_titre\]/g, 'Date de printemps')
     .replace(/\[concert_date\]/g, '15/05/2025')
     .replace(/\[concert_montant\]/g, '800')
     .replace(/\[concert_montant_lettres\]/g, 'Huit cents euros')

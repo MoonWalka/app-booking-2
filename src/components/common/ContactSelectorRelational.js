@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import CardSection from '@/components/ui/CardSection';
-import SearchDropdown from '@/components/concerts/sections/SearchDropdown';
-import SelectedEntityCard from '@/components/concerts/sections/SelectedEntityCard';
+import SearchDropdown from '@/components/dates/sections/SearchDropdown';
+import SelectedEntityCard from '@/components/dates/sections/SelectedEntityCard';
 import contactServiceRelational from '@/services/contactServiceRelational';
 import { useOrganization } from '@/context/OrganizationContext';
 import { useNavigate } from 'react-router-dom';

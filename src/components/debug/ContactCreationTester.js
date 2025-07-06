@@ -99,16 +99,16 @@ const ContactCreationTester = () => {
   };
 
   // Test 2: Créer un contact depuis un concert
-  const testContactFromConcert = async () => {
-    addTestResult('Test Contact via Concert', 'running', 'Création en cours...');
+  const testContactFromDate = async () => {
+    addTestResult('Test Contact via Date', 'running', 'Création en cours...');
     
     try {
       // Créer un contact
       const contactData = {
-        nom: `Contact Test Concert ${Date.now()}`,
-        nomLowercase: `contact test concert ${Date.now()}`.toLowerCase(),
+        nom: `Contact Test Date ${Date.now()}`,
+        nomLowercase: `contact test date ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
-        email: 'test@concert.com',
+        email: 'test@date.com',
         concertsIds: [],
         lieuxIds: [],
         artistesIds: [],
@@ -118,9 +118,9 @@ const ContactCreationTester = () => {
 
       const { id: contactId } = await createEntity('contacts', contactData);
       
-      // Créer un concert avec ce contact
-      const concertData = {
-        titre: `Concert Test ${Date.now()}`,
+      // Créer un date avec ce contact
+      const dateData = {
+        titre: `Date Test ${Date.now()}`,
         titreLowercase: `concert test ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         contactIds: [contactId], // Nouveau format unifié (array)
@@ -130,19 +130,19 @@ const ContactCreationTester = () => {
         updatedAt: new Date()
       };
 
-      const { id: concertId } = await createEntity('concerts', concertData);
+      const { id: dateId } = await createEntity('concerts', dateData);
 
       // Simuler la mise à jour bidirectionnelle
-      await updateBidirectionalRelation('concert', concertId, 'contact', contactId);
+      await updateBidirectionalRelation('concert', dateId, 'contact', contactId);
 
-      addTestResult('Test Contact via Concert', 'success', 
-        `Contact créé (${contactId}) et associé au concert (${concertId})`);
+      addTestResult('Test Contact via Date', 'success', 
+        `Contact créé (${contactId}) et associé au date (${dateId})`);
 
       // Vérifier les relations
-      await verifyBidirectionalRelation(concertId, contactId, 'concert-contact');
+      await verifyBidirectionalRelation(dateId, contactId, 'concert-contact');
 
     } catch (error) {
-      addTestResult('Test Contact via Concert', 'error', error.message);
+      addTestResult('Test Contact via Date', 'error', error.message);
     }
   };
 
@@ -242,9 +242,9 @@ const ContactCreationTester = () => {
 
       const { id: lieuId } = await createEntity('lieux', lieuData);
 
-      // Créer un concert (sans lieu - pas de carte)
-      const concertData = {
-        titre: `Concert Partagé ${Date.now()}`,
+      // Créer un date (sans lieu - pas de carte)
+      const dateData = {
+        titre: `Date Partagé ${Date.now()}`,
         titreLowercase: `concert partagé ${Date.now()}`.toLowerCase(),
         organizationId: currentOrganization.id,
         contactIds: [contactId], // Nouveau format unifié (array)
@@ -253,7 +253,7 @@ const ContactCreationTester = () => {
         updatedAt: new Date()
       };
 
-      const { id: concertId } = await createEntity('concerts', concertData);
+      const { id: dateId } = await createEntity('concerts', dateData);
 
       // Créer une structure
       const structureData = {
@@ -270,21 +270,21 @@ const ContactCreationTester = () => {
 
       // Mettre à jour les relations bidirectionnelles
       await updateBidirectionalRelation('lieu', lieuId, 'contact', contactId);
-      await updateBidirectionalRelation('concert', concertId, 'contact', contactId);
+      await updateBidirectionalRelation('concert', dateId, 'contact', contactId);
       await updateBidirectionalRelation('structure', structureId, 'contact', contactId);
 
       addTestResult('Test Contact Partagé', 'success', 
-        `Contact (${contactId}) associé au lieu (${lieuId}), concert (${concertId}) ET structure (${structureId})`);
+        `Contact (${contactId}) associé au lieu (${lieuId}), date (${dateId}) ET structure (${structureId})`);
 
       // Vérifier toutes les relations
       const contactDoc = await getDoc(doc(db, 'contacts', contactId));
       const contactFinal = contactDoc.data();
       
       if (contactFinal.lieuxIds?.includes(lieuId) && 
-          contactFinal.concertsIds?.includes(concertId) &&
+          contactFinal.concertsIds?.includes(dateId) &&
           contactFinal.structureId === structureId) {
         addTestResult('Vérification Contact Partagé', 'success', 
-          'Le contact contient bien les références au lieu, concert ET structure');
+          'Le contact contient bien les références au lieu, date ET structure');
       } else {
         addTestResult('Vérification Contact Partagé', 'error', 
           'Les relations bidirectionnelles ne sont pas complètes');
@@ -317,7 +317,7 @@ const ContactCreationTester = () => {
         snapshot.forEach(doc => {
           const data = doc.data();
           addTestResult('Contact trouvé', 'info', 
-            `${data.nom} - Lieux: ${data.lieuxIds?.length || 0}, Concerts: ${data.concertsIds?.length || 0}, Structure: ${data.structureNom || 'Aucune'}`);
+            `${data.nom} - Lieux: ${data.lieuxIds?.length || 0}, Dates: ${data.concertsIds?.length || 0}, Structure: ${data.structureNom || 'Aucune'}`);
         });
       } else {
         addTestResult('Test Visibilité Liste', 'warning', 
@@ -420,15 +420,15 @@ const ContactCreationTester = () => {
       }
 
       if (relationType === 'concert-contact') {
-        const concertDoc = await getDoc(doc(db, 'concerts', entityId));
-        const concertData = concertDoc.data();
+        const dateDoc = await getDoc(doc(db, 'concerts', entityId));
+        const dateData = dateDoc.data();
 
-        if (concertData.contactIds?.includes(contactId) && contactData.concertsIds?.includes(entityId)) {
+        if (dateData.contactIds?.includes(contactId) && contactData.concertsIds?.includes(entityId)) {
           addTestResult('Vérification Bidirectionnelle', 'success', 
-            'Relations concert ↔ contact correctement établies');
+            'Relations date ↔ contact correctement établies');
         } else {
           addTestResult('Vérification Bidirectionnelle', 'error', 
-            'Relations concert ↔ contact incomplètes');
+            'Relations date ↔ contact incomplètes');
         }
       }
 
@@ -463,7 +463,7 @@ const ContactCreationTester = () => {
       await testContactFromLieu();
       await new Promise(resolve => setTimeout(resolve, 1000)); // Délai entre les tests
 
-      await testContactFromConcert();
+      await testContactFromDate();
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       await testContactFromStructure();
@@ -550,7 +550,7 @@ const ContactCreationTester = () => {
                 <strong>Lieux:</strong> {testEntities.lieux.map(l => l.nom).join(', ')}
               </div>
               <div>
-                <strong>Concerts:</strong> {testEntities.concerts.map(c => c.titre || c.nom || c.id).join(', ')}
+                <strong>Dates:</strong> {testEntities.concerts.map(c => c.titre || c.nom || c.id).join(', ')}
               </div>
               <div>
                 <strong>Structures:</strong> {testEntities.structures.map(s => s.nom).join(', ')}

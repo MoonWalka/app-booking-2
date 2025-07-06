@@ -92,12 +92,12 @@ const TabManager = ({ children }) => {
                 className={styles.actionButton}
                 onClick={() => addTab({
                   id: 'concert-' + Date.now(),
-                  title: 'Concert - Jazz Festival',
-                  component: 'ConcertContent',
+                  title: 'Date - Jazz Festival',
+                  component: 'DateContent',
                   closable: true
                 })}
               >
-                Ouvrir un Concert
+                Ouvrir un Date
               </button>
             </div>
           </div>
@@ -129,7 +129,7 @@ const TabManager = ({ children }) => {
           </div>
         );
       
-      case 'ConcertContent':
+      case 'DateContent':
         return (
           <div className={styles.tabContent}>
             <h2>🎵 Jazz Festival</h2>

@@ -291,7 +291,7 @@ const FacturesTableView = ({
                   title: `Contrat`,
                   path: `/contrats/${facture.contratId}`,
                   component: 'ContratGenerationNewPage',
-                  params: { concertId: facture.contratId },
+                  params: { dateId: facture.contratId },
                   icon: 'bi-file-earmark-check'
                 });
               }

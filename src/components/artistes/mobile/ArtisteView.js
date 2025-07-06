@@ -27,7 +27,7 @@ const ArtisteView = ({ id }) => {
           };
           
           // Charger les concerts liés via la relation bidirectionnelle
-          const concertsRef = collection(db, 'concerts');
+          const concertsRef = collection(db, 'dates');
           const q = query(concertsRef, where('artisteId', '==', id));
           const concertsSnapshot = await getDocs(q);
           
@@ -126,7 +126,7 @@ const ArtisteView = ({ id }) => {
           onClick={() => setActiveTab('concerts')}
         >
           <i className="bi bi-calendar-event"></i>
-          <span>Concerts</span>
+          <span>Dates</span>
         </button>
         <button 
           className={`${styles.tabButton} ${activeTab === 'contrats' ? styles.active : ''}`}
@@ -209,10 +209,10 @@ const ArtisteView = ({ id }) => {
             {(!artiste.concertsAssocies || artiste.concertsAssocies.length === 0) ? (
               <div className={styles.emptyStateMobile}>
                 <i className="bi bi-calendar-x"></i>
-                <p>Aucun concert associé à cet artiste</p>
+                <p>Aucun date associé à cet artiste</p>
                 <button 
                   className="tc-btn tc-btn-primary tc-btn-sm"
-                  onClick={() => navigate('/concerts/nouveau')}
+                  onClick={() => navigate('/dates/nouveau')}
                 >
                   <i className="bi bi-plus-circle me-2"></i>
                   Créer un concert
@@ -221,10 +221,10 @@ const ArtisteView = ({ id }) => {
             ) : (
               <>
                 <div className={styles.concertsHeaderMobile}>
-                  <h3>Concerts ({artiste.concertsAssocies.length})</h3>
+                  <h3>Dates ({artiste.concertsAssocies.length})</h3>
                   <button 
                     className="tc-btn tc-btn-sm tc-btn-outline-primary"
-                    onClick={() => navigate('/concerts/nouveau')}
+                    onClick={() => navigate('/dates/nouveau')}
                   >
                     <i className="bi bi-plus-circle"></i>
                   </button>
@@ -233,11 +233,11 @@ const ArtisteView = ({ id }) => {
                 <div className={styles.concertsListMobile}>
                   {artiste.concertsAssocies.map(concert => (
                     <div 
-                      key={concert.id}
+                      key={date.id}
                       className={styles.concertItemMobile}
-                      onClick={() => navigate(`/concerts/${concert.id}`)}
+                      onClick={() => navigate(`/dates/${date.id}`)}
                     >
-                      <div className={styles.concertDate}>
+                      <div className={styles.dateDate}>
                         {new Date(concert.date).toLocaleDateString('fr-FR')}
                       </div>
                       <div className={styles.concertDetails}>
@@ -281,8 +281,8 @@ const ArtisteView = ({ id }) => {
                         {new Date(contrat.dateSignature).toLocaleDateString('fr-FR')}
                       </div>
                       <div className={styles.contratDetails}>
-                        <div className={styles.contratConcert}>
-                          {artiste.concertsAssocies?.find(c => c.id === contrat.concertId)?.lieu || 'Concert inconnu'}
+                        <div className={styles.contratDate}>
+                          {artiste.concertsAssocies?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
                         </div>
                       </div>
                       <div className={styles.contratActions}>
@@ -310,8 +310,8 @@ const ArtisteView = ({ id }) => {
                   <i className="bi bi-calendar-check"></i>
                 </div>
                 <div className={styles.statContent}>
-                  <h4>Concerts</h4>
-                  <p className={styles.statValue}>{artiste.stats?.nombreConcerts || 0}</p>
+                  <h4>Dates</h4>
+                  <p className={styles.statValue}>{artiste.stats?.nombreDates || 0}</p>
                 </div>
               </div>
               <div className={styles.statCardMobile}>

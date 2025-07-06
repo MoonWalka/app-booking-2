@@ -69,16 +69,16 @@ const useStructureDetails = (id) => {
         loadRelated: false // 🚫 Empêche les lieux de charger leurs relations (évite boucles)
       },
       {
-        name: 'concerts',
-        collection: 'concerts',
+        name: 'dates',
+        collection: 'dates',
         type: 'custom', // Utiliser la customQuery pour une logique plus complexe
-        essential: true, // Les concerts sont importants pour l'affichage
-        loadRelated: false // 🚫 Empêche les concerts de charger leurs relations (évite boucles)
+        essential: true, // Les dates sont importants pour l'affichage
+        loadRelated: false // 🚫 Empêche les dates de charger leurs relations (évite boucles)
       },
       {
         name: 'artistes',
         collection: 'artistes',
-        type: 'custom', // Charger via les concerts ou directement
+        type: 'custom', // Charger via les dates ou directement
         essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
         loadRelated: false // 🚫 Empêche les artistes de charger leurs relations (évite boucles)
       }
@@ -166,115 +166,115 @@ const useStructureDetails = (id) => {
         }
       },
 
-      concerts: async (structureData) => {
-        console.log('[DEBUG useStructureDetails] customQuery concerts appelée avec:', structureData);
+      dates: async (structureData) => {
+        console.log('[DEBUG useStructureDetails] customQuery dates appelée avec:', structureData);
         
         // Importer les services Firebase
         const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
         const { db } = await import('@/services/firebase-service');
         
-        let concerts = [];
+        let dates = [];
         
         try {
           // Méthode 1: Vérifier les IDs directs dans la structure (si ils existent)
-          const concertIds = structureData.concertIds || structureData.concertsAssocies || [];
+          const dateIds = structureData.dateIds || structureData.datesAssocies || [];
           
-          if (concertIds.length > 0) {
-            console.log('[DEBUG] Chargement concerts par IDs directs:', concertIds);
+          if (dateIds.length > 0) {
+            console.log('[DEBUG] Chargement dates par IDs directs:', dateIds);
             
-            // Charger chaque concert individuellement
-            const concertPromises = concertIds.map(async (concertId) => {
+            // Charger chaque date individuellement
+            const datePromises = dateIds.map(async (dateId) => {
               try {
-                // S'assurer que concertId est une string
-                const idString = typeof concertId === 'object' ? concertId.id : concertId;
+                // S'assurer que dateId est une string
+                const idString = typeof dateId === 'object' ? dateId.id : dateId;
                 if (!idString || typeof idString !== 'string') {
-                  console.error(`ID concert invalide:`, concertId);
+                  console.error(`ID date invalide:`, dateId);
                   return null;
                 }
                 
-                const concertRef = doc(db, 'concerts', idString);
-                const concertDoc = await getDoc(concertRef);
+                const dateRef = doc(db, 'dates', idString);
+                const dateDoc = await getDoc(dateRef);
                 
-                if (concertDoc.exists()) {
-                  return { id: concertDoc.id, ...concertDoc.data() };
+                if (dateDoc.exists()) {
+                  return { id: dateDoc.id, ...dateDoc.data() };
                 }
                 return null;
               } catch (error) {
-                console.error(`Erreur chargement concert ${concertId}:`, error);
+                console.error(`Erreur chargement date ${dateId}:`, error);
                 return null;
               }
             });
             
-            const results = await Promise.all(concertPromises);
-            concerts = results.filter(Boolean);
+            const results = await Promise.all(datePromises);
+            dates = results.filter(Boolean);
             
-            console.log('[DEBUG] Concerts trouvés par IDs directs:', concerts.length);
+            console.log('[DEBUG] Dates trouvés par IDs directs:', dates.length);
           }
           
-          // Méthode 2: Chercher par structureId (référence dans le concert)
-          const concertConstraints = [where('structureId', '==', structureData.id)];
+          // Méthode 2: Chercher par structureId (référence dans le date)
+          const dateConstraints = [where('structureId', '==', structureData.id)];
           if (currentOrganization?.id) {
-            concertConstraints.push(where('organizationId', '==', currentOrganization.id));
+            dateConstraints.push(where('organizationId', '==', currentOrganization.id));
           }
-          const concertsQuery = query(
-            collection(db, 'concerts'),
-            ...concertConstraints
+          const datesQuery = query(
+            collection(db, 'dates'),
+            ...dateConstraints
           );
           
-          const querySnapshot = await getDocs(concertsQuery);
+          const querySnapshot = await getDocs(datesQuery);
           
           querySnapshot.forEach((docSnapshot) => {
-            const concertData = { id: docSnapshot.id, ...docSnapshot.data() };
+            const dateData = { id: docSnapshot.id, ...docSnapshot.data() };
             
             // Éviter les doublons si déjà trouvé par ID direct
-            const existingConcert = concerts.find(c => c.id === concertData.id);
-            if (!existingConcert) {
-              concerts.push(concertData);
+            const existingDate = dates.find(c => c.id === dateData.id);
+            if (!existingDate) {
+              dates.push(dateData);
             }
           });
           
-          console.log('[DEBUG] Concerts trouvés par structureId:', concerts.length);
+          console.log('[DEBUG] Dates trouvés par structureId:', dates.length);
           
           // Méthode 3: Chercher par contact associé (si structure a des contacts)
-          // Cette recherche sera fait seulement si les deux premières méthodes n'ont pas trouvé de concerts
-          if (concerts.length === 0) {
+          // Cette recherche sera fait seulement si les deux premières méthodes n'ont pas trouvé de dates
+          if (dates.length === 0) {
             const contactIds = structureData.contactIds || structureData.contactsAssocies || [];
             
             if (contactIds.length > 0) {
-              console.log('[DEBUG] Recherche concerts via contacts associés:', contactIds);
+              console.log('[DEBUG] Recherche dates via contacts associés:', contactIds);
               
               for (const contactId of contactIds) {
-                const concertsByProgConstraints = [where('contactIds', 'array-contains', contactId)];
+                const datesByProgConstraints = [where('contactIds', 'array-contains', contactId)];
                 if (currentOrganization?.id) {
-                  concertsByProgConstraints.push(where('organizationId', '==', currentOrganization.id));
+                  datesByProgConstraints.push(where('organizationId', '==', currentOrganization.id));
                 }
-                const concertsByProgQuery = query(
-                  collection(db, 'concerts'),
-                  ...concertsByProgConstraints
+                const datesByProgQuery = query(
+                  collection(db, 'dates'),
+                  ...datesByProgConstraints
                 );
                 
-                const progConcertsSnapshot = await getDocs(concertsByProgQuery);
+                const progDatesSnapshot = await getDocs(datesByProgQuery);
                 
-                progConcertsSnapshot.forEach((docSnapshot) => {
-                  const concertData = { id: docSnapshot.id, ...docSnapshot.data() };
+                progDatesSnapshot.forEach((docSnapshot) => {
+                  const dateData = { id: docSnapshot.id, ...docSnapshot.data() };
                   
                   // Éviter les doublons
-                  const existingConcert = concerts.find(c => c.id === concertData.id);
-                  if (!existingConcert) {
-                    concerts.push(concertData);
+                  const existingDate = dates.find(c => c.id === dateData.id);
+                  if (!existingDate) {
+                    dates.push(dateData);
                   }
                 });
               }
               
-              console.log('[DEBUG] Concerts trouvés via contacts:', concerts.length);
+              console.log('[DEBUG] Dates trouvés via contacts:', dates.length);
             }
           }
           
-          console.log('[DEBUG] Total concerts retournés:', concerts.length);
-          return concerts;
+          console.log('[DEBUG] Total dates retournés:', dates.length);
+          return dates;
           
         } catch (error) {
-          console.error('[ERROR] useStructureDetails customQuery concerts:', error);
+          console.error('[ERROR] useStructureDetails customQuery dates:', error);
           return [];
         }
       },
@@ -344,40 +344,40 @@ const useStructureDetails = (id) => {
             }
           });
           
-          // Méthode 3: NOUVELLE - Via les concerts de cette structure
-          console.log('[useStructureDetails] 🔍 Méthode 3: Recherche lieux via concerts de la structure');
-          const concertConstraints2 = [where('structureId', '==', structureData.id)];
+          // Méthode 3: NOUVELLE - Via les dates de cette structure
+          console.log('[useStructureDetails] 🔍 Méthode 3: Recherche lieux via dates de la structure');
+          const dateConstraints2 = [where('structureId', '==', structureData.id)];
           if (currentOrganization?.id) {
-            concertConstraints2.push(where('organizationId', '==', currentOrganization.id));
+            dateConstraints2.push(where('organizationId', '==', currentOrganization.id));
           }
-          const concertsQuery = query(
-            collection(db, 'concerts'),
-            ...concertConstraints2
+          const datesQuery = query(
+            collection(db, 'dates'),
+            ...dateConstraints2
           );
           
-          const concertsSnapshot = await getDocs(concertsQuery);
+          const datesSnapshot = await getDocs(datesQuery);
           
-          concertsSnapshot.forEach((docSnapshot) => {
-            const concertData = docSnapshot.data();
-            if (concertData.lieuId) {
+          datesSnapshot.forEach((docSnapshot) => {
+            const dateData = docSnapshot.data();
+            if (dateData.lieuId) {
               // Ajouter le lieu à charger (on le chargera après)
-              console.log('[useStructureDetails] 🎵 Concert trouvé avec lieu:', concertData.lieuId);
+              console.log('[useStructureDetails] 🎵 Date trouvé avec lieu:', dateData.lieuId);
             }
           });
           
-          // Charger tous les lieux des concerts de cette structure
-          const lieuxDesConcerts = [];
-          const concertsArray = [];
-          concertsSnapshot.forEach((docSnapshot) => {
-            const concertData = docSnapshot.data();
-            concertsArray.push(concertData);
-            if (concertData.lieuId) {
-              lieuxDesConcerts.push(concertData.lieuId);
+          // Charger tous les lieux des dates de cette structure
+          const lieuxDesDates = [];
+          const datesArray = [];
+          datesSnapshot.forEach((docSnapshot) => {
+            const dateData = docSnapshot.data();
+            datesArray.push(dateData);
+            if (dateData.lieuId) {
+              lieuxDesDates.push(dateData.lieuId);
             }
           });
           
           // Supprimer les doublons et charger les lieux
-          const uniqueLieuxIds = [...new Set(lieuxDesConcerts)];
+          const uniqueLieuxIds = [...new Set(lieuxDesDates)];
           for (const lieuId of uniqueLieuxIds) {
             try {
               const lieuDoc = await getDoc(doc(db, 'lieux', lieuId));
@@ -388,11 +388,11 @@ const useStructureDetails = (id) => {
                 const existingLieu = lieux.find(l => l.id === lieuData.id);
                 if (!existingLieu) {
                   lieux.push(lieuData);
-                  console.log('[useStructureDetails] ✅ Lieu trouvé via concerts:', lieuData.nom);
+                  console.log('[useStructureDetails] ✅ Lieu trouvé via dates:', lieuData.nom);
                 }
               }
             } catch (error) {
-              console.error(`Erreur chargement lieu via concerts ${lieuId}:`, error);
+              console.error(`Erreur chargement lieu via dates ${lieuId}:`, error);
             }
           }
           
@@ -448,24 +448,24 @@ const useStructureDetails = (id) => {
             console.log('[DEBUG] Artistes trouvés par IDs directs:', artistes.length);
           }
           
-          // Méthode 2: Charger les artistes via les concerts de cette structure
-          // D'abord récupérer les concerts de cette structure
-          const concertConstraints3 = [where('structureId', '==', structureData.id)];
+          // Méthode 2: Charger les artistes via les dates de cette structure
+          // D'abord récupérer les dates de cette structure
+          const dateConstraints3 = [where('structureId', '==', structureData.id)];
           if (currentOrganization?.id) {
-            concertConstraints3.push(where('organizationId', '==', currentOrganization.id));
+            dateConstraints3.push(where('organizationId', '==', currentOrganization.id));
           }
-          const concertsQuery = query(
-            collection(db, 'concerts'),
-            ...concertConstraints3
+          const datesQuery = query(
+            collection(db, 'dates'),
+            ...dateConstraints3
           );
           
-          const concertsSnapshot = await getDocs(concertsQuery);
+          const datesSnapshot = await getDocs(datesQuery);
           const artisteIds2 = [];
           
-          concertsSnapshot.forEach((docSnapshot) => {
-            const concertData = docSnapshot.data();
-            if (concertData.artisteId) {
-              artisteIds2.push(concertData.artisteId);
+          datesSnapshot.forEach((docSnapshot) => {
+            const dateData = docSnapshot.data();
+            if (dateData.artisteId) {
+              artisteIds2.push(dateData.artisteId);
             }
           });
           
@@ -473,7 +473,7 @@ const useStructureDetails = (id) => {
           const uniqueArtisteIds = [...new Set(artisteIds2)];
           
           if (uniqueArtisteIds.length > 0) {
-            console.log('[DEBUG] Chargement artistes via concerts:', uniqueArtisteIds);
+            console.log('[DEBUG] Chargement artistes via dates:', uniqueArtisteIds);
             
             const artistePromises2 = uniqueArtisteIds.map(async (artisteId) => {
               try {
@@ -491,7 +491,7 @@ const useStructureDetails = (id) => {
                 }
                 return null;
               } catch (error) {
-                console.error(`Erreur chargement artiste via concert ${artisteId}:`, error);
+                console.error(`Erreur chargement artiste via date ${artisteId}:`, error);
                 return null;
               }
             });
@@ -500,7 +500,7 @@ const useStructureDetails = (id) => {
             const newArtistes = results2.filter(Boolean);
             artistes = [...artistes, ...newArtistes];
             
-            console.log('[DEBUG] Artistes trouvés via concerts:', newArtistes.length);
+            console.log('[DEBUG] Artistes trouvés via dates:', newArtistes.length);
           }
           
           console.log('[DEBUG] Total artistes retournés:', artistes.length);
@@ -633,8 +633,8 @@ const useStructureDetails = (id) => {
     loadingContacts: detailsHook.loadingRelated?.contacts || false,
     lieux: detailsHook.relatedData?.lieux || [],
     loadingLieux: detailsHook.loadingRelated?.lieux || false,
-    concerts: detailsHook.relatedData?.concerts || [],
-    loadingConcerts: detailsHook.loadingRelated?.concerts || false,
+    dates: detailsHook.relatedData?.dates || [],
+    loadingDates: detailsHook.loadingRelated?.dates || false,
     artistes: detailsHook.relatedData?.artistes || [],
     loadingArtistes: detailsHook.loadingRelated?.artistes || false
   };

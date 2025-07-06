@@ -82,7 +82,7 @@ import useGenericFilteredSearch from '../search/useGenericFilteredSearch';
  * @complexity HIGH
  * @businessCritical true
  * @generic true
- * @replaces useConcertsList (SUPPRIMÉ), useContactsList, useEntityList
+ * @replaces useDatesList (SUPPRIMÉ), useContactsList, useEntityList
  */
 const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo

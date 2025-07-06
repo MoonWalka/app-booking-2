@@ -39,9 +39,9 @@ const GenericDetailViewTest = () => {
     }
   };
   
-  const demoConcert = {
+  const demoDate = {
     id: 'concert-demo-1',
-    titre: 'Concert de Printemps',
+    titre: 'Date de Printemps',
     date: '2025-03-15',
     heure: '20:30',
     lieu: demoLieu,
@@ -129,9 +129,9 @@ const GenericDetailViewTest = () => {
             </div>
             
             <div className={styles.cardWrapper}>
-              <h3>Concert</h3>
+              <h3>Date</h3>
               <RelationCard 
-                entity={demoConcert}
+                entity={demoDate}
                 type="concert"
                 onClick={() => alert('Clic sur concert')}
               />
@@ -218,8 +218,8 @@ const GenericDetailViewTest = () => {
               </Card>
               
               <Card>
-                <h3><i className="bi bi-calendar-event"></i> Concerts associés (1)</h3>
-                <RelationCard entity={demoConcert} type="concert" />
+                <h3><i className="bi bi-calendar-event"></i> Dates associés (1)</h3>
+                <RelationCard entity={demoDate} type="concert" />
               </Card>
             </div>
           </div>
@@ -263,15 +263,15 @@ const GenericDetailViewTest = () => {
               </Card>
               
               <Card>
-                <h3><i className="bi bi-calendar-event"></i> Concerts programmés (3)</h3>
+                <h3><i className="bi bi-calendar-event"></i> Dates programmés (3)</h3>
                 <div className={styles.relationsList}>
-                  <RelationCard entity={demoConcert} type="concert" />
+                  <RelationCard entity={demoDate} type="concert" />
                   <RelationCard 
-                    entity={{...demoConcert, id: 'concert-2', titre: 'Festival d\'été', date: '2025-07-20'}} 
+                    entity={{...demoDate, id: 'concert-2', titre: 'Festival d\'été', date: '2025-07-20'}} 
                     type="concert" 
                   />
                   <RelationCard 
-                    entity={{...demoConcert, id: 'concert-3', titre: 'Soirée Jazz', date: '2025-09-10'}} 
+                    entity={{...demoDate, id: 'concert-3', titre: 'Soirée Jazz', date: '2025-09-10'}} 
                     type="concert" 
                   />
                 </div>

@@ -4,8 +4,8 @@ import { useContactActionsRelational } from '@/hooks/contacts/useContactActionsR
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { personnesService } from '@/services/contacts/personnesService';
-import { concertsService } from '@/services/concertService';
-import { getPreContratsByConcert } from '@/services/preContratService';
+import { datesService } from '@/services/dateService';
+import { getPreContratsByDate } from '@/services/preContratService';
 import { useAuth } from '@/context/AuthContext';
 import { useOrganization } from '@/context/OrganizationContext';
 import EntityViewTabs from '@/components/common/EntityViewTabs';
@@ -275,7 +275,7 @@ function ContactViewTabs({ id, viewType = null }) {
       structure: `/structures/${entityId}`,
       contact: `/contacts/${entityId}`,
       lieu: `/lieux/${entityId}`,
-      concert: `/concerts/${entityId}`,
+      concert: `/dates/${entityId}`,
       artiste: `/artistes/${entityId}`
     };
     
@@ -512,14 +512,14 @@ function ContactViewTabs({ id, viewType = null }) {
       // Essayer d'abord avec l'ID de la structure si disponible
       if (cleanId && entityType === 'structure') {
         console.log('🔎 [ContactViewTabs] Tentative 1: Chargement par structureId:', cleanId);
-        dates = await concertsService.getConcertsByStructureId(currentOrganization.id, cleanId);
+        dates = await datesService.getDatesByStructureId(currentOrganization.id, cleanId);
         console.log(`  → Résultat: ${dates.length} dates trouvées`);
       }
       
       // Si pas de résultats ou pas d'ID, essayer avec le nom
       if (dates.length === 0 && structureName) {
         console.log('🔎 [ContactViewTabs] Tentative 2: Chargement par structureName:', structureName);
-        dates = await concertsService.getConcertsByStructure(currentOrganization.id, structureName);
+        dates = await datesService.getDatesByStructure(currentOrganization.id, structureName);
         console.log(`  → Résultat: ${dates.length} dates trouvées`);
       }
       
@@ -529,7 +529,7 @@ function ContactViewTabs({ id, viewType = null }) {
       const datesWithPreContrat = await Promise.all(
         (dates || []).map(async (date) => {
           try {
-            const preContrats = await getPreContratsByConcert(date.id);
+            const preContrats = await getPreContratsByDate(date.id);
             if (preContrats && preContrats.length > 0) {
               // Prendre le plus récent
               const latestPreContrat = preContrats.sort((a, b) => {

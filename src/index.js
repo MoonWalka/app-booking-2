@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
     trackHooks: true,
     logOnDifferentValues: true,
     collapseGroups: true,
-    include: [/.*Artiste.*/, /.*Concert.*/, /.*Generic.*/],
+    include: [/.*Artiste.*/, /.*Date.*/, /.*Generic.*/],
     exclude: [/^Connect/, /^Router/]
   });
 }

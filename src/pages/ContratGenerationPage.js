@@ -7,9 +7,9 @@ import ContratGenerator from '@/components/contrats/desktop/ContratGenerator';
 import '@styles/index.css';
 
 const ContratGenerationPage = () => {
-  const { concertId } = useParams();
+  const { dateId } = useParams();
   const navigate = useNavigate();
-  const [concert, setConcert] = useState(null);
+  const [concert, setDate] = useState(null);
   const [contact, setContact] = useState(null);
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
@@ -20,52 +20,52 @@ const ContratGenerationPage = () => {
     const fetchData = async () => {
       try {
         // Récupérer les données du concert
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (!concertDoc.exists()) {
-          setError('Concert non trouvé');
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (!dateDoc.exists()) {
+          setError('Date non trouvé');
           setLoading(false);
           return;
         }
         
-        const concertData = { id: concertId, ...concertDoc.data() };
-        setConcert(concertData);
+        const dateData = { id: dateId, ...dateDoc.data() };
+        setDate(dateData);
 
         // Récupérer les données du contact si disponible
-        if (concertData.contactId) {
-          const contactDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
+        if (dateData.contactId) {
+          const contactDoc = await getDoc(doc(db, 'contacts', dateData.contactId));
           if (contactDoc.exists()) {
             setContact({ id: contactDoc.id, ...contactDoc.data() });
           }
         }
 
         // Récupérer les données de l'artiste si disponible
-        if (concertData.artisteId) {
-          const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+        if (dateData.artisteId) {
+          const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
           if (artisteDoc.exists()) {
             setArtiste({ id: artisteDoc.id, ...artisteDoc.data() });
           }
-        } else if (concertData.artisteNom) {
+        } else if (dateData.artisteNom) {
           // Si pas d'artisteId, créer un objet artiste avec les données du concert
           setArtiste({
-            nom: concertData.artisteNom,
-            genre: concertData.artisteGenre || '',
+            nom: dateData.artisteNom,
+            genre: dateData.artisteGenre || '',
             contact: ''
           });
         }
 
         // Récupérer les données du lieu si disponible
-        if (concertData.lieuId) {
-          const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+        if (dateData.lieuId) {
+          const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
           if (lieuDoc.exists()) {
             setLieu({ id: lieuDoc.id, ...lieuDoc.data() });
           }
-        } else if (concertData.lieuNom) {
+        } else if (dateData.lieuNom) {
           // Si pas de lieuId, créer un objet lieu avec les données du concert
           setLieu({
-            nom: concertData.lieuNom,
-            adresse: concertData.lieuAdresse || '',
-            ville: concertData.lieuVille || '',
-            codePostal: concertData.lieuCodePostal || '',
+            nom: dateData.lieuNom,
+            adresse: dateData.lieuAdresse || '',
+            ville: dateData.lieuVille || '',
+            codePostal: dateData.lieuCodePostal || '',
             capacite: ''
           });
         }
@@ -81,7 +81,7 @@ const ContratGenerationPage = () => {
     };
 
     fetchData();
-  }, [concertId]);
+  }, [dateId]);
 
   if (loading) {
     return (
@@ -115,7 +115,7 @@ const ContratGenerationPage = () => {
             <h1 className="h3">Génération de contrat</h1>
             <button 
               className="btn btn-secondary"
-              onClick={() => navigate(`/concerts/${concertId}`)}
+              onClick={() => navigate(`/dates/${dateId}`)}
             >
               <i className="bi bi-arrow-left me-2"></i>
               Retour au concert

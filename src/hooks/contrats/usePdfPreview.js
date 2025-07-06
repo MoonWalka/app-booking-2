@@ -38,8 +38,8 @@ export const usePdfPreview = () => {
     }
     
     if (!data.concert) {
-      console.error('Concert manquant dans les données:', { data, concert: data.concert });
-      alert('Les données du concert sont manquantes.');
+      console.error('Date manquant dans les données:', { data, concert: data.concert });
+      alert('Les données du date sont manquantes.');
       return;
     }
 
@@ -78,8 +78,8 @@ export const usePdfPreview = () => {
       }
       
       if (!data.concert) {
-        console.error('Concert manquant pour le téléchargement:', { data, concert: data.concert });
-        alert('Les données du concert sont manquantes.');
+        console.error('Date manquant pour le téléchargement:', { data, concert: data.concert });
+        alert('Les données du date sont manquantes.');
         return;
       }
 
@@ -87,11 +87,11 @@ export const usePdfPreview = () => {
       const generateFileName = () => {
         const parts = [];
         
-        // Date du concert au format YYYYMMDD
+        // Date du date au format YYYYMMDD
         if (data.concert?.date) {
-          const date = data.concert.date.seconds 
-            ? new Date(data.concert.date.seconds * 1000) 
-            : new Date(data.concert.date);
+          const date = data.date.date.seconds 
+            ? new Date(data.date.date.seconds * 1000) 
+            : new Date(data.date.date);
           const year = date.getFullYear();
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const day = String(date.getDate()).padStart(2, '0');

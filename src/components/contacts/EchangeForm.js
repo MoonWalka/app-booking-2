@@ -16,7 +16,7 @@ function EchangeForm({ echange, onSubmit, onCancel, concerts = [], isSubmitting 
     sujet: '',
     contenu: '',
     rappel: '',
-    concertId: ''
+    dateId: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -39,7 +39,7 @@ function EchangeForm({ echange, onSubmit, onCancel, concerts = [], isSubmitting 
         sujet: echange.sujet || '',
         contenu: echange.contenu || '',
         rappel: rappelValue,
-        concertId: echange.concertId || ''
+        dateId: echange.dateId || ''
       });
     }
   }, [echange]);
@@ -93,7 +93,7 @@ function EchangeForm({ echange, onSubmit, onCancel, concerts = [], isSubmitting 
       ...formData,
       date: new Date(formData.date),
       rappel: formData.rappel ? new Date(formData.rappel) : null,
-      concertId: formData.concertId || null
+      dateId: formData.dateId || null
     };
 
     console.log('[EchangeForm] Soumission avec données:', dataToSubmit);
@@ -146,24 +146,24 @@ function EchangeForm({ echange, onSubmit, onCancel, concerts = [], isSubmitting 
         />
 
         <FormField 
-          label="Concert lié (optionnel)"
+          label="Date lié (optionnel)"
           type="select"
-          name="concertId"
-          value={formData.concertId}
+          name="dateId"
+          value={formData.dateId}
           onChange={handleChange}
         >
           <option value="">Aucun concert</option>
           {concerts && concerts.length > 0 ? (
             concerts.map(concert => {
-              const concertDate = concert.date?.toDate ? concert.date.toDate() : new Date(concert.date);
+              const dateDate = concert.date?.toDate ? concert.date.toDate() : new Date(concert.date);
               return (
-                <option key={concert.id} value={concert.id}>
-                  {concert.titre || 'Sans titre'} - {concertDate.toLocaleDateString('fr-FR')}
+                <option key={date.id} value={date.id}>
+                  {concert.titre || 'Sans titre'} - {dateDate.toLocaleDateString('fr-FR')}
                 </option>
               );
             })
           ) : (
-            <option disabled>Aucun concert disponible</option>
+            <option disabled>Aucun date disponible</option>
           )}
         </FormField>
       </div>

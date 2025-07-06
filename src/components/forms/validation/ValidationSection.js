@@ -16,9 +16,9 @@ const ValidationSection = ({
   infoText = null,
   structureFieldsMapping = false
 }) => {
-  // Special case for concert information
+  // Special case for date information
   if (!fields && title === "Informations du concert" && existingData) {
-    const concert = existingData;
+    const date = existingData;
     return (
       <div className={styles.section}>
         <div className={`${styles.header} ${headerClass}`}>
@@ -29,22 +29,22 @@ const ValidationSection = ({
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Date</div>
               <div className={styles.infoValue}>
-                {concert.date ? new Date(concert.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée'}
+                {date.date ? new Date(date.date.seconds * 1000).toLocaleDateString('fr-FR') : 'Non spécifiée'}
               </div>
             </div>
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Montant</div>
               <div className={styles.infoValue}>
-                {concert.montant ? new Intl.NumberFormat('fr-FR', { 
+                {date.montant ? new Intl.NumberFormat('fr-FR', { 
                   style: 'currency', 
                   currency: 'EUR' 
-                }).format(concert.montant) : '0,00 €'}
+                }).format(date.montant) : '0,00 €'}
               </div>
             </div>
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Lieu</div>
               <div className={styles.infoValue}>
-                {concert.lieuNom || 'Non spécifié'}
+                {date.lieuNom || 'Non spécifié'}
               </div>
             </div>
           </div>

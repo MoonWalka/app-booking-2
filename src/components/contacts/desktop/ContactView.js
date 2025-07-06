@@ -13,7 +13,7 @@ import styles from './ContactView.module.css';
 
 /**
  * Composant des détails d'un contact - Interface moderne et épurée
- * Aligné avec l'architecture de ConcertView et LieuView
+ * Aligné avec l'architecture de DateView et LieuView
  */
 function ContactView({ id: propId }) {
   const { id: urlId } = useParams();
@@ -27,7 +27,7 @@ function ContactView({ id: propId }) {
     contact,
     structure,
     lieux,
-    concerts,
+    dates,
     artistes,
     loading,
     error
@@ -49,7 +49,7 @@ function ContactView({ id: propId }) {
       nom: structure.nom 
     } : null,
     lieuxCount: lieux?.length || 0,
-    concertsCount: concerts?.length || 0
+    datesCount: dates?.length || 0
   });
   
   // Debug - Affichage complet du contact pour voir la structure
@@ -123,7 +123,7 @@ function ContactView({ id: propId }) {
     const routes = {
       structure: `/structures/${entityId}`,
       lieu: `/lieux/${entityId}`,
-      concert: `/concerts/${entityId}`,
+      date: `/dates/${entityId}`,
       artiste: `/artistes/${entityId}`
     };
     
@@ -192,7 +192,7 @@ function ContactView({ id: propId }) {
         </div>
 
         {/* Entités liées */}
-        {(structure || lieux?.length > 0 || concerts?.length > 0 || artistes?.length > 0) && (
+        {(structure || lieux?.length > 0 || dates?.length > 0 || artistes?.length > 0) && (
           <div className={styles.entitiesSection}>
             <p className={styles.entitiesLabel}>Entités liées</p>
             <div className={styles.entitiesGrid}>
@@ -221,14 +221,14 @@ function ContactView({ id: propId }) {
                 />
               ))}
               
-              {/* Premiers concerts */}
-              {concerts?.slice(0, 2).map((concert) => (
+              {/* Premières dates */}
+              {dates?.slice(0, 2).map((date) => (
                 <EntityCard
-                  key={concert.id}
-                  entityType="concert"
-                  name={concert.titre || 'Concert'}
-                  subtitle={`Concert (${concerts.length})`}
-                  onClick={() => navigateToEntity('concert', concert.id)}
+                  key={date.id}
+                  entityType="date"
+                  name={date.titre || 'Date'}
+                  subtitle={`Date (${dates.length})`}
+                  onClick={() => navigateToEntity('date', date.id)}
                 />
               ))}
               
@@ -259,7 +259,7 @@ function ContactView({ id: propId }) {
       )}
 
       {/* Historique des échanges */}
-      <HistoriqueEchanges contactId={id} concerts={concerts} />
+      <HistoriqueEchanges contactId={id} dates={dates} />
     </div>
   );
 }

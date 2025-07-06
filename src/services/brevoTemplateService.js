@@ -64,17 +64,17 @@ class BrevoTemplateService {
 
   /**
    * Envoie un email formulaire programmateur avec template Brevo
-   * @param {Object} concert - Données du concert
+   * @param {Object} date - Données du concert
    * @param {Object} contact - Données du contact
    * @param {string} lienFormulaire - URL du formulaire
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendFormulaireEmail(concert, contact, lienFormulaire) {
+  async sendFormulaireEmail(date, contact, lienFormulaire) {
     try {
       const { userId, organizationId } = this.getCurrentUserInfo();
 
       // Transformer les données TourCraft en variables Brevo
-      const variables = formatFormulaireVariables(concert, contact, lienFormulaire);
+      const variables = formatFormulaireVariables(date, contact, lienFormulaire);
       
       // Appliquer les valeurs par défaut
       const finalVariables = applyDefaultVariables(variables);
@@ -88,8 +88,8 @@ class BrevoTemplateService {
       debugLog('[BrevoTemplateService] Envoi email formulaire:', {
         to: contact.email,
         variables: finalVariables,
-        concert: concert?.nom || concert?.titre || concert?.title || 'nom non trouvé',
-        concertKeys: concert ? Object.keys(concert) : 'concert null'
+        date: date?.nom || date?.titre || date?.title || 'nom non trouvé',
+        dateKeys: date ? Object.keys(date) : 'date null'
       }, 'info');
 
       // Essayer d'abord l'envoi direct via Brevo (plus fiable)
@@ -129,17 +129,17 @@ class BrevoTemplateService {
 
   /**
    * Envoie un email de relance documents avec template Brevo
-   * @param {Object} concert - Données du concert
+   * @param {Object} date - Données du concert
    * @param {Object} contact - Données du contact
    * @param {Array} documentsManquants - Liste des documents manquants
    * @param {number} nombreRelance - Numéro de la relance
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendRelanceEmail(concert, contact, documentsManquants = [], nombreRelance = 1) {
+  async sendRelanceEmail(date, contact, documentsManquants = [], nombreRelance = 1) {
     try {
       const { userId, organizationId } = this.getCurrentUserInfo();
 
-      const variables = formatRelanceVariables(concert, contact, documentsManquants, nombreRelance);
+      const variables = formatRelanceVariables(date, contact, documentsManquants, nombreRelance);
       const finalVariables = applyDefaultVariables(variables);
 
       const validation = validateRequiredVariables(finalVariables, RequiredVariables.relance);
@@ -180,12 +180,12 @@ class BrevoTemplateService {
    * TEMPORAIREMENT DÉSACTIVÉ: Cette fonction n'est pas appelée actuellement
    * Conservée pour réactivation future avec une solution API stable
    * 
-   * @param {Object} concert - Données du concert
+   * @param {Object} date - Données du concert
    * @param {Object} contact - Données du contact
    * @param {Object} contrat - Données du contrat
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendContratEmail(concert, contact, contrat) {
+  async sendContratEmail(date, contact, contrat) {
     try {
       debugLog('[BrevoTemplateService] === DÉBUT SEND CONTRAT EMAIL ===');
       debugLog('[BrevoTemplateService] 1. Récupération userInfo...');
@@ -193,7 +193,7 @@ class BrevoTemplateService {
       debugLog('[BrevoTemplateService] 2. UserInfo récupéré:', { userId, organizationId });
 
       debugLog('[BrevoTemplateService] 3. Formatage variables contrat...');
-      const variables = formatContratVariables(concert, contact, contrat);
+      const variables = formatContratVariables(date, contact, contrat);
       debugLog('[BrevoTemplateService] 4. Variables formatées:', variables);
       
       const finalVariables = applyDefaultVariables(variables);
@@ -212,7 +212,7 @@ class BrevoTemplateService {
         variables: finalVariables,
         contrat: contrat?.type,
         contratData: contrat,
-        concertData: concert,
+        dateData: date,
         contactData: contact
       }, 'info');
 
@@ -269,17 +269,17 @@ class BrevoTemplateService {
   }
 
   /**
-   * Envoie un email de confirmation concert avec template Brevo
-   * @param {Object} concert - Données du concert
+   * Envoie un email de confirmation date avec template Brevo
+   * @param {Object} date - Données du concert
    * @param {Object} contact - Données du contact
-   * @param {Object} detailsTechniques - Détails techniques du concert
+   * @param {Object} detailsTechniques - Détails techniques de la date
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
-  async sendConfirmationEmail(concert, contact, detailsTechniques = {}) {
+  async sendConfirmationEmail(date, contact, detailsTechniques = {}) {
     try {
       const { userId, organizationId } = this.getCurrentUserInfo();
 
-      const variables = formatConfirmationVariables(concert, contact, detailsTechniques);
+      const variables = formatConfirmationVariables(date, contact, detailsTechniques);
       const finalVariables = applyDefaultVariables(variables);
 
       const validation = validateRequiredVariables(finalVariables, RequiredVariables.confirmation);
@@ -290,7 +290,7 @@ class BrevoTemplateService {
       debugLog('[BrevoTemplateService] Envoi email confirmation:', {
         to: contact.email,
         variables: finalVariables,
-        concert: concert.nom
+        date: date.nom
       }, 'info');
 
       const result = await sendUnifiedEmailFunction({
@@ -317,7 +317,7 @@ class BrevoTemplateService {
    * Envoie un email à plusieurs contacts avec le même template
    * @param {string} templateName - Nom du template ('formulaire', 'relance', 'contrat', 'confirmation')
    * @param {Array} contacts - Liste des contacts
-   * @param {Object} baseData - Données de base (concert, etc.)
+   * @param {Object} baseData - Données de base (date, etc.)
    * @param {Object} templateSpecificData - Données spécifiques au template
    * @returns {Promise<Array>} - Résultats des envois
    */
@@ -342,7 +342,7 @@ class BrevoTemplateService {
           switch (templateName) {
             case 'formulaire':
               result = await this.sendFormulaireEmail(
-                baseData.concert, 
+                baseData.date, 
                 contact, 
                 templateSpecificData.lienFormulaire
               );
@@ -350,7 +350,7 @@ class BrevoTemplateService {
               
             case 'relance':
               result = await this.sendRelanceEmail(
-                baseData.concert,
+                baseData.date,
                 contact,
                 templateSpecificData.documentsManquants,
                 templateSpecificData.nombreRelance
@@ -359,7 +359,7 @@ class BrevoTemplateService {
               
             case 'contrat':
               result = await this.sendContratEmail(
-                baseData.concert,
+                baseData.date,
                 contact,
                 templateSpecificData.contrat
               );
@@ -367,7 +367,7 @@ class BrevoTemplateService {
               
             case 'confirmation':
               result = await this.sendConfirmationEmail(
-                baseData.concert,
+                baseData.date,
                 contact,
                 templateSpecificData.detailsTechniques
               );
@@ -667,7 +667,7 @@ class BrevoTemplateService {
       switch (templateName) {
         case 'formulaire':
           variables = formatFormulaireVariables(
-            demoData.concert, 
+            demoData.date, 
             { ...demoData.contact, email: emailTest }, 
             demoData.lienFormulaire
           );
@@ -675,7 +675,7 @@ class BrevoTemplateService {
           
         case 'relance':
           variables = formatRelanceVariables(
-            demoData.concert,
+            demoData.date,
             { ...demoData.contact, email: emailTest },
             demoData.documentsManquants,
             1
@@ -684,7 +684,7 @@ class BrevoTemplateService {
           
         case 'contrat':
           variables = formatContratVariables(
-            demoData.concert,
+            demoData.date,
             { ...demoData.contact, email: emailTest },
             demoData.contrat
           );
@@ -692,7 +692,7 @@ class BrevoTemplateService {
           
         case 'confirmation':
           variables = formatConfirmationVariables(
-            demoData.concert,
+            demoData.date,
             { ...demoData.contact, email: emailTest },
             demoData.detailsTechniques
           );
@@ -750,7 +750,7 @@ class BrevoTemplateService {
     const futureDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000); // +30 jours
 
     return {
-      concert: {
+      date: {
         nom: 'Festival Rock Démo 2025',
         date: futureDate,
         heure: '20:30',

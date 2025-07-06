@@ -109,7 +109,7 @@ function TestWorkflowButton({ onDataGenerated, variant = 'outline-primary', size
 
       // 4. Créer un concert
       const formToken = uuidv4();
-      const concertData = {
+      const dateData = {
         date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Dans 30 jours
         heure: '20:30',
         // Structure (nouveau format)
@@ -124,7 +124,7 @@ function TestWorkflowButton({ onDataGenerated, variant = 'outline-primary', size
         artisteId: artisteRef.id,
         artisteNom: artisteData.nom,
         projetNom: artisteData.projets[0].nom,
-        libelle: `[TEST] Concert de test`,
+        libelle: `[TEST] Date de test`,
         genre: artisteData.genre,
         cachetBrut: 1000,
         statut: 'En cours',
@@ -137,27 +137,27 @@ function TestWorkflowButton({ onDataGenerated, variant = 'outline-primary', size
         updatedAt: serverTimestamp()
       };
 
-      const concertRef = await addDoc(collection(db, 'concerts'), concertData);
-      console.log('✅ Concert créé:', concertRef.id);
+      const concertRef = await addDoc(collection(db, 'dates'), dateData);
+      console.log('✅ Date créé:', concertRef.id);
       
       // Debug : Vérifier exactement ce qui a été créé
-      console.log('📊 Données du concert créé :', {
+      console.log('📊 Données du date créé :', {
         id: concertRef.id,
-        date: concertData.date,
-        organizationId: concertData.organizationId,
-        structureId: concertData.structureId,
-        structureNom: concertData.structureNom,
-        organisateurId: concertData.organisateurId,
-        organisateurNom: concertData.organisateurNom,
-        lieuId: concertData.lieuId,
-        artisteId: concertData.artisteId,
-        artisteNom: concertData.artisteNom
+        date: dateData.date,
+        organizationId: dateData.organizationId,
+        structureId: dateData.structureId,
+        structureNom: dateData.structureNom,
+        organisateurId: dateData.organisateurId,
+        organisateurNom: dateData.organisateurNom,
+        lieuId: dateData.lieuId,
+        artisteId: dateData.artisteId,
+        artisteNom: dateData.artisteNom
       });
 
       // Vérifier immédiatement si la date est visible
       console.log('🔍 Vérification de la visibilité de la date...');
       const verificationQuery = query(
-        collection(db, 'concerts'),
+        collection(db, 'dates'),
         where('organizationId', '==', currentOrganization.id),
         orderBy('date', 'desc')
       );
@@ -200,7 +200,7 @@ function TestWorkflowButton({ onDataGenerated, variant = 'outline-primary', size
       if (typeof window !== 'undefined') {
         console.log('🔄 Émission événement de rafraîchissement des concerts');
         window.dispatchEvent(new CustomEvent('concertCreated', { 
-          detail: { concertId: concertRef.id, isTest: true } 
+          detail: { dateId: concertRef.id, isTest: true } 
         }));
       }
 
@@ -209,7 +209,7 @@ function TestWorkflowButton({ onDataGenerated, variant = 'outline-primary', size
           artiste: { id: artisteRef.id, ...artisteData },
           programmateur: { id: programmateurRef.id, ...programmateurData },
           lieu: { id: lieuRef.id, ...lieuData },
-          concert: { id: concertRef.id, ...concertData },
+          concert: { id: concertRef.id, ...dateData },
           formToken: formToken,
           formUrl: `/formulaire/${formToken}`
         });

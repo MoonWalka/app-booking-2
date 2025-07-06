@@ -53,7 +53,7 @@ const ContactEntityTable = ({
       return column.render(item);
     }
     
-    // Accès aux propriétés imbriquées (ex: "concert.titre")
+    // Accès aux propriétés imbriquées (ex: "date.titre")
     const value = column.key.split('.').reduce((obj, key) => obj?.[key], item);
     return value || '—';
   };

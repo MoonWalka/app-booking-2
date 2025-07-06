@@ -19,6 +19,7 @@ const SidebarItem = ({ item, currentPath, userRole }) => {
         <Link 
           to={item.path} 
           className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+          onClick={() => console.log('[SidebarItem] Clic sur menu:', item.label, '- path:', item.path)}
         >
           <i className={item.icon}></i>
           <span className={styles.navLabel}>{item.label}</span>

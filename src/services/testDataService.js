@@ -71,7 +71,7 @@ class TestDataService {
       
       // Caractéristiques
       capacite: faker.number.int({ min: 100, max: 2000 }),
-      typesDeLieu: faker.helpers.arrayElements(['Salle de concert', 'Théâtre', 'Plein air', 'Bar'], { min: 1, max: 2 }),
+      typesDeLieu: faker.helpers.arrayElements(['Salle de date', 'Théâtre', 'Plein air', 'Bar'], { min: 1, max: 2 }),
       
       // Contact
       contactNom: faker.person.fullName(),
@@ -101,7 +101,7 @@ class TestDataService {
   generateTestArtiste() {
     const artistName = faker.person.fullName();
     const genre = faker.helpers.arrayElement(['Rock', 'Jazz', 'Pop', 'Électro', 'Chanson française', 'Classique']);
-    const projetName = faker.helpers.arrayElement(['Nouvel Album', 'Tournée', 'Festival Tour', 'Concert Acoustique']) + ' ' + new Date().getFullYear();
+    const projetName = faker.helpers.arrayElement(['Nouvel Album', 'Tournée', 'Festival Tour', 'Date Acoustique']) + ' ' + new Date().getFullYear();
     
     return {
       nom: `${this.testDataPrefix} ${artistName}`,
@@ -137,15 +137,15 @@ class TestDataService {
   }
 
   /**
-   * Génère un concert de test lié à un programmateur et un lieu
+   * Génère un date de test lié à un programmateur et un lieu
    */
-  generateTestConcert(programmateurId, lieuId, artisteData) {
-    const concertDate = faker.date.future({ years: 0.5 });
+  generateTestDate(programmateurId, lieuId, artisteData) {
+    const dateDate = faker.date.future({ years: 0.5 });
     const cachet = faker.number.int({ min: 500, max: 10000 });
     
     return {
       // Date et lieu
-      date: concertDate.toISOString().split('T')[0],
+      date: dateDate.toISOString().split('T')[0],
       heure: faker.helpers.arrayElement(['20:30', '21:00', '19:30', '20:00']),
       
       // Associations
@@ -155,8 +155,8 @@ class TestDataService {
       artisteNom: artisteData.nom,
       projetNom: artisteData.projets?.[0]?.nom || 'Projet test',
       
-      // Détails du concert
-      libelle: `${this.testDataPrefix} Concert ${artisteData.nom} à ${faker.location.city()}`,
+      // Détails du date
+      libelle: `${this.testDataPrefix} Date ${artisteData.nom} à ${faker.location.city()}`,
       genre: artisteData.genre,
       
       // Conditions financières
@@ -181,7 +181,7 @@ class TestDataService {
       formToken: uuidv4(),
       
       // Métadonnées
-      tags: ['test', 'concert'],
+      tags: ['test', 'date'],
       isTest: true
     };
   }
@@ -189,17 +189,17 @@ class TestDataService {
   /**
    * Génère des données de formulaire pré-remplies
    */
-  generateTestFormData(concertData) {
+  generateTestFormData(dateData) {
     return {
-      // Infos de base reprises du concert
-      artisteNom: concertData.artisteNom,
-      projetNom: concertData.projetNom,
-      date: concertData.date,
-      heure: concertData.heure,
+      // Infos de base reprises du date
+      artisteNom: dateData.artisteNom,
+      projetNom: dateData.projetNom,
+      date: dateData.date,
+      heure: dateData.heure,
       
       // Complément d'infos artiste
       nombreMusiciens: faker.number.int({ min: 2, max: 8 }),
-      genreMusical: concertData.genre,
+      genreMusical: dateData.genre,
       dureeSpectacle: faker.helpers.arrayElement(['45', '60', '90', '120']),
       
       // Besoins techniques
@@ -270,27 +270,27 @@ class TestDataService {
       const lieuId = lieuRef.id;
       console.log('✅ Lieu créé:', lieuId);
 
-      // 4. Créer un concert
-      const concertData = this.generateTestConcert(
+      // 4. Créer un date
+      const dateData = this.generateTestDate(
         programmateurId,
         lieuId,
         { ...artisteData, id: artisteId }
       );
-      concertData.organizationId = organizationId;
-      concertData.createdAt = serverTimestamp();
-      concertData.updatedAt = serverTimestamp();
-      const concertRef = await addDoc(collection(db, 'concerts'), concertData);
-      const concertId = concertRef.id;
-      console.log('✅ Concert créé:', concertId);
+      dateData.organizationId = organizationId;
+      dateData.createdAt = serverTimestamp();
+      dateData.updatedAt = serverTimestamp();
+      const dateRef = await addDoc(collection(db, 'dates'), dateData);
+      const dateId = dateRef.id;
+      console.log('✅ Date créé:', dateId);
 
       // 5. Retourner toutes les données créées
       return {
         artiste: { id: artisteId, ...artisteData },
         programmateur: { id: programmateurId, ...programmateurData },
         lieu: { id: lieuId, ...lieuData },
-        concert: { id: concertId, ...concertData },
-        formToken: concertData.formToken,
-        formUrl: `/formulaire/${concertData.formToken}`
+        date: { id: dateId, ...dateData },
+        formToken: dateData.formToken,
+        formUrl: `/formulaire/${dateData.formToken}`
       };
 
     } catch (error) {
@@ -312,7 +312,7 @@ class TestDataService {
       console.log('🧹 Nettoyage des données de test...');
       
       // Collections à nettoyer
-      const collections = ['concerts', 'lieux', 'contacts', 'artistes'];
+      const collections = ['dates', 'lieux', 'contacts', 'artistes'];
       let totalDeleted = 0;
 
       for (const collectionName of collections) {

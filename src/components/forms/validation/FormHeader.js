@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './FormHeader.module.css';
 
-const FormHeader = ({ concertId, isValidated, navigate }) => {
+const FormHeader = ({ dateId, isValidated, navigate }) => {
   return (
     <div className={styles.container}>
       <div className={styles.headerWrapper}>
@@ -13,7 +13,7 @@ const FormHeader = ({ concertId, isValidated, navigate }) => {
         <div className={styles.actionsWrapper}>
           <button 
             className={styles.backButton}
-            onClick={() => navigate(`/concerts/${concertId}`)}
+            onClick={() => navigate(`/dates/${dateId}`)}
           >
             <i className="bi bi-arrow-left"></i>
             Retour au concert

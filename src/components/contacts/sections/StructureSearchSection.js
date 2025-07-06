@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './StructureSearchSection.module.css';
-import SearchDropdown from '../../concerts/sections/SearchDropdown';
-import SelectedEntityCard from '../../concerts/sections/SelectedEntityCard';
+import SearchDropdown from '../../dates/sections/SearchDropdown';
+import SelectedEntityCard from '../../dates/sections/SelectedEntityCard';
 import CardSection from '@/components/ui/CardSection';
 
 /**

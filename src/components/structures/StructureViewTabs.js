@@ -165,7 +165,7 @@ const StructureViewTabs = ({ id: propId }) => {
       case 'diffusion':
         return (
           <ContactEntityTable
-            title="Concerts"
+            title="Dates"
             data={concerts || []}
             columns={[
               { key: 'titre', label: 'Titre' },
@@ -176,13 +176,13 @@ const StructureViewTabs = ({ id: propId }) => {
             actions={[
               { 
                 label: 'Voir', 
-                onClick: (item) => navigate(`/concerts/${item.id}`),
+                onClick: (item) => navigate(`/dates/${item.id}`),
                 variant: 'outline-primary',
                 size: 'sm'
               }
             ]}
             addButtonLabel="Nouveau concert"
-            onAddClick={() => navigate('/concerts/nouveau')}
+            onAddClick={() => navigate('/dates/nouveau')}
             {...commonTableProps}
           />
         );
@@ -204,7 +204,7 @@ const StructureViewTabs = ({ id: propId }) => {
             actions={[
               { 
                 label: 'Formulaire', 
-                onClick: (item) => navigate(`/concerts/${item.id}/formulaire`),
+                onClick: (item) => navigate(`/dates/${item.id}/formulaire`),
                 variant: 'outline-success',
                 size: 'sm'
               },
@@ -240,7 +240,7 @@ const StructureViewTabs = ({ id: propId }) => {
             data={[]}
             columns={[
               { key: 'numero', label: 'Numéro' },
-              { key: 'concert', label: 'Concert' },
+              { key: 'concert', label: 'Date' },
               { key: 'statut', label: 'Statut' },
               { key: 'dateCreation', label: 'Date création' }
             ]}
@@ -265,7 +265,7 @@ const StructureViewTabs = ({ id: propId }) => {
             data={[]}
             columns={[
               { key: 'numero', label: 'Numéro' },
-              { key: 'concert', label: 'Concert' },
+              { key: 'concert', label: 'Date' },
               { key: 'montant', label: 'Montant' },
               { key: 'statut', label: 'Statut' }
             ]}

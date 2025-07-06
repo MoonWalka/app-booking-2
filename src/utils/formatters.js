@@ -31,11 +31,11 @@ export const isDatePassed = (dateValue) => {
   if (!dateValue) return false;
   
   const today = new Date();
-  const concertDate = dateValue.seconds ? 
+  const dateDate = dateValue.seconds ? 
     new Date(dateValue.seconds * 1000) : 
     new Date(dateValue);
   
-  return concertDate < today;
+  return dateDate < today;
 };
 
 // Fonction pour copier le lien dans le presse-papiers
@@ -50,4 +50,4 @@ export const copyToClipboard = (text) => {
 };
 
 // Fonction utilitaire pour créer un ID unique pour les requêtes (cache-busting)
-export const getCacheKey = (id) => `concert_${id}_${Date.now()}`;
+export const getCacheKey = (id) => `date_${id}_${Date.now()}`;

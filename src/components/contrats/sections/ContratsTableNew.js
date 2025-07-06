@@ -13,7 +13,7 @@ import styles from './ContratsTableNew.module.css';
 const ContratsTableNew = ({ 
   contrats = [], 
   onUpdateContrat,
-  // Fonctions directes du contexte (comme ConcertsTableView)
+  // Fonctions directes du contexte (comme DatesTableView)
   openDevisTab,
   openNewDevisTab,
   openContratTab,
@@ -53,8 +53,8 @@ const ContratsTableNew = ({
     if (dateValiditeMin) {
       const minDate = new Date(dateValiditeMin);
       filtered = filtered.filter(contrat => {
-        if (!contrat.dateValidite) return false;
-        const validiteDate = new Date(contrat.dateValidite);
+        if (!contrat.concertValidite) return false;
+        const validiteDate = new Date(contrat.concertValidite);
         return validiteDate >= minDate;
       });
     }
@@ -252,7 +252,7 @@ const ContratsTableNew = ({
       label: 'Date',
       key: 'dateEvenement',
       sortable: true,
-      render: (contrat) => <span>{formatDate(contrat.dateEvenement)}</span>
+      render: (contrat) => <span>{formatDate(contrat.concertEvenement)}</span>
     },
     
     // ===== COLONNE ENVOYÉ =====
@@ -325,7 +325,7 @@ const ContratsTableNew = ({
       label: 'Validité',
       key: 'dateValidite',
       sortable: true,
-      render: (contrat) => <span>{formatDate(contrat.dateValidite)}</span>
+      render: (contrat) => <span>{formatDate(contrat.concertValidite)}</span>
     },
     
     // ===== COLONNE SIGNATURE =====
@@ -336,7 +336,7 @@ const ContratsTableNew = ({
       label: 'Signature',
       key: 'dateSignature',
       sortable: true,
-      render: (contrat) => <span>{formatDate(contrat.dateSignature) || '—'}</span>
+      render: (contrat) => <span>{formatDate(contrat.concertSignature) || '—'}</span>
       // NOTE: Utilise contrat.dateSignature (type Date) pour afficher la date de signature
     },
     {
@@ -402,10 +402,10 @@ const ContratsTableNew = ({
         // Action pour ouvrir le contrat
         if (contrat.status || contrat.contratGenere) {
           action = () => {
-            if (openContratTab && contrat.concertId) {
-              const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
+            if (openContratTab && contrat.dateId) {
+              const titre = `${contrat.artisteNom || 'Date'} - ${contrat.lieu || ''}`;
               const isRedige = contrat.status && contrat.status !== 'draft';
-              openContratTab(contrat.concertId, titre, isRedige);
+              openContratTab(contrat.dateId, titre, isRedige);
             }
           };
         }
@@ -445,7 +445,7 @@ const ContratsTableNew = ({
           hasDevis: contrat.hasDevis,
           devisId: contrat.devisId,
           devisStatus: contrat.devisStatus,
-          concertId: contrat.concertId
+          dateId: contrat.dateId
         });
 
         let iconClass, title, action;
@@ -478,7 +478,7 @@ const ContratsTableNew = ({
           
           action = () => {
             if (openDevisTab) {
-              const devisTitle = `${contrat.devisNumero || 'Devis'} - ${contrat.artisteNom || 'Concert'}`;
+              const devisTitle = `${contrat.devisNumero || 'Devis'} - ${contrat.artisteNom || 'Date'}`;
               openDevisTab(contrat.devisId, devisTitle);
             }
           };
@@ -487,10 +487,10 @@ const ContratsTableNew = ({
           iconClass = "bi bi-file-earmark text-muted";
           title = "Créer un devis";
           action = () => {
-            if (openNewDevisTab && contrat.concertId) {
+            if (openNewDevisTab && contrat.dateId) {
               const structureName = getStructureName ? getStructureName() : 'Structure';
               const title = `Nouveau Devis - ${structureName}`;
-              openNewDevisTab(contrat.concertId, contrat.structureId, title);
+              openNewDevisTab(contrat.dateId, contrat.structureId, title);
             }
           };
         }
@@ -531,7 +531,7 @@ const ContratsTableNew = ({
           factureId: contrat.factureId,
           factureStatus: contrat.factureStatus,
           contratStatus: contrat.status,
-          concertId: contrat.concertId
+          dateId: contrat.dateId
         });
 
         let iconClass, title, action, disabled = false;
@@ -540,7 +540,7 @@ const ContratsTableNew = ({
           // Facture existante - déterminer la couleur selon le statut
           const factureInfo = contrat.factureInfo || {};
           const isPayee = factureInfo.montantPaye >= factureInfo.montantTotal;
-          const isEnRetard = factureInfo.dateEcheance && new Date(factureInfo.dateEcheance) < new Date() && !isPayee;
+          const isEnRetard = factureInfo.dateEcheance && new Date(factureInfo.concertEcheance) < new Date() && !isPayee;
 
           if (isPayee) {
             iconClass = "bi bi-receipt-cutoff text-success";
@@ -573,8 +573,8 @@ const ContratsTableNew = ({
             iconClass = "bi bi-receipt text-warning";
             title = "Générer une facture";
             action = () => {
-              if (handleGenerateFacture && contrat.concertId) {
-                handleGenerateFacture(contrat.concertId, contrat.id);
+              if (handleGenerateFacture && contrat.dateId) {
+                handleGenerateFacture(contrat.dateId, contrat.id);
               }
             };
           } else {
@@ -607,10 +607,10 @@ const ContratsTableNew = ({
       <button 
         className={styles.actionButton}
         onClick={() => {
-          if (openContratTab && contrat.concertId) {
-            const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
+          if (openContratTab && contrat.dateId) {
+            const titre = `${contrat.artisteNom || 'Date'} - ${contrat.lieu || ''}`;
             const isRedige = contrat.status && contrat.status !== 'draft';
-            openContratTab(contrat.concertId, titre, isRedige);
+            openContratTab(contrat.dateId, titre, isRedige);
           } else {
             navigate(`/contrats/${contrat.id}/edit`);
           }
@@ -660,10 +660,10 @@ const ContratsTableNew = ({
 
   // Gestion du clic sur une ligne
   const handleRowClick = (contrat) => {
-    if (openContratTab && contrat.concertId) {
-      const titre = `${contrat.artisteNom || 'Concert'} - ${contrat.lieu || ''}`;
+    if (openContratTab && contrat.dateId) {
+      const titre = `${contrat.artisteNom || 'Date'} - ${contrat.lieu || ''}`;
       const isRedige = contrat.status && contrat.status !== 'draft';
-      openContratTab(contrat.concertId, titre, isRedige);
+      openContratTab(contrat.dateId, titre, isRedige);
     } else {
       // Fallback vers navigation classique si handlers non disponibles
       navigate(`/contrats/${contrat.id}`);

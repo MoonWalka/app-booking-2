@@ -28,7 +28,7 @@ const ArtisteView = ({ id }) => {
           };
           
           // Charger les concerts liés via la relation bidirectionnelle
-          const concertsRef = collection(db, 'concerts');
+          const concertsRef = collection(db, 'dates');
           const q = query(concertsRef, where('artisteId', '==', id));
           const concertsSnapshot = await getDocs(q);
           
@@ -340,14 +340,14 @@ const ArtisteView = ({ id }) => {
             </Card>
           )}
 
-          {/* Section Concerts */}
+          {/* Section Dates */}
           <Card 
-            title={`Concerts associés (${artiste.concertsAssocies?.length || 0})`}
+            title={`Dates associés (${artiste.concertsAssocies?.length || 0})`}
             icon={<i className="bi bi-calendar-event"></i>}
             actions={[
               <Button 
                 key="new-concert"
-                onClick={() => navigate('/concerts/nouveau')} 
+                onClick={() => navigate('/dates/nouveau')} 
                 variant="primary"
                 size="sm"
                 icon={<i className="bi bi-plus-circle"></i>}
@@ -369,7 +369,7 @@ const ArtisteView = ({ id }) => {
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
-                    onClick={() => navigate(`/concerts/${concert.id}`)}
+                    onClick={() => navigate(`/dates/${date.id}`)}
                     onMouseEnter={(e) => {
                       e.target.style.backgroundColor = 'var(--tc-color-primary-50)';
                       e.target.style.borderColor = 'var(--tc-color-primary)';
@@ -380,7 +380,7 @@ const ArtisteView = ({ id }) => {
                     }}
                   >
                     <h4 style={{ margin: '0 0 var(--tc-space-2) 0', color: 'var(--tc-color-primary)' }}>
-                      {concert.titre || 'Concert sans titre'}
+                      {concert.titre || 'Date sans titre'}
                     </h4>
                     <div style={{ display: 'flex', gap: 'var(--tc-space-4)', fontSize: 'var(--tc-font-size-sm)', color: 'var(--tc-color-gray-600)' }}>
                       <span><i className="bi bi-calendar"></i> {new Date(concert.date).toLocaleDateString('fr-FR')}</span>
@@ -395,9 +395,9 @@ const ArtisteView = ({ id }) => {
             ) : (
               <div style={{ textAlign: 'center', padding: 'var(--tc-space-8)', color: 'var(--tc-color-gray-500)' }}>
                 <i className="bi bi-calendar-x" style={{ fontSize: '3rem', marginBottom: 'var(--tc-space-2)' }}></i>
-                <p>Aucun concert associé pour le moment.</p>
+                <p>Aucun date associé pour le moment.</p>
                 <Button 
-                  onClick={() => navigate('/concerts/nouveau')} 
+                  onClick={() => navigate('/dates/nouveau')} 
                   variant="primary"
                   icon={<i className="bi bi-plus-circle"></i>}
                 >
@@ -431,7 +431,7 @@ const ArtisteView = ({ id }) => {
                         {new Date(contrat.dateSignature).toLocaleDateString('fr-FR')}
                       </div>
                       <div style={{ fontSize: 'var(--tc-font-size-sm)', color: 'var(--tc-color-gray-600)' }}>
-                        {artiste.concertsAssocies?.find(c => c.id === contrat.concertId)?.lieu || 'Concert inconnu'}
+                        {artiste.concertsAssocies?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
                       </div>
                     </div>
                     {contrat.url && (
@@ -478,7 +478,7 @@ const ArtisteView = ({ id }) => {
                   {artiste.concertsAssocies?.length || 0}
                 </div>
                 <div style={{ fontSize: 'var(--tc-font-size-sm)', color: 'var(--tc-color-gray-600)' }}>
-                  Concerts totaux
+                  Dates totaux
                 </div>
               </div>
               

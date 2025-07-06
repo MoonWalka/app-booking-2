@@ -118,7 +118,7 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
 
       // Créer le concert
       const formToken = uuidv4();
-      const concertData = {
+      const dateData = {
         date: new Date(Date.now() + randomInt(7, 60) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         heure: `${randomInt(19, 21)}:${randomElement(['00', '30'])}`,
         // Structure
@@ -136,7 +136,7 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
         artisteNom: artiste.nom || artiste.nomArtiste,
         projetNom: artiste.projets?.[0]?.nom || 'Tournée 2025',
         // Infos supplémentaires
-        libelle: `[TEST] Concert ${artiste.nom || artiste.nomArtiste} à ${lieu.nom}`,
+        libelle: `[TEST] Date ${artiste.nom || artiste.nomArtiste} à ${lieu.nom}`,
         genre: artiste.genre || 'Rock',
         cachetBrut: randomInt(500, 5000),
         statut: 'En cours',
@@ -149,13 +149,13 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
         updatedAt: serverTimestamp()
       };
 
-      const concertRef = await addDoc(collection(db, 'concerts'), concertData);
-      console.log('✅ Concert créé avec entités existantes:', concertRef.id);
+      const concertRef = await addDoc(collection(db, 'dates'), dateData);
+      console.log('✅ Date créé avec entités existantes:', concertRef.id);
 
       // Émettre l'événement de rafraîchissement
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('concertCreated', { 
-          detail: { concertId: concertRef.id, isTest: true } 
+          detail: { dateId: concertRef.id, isTest: true } 
         }));
       }
 
@@ -174,7 +174,7 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
 
       if (onDataGenerated) {
         onDataGenerated({
-          concert: { id: concertRef.id, ...concertData },
+          concert: { id: concertRef.id, ...dateData },
           contact,
           artiste,
           lieu,
@@ -273,7 +273,7 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
 
       // 4. Créer le concert
       const formToken = uuidv4();
-      const concertData = {
+      const dateData = {
         date: new Date(Date.now() + randomInt(7, 60) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         heure: `${randomInt(19, 21)}:${randomElement(['00', '30'])}`,
         structureId: contactRef.id,
@@ -286,7 +286,7 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
         artisteId: artisteRef.id,
         artisteNom: artisteData.nom,
         projetNom: artisteData.projets[0].nom,
-        libelle: `[TEST] Concert complet de test`,
+        libelle: `[TEST] Date complet de test`,
         genre: artisteData.genre,
         cachetBrut: randomInt(1000, 5000),
         statut: 'En cours',
@@ -299,13 +299,13 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
         updatedAt: serverTimestamp()
       };
 
-      const concertRef = await addDoc(collection(db, 'concerts'), concertData);
-      console.log('✅ Concert créé:', concertRef.id);
+      const concertRef = await addDoc(collection(db, 'dates'), dateData);
+      console.log('✅ Date créé:', concertRef.id);
 
       // Émettre l'événement
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('concertCreated', { 
-          detail: { concertId: concertRef.id, isTest: true } 
+          detail: { dateId: concertRef.id, isTest: true } 
         }));
       }
 
@@ -331,7 +331,7 @@ function TestWorkflowButton2({ onDataGenerated, variant = 'outline-primary', siz
           artiste: { id: artisteRef.id, ...artisteData },
           contact: { id: contactRef.id, ...contactData },
           lieu: { id: lieuRef.id, ...lieuData },
-          concert: { id: concertRef.id, ...concertData },
+          concert: { id: concertRef.id, ...dateData },
           formToken,
           formUrl: `/formulaire/${formToken}`
         });

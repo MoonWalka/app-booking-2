@@ -5,7 +5,7 @@ import styles from './TabManager.module.css';
 // Import des pages/composants
 import DashboardPage from '@/pages/DashboardPage';
 import ContactsPage from '@/pages/ContactsPage';
-import ConcertsPage from '@/pages/ConcertsPage';
+import DatesPage from '@/pages/DatesPage';
 import PublicationsPage from '@/pages/PublicationsPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
@@ -35,7 +35,7 @@ import ContactTagsPage from '@/pages/ContactTagsPage';
 import FestivalsDatesPage from '@/pages/FestivalsDatesPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
-// import ConcertsList from '@/components/concerts/ConcertsList'; // Plus utilisé
+// import DatesList from '@/components/dates/DatesList'; // Plus utilisé
 import LieuxList from '@/components/lieux/LieuxList';
 import ContactsList from '@/components/contacts/ContactsList'; // Liste unifiée contacts + structures
 import ContactsListFiltered from '@/components/contacts/ContactsListFiltered'; // Liste filtrée par tag
@@ -45,7 +45,7 @@ import ArtistesList from '@/components/artistes/ArtistesList';
 import ContactViewTabs from '@/components/contacts/ContactViewTabs';
 import LieuView from '@/components/lieux/desktop/LieuView';
 // import StructureViewTabs from '@/components/structures/StructureViewTabs'; // Plus utilisé - maintenant tout est des contacts
-import ConcertDetails from '@/components/concerts/ConcertDetails';
+import DateDetails from '@/components/dates/DateDetails';
 // ContratGeneratorNew retiré car non utilisé
 
 const TabManagerProduction = () => {
@@ -209,17 +209,18 @@ const TabManagerProduction = () => {
             id={activeTab.params?.contactId} 
             viewType={activeTab.params?.viewType} 
           />;
-        case 'ConcertsPage':
+        case 'DatesPage':
+        case 'DatesPage': // Rétrocompatibilité avec les anciens onglets
           // Afficher directement la liste des dates
-          return <ConcertsPage />;
+          return <DatesPage />;
         case 'PublicationsPage':
           // Afficher directement la liste des publications
           return <PublicationsPage />;
-        case 'ConcertDetailsPage':
+        case 'DateDetailsPage':
           // Afficher les détails d'un concert
-          console.log('[DEBUG TabManager] Rendu ConcertDetailsPage avec activeTab:', activeTab);
-          console.log('[DEBUG TabManager] concertId passé:', activeTab.params?.concertId);
-          return <ConcertDetails id={activeTab.params?.concertId} />;
+          console.log('[DEBUG TabManager] Rendu DateDetailsPage avec activeTab:', activeTab);
+          console.log('[DEBUG TabManager] dateId passé:', activeTab.params?.dateId);
+          return <DateDetails id={activeTab.params?.dateId} />;
         case 'LieuxPage':
           // Afficher directement la liste des lieux
           return <LieuxList />;
@@ -249,27 +250,27 @@ const TabManagerProduction = () => {
           return <FacturesPage />;
         case 'FactureGeneratorPage':
           console.log('[TabManager] Rendu FactureGeneratorPage avec activeTab:', activeTab);
-          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
           console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
           return <FactureGeneratorPage />;
         case 'FactureDetailsPage':
           console.log('[TabManager] Rendu FactureGeneratorPage (remplace FactureDetailsPage) avec activeTab:', activeTab);
           console.log('[TabManager] factureId passé:', activeTab.params?.factureId);
-          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
           console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
           return <FactureGeneratorPage 
             factureId={activeTab.params?.factureId}
-            concertId={activeTab.params?.concertId}
+            dateId={activeTab.params?.dateId}
             contratId={activeTab.params?.contratId}
           />;
         case 'DevisPage':
           console.log('[TabManager] Rendu DevisPage avec activeTab:', activeTab);
           console.log('[TabManager] devisId passé:', activeTab.params?.devisId);
-          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
+          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
           console.log('[TabManager] structureId passé:', activeTab.params?.structureId);
           return <DevisPage 
             devisId={activeTab.params?.devisId}
-            concertId={activeTab.params?.concertId}
+            dateId={activeTab.params?.dateId}
             structureId={activeTab.params?.structureId}
           />;
         case 'ParametresPage':
@@ -289,7 +290,7 @@ const TabManagerProduction = () => {
           return <DateCreationPage />;
         case 'DateDetailsPage':
           console.log('[TabManager] Rendu DateDetailsPage avec activeTab:', activeTab);
-          console.log('[TabManager] concertId passé:', activeTab.params?.id);
+          console.log('[TabManager] dateId passé:', activeTab.params?.id);
           return <DateDetailsPage params={activeTab.params} />;
         case 'TachesPage':
           return <TachesPage />;
@@ -301,14 +302,14 @@ const TabManagerProduction = () => {
           return <ContactParametragePage />;
         case 'PreContratGenerationPage':
           console.log('[TabManager] Rendu PreContratGenerationPage avec activeTab:', activeTab);
-          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
-          return <PreContratGenerationPage concertId={activeTab.params?.concertId} />;
+          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
+          return <PreContratGenerationPage dateId={activeTab.params?.dateId} />;
         case 'ConfirmationPage':
-          return <ConfirmationPage concertId={activeTab.params?.concertId} />;
+          return <ConfirmationPage dateId={activeTab.params?.dateId} />;
         case 'ContratGenerationNewPage':
           console.log('[TabManager] Rendu ContratGenerationNewPage avec activeTab:', activeTab);
-          console.log('[TabManager] concertId passé:', activeTab.params?.concertId);
-          return <ContratGenerationNewPage concertId={activeTab.params?.concertId} />;
+          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
+          return <ContratGenerationNewPage dateId={activeTab.params?.dateId} />;
         case 'ContratRedactionPage':
           console.log('[TabManager] Rendu ContratRedactionPage avec activeTab:', activeTab);
           console.log('[TabManager] contratId passé:', activeTab.params?.id);

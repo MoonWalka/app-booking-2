@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styles from './PreContratFormPublic.module.css';
 
-const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existingData = {} }) => {
+const PreContratFormPublic = ({ dateData, organizationData, onSubmit, existingData = {} }) => {
   console.log('[WORKFLOW_TEST] 5. Passage des données au formulaire public - PreContratFormPublic reçoit:', {
     existingData,
     hasData: !!existingData && Object.keys(existingData).length > 0
@@ -40,7 +40,7 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
     }
     
     return {
-      // Concert
+      // Date
       heureDebut: data.horaireDebut || '',
       heureFin: data.horaireFin || '',
       payant: data.payant ? 'payant' : 'gratuit',
@@ -110,7 +110,7 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
     });
     
     return {
-      // Concert
+      // Date
       heureDebut: mappedData.heureDebut || '',
       heureFin: mappedData.heureFin || '',
       payant: mappedData.payant || 'gratuit',
@@ -246,11 +246,11 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
 
   return (
     <div className={styles.formContainer}>
-      {/* Header avec infos concert */}
+      {/* Header avec infos date */}
       <div className={styles.header}>
-        <h1>{typeof concertData?.artiste === 'string' ? concertData.artiste : concertData?.artiste?.nom || 'Artiste'}</h1>
-        <p className={styles.concertDate}>
-          {concertData?.date ? new Date(concertData.date).toLocaleDateString('fr-FR', {
+        <h1>{typeof dateData?.artiste === 'string' ? dateData.artiste : dateData?.artiste?.nom || 'Artiste'}</h1>
+        <p className={styles.dateDate}>
+          {dateData?.date ? new Date(dateData.date).toLocaleDateString('fr-FR', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -265,9 +265,9 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
       </div>
 
       <form className={styles.form}>
-        {/* Section Concert */}
+        {/* Section Date */}
         <section className={styles.section}>
-          <h2>Concert</h2>
+          <h2>Date</h2>
           <div className={styles.grid}>
             <div className={styles.fieldGroup}>
               <label htmlFor="heureDebut">Heure de début</label>
@@ -515,9 +515,9 @@ const PreContratFormPublic = ({ concertData, organizationData, onSubmit, existin
             />
           </div>
 
-          {concertData?.presta && (
+          {dateData?.presta && (
             <div className={styles.prestaInfo}>
-              <strong>Presta:</strong> {concertData.presta}
+              <strong>Presta:</strong> {dateData.presta}
             </div>
           )}
         </section>

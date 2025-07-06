@@ -120,21 +120,21 @@ export const validateArtisteForm = (data) => {
 };
 
 /**
- * Valide un formulaire de concert
+ * Valide un formulaire de date
  * @param {Object} data - Les données du formulaire à valider
  * @returns {Object} - { isValid, errors } Résultat de la validation
  */
-export const validateConcertForm = (data) => {
+export const validateDateForm = (data) => {
   const errors = {};
   
   // Validation du titre
   if (!data.titre) {
-    errors.titre = 'Le titre du concert est obligatoire';
+    errors.titre = 'Le titre de la date est obligatoire';
   }
   
   // Validation de la date
   if (!data.date) {
-    errors.date = 'La date du concert est obligatoire';
+    errors.date = 'La date est obligatoire';
   }
 
   // Validation du montant

@@ -95,8 +95,8 @@ const ArtisteSearchBar = ({
                 onChange={onFilterChange}
               >
                 <option value="tous">Tous les artistes</option>
-                <option value="avecConcerts">Avec concerts</option>
-                <option value="sansConcerts">Sans concerts</option>
+                <option value="avecDates">Avec concerts</option>
+                <option value="sansDates">Sans concerts</option>
               </Form.Select>
             </div>
             <div className="col-md-8">

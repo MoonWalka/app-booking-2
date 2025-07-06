@@ -14,8 +14,8 @@ import ContactInfoSection from '@/components/contacts/sections/ContactInfoSectio
 import ContactQualificationSection from '@/components/contacts/sections/ContactQualificationSection';
 import ContactDiffusionSection from '@/components/contacts/sections/ContactDiffusionSection';
 import StructureSearchSection from '@/components/contacts/sections/StructureSearchSection';
-import LieuSearchSection from '@/components/concerts/sections/LieuSearchSection';
-import ContactConcertsSection from '@/components/contacts/sections/ContactConcertsSection';
+import LieuSearchSection from '@/components/dates/sections/LieuSearchSection';
+import ContactDatesSection from '@/components/contacts/sections/ContactDatesSection';
 import ContactNotesSection from '@/components/contacts/desktop/sections/ContactNotesSection';
 import { mapTerm } from '@/utils/terminologyMapping';
 import styles from './ContactForm.module.css';
@@ -71,7 +71,7 @@ const ContactForm = () => {
 
   // État pour les associations
   const [lieuxAssocies, setLieuxAssocies] = useState([]);
-  const [concertsAssocies, setConcertsAssocies] = useState([]);
+  const [datesAssocies, setDatesAssocies] = useState([]);
   const [loadingAssociations, setLoadingAssociations] = useState(false);
 
   // Callback mémorisé pour la sélection de structure
@@ -165,15 +165,15 @@ const ContactForm = () => {
     maxResults: 10
   });
   
-  // États pour la recherche de concerts simples
-  const [concertSearchTerm, setConcertSearchTerm] = useState('');
-  const [concertSearchResults, setConcertSearchResults] = useState([]);
-  const [isSearchingConcerts, setIsSearchingConcerts] = useState(false);
+  // États pour la recherche de dates simples
+  const [dateSearchTerm, setDateSearchTerm] = useState('');
+  const [dateSearchResults, setDateSearchResults] = useState([]);
+  const [isSearchingDates, setIsSearchingDates] = useState(false);
   
   // État pour la structure sélectionnée
   const [selectedStructure, setSelectedStructure] = useState(null);
   
-  // Fonction pour charger les lieux et concerts associés
+  // Fonction pour charger les lieux et dates associés
   const loadAssociations = useCallback(async (contact) => {
     setLoadingAssociations(true);
     try {
@@ -215,22 +215,22 @@ const ContactForm = () => {
         setLieuxAssocies(lieuxLoaded);
       }
 
-      // Charger les concerts associés
-      if (contact.concertsIds?.length > 0 || contact.concertsAssocies?.length > 0) {
-        const concertsIds = contact.concertsIds || contact.concertsAssocies || [];
-        const concertsPromises = concertsIds.map(async (concertRef) => {
-          const concertId = typeof concertRef === 'object' ? concertRef.id : concertRef;
-          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-          return concertDoc.exists() ? { id: concertDoc.id, ...concertDoc.data() } : null;
+      // Charger les dates associées
+      if (contact.datesIds?.length > 0 || contact.datesAssocies?.length > 0) {
+        const datesIds = contact.datesIds || contact.datesAssocies || [];
+        const datesPromises = datesIds.map(async (dateRef) => {
+          const dateId = typeof dateRef === 'object' ? dateRef.id : dateRef;
+          const dateDoc = await getDoc(doc(db, 'dates', dateId));
+          return dateDoc.exists() ? { id: dateDoc.id, ...dateDoc.data() } : null;
         });
-        const concerts = (await Promise.all(concertsPromises)).filter(concert => concert !== null);
-        setConcertsAssocies(concerts);
+        const dates = (await Promise.all(datesPromises)).filter(date => date !== null);
+        setDatesAssocies(dates);
       } else {
         // Recherche par référence inverse
-        const concertsQuery = query(collection(db, 'concerts'), where('contactIds', 'array-contains', contact.id)); // Format migré
-        const concertsSnapshot = await getDocs(concertsQuery);
-        const concerts = concertsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setConcertsAssocies(concerts);
+        const datesQuery = query(collection(db, 'dates'), where('contactIds', 'array-contains', contact.id)); // Format migré
+        const datesSnapshot = await getDocs(datesQuery);
+        const dates = datesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setDatesAssocies(dates);
       }
 
     } catch (error) {
@@ -392,72 +392,72 @@ const ContactForm = () => {
   };
 
 
-  // Fonctions de gestion des concerts associés
-  const handleRemoveConcert = useCallback((concertId) => {
-    setConcertsAssocies(prev => prev.filter(concert => concert.id !== concertId));
-    toast.info('Concert retiré de la liste');
+  // Fonctions de gestion des dates associées
+  const handleRemoveDate = useCallback((dateId) => {
+    setDatesAssocies(prev => prev.filter(date => date.id !== dateId));
+    toast.info('Date retiré de la liste');
   }, []);
 
-  const handleSelectConcertFromSearch = useCallback((concert) => {
-    if (concert) {
-      setConcertsAssocies(prev => {
+  const handleSelectDateFromSearch = useCallback((date) => {
+    if (date) {
+      setDatesAssocies(prev => {
         // Vérifier la duplication à l'intérieur du setter
-        if (!prev.find(c => c.id === concert.id)) {
-          toast.success(`Concert "${concert.titre}" ajouté`);
-          return [...prev, concert];
+        if (!prev.find(c => c.id === date.id)) {
+          toast.success(`Date "${date.titre}" ajoutée`);
+          return [...prev, date];
         }
         return prev;
       });
       // ✅ Nettoyer APRÈS le setState, pas dedans
-      setConcertSearchTerm('');
-      setConcertSearchResults([]);
+      setDateSearchTerm('');
+      setDateSearchResults([]);
     }
   }, []);
 
-  // Fonction de recherche de concerts simplifiée
-  const searchConcerts = useCallback(async (searchTerm) => {
+  // Fonction de recherche de dates simplifiée
+  const searchDates = useCallback(async (searchTerm) => {
     if (!searchTerm || searchTerm.length < 2) {
-      setConcertSearchResults([]);
+      setDateSearchResults([]);
       return;
     }
 
-    setIsSearchingConcerts(true);
+    setIsSearchingDates(true);
     try {
-      const concertsQuery = query(
-        collection(db, 'concerts'),
+      const datesQuery = query(
+        collection(db, 'dates'),
         where('titre', '>=', searchTerm),
         where('titre', '<=', searchTerm + '\uf8ff')
       );
-      const querySnapshot = await getDocs(concertsQuery);
-      const concerts = querySnapshot.docs.map(doc => ({
+      const querySnapshot = await getDocs(datesQuery);
+      const dates = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
       
-      setConcertSearchResults(concerts);
+      setDateSearchResults(dates);
     } catch (error) {
-      console.error('Erreur lors de la recherche de concerts:', error);
-      setConcertSearchResults([]);
+      console.error('Erreur lors de la recherche de dates:', error);
+      setDateSearchResults([]);
     } finally {
-      setIsSearchingConcerts(false);
+      setIsSearchingDates(false);
     }
   }, []);
 
-  // Effet pour la recherche de concerts avec debounce
+  // Effet pour la recherche de dates avec debounce
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      searchConcerts(concertSearchTerm);
+      searchDates(dateSearchTerm);
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [concertSearchTerm, searchConcerts]);
+  }, [dateSearchTerm, searchDates]);
 
-  // Filtrer les concerts dans le rendu pour éviter la dépendance dans searchConcerts
-  const filteredConcertResults = useMemo(() => 
-    concertSearchResults.filter(concert => 
-      !concertsAssocies.find(c => c.id === concert.id)
+  // Filtrer les dates dans le rendu pour éviter la dépendance dans searchDates
+  const filteredDateResults = useMemo(() => 
+    dateSearchResults.filter(date => 
+      !datesAssocies.find(c => c.id === date.id)
     ),
-    [concertSearchResults, concertsAssocies]
+    [dateSearchResults, datesAssocies]
   );
 
   // Gestionnaire de sauvegarde
@@ -563,7 +563,7 @@ const ContactForm = () => {
         structureId: selectedStructure?.id || formData.structureId || '',
         notes: formData.notes?.trim() || '',
         lieuxIds: lieuxAssocies.map(lieu => lieu.id),
-        concertsIds: concertsAssocies.map(concert => concert.id),
+        datesIds: datesAssocies.map(date => date.id),
         updatedAt: new Date()
       };
 
@@ -615,16 +615,16 @@ const ContactForm = () => {
           });
         }
 
-        // Relations avec les concerts
-        if (contact.concertsIds && contact.concertsIds.length > 0) {
-          console.log(`🔗 Création des relations bidirectionnelles pour ${contact.concertsIds.length} concerts`);
-          for (const concertId of contact.concertsIds) {
+        // Relations avec les dates
+        if (contact.datesIds && contact.datesIds.length > 0) {
+          console.log(`🔗 Création des relations bidirectionnelles pour ${contact.datesIds.length} dates`);
+          for (const dateId of contact.datesIds) {
             await updateBidirectionalRelation({
               sourceType: 'contacts',
               sourceId: savedContactId,
-              targetType: 'concerts',
-              targetId: concertId,
-              relationName: 'concerts',
+              targetType: 'dates',
+              targetId: dateId,
+              relationName: 'dates',
               action: 'add'
             });
           }
@@ -809,16 +809,16 @@ const ContactForm = () => {
               handleCreateLieu={handleCreateLieu}
             />
 
-            {/* Section Concerts associés - Composant modulaire */}
-            <ContactConcertsSection 
-              concertSearchTerm={concertSearchTerm}
-              setConcertSearchTerm={setConcertSearchTerm}
-              filteredConcertResults={filteredConcertResults}
-              isSearchingConcerts={isSearchingConcerts}
-              concertsAssocies={concertsAssocies}
+            {/* Section Dates associés - Composant modulaire */}
+            <ContactDatesSection 
+              dateSearchTerm={dateSearchTerm}
+              setDateSearchTerm={setDateSearchTerm}
+              filteredDateResults={filteredDateResults}
+              isSearchingDates={isSearchingDates}
+              datesAssocies={datesAssocies}
               loadingAssociations={loadingAssociations}
-              handleSelectConcertFromSearch={handleSelectConcertFromSearch}
-              handleRemoveConcert={handleRemoveConcert}
+              handleSelectDateFromSearch={handleSelectDateFromSearch}
+              handleRemoveDate={handleRemoveDate}
             />
 
             {/* Section Commentaires/Notes */}
@@ -843,7 +843,7 @@ const ContactForm = () => {
         confirmText="Supprimer définitivement"
         cancelText="Annuler"
         isLoading={isDeleting}
-        warnings={concertsAssocies.length > 0 ? ['Ce contact a des concerts associés. Ils seront également affectés.'] : undefined}
+        warnings={datesAssocies.length > 0 ? ['Ce contact a des dates associées. Elles seront également affectées.'] : undefined}
       />
     </div>
   );

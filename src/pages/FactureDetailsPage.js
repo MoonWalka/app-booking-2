@@ -15,7 +15,7 @@ import styles from './ContratDetailsPage.module.css';
 
 const FactureDetailsPage = ({ 
   factureId: factureIdFromProps,
-  concertId: concertIdFromProps,
+  dateId: dateIdFromProps,
   contratId: contratIdFromProps 
 }) => {
   const { factureId: factureIdFromParams } = useParams();
@@ -151,13 +151,13 @@ const FactureDetailsPage = ({
     
     try {
       // Charger les données nécessaires
-      let concert = null;
+      let date = null;
       let structure = null;
       
-      if (facture.concertId) {
-        const concertDoc = await getDoc(doc(db, 'concerts', facture.concertId));
-        if (concertDoc.exists()) {
-          concert = { id: concertDoc.id, ...concertDoc.data() };
+      if (facture.dateId) {
+        const dateDoc = await getDoc(doc(db, 'concerts', facture.dateId));
+        if (dateDoc.exists()) {
+          date = { id: dateDoc.id, ...dateDoc.data() };
         }
       }
       
@@ -440,7 +440,7 @@ const FactureDetailsPage = ({
             
             <Button
               variant="outline"
-              onClick={() => navigate(`/factures/generate/${facture.concertId}`)}
+              onClick={() => navigate(`/factures/generate/${facture.dateId}`)}
             >
               <i className="bi bi-arrow-clockwise me-2"></i>
               Régénérer

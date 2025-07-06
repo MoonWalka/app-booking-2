@@ -95,7 +95,7 @@ const TagsManager = ({ type, title, buttonLabel }) => {
                     { id: 1, nom: 'Urgent', type: 'Système', utilisations: 123, tache: true, projet: false, personne: true, structure: false },
                     { id: 2, nom: 'Important', type: 'Système', utilisations: 89, tache: true, projet: true, personne: false, structure: true },
                     { id: 3, nom: 'Festival', type: 'Utilisateur', utilisations: 67, tache: false, projet: true, personne: false, structure: true },
-                    { id: 4, nom: 'Concert', type: 'Utilisateur', utilisations: 145, tache: false, projet: true, personne: false, structure: false },
+                    { id: 4, nom: 'Date', type: 'Utilisateur', utilisations: 145, tache: false, projet: true, personne: false, structure: false },
                     { id: 5, nom: 'Partenaire', type: 'Utilisateur', utilisations: 34, tache: false, projet: false, personne: true, structure: true }
                 ];
             default:

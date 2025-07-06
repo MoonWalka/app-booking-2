@@ -97,10 +97,10 @@ export async function fixAllMissingOrganizationIds(organizationId) {
     contacts: { success: 0, errors: [] },
     lieux: { success: 0, errors: [] },
     structures: { success: 0, errors: [] },
-    concerts: { success: 0, errors: [] }
+    dates: { success: 0, errors: [] }
   };
 
-  const collections = ['contacts', 'lieux', 'structures', 'concerts'];
+  const collections = ['contacts', 'lieux', 'structures', 'dates'];
 
   for (const collectionName of collections) {
     try {

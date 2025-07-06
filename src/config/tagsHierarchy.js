@@ -133,7 +133,7 @@ export const TAGS_HIERARCHY = [
     id: 'diffuseur',
     label: 'Diffuseur',
     color: '#007bff',
-    description: 'Salles de concert, festivals, lieux de diffusion',
+    description: 'Salles de spectacle, festivals, lieux de diffusion',
     children: [
       { id: 'theatre-public', label: 'Théâtre public' },
       { id: 'theatre-prive', label: 'Théâtre privé' },

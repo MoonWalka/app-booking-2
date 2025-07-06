@@ -53,18 +53,18 @@ const lieuFields = [
  * Hook de validation des données de formulaire pour un concert
  * 
  * Ce hook gère la logique complexe de récupération et validation des données
- * de formulaire soumises par les contacts pour un concert donné.
+ * de formulaire soumises par les contacts pour un date donné.
  * 
  * @description
  * Fonctionnalités principales :
- * - Récupération des données du concert et du lieu associé
+ * - Récupération des données du date et du lieu associé
  * - Recherche de la soumission de formulaire (formSubmissions)
  * - Gestion des liens de formulaire non soumis (formLinks)
  * - Récupération des données du contact existant
  * - Initialisation des valeurs de validation
  * - Gestion des états de validation
  * 
- * @param {string} concertId - ID unique du concert pour lequel récupérer les données de formulaire
+ * @param {string} dateId - ID unique du date pour lequel récupérer les données de formulaire
  * 
  * @returns {Object} État et données du formulaire de validation
  * @returns {Object|null} returns.formData - Données de la soumission de formulaire
@@ -110,29 +110,29 @@ const lieuFields = [
  * @migrationCandidate useGenericEntityForm - Candidat pour généralisation
  * 
  * @workflow
- * 1. Récupération des données du concert par concertId
+ * 1. Récupération des données du date par dateId
  * 2. Récupération optionnelle des données du lieu associé
  * 3. Recherche de la soumission de formulaire :
- *    - Via formSubmissionId du concert (si existant)
- *    - Via requête sur formSubmissions par concertId
+ *    - Via formSubmissionId du date (si existant)
+ *    - Via requête sur formSubmissions par dateId
  *    - Vérification des formLinks si aucune soumission
  * 4. Sélection de la soumission la plus récente
- * 5. Mise à jour du concert avec formSubmissionId
+ * 5. Mise à jour du date avec formSubmissionId
  * 6. Récupération des données du contact existant
  * 7. Initialisation des valeurs de validation
  * 8. Gestion des états de validation existants
  * 
  * @errorHandling
- * - Concert inexistant : "Ce concert n'existe pas."
- * - Aucun formulaire : "Aucun formulaire n'a été soumis pour ce concert."
+ * - Date inexistant : "Ce date n'existe pas."
+ * - Aucun formulaire : "Aucun formulaire n'a été soumis pour ce date."
  * - Lien sans soumission : "Un lien de formulaire a été généré mais le contact n'a pas encore soumis de réponse."
  * - Soumission introuvable : "La soumission de formulaire n'a pas été trouvée."
  * - Erreurs génériques : "Impossible de charger les données du formulaire: {error}"
  */
-const useFormValidationData = (concertId) => {
+const useFormValidationData = (dateId) => {
   const [formData, setFormData] = useState(null);
   const [formId, setFormId] = useState(null);
-  const [concert, setConcert] = useState(null);
+  const [concert, setDate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [validated, setValidated] = useState(false);
@@ -142,33 +142,33 @@ const useFormValidationData = (concertId) => {
   
   const fetchData = useCallback(async () => {
     try {
-      console.log("Recherche de formulaire pour le concert:", concertId);
+      console.log("Recherche de formulaire pour le concert:", dateId);
       
       // 1. D'abord, récupérer les données du concert
-      const concertRef = doc(db, 'concerts', concertId);
-      const concertDoc = await getDoc(concertRef);
+      const concertRef = doc(db, 'concerts', dateId);
+      const dateDoc = await getDoc(concertRef);
       
-      if (!concertDoc.exists()) {
-        console.error("Concert non trouvé:", concertId);
-        setError("Ce concert n'existe pas.");
+      if (!dateDoc.exists()) {
+        console.error("Date non trouvé:", dateId);
+        setError("Ce date n'existe pas.");
         setLoading(false);
         return;
       }
       
-      const concertData = {
-        id: concertDoc.id,
-        ...concertDoc.data()
+      const dateData = {
+        id: dateDoc.id,
+        ...dateDoc.data()
       };
       
-      console.log("Concert trouvé:", concertData);
-      setConcert(concertData);
+      console.log("Date trouvé:", dateData);
+      setDate(dateData);
       
       // Variable locale pour les données du lieu (éviter la dépendance cyclique)
       let lieuData = null;
       
       // Récupérer les données du lieu si existant
-      if (concertData.lieuId) {
-        const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+      if (dateData.lieuId) {
+        const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
         if (lieuDoc.exists()) {
           lieuData = {
             id: lieuDoc.id,
@@ -182,18 +182,18 @@ const useFormValidationData = (concertId) => {
       // 2. Chercher la soumission de formulaire associée au concert
       let formSubmissionId = null;
       
-      // Si le concert a déjà un formSubmissionId associé
-      if (concertData.formSubmissionId) {
-        console.log("FormSubmissionId trouvé dans le concert:", concertData.formSubmissionId);
-        formSubmissionId = concertData.formSubmissionId;
+      // Si le date a déjà un formSubmissionId associé
+      if (dateData.formSubmissionId) {
+        console.log("FormSubmissionId trouvé dans le concert:", dateData.formSubmissionId);
+        formSubmissionId = dateData.formSubmissionId;
       } else {
-        console.log("Recherche dans formSubmissions par concertId");
+        console.log("Recherche dans formSubmissions par dateId");
         // Chercher dans la collection formSubmissions
         // NOTE: Ne pas filtrer par organizationId pour les formSubmissions existantes
         // car elles n'ont pas encore ce champ
         const submissionsQuery = query(
           collection(db, 'formSubmissions'), 
-          where('concertId', '==', concertId)
+          where('dateId', '==', dateId)
         );
         
         const submissionsSnapshot = await getDocs(submissionsQuery);
@@ -204,7 +204,7 @@ const useFormValidationData = (concertId) => {
           // NOTE: Ne pas filtrer par organizationId pour les formLinks existants
           const linksQuery = query(
             collection(db, 'formLinks'), 
-            where('concertId', '==', concertId)
+            where('dateId', '==', dateId)
           );
           
           const linksSnapshot = await getDocs(linksQuery);
@@ -241,8 +241,8 @@ const useFormValidationData = (concertId) => {
         
         formSubmissionId = submissions[0].id;
         
-        // Mettre à jour le concert avec l'ID de la soumission
-        await updateDoc(doc(db, 'concerts', concertId), {
+        // Mettre à jour le date avec l'ID de la soumission
+        await updateDoc(doc(db, 'concerts', dateId), {
           formSubmissionId: formSubmissionId
         });
         
@@ -289,7 +289,7 @@ const useFormValidationData = (concertId) => {
         
         // Récupérer les données existantes du contact (s'il existe)
         // D'abord essayer avec programmId de la soumission (rétrocompatibilité), sinon utiliser contactId du concert
-        const contactIdToUse = formDocData.programmId || concertData.contactId || concertData.programmateurId;
+        const contactIdToUse = formDocData.programmId || dateData.contactId || dateData.programmateurId;
         
         if (contactIdToUse) {
           try {
@@ -313,7 +313,7 @@ const useFormValidationData = (concertId) => {
             console.error("Erreur lors de la récupération des données du contact:", error);
           }
         } else {
-          console.log("Aucun contact lié à ce concert ou formulaire");
+          console.log("Aucun contact lié à ce date ou formulaire");
         }
         
         // Si la soumission a déjà été validée, utiliser les champs validés existants
@@ -335,13 +335,13 @@ const useFormValidationData = (concertId) => {
       setError(`Impossible de charger les données du formulaire: ${err.message}`);
       setLoading(false);
     }
-  }, [concertId]);
+  }, [dateId]);
 
   useEffect(() => {
-    if (concertId) {
+    if (dateId) {
       fetchData();
     }
-  }, [concertId, fetchData]);
+  }, [dateId, fetchData]);
 
   return {
     formData,

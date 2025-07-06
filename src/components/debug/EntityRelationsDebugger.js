@@ -59,7 +59,7 @@ const EntityRelationsDebugger = () => {
       if (entityType === 'artistes') {
         await analyzeArtisteRelations(analysisResults);
       } else if (entityType === 'concerts') {
-        await analyzeConcertRelations(analysisResults);
+        await analyzeDateRelations(analysisResults);
       } else if (entityType === 'lieux') {
         await analyzeLieuRelations(analysisResults);
       } else if (entityType === 'contacts') {
@@ -79,58 +79,58 @@ const EntityRelationsDebugger = () => {
   const analyzeArtisteRelations = async (results) => {
     const artiste = results.entity.data;
     
-    // 1. Concerts liés via concertsIds
+    // 1. Dates liés via concertsIds
     if (artiste.concertsIds && artiste.concertsIds.length > 0) {
       console.log(`📋 L'artiste a ${artiste.concertsIds.length} concerts dans concertsIds`);
       results.relatedEntities.concertsFromIds = [];
       
-      for (const concertId of artiste.concertsIds) {
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists()) {
-          const concertData = concertDoc.data();
+      for (const dateId of artiste.concertsIds) {
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (dateDoc.exists()) {
+          const dateData = dateDoc.data();
           results.relatedEntities.concertsFromIds.push({
-            id: concertId,
+            id: dateId,
             exists: true,
-            data: concertData,
-            hasArtisteId: concertData.artisteId === results.entity.id,
-            artisteId: concertData.artisteId
+            data: dateData,
+            hasArtisteId: dateData.artisteId === results.entity.id,
+            artisteId: dateData.artisteId
           });
         } else {
           results.relatedEntities.concertsFromIds.push({
-            id: concertId,
+            id: dateId,
             exists: false
           });
           results.issues.push({
             type: 'orphaned_relation',
-            message: `Concert ${concertId} dans concertsIds n'existe pas`
+            message: `Date ${dateId} dans concertsIds n'existe pas`
           });
         }
       }
     }
     
-    // 2. Concerts qui pointent vers cet artiste
+    // 2. Dates qui pointent vers cet artiste
     console.log(`🔍 Recherche des concerts qui pointent vers l'artiste...`);
     const concertsQuery = query(
-      collection(db, 'concerts'),
+      collection(db, 'dates'),
       where('artisteId', '==', results.entity.id)
     );
     const concertsSnapshot = await getDocs(concertsQuery);
     
     results.relatedEntities.concertsPointingToArtiste = [];
     concertsSnapshot.forEach(doc => {
-      const concertData = doc.data();
-      const isInArtisteConcertsIds = artiste.concertsIds?.includes(doc.id);
+      const dateData = doc.data();
+      const isInArtisteDatesIds = artiste.concertsIds?.includes(doc.id);
       
       results.relatedEntities.concertsPointingToArtiste.push({
         id: doc.id,
-        data: concertData,
-        isInArtisteConcertsIds
+        data: dateData,
+        isInArtisteDatesIds
       });
       
-      if (!isInArtisteConcertsIds) {
+      if (!isInArtisteDatesIds) {
         results.issues.push({
           type: 'missing_bidirectional',
-          message: `Concert ${doc.id} (${concertData.titre}) pointe vers l'artiste mais n'est pas dans concertsIds`,
+          message: `Date ${doc.id} (${dateData.titre}) pointe vers l'artiste mais n'est pas dans concertsIds`,
           fix: {
             action: 'add_to_array',
             entity: 'artistes',
@@ -144,31 +144,31 @@ const EntityRelationsDebugger = () => {
   };
   
   // Analyser les relations d'un concert
-  const analyzeConcertRelations = async (results) => {
-    const concert = results.entity.data;
+  const analyzeDateRelations = async (results) => {
+    const date = results.entity.data;
     
     // Vérifier l'artiste
-    if (concert.artisteId) {
-      const artisteDoc = await getDoc(doc(db, 'artistes', concert.artisteId));
+    if (date.artisteId) {
+      const artisteDoc = await getDoc(doc(db, 'artistes', date.artisteId));
       if (artisteDoc.exists()) {
         const artisteData = artisteDoc.data();
-        const hasConcertInList = artisteData.concertsIds?.includes(results.entity.id);
+        const hasDateInList = artisteData.concertsIds?.includes(results.entity.id);
         
         results.relatedEntities.artiste = {
-          id: concert.artisteId,
+          id: date.artisteId,
           exists: true,
           data: artisteData,
-          hasConcertInList
+          hasDateInList
         };
         
-        if (!hasConcertInList) {
+        if (!hasDateInList) {
           results.issues.push({
             type: 'missing_bidirectional',
-            message: `L'artiste ${artisteData.nom} n'a pas ce concert dans sa liste concertsIds`,
+            message: `L'artiste ${artisteData.nom} n'a pas ce date dans sa liste concertsIds`,
             fix: {
               action: 'add_to_array',
               entity: 'artistes',
-              entityId: concert.artisteId,
+              entityId: date.artisteId,
               field: 'concertsIds',
               value: results.entity.id
             }
@@ -176,38 +176,38 @@ const EntityRelationsDebugger = () => {
         }
       } else {
         results.relatedEntities.artiste = {
-          id: concert.artisteId,
+          id: date.artisteId,
           exists: false
         };
         results.issues.push({
           type: 'orphaned_relation',
-          message: `Artiste ${concert.artisteId} n'existe pas`
+          message: `Artiste ${date.artisteId} n'existe pas`
         });
       }
     }
     
     // Vérifier le lieu
-    if (concert.lieuId) {
-      const lieuDoc = await getDoc(doc(db, 'lieux', concert.lieuId));
+    if (date.lieuId) {
+      const lieuDoc = await getDoc(doc(db, 'lieux', date.lieuId));
       if (lieuDoc.exists()) {
         const lieuData = lieuDoc.data();
-        const hasConcertInList = lieuData.concertsIds?.includes(results.entity.id);
+        const hasDateInList = lieuData.concertsIds?.includes(results.entity.id);
         
         results.relatedEntities.lieu = {
-          id: concert.lieuId,
+          id: date.lieuId,
           exists: true,
           data: lieuData,
-          hasConcertInList
+          hasDateInList
         };
         
-        if (!hasConcertInList) {
+        if (!hasDateInList) {
           results.issues.push({
             type: 'missing_bidirectional',
-            message: `Le lieu ${lieuData.nom} n'a pas ce concert dans sa liste concertsIds`,
+            message: `Le lieu ${lieuData.nom} n'a pas ce date dans sa liste concertsIds`,
             fix: {
               action: 'add_to_array',
               entity: 'lieux',
-              entityId: concert.lieuId,
+              entityId: date.lieuId,
               field: 'concertsIds',
               value: results.entity.id
             }
@@ -221,18 +221,18 @@ const EntityRelationsDebugger = () => {
   const analyzeLieuRelations = async (results) => {
     const lieu = results.entity.data;
     
-    // Concerts liés
+    // Dates liés
     if (lieu.concertsIds && lieu.concertsIds.length > 0) {
       results.relatedEntities.concerts = [];
-      for (const concertId of lieu.concertsIds) {
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists()) {
-          const concertData = concertDoc.data();
+      for (const dateId of lieu.concertsIds) {
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (dateDoc.exists()) {
+          const dateData = dateDoc.data();
           results.relatedEntities.concerts.push({
-            id: concertId,
+            id: dateId,
             exists: true,
-            data: concertData,
-            hasLieuId: concertData.lieuId === results.entity.id
+            data: dateData,
+            hasLieuId: dateData.lieuId === results.entity.id
           });
         }
       }
@@ -243,18 +243,18 @@ const EntityRelationsDebugger = () => {
   const analyzeContactRelations = async (results) => {
     const contact = results.entity.data;
     
-    // Concerts liés
+    // Dates liés
     if (contact.concertsIds && contact.concertsIds.length > 0) {
       results.relatedEntities.concerts = [];
-      for (const concertId of contact.concertsIds) {
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (concertDoc.exists()) {
-          const concertData = concertDoc.data();
+      for (const dateId of contact.concertsIds) {
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (dateDoc.exists()) {
+          const dateData = dateDoc.data();
           results.relatedEntities.concerts.push({
-            id: concertId,
+            id: dateId,
             exists: true,
-            data: concertData,
-            hasContactId: concertData.contactId === results.entity.id
+            data: dateData,
+            hasContactId: dateData.contactId === results.entity.id
           });
         }
       }
@@ -276,7 +276,7 @@ const EntityRelationsDebugger = () => {
               onChange={(e) => setEntityType(e.target.value)}
             >
               <option value="artistes">Artistes</option>
-              <option value="concerts">Concerts</option>
+              <option value="concerts">Dates</option>
               <option value="lieux">Lieux</option>
               <option value="contacts">Contacts</option>
               <option value="structures">Structures</option>
@@ -368,9 +368,9 @@ const EntityRelationsDebugger = () => {
                                   {entity.hasArtisteId ? ' ✅ Relation bidirectionnelle OK' : ' ❌ Relation manquante'}
                                 </span>
                               )}
-                              {entity.isInArtisteConcertsIds !== undefined && (
-                                <span className={entity.isInArtisteConcertsIds ? 'text-success' : 'text-danger'}>
-                                  {entity.isInArtisteConcertsIds ? ' ✅ Présent dans concertsIds' : ' ❌ Manquant dans concertsIds'}
+                              {entity.isInArtisteDatesIds !== undefined && (
+                                <span className={entity.isInArtisteDatesIds ? 'text-success' : 'text-danger'}>
+                                  {entity.isInArtisteDatesIds ? ' ✅ Présent dans concertsIds' : ' ❌ Manquant dans concertsIds'}
                                 </span>
                               )}
                             </>
@@ -385,9 +385,9 @@ const EntityRelationsDebugger = () => {
                       {entities.exists ? (
                         <>
                           <strong>{entities.data?.nom || entities.id}</strong>
-                          {entities.hasConcertInList !== undefined && (
-                            <span className={entities.hasConcertInList ? 'text-success' : 'text-danger'}>
-                              {entities.hasConcertInList ? ' ✅ Relation bidirectionnelle OK' : ' ❌ Relation manquante'}
+                          {entities.hasDateInList !== undefined && (
+                            <span className={entities.hasDateInList ? 'text-success' : 'text-danger'}>
+                              {entities.hasDateInList ? ' ✅ Relation bidirectionnelle OK' : ' ❌ Relation manquante'}
                             </span>
                           )}
                         </>

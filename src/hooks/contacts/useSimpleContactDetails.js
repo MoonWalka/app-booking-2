@@ -17,20 +17,20 @@ export default function useSimpleContactDetails(id) {
   const [contact, setContact] = useState(null);
   const [structure, setStructure] = useState(null);
   const [lieux, setLieux] = useState([]);
-  const [concerts, setConcerts] = useState([]);
+  const [concerts, setDates] = useState([]);
   const [artistes, setArtistes] = useState([]);
   
   // États de chargement
   const [loading, setLoading] = useState(true);
   const [loadingLieux, setLoadingLieux] = useState(false);
-  const [loadingConcerts, setLoadingConcerts] = useState(false);
+  const [loadingDates, setLoadingDates] = useState(false);
   const [loadingArtistes, setLoadingArtistes] = useState(false);
   const [loadingStructure, setLoadingStructure] = useState(false);
   
   // États d'erreur
   const [error, setError] = useState(null);
   const [errorLieux, setErrorLieux] = useState(null);
-  const [errorConcerts, setErrorConcerts] = useState(null);
+  const [errorDates, setErrorDates] = useState(null);
   const [errorArtistes, setErrorArtistes] = useState(null);
   const [errorStructure, setErrorStructure] = useState(null);
 
@@ -101,13 +101,13 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingLieux(false);
     }
-  }, [currentOrganization?.id]);
+  }, [currentOrganization?.id, id]);
 
   // Fonction pour charger les concerts associés (même logique complexe que l'original)
-  const fetchConcertsAssocies = useCallback(async (contactEntity) => {
+  const fetchDatesAssocies = useCallback(async (contactEntity) => {
     try {
-      setLoadingConcerts(true);
-      setErrorConcerts(null);
+      setLoadingDates(true);
+      setErrorDates(null);
       
       // Méthode 1: Vérifier si le contact a des concertsIds ou concertsAssocies dans ses données
       if (contactEntity.concertsIds?.length > 0 || contactEntity.concertsAssocies?.length > 0) {
@@ -120,8 +120,8 @@ export default function useSimpleContactDetails(id) {
           }
           
           // Sinon on charge les détails complets
-          const concertId = typeof concertRef === 'object' ? concertRef.id : concertRef;
-          return getDoc(doc(db, 'concerts', concertId)).then(snapshot => {
+          const dateId = typeof concertRef === 'object' ? concertRef.id : concertRef;
+          return getDoc(doc(db, 'concerts', dateId)).then(snapshot => {
             if (snapshot.exists()) {
               return { id: snapshot.id, ...snapshot.data() };
             }
@@ -130,9 +130,9 @@ export default function useSimpleContactDetails(id) {
         });
         
         const concertResults = await Promise.all(concertPromises);
-        const validConcerts = concertResults.filter(concert => concert !== null);
+        const validDates = concertResults.filter(concert => concert !== null);
         
-        setConcerts(validConcerts);
+        setDates(validDates);
       } else {
         // Méthode 2: Chercher par référence inverse dans la collection concerts
         
@@ -142,7 +142,7 @@ export default function useSimpleContactDetails(id) {
           concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
         }
         let concertsQuery = query(
-          collection(db, 'concerts'),
+          collection(db, 'dates'),
           ...concertsConstraints
         );
         let querySnapshot = await getDocs(concertsQuery);
@@ -155,7 +155,7 @@ export default function useSimpleContactDetails(id) {
             concertsConstraints2.push(where('organizationId', '==', currentOrganization.id));
           }
           concertsQuery = query(
-            collection(db, 'concerts'),
+            collection(db, 'dates'),
             ...concertsConstraints2
           );
           querySnapshot = await getDocs(concertsQuery);
@@ -163,19 +163,19 @@ export default function useSimpleContactDetails(id) {
         }
         
         console.log(`[DIAGNOSTIC] useSimpleContactDetails - ${concertsLoaded.length} concerts trouvés par référence inverse`, { 
-          concertIds: concertsLoaded.map(concert => concert.id) 
+          dateIds: concertsLoaded.map(dateItem => dateItem.id) 
         });
         
-        setConcerts(concertsLoaded);
+        setDates(concertsLoaded);
       }
       
     } catch (error) {
       console.error('[ERROR] useSimpleContactDetails - Erreur lors du chargement des concerts:', error);
-      setErrorConcerts(error.message);
+      setErrorDates(error.message);
     } finally {
-      setLoadingConcerts(false);
+      setLoadingDates(false);
     }
-  }, [currentOrganization?.id]);
+  }, [currentOrganization?.id, id]);
 
   // Fonction pour charger les artistes associés (même logique complexe que l'original)
   const fetchArtistesAssocies = useCallback(async (contactEntity, concertsData) => {
@@ -200,14 +200,14 @@ export default function useSimpleContactDetails(id) {
       // Méthode 2: Chercher les artistes via les concerts
       if (concertsData && concertsData.length > 0) {
         // Extraire les artisteIds des concerts
-        const artisteIdsFromConcerts = concertsData.flatMap(concert => {
+        const artisteIdsFromDates = concertsData.flatMap(dateItem => {
           const artisteIds = [];
           
           // Vérifier les différents formats de stockage des artistes
-          if (concert.artisteId) artisteIds.push(concert.artisteId);
-          if (concert.artisteIds?.length > 0) artisteIds.push(...concert.artisteIds);
-          if (concert.artistes?.length > 0) {
-            concert.artistes.forEach(artiste => {
+          if (dateItem.artisteId) artisteIds.push(dateItem.artisteId);
+          if (dateItem.artisteIds?.length > 0) artisteIds.push(...dateItem.artisteIds);
+          if (dateItem.artistes?.length > 0) {
+            dateItem.artistes.forEach(artiste => {
               if (typeof artiste === 'string') {
                 artisteIds.push(artiste);
               } else if (artiste.id) {
@@ -220,7 +220,7 @@ export default function useSimpleContactDetails(id) {
         });
         
         // Supprimer les doublons
-        const uniqueArtisteIds = [...new Set(artisteIdsFromConcerts)];
+        const uniqueArtisteIds = [...new Set(artisteIdsFromDates)];
         
         if (uniqueArtisteIds.length > 0) {
           console.log('[DEBUG] useSimpleContactDetails - Chargement des artistes:', uniqueArtisteIds);
@@ -266,7 +266,7 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingArtistes(false);
     }
-  }, [currentOrganization?.id]);
+  }, [currentOrganization?.id, id]);
 
   // Fonction pour charger la structure associée (même logique que l'original)
   const fetchStructureAssociee = useCallback(async (contactEntity) => {
@@ -314,7 +314,7 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingStructure(false);
     }
-  }, [currentOrganization?.id]);
+  }, []);
 
   // EFFET PRINCIPAL - UNE SEULE DÉPENDANCE STABLE POUR ÉVITER LES BOUCLES
   useEffect(() => {
@@ -351,7 +351,7 @@ export default function useSimpleContactDetails(id) {
         // 2. CHARGER LES DONNÉES LIÉES EN PARALLÈLE (sauf artistes)
         const [, concertsPromise] = await Promise.allSettled([
           fetchLieuxAssocies(contactData),
-          fetchConcertsAssocies(contactData),
+          fetchDatesAssocies(contactData),
           fetchStructureAssociee(contactData)
         ]);
 
@@ -363,7 +363,7 @@ export default function useSimpleContactDetails(id) {
           if (currentOrganization?.id) {
             concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
           }
-          let concertsQuery = query(collection(db, 'concerts'), ...concertsConstraints);
+          let concertsQuery = query(collection(db, 'dates'), ...concertsConstraints);
           let querySnapshot = await getDocs(concertsQuery);
           let concertsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           
@@ -379,7 +379,7 @@ export default function useSimpleContactDetails(id) {
     };
 
     loadAllContactData();
-  }, [id, currentOrganization?.id, fetchLieuxAssocies, fetchConcertsAssocies, fetchStructureAssociee, fetchArtistesAssocies]); // DÉPENDANCES STABLES = PAS DE BOUCLES DE RECHARGEMENT
+  }, [id, currentOrganization?.id, fetchLieuxAssocies, fetchDatesAssocies, fetchStructureAssociee, fetchArtistesAssocies]); // DÉPENDANCES STABLES = PAS DE BOUCLES DE RECHARGEMENT
 
   // 🔍 DEBUG: Log du retour
   console.log('[DEBUG useSimpleContactDetails] Données retournées:', {
@@ -406,14 +406,14 @@ export default function useSimpleContactDetails(id) {
     loading,
     loadingStructure,
     loadingLieux,
-    loadingConcerts,
+    loadingDates,
     loadingArtistes,
     
     // États d'erreur
     error,
     errorStructure,
     errorLieux,
-    errorConcerts,
+    errorDates,
     errorArtistes,
     
     // Fonctions vides pour compatibilité (si nécessaire)

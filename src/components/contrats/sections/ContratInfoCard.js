@@ -4,7 +4,7 @@ import styles from '@/pages/ContratDetailsPage.module.css';
 import { formatDateFr } from '@/utils/dateUtils';
 
 /**
- * Component displaying contract and concert information
+ * Component displaying contract and date information
  */
 const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact }) => {
   // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
@@ -34,7 +34,7 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact })
     ? formatDateFr(concert.date)
     : 'Non spécifiée';
 
-  console.log('[DEBUG ContratInfoCard] Date spectacle calculée:', dateSpectacle, 'concert?.date:', concert?.date, 'concert?.heure:', concert?.heure);
+  console.log('[DEBUG ContratInfoCard] Date spectacle calculée:', dateSpectacle, 'concert?.date:', concert?.concert, 'concert?.heure:', concert?.heure);
 
   // Lieu complet avec ville si disponible
   const lieuComplet = lieu?.nom && lieu?.ville
@@ -123,8 +123,8 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact })
             <div className={styles.infoValue}>{template?.name || 'Non spécifié'}</div>
           </div>
           <div className={styles.infoItem}>
-            <div className={styles.infoLabel}>Concert</div>
-            <div className={styles.infoValue}>{concert?.titre || 'Concert sans titre'}</div>
+            <div className={styles.infoLabel}>Date</div>
+            <div className={styles.infoValue}>{concert?.titre || 'Date sans titre'}</div>
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Date du spectacle</div>

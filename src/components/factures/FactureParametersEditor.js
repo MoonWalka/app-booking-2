@@ -84,12 +84,12 @@ const FactureParametersEditor = ({ parameters, onSave, onClose, isModalContext }
         telephone_entreprise: '01 23 45 67 89',
         email_entreprise: 'contact@monentreprise.fr',
         
-        nom_structure: 'Salle de Concert XYZ',
+        nom_structure: 'Salle de Date XYZ',
         adresse_structure: '456 avenue du Spectacle',
         ville_structure: '69000 Lyon',
         siret_structure: '987 654 321 00098',
         tva_structure: 'FR98765432109',
-        email_structure: 'contact@salledeconcert.fr',
+        email_structure: 'contact@sallededate.fr',
         telephone_structure: '04 78 90 12 34',
         
         numero_facture: generateExampleNumber(),
@@ -98,10 +98,10 @@ const FactureParametersEditor = ({ parameters, onSave, onClose, isModalContext }
         // Contact
         contact_nom: 'Jean Dupont',
         contact_telephone: '06 12 34 56 78',
-        contact_email: 'jean.dupont@salledeconcert.fr',
+        contact_email: 'jean.dupont@sallededate.fr',
         
-        titre_concert: 'Concert de Jazz',
-        date_concert: '15/02/2025',
+        titre_date: 'Date de Jazz',
+        date_date: '15/02/2025',
         lieu_nom: 'Théâtre Municipal',
         lieu_ville: 'Lyon',
         artiste_nom: 'Trio Jazz Fusion',

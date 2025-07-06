@@ -14,7 +14,7 @@ import FacturePreview from '@/components/factures/FacturePreview';
 import styles from './FactureGeneratorPage.module.css';
 
 const FactureGeneratorPage = () => {
-  const { concertId: concertIdFromParams, factureId: factureIdFromParams } = useParams();
+  const { dateId: dateIdFromParams, factureId: factureIdFromParams } = useParams();
   const { user } = useAuth();
   const { currentOrganization } = useOrganization();
   const { parametres } = useParametres();
@@ -22,7 +22,7 @@ const FactureGeneratorPage = () => {
   
   // Récupérer les paramètres depuis l'onglet actif
   const activeTab = getActiveTab && getActiveTab();
-  const concertId = activeTab?.params?.concertId || concertIdFromParams;
+  const dateId = activeTab?.params?.dateId || dateIdFromParams;
   const factureId = activeTab?.params?.factureId || factureIdFromParams;
   const contratId = activeTab?.params?.contratId;
   const fromContrat = activeTab?.params?.fromContrat || false;
@@ -228,7 +228,7 @@ const FactureGeneratorPage = () => {
   }, [currentOrganization]);
 
   // Générer les factures à partir du contrat
-  const generateFacturesFromContrat = useCallback((contratData, concertData, parametres, entrepriseData, currentOrganization, structureData) => {
+  const generateFacturesFromContrat = useCallback((contratData, dateData, parametres, entrepriseData, currentOrganization, structureData) => {
     console.log('[generateFacturesFromContrat] === DÉBUT GÉNÉRATION FACTURES ===');
     console.log('[generateFacturesFromContrat] Données contrat reçues:', contratData);
     console.log('[generateFacturesFromContrat] Paramètres entreprise:', parametres?.entreprise);
@@ -238,10 +238,10 @@ const FactureGeneratorPage = () => {
     console.log('[generateFacturesFromContrat] ORDRE depuis entrepriseData:', entrepriseData?.ordre);
     console.log('[generateFacturesFromContrat] Contractant2 (destinataire):', contratData.contractant2);
     console.log('[generateFacturesFromContrat] Structure depuis concert:', {
-      structureNom: concertData.structureNom,
-      structureAdresse: concertData.structureAdresse,
-      structureCodePostal: concertData.structureCodePostal,
-      structureVille: concertData.structureVille
+      structureNom: dateData.structureNom,
+      structureAdresse: dateData.structureAdresse,
+      structureCodePostal: dateData.structureCodePostal,
+      structureVille: dateData.structureVille
     });
     console.log('[generateFacturesFromContrat] TVA dans négociation:', contratData.negociation?.tauxTva);
     console.log('[generateFacturesFromContrat] TVA dans facturation:', contratData.facturation?.tauxTVA);
@@ -252,14 +252,14 @@ const FactureGeneratorPage = () => {
     // Données communes à toutes les factures
     const commonData = {
       // Informations du concert
-      concertId: concertData.id,
+      dateId: dateData.id,
       
       // Informations du destinataire (organisateur) - contractant2 dans le contrat
-      structureId: contratData.structureId || concertData.structureId,
-      structureNom: contratData.contractant2?.nom || structureData?.nom || contratData.structureNom || concertData.structureNom,
-      structureAdresse: contratData.contractant2?.adresse || structureData?.adresse || contratData.structureAdresse || concertData.structureAdresse || '',
-      structureCodePostal: contratData.contractant2?.codePostal || structureData?.codePostal || contratData.structureCodePostal || concertData.structureCodePostal || '',
-      structureVille: contratData.contractant2?.ville || structureData?.ville || contratData.structureVille || concertData.structureVille || '',
+      structureId: contratData.structureId || dateData.structureId,
+      structureNom: contratData.contractant2?.nom || structureData?.nom || contratData.structureNom || dateData.structureNom,
+      structureAdresse: contratData.contractant2?.adresse || structureData?.adresse || contratData.structureAdresse || dateData.structureAdresse || '',
+      structureCodePostal: contratData.contractant2?.codePostal || structureData?.codePostal || contratData.structureCodePostal || dateData.structureCodePostal || '',
+      structureVille: contratData.contractant2?.ville || structureData?.ville || contratData.structureVille || dateData.structureVille || '',
       structureTVA: contratData.contractant2?.numeroTVA || structureData?.numeroTVA || '',
       
       // Informations de l'émetteur (producteur/tourneur) - contractant1 dans le contrat
@@ -352,7 +352,7 @@ const FactureGeneratorPage = () => {
         ...commonData,
         type: 'complete',
         reference: `FAC-${new Date().getFullYear()}-${String(factures.length + 1).padStart(3, '0')}`,
-        objet: `Prestation artistique - ${concertData.artisteNom || ''}`,
+        objet: `Prestation artistique - ${dateData.artisteNom || ''}`,
         montantHT: contratData.negociation?.montantNet || 0,
         tauxTVA: commonData.tauxTVA, // Utiliser la TVA du commonData
         echeance: new Date().toISOString().split('T')[0],
@@ -422,7 +422,7 @@ const FactureGeneratorPage = () => {
           ...commonData,
           type: echeance.nature?.toLowerCase() || 'complete',
           reference: `FAC-${new Date().getFullYear()}-${String(index + 1).padStart(3, '0')}`,
-          objet: `${echeance.nature || 'Facture'} - ${concertData.artisteNom || ''}`,
+          objet: `${echeance.nature || 'Facture'} - ${dateData.artisteNom || ''}`,
           montantHT: montantHT,
           montantTotalTTC: montantTotalTTC, // Passer le montant total de la prestation
           echeance: dateEcheancePaiement || echeance.dateEcheance,
@@ -490,13 +490,13 @@ const FactureGeneratorPage = () => {
             throw new Error('Facture introuvable');
           }
           
-          // Charger le concert associé
-          let concertData = null;
-          if (factureData.concertId) {
-            const concertRef = doc(db, 'concerts', factureData.concertId);
+          // Charger le date associé
+          let dateData = null;
+          if (factureData.dateId) {
+            const concertRef = doc(db, 'concerts', factureData.dateId);
             const concertSnap = await getDoc(concertRef);
             if (concertSnap.exists()) {
-              concertData = { id: concertSnap.id, ...concertSnap.data() };
+              dateData = { id: concertSnap.id, ...concertSnap.data() };
             }
           }
           
@@ -504,11 +504,11 @@ const FactureGeneratorPage = () => {
           let allFactures = [factureData];
           let factureIndex = 0;
           
-          if (factureData.concertId) {
+          if (factureData.dateId) {
             try {
               // Chercher toutes les factures du même concert
               const facturesRef = collection(db, 'organizations', currentOrganization.id, 'factures');
-              const q = query(facturesRef, where('concertId', '==', factureData.concertId));
+              const q = query(facturesRef, where('dateId', '==', factureData.dateId));
               const snapshot = await getDocs(q);
               
               if (!snapshot.empty) {
@@ -568,11 +568,11 @@ const FactureGeneratorPage = () => {
         }
       }
       
-      // Si pas de concertId et pas en mode edit, afficher une démo vide
-      if (!concertId) {
+      // Si pas de dateId et pas en mode edit, afficher une démo vide
+      if (!dateId) {
         setLoading(false);
         // Créer des données de démonstration
-        // (les données de concert sont maintenant gérées via contrat)
+        // (les données de date sont maintenant gérées via contrat)
         setFactures([{
           type: 'demo',
           reference: 'DEMO-2024-001',
@@ -614,20 +614,20 @@ const FactureGeneratorPage = () => {
         }
         
         // Charger le concert
-        const concertRef = doc(db, 'concerts', concertId);
+        const concertRef = doc(db, 'concerts', dateId);
         const concertSnap = await getDoc(concertRef);
         
         if (!concertSnap.exists()) {
-          throw new Error('Concert introuvable');
+          throw new Error('Date introuvable');
         }
         
-        const concertData = { id: concertSnap.id, ...concertSnap.data() };
+        const dateData = { id: concertSnap.id, ...concertSnap.data() };
         
         // Charger les données complètes de la structure si elle existe
         let structureData = null;
-        if (concertData.structureId) {
+        if (dateData.structureId) {
           try {
-            const structureRef = doc(db, 'structures', concertData.structureId);
+            const structureRef = doc(db, 'structures', dateData.structureId);
             const structureSnap = await getDoc(structureRef);
             if (structureSnap.exists()) {
               structureData = structureSnap.data();
@@ -639,9 +639,9 @@ const FactureGeneratorPage = () => {
         }
         
         // Charger le contrat si nécessaire
-        if (fromContrat && concertId) {
-          console.log('[FactureGeneratorPage] Chargement du contrat pour concert:', concertId);
-          const contratData = await contratService.getContratByConcert(concertId);
+        if (fromContrat && dateId) {
+          console.log('[FactureGeneratorPage] Chargement du contrat pour concert:', dateId);
+          const contratData = await contratService.getContratByDate(dateId);
           
           if (contratData) {
             console.log('[FactureGeneratorPage] === AUDIT CONTRAT CHARGÉ ===');
@@ -670,7 +670,7 @@ const FactureGeneratorPage = () => {
             setContrat(contratData);
             
             // Générer les factures basées sur les échéances du contrat
-            const generatedFactures = generateFacturesFromContrat(contratData, concertData, parametres, entrepriseInfo, currentOrganization, structureData);
+            const generatedFactures = generateFacturesFromContrat(contratData, dateData, parametres, entrepriseInfo, currentOrganization, structureData);
             console.log('[FactureGeneratorPage] Factures générées:', generatedFactures);
             setFactures(generatedFactures);
             
@@ -694,7 +694,7 @@ const FactureGeneratorPage = () => {
     };
 
     loadData();
-  }, [user, currentOrganization?.id, concertId, contratId, fromContrat, parametres, mode, factureId, generatePreview, generateFacturesFromContrat]);
+  }, [user, currentOrganization?.id, dateId, contratId, fromContrat, parametres, mode, factureId, generatePreview, generateFacturesFromContrat]);
 
   // Note: generateFacturesFromContrat est défini plus haut avant son utilisation dans loadData
 
@@ -809,7 +809,7 @@ const FactureGeneratorPage = () => {
             numeroFacture: numeroFacture,
             reference: numeroFacture,
             status: 'draft', // Statut initial
-            concertId: facture.concertId,
+            dateId: facture.dateId,
             contratId: contrat?.id,
             // Informations calculées
             montantHT: parseFloat(facture.montantHT) || 0,

@@ -17,7 +17,7 @@ import styles from './DevisEditor.module.css';
  * Gauche: Formulaire d'édition
  * Droite: Preview PDF temps réel
  */
-function DevisEditor({ concertId, structureId, devisId }) {
+function DevisEditor({ dateId, structureId, devisId }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -34,16 +34,16 @@ function DevisEditor({ concertId, structureId, devisId }) {
   const { closeTab, getActiveTab, openDevisTab } = useTabs();
 
   // Récupérer les paramètres depuis les props ou l'URL
-  const finalConcertId = concertId || searchParams.get('concertId');
+  const finalDateId = dateId || searchParams.get('dateId');
   const finalStructureId = structureId || searchParams.get('structureId');
   const finalDevisId = devisId || id;
   
   console.log('🎯 DevisEditor - Paramètres reçus:');
-  console.log('  - concertId (prop):', concertId);
+  console.log('  - dateId (prop):', dateId);
   console.log('  - structureId (prop):', structureId);
   console.log('  - devisId (prop):', devisId);
   console.log('  - id (URL param):', id);
-  console.log('  - finalConcertId:', finalConcertId);
+  console.log('  - finalDateId:', finalDateId);
   console.log('  - finalStructureId:', finalStructureId);
   console.log('  - finalDevisId:', finalDevisId);
 
@@ -65,7 +65,7 @@ function DevisEditor({ concertId, structureId, devisId }) {
     adresseAdministrative: '',
     
     // Événement
-    concertId: finalConcertId || '',
+    dateId: finalDateId || '',
     artisteNom: '',
     projetNom: '',
     dateDebut: '',
@@ -154,49 +154,49 @@ function DevisEditor({ concertId, structureId, devisId }) {
     loadDevis();
   }, [finalDevisId, devisData, currentOrg?.id, currentUser]);
 
-  // Charger les données du concert si concertId fourni
+  // Charger les données du date si dateId fourni
   useEffect(() => {
-    const loadConcertData = async () => {
-      // Ne charger les données du concert que pour un nouveau devis
-      if (!finalConcertId || (finalDevisId && finalDevisId !== 'nouveau' && finalDevisId !== 'new')) {
+    const loadDateData = async () => {
+      // Ne charger les données du date que pour un nouveau devis
+      if (!finalDateId || (finalDevisId && finalDevisId !== 'nouveau' && finalDevisId !== 'new')) {
         return;
       }
       
       try {
-        console.log('=== Début du chargement du concert pour nouveau devis ===');
-        console.log('Concert ID:', finalConcertId);
+        console.log('=== Début du chargement du date pour nouveau devis ===');
+        console.log('Date ID:', finalDateId);
         console.log('Structure ID depuis URL:', finalStructureId);
         
-        // Charger les données du concert depuis Firebase
-        const concertDoc = await getDoc(doc(db, 'concerts', finalConcertId));
+        // Charger les données du date depuis Firebase
+        const dateDoc = await getDoc(doc(db, 'dates', finalDateId));
         
-        if (!concertDoc.exists()) {
-          console.error('❌ Concert non trouvé:', finalConcertId);
-          setError('Concert non trouvé');
+        if (!dateDoc.exists()) {
+          console.error('❌ Date non trouvé:', finalDateId);
+          setError('Date non trouvé');
           return;
         }
         
-        const concertData = { id: finalConcertId, ...concertDoc.data() };
-        console.log('✅ Données COMPLÈTES du concert récupérées:', concertData);
+        const dateData = { id: finalDateId, ...dateDoc.data() };
+        console.log('✅ Données COMPLÈTES du date récupérées:', dateData);
         console.log('🔍 Vérification des champs projet:');
-        console.log('  - projetNom:', concertData.projetNom);
-        console.log('  - projet:', concertData.projet);
-        console.log('  - projetId:', concertData.projetId);
-        console.log('🎨 Artiste du concert:', concertData.artisteNom || 'Aucun artiste');
+        console.log('  - projetNom:', dateData.projetNom);
+        console.log('  - projet:', dateData.projet);
+        console.log('  - projetId:', dateData.projetId);
+        console.log('🎨 Artiste du concert:', dateData.artisteNom || 'Aucun artiste');
         
         // Mettre à jour les données du devis avec les infos du concert
         const updatedDevisData = {
-          concertId: finalConcertId,
-          artisteId: concertData.artisteId || '',
-          artisteNom: concertData.artisteNom || '',
-          projetNom: concertData.projetNom || '', // Récupérer le projet depuis le concert
-          dateDebut: concertData.date || '', // Date de début = date du concert
-          dateFin: concertData.dateFin || concertData.date || '', // Si pas de date de fin, utiliser la date de début
-          titreEvenement: concertData.libelle || concertData.titre || '',
-          lieuNom: concertData.lieuNom || '',
-          lieuVille: concertData.lieuVille || '',
-          structureId: concertData.organisateurId || finalStructureId || '',
-          structureNom: concertData.organisateurNom || ''
+          dateId: finalDateId,
+          artisteId: dateData.artisteId || '',
+          artisteNom: dateData.artisteNom || '',
+          projetNom: dateData.projetNom || '', // Récupérer le projet depuis le concert
+          dateDebut: dateData.date || '', // Date de début = date du concert
+          dateFin: dateData.dateFin || dateData.date || '', // Si pas de date de fin, utiliser la date de début
+          titreEvenement: dateData.libelle || dateData.titre || '',
+          lieuNom: dateData.lieuNom || '',
+          lieuVille: dateData.lieuVille || '',
+          structureId: dateData.organisateurId || finalStructureId || '',
+          structureNom: dateData.organisateurNom || ''
         };
         
         console.log('📦 Données du devis à mettre à jour:', updatedDevisData);
@@ -211,15 +211,15 @@ function DevisEditor({ concertId, structureId, devisId }) {
           return newData;
         });
         
-        console.log('=== Fin du chargement du concert ===');
+        console.log('=== Fin du chargement du date ===');
         
       } catch (err) {
         console.error('Erreur lors du chargement du concert:', err);
       }
     };
 
-    loadConcertData();
-  }, [finalConcertId, finalDevisId, finalStructureId]);
+    loadDateData();
+  }, [finalDateId, finalDevisId, finalStructureId]);
 
   // Surveiller les changements
   useEffect(() => {

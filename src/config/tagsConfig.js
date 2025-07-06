@@ -56,7 +56,7 @@ export const CONTACT_TAGS = [
     id: 'diffuseur',
     label: 'Diffuseur',
     color: '#007bff', // Primary blue
-    description: 'Salles de concert, festivals, lieux de diffusion'
+    description: 'Salles de spectacle, festivals, lieux de diffusion'
   },
   {
     id: 'agent-entrepreneur',

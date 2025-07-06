@@ -105,10 +105,10 @@ function EchangeItem({ echange, onEdit, onDelete, onMarkCompleted, onSetRappel }
         <div className={styles.details}>
           {/* Infos supplémentaires */}
           <div className={styles.detailsInfo}>
-            {echange.concertId && (
+            {echange.dateId && (
               <div className={styles.detailItem}>
                 <i className="bi bi-music-note-beamed"></i>
-                <span>Concert associé</span>
+                <span>Date associé</span>
               </div>
             )}
             {echange.rappel && (

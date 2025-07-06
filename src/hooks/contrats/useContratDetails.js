@@ -21,7 +21,7 @@ const useContratDetails = (contratId) => {
     { 
       name: 'concert', 
       collection: 'concerts', 
-      idField: 'concertId',
+      idField: 'dateId',
       type: 'one-to-one',
       essential: true
     },
@@ -75,32 +75,32 @@ const useContratDetails = (contratId) => {
     contact: async (contratData) => {
       console.log('[DEBUG] Chargement contact pour contrat:', contratData);
       
-      if (!contratData.concertId) {
-        console.log('[DEBUG] Pas de concertId dans le contrat');
+      if (!contratData.dateId) {
+        console.log('[DEBUG] Pas de dateId dans le contrat');
         return null;
       }
       
       try {
         // Récupérer d'abord le concert
-        console.log('[DEBUG] Récupération du concert:', contratData.concertId);
-        const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
+        console.log('[DEBUG] Récupération du concert:', contratData.dateId);
+        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
         
-        if (!concertDoc.exists()) {
-          console.log('[DEBUG] Concert non trouvé');
+        if (!dateDoc.exists()) {
+          console.log('[DEBUG] Date non trouvé');
           return null;
         }
         
-        const concertData = concertDoc.data();
-        console.log('[DEBUG] Données du concert:', concertData);
+        const dateData = dateDoc.data();
+        console.log('[DEBUG] Données du concert:', dateData);
         
-        if (!concertData.contactId) {
+        if (!dateData.contactId) {
           console.log('[DEBUG] Pas de contactId dans le concert');
           return null;
         }
         
         // Récupérer ensuite le contact
-        console.log('[DEBUG] Récupération du contact:', concertData.contactId);
-        const progDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
+        console.log('[DEBUG] Récupération du contact:', dateData.contactId);
+        const progDoc = await getDoc(doc(db, 'contacts', dateData.contactId));
         
         if (!progDoc.exists()) {
           console.log('[DEBUG] Contact non trouvé');
@@ -121,29 +121,29 @@ const useContratDetails = (contratId) => {
     lieu: async (contratData) => {
       console.log('[DEBUG] Chargement lieu pour contrat:', contratData);
       
-      if (!contratData.concertId) {
-        console.log('[DEBUG] Pas de concertId dans le contrat');
+      if (!contratData.dateId) {
+        console.log('[DEBUG] Pas de dateId dans le contrat');
         return null;
       }
       
       try {
-        const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
+        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
         
-        if (!concertDoc.exists()) {
-          console.log('[DEBUG] Concert non trouvé pour le lieu');
+        if (!dateDoc.exists()) {
+          console.log('[DEBUG] Date non trouvé pour le lieu');
           return null;
         }
         
-        const concertData = concertDoc.data();
-        console.log('[DEBUG] Données du concert pour lieu:', concertData);
+        const dateData = dateDoc.data();
+        console.log('[DEBUG] Données du date pour lieu:', dateData);
         
-        if (!concertData.lieuId) {
+        if (!dateData.lieuId) {
           console.log('[DEBUG] Pas de lieuId dans le concert');
           return null;
         }
         
-        console.log('[DEBUG] Récupération du lieu:', concertData.lieuId);
-        const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+        console.log('[DEBUG] Récupération du lieu:', dateData.lieuId);
+        const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
         
         if (!lieuDoc.exists()) {
           console.log('[DEBUG] Lieu non trouvé');
@@ -164,29 +164,29 @@ const useContratDetails = (contratId) => {
     artiste: async (contratData) => {
       console.log('[DEBUG] Chargement artiste pour contrat:', contratData);
       
-      if (!contratData.concertId) {
-        console.log('[DEBUG] Pas de concertId dans le contrat');
+      if (!contratData.dateId) {
+        console.log('[DEBUG] Pas de dateId dans le contrat');
         return null;
       }
       
       try {
-        const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
+        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
         
-        if (!concertDoc.exists()) {
-          console.log('[DEBUG] Concert non trouvé pour artiste');
+        if (!dateDoc.exists()) {
+          console.log('[DEBUG] Date non trouvé pour artiste');
           return null;
         }
         
-        const concertData = concertDoc.data();
-        console.log('[DEBUG] Données du concert pour artiste:', concertData);
+        const dateData = dateDoc.data();
+        console.log('[DEBUG] Données du date pour artiste:', dateData);
         
-        if (!concertData.artisteId) {
+        if (!dateData.artisteId) {
           console.log('[DEBUG] Pas d\'artisteId dans le concert');
           return null;
         }
         
-        console.log('[DEBUG] Récupération de l\'artiste:', concertData.artisteId);
-        const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+        console.log('[DEBUG] Récupération de l\'artiste:', dateData.artisteId);
+        const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
         
         if (!artisteDoc.exists()) {
           console.log('[DEBUG] Artiste non trouvé');
@@ -220,30 +220,30 @@ const useContratDetails = (contratId) => {
     structure: async (contratData) => {
       console.log('[DEBUG] Chargement structure pour contrat:', contratData);
       
-      if (!contratData.concertId) {
-        console.log('[DEBUG] Pas de concertId dans le contrat');
+      if (!contratData.dateId) {
+        console.log('[DEBUG] Pas de dateId dans le contrat');
         return null;
       }
       
       try {
         // Récupérer d'abord le concert
-        const concertDoc = await getDoc(doc(db, 'concerts', contratData.concertId));
+        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
         
-        if (!concertDoc.exists()) {
-          console.log('[DEBUG] Concert non trouvé pour structure');
+        if (!dateDoc.exists()) {
+          console.log('[DEBUG] Date non trouvé pour structure');
           return null;
         }
         
-        const concertData = concertDoc.data();
-        console.log('[DEBUG] Données du concert pour structure:', concertData);
+        const dateData = dateDoc.data();
+        console.log('[DEBUG] Données du date pour structure:', dateData);
         
-        if (!concertData.contactId) {
+        if (!dateData.contactId) {
           console.log('[DEBUG] Pas de contactId dans le concert');
           return null;
         }
         
         // Récupérer le contact
-        const contactDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
+        const contactDoc = await getDoc(doc(db, 'contacts', dateData.contactId));
         
         if (!contactDoc.exists()) {
           console.log('[DEBUG] Contact non trouvé pour structure');

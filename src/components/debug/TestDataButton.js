@@ -46,7 +46,7 @@ function TestDataButton({
           break;
         case 'concert':
           // Pour un concert, on a besoin des IDs
-          toast.info('Utilisez le workflow complet pour créer un concert de test');
+          toast.info('Utilisez le workflow complet pour créer un date de test');
           return;
         case 'form':
           data = testDataService.generateTestFormData(formData || {});
@@ -93,7 +93,7 @@ function TestDataButton({
             <small>
               Artiste: {result.artiste.nom}<br />
               Lieu: {result.lieu.nom}<br />
-              Concert: {result.concert.libelle}<br />
+              Date: {result.date.libelle}<br />
               <a href={result.formUrl} target="_blank" rel="noopener noreferrer">
                 Ouvrir le formulaire →
               </a>

@@ -58,7 +58,7 @@ const RelationCard = ({
       
       case 'concert':
         return {
-          title: entity.titre || 'Concert sans titre',
+          title: entity.titre || 'Date sans titre',
           subtitle: entity.date ? new Date(entity.date).toLocaleDateString('fr-FR') : '',
           icon: 'bi-calendar-event'
         };

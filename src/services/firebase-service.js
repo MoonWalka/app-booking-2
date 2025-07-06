@@ -369,12 +369,15 @@ export const createOrganization = async (orgData, userId) => {
 // Obtenir les organisations d'un utilisateur
 export const getUserOrganizations = async (userId) => {
   console.log('🔍 Récupération des organisations pour l\'utilisateur:', userId);
+  console.log('[DEBUG getUserOrganizations] Recherche dans user_organizations/', userId);
   
   try {
     const userOrgDoc = await getDoc(doc(db, 'user_organizations', userId));
+    console.log('[DEBUG getUserOrganizations] Document trouvé ?', userOrgDoc.exists());
     
     if (!userOrgDoc.exists()) {
       console.log('ℹ️ Aucune organisation trouvée pour cet utilisateur');
+      console.log('[DEBUG] Le document user_organizations/', userId, 'n\'existe pas dans Firestore');
       return [];
     }
     

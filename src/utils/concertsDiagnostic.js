@@ -1,12 +1,12 @@
 /**
- * Diagnostic pour analyser le problème de chargement des concerts
+ * Diagnostic pour analyser le problème de chargement des dates
  */
 
 import { collection, getDocs, query, orderBy } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import { getCurrentOrganization } from '@/services/firebase-service';
 
-export const diagnosticConcerts = async () => {
+export const diagnosticDates = async () => {
   console.log('🔍 === DIAGNOSTIC CONCERTS ===');
   
   // 1. Vérifier l'organisation courante
@@ -20,13 +20,13 @@ export const diagnosticConcerts = async () => {
   // 3. Vérifier la disponibilité de la base de données
   console.log('3. Instance db:', db);
   
-  // 4. Tenter de charger la collection concerts directement
+  // 4. Tenter de charger la collection dates directement
   try {
-    console.log('4. Test collection concerts directe...');
-    const concertsRef = collection(db, 'concerts');
-    console.log('   - Collection ref créée:', concertsRef);
+    console.log('4. Test collection dates directe...');
+    const datesRef = collection(db, 'dates');
+    console.log('   - Collection ref créée:', datesRef);
     
-    const snapshot = await getDocs(concertsRef);
+    const snapshot = await getDocs(datesRef);
     console.log('   - Snapshot obtenu:', snapshot);
     console.log('   - Nombre de documents:', snapshot.docs?.length || 0);
     
@@ -37,14 +37,14 @@ export const diagnosticConcerts = async () => {
       });
     }
   } catch (error) {
-    console.error('❌ Erreur lors du test collection concerts:', error);
+    console.error('❌ Erreur lors du test collection dates:', error);
   }
   
   // 5. Tester avec une requête triée (comme dans ListWithFilters)
   try {
     console.log('5. Test requête triée...');
-    const concertsRef = collection(db, 'concerts');
-    const q = query(concertsRef, orderBy('dateEvenement', 'desc'));
+    const datesRef = collection(db, 'dates');
+    const q = query(datesRef, orderBy('dateEvenement', 'desc'));
     const snapshot = await getDocs(q);
     console.log('   - Requête triée réussie, documents:', snapshot.docs?.length || 0);
   } catch (error) {
@@ -55,11 +55,11 @@ export const diagnosticConcerts = async () => {
   if (currentOrg) {
     try {
       console.log('6. Test collection organisationnelle...');
-      const orgCollectionName = `concerts_org_${currentOrg}`;
+      const orgCollectionName = `dates_org_${currentOrg}`;
       console.log('   - Nom collection org:', orgCollectionName);
       
-      const orgConcertsRef = collection(db, orgCollectionName);
-      const snapshot = await getDocs(orgConcertsRef);
+      const orgDatesRef = collection(db, orgCollectionName);
+      const snapshot = await getDocs(orgDatesRef);
       console.log('   - Documents org:', snapshot.docs?.length || 0);
     } catch (error) {
       console.error('❌ Erreur collection organisationnelle:', error);
@@ -73,7 +73,7 @@ export const diagnosticConcerts = async () => {
 export const diagnosticDemoData = async () => {
   console.log('🎭 === DIAGNOSTIC DONNÉES DÉMO ===');
   
-  const collections = ['concerts', 'artistes', 'lieux', 'contacts', 'structures'];
+  const collections = ['dates', 'artistes', 'lieux', 'contacts', 'structures'];
   
   for (const collName of collections) {
     try {

@@ -33,11 +33,11 @@ class PreContratService {
   /**
    * Crée un nouveau pré-contrat
    * @param {Object} preContratData - Données du pré-contrat
-   * @param {string} concertId - ID du concert associé
+   * @param {string} dateId - ID du date associé
    * @param {string} organizationId - ID de l'organisation
    * @returns {Promise<Object>} - Pré-contrat créé avec ID
    */
-  async createPreContrat(preContratData, concertId, organizationId) {
+  async createPreContrat(preContratData, dateId, organizationId) {
     try {
       const user = auth.currentUser;
       if (!user) throw new Error('Utilisateur non authentifié');
@@ -48,7 +48,7 @@ class PreContratService {
 
       const preContrat = {
         ...preContratData,
-        concertId,
+        dateId,
         organizationId,
         token,
         status: 'draft',
@@ -68,7 +68,7 @@ class PreContratService {
 
       console.log('[WORKFLOW_TEST] 3. Génération du pré-contrat - création dans Firebase');
       debugLog('[PreContratService] Création pré-contrat:', {
-        concertId,
+        dateId,
         organizationId,
         destinataires: preContratData.destinataires?.length || 0,
         structureData: {
@@ -93,7 +93,7 @@ class PreContratService {
           priorite: 'haute',
           dateEcheance: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 jours
           organizationId,
-          concertId,
+          dateId,
           contactId: preContratData.contactId || null,
           entityType: 'pre_contrat',
           entityId: docRef.id,
@@ -163,13 +163,13 @@ class PreContratService {
 
       const preContrat = { id: preContratId, ...preContratDoc.data() };
       
-      // Récupérer les données du concert
-      const concertDoc = await getDoc(doc(db, 'concerts', preContrat.concertId));
-      if (!concertDoc.exists()) {
-        throw new Error('Concert associé introuvable');
+      // Récupérer les données du date
+      const dateDoc = await getDoc(doc(db, 'dates', preContrat.dateId));
+      if (!dateDoc.exists()) {
+        throw new Error('Date associé introuvable');
       }
       
-      const concert = { id: preContrat.concertId, ...concertDoc.data() };
+      const date = { id: preContrat.dateId, ...dateDoc.data() };
 
       // Utiliser les destinataires fournis ou ceux du pré-contrat
       const emailList = destinataires.length > 0 ? destinataires : preContrat.destinataires;
@@ -179,12 +179,12 @@ class PreContratService {
       }
 
       // Générer le lien de validation
-      const validationLink = this.generateValidationLink(preContrat.concertId, preContrat.token);
+      const validationLink = this.generateValidationLink(preContrat.dateId, preContrat.token);
 
       debugLog('[PreContratService] Envoi pré-contrat:', {
         preContratId,
         destinataires: emailList,
-        concertNom: concert.titre || concert.nom,
+        dateNom: date.titre || date.nom,
         validationLink
       }, 'info');
 
@@ -201,7 +201,7 @@ class PreContratService {
 
           // Utiliser le service Brevo pour envoyer avec le template "formulaire"
           const result = await emailService.sendBrevoFormEmail(
-            concert,
+            date,
             contact,
             validationLink
           );
@@ -255,7 +255,7 @@ class PreContratService {
             priorite: 'normale',
             dateEcheance: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours
             organizationId: preContrat.organizationId,
-            concertId: preContrat.concertId,
+            dateId: preContrat.dateId,
             contactId: preContrat.contactId || null,
             entityType: 'pre_contrat',
             entityId: preContratId,
@@ -284,13 +284,13 @@ class PreContratService {
 
   /**
    * Génère le lien de validation pour un pré-contrat
-   * @param {string} concertId - ID du concert
+   * @param {string} dateId - ID du date
    * @param {string} token - Token du pré-contrat
    * @returns {string} - URL complète de validation
    */
-  generateValidationLink(concertId, token) {
+  generateValidationLink(dateId, token) {
     const baseUrl = window.location.origin;
-    return `${baseUrl}/pre-contrat/${concertId}/${token}`;
+    return `${baseUrl}/pre-contrat/${dateId}/${token}`;
   }
 
   /**
@@ -308,15 +308,15 @@ class PreContratService {
 
   /**
    * Valide un token de pré-contrat
-   * @param {string} concertId - ID du concert
+   * @param {string} dateId - ID du date
    * @param {string} token - Token à valider
    * @returns {Promise<Object>} - Pré-contrat si valide
    */
-  async validateToken(concertId, token) {
+  async validateToken(dateId, token) {
     try {
       const q = query(
         collection(db, 'preContrats'),
-        where('concertId', '==', concertId),
+        where('dateId', '==', dateId),
         where('token', '==', token)
       );
 
@@ -444,17 +444,17 @@ class PreContratService {
   }
 
   /**
-   * Récupère les pré-contrats d'un concert
-   * @param {string} concertId - ID du concert
+   * Récupère les pré-contrats d'un date
+   * @param {string} dateId - ID du date
    * @returns {Promise<Array>} - Liste des pré-contrats
    */
-  async getPreContratsByConcert(concertId) {
+  async getPreContratsByDate(dateId) {
     try {
-      console.log('[PreContratService] Recherche pré-contrats pour concert:', concertId);
+      console.log('[PreContratService] Recherche pré-contrats pour date:', dateId);
       
       const q = query(
         collection(db, 'preContrats'),
-        where('concertId', '==', concertId)
+        where('dateId', '==', dateId)
       );
 
       const querySnapshot = await getDocs(q);
@@ -554,7 +554,7 @@ export const {
   validateToken,
   savePublicFormData,
   validatePreContrat,
-  getPreContratsByConcert,
+  getPreContratsByDate,
   getPreContratById,
   resendPreContrat
 } = preContratService;

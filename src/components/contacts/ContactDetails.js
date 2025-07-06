@@ -10,7 +10,7 @@ import ContactsMobileView from './mobile/ContactView';
 /**
  * Composant conteneur pour les détails d'un contact
  * Utilise le hook useResponsive pour afficher soit la version desktop, soit la version mobile
- * Architecture moderne alignée avec ConcertDetails et LieuDetails
+ * Architecture moderne alignée avec DateDetails et LieuDetails
  */
 const ContactDetails = () => {
   const { id } = useParams();

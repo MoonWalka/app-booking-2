@@ -22,7 +22,7 @@ const DEFAULT_ADMIN_EMAIL = process.env.REACT_APP_DEFAULT_ADMIN_EMAIL || "admin@
 // Collections à migrer
 const COLLECTIONS_TO_MIGRATE = [
   'contacts',
-  'concerts',
+  'dates',
   'lieux',
   'artistes',
   'structures',

@@ -9,7 +9,7 @@ const ArtisteSearchLiveDebug = () => {
   const { currentOrganization } = useOrganization();
   const [manualSearchTerm, setManualSearchTerm] = useState('');
   
-  // Utiliser exactement le même hook que dans ConcertForm
+  // Utiliser exactement le même hook que dans DateForm
   const {
     searchTerm: artisteSearchTerm,
     setSearchTerm: setArtisteSearchTerm,

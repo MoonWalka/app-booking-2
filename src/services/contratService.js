@@ -21,19 +21,19 @@ import tachesService from '@/services/tachesService';
 const contratService = {
   /**
    * Sauvegarde ou met à jour un contrat
-   * @param {string} concertId - ID du concert
+   * @param {string} dateId - ID du date
    * @param {Object} contratData - Données du contrat
    * @param {string} organizationId - ID de l'organisation
    * @returns {Promise<Object>} Le contrat sauvegardé
    */
-  async saveContrat(concertId, contratData, organizationId) {
+  async saveContrat(dateId, contratData, organizationId) {
     try {
-      console.log('[ContratService] Sauvegarde du contrat pour concert:', concertId);
+      console.log('[ContratService] Sauvegarde du contrat pour date:', dateId);
       
       // Préparer les données du contrat
       const contratToSave = {
         ...contratData,
-        concertId,
+        dateId,
         organizationId,
         updatedAt: serverTimestamp(),
         // Si c'est une nouvelle création, ajouter createdAt
@@ -47,8 +47,8 @@ const contratService = {
         entrepriseCode: contratData.entrepriseCode || 'MR' // Utiliser 'MR' pour Meltin Recordz par défaut
       };
 
-      // Utiliser l'ID du concert comme ID du contrat pour maintenir la relation 1:1
-      const contratRef = doc(db, 'contrats', concertId);
+      // Utiliser l'ID du date comme ID du contrat pour maintenir la relation 1:1
+      const contratRef = doc(db, 'contrats', dateId);
       await setDoc(contratRef, contratToSave, { merge: true });
 
       console.log('[ContratService] Contrat sauvegardé avec succès');
@@ -56,20 +56,20 @@ const contratService = {
       // Si c'est une nouvelle création de contrat, créer une tâche automatique
       if (!contratData.createdAt && contratData.status === 'draft') {
         try {
-          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-          const concertData = concertDoc.exists() ? concertDoc.data() : {};
+          const dateDoc = await getDoc(doc(db, 'dates', dateId));
+          const dateData = dateDoc.exists() ? dateDoc.data() : {};
           
           await tachesService.creerTache({
             titre: `Envoyer le contrat à ${contratData.organisateur?.raisonSociale || 'l\'organisateur'}`,
-            description: `Le contrat pour ${concertData.titre || 'le concert'} a été créé. Il faut maintenant l'envoyer pour signature.`,
+            description: `Le contrat pour ${dateData.titre || 'le date'} a été créé. Il faut maintenant l'envoyer pour signature.`,
             type: 'envoi_document',
             priorite: 'haute',
             dateEcheance: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 jours
             organizationId,
-            concertId,
+            dateId,
             contactId: contratData.organisateur?.contactId || null,
             entityType: 'contrat',
-            entityId: concertId,
+            entityId: dateId,
             automatique: true,
             createdBy: contratData.createdBy || null
           });
@@ -81,7 +81,7 @@ const contratService = {
       
       // Retourner le contrat sauvegardé avec son ID
       return {
-        id: concertId,
+        id: dateId,
         ...contratToSave,
         updatedAt: new Date(),
         createdAt: contratData.createdAt || new Date()
@@ -93,15 +93,15 @@ const contratService = {
   },
 
   /**
-   * Récupère un contrat par l'ID du concert
-   * @param {string} concertId - ID du concert
+   * Récupère un contrat par l'ID du date
+   * @param {string} dateId - ID du date
    * @returns {Promise<Object|null>} Le contrat ou null
    */
-  async getContratByConcert(concertId) {
+  async getContratByDate(dateId) {
     try {
-      console.log('[ContratService] Récupération du contrat pour concert:', concertId);
+      console.log('[ContratService] Récupération du contrat pour date:', dateId);
       
-      const contratRef = doc(db, 'contrats', concertId);
+      const contratRef = doc(db, 'contrats', dateId);
       const contratDoc = await getDoc(contratRef);
       
       if (contratDoc.exists()) {
@@ -113,7 +113,7 @@ const contratService = {
         return contratData;
       }
       
-      console.log('[ContratService] Aucun contrat trouvé pour ce concert');
+      console.log('[ContratService] Aucun contrat trouvé pour ce date');
       return null;
     } catch (error) {
       console.error('[ContratService] Erreur lors de la récupération du contrat:', error);
@@ -146,48 +146,48 @@ const contratService = {
 
   /**
    * Met à jour le statut d'un contrat
-   * @param {string} concertId - ID du concert
+   * @param {string} dateId - ID du date
    * @param {string} status - Nouveau statut ('draft', 'finalized', 'signed')
    * @returns {Promise<void>}
    */
-  async updateContratStatus(concertId, status) {
+  async updateContratStatus(dateId, status) {
     try {
-      console.log('[ContratService] Mise à jour du statut du contrat:', concertId, status);
+      console.log('[ContratService] Mise à jour du statut du contrat:', dateId, status);
       
-      const contratRef = doc(db, 'contrats', concertId);
+      const contratRef = doc(db, 'contrats', dateId);
       await updateDoc(contratRef, {
         status,
         updatedAt: serverTimestamp(),
         [`${status}At`]: serverTimestamp() // Ex: finalizedAt, signedAt
       });
       
-      // Mettre à jour aussi le statut dans le concert
-      const concertRef = doc(db, 'concerts', concertId);
-      await updateDoc(concertRef, {
+      // Mettre à jour aussi le statut dans le date
+      const dateRef = doc(db, 'dates', dateId);
+      await updateDoc(dateRef, {
         contratStatus: status,
-        contratId: concertId,
+        contratId: dateId,
         updatedAt: serverTimestamp()
       });
       
       // Créer une tâche automatique si le contrat est signé
       if (status === 'signed') {
         try {
-          const concertDoc = await getDoc(concertRef);
-          const concertData = concertDoc.exists() ? concertDoc.data() : {};
+          const dateDoc = await getDoc(dateRef);
+          const dateData = dateDoc.exists() ? dateDoc.data() : {};
           const contratDoc = await getDoc(contratRef);
           const contratData = contratDoc.exists() ? contratDoc.data() : {};
           
           await tachesService.creerTache({
             titre: `Créer la facture pour ${contratData.organisateur?.raisonSociale || 'l\'organisateur'}`,
-            description: `Le contrat pour ${concertData.titre || 'le concert'} a été signé. Il faut maintenant créer la facture.`,
+            description: `Le contrat pour ${dateData.titre || 'le date'} a été signé. Il faut maintenant créer la facture.`,
             type: 'facture',
             priorite: 'normale',
             dateEcheance: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 jours
             organizationId: contratData.organizationId,
-            concertId,
+            dateId,
             contactId: contratData.organisateur?.contactId || null,
             entityType: 'contrat',
-            entityId: concertId,
+            entityId: dateId,
             automatique: true,
             createdBy: contratData.updatedBy || null
           });
@@ -206,15 +206,15 @@ const contratService = {
 
   /**
    * Finalise un contrat (le verrouille)
-   * @param {string} concertId - ID du concert
+   * @param {string} dateId - ID du date
    * @param {string} contratNumber - Numéro de contrat généré
    * @returns {Promise<void>}
    */
-  async finalizeContrat(concertId, contratNumber) {
+  async finalizeContrat(dateId, contratNumber) {
     try {
-      console.log('[ContratService] Finalisation du contrat:', concertId);
+      console.log('[ContratService] Finalisation du contrat:', dateId);
       
-      const contratRef = doc(db, 'contrats', concertId);
+      const contratRef = doc(db, 'contrats', dateId);
       await updateDoc(contratRef, {
         status: 'finalized',
         contratNumber,
@@ -222,9 +222,9 @@ const contratService = {
         updatedAt: serverTimestamp()
       });
       
-      // Mettre à jour le concert
-      const concertRef = doc(db, 'concerts', concertId);
-      await updateDoc(concertRef, {
+      // Mettre à jour le date
+      const dateRef = doc(db, 'dates', dateId);
+      await updateDoc(dateRef, {
         contratStatus: 'finalized',
         contratNumber,
         updatedAt: serverTimestamp()
@@ -352,15 +352,15 @@ const contratService = {
 
   /**
    * Met à jour le lien vers un devis
-   * @param {string} concertId - ID du concert/contrat
+   * @param {string} dateId - ID du date/contrat
    * @param {string} devisId - ID du devis
    * @returns {Promise<void>}
    */
-  async linkDevis(concertId, devisId) {
+  async linkDevis(dateId, devisId) {
     try {
-      console.log('[ContratService] Liaison du devis:', devisId, 'au contrat:', concertId);
+      console.log('[ContratService] Liaison du devis:', devisId, 'au contrat:', dateId);
       
-      const contratRef = doc(db, 'contrats', concertId);
+      const contratRef = doc(db, 'contrats', dateId);
       await updateDoc(contratRef, {
         devisId,
         updatedAt: serverTimestamp()
@@ -375,15 +375,15 @@ const contratService = {
 
   /**
    * Met à jour le lien vers une facture
-   * @param {string} concertId - ID du concert/contrat
+   * @param {string} dateId - ID du date/contrat
    * @param {string} factureId - ID de la facture
    * @returns {Promise<void>}
    */
-  async linkFacture(concertId, factureId) {
+  async linkFacture(dateId, factureId) {
     try {
-      console.log('[ContratService] Liaison de la facture:', factureId, 'au contrat:', concertId);
+      console.log('[ContratService] Liaison de la facture:', factureId, 'au contrat:', dateId);
       
-      const contratRef = doc(db, 'contrats', concertId);
+      const contratRef = doc(db, 'contrats', dateId);
       await updateDoc(contratRef, {
         factureId,
         updatedAt: serverTimestamp()

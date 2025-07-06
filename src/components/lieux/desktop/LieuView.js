@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button';
 import FormHeader from '@/components/ui/FormHeader';
 import EntityCard from '@/components/ui/EntityCard';
 // import ConfirmationModal from '@/components/ui/ConfirmationModal'; // TODO: Ajouter modal de suppression
-import ConcertLieuMap from '../../concerts/desktop/sections/ConcertLieuMap';
+import DateLieuMap from '../../dates/desktop/sections/DateLieuMap';
 import styles from './LieuView.module.css';
 
 /**
@@ -80,7 +80,7 @@ function LieuView({ id: propId }) {
     const routes = {
       contact: `/contacts/${entityId}`,
       structure: `/structures/${entityId}`,
-      concert: `/concerts/${entityId}`,
+      concert: `/dates/${entityId}`,
       artiste: `/artistes/${entityId}`
     };
     
@@ -179,16 +179,16 @@ function LieuView({ id: propId }) {
                 />
               ))}
 
-              {/* Concerts */}
-              {concertsArray.slice(0, 3).map((concert) => (
+              {/* Dates */}
+              {concertsArray.slice(0, 3).map((dateItem) => (
                 <EntityCard
-                  key={concert.id}
+                  key={dateItem.id}
                   entityType="concert"
-                  name={concert.titre || 'Concert'}
-                  subtitle={`Concert (${concertsArray.length})`}
+                  name={dateItem.titre || 'Date'}
+                  subtitle={`Date (${concertsArray.length})`}
                   onClick={() => {
-                    const concertId = concert.id || concert.concertId;
-                    navigateToEntity('concert', concertId);
+                    const dateId = dateItem.id || dateItem.dateId;
+                    navigateToEntity('concert', dateId);
                   }}
                 />
               ))}
@@ -230,7 +230,7 @@ function LieuView({ id: propId }) {
         </div>
         
         {/* Carte interactive */}
-        <ConcertLieuMap 
+        <DateLieuMap 
           lieu={lieu}
           onDirections={() => {}}
         />

@@ -120,12 +120,12 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
       if (!concert?.id || !currentOrg?.id) return;
 
       try {
-        console.log('[PreContratGenerator] Recherche pré-contrat existant pour concert:', concert.id);
+        console.log('[PreContratGenerator] Recherche pré-contrat existant pour concert:', date.id);
         
         // Rechercher un pré-contrat existant pour ce concert
         const q = query(
           collection(db, 'preContrats'),
-          where('concertId', '==', concert.id),
+          where('dateId', '==', date.id),
           where('organizationId', '==', currentOrg.id)
         );
         
@@ -241,14 +241,14 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
 
   // Charger le devis associé au concert
   useEffect(() => {
-    const loadDevisDuConcert = async () => {
+    const loadDevisDuDate = async () => {
       if (!concert?.id) return;
 
       try {
-        console.log('[PreContratGenerator] Recherche devis pour concert:', concert.id);
+        console.log('[PreContratGenerator] Recherche devis pour concert:', date.id);
         
         // Chercher les devis pour ce concert
-        const devisList = await devisService.getDevisByConcert(concert.id);
+        const devisList = await devisService.getDevisByDate(date.id);
         
         if (devisList && devisList.length > 0) {
           // Prendre le devis le plus récent
@@ -322,7 +322,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
       }
     };
     
-    loadDevisDuConcert();
+    loadDevisDuDate();
   }, [concert?.id]);
 
   // Initialiser les données depuis les props (exécuté une seule fois au chargement)
@@ -500,7 +500,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         // Création
         const result = await preContratService.createPreContrat(
           formData,
-          concert.id,
+          date.id,
           currentOrg.id
         );
         setPreContratId(result.id);
@@ -548,7 +548,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
       if (!currentPreContratId) {
         const result = await preContratService.createPreContrat(
           formData,
-          concert.id,
+          date.id,
           currentOrg.id
         );
         currentPreContratId = result.id;
@@ -616,11 +616,11 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
             size="sm"
             onClick={() => {
               openTab({
-                id: `confirmation-${concert.id}`,
-                title: `Confirmation - ${concert.artisteNom || 'Concert'}`,
-                path: `/confirmation?concertId=${concert.id}`,
+                id: `confirmation-${date.id}`,
+                title: `Confirmation - ${concert.artisteNom || 'Date'}`,
+                path: `/confirmation?dateId=${date.id}`,
                 component: 'ConfirmationPage',
-                params: { concertId: concert.id },
+                params: { dateId: date.id },
                 icon: 'bi-check-circle'
               });
             }}
@@ -1361,7 +1361,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
             ))}
           </ul>
           <p className="mb-0">
-            <strong>Concert :</strong> {concert?.titre || concert?.nom || 'Sans titre'}
+            <strong>Date :</strong> {concert?.titre || concert?.nom || 'Sans titre'}
           </p>
           <p className="mb-0">
             <strong>Structure :</strong> {formData.raisonSociale || 'Non renseignée'}

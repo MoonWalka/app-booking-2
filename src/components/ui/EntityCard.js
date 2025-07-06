@@ -4,7 +4,7 @@ import styles from './EntityCard.module.css';
 
 /**
  * Composant EntityCard - Carte d'entité cliquable avec couleurs thématiques
- * Basé sur le design des cartes de ConcertViewModern
+ * Basé sur le design des cartes de DateViewModern
  * 
  * @param {Object} props
  * @param {string} props.entityType - Type d'entité ('artiste', 'contact', 'structure', 'lieu', 'concert')
@@ -53,10 +53,10 @@ const EntityCard = ({
       defaultSubtitle: 'Lieu'
     },
     concert: {
-      colorClass: styles.entityConcert,
-      iconClass: styles.entityIconConcert,
+      colorClass: styles.entityDate,
+      iconClass: styles.entityIconDate,
       defaultIcon: '🎵',
-      defaultSubtitle: 'Concert'
+      defaultSubtitle: 'Date'
     }
   };
 

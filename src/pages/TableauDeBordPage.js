@@ -3,12 +3,12 @@ import { Container, Row, Col, Card, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTabs } from '@/context/TabsContext';
 import AddButton from '@/components/ui/AddButton';
-import ConcertsTableView from '@/components/concerts/ConcertsTableView';
+import DatesTableView from '@/components/dates/DatesTableView';
 // useAuth import retiré car non utilisé
 import { useOrganization } from '@/context/OrganizationContext';
 import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { getPreContratsByConcert } from '@/services/preContratService';
+import { getPreContratsByDate } from '@/services/preContratService';
 import contratService from '@/services/contratService';
 import styles from './TableauDeBordPage.module.css';
 
@@ -23,7 +23,7 @@ const TableauDeBordPage = () => {
   // Fonction openConfirmationPage retirée car non utilisée
   
   // État pour les données
-  const [concerts, setConcerts] = useState([]);
+  const [dates, setDates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -35,26 +35,26 @@ const TableauDeBordPage = () => {
       try {
         setLoading(true);
         
-        // Charger les concerts récents avec leurs informations
-        const concertsQuery = query(
-          collection(db, 'concerts'),
+        // Charger les dates récentes avec leurs informations
+        const datesQuery = query(
+          collection(db, 'dates'),
           where('organizationId', '==', currentOrg.id),
           orderBy('date', 'desc')
         );
         
-        const concertsSnapshot = await getDocs(concertsQuery);
-        console.log('🔍 DEBUG TableauDeBord - Concerts trouvés:', concertsSnapshot.size, 'pour org:', currentOrg.id);
-        const concertsData = await Promise.all(
-          concertsSnapshot.docs.map(async (doc) => {
-            const concertData = {
+        const datesSnapshot = await getDocs(datesQuery);
+        console.log('🔍 DEBUG TableauDeBord - Dates trouvées:', datesSnapshot.size, 'pour org:', currentOrg.id);
+        const datesData = await Promise.all(
+          datesSnapshot.docs.map(async (doc) => {
+            const dateData = {
               id: doc.id,
               ...doc.data(),
-              type: 'concert'
+              type: 'date'
             };
             
-            // Charger les données du pré-contrat pour ce concert
+            // Charger les données du pré-contrat pour cette date
             try {
-              const preContrats = await getPreContratsByConcert(doc.id);
+              const preContrats = await getPreContratsByDate(doc.id);
               if (preContrats && preContrats.length > 0) {
                 // Prendre le plus récent
                 const latestPreContrat = preContrats.sort((a, b) => {
@@ -63,63 +63,63 @@ const TableauDeBordPage = () => {
                   return dateB - dateA;
                 })[0];
                 
-                // Ajouter les infos de pré-contrat au concert
-                concertData.preContratId = latestPreContrat.id;
-                concertData.publicFormData = latestPreContrat.publicFormData;
-                concertData.publicFormCompleted = latestPreContrat.publicFormCompleted;
-                concertData.confirmationValidee = latestPreContrat.confirmationValidee;
+                // Ajouter les infos de pré-contrat à la date
+                dateData.preContratId = latestPreContrat.id;
+                dateData.publicFormData = latestPreContrat.publicFormData;
+                dateData.publicFormCompleted = latestPreContrat.publicFormCompleted;
+                dateData.confirmationValidee = latestPreContrat.confirmationValidee;
               }
             } catch (error) {
-              console.error('Erreur chargement pré-contrat pour concert', doc.id, error);
+              console.error('Erreur chargement pré-contrat pour date', doc.id, error);
             }
             
-            // Charger les données du contrat pour ce concert
+            // Charger les données du contrat pour ce date
             try {
-              const contrat = await contratService.getContratByConcert(doc.id);
+              const contrat = await contratService.getContratByDate(doc.id);
               if (contrat) {
-                console.log('[TableauDeBordPage] Contrat trouvé pour concert', doc.id, ':', {
+                console.log('[TableauDeBordPage] Contrat trouvé pour date', doc.id, ':', {
                   status: contrat.status,
                   contratStatut: contrat.contratStatut,
                   hasContent: !!contrat.contratContenu
                 });
-                // Ajouter les infos du contrat au concert
-                concertData.contratId = contrat.id;
+                // Ajouter les infos du contrat au date
+                dateData.contratId = contrat.id;
                 // Utiliser le statut réel du contrat depuis la collection 'contrats'
-                concertData.contratStatus = contrat.status || 'draft';
-                concertData.contratNumber = contrat.contratNumber;
+                dateData.contratStatus = contrat.status || 'draft';
+                dateData.contratNumber = contrat.contratNumber;
                 console.log('[TableauDeBordPage] Statut contrat assigné:', {
-                  concertId: doc.id,
+                  dateId: doc.id,
                   contratId: contrat.id,
                   status: contrat.status,
-                  assignedStatus: concertData.contratStatus
+                  assignedStatus: dateData.contratStatus
                 });
                 // Si le contrat a un statut 'redige' dans la collection contrats
                 if (contrat.contratStatut === 'redige') {
-                  concertData.contratStatut = 'redige';
-                  concertData.hasContratRedige = true;
+                  dateData.contratStatut = 'redige';
+                  dateData.hasContratRedige = true;
                 }
                 // Logique de fallback : si le contrat a du contenu et un timestamp de finalisation, c'est finalisé
                 if (!contrat.status && contrat.finalizedAt && contrat.contratContenu) {
                   console.log('[TableauDeBordPage] Fallback: contrat détecté comme finalisé');
-                  concertData.contratStatus = 'finalized';
+                  dateData.contratStatus = 'finalized';
                 }
                 // Ajouter les infos de facture liée au contrat
                 if (contrat.factureId) {
-                  concertData.factureId = contrat.factureId;
-                  concertData.factureStatus = contrat.factureStatus || 'generated';
-                  concertData.hasFacture = true;
+                  dateData.factureId = contrat.factureId;
+                  dateData.factureStatus = contrat.factureStatus || 'generated';
+                  dateData.hasFacture = true;
                 }
               }
             } catch (error) {
-              console.error('Erreur chargement contrat pour concert', doc.id, error);
+              console.error('Erreur chargement contrat pour date', doc.id, error);
             }
             
-            // Charger les données du devis pour ce concert
+            // Charger les données du devis pour ce date
             try {
               // Requête simplifiée pour éviter l'index composite
               const devisQuery = query(
                 collection(db, 'devis'),
-                where('concertId', '==', doc.id)
+                where('dateId', '==', doc.id)
               );
               const devisSnapshot = await getDocs(devisQuery);
               
@@ -139,20 +139,20 @@ const TableauDeBordPage = () => {
                 // Prendre le plus récent
                 const latestDevis = devisDocs[0];
                 
-                concertData.devisId = latestDevis.id;
-                concertData.devisStatut = latestDevis.statut || 'brouillon';
-                concertData.devisNumero = latestDevis.numero;
-                concertData.hasDevis = true;
+                dateData.devisId = latestDevis.id;
+                dateData.devisStatut = latestDevis.statut || 'brouillon';
+                dateData.devisNumero = latestDevis.numero;
+                dateData.hasDevis = true;
               }
             } catch (error) {
-              console.error('Erreur chargement devis pour concert', doc.id, error);
+              console.error('Erreur chargement devis pour date', doc.id, error);
             }
             
-            return concertData;
+            return dateData;
           })
         );
 
-        setConcerts(concertsData);
+        setDates(datesData);
         
       } catch (err) {
         console.error('Erreur lors du chargement des données:', err);
@@ -169,17 +169,17 @@ const TableauDeBordPage = () => {
   const handleDelete = async (item) => {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimer "${item.titre || item.artisteNom}" ?`)) {
       try {
-        console.log('Suppression du concert:', item.id);
+        console.log('Suppression du date:', item.id);
         
-        // Supprimer le concert de la base de données
-        await deleteDoc(doc(db, 'concerts', item.id));
+        // Supprimer le date de la base de données
+        await deleteDoc(doc(db, 'dates', item.id));
         
         // Mettre à jour l'état local immédiatement pour une meilleure UX
-        setConcerts(prevConcerts => prevConcerts.filter(c => c.id !== item.id));
+        setDates(prevDates => prevDates.filter(c => c.id !== item.id));
         
-        console.log('Concert supprimé avec succès:', item.id);
+        console.log('Date supprimé avec succès:', item.id);
       } catch (error) {
-        console.error('Erreur lors de la suppression du concert:', error);
+        console.error('Erreur lors de la suppression du date:', error);
         // Recharger les données en cas d'erreur pour s'assurer de la cohérence
         const loadDashboardData = async () => {
           if (!currentOrg?.id) return;
@@ -187,26 +187,26 @@ const TableauDeBordPage = () => {
           try {
             setLoading(true);
             
-            // Charger les concerts récents avec leurs informations
-            const concertsQuery = query(
-              collection(db, 'concerts'),
+            // Charger les dates récents avec leurs informations
+            const datesQuery = query(
+              collection(db, 'dates'),
               where('organizationId', '==', currentOrg.id),
               orderBy('date', 'desc')
             );
             
-            const concertsSnapshot = await getDocs(concertsQuery);
-            console.log('🔍 DEBUG TableauDeBord - Concerts trouvés:', concertsSnapshot.size, 'pour org:', currentOrg.id);
-            const concertsData = await Promise.all(
-              concertsSnapshot.docs.map(async (doc) => {
-                const concertData = {
+            const datesSnapshot = await getDocs(datesQuery);
+            console.log('🔍 DEBUG TableauDeBord - Dates trouvés:', datesSnapshot.size, 'pour org:', currentOrg.id);
+            const datesData = await Promise.all(
+              datesSnapshot.docs.map(async (doc) => {
+                const dateData = {
                   id: doc.id,
                   ...doc.data(),
-                  type: 'concert'
+                  type: 'date'
                 };
                 
-                // Charger les données du pré-contrat pour ce concert
+                // Charger les données du pré-contrat pour cette date
                 try {
-                  const preContrats = await getPreContratsByConcert(doc.id);
+                  const preContrats = await getPreContratsByDate(doc.id);
                   if (preContrats && preContrats.length > 0) {
                     // Prendre le plus récent
                     const latestPreContrat = preContrats.sort((a, b) => {
@@ -215,63 +215,63 @@ const TableauDeBordPage = () => {
                       return dateB - dateA;
                     })[0];
                     
-                    // Ajouter les infos de pré-contrat au concert
-                    concertData.preContratId = latestPreContrat.id;
-                    concertData.publicFormData = latestPreContrat.publicFormData;
-                    concertData.publicFormCompleted = latestPreContrat.publicFormCompleted;
-                    concertData.confirmationValidee = latestPreContrat.confirmationValidee;
+                    // Ajouter les infos de pré-contrat à la date
+                    dateData.preContratId = latestPreContrat.id;
+                    dateData.publicFormData = latestPreContrat.publicFormData;
+                    dateData.publicFormCompleted = latestPreContrat.publicFormCompleted;
+                    dateData.confirmationValidee = latestPreContrat.confirmationValidee;
                   }
                 } catch (error) {
-                  console.error('Erreur chargement pré-contrat pour concert', doc.id, error);
+                  console.error('Erreur chargement pré-contrat pour date', doc.id, error);
                 }
                 
-                // Charger les données du contrat pour ce concert
+                // Charger les données du contrat pour ce date
                 try {
-                  const contrat = await contratService.getContratByConcert(doc.id);
+                  const contrat = await contratService.getContratByDate(doc.id);
                   if (contrat) {
-                    console.log('[TableauDeBordPage] Contrat trouvé pour concert', doc.id, ':', {
+                    console.log('[TableauDeBordPage] Contrat trouvé pour date', doc.id, ':', {
                       status: contrat.status,
                       contratStatut: contrat.contratStatut,
                       hasContent: !!contrat.contratContenu
                     });
-                    // Ajouter les infos du contrat au concert
-                    concertData.contratId = contrat.id;
+                    // Ajouter les infos du contrat au date
+                    dateData.contratId = contrat.id;
                     // Utiliser le statut réel du contrat depuis la collection 'contrats'
-                    concertData.contratStatus = contrat.status || 'draft';
-                    concertData.contratNumber = contrat.contratNumber;
+                    dateData.contratStatus = contrat.status || 'draft';
+                    dateData.contratNumber = contrat.contratNumber;
                     console.log('[TableauDeBordPage] Statut contrat assigné:', {
-                      concertId: doc.id,
+                      dateId: doc.id,
                       contratId: contrat.id,
                       status: contrat.status,
-                      assignedStatus: concertData.contratStatus
+                      assignedStatus: dateData.contratStatus
                     });
                     // Si le contrat a un statut 'redige' dans la collection contrats
                     if (contrat.contratStatut === 'redige') {
-                      concertData.contratStatut = 'redige';
-                      concertData.hasContratRedige = true;
+                      dateData.contratStatut = 'redige';
+                      dateData.hasContratRedige = true;
                     }
                     // Logique de fallback : si le contrat a du contenu et un timestamp de finalisation, c'est finalisé
                     if (!contrat.status && contrat.finalizedAt && contrat.contratContenu) {
                       console.log('[TableauDeBordPage] Fallback: contrat détecté comme finalisé');
-                      concertData.contratStatus = 'finalized';
+                      dateData.contratStatus = 'finalized';
                     }
                     // Ajouter les infos de facture liée au contrat
                     if (contrat.factureId) {
-                      concertData.factureId = contrat.factureId;
-                      concertData.factureStatus = contrat.factureStatus || 'generated';
-                      concertData.hasFacture = true;
+                      dateData.factureId = contrat.factureId;
+                      dateData.factureStatus = contrat.factureStatus || 'generated';
+                      dateData.hasFacture = true;
                     }
                   }
                 } catch (error) {
-                  console.error('Erreur chargement contrat pour concert', doc.id, error);
+                  console.error('Erreur chargement contrat pour date', doc.id, error);
                 }
                 
-                // Charger les données du devis pour ce concert
+                // Charger les données du devis pour ce date
                 try {
                   // Requête simplifiée pour éviter l'index composite
                   const devisQuery = query(
                     collection(db, 'devis'),
-                    where('concertId', '==', doc.id)
+                    where('dateId', '==', doc.id)
                   );
                   const devisSnapshot = await getDocs(devisQuery);
                   
@@ -291,20 +291,20 @@ const TableauDeBordPage = () => {
                     // Prendre le plus récent
                     const latestDevis = devisDocs[0];
                     
-                    concertData.devisId = latestDevis.id;
-                    concertData.devisStatut = latestDevis.statut || 'brouillon';
-                    concertData.devisNumero = latestDevis.numero;
-                    concertData.hasDevis = true;
+                    dateData.devisId = latestDevis.id;
+                    dateData.devisStatut = latestDevis.statut || 'brouillon';
+                    dateData.devisNumero = latestDevis.numero;
+                    dateData.hasDevis = true;
                   }
                 } catch (error) {
-                  console.error('Erreur chargement devis pour concert', doc.id, error);
+                  console.error('Erreur chargement devis pour date', doc.id, error);
                 }
                 
-                return concertData;
+                return dateData;
               })
             );
 
-            setConcerts(concertsData);
+            setDates(datesData);
             
           } catch (err) {
             console.error('Erreur lors du chargement des données:', err);
@@ -321,7 +321,7 @@ const TableauDeBordPage = () => {
 
   // Gestion de l'édition
   const handleEdit = (item) => {
-    navigate(`/concerts/${item.id}/edit`);
+    navigate(`/dates/${item.id}/edit`);
   };
 
   /*
@@ -518,7 +518,7 @@ const TableauDeBordPage = () => {
               style={{ cursor: 'pointer' }}
               onClick={() => openTab({
                 id: `devis-${item.devisId}`,
-                title: `Devis - ${item.artisteNom || item.titre || 'Concert'}`,
+                title: `Devis - ${item.artisteNom || item.titre || 'Date'}`,
                 path: `/devis/${item.devisId}`,
                 component: 'DevisPage',
                 params: { devisId: item.devisId },
@@ -532,10 +532,10 @@ const TableauDeBordPage = () => {
               style={{ cursor: 'pointer' }}
               onClick={() => openTab({
                 id: `devis-nouveau-${item.id}`,
-                title: `Nouveau devis - ${item.artisteNom || item.titre || 'Concert'}`,
-                path: `/devis/nouveau?concertId=${item.id}&structureId=${item.structureId}`,
+                title: `Nouveau devis - ${item.artisteNom || item.titre || 'Date'}`,
+                path: `/devis/nouveau?dateId=${item.id}&structureId=${item.structureId}`,
                 component: 'DevisPage',
-                params: { concertId: item.id, structureId: item.structureId },
+                params: { dateId: item.id, structureId: item.structureId },
                 icon: 'bi-file-earmark-plus'
               })}
             ></i>
@@ -554,14 +554,14 @@ const TableauDeBordPage = () => {
               className="bi bi-file-earmark-text-fill text-warning" 
               title="Pré-contrat existant"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Date')}
             ></i>
           ) : (
             <i 
               className="bi bi-file-earmark-text text-muted" 
               title="Créer un pré-contrat"
               style={{ cursor: 'pointer' }}
-              onClick={() => openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Concert')}
+              onClick={() => openPreContratTab(item.id, item.artiste?.nom || item.artisteNom || 'Date')}
             ></i>
           )}
         </div>
@@ -633,19 +633,19 @@ const TableauDeBordPage = () => {
           iconClass = "bi bi-file-earmark-check-fill text-success";
           title = "Contrat rédigé - Voir";
           isClickable = true;
-          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Date');
         } else if (hasContrat) {
           // Contrat en cours de rédaction - icône orange
           iconClass = "bi bi-file-earmark-text-fill text-warning";
           title = "Contrat en cours - Continuer la rédaction";
           isClickable = true;
-          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Date');
         } else {
           // Aucun contrat mais pré-contrat validé - icône grise cliquable
           iconClass = "bi bi-file-earmark text-muted";
           title = "Créer un contrat";
           isClickable = true;
-          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Concert');
+          action = () => openContratTab(item.id, item.artisteNom || item.titre || 'Date');
         }
         
         return (
@@ -701,7 +701,7 @@ const TableauDeBordPage = () => {
               style={{ cursor: isClickable ? 'pointer' : 'default' }}
               onClick={isClickable ? () => {
                 // TODO: Ouvrir l'onglet facture
-                console.log('Ouvrir facture pour concert', item.id);
+                console.log('Ouvrir facture pour date', item.id);
               } : undefined}
             ></i>
           </div>
@@ -713,7 +713,7 @@ const TableauDeBordPage = () => {
   // Fonctions utilitaires (pour usage futur)
   // const getTypeIcon = (type) => {
   //   switch (type) {
-  //     case 'concert': return 'music-note';
+  //     case 'date': return 'music-note';
   //     case 'contrat': return 'file-text';
   //     case 'facture': return 'receipt';
   //     case 'projet': return 'folder';
@@ -723,7 +723,7 @@ const TableauDeBordPage = () => {
 
   // const getTypeLabel = (type) => {
   //   switch (type) {
-  //     case 'concert': return 'Concert';
+  //     case 'date': return 'Date';
   //     case 'contrat': return 'Contrat';
   //     case 'facture': return 'Facture';
   //     case 'projet': return 'Projet';
@@ -743,7 +743,7 @@ const TableauDeBordPage = () => {
   // };
 
   /*
-  // Toute la logique du tableau est maintenant dans ConcertsTableView
+  // Toute la logique du tableau est maintenant dans DatesTableView
   */
 
   if (loading) {
@@ -781,14 +781,14 @@ const TableauDeBordPage = () => {
                   Tableau de bord
                 </h1>
                 <p className={styles.subtitle}>
-                  Vue d'ensemble de vos activités • {concerts.length} concerts
+                  Vue d'ensemble de vos activités • {dates.length} dates
                 </p>
               </div>
               
               <div className={styles.headerActions}>
                 <AddButton
-                  onClick={() => navigate('/concerts/nouveau')}
-                  label="Nouveau concert"
+                  onClick={() => navigate('/dates/nouveau')}
+                  label="Nouveau date"
                 />
               </div>
             </div>
@@ -796,56 +796,56 @@ const TableauDeBordPage = () => {
 
           <Card className={styles.tableCard}>
             <Card.Body className={styles.cardBody}>
-              <ConcertsTableView
-                concerts={concerts}
+              <DatesTableView
+                dates={dates}
                 loading={loading}
                 error={error}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
                 showSearch={true}
                 // Props pour gérer les contrats et factures
-                hasContractFunc={(concertId) => {
-                  const concert = concerts.find(c => c.id === concertId);
-                  return concert && (concert.contratId || concert.hasContrat);
+                hasContractFunc={(dateId) => {
+                  const date = dates.find(c => c.id === dateId);
+                  return date && (date.contratId || date.hasContrat);
                 }}
-                getContractStatus={(concertId) => {
-                  const concert = concerts.find(c => c.id === concertId);
+                getContractStatus={(dateId) => {
+                  const date = dates.find(c => c.id === dateId);
                   // Log pour debug
-                  if (concert && concert.contratId) {
-                    console.log('[TableauDeBordPage] getContractStatus pour concert:', concertId, {
-                      contratId: concert.contratId,
-                      contratStatus: concert.contratStatus,
-                      contratStatut: concert.contratStatut,
-                      hasContratRedige: concert.hasContratRedige
+                  if (date && date.contratId) {
+                    console.log('[TableauDeBordPage] getContractStatus pour date:', dateId, {
+                      contratId: date.contratId,
+                      contratStatus: date.contratStatus,
+                      contratStatut: date.contratStatut,
+                      hasContratRedige: date.hasContratRedige
                     });
                   }
                   // Utiliser le vrai statut du contrat chargé depuis la collection 'contrats'
-                  return concert?.contratStatus || null;
+                  return date?.contratStatus || null;
                 }}
-                getContractData={(concertId) => {
-                  const concert = concerts.find(c => c.id === concertId);
-                  if (!concert) return null;
+                getContractData={(dateId) => {
+                  const date = dates.find(c => c.id === dateId);
+                  if (!date) return null;
                   return {
-                    id: concert.contratId,
-                    status: concert.contratStatus,
-                    factureId: concert.factureId,
-                    factureStatus: concert.factureStatus
+                    id: date.contratId,
+                    status: date.contratStatus,
+                    factureId: date.factureId,
+                    factureStatus: date.factureStatus
                   };
                 }}
-                hasFacture={(concertId) => {
-                  const concert = concerts.find(c => c.id === concertId);
-                  return concert && (concert.factureId || concert.hasFacture);
+                hasFacture={(dateId) => {
+                  const date = dates.find(c => c.id === dateId);
+                  return date && (date.factureId || date.hasFacture);
                 }}
-                getFactureStatus={(concertId) => {
-                  const concert = concerts.find(c => c.id === concertId);
-                  return concert?.factureStatus || null;
+                getFactureStatus={(dateId) => {
+                  const date = dates.find(c => c.id === dateId);
+                  return date?.factureStatus || null;
                 }}
-                getFactureData={(concertId) => {
-                  const concert = concerts.find(c => c.id === concertId);
-                  if (!concert) return null;
+                getFactureData={(dateId) => {
+                  const date = dates.find(c => c.id === dateId);
+                  if (!date) return null;
                   return {
-                    id: concert.factureId,
-                    status: concert.factureStatus
+                    id: date.factureId,
+                    status: date.factureStatus
                   };
                 }}
                 handleViewFacture={(factureId) => {
@@ -858,13 +858,13 @@ const TableauDeBordPage = () => {
                     icon: 'bi-receipt'
                   });
                 }}
-                handleGenerateFacture={(concertId) => {
+                handleGenerateFacture={(dateId) => {
                   openTab({
-                    id: `facture-generate-${concertId}`,
+                    id: `facture-generate-${dateId}`,
                     title: `Nouvelle facture`,
-                    path: `/factures/generate/${concertId}?fromContrat=true`,
+                    path: `/factures/generate/${dateId}?fromContrat=true`,
                     component: 'FactureGeneratorPage',
-                    params: { concertId, fromContrat: true },
+                    params: { dateId, fromContrat: true },
                     icon: 'bi-receipt'
                   });
                 }}

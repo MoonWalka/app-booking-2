@@ -25,12 +25,12 @@
  * - Intégration avec les paramètres d'entreprise
  * - Système d'alertes et notifications
  * 
- * @param {Object} concert - Données complètes du concert
- * @param {string} concert.id - ID unique du concert
- * @param {string} concert.titre - Titre du concert
- * @param {Object} concert.date - Date du concert (Firestore timestamp)
- * @param {string} concert.heure - Heure du concert
- * @param {number} concert.montant - Montant du concert
+ * @param {Object} date - Données complètes du concert
+ * @param {string} date.id - ID unique du concert
+ * @param {string} date.titre - Titre du concert
+ * @param {Object} date.date - Date du date (Firestore timestamp)
+ * @param {string} date.heure - Heure du concert
+ * @param {number} date.montant - Montant du concert
  * 
  * @param {Object} contact - Données du contact (anciennement programmateur)
  * @param {string} contact.nom - Nom du contact
@@ -150,7 +150,7 @@
  * - contact: nom, prénom, adresse, email, téléphone, structure
  * - Lieu: nom, adresse, capacité, ville, codePostal
  * - Artiste: nom, genre, contact
- * - Concert: titre, date formatée, heure, montant formaté
+ * - Date: titre, date formatée, heure, montant formaté
  * 
  * @contractLifecycle
  * - generated: Contrat généré
@@ -221,8 +221,8 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
   // Valider les données avant génération du PDF
   const validateDataBeforeGeneration = () => {
     // Vérifier si les données essentielles sont présentes
-    if (!concert || !concert.id) {
-      console.error("Données de concert manquantes ou invalides:", concert);
+    if (!concert || !date.id) {
+      console.error("Données de date manquantes ou invalides:", concert);
       return false;
     }
     
@@ -331,11 +331,11 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         
         // Vérifier si un contrat existe déjà pour ce concert
         if (concert?.id) {
-          console.log("Recherche d'un contrat existant pour le concert:", concert.id);
+          console.log("Recherche d'un contrat existant pour le concert:", date.id);
           // Récupérer tous les contrats pour ce concert
           const contratsQuery = query(
             collection(db, 'contrats'),
-            where('concertId', '==', concert.id)
+            where('dateId', '==', date.id)
           );
           const contratsSnapshot = await getDocs(contratsQuery);
           
@@ -601,7 +601,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         representation_horaire_fin: contratData.representations.horaireFin || 'Non spécifié',
         representation_nombre: contratData.representations.nbRepresentations || '1',
         representation_salle: contratData.representations.salle || 'Non spécifiée',
-        representation_type: contratData.representations.type || 'Concert',
+        representation_type: contratData.representations.type || 'Date',
         representation_invitations: contratData.representations.invitations ? contratData.representations.nbAdmins || '0' : '0',
       }),
       
@@ -806,7 +806,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
         : 'Non spécifié',
       concert_montant_lettres: montantEnLettres(concert?.montant),
-      concert_type: contratData?.representations?.type || concert?.type || 'Concert',
+      concert_type: contratData?.representations?.type || concert?.type || 'Date',
       
       // Variables lieu
       lieu_nom: lieu?.nom || 'Non spécifié',
@@ -882,8 +882,8 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
       nomArtiste: artiste?.nom || 'Non spécifié',
       genreArtiste: artiste?.genre || 'Non spécifié',
       contactArtiste: artiste?.contact || 'Non spécifié',
-      titreConcert: concert?.titre || 'Non spécifié',
-      dateConcert: (() => {
+      titreDate: concert?.titre || 'Non spécifié',
+      dateDate: (() => {
         if (!concert?.date) return 'Non spécifiée';
         
         // Gérer différents formats de date possibles
@@ -915,8 +915,8 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         
         return dateObj.toLocaleDateString('fr-FR');
       })(),
-      heureConcert: concert?.heure || 'Non spécifiée',
-      montantConcert: concert?.montant 
+      heureDate: concert?.heure || 'Non spécifiée',
+      montantDate: concert?.montant 
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
         : 'Non spécifié',
     };
@@ -988,9 +988,9 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         
         return contratId;
       } else {
-        console.log("Création d'un nouveau contrat pour le concert:", concert.id);
+        console.log("Création d'un nouveau contrat pour le concert:", date.id);
         const contratData = {
-          concertId: concert.id,
+          dateId: date.id,
           templateId: selectedTemplateId,
           templateSnapshot,
           dateGeneration: serverTimestamp(),

@@ -63,7 +63,7 @@ const createSafeData = (data) => {
     
     // Format 2 : Ancien format
     contratData, 
-    concertData, 
+    dateData, 
     contactData,  // Nouveau format
     programmateurData,  // Rétrocompatibilité
     artisteData, 
@@ -78,7 +78,7 @@ const createSafeData = (data) => {
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
     template: effectiveTemplate,
-    concert: concert || concertData || {},
+    concert: concert || dateData || {},
     contact: contact || contactData || {},  // Nouveau format
     programmateur: programmateur || programmateurData || {},  // Rétrocompatibilité
     artiste: artiste || artisteData || {},
@@ -328,7 +328,7 @@ const prepareContractVariables = (safeData) => {
       'representation_horaire_fin': safeData.contratData.representations.horaireFin || 'Non spécifié',
       'representation_nombre': safeData.contratData.representations.nbRepresentations || '1',
       'representation_salle': safeData.contratData.representations.salle || 'Non spécifiée',
-      'representation_type': safeData.contratData.representations.type || 'Concert',
+      'representation_type': safeData.contratData.representations.type || 'Date',
       'representation_invitations': safeData.contratData.representations.invitations ? safeData.contratData.representations.nbAdmins || '0' : '0',
     }),
     
@@ -401,12 +401,12 @@ const prepareContractVariables = (safeData) => {
     'concert_date': formatSafeDate(safeData.concert?.date),
     'concert_heure': safeData.concert?.heure || 'Non spécifiée',
     'concert_montant': safeData.concert?.montant 
-      ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(safeData.concert.montant) 
+      ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(safeData.date.montant) 
       : 'Non spécifié',
     'concert_montant_lettres': montantEnLettres(safeData.concert?.montant),
-    'concert_type': safeData.concert?.type || 'Concert',
+    'concert_type': safeData.concert?.type || 'Date',
     
-    // Variables lieu - Utiliser le libellé du concert si pas de lieu référencé
+    // Variables lieu - Utiliser le libellé du date si pas de lieu référencé
     'lieu_nom': safeData.lieu?.nom || safeData.concert?.libelle || 'Non spécifié',
     'lieu_adresse': safeData.lieu?.adresse || 'Non spécifiée',
     'lieu_code_postal': safeData.lieu?.codePostal || safeData.lieu?.code_postal || 'Non spécifié',
@@ -1073,7 +1073,7 @@ const ContratHTMLPreview = ({ data, title = '' }) => {
 const ContratPDFWrapper = ({ 
   template, 
   contratData, 
-  concertData, 
+  dateData, 
   programmateurData,
   contactData, // Nouveau format
   artisteData, 
@@ -1090,7 +1090,7 @@ const ContratPDFWrapper = ({
   
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
-    concert: concertData || {},
+    concert: dateData || {},
     contact: contactData || {},
     programmateur: programmateurData || {},
     artiste: artisteData || {},
@@ -1119,7 +1119,7 @@ const ContratPDFWrapper = ({
           )}
           
           <Text>
-            Date: {formatSafeDate(safeData.concert.date)}
+            Date: {formatSafeDate(safeData.date.date)}
           </Text>
           <Text>
             Contrat pour: {safeData.artiste.nom || 'Non spécifié'}

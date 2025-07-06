@@ -10,7 +10,7 @@ import { formatDateFr } from '@/utils/dateUtils';
 const ContratHeader = ({ contrat, concert, artiste, lieu }) => {
   // Formater la date de création
   const creationDate = contrat?.dateGeneration 
-    ? formatDateFr(contrat.dateGeneration) 
+    ? formatDateFr(contrat.concertGeneration) 
     : 'Date inconnue';
 
   // Construire le titre du contrat

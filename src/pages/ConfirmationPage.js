@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, Container, Row, Col, Form, Button, Accordion, Alert, Spinner } from 'react-bootstrap';
-import { getPreContratsByConcert, updatePreContrat } from '@/services/preContratService';
+import { getPreContratsByDate, updatePreContrat } from '@/services/preContratService';
 import tachesService from '@/services/tachesService';
 import { auth } from '@/services/firebase-service';
 import styles from './ConfirmationPage.module.css';
@@ -10,10 +10,10 @@ import styles from './ConfirmationPage.module.css';
  * Page de confirmation de pré-contrat
  * Deux colonnes : Mes informations (éditable) | Informations organisateur (lecture seule)
  */
-function ConfirmationPage({ concertId: propConcertId }) {
+function ConfirmationPage({ dateId: propDateId }) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const concertId = propConcertId || searchParams.get('concertId');
+  const dateId = propDateId || searchParams.get('dateId');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [preContrat, setPreContrat] = useState(null);
@@ -101,8 +101,8 @@ function ConfirmationPage({ concertId: propConcertId }) {
   // Charger les données du pré-contrat
   useEffect(() => {
     const loadPreContratData = async () => {
-      if (!concertId) {
-        setError('Aucun concert spécifié');
+      if (!dateId) {
+        setError('Aucun date spécifié');
         setLoading(false);
         return;
       }
@@ -111,7 +111,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
         setLoading(true);
         
         // Récupérer les pré-contrats du concert
-        const preContrats = await getPreContratsByConcert(concertId);
+        const preContrats = await getPreContratsByDate(dateId);
         console.log('[ConfirmationPage] Pré-contrats trouvés:', preContrats);
         
         // Prendre le plus récent avec des données du formulaire public OU déjà validé
@@ -178,7 +178,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
     };
 
     loadPreContratData();
-  }, [concertId]);
+  }, [dateId]);
 
   // Fonction pour copier une valeur de droite à gauche
   const copierValeur = (champ) => {
@@ -233,7 +233,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
           priorite: 'haute',
           dateEcheance: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 jours
           organizationId: preContrat.organizationId,
-          concertId: preContrat.concertId,
+          dateId: preContrat.dateId,
           contactId: preContrat.contactId || null,
           entityType: 'pre_contrat',
           entityId: preContrat.id,
@@ -1362,7 +1362,7 @@ function ConfirmationPage({ concertId: propConcertId }) {
                         value={mesInfos.type}
                         onChange={(e) => setMesInfos(prev => ({ ...prev, type: e.target.value }))}
                       >
-                        <option value="concert">Concert</option>
+                        <option value="concert">Date</option>
                         <option value="showcase">Showcase</option>
                         <option value="festival">Festival</option>
                         <option value="representation">Représentation</option>

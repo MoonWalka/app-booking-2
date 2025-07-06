@@ -29,8 +29,8 @@ const AdminFormValidation = ({
         type="error"
         message={error}
         actionButton={
-          <button className="tc-btn-primary" onClick={() => navigate('/concerts')}>
-            Retour à la liste des concerts
+          <button className="tc-btn-primary" onClick={() => navigate('/dates')}>
+            Retour à la liste des dates
           </button>
         }
       />
@@ -39,7 +39,7 @@ const AdminFormValidation = ({
 
   const footerContent = (
     <FlexContainer justify="flex-end">
-      <button className="tc-btn-secondary me-2" onClick={() => navigate('/concerts')}>
+      <button className="tc-btn-secondary me-2" onClick={() => navigate('/dates')}>
         Retour
       </button>
       <button className="tc-btn-primary" onClick={onValidate}>

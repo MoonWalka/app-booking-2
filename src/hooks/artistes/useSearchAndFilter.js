@@ -26,8 +26,8 @@
  *   searchFields: ['nom'],
  *   filters: {
  *     tous: () => true,
- *     avecConcerts: (artiste) => artiste.concertsAssocies?.length > 0,
- *     sansConcerts: (artiste) => !artiste.concertsAssocies || artiste.concertsAssocies.length === 0
+ *     avecDates: (artiste) => artiste.concertsAssocies?.length > 0,
+ *     sansDates: (artiste) => !artiste.concertsAssocies || artiste.concertsAssocies.length === 0
  *   },
  *   defaultFilter: 'tous',
  *   defaultSortField: 'nom',
@@ -50,8 +50,8 @@ const useSearchAndFilter = (artistes) => {
     searchFields: ['nom'],
     filters: {
       tous: () => true,
-      avecConcerts: (artiste) => artiste.concertsAssocies?.length > 0,
-      sansConcerts: (artiste) => !artiste.concertsAssocies || artiste.concertsAssocies.length === 0
+      avecDates: (artiste) => artiste.concertsAssocies?.length > 0,
+      sansDates: (artiste) => !artiste.concertsAssocies || artiste.concertsAssocies.length === 0
     },
     defaultFilter: 'tous',
     defaultSortField: 'nom',

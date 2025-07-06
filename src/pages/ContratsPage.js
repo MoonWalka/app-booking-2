@@ -33,34 +33,34 @@ const ContratsPage = () => {
       const contratsPromises = contratsSnapshot.docs.map(async (doc) => {
         const contratData = doc.data();
         
-        // Récupérer les données du concert associé
-        let concertData = null;
+        // Récupérer les données du date associé
+        let dateData = null;
         let devisData = null;
         let factureData = null;
         
-        if (contratData.concertId) {
+        if (contratData.dateId) {
           try {
-            const concertDoc = await getDocs(query(
-              collection(db, 'concerts'),
-              where('__name__', '==', contratData.concertId)
+            const dateDoc = await getDocs(query(
+              collection(db, 'dates'),
+              where('__name__', '==', contratData.dateId)
             ));
             
-            if (!concertDoc.empty) {
-              concertData = {
-                id: concertDoc.docs[0].id,
-                ...concertDoc.docs[0].data()
+            if (!dateDoc.empty) {
+              dateData = {
+                id: dateDoc.docs[0].id,
+                ...dateDoc.docs[0].data()
               };
               
               // 🔧 CORRECTION: Charger les noms des entités liées si manquants
               const promises = [];
               
               // Charger le nom du lieu si manquant
-              if (concertData.lieuId && !concertData.lieuNom) {
+              if (dateData.lieuId && !dateData.lieuNom) {
                 promises.push(
-                  getDocs(query(collection(db, 'lieux'), where('__name__', '==', concertData.lieuId)))
+                  getDocs(query(collection(db, 'lieux'), where('__name__', '==', dateData.lieuId)))
                     .then(snapshot => {
                       if (!snapshot.empty) {
-                        concertData.lieuNom = snapshot.docs[0].data().nom;
+                        dateData.lieuNom = snapshot.docs[0].data().nom;
                       }
                     })
                     .catch(err => console.error('Erreur chargement lieu:', err))
@@ -68,12 +68,12 @@ const ContratsPage = () => {
               }
               
               // Charger le nom du contact si manquant
-              if (concertData.contactId && !concertData.contactNom) {
+              if (dateData.contactId && !dateData.contactNom) {
                 promises.push(
-                  getDocs(query(collection(db, 'contacts'), where('__name__', '==', concertData.contactId)))
+                  getDocs(query(collection(db, 'contacts'), where('__name__', '==', dateData.contactId)))
                     .then(snapshot => {
                       if (!snapshot.empty) {
-                        concertData.contactNom = snapshot.docs[0].data().nom;
+                        dateData.contactNom = snapshot.docs[0].data().nom;
                       }
                     })
                     .catch(err => console.error('Erreur chargement contact:', err))
@@ -81,12 +81,12 @@ const ContratsPage = () => {
               }
               
               // Charger le nom de l'artiste si manquant
-              if (concertData.artisteId && !concertData.artisteNom) {
+              if (dateData.artisteId && !dateData.artisteNom) {
                 promises.push(
-                  getDocs(query(collection(db, 'artistes'), where('__name__', '==', concertData.artisteId)))
+                  getDocs(query(collection(db, 'artistes'), where('__name__', '==', dateData.artisteId)))
                     .then(snapshot => {
                       if (!snapshot.empty) {
-                        concertData.artisteNom = snapshot.docs[0].data().nom;
+                        dateData.artisteNom = snapshot.docs[0].data().nom;
                       }
                     })
                     .catch(err => console.error('Erreur chargement artiste:', err))
@@ -97,14 +97,14 @@ const ContratsPage = () => {
               await Promise.all(promises);
             }
           } catch (err) {
-            console.error('Erreur lors de la récupération du concert:', err);
+            console.error('Erreur lors de la récupération du date:', err);
           }
         }
         
         // Récupérer les données du devis associé si présent
-        if (contratData.devisId || concertData?.devisId) {
+        if (contratData.devisId || dateData?.devisId) {
           try {
-            const devisId = contratData.devisId || concertData?.devisId;
+            const devisId = contratData.devisId || dateData?.devisId;
             const devisQuery = query(
               collection(db, 'devis'),
               where('__name__', '==', devisId)
@@ -123,9 +123,9 @@ const ContratsPage = () => {
         }
         
         // Récupérer les données de la facture associée si présente
-        if (contratData.factureId || concertData?.factureId) {
+        if (contratData.factureId || dateData?.factureId) {
           try {
-            const factureId = contratData.factureId || concertData?.factureId;
+            const factureId = contratData.factureId || dateData?.factureId;
             const factureQuery = query(
               collection(db, 'factures'),
               where('__name__', '==', factureId)
@@ -154,15 +154,15 @@ const ContratsPage = () => {
           type: contratData.type || contratData.contratType || 'Standard',
           raisonSociale: contratData.raisonSociale || 
                         contratData.organisateur?.raisonSociale || 
-                        concertData?.structureNom || 
+                        dateData?.structureNom || 
                         '--',
           // Données de l'artiste et du lieu
-          artiste: contratData.artiste || concertData?.artisteNom || '--',
-          artisteNom: concertData?.artisteNom || contratData.artisteNom || '--',
-          lieu: concertData?.lieuNom || contratData.lieu || '--',
-          ville: contratData.ville || concertData?.ville || '--',
+          artiste: contratData.artiste || dateData?.artisteNom || '--',
+          artisteNom: dateData?.artisteNom || contratData.artisteNom || '--',
+          lieu: dateData?.lieuNom || contratData.lieu || '--',
+          ville: contratData.ville || dateData?.ville || '--',
           // Dates
-          dateEvenement: concertData?.date || contratData.dateEvenement,
+          dateEvenement: dateData?.date || contratData.dateEvenement,
           dateGeneration: contratData.dateGeneration || contratData.createdAt || contratData.updatedAt,
           dateValidite: contratData.dateValidite || contratData.dateEvenement,
           // Montants - Gérer toutes les structures possibles
@@ -188,10 +188,10 @@ const ContratsPage = () => {
           envoye: contratData.envoye || false,
           signe: contratData.signe || false,
           dateSignature: contratData.dateSignature,
-          // Données du concert pour les actions
-          concert: concertData,
-          concertId: contratData.concertId,
-          structureId: concertData?.structureId || contratData.structureId,
+          // Données du date pour les actions
+          date: dateData,
+          dateId: contratData.dateId,
+          structureId: dateData?.structureId || contratData.structureId,
           // Informations du devis
           hasDevis: !!devisData,
           devisId: devisData?.id || contratData.devisId,
@@ -271,20 +271,20 @@ const ContratsPage = () => {
     }
   };
 
-  const handleGenerateFacture = (concertId, contratId) => {
+  const handleGenerateFacture = (dateId, contratId) => {
     if (openTab) {
       const contrat = contrats.find(c => c.id === contratId);
       const structureName = contrat?.raisonSociale || 'Structure';
       openTab({
-        id: `facture-generate-${concertId}`,
+        id: `facture-generate-${dateId}`,
         title: `Nouvelle facture - ${structureName}`,
-        path: `/factures/generate/${concertId}?fromContrat=true`,
+        path: `/factures/generate/${dateId}?fromContrat=true`,
         component: 'FactureGeneratorPage',
-        params: { concertId, fromContrat: true, contratId },
+        params: { dateId, fromContrat: true, contratId },
         icon: 'bi-receipt'
       });
     } else {
-      navigate(`/factures/generate/${concertId}?fromContrat=true`);
+      navigate(`/factures/generate/${dateId}?fromContrat=true`);
     }
   };
 
@@ -323,7 +323,7 @@ const ContratsPage = () => {
             <i className="bi bi-file-earmark-text fs-1 mb-3 text-muted"></i>
             <p className="fs-5">Aucun contrat n'a été généré.</p>
             <p className="text-muted">
-              Rendez-vous sur la page de détail d'un concert pour générer un contrat.
+              Rendez-vous sur la page de détail d'un date pour générer un contrat.
             </p>
             <Button 
               variant="outline-primary" 
@@ -349,10 +349,10 @@ const ContratsPage = () => {
                     <div className="d-flex justify-content-between align-items-start mb-2">
                       <div>
                         <h6 className="mb-1 fw-bold">
-                          {contrat.concert?.titre || 'N/A'}
+                          {contrat.date?.titre || 'N/A'}
                         </h6>
                         <small className="text-muted">
-                          {contrat.concert?.artisteNom && `${contrat.concert.artisteNom} • `}
+                          {contrat.date?.artisteNom && `${contrat.date.artisteNom} • `}
                           {(() => {
                             if (!contrat.dateGeneration) return '-';
                             try {
@@ -385,12 +385,12 @@ const ContratsPage = () => {
                     
                     <div className="small text-muted mb-2">
                       <i className="bi bi-geo-alt me-1"></i>
-                      {contrat.concert?.lieuNom || 'N/A'}
+                      {contrat.date?.lieuNom || 'N/A'}
                     </div>
                     
                     <div className="small text-muted mb-3">
                       <i className="bi bi-person me-1"></i>
-                      {contrat.concert?.contactNom || 'N/A'}
+                      {contrat.date?.contactNom || 'N/A'}
                     </div>
                     
                     <div className="d-flex gap-2" onClick={e => e.stopPropagation()}>

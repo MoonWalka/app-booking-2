@@ -35,7 +35,7 @@ export const ParametresProvider = ({ children }) => {
     },
     notifications: {
       email: true,
-      concerts: true,
+      dates: true,
       contrats: true,
       artistes: true
     },

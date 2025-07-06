@@ -15,7 +15,7 @@ import StructureSignataireSection from './sections/StructureSignataireSection';
 import StructureBillingSection from './sections/StructureBillingSection';
 import StructureNotesSection from './sections/StructureNotesSection';
 import StructureContactsSection from './sections/StructureContactsSection';
-import StructureConcertsManagementSection from './sections/StructureConcertsManagementSection';
+import StructureDatesManagementSection from './sections/StructureDatesManagementSection';
 import StructureSiretSearchSection from './sections/StructureSiretSearchSection';
 import styles from './StructureForm.module.css';
 
@@ -82,7 +82,7 @@ const StructureFormEnhanced = () => {
 
   // État pour les associations
   const [contactsAssocies, setContactsAssocies] = useState([]);
-  const [concertsAssocies, setConcertsAssocies] = useState([]);
+  const [concertsAssocies, setDatesAssocies] = useState([]);
   const [contratsAssocies] = useState([]);
   const [lieuxAssocies, setLieuxAssocies] = useState([]);
 
@@ -153,7 +153,7 @@ const StructureFormEnhanced = () => {
           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
         });
         const concerts = (await Promise.all(concertPromises)).filter(c => c !== null);
-        setConcertsAssocies(concerts);
+        setDatesAssocies(concerts);
       }
 
       // Charger les lieux associés
@@ -720,42 +720,42 @@ const StructureFormEnhanced = () => {
               isEditing={true}
             />
 
-            {/* Section Concerts associés */}
-            <StructureConcertsManagementSection
-              concertIds={concertsAssocies.map(c => c.id)}
-              onChange={(concertIds) => {
+            {/* Section Dates associés */}
+            <StructureDatesManagementSection
+              dateIds={concertsAssocies.map(c => c.id)}
+              onChange={(dateIds) => {
                 // Gérer la mise à jour des concerts
-                const newConcertIds = Array.isArray(concertIds) ? concertIds : [concertIds].filter(Boolean);
+                const newDateIds = Array.isArray(dateIds) ? dateIds : [dateIds].filter(Boolean);
                 
                 // Si on a des nouveaux concerts à charger
-                const loadNewConcerts = async () => {
+                const loadNewDates = async () => {
                   const currentIds = concertsAssocies.map(c => c.id);
-                  const idsToLoad = newConcertIds.filter(id => !currentIds.includes(id));
+                  const idsToLoad = newDateIds.filter(id => !currentIds.includes(id));
                   
                   if (idsToLoad.length > 0) {
                     try {
-                      const newConcerts = await Promise.all(
+                      const newDates = await Promise.all(
                         idsToLoad.map(async (id) => {
                           const docSnap = await getDoc(doc(db, 'concerts', id));
                           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
                         })
                       );
                       
-                      const validConcerts = newConcerts.filter(c => c !== null);
-                      setConcertsAssocies(prev => [...prev, ...validConcerts]);
+                      const validDates = newDates.filter(c => c !== null);
+                      setDatesAssocies(prev => [...prev, ...validDates]);
                     } catch (error) {
                       console.error('Erreur lors du chargement des concerts:', error);
                     }
                   }
                   
                   // Si on a des concerts à retirer
-                  const idsToRemove = currentIds.filter(id => !newConcertIds.includes(id));
+                  const idsToRemove = currentIds.filter(id => !newDateIds.includes(id));
                   if (idsToRemove.length > 0) {
-                    setConcertsAssocies(prev => prev.filter(c => !idsToRemove.includes(c.id)));
+                    setDatesAssocies(prev => prev.filter(c => !idsToRemove.includes(c.id)));
                   }
                 };
                 
-                loadNewConcerts();
+                loadNewDates();
               }}
               entityId={!isNewFromUrl ? id : null}
               isEditing={true}

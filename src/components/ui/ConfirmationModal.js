@@ -5,7 +5,7 @@ import styles from './ConfirmationModal.module.css';
 
 /**
  * Modal de confirmation générique pour toutes les entités
- * Remplace tous les DeleteModal spécifiques (DeleteConcertModal, DeleteProgrammateurModal, etc.)
+ * Remplace tous les DeleteModal spécifiques (DeleteDateModal, DeleteProgrammateurModal, etc.)
  * 
  * @param {Object} props - Props du composant
  * @param {boolean} props.show - Affichage de la modal

@@ -176,26 +176,26 @@ const ContactView = ({ id: propId }) => {
         )}
       </Card>
       
-      {/* Concerts associés */}
+      {/* Dates associés */}
       <Card 
         className="mb-3"
-        title="Concerts"
+        title="Dates"
         icon={<i className="bi bi-calendar-event"></i>}
       >
         {contact.concertsAssocies && contact.concertsAssocies.length > 0 ? (
           <div className="list-group list-group-flush">
             {contact.concertsAssocies.slice(0, 3).map(concert => (
               <div 
-                key={concert.id} 
+                key={date.id} 
                 className="list-group-item list-group-item-action"
-                onClick={() => navigate(`/concerts/${concert.id}`)}
+                onClick={() => navigate(`/dates/${date.id}`)}
               >
                 <FlexContainer justify="space-between" align="center">
                   <div>
-                    <div className="fw-semibold">{concert.titre || "Concert sans titre"}</div>
+                    <div className="fw-semibold">{date.titre || "Date sans titre"}</div>
                     <small className="text-muted">
-                      {new Date(concert.date).toLocaleDateString('fr-FR')}
-                      {concert.lieu && ` - ${concert.lieu}`}
+                      {new Date(date.date).toLocaleDateString('fr-FR')}
+                      {date.lieu && ` - ${date.lieu}`}
                     </small>
                   </div>
                   <i className="bi bi-chevron-right text-muted"></i>
@@ -214,7 +214,7 @@ const ContactView = ({ id: propId }) => {
           </div>
         ) : (
           <div className="text-muted">
-            Aucun concert associé à ce contact
+            Aucun date associé à ce contact
           </div>
         )}
       </Card>

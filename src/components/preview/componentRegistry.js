@@ -42,24 +42,24 @@ export const componentRegistry = {
     defaultProps: { contacts: [], loading: false }
   },
   
-  // Concerts
-  'ConcertForm': {
-    path: () => import('../concerts/desktop/ConcertForm'),
-    category: 'Concerts',
-    description: 'Formulaire de création/édition de concert',
+  // Dates
+  'DateForm': {
+    path: () => import('../dates/desktop/DateForm'),
+    category: 'Dates',
+    description: 'Formulaire de création/édition de date',
     defaultProps: { mode: 'create', onSubmit: () => console.log('Submit') }
   },
-  'ConcertView': {
-    path: () => import('../concerts/desktop/ConcertView'),
-    category: 'Concerts',
-    description: 'Vue détaillée d\'un concert',
-    defaultProps: { concertId: 'demo-id' }
+  'DateView': {
+    path: () => import('../dates/desktop/DateView'),
+    category: 'Dates',
+    description: 'Vue détaillée d\'une date',
+    defaultProps: { dateId: 'demo-id' }
   },
-  'ConcertsList': {
-    path: () => import('../concerts/desktop/ConcertsList'),
-    category: 'Concerts',
-    description: 'Liste des concerts',
-    defaultProps: { concerts: [], loading: false }
+  'DatesList': {
+    path: () => import('../dates/desktop/DatesList'),
+    category: 'Dates',
+    description: 'Liste des dates',
+    defaultProps: { dates: [], loading: false }
   },
   
   // Contrats
@@ -67,13 +67,13 @@ export const componentRegistry = {
     path: () => import('../contrats/desktop/ContratGenerator'),
     category: 'Contrats',
     description: 'Générateur de contrats',
-    defaultProps: { concertId: 'demo-id' }
+    defaultProps: { dateId: 'demo-id' }
   },
   'ContratGeneratorNew': {
     path: () => import('../contrats/desktop/ContratGeneratorNew'),
     category: 'Contrats',
     description: 'Nouveau générateur de contrats',
-    defaultProps: { concertId: 'demo-id' }
+    defaultProps: { dateId: 'demo-id' }
   },
   
   // Factures
@@ -81,7 +81,7 @@ export const componentRegistry = {
     path: () => import('../factures/FactureEditor'),
     category: 'Factures',
     description: 'Éditeur de factures',
-    defaultProps: { concertId: 'demo-id', mode: 'create' }
+    defaultProps: { dateId: 'demo-id', mode: 'create' }
   },
   'FacturePreview': {
     path: () => import('../factures/FacturePreview'),

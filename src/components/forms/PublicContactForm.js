@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const PublicContactForm = ({ 
   token, 
-  concertId, 
+  dateId, 
   formLinkId, 
   onSubmitSuccess,
   contactEmail, // Email du contact passé si disponible
@@ -349,7 +349,7 @@ const PublicContactForm = ({
       // Créer la soumission de formulaire avec structure claire
       const submissionData = {
         // Métadonnées
-        concertId,
+        dateId,
         formLinkId,
         token,
         submittedAt: serverTimestamp(),
@@ -402,7 +402,7 @@ const PublicContactForm = ({
       }
 
       // Mettre à jour le concert
-      await updateDoc(doc(db, 'concerts', concertId), {
+      await updateDoc(doc(db, 'concerts', dateId), {
         lastFormSubmissionId: submissionRef.id,
         hasFormSubmission: true,
         updatedAt: serverTimestamp()

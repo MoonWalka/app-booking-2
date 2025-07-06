@@ -211,14 +211,14 @@ const LieuView = () => {
         )}
       </div>
 
-      {/* Concerts associés - affichage simplifié */}
+      {/* Dates associés - affichage simplifié */}
       <div className={styles?.section || "mobile-section mb-4 p-3 border rounded"}>
         <FlexContainer justify="space-between" align="center" className="mb-3">
-          <h2 className="h6 mb-0">Concerts</h2>
+          <h2 className="h6 mb-0">Dates</h2>
           <Button 
             variant="outline-primary" 
             size="sm"
-            onClick={() => navigate('/concerts/nouveau', { state: { lieuId: lieu.id } })}
+            onClick={() => navigate('/dates/nouveau', { state: { lieuId: lieu.id } })}
             icon={<i className="bi bi-plus"></i>}
           >
             Ajouter
@@ -229,13 +229,13 @@ const LieuView = () => {
           <div className="list-group">
             {lieu.concerts.map(concert => (
               <div 
-                key={concert.id} 
+                key={date.id} 
                 className="list-group-item list-group-item-action"
-                onClick={() => navigate(`/concerts/${concert.id}`)}
+                onClick={() => navigate(`/dates/${date.id}`)}
               >
                 <FlexContainer justify="space-between" align="center">
                   <div>
-                    <div>{concert.titre || "Concert sans titre"}</div>
+                    <div>{concert.titre || "Date sans titre"}</div>
                     <small className="text-muted">
                       {new Date(concert.date).toLocaleDateString('fr-FR')}
                     </small>
@@ -246,7 +246,7 @@ const LieuView = () => {
             ))}
           </div>
         ) : (
-          <div className="text-muted">Aucun concert associé</div>
+          <div className="text-muted">Aucun date associé</div>
         )}
       </div>
     </div>

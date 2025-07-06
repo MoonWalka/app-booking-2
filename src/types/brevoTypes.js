@@ -13,9 +13,9 @@ export const BrevoTemplateVariables = {
     nom_programmateur: 'string',
     prenom_programmateur: 'string',
     email_programmateur: 'string',
-    titre_concert: 'string',
-    date_concert: 'string',
-    heure_concert: 'string',
+    titre_date: 'string',
+    date_date: 'string',
+    heure_date: 'string',
     lieu_nom: 'string',
     lieu_adresse: 'string',
     contact_organisateur: 'string',
@@ -63,7 +63,7 @@ export const ContratTemplateVariables = {
 
 /**
  * @typedef {Object} ConfirmationTemplateVariables
- * Variables spécifiques au template "Confirmation Concert"
+ * Variables spécifiques au template "Confirmation Date"
  */
 export const ConfirmationTemplateVariables = {
   ...BrevoTemplateVariables.COMMON,
@@ -103,27 +103,27 @@ export const BrevoConfig = {
 export const RequiredVariables = {
   formulaire: [
     'nom_programmateur',
-    'titre_concert', 
-    'date_concert',
+    'titre_date', 
+    'date_date',
     'lien_formulaire'
   ],
   relance: [
     'nom_programmateur',
-    'titre_concert',
+    'titre_date',
     'documents_manquants',
     'date_limite'
   ],
   contrat: [
     'nom_programmateur', 
-    'titre_concert',
+    'titre_date',
     'lien_contrat',
     'montant_total'
   ],
   confirmation: [
     'nom_programmateur',
-    'titre_concert',
-    'date_concert',
-    'heure_concert',
+    'titre_date',
+    'date_date',
+    'heure_date',
     'lieu_nom'
   ]
 };
@@ -137,7 +137,7 @@ export const DefaultVariables = {
   email_organisateur: 'contact@tourcraft.com',
   telephone_organisateur: '01 00 00 00 00',
   lieu_adresse: 'Adresse à confirmer',
-  heure_concert: 'Horaire à confirmer',
+  heure_date: 'Horaire à confirmer',
   contact_technique: 'À définir',
   materiel_fourni: 'Standard',
   parking_info: 'Se renseigner sur place',

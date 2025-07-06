@@ -4,7 +4,7 @@ import styles from './StatutBadge.module.css';
 
 /**
  * Composant générique pour afficher des badges de statut
- * Utilisé pour les statuts de concerts, contrats, et autres entités
+ * Utilisé pour les statuts de dates, contrats, et autres entités
  * 
  * @param {Object} props - Propriétés du composant
  * @param {string} props.status - Code du statut à afficher
@@ -32,7 +32,7 @@ const StatutBadge = ({
       error: { color: 'danger', icon: 'bi-exclamation-circle', label: 'Erreur' },
       draft: { color: 'info', icon: 'bi-pencil', label: 'Brouillon' }
     },
-    // Statuts spécifiques aux concerts
+    // Statuts spécifiques aux dates
     concert: {
       en_negociation: { color: 'info', icon: 'bi-chat-dots', label: 'En négociation' },
       option: { color: 'warning', icon: 'bi-calendar-check', label: 'Option' },

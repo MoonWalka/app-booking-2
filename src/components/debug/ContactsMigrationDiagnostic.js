@@ -34,7 +34,7 @@ const ContactsMigrationDiagnostic = () => {
     const results = {
       timestamp: new Date().toISOString(),
       organizationId: currentOrganization.id,
-      concerts: {
+      dates: {
         total: 0,
         avecContactId: 0,
         avecContactIds: 0,
@@ -54,36 +54,36 @@ const ContactsMigrationDiagnostic = () => {
         avecContactIds: 0
       },
       relations: {
-        concertContactValides: 0,
-        concertContactManquantes: 0
+        dateContactValides: 0,
+        dateContactManquantes: 0
       },
       recommandations: []
     };
 
     try {
       // 1. Analyser les CONCERTS
-      console.log('📋 Analyse des concerts...');
-      const concertsSnapshot = await getDocs(collection(db, 'concerts'));
+      console.log('📋 Analyse des dates...');
+      const datesSnapshot = await getDocs(collection(db, 'dates'));
       
-      for (const docSnap of concertsSnapshot.docs) {
-        const concert = docSnap.data();
+      for (const docSnap of datesSnapshot.docs) {
+        const date = docSnap.data();
         
         // Filtrer par organisation
-        if (concert.organizationId !== currentOrganization.id) continue;
+        if (date.organizationId !== currentOrganization.id) continue;
         
-        results.concerts.total++;
+        results.dates.total++;
         
-        if (concert.contactId) {
-          results.concerts.avecContactId++;
+        if (date.contactId) {
+          results.dates.avecContactId++;
           
           // Vérifier si le contact existe
           try {
-            const contactDoc = await getDoc(doc(db, 'contacts', concert.contactId));
+            const contactDoc = await getDoc(doc(db, 'contacts', date.contactId));
             if (!contactDoc.exists()) {
-              results.concerts.contactsOrphelins.push({
-                concertId: docSnap.id,
-                concertNom: concert.nom,
-                contactIdInexistant: concert.contactId
+              results.dates.contactsOrphelins.push({
+                dateId: docSnap.id,
+                dateNom: date.nom,
+                contactIdInexistant: date.contactId
               });
             }
           } catch (error) {
@@ -91,16 +91,16 @@ const ContactsMigrationDiagnostic = () => {
           }
         }
         
-        if (concert.contactIds && Array.isArray(concert.contactIds)) {
-          results.concerts.avecContactIds++;
+        if (date.contactIds && Array.isArray(date.contactIds)) {
+          results.dates.avecContactIds++;
         }
         
-        if (concert.contactId && concert.contactIds) {
-          results.concerts.avecLesDeuxChamps++;
+        if (date.contactId && date.contactIds) {
+          results.dates.avecLesDeuxChamps++;
         }
         
-        if (!concert.contactId && (!concert.contactIds || concert.contactIds.length === 0)) {
-          results.concerts.sansContact++;
+        if (!date.contactId && (!date.contactIds || date.contactIds.length === 0)) {
+          results.dates.sansContact++;
         }
       }
       
@@ -153,21 +153,21 @@ const ContactsMigrationDiagnostic = () => {
       console.log('🔗 Vérification des relations...');
       let checkedRelations = 0;
       
-      for (const docSnap of concertsSnapshot.docs) {
-        const concert = docSnap.data();
+      for (const docSnap of datesSnapshot.docs) {
+        const date = docSnap.data();
         
-        if (concert.organizationId !== currentOrganization.id) continue;
-        if (!concert.contactId) continue;
+        if (date.organizationId !== currentOrganization.id) continue;
+        if (!date.contactId) continue;
         if (checkedRelations >= 10) break; // Limiter pour la performance
         
         try {
-          const contactDoc = await getDoc(doc(db, 'contacts', concert.contactId));
+          const contactDoc = await getDoc(doc(db, 'contacts', date.contactId));
           if (contactDoc.exists()) {
             const contact = contactDoc.data();
-            if (contact.concertsIds && contact.concertsIds.includes(docSnap.id)) {
-              results.relations.concertContactValides++;
+            if (contact.datesIds && contact.datesIds.includes(docSnap.id)) {
+              results.relations.dateContactValides++;
             } else {
-              results.relations.concertContactManquantes++;
+              results.relations.dateContactManquantes++;
             }
             checkedRelations++;
           }
@@ -177,18 +177,18 @@ const ContactsMigrationDiagnostic = () => {
       }
       
       // 5. Générer les recommandations
-      if (results.concerts.avecLesDeuxChamps > 0) {
+      if (results.dates.avecLesDeuxChamps > 0) {
         results.recommandations.push({
           niveau: 'CRITIQUE',
-          message: `${results.concerts.avecLesDeuxChamps} concerts ont à la fois contactId et contactIds`,
+          message: `${results.dates.avecLesDeuxChamps} dates ont à la fois contactId et contactIds`,
           action: 'Vérifier la cohérence et nettoyer avant migration'
         });
       }
       
-      if (results.concerts.contactsOrphelins.length > 0) {
+      if (results.dates.contactsOrphelins.length > 0) {
         results.recommandations.push({
           niveau: 'IMPORTANT',
-          message: `${results.concerts.contactsOrphelins.length} concerts référencent des contacts inexistants`,
+          message: `${results.dates.contactsOrphelins.length} dates référencent des contacts inexistants`,
           action: 'Nettoyer les références orphelines'
         });
       }
@@ -201,11 +201,11 @@ const ContactsMigrationDiagnostic = () => {
         });
       }
       
-      const totalAMigrer = results.concerts.avecContactId - results.concerts.avecContactIds;
+      const totalAMigrer = results.dates.avecContactId - results.dates.avecContactIds;
       if (totalAMigrer > 0) {
         results.recommandations.push({
           niveau: 'INFO',
-          message: `${totalAMigrer} concerts à migrer de contactId vers contactIds`,
+          message: `${totalAMigrer} dates à migrer de contactId vers contactIds`,
           action: 'Exécuter le script de migration'
         });
       }
@@ -229,7 +229,7 @@ const ContactsMigrationDiagnostic = () => {
       case 'orphelins':
         details = {
           title: 'Contacts Orphelins',
-          data: diagnosticResults.concerts.contactsOrphelins
+          data: diagnosticResults.dates.contactsOrphelins
         };
         break;
       case 'formatIncorrect':
@@ -240,8 +240,8 @@ const ContactsMigrationDiagnostic = () => {
         break;
       case 'deuxChamps':
         details = {
-          title: 'Concerts avec les deux champs',
-          message: 'Ces concerts ont à la fois contactId et contactIds, ce qui peut créer des incohérences.'
+          title: 'Dates avec les deux champs',
+          message: 'Ces dates ont à la fois contactId et contactIds, ce qui peut créer des incohérences.'
         };
         break;
       default:
@@ -304,9 +304,9 @@ const ContactsMigrationDiagnostic = () => {
     setMigrationState('running');
     setMigrationLogs([]);
     setMigrationStats({
-      totalConcerts: 0,
-      concertsToMigrate: 0,
-      concertsMigrated: 0,
+      totalDates: 0,
+      datesToMigrate: 0,
+      datesMigrated: 0,
       errors: [],
       bidirectionalUpdates: 0
     });
@@ -315,95 +315,95 @@ const ContactsMigrationDiagnostic = () => {
       addMigrationLog(`🚀 Début de la migration ${dryRunMode ? '(MODE SIMULATION)' : '(MODE RÉEL)'}`, 'info');
       addMigrationLog(`📍 Organisation: ${currentOrganization.name}`, 'info');
 
-      // Phase 1: Analyser les concerts à migrer
-      addMigrationLog('🔍 Phase 1: Analyse des concerts...', 'info');
+      // Phase 1: Analyser les dates à migrer
+      addMigrationLog('🔍 Phase 1: Analyse des dates...', 'info');
       
-      const concertsSnapshot = await getDocs(collection(db, 'concerts'));
-      const concertsToMigrate = [];
-      let totalConcerts = 0;
+      const datesSnapshot = await getDocs(collection(db, 'dates'));
+      const datesToMigrate = [];
+      let totalDates = 0;
 
-      for (const docSnap of concertsSnapshot.docs) {
-        const concert = docSnap.data();
+      for (const docSnap of datesSnapshot.docs) {
+        const date = docSnap.data();
         
         // Filtrer par organisation
-        if (concert.organizationId !== currentOrganization.id) continue;
+        if (date.organizationId !== currentOrganization.id) continue;
         
-        totalConcerts++;
+        totalDates++;
 
-        // Concert à migrer : a contactId mais pas contactIds
-        const hasContactId = concert.contactId && typeof concert.contactId === 'string';
-        const hasContactIds = concert.contactIds && Array.isArray(concert.contactIds) && concert.contactIds.length > 0;
+        // Date à migrer : a contactId mais pas contactIds
+        const hasContactId = date.contactId && typeof date.contactId === 'string';
+        const hasContactIds = date.contactIds && Array.isArray(date.contactIds) && date.contactIds.length > 0;
 
         if (hasContactId && !hasContactIds) {
-          concertsToMigrate.push({
+          datesToMigrate.push({
             id: docSnap.id,
-            contactId: concert.contactId,
-            nom: concert.nom || 'Concert sans nom'
+            contactId: date.contactId,
+            nom: date.nom || 'Date sans nom'
           });
         }
       }
 
       setMigrationStats(prev => ({
         ...prev,
-        totalConcerts,
-        concertsToMigrate: concertsToMigrate.length
+        totalDates,
+        datesToMigrate: datesToMigrate.length
       }));
 
-      addMigrationLog(`📊 Concerts totaux: ${totalConcerts}`, 'info');
-      addMigrationLog(`🎯 Concerts à migrer: ${concertsToMigrate.length}`, 'info');
+      addMigrationLog(`📊 Dates totaux: ${totalDates}`, 'info');
+      addMigrationLog(`🎯 Dates à migrer: ${datesToMigrate.length}`, 'info');
 
-      if (concertsToMigrate.length === 0) {
-        addMigrationLog('✅ Aucun concert à migrer trouvé', 'success');
+      if (datesToMigrate.length === 0) {
+        addMigrationLog('✅ Aucun date à migrer trouvé', 'success');
         setMigrationState('completed');
         return;
       }
 
       // Phase 2: Migration par lots
-      addMigrationLog('🔄 Phase 2: Migration des concerts...', 'info');
+      addMigrationLog('🔄 Phase 2: Migration des dates...', 'info');
       
       const BATCH_SIZE = 10; // Plus petit pour l'interface
       const batches = [];
       
-      for (let i = 0; i < concertsToMigrate.length; i += BATCH_SIZE) {
-        batches.push(concertsToMigrate.slice(i, i + BATCH_SIZE));
+      for (let i = 0; i < datesToMigrate.length; i += BATCH_SIZE) {
+        batches.push(datesToMigrate.slice(i, i + BATCH_SIZE));
       }
 
       for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
         const batch = batches[batchIndex];
-        addMigrationLog(`📦 Lot ${batchIndex + 1}/${batches.length} (${batch.length} concerts)`, 'info');
+        addMigrationLog(`📦 Lot ${batchIndex + 1}/${batches.length} (${batch.length} dates)`, 'info');
 
         if (dryRunMode) {
           // Simulation
-          for (const concert of batch) {
-            addMigrationLog(`   🧪 [SIMULATION] ${concert.nom}: contactId=${concert.contactId} → contactIds=[${concert.contactId}]`, 'info');
+          for (const date of batch) {
+            addMigrationLog(`   🧪 [SIMULATION] ${date.nom}: contactId=${date.contactId} → contactIds=[${date.contactId}]`, 'info');
             setMigrationStats(prev => ({
               ...prev,
-              concertsMigrated: prev.concertsMigrated + 1
+              datesMigrated: prev.datesMigrated + 1
             }));
           }
         } else {
           // Migration réelle
           const firestoreBatch = writeBatch(db);
 
-          for (const concert of batch) {
+          for (const date of batch) {
             try {
-              const concertRef = doc(db, 'concerts', concert.id);
+              const dateRef = doc(db, 'dates', date.id);
               
               const updateData = {
-                contactIds: [concert.contactId],
+                contactIds: [date.contactId],
                 contactId: null, // Supprimer l'ancien champ
-                contactId_migrated: concert.contactId, // Sauvegarde pour rollback
+                contactId_migrated: date.contactId, // Sauvegarde pour rollback
                 updatedAt: serverTimestamp()
               };
 
-              firestoreBatch.update(concertRef, updateData);
-              addMigrationLog(`   ✅ ${concert.nom} préparé pour migration`, 'info');
+              firestoreBatch.update(dateRef, updateData);
+              addMigrationLog(`   ✅ ${date.nom} préparé pour migration`, 'info');
 
             } catch (error) {
-              addMigrationLog(`   ❌ Erreur ${concert.nom}: ${error.message}`, 'error');
+              addMigrationLog(`   ❌ Erreur ${date.nom}: ${error.message}`, 'error');
               setMigrationStats(prev => ({
                 ...prev,
-                errors: [...prev.errors, { concertId: concert.id, error: error.message }]
+                errors: [...prev.errors, { dateId: date.id, error: error.message }]
               }));
             }
           }
@@ -415,12 +415,12 @@ const ContactsMigrationDiagnostic = () => {
             
             setMigrationStats(prev => ({
               ...prev,
-              concertsMigrated: prev.concertsMigrated + batch.length
+              datesMigrated: prev.datesMigrated + batch.length
             }));
 
             // Mettre à jour les relations bidirectionnelles
-            for (const concert of batch) {
-              await updateBidirectionalRelation(concert.id, concert.contactId);
+            for (const date of batch) {
+              await updateBidirectionalRelation(date.id, date.contactId);
             }
 
           } catch (error) {
@@ -450,24 +450,24 @@ const ContactsMigrationDiagnostic = () => {
     }
   };
 
-  const updateBidirectionalRelation = async (concertId, contactId) => {
+  const updateBidirectionalRelation = async (dateId, contactId) => {
     try {
       const contactRef = doc(db, 'contacts', contactId);
       const contactDoc = await getDoc(contactRef);
 
       if (!contactDoc.exists()) {
-        addMigrationLog(`      ⚠️ Contact ${contactId} non trouvé pour concert ${concertId}`, 'warning');
+        addMigrationLog(`      ⚠️ Contact ${contactId} non trouvé pour date ${dateId}`, 'warning');
         return;
       }
 
       const contactData = contactDoc.data();
-      let concertsIds = contactData.concertsIds || [];
+      let datesIds = contactData.datesIds || [];
 
-      if (!concertsIds.includes(concertId)) {
-        concertsIds.push(concertId);
+      if (!datesIds.includes(dateId)) {
+        datesIds.push(dateId);
 
         await updateDoc(contactRef, {
-          concertsIds: concertsIds,
+          datesIds: datesIds,
           updatedAt: serverTimestamp()
         });
 
@@ -476,16 +476,16 @@ const ContactsMigrationDiagnostic = () => {
           bidirectionalUpdates: prev.bidirectionalUpdates + 1
         }));
 
-        addMigrationLog(`      🔗 Relation bidirectionnelle mise à jour: contact ${contactId} ↔ concert ${concertId}`, 'info');
+        addMigrationLog(`      🔗 Relation bidirectionnelle mise à jour: contact ${contactId} ↔ date ${dateId}`, 'info');
       }
 
     } catch (error) {
-      addMigrationLog(`      ❌ Erreur relation bidirectionnelle ${contactId} ↔ ${concertId}: ${error.message}`, 'error');
+      addMigrationLog(`      ❌ Erreur relation bidirectionnelle ${contactId} ↔ ${dateId}: ${error.message}`, 'error');
       setMigrationStats(prev => ({
         ...prev,
         errors: [...prev.errors, { 
           type: 'bidirectional', 
-          concertId, 
+          dateId, 
           contactId, 
           error: error.message 
         }]
@@ -531,42 +531,42 @@ const ContactsMigrationDiagnostic = () => {
         <>
           <Card title="📊 Résultats du Diagnostic" className={styles.card}>
             <div className={styles.section}>
-              <h3>🎵 Concerts ({diagnosticResults.concerts.total} total)</h3>
+              <h3>🎵 Dates ({diagnosticResults.dates.total} total)</h3>
               <table className={styles.table}>
                 <tbody>
                   <tr>
                     <td>Avec contactId (ancien format)</td>
-                    <td className={styles.number}>{diagnosticResults.concerts.avecContactId}</td>
+                    <td className={styles.number}>{diagnosticResults.dates.avecContactId}</td>
                   </tr>
                   <tr>
                     <td>Avec contactIds (nouveau format)</td>
-                    <td className={styles.number}>{diagnosticResults.concerts.avecContactIds}</td>
+                    <td className={styles.number}>{diagnosticResults.dates.avecContactIds}</td>
                   </tr>
-                  <tr className={diagnosticResults.concerts.avecLesDeuxChamps > 0 ? styles.warning : ''}>
+                  <tr className={diagnosticResults.dates.avecLesDeuxChamps > 0 ? styles.warning : ''}>
                     <td>
                       Avec les DEUX champs
-                      {diagnosticResults.concerts.avecLesDeuxChamps > 0 && (
+                      {diagnosticResults.dates.avecLesDeuxChamps > 0 && (
                         <Button size="small" variant="link" onClick={() => showDetailedInfo('deuxChamps')}>
                           ⚠️ Voir détails
                         </Button>
                       )}
                     </td>
-                    <td className={styles.number}>{diagnosticResults.concerts.avecLesDeuxChamps}</td>
+                    <td className={styles.number}>{diagnosticResults.dates.avecLesDeuxChamps}</td>
                   </tr>
                   <tr>
                     <td>Sans contact</td>
-                    <td className={styles.number}>{diagnosticResults.concerts.sansContact}</td>
+                    <td className={styles.number}>{diagnosticResults.dates.sansContact}</td>
                   </tr>
-                  <tr className={diagnosticResults.concerts.contactsOrphelins.length > 0 ? styles.error : ''}>
+                  <tr className={diagnosticResults.dates.contactsOrphelins.length > 0 ? styles.error : ''}>
                     <td>
                       Contacts orphelins
-                      {diagnosticResults.concerts.contactsOrphelins.length > 0 && (
+                      {diagnosticResults.dates.contactsOrphelins.length > 0 && (
                         <Button size="small" variant="link" onClick={() => showDetailedInfo('orphelins')}>
                           Voir liste
                         </Button>
                       )}
                     </td>
-                    <td className={styles.number}>{diagnosticResults.concerts.contactsOrphelins.length}</td>
+                    <td className={styles.number}>{diagnosticResults.dates.contactsOrphelins.length}</td>
                   </tr>
                 </tbody>
               </table>
@@ -621,11 +621,11 @@ const ContactsMigrationDiagnostic = () => {
                 <tbody>
                   <tr>
                     <td>Relations valides</td>
-                    <td className={styles.number}>{diagnosticResults.relations.concertContactValides}</td>
+                    <td className={styles.number}>{diagnosticResults.relations.dateContactValides}</td>
                   </tr>
                   <tr>
                     <td>Relations manquantes</td>
-                    <td className={styles.number}>{diagnosticResults.relations.concertContactManquantes}</td>
+                    <td className={styles.number}>{diagnosticResults.relations.dateContactManquantes}</td>
                   </tr>
                 </tbody>
               </table>
@@ -648,10 +648,10 @@ const ContactsMigrationDiagnostic = () => {
               <div className={styles.migrationEstimate}>
                 <h4>📈 Estimation de la migration</h4>
                 <p>
-                  Concerts à migrer : <strong>{diagnosticResults.concerts.avecContactId - diagnosticResults.concerts.avecContactIds}</strong>
+                  Dates à migrer : <strong>{diagnosticResults.dates.avecContactId - diagnosticResults.dates.avecContactIds}</strong>
                 </p>
                 <p>
-                  Durée estimée : <strong>{Math.ceil((diagnosticResults.concerts.avecContactId - diagnosticResults.concerts.avecContactIds) / 100)} minutes</strong>
+                  Durée estimée : <strong>{Math.ceil((diagnosticResults.dates.avecContactId - diagnosticResults.dates.avecContactIds) / 100)} minutes</strong>
                 </p>
               </div>
             </Card>
@@ -689,7 +689,7 @@ const ContactsMigrationDiagnostic = () => {
       {/* SECTION MIGRATION */}
       <Card title="🚀 Exécuter la Migration" className={styles.card}>
         <div className={styles.description}>
-          <p>Convertit les concerts de <code>contactId</code> vers <code>contactIds</code> directement depuis l'interface.</p>
+          <p>Convertit les dates de <code>contactId</code> vers <code>contactIds</code> directement depuis l'interface.</p>
           
           {!diagnosticResults && (
             <Alert type="warning">
@@ -744,16 +744,16 @@ const ContactsMigrationDiagnostic = () => {
             <table className={styles.table}>
               <tbody>
                 <tr>
-                  <td>Concerts totaux (organisation)</td>
-                  <td className={styles.number}>{migrationStats.totalConcerts}</td>
+                  <td>Dates totaux (organisation)</td>
+                  <td className={styles.number}>{migrationStats.totalDates}</td>
                 </tr>
                 <tr>
-                  <td>Concerts à migrer</td>
-                  <td className={styles.number}>{migrationStats.concertsToMigrate}</td>
+                  <td>Dates à migrer</td>
+                  <td className={styles.number}>{migrationStats.datesToMigrate}</td>
                 </tr>
                 <tr>
-                  <td>Concerts {dryRunMode ? 'simulés' : 'migrés'}</td>
-                  <td className={styles.number}>{migrationStats.concertsMigrated}</td>
+                  <td>Dates {dryRunMode ? 'simulés' : 'migrés'}</td>
+                  <td className={styles.number}>{migrationStats.datesMigrated}</td>
                 </tr>
                 <tr>
                   <td>Relations bidirectionnelles mises à jour</td>
@@ -771,7 +771,7 @@ const ContactsMigrationDiagnostic = () => {
                 <strong>Erreurs rencontrées :</strong>
                 <ul>
                   {migrationStats.errors.slice(0, 5).map((error, index) => (
-                    <li key={index}>{error.concertId}: {error.error}</li>
+                    <li key={index}>{error.dateId}: {error.error}</li>
                   ))}
                   {migrationStats.errors.length > 5 && (
                     <li>... et {migrationStats.errors.length - 5} autres erreurs</li>

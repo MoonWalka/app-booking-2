@@ -83,8 +83,8 @@ const EntitySelector = ({
       icon: 'bi-file-text',
       idField: 'id',
     },
-    concerts: {
-      collection: 'concerts',
+    dates: {
+      collection: 'dates',
       displayField: 'titre',
       icon: 'bi-calendar-event',
       idField: 'id',

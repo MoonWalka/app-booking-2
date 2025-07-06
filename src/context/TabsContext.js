@@ -176,14 +176,14 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
-  const openConcertTab = useCallback((concertId, concertTitle) => {
-    console.log('[TabsContext] openConcertTab appelé - ouverture DateDetailsPage');
+  const openDateTab = useCallback((dateId, dateTitle) => {
+    console.log('[TabsContext] openDateTab appelé - ouverture DateDetailsPage');
     openTab({
-      id: `date-details-${concertId}`,
-      title: concertTitle || 'Détails de la date',
-      path: `/dates/${concertId}`,
+      id: `date-details-${dateId}`,
+      title: dateTitle || 'Détails de la date',
+      path: `/dates/${dateId}`,
       component: 'DateDetailsPage',
-      params: { id: concertId },
+      params: { id: dateId },
       icon: 'bi-calendar-check'
     });
   }, [openTab]);
@@ -210,14 +210,17 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
-  const openConcertsListTab = useCallback(() => {
-    openTab({
-      id: 'concerts-list',
+  const openDatesListTab = useCallback(() => {
+    console.log('[TabsContext] openDatesListTab appelé');
+    const tabConfig = {
+      id: 'dates-list',
       title: 'Liste des dates',
-      path: '/concerts',
-      component: 'ConcertsPage',
+      path: '/dates',
+      component: 'DatesPage',
       icon: 'bi-calendar-event'
-    });
+    };
+    console.log('[TabsContext] Ouverture onglet avec config:', tabConfig);
+    openTab(tabConfig);
   }, [openTab]);
 
   const openPublicationsListTab = useCallback(() => {
@@ -296,31 +299,31 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
-  const openPreContratTab = useCallback((concertId, concertTitle) => {
+  const openPreContratTab = useCallback((dateId, dateTitle) => {
     openTab({
-      id: `precontrat-${concertId}`,
-      title: `Pré-contrat - ${concertTitle}`,
-      path: `/precontrats/generate/${concertId}`,
+      id: `precontrat-${dateId}`,
+      title: `Pré-contrat - ${dateTitle}`,
+      path: `/precontrats/generate/${dateId}`,
       component: 'PreContratGenerationPage',
-      params: { concertId },
+      params: { dateId },
       icon: 'bi-file-earmark-text'
     });
   }, [openTab]);
 
-  const openContratTab = useCallback((concertId, concertTitle, isRedige = false) => {
-    console.log('[TabsContext] openContratTab appelé - concertId:', concertId, 'isRedige:', isRedige);
+  const openContratTab = useCallback((dateId, dateTitle, isRedige = false) => {
+    console.log('[TabsContext] openContratTab appelé - dateId:', dateId, 'isRedige:', isRedige);
     
     if (isRedige) {
       // Si le contrat est rédigé, ouvrir directement la page de rédaction/aperçu
       console.log('[TabsContext] Ouverture en mode aperçu (contrat rédigé)');
       openTab({
-        id: `contrat-redaction-${concertId}`,
-        title: `Aperçu contrat - ${concertTitle}`,
-        path: `/contrats/${concertId}/redaction`,
+        id: `contrat-redaction-${dateId}`,
+        title: `Aperçu contrat - ${dateTitle}`,
+        path: `/contrats/${dateId}/redaction`,
         component: 'ContratRedactionPage',
         params: { 
-          originalConcertId: concertId,
-          contratId: concertId,
+          originalDateId: dateId,
+          contratId: dateId,
           readOnly: true // Indiquer qu'on est en mode lecture seule
         },
         icon: 'bi-file-earmark-check-fill'
@@ -329,11 +332,11 @@ export const TabsProvider = ({ children }) => {
       // Sinon, ouvrir le formulaire de génération
       console.log('[TabsContext] Ouverture en mode formulaire (contrat non rédigé)');
       openTab({
-        id: `contrat-${concertId}`,
-        title: `Contrat - ${concertTitle}`,
-        path: `/contrats/generate/${concertId}`,
+        id: `contrat-${dateId}`,
+        title: `Contrat - ${dateTitle}`,
+        path: `/contrats/generate/${dateId}`,
         component: 'ContratGenerationNewPage',
-        params: { concertId },
+        params: { dateId },
         icon: 'bi-file-earmark-check'
       });
     }
@@ -351,15 +354,15 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
-  const openNewDevisTab = useCallback((concertId, structureId, title) => {
-    console.log('[TabsContext] openNewDevisTab appelé - concertId:', concertId, 'structureId:', structureId);
-    const tabId = concertId ? `nouveau-devis-${concertId}` : 'nouveau-devis';
+  const openNewDevisTab = useCallback((dateId, structureId, title) => {
+    console.log('[TabsContext] openNewDevisTab appelé - dateId:', dateId, 'structureId:', structureId);
+    const tabId = dateId ? `nouveau-devis-${dateId}` : 'nouveau-devis';
     openTab({
       id: tabId,
       title: title || 'Nouveau Devis',
-      path: `/devis/nouveau${concertId ? `?concertId=${concertId}&structureId=${structureId}` : ''}`,
+      path: `/devis/nouveau${dateId ? `?dateId=${dateId}&structureId=${structureId}` : ''}`,
       component: 'DevisPage',
-      params: { concertId, structureId },
+      params: { dateId, structureId },
       icon: 'bi-file-earmark-plus'
     });
   }, [openTab]);
@@ -392,10 +395,10 @@ export const TabsProvider = ({ children }) => {
     // Helpers spécialisés
     openContactTab,
     openLieuTab,
-    openConcertTab,
+    openDateTab,
     openStructureTab,
     openContactsListTab,
-    openConcertsListTab,
+    openDatesListTab,
     openPublicationsListTab,
     openLieuxListTab,
     openStructuresListTab,
@@ -420,10 +423,10 @@ export const TabsProvider = ({ children }) => {
     getBottomTabForEntity,
     openContactTab,
     openLieuTab,
-    openConcertTab,
+    openDateTab,
     openStructureTab,
     openContactsListTab,
-    openConcertsListTab,
+    openDatesListTab,
     openPublicationsListTab,
     openLieuxListTab,
     openStructuresListTab,

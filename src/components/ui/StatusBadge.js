@@ -15,7 +15,7 @@ const StatusBadge = ({
   // Mappage automatique des statuts vers les variantes
   const getVariantFromStatus = (status) => {
     const statusMap = {
-      // Concerts
+      // Dates
       'brouillon': 'secondary',
       'confirme': 'success',
       'annule': 'danger',

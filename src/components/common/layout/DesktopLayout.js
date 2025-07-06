@@ -20,7 +20,7 @@ function DesktopLayout({ children }) {
   const { isMobile } = useResponsive();
   const { 
     openContactsListTab,
-    openConcertsListTab,
+    openDatesListTab,
     openPublicationsListTab,
     openLieuxListTab,
     openStructuresListTab,
@@ -85,6 +85,7 @@ function DesktopLayout({ children }) {
 
   // Navigation adaptée pour le système d'onglets
   const handleNavigation = (item) => {
+    console.log('[DesktopLayout] handleNavigation appelé avec:', item);
     // Pour les éléments avec des actions spéciales
     switch (item.to) {
       case '/':
@@ -101,8 +102,9 @@ function DesktopLayout({ children }) {
       case '/contacts':
         openContactsListTab();
         break;
-      case '/concerts':
-        openConcertsListTab();
+      case '/dates':
+        console.log('[DesktopLayout] Route /dates détectée, appel de openDatesListTab()');
+        openDatesListTab();
         break;
       case '/publications':
         openPublicationsListTab();
@@ -345,7 +347,7 @@ function DesktopLayout({ children }) {
       label: "Booking",
       subItems: [
         { to: "/booking/nouvelle-date", icon: "bi-calendar-plus", label: "Nouvelle date" },
-        { to: "/concerts", icon: "bi-calendar-event", label: "Liste des dates" },
+        { to: "/dates", icon: "bi-calendar-event", label: "Liste des dates" },
         { to: "/publications", icon: "bi-newspaper", label: "Publications" },
         { to: "/projets", icon: "bi-folder", label: "Projets" },
         { to: "/salles", icon: "bi-building", label: "Salle" },

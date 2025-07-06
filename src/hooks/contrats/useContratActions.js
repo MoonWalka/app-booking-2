@@ -84,13 +84,13 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
       // }
       // 
       // if (!concert) {
-      //   throw new Error('Données du concert manquantes pour l\'envoi du contrat');
+      //   throw new Error('Données du date manquantes pour l\'envoi du contrat');
       // }
       
       debugLog('[useContratActions] Marquage manuel du contrat comme envoyé:', {
         contratId,
         contactEmail: contact?.email || 'N/A',
-        concertTitle: concert?.nom || concert?.titre || 'N/A',
+        dateTitle: concert?.nom || concert?.titre || 'N/A',
         contratType: contrat?.type || 'N/A'
       });
       

@@ -42,7 +42,7 @@ const ArtistesTable = ({ artistes, onDelete }) => {
       render: (artiste) => artiste.cachet ? `${artiste.cachet}€` : <span className="text-muted">Non spécifié</span>
     },
     {
-      label: 'Concerts',
+      label: 'Dates',
       key: 'concertsCount',
       sortable: false,
       render: (artiste) => (

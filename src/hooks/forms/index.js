@@ -34,4 +34,4 @@ export { default as useFieldActions } from './useFieldActions';
 
 // Hook d'état de formulaire de lieu
 export { default as useLieuFormState } from './useLieuFormState';
-// export { default as useConcertForm } from './useConcertForm'; // Supprimé car le hook a été migré vers hooks/concerts/useConcertForm.js
+// export { default as useDateForm } from './useDateForm'; // Supprimé car le hook a été migré vers hooks/dates/useDateForm.js

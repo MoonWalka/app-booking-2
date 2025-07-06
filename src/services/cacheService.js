@@ -6,7 +6,7 @@
 // Configuration des durées de cache par collection (en ms)
 const CACHE_DURATIONS = {
   // Collections fréquemment utilisées avec cache court
-  concerts: 60000, // 1 minute
+  dates: 60000, // 1 minute
   form_submissions: 30000, // 30 secondes
   
   // Collections semi-statiques avec cache plus long

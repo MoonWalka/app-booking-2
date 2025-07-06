@@ -95,39 +95,39 @@ export default function OrganizationIdFixer() {
         }
       }
       
-      // 3. Optionnel : Corriger aussi les concerts et structures si nécessaire
-      console.log('\n🎵 Vérification des concerts...');
-      const allConcertsQuery = query(collection(db, 'concerts'));
-      const allConcertsSnapshot = await getDocs(allConcertsQuery);
+      // 3. Optionnel : Corriger aussi les dates et structures si nécessaire
+      console.log('\n🎵 Vérification des dates...');
+      const allDatesQuery = query(collection(db, 'dates'));
+      const allDatesSnapshot = await getDocs(allDatesQuery);
       
-      let concertsFixed = 0;
-      const concertsToFix = [];
+      let datesFixed = 0;
+      const datesToFix = [];
       
-      allConcertsSnapshot.forEach(docSnapshot => {
+      allDatesSnapshot.forEach(docSnapshot => {
         const data = docSnapshot.data();
         if (!data.organizationId) {
-          concertsToFix.push({
+          datesToFix.push({
             id: docSnapshot.id,
             titre: data.titre || 'Sans titre'
           });
         }
       });
       
-      console.log(`Concerts à corriger: ${concertsToFix.length}`);
-      fixLog.push(`Concerts à corriger: ${concertsToFix.length}`);
+      console.log(`Dates à corriger: ${datesToFix.length}`);
+      fixLog.push(`Dates à corriger: ${datesToFix.length}`);
       
-      // Corriger les concerts
-      for (const concert of concertsToFix) {
+      // Corriger les dates
+      for (const date of datesToFix) {
         try {
-          await updateDoc(doc(db, 'concerts', concert.id), {
+          await updateDoc(doc(db, 'dates', date.id), {
             organizationId: currentOrganization.id
           });
-          concertsFixed++;
-          console.log(`✅ Concert corrigé: ${concert.titre} (${concert.id})`);
-          fixLog.push(`✅ Concert corrigé: ${concert.titre}`);
+          datesFixed++;
+          console.log(`✅ Date corrigé: ${date.titre} (${date.id})`);
+          fixLog.push(`✅ Date corrigé: ${date.titre}`);
         } catch (error) {
-          console.error(`❌ Erreur concert ${concert.id}:`, error);
-          fixLog.push(`❌ Erreur concert ${concert.titre}: ${error.message}`);
+          console.error(`❌ Erreur date ${date.id}:`, error);
+          fixLog.push(`❌ Erreur date ${date.titre}: ${error.message}`);
         }
       }
       
@@ -170,14 +170,14 @@ export default function OrganizationIdFixer() {
       const summary = {
         contacts: { total: contactsToFix.length, fixed: contactsFixed },
         lieux: { total: lieuxToFix.length, fixed: lieuxFixed },
-        concerts: { total: concertsToFix.length, fixed: concertsFixed },
+        dates: { total: datesToFix.length, fixed: datesFixed },
         structures: { total: structuresToFix.length, fixed: structuresFixed }
       };
       
       console.log('\n🎯 === RÉSUMÉ DE LA CORRECTION ===');
       console.log(`Contacts: ${contactsFixed}/${contactsToFix.length} corrigés`);
       console.log(`Lieux: ${lieuxFixed}/${lieuxToFix.length} corrigés`);
-      console.log(`Concerts: ${concertsFixed}/${concertsToFix.length} corrigés`);
+      console.log(`Dates: ${datesFixed}/${datesToFix.length} corrigés`);
       console.log(`Structures: ${structuresFixed}/${structuresToFix.length} corrigés`);
       
       setFixResults(summary);
@@ -231,7 +231,7 @@ export default function OrganizationIdFixer() {
           <h3>📊 Résumé de la correction</h3>
           <p><strong>Contacts:</strong> {fixResults.contacts.fixed}/{fixResults.contacts.total} corrigés</p>
           <p><strong>Lieux:</strong> {fixResults.lieux.fixed}/{fixResults.lieux.total} corrigés</p>
-          <p><strong>Concerts:</strong> {fixResults.concerts.fixed}/{fixResults.concerts.total} corrigés</p>
+          <p><strong>Dates:</strong> {fixResults.dates.fixed}/{fixResults.dates.total} corrigés</p>
           <p><strong>Structures:</strong> {fixResults.structures.fixed}/{fixResults.structures.total} corrigés</p>
           
           {(fixResults.contacts.fixed > 0 || fixResults.lieux.fixed > 0) && (

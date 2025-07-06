@@ -3,7 +3,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { useTabs } from '@/context/TabsContext';
 import { useContactsRelational } from './useContactsRelational';
-import { personnesService } from '@/services/contacts/personnesService';
 import debug from '@/utils/debugTagsComments';
 
 /**
@@ -193,7 +192,7 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       console.error('Erreur lors de la dissociation de la personne:', error);
       throw error;
     }
-  }, [contactId, contactType, dissociatePersonFromStructure, getStructureWithPersonnes, getPersonneWithStructures, currentUser]);
+  }, [contactId, contactType, dissociatePersonFromStructure, getStructureWithPersonnes]);
 
   const handleOpenPersonFiche = useCallback(async (personne) => {
     try {

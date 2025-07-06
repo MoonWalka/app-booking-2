@@ -154,13 +154,13 @@ class HistoriqueEchangesService {
   }
 
   /**
-   * Récupérer l'historique des échanges pour un concert
+   * Récupérer l'historique des échanges pour une date
    */
-  async getEchangesByConcert(concertId, organizationId) {
+  async getEchangesByDate(dateId, organizationId) {
     try {
       const q = query(
         collection(db, COLLECTION_NAME),
-        where('concertId', '==', concertId),
+        where('dateId', '==', dateId),
         where('organizationId', '==', organizationId),
         orderBy('date', 'desc')
       );
@@ -171,13 +171,13 @@ class HistoriqueEchangesService {
         ...doc.data()
       }));
 
-      console.log(`[HistoriqueEchangesService] ${echanges.length} échanges trouvés pour concert ${concertId}`);
+      console.log(`[HistoriqueEchangesService] ${echanges.length} échanges trouvés pour date ${dateId}`);
       return {
         success: true,
         data: echanges
       };
     } catch (error) {
-      console.error('[HistoriqueEchangesService] Erreur récupération échanges concert:', error);
+      console.error('[HistoriqueEchangesService] Erreur récupération échanges date:', error);
       return {
         success: false,
         error: error.message,

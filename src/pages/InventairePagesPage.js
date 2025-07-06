@@ -26,7 +26,7 @@ const InventairePagesPage = () => {
         { name: 'ArtistesPage', path: 'src/pages/ArtistesPage.js', route: '/preview/artistes', category: 'Gestion', usedInNewVersion: true },
         { name: 'BookingParametragePage', path: 'src/pages/BookingParametragePage.js', route: '/preview/booking/parametrage', category: 'Paramétrage', usedInNewVersion: true },
         { name: 'CollaborationParametragePage', path: 'src/pages/CollaborationParametragePage.js', route: '/preview/collaboration/parametrage', category: 'Paramétrage', usedInNewVersion: true },
-        { name: 'ConcertsPage', path: 'src/pages/ConcertsPage.js', route: '/preview/concerts', category: 'Gestion', usedInNewVersion: true },
+        { name: 'DatesPage', path: 'src/pages/DatesPage.js', route: '/preview/concerts', category: 'Gestion', usedInNewVersion: true },
         { name: 'ContactParametragePage', path: 'src/pages/ContactParametragePage.js', route: null, category: 'Paramétrage', usedInNewVersion: true },
         { name: 'ContactTagsPage', path: 'src/pages/ContactTagsPage.js', route: '/contacts/tags', category: 'Gestion', usedInNewVersion: false },
         { name: 'ContactsPage', path: 'src/pages/ContactsPage.js', route: '/preview/contacts', category: 'Gestion', usedInNewVersion: true },
@@ -51,13 +51,13 @@ const InventairePagesPage = () => {
         
         // Pages avec routes paramétrées
         { name: 'ContratDetailsPage', path: 'src/pages/ContratDetailsPage.js', route: '/contrats/:contratId', category: 'Détails', usedInNewVersion: false },
-        { name: 'ContratGenerationPage', path: 'src/pages/ContratGenerationPage.js', route: '/contrats/generate/:concertId', category: 'Génération', usedInNewVersion: false },
-        { name: 'ContratRedactionPage', path: 'src/pages/ContratRedactionPage.js', route: '/contrats/redaction/:concertId', category: 'Génération', usedInNewVersion: false },
+        { name: 'ContratGenerationPage', path: 'src/pages/ContratGenerationPage.js', route: '/contrats/generate/:dateId', category: 'Génération', usedInNewVersion: false },
+        { name: 'ContratRedactionPage', path: 'src/pages/ContratRedactionPage.js', route: '/contrats/redaction/:dateId', category: 'Génération', usedInNewVersion: false },
         // { name: 'FactureDetailsPage', path: 'src/pages/FactureDetailsPage.js', route: '/factures/:factureId', category: 'Détails', usedInNewVersion: false }, // Remplacé par FactureGeneratorPage
         { name: 'FactureGeneratorPage', path: 'src/pages/FactureGeneratorPage.js', route: '/preview/component/FactureGeneratorPage', category: 'Génération', usedInNewVersion: false },
-        { name: 'FormResponsePage', path: 'src/pages/FormResponsePage.js', route: '/formulaire/:concertId/:token', category: 'Formulaires', usedInNewVersion: false },
-        { name: 'PreContratFormResponsePage', path: 'src/pages/PreContratFormResponsePage.js', route: '/pre-contrat/:concertId/:token', category: 'Formulaires', usedInNewVersion: false },
-        { name: 'PreContratGenerationPage', path: 'src/pages/PreContratGenerationPage.js', route: '/pre-contrat/generate/:concertId', category: 'Génération', usedInNewVersion: false },
+        { name: 'FormResponsePage', path: 'src/pages/FormResponsePage.js', route: '/formulaire/:dateId/:token', category: 'Formulaires', usedInNewVersion: false },
+        { name: 'PreContratFormResponsePage', path: 'src/pages/PreContratFormResponsePage.js', route: '/pre-contrat/:dateId/:token', category: 'Formulaires', usedInNewVersion: false },
+        { name: 'PreContratGenerationPage', path: 'src/pages/PreContratGenerationPage.js', route: '/pre-contrat/generate/:dateId', category: 'Génération', usedInNewVersion: false },
         
         // Pages de templates (intégrées via ParametresPage)
         { name: 'contratTemplatesPage', path: 'src/pages/contratTemplatesPage.js', route: '/preview/component/contratTemplatesPage', category: 'Templates', usedInNewVersion: false },

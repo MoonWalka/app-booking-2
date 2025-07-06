@@ -42,11 +42,14 @@ export const OrganizationProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       console.log('🏢 Chargement des organisations pour:', currentUser.uid);
+      console.log('[DEBUG OrganizationContext] currentUser complet:', currentUser);
       
       const result = await getUserOrganizations(currentUser.uid);
+      console.log('[DEBUG OrganizationContext] Résultat getUserOrganizations:', result);
       
       if (!result || (!result.organizations && !Array.isArray(result))) {
         console.log('ℹ️ Aucune organisation trouvée');
+        console.log('[DEBUG] result est:', result);
         setUserOrgs([]);
         setCurrentOrg(null);
         return;

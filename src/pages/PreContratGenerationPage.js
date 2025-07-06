@@ -7,25 +7,25 @@ import { doc, getDoc, collection, query, where, getDocs } from '@/services/fireb
 import PreContratGenerator from '@/components/precontrats/desktop/PreContratGenerator';
 import '@styles/index.css';
 
-const PreContratGenerationPage = ({ concertId: propConcertId }) => {
-  const { concertId: paramsConcertId } = useParams();
+const PreContratGenerationPage = ({ dateId: propDateId }) => {
+  const { dateId: paramsDateId } = useParams();
   const { getActiveTab } = useTabs();
   
-  // Récupérer concertId depuis plusieurs sources possibles
-  const getConcertId = () => {
-    if (propConcertId) return propConcertId;
-    if (paramsConcertId) return paramsConcertId;
+  // Récupérer dateId depuis plusieurs sources possibles
+  const getDateId = () => {
+    if (propDateId) return propDateId;
+    if (paramsDateId) return paramsDateId;
     
     // Si on est dans un onglet, récupérer depuis les params du tab
     const activeTab = getActiveTab();
-    if (activeTab?.params?.concertId) return activeTab.params.concertId;
+    if (activeTab?.params?.dateId) return activeTab.params.dateId;
     
     return null;
   };
   
-  const concertId = getConcertId();
+  const dateId = getDateId();
   const navigate = useNavigate();
-  const [concert, setConcert] = useState(null);
+  const [concert, setDate] = useState(null);
   const [contact, setContact] = useState(null);
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
@@ -36,24 +36,24 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
   useEffect(() => {
     const fetchData = async () => {
       console.log('[WORKFLOW_TEST] 3. Génération du pré-contrat - début du chargement');
-      console.log('[PreContratGenerationPage] Chargement des données pour concertId:', concertId);
+      console.log('[PreContratGenerationPage] Chargement des données pour dateId:', dateId);
       
       try {
         // Récupérer les données du concert
-        const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-        if (!concertDoc.exists()) {
-          console.error('[PreContratGenerationPage] Concert non trouvé:', concertId);
-          setError('Concert non trouvé');
+        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        if (!dateDoc.exists()) {
+          console.error('[PreContratGenerationPage] Date non trouvé:', dateId);
+          setError('Date non trouvé');
           setLoading(false);
           return;
         }
         
-        const concertData = { id: concertId, ...concertDoc.data() };
-        setConcert(concertData);
+        const dateData = { id: dateId, ...dateDoc.data() };
+        setDate(dateData);
 
         // Récupérer les données du contact si disponible
-        if (concertData.contactId) {
-          const contactDoc = await getDoc(doc(db, 'contacts', concertData.contactId));
+        if (dateData.contactId) {
+          const contactDoc = await getDoc(doc(db, 'contacts', dateData.contactId));
           if (contactDoc.exists()) {
             setContact({ id: contactDoc.id, ...contactDoc.data() });
           }
@@ -61,16 +61,16 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
 
         // Récupérer les données de la structure si disponible
         console.log('[WORKFLOW_TEST] 4. Chargement des données de structure dans le pré-contrat');
-        console.log('[PreContratGenerationPage] Concert data:', concertData);
-        console.log('[PreContratGenerationPage] structureId:', concertData.structureId);
+        console.log('[PreContratGenerationPage] Date data:', dateData);
+        console.log('[PreContratGenerationPage] structureId:', dateData.structureId);
         
         let structureFound = false;
         
-        if (concertData.structureId) {
-          console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structureId trouvé:', concertData.structureId);
+        if (dateData.structureId) {
+          console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structureId trouvé:', dateData.structureId);
           
           // Chercher dans la collection structures (nouveau système)
-          const structureDoc = await getDoc(doc(db, 'structures', concertData.structureId));
+          const structureDoc = await getDoc(doc(db, 'structures', dateData.structureId));
           if (structureDoc.exists()) {
             const structureData = { id: structureDoc.id, ...structureDoc.data() };
             console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structure chargée:', structureData);
@@ -78,8 +78,8 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
             setStructure(structureData);
             structureFound = true;
           } else {
-            console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structure non trouvée avec ID:', concertData.structureId);
-            console.log('[PreContratGenerationPage] Structure non trouvée avec ID:', concertData.structureId);
+            console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - structure non trouvée avec ID:', dateData.structureId);
+            console.log('[PreContratGenerationPage] Structure non trouvée avec ID:', dateData.structureId);
           }
         } else {
           console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - pas de structureId dans le concert');
@@ -87,7 +87,7 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
         }
         
         // Si pas de structure trouvée mais qu'on a des infos dans le concert
-        if (!structureFound && concertData.structureRaisonSociale) {
+        if (!structureFound && dateData.structureRaisonSociale) {
           console.log('[PreContratGenerationPage] Utilisation des données structure du concert');
           
           // Essayer de charger depuis structures (nouveau système)
@@ -95,8 +95,8 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
             const structuresRef = collection(db, 'structures');
             const q = query(
               structuresRef,
-              where('organizationId', '==', concertData.organizationId),
-              where('raisonSociale', '==', concertData.structureRaisonSociale)
+              where('organizationId', '==', dateData.organizationId),
+              where('raisonSociale', '==', dateData.structureRaisonSociale)
             );
             
             const querySnapshot = await getDocs(q);
@@ -114,35 +114,35 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
           // Si toujours pas trouvé, utiliser les données minimales du concert
           if (!structureFound) {
             setStructure({
-              raisonSociale: concertData.structureRaisonSociale,
-              nom: concertData.structureNom || concertData.structureRaisonSociale,
-              // Ajouter d'autres champs si disponibles dans concertData
-              adresse: concertData.structureAdresse || '',
-              ville: concertData.structureVille || '',
-              codePostal: concertData.structureCodePostal || '',
-              telephone: concertData.structureTelephone || '',
-              email: concertData.structureEmail || ''
+              raisonSociale: dateData.structureRaisonSociale,
+              nom: dateData.structureNom || dateData.structureRaisonSociale,
+              // Ajouter d'autres champs si disponibles dans dateData
+              adresse: dateData.structureAdresse || '',
+              ville: dateData.structureVille || '',
+              codePostal: dateData.structureCodePostal || '',
+              telephone: dateData.structureTelephone || '',
+              email: dateData.structureEmail || ''
             });
           }
         }
 
         // Récupérer les données de l'artiste si disponible
-        if (concertData.artisteId) {
-          const artisteDoc = await getDoc(doc(db, 'artistes', concertData.artisteId));
+        if (dateData.artisteId) {
+          const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
           if (artisteDoc.exists()) {
             setArtiste({ id: artisteDoc.id, ...artisteDoc.data() });
           }
-        } else if (concertData.artisteNom) {
+        } else if (dateData.artisteNom) {
           // Si pas d'artisteId, créer un objet artiste avec les données du concert
           setArtiste({
-            nom: concertData.artisteNom,
+            nom: dateData.artisteNom,
             id: null
           });
         }
 
         // Récupérer les données du lieu si disponible
-        if (concertData.lieuId) {
-          const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+        if (dateData.lieuId) {
+          const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
           if (lieuDoc.exists()) {
             setLieu({ id: lieuDoc.id, ...lieuDoc.data() });
           }
@@ -156,14 +156,14 @@ const PreContratGenerationPage = ({ concertId: propConcertId }) => {
       }
     };
 
-    if (concertId) {
+    if (dateId) {
       fetchData();
     } else {
-      console.error('[PreContratGenerationPage] Aucun concertId disponible');
-      setError('Aucun concert spécifié');
+      console.error('[PreContratGenerationPage] Aucun dateId disponible');
+      setError('Aucun date spécifié');
       setLoading(false);
     }
-  }, [concertId]);
+  }, [dateId]);
 
   if (loading) {
     return (

@@ -92,7 +92,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
         .mockResolvedValueOnce({ // getBrevoTemplates
           data: {
             templates: [
-              { id: 1, name: 'Formulaire Concert' },
+              { id: 1, name: 'Formulaire Date' },
               { id: 2, name: 'Contrat Artiste' },
               { id: 3, name: 'Relance Documents' }
             ]
@@ -136,7 +136,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
       // Vérifier que les templates apparaissent
       await waitFor(() => {
         expect(screen.getByText('Association des templates')).toBeInTheDocument();
-        expect(screen.getByText(/Formulaire Concert/)).toBeInTheDocument();
+        expect(screen.getByText(/Formulaire Date/)).toBeInTheDocument();
       });
 
       // Étape 5: Associer les templates
@@ -239,7 +239,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
         nom: 'Jean Musicien'
       };
 
-      const concertData = {
+      const dateData = {
         nom: 'Festival Jazz 2024',
         date: new Date('2024-08-15T20:00:00Z')
       };
@@ -249,7 +249,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
 
       const result = await brevoTemplateService.sendFormulaireEmail(
         contactData,
-        concertData,
+        dateData,
         lienFormulaire,
         organizationId
       );
@@ -262,10 +262,10 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
         templateData: {
           params: {
             nomContact: 'Jean Musicien',
-            nomConcert: 'Festival Jazz 2024',
+            nomDate: 'Festival Jazz 2024',
             lienFormulaire: 'https://tourcraft.app/formulaire/abc123',
             dateEcheance: expect.any(String),
-            dateConcert: expect.any(String)
+            dateDate: expect.any(String)
           }
         },
         organizationId: 'test-org-456'
@@ -291,14 +291,14 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
         nom: 'Marie Manager'
       };
 
-      const concertData = {
-        nom: 'Concert Rock 2024',
+      const dateData = {
+        nom: 'Date Rock 2024',
         date: new Date('2024-09-20T21:00:00Z')
       };
 
       const result = await brevoTemplateService.sendContratEmail(
         contactData,
-        concertData,
+        dateData,
         mockOrganization.id
       );
 
@@ -440,7 +440,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
       await expect(
         brevoTemplateService.sendFormulaireEmail(
           { email: 'invalid-email', nom: 'Test' },
-          { nom: 'Concert' },
+          { nom: 'Date' },
           'https://example.com',
           mockOrganization.id
         )

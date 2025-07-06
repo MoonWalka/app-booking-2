@@ -14,7 +14,7 @@ import { ContactModalsProvider } from '@/context/ContactModalsContext';
 import { TabsProvider } from '@/context/TabsContext';
 import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
-import ConcertsPage from '@/pages/ConcertsPage';
+import DatesPage from '@/pages/DatesPage';
 import ContactsPage from '@/pages/ContactsPage';
 import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
@@ -44,9 +44,9 @@ import MesRecherchesPage from '@/pages/MesRecherchesPage';
 import MesSelectionsPage from '@/pages/MesSelectionsPage';
 import ContactTagsPage from '@/pages/ContactTagsPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-// import ConcertFormWrapper from '@/components/concerts/ConcertForm';
-// import ConcertsList from '@/components/concerts/ConcertsList';
-// import ConcertDetails from '@/components/concerts/ConcertDetails';
+// import DateFormWrapper from '@/components/dates/DateForm';
+// import DatesList from '@/components/dates/DatesList';
+// import DateDetails from '@/components/dates/DateDetails';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
@@ -60,7 +60,7 @@ import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
 import DebugController from '@/components/debug/DebugController';
 import DebugToolsPage from '@/pages/DebugToolsPage';
 import DebugButton from '@/components/common/DebugButton';
-// import ConcertLieuDebug from '@/components/debug/ConcertLieuDebug';
+// import DateLieuDebug from '@/components/debug/DateLieuDebug';
 import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
 import TabsTestPage from '@/pages/TabsTestPage';
 import InventairePagesPage from '@/pages/InventairePagesPage';
@@ -187,8 +187,8 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    <Route path="/formulaire/:concertId/:token" element={<FormResponsePage />} />
-                    <Route path="/pre-contrat/:concertId/:token" element={<PreContratFormResponsePage />} />
+                    <Route path="/formulaire/:dateId/:token" element={<FormResponsePage />} />
+                    <Route path="/pre-contrat/:dateId/:token" element={<PreContratFormResponsePage />} />
                     
                     {/* Route indépendante pour l'inventaire des pages (hors système d'onglets) */}
                     <Route path="/inventaire-pages" element={
@@ -221,10 +221,10 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    <Route path="/preview/concerts" element={
+                    <Route path="/preview/dates" element={
                       <PrivateRoute>
                         <div style={{ padding: '1rem' }}>
-                          <ConcertsPage />
+                          <DatesPage />
                         </div>
                       </PrivateRoute>
                     } />
@@ -372,11 +372,14 @@ function App() {
                     }>
                       <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
                       
-                      <Route path="/concerts/*" element={
+                      <Route path="/dates/*" element={
                         <PrivateRoute>
-                          <ConcertsPage />
+                          <DatesPage />
                         </PrivateRoute>
                       } />
+                      
+                      {/* Redirection temporaire de /concerts vers /dates */}
+                      <Route path="/dates/*" element={<Navigate to="/dates" replace />} />
                       
                       <Route path="/contacts/*" element={
                         <PrivateRoute>
@@ -458,12 +461,12 @@ function App() {
                               <ContratsPage />
                             </PrivateRoute>
                           } />
-                          <Route path="/contrats/generate/:concertId" element={
+                          <Route path="/contrats/generate/:dateId" element={
                             <PrivateRoute>
                               <ContratGenerationPage />
                             </PrivateRoute>
                           } />
-                          <Route path="/precontrats/generate/:concertId" element={
+                          <Route path="/precontrats/generate/:dateId" element={
                             <PrivateRoute>
                               <PreContratGenerationPage />
                             </PrivateRoute>
@@ -516,7 +519,7 @@ function App() {
                             </PrivateRoute>
                           } />
                           
-                          <Route path="/factures/generate/:concertId" element={
+                          <Route path="/factures/generate/:dateId" element={
                             <PrivateRoute>
                               <FactureGeneratorPage />
                             </PrivateRoute>
@@ -574,7 +577,7 @@ function App() {
                       } />
                       
                           
-                          <Route path="*" element={<Navigate to="/concerts" replace />} />
+                          <Route path="*" element={<Navigate to="/dates" replace />} />
                         </Route>
                   </Routes>
                   </ContactModalsProvider>

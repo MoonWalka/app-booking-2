@@ -153,7 +153,7 @@ const FestitestContactFinder = () => {
         relatedData: {
           allContacts: allData.contacts,
           allStructures: allData.structures,
-          allConcerts: allData.concerts,
+          allDates: allData.concerts,
           allLieux: allData.lieux,
           allContrats: allData.contrats,
           allFactures: allData.factures,
@@ -211,7 +211,7 @@ const FestitestContactFinder = () => {
         <div style={{ marginBottom: '20px' }}>
           <h2>🔍 Recherche du contact "jean fons" (lié à festitest)</h2>
           <p>
-            Cet outil recherche le contact "jean fons" lié au concert festitest et la structure "meltin recordz"
+            Cet outil recherche le contact "jean fons" lié au date festitest et la structure "meltin recordz"
             pour préparer la migration des métadonnées.
           </p>
           

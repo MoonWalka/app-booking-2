@@ -92,7 +92,7 @@ class FirebaseInterceptor {
     }
 
     // Vérifier les collections sensibles
-    const sensitiveCollections = ['contacts', 'lieux', 'concerts', 'structures'];
+    const sensitiveCollections = ['contacts', 'lieux', 'dates', 'structures'];
     const collectionName = this.extractCollectionName(ref);
     
     if (sensitiveCollections.includes(collectionName) && !data?.organizationId) {
@@ -146,7 +146,7 @@ class FirebaseInterceptor {
     
     if (!hasOrgFilter) {
       const collectionName = this.extractCollectionFromQuery(query);
-      const sensitiveCollections = ['contacts', 'lieux', 'concerts', 'structures'];
+      const sensitiveCollections = ['contacts', 'lieux', 'dates', 'structures'];
       
       if (sensitiveCollections.includes(collectionName)) {
         violation.issues.push({

@@ -9,7 +9,7 @@ import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**
  * Hook optimisé pour la gestion des détails d'un lieu
- * Mode lecture seule - l'édition se fait dans LieuForm (comme les concerts)
+ * Mode lecture seule - l'édition se fait dans LieuForm (comme les dates)
  * 
  * @param {string} id - ID du lieu à afficher
  * @param {object} locationParam - Objet location de React Router (optionnel)
@@ -78,7 +78,7 @@ const useLieuDetails = (id, locationParam) => {
     }
   }, [formatDate]);
   
-  // Configuration stabilisée avec useRef pour éviter les re-renders (comme dans useConcertDetails)
+  // Configuration stabilisée avec useRef pour éviter les re-renders (comme dans useDateDetails)
   const customQueriesRef = useRef({
     contact: async (lieuData) => {
       console.log('🔥🔥🔥 CUSTOM CONTACT QUERY APPELÉE 🔥🔥🔥');
@@ -185,30 +185,30 @@ const useLieuDetails = (id, locationParam) => {
           return contact;
         }
         
-        // Méthode 3: NOUVELLE - Trouver le contact via les concerts de ce lieu
-        console.log('[useLieuDetails] 🔍 Méthode 3: Recherche contact via concerts du lieu');
-        const concertsConstraints = [where('lieuId', '==', lieuData.id)];
+        // Méthode 3: NOUVELLE - Trouver le contact via les dates de ce lieu
+        console.log('[useLieuDetails] 🔍 Méthode 3: Recherche contact via dates du lieu');
+        const datesConstraints = [where('lieuId', '==', lieuData.id)];
         if (organizationId) {
-          concertsConstraints.push(where('organizationId', '==', organizationId));
+          datesConstraints.push(where('organizationId', '==', organizationId));
         }
-        const concertsQuery = query(
-          collection(db, 'concerts'),
-          ...concertsConstraints
+        const datesQuery = query(
+          collection(db, 'dates'),
+          ...datesConstraints
         );
         
-        const concertsSnapshot = await getDocs(concertsQuery);
+        const datesSnapshot = await getDocs(datesQuery);
         
-        if (!concertsSnapshot.empty) {
-          // Prendre le premier concert et récupérer son contact
-          const premierConcert = concertsSnapshot.docs[0].data();
-          console.log('[useLieuDetails] 🎵 Premier concert trouvé:', premierConcert);
+        if (!datesSnapshot.empty) {
+          // Prendre le premier date et récupérer son contact
+          const premierDate = datesSnapshot.docs[0].data();
+          console.log('[useLieuDetails] 🎵 Premier date trouvé:', premierDate);
           
-          if (premierConcert.contactId) {
-            console.log('[useLieuDetails] 🚀 Chargement contact via concert:', premierConcert.contactId);
-            const contactDoc = await getDoc(doc(db, 'contacts', premierConcert.contactId));
+          if (premierDate.contactId) {
+            console.log('[useLieuDetails] 🚀 Chargement contact via date:', premierDate.contactId);
+            const contactDoc = await getDoc(doc(db, 'contacts', premierDate.contactId));
             if (contactDoc.exists()) {
               const contact = { id: contactDoc.id, ...contactDoc.data() };
-              console.log('[useLieuDetails] ✅ Contact trouvé via concert:', contact);
+              console.log('[useLieuDetails] ✅ Contact trouvé via date:', contact);
               return contact;
             }
           }
@@ -258,8 +258,8 @@ const useLieuDetails = (id, locationParam) => {
           }
         }
         
-        // Méthode 3: NOUVELLE - Via le contact des concerts de ce lieu
-        console.log('[useLieuDetails] 🔍 Méthode 3: Recherche structure via contact des concerts');
+        // Méthode 3: NOUVELLE - Via le contact des dates de ce lieu
+        console.log('[useLieuDetails] 🔍 Méthode 3: Recherche structure via contact des dates');
         
         // Récupérer l'organizationId depuis le localStorage
         let organizationId = null;
@@ -273,35 +273,35 @@ const useLieuDetails = (id, locationParam) => {
           console.warn('[useLieuDetails] Impossible de récupérer l\'organizationId depuis localStorage:', error);
         }
         
-        const concertsConstraints = [where('lieuId', '==', lieuData.id)];
+        const datesConstraints = [where('lieuId', '==', lieuData.id)];
         if (organizationId) {
-          concertsConstraints.push(where('organizationId', '==', organizationId));
+          datesConstraints.push(where('organizationId', '==', organizationId));
         }
-        const concertsQuery = query(
-          collection(db, 'concerts'),
-          ...concertsConstraints
+        const datesQuery = query(
+          collection(db, 'dates'),
+          ...datesConstraints
         );
         
-        const concertsSnapshot = await getDocs(concertsQuery);
+        const datesSnapshot = await getDocs(datesQuery);
         
-        if (!concertsSnapshot.empty) {
-          // Prendre le premier concert et récupérer sa structure via le contact
-          const premierConcert = concertsSnapshot.docs[0].data();
-          console.log('[useLieuDetails] 🎵 Premier concert pour structure:', premierConcert);
+        if (!datesSnapshot.empty) {
+          // Prendre le premier date et récupérer sa structure via le contact
+          const premierDate = datesSnapshot.docs[0].data();
+          console.log('[useLieuDetails] 🎵 Premier date pour structure:', premierDate);
           
-          if (premierConcert.contactId) {
-            console.log('[useLieuDetails] 🚀 Chargement contact du concert:', premierConcert.contactId);
-            const contactDoc = await getDoc(doc(db, 'contacts', premierConcert.contactId));
+          if (premierDate.contactId) {
+            console.log('[useLieuDetails] 🚀 Chargement contact du date:', premierDate.contactId);
+            const contactDoc = await getDoc(doc(db, 'contacts', premierDate.contactId));
             if (contactDoc.exists()) {
               const contactData = contactDoc.data();
               console.log('[useLieuDetails] 📋 Données contact:', contactData);
               
               if (contactData.structureId) {
-                console.log('[useLieuDetails] 🚀 Chargement structure via contact du concert:', contactData.structureId);
+                console.log('[useLieuDetails] 🚀 Chargement structure via contact du date:', contactData.structureId);
                 const structureDoc = await getDoc(doc(db, 'structures', contactData.structureId));
                 if (structureDoc.exists()) {
                   const structure = { id: structureDoc.id, ...structureDoc.data() };
-                  console.log('[useLieuDetails] ✅ Structure trouvée via contact du concert:', structure);
+                  console.log('[useLieuDetails] ✅ Structure trouvée via contact du date:', structure);
                   return structure;
                 }
               }
@@ -317,8 +317,8 @@ const useLieuDetails = (id, locationParam) => {
       }
     },
 
-    concerts: async (lieuData) => {
-      console.log('[DEBUG useLieuDetails] customQuery concerts appelée avec:', lieuData);
+    dates: async (lieuData) => {
+      console.log('[DEBUG useLieuDetails] customQuery dates appelée avec:', lieuData);
       
       if (!lieuData) return [];
       
@@ -333,27 +333,27 @@ const useLieuDetails = (id, locationParam) => {
           constraints.push(where('organizationId', '==', organizationId));
         }
         
-        // Rechercher tous les concerts qui ont ce lieu
-        const concertsQuery = query(
-          collection(db, 'concerts'),
+        // Rechercher tous les dates qui ont ce lieu
+        const datesQuery = query(
+          collection(db, 'dates'),
           ...constraints
         );
         
-        const querySnapshot = await getDocs(concertsQuery);
-        const concerts = [];
+        const querySnapshot = await getDocs(datesQuery);
+        const dates = [];
         
         querySnapshot.forEach((docSnapshot) => {
-          concerts.push({
+          dates.push({
             id: docSnapshot.id,
             ...docSnapshot.data()
           });
         });
         
-        console.log('[useLieuDetails] ✅ Concerts trouvés:', concerts.length);
-        return concerts;
+        console.log('[useLieuDetails] ✅ Dates trouvés:', dates.length);
+        return dates;
         
       } catch (error) {
-        console.error('[useLieuDetails] Erreur lors du chargement des concerts:', error);
+        console.error('[useLieuDetails] Erreur lors du chargement des dates:', error);
         return [];
       }
     },
@@ -374,19 +374,19 @@ const useLieuDetails = (id, locationParam) => {
           constraints.push(where('organizationId', '==', organizationId));
         }
         
-        // D'abord récupérer tous les concerts de ce lieu
-        const concertsQuery = query(
-          collection(db, 'concerts'),
+        // D'abord récupérer tous les dates de ce lieu
+        const datesQuery = query(
+          collection(db, 'dates'),
           ...constraints
         );
         
-        const concertsSnapshot = await getDocs(concertsQuery);
+        const datesSnapshot = await getDocs(datesQuery);
         const artisteIds = [];
         
-        concertsSnapshot.forEach((docSnapshot) => {
-          const concertData = docSnapshot.data();
-          if (concertData.artisteId) {
-            artisteIds.push(concertData.artisteId);
+        datesSnapshot.forEach((docSnapshot) => {
+          const dateData = docSnapshot.data();
+          if (dateData.artisteId) {
+            artisteIds.push(dateData.artisteId);
           }
         });
         
@@ -428,7 +428,7 @@ const useLieuDetails = (id, locationParam) => {
   });
 
   // Configuration stabilisée des entités liées avec useMemo
-  // 🏗️ NIVEAU 3 (Lieu) - Charge contact + concerts + artistes, ÉVITE structure direct (via contact)
+  // 🏗️ NIVEAU 3 (Lieu) - Charge contact + dates + artistes, ÉVITE structure direct (via contact)
   const relatedEntities = useMemo(() => [
     { 
       name: 'contact', 
@@ -449,17 +449,17 @@ const useLieuDetails = (id, locationParam) => {
       loadRelated: false // 🚫 SÉCURITÉ: Empêche la structure de charger ses relations (évite boucles)
     },
     {
-      name: 'concerts',
-      collection: 'concerts',
+      name: 'dates',
+      collection: 'dates',
       idField: 'lieuId',
-      type: 'custom', // Requête inverse pour trouver les concerts dans ce lieu
+      type: 'custom', // Requête inverse pour trouver les dates dans ce lieu
       essential: true, // Très important pour un lieu
-      loadRelated: false // 🚫 Empêche les concerts de charger leurs relations (évite boucles)
+      loadRelated: false // 🚫 Empêche les dates de charger leurs relations (évite boucles)
     },
     {
       name: 'artistes',
       collection: 'artistes', 
-      type: 'custom', // Charger via les concerts de ce lieu
+      type: 'custom', // Charger via les dates de ce lieu
       essential: true, // CORRECTION: Marquer comme essentiel pour forcer le chargement
       loadRelated: false // 🚫 Empêche les artistes de charger leurs relations (évite boucles)
     }
@@ -519,7 +519,7 @@ const useLieuDetails = (id, locationParam) => {
     useDeleteModal: true, // Utiliser un modal pour confirmer la suppression
   });
   
-  // Callbacks pour les événements de sauvegarde et suppression (comme dans useConcertDetails)
+  // Callbacks pour les événements de sauvegarde et suppression (comme dans useDateDetails)
   const handleSaveSuccess = useCallback((data) => {
     // Émettre un événement personnalisé pour notifier les autres composants
     try {
@@ -563,7 +563,7 @@ const useLieuDetails = (id, locationParam) => {
   // SUPPRIMÉ: L'effet pour charger les entités - Maintenant géré automatiquement par useGenericEntityDetails
   
   
-  // Fonctions de navigation (comme dans useConcertDetails)
+  // Fonctions de navigation (comme dans useDateDetails)
   const handleEdit = useCallback(() => {
     navigate(`/lieux/${id}/edit`); // Navigation vers LieuForm
   }, [navigate, id]);
@@ -642,13 +642,13 @@ const useLieuDetails = (id, locationParam) => {
     }
   }, [detailsHook]);
   
-  // Retourner l'API du hook (comme useConcertDetails)
+  // Retourner l'API du hook (comme useDateDetails)
   return {
     // Données principales
     lieu: detailsHook?.entity || null,
     contact: detailsHook?.relatedData?.contact || null,
     structure: detailsHook?.relatedData?.structure || null,
-    concerts: detailsHook?.relatedData?.concerts || [],
+    dates: detailsHook?.relatedData?.dates || [],
     artistes: detailsHook?.relatedData?.artistes || [],
     loading: detailsHook?.loading || false,
     isLoading: detailsHook?.loading || false,

@@ -1,6 +1,6 @@
 /**
  * Utilitaires pour transformer les données TourCraft en variables Brevo
- * Gère la conversion des objets concert/contact en variables de templates
+ * Gère la conversion des objets date/contact en variables de templates
  * 
  * NOTE: La fonction formatContratVariables est temporairement non utilisée
  * car l'envoi d'email de contrat est désactivé
@@ -10,20 +10,20 @@
 import { DefaultVariables } from '../types/brevoTypes.js';
 
 /**
- * Formate les données d'un concert pour les templates Brevo
- * @param {Object} concert - Données du concert
+ * Formate les données d'un date pour les templates Brevo
+ * @param {Object} date - Données de la date
  * @param {Object} contact - Données du contact (programmateur)
  * @returns {Object} Variables formatées pour Brevo
  */
-export const formatConcertVariables = (concert, contact = {}) => {
-  const dateFormattee = concert.date ? 
-    new Date(concert.date).toLocaleDateString('fr-FR', {
+export const formatDateVariables = (date, contact = {}) => {
+  const dateFormattee = date.date ? 
+    new Date(date.date).toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: 'long', 
       year: 'numeric'
     }) : 'Date à confirmer';
 
-  const heureFormattee = concert.heure || DefaultVariables.heure_concert;
+  const heureFormattee = date.heure || DefaultVariables.heure_date;
 
   return {
     // Informations programmateur
@@ -31,15 +31,15 @@ export const formatConcertVariables = (concert, contact = {}) => {
     prenom_programmateur: contact.prenom || contact.firstName || DefaultVariables.prenom_programmateur,
     email_programmateur: contact.email || '',
     
-    // Informations concert
-    titre_concert: concert.nom || concert.title || concert.titre || 'Concert',
-    date_concert: dateFormattee,
-    heure_concert: heureFormattee,
+    // Informations date
+    titre_date: date.nom || date.title || date.titre || 'Date',
+    date_date: dateFormattee,
+    heure_date: heureFormattee,
     
     // Informations lieu
-    lieu_nom: concert.lieu?.nom || concert.venue?.name || 'Lieu à confirmer',
-    lieu_adresse: concert.lieu?.adresse || concert.venue?.address || DefaultVariables.lieu_adresse,
-    adresse_complete: formatAdresseComplete(concert.lieu || concert.venue),
+    lieu_nom: date.lieu?.nom || date.venue?.name || 'Lieu à confirmer',
+    lieu_adresse: date.lieu?.adresse || date.venue?.address || DefaultVariables.lieu_adresse,
+    adresse_complete: formatAdresseComplete(date.lieu || date.venue),
     
     // Contacts organisateur
     contact_organisateur: DefaultVariables.contact_organisateur,
@@ -50,16 +50,16 @@ export const formatConcertVariables = (concert, contact = {}) => {
 
 /**
  * Formate les variables pour le template formulaire programmateur
- * @param {Object} concert - Données du concert
+ * @param {Object} date - Données de la date
  * @param {Object} contact - Données du contact
  * @param {string} lienFormulaire - URL du formulaire
  * @returns {Object} Variables pour template formulaire
  */
-export const formatFormulaireVariables = (concert, contact, lienFormulaire) => {
-  const baseVariables = formatConcertVariables(concert, contact);
+export const formatFormulaireVariables = (date, contact, lienFormulaire) => {
+  const baseVariables = formatDateVariables(date, contact);
   
-  const dateLimite = concert.dateLimiteFormulaire ? 
-    new Date(concert.dateLimiteFormulaire).toLocaleDateString('fr-FR') :
+  const dateLimite = date.dateLimiteFormulaire ? 
+    new Date(date.dateLimiteFormulaire).toLocaleDateString('fr-FR') :
     new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'); // +7 jours par défaut
 
   return {
@@ -71,20 +71,20 @@ export const formatFormulaireVariables = (concert, contact, lienFormulaire) => {
 
 /**
  * Formate les variables pour le template relance documents
- * @param {Object} concert - Données du concert
+ * @param {Object} date - Données de la date
  * @param {Object} contact - Données du contact
  * @param {Array} documentsManquants - Liste des documents manquants
  * @param {number} nombreRelance - Numéro de la relance
  * @returns {Object} Variables pour template relance
  */
-export const formatRelanceVariables = (concert, contact, documentsManquants = [], nombreRelance = 1) => {
-  const baseVariables = formatConcertVariables(concert, contact);
+export const formatRelanceVariables = (date, contact, documentsManquants = [], nombreRelance = 1) => {
+  const baseVariables = formatDateVariables(date, contact);
   
-  const dateLimite = concert.dateLimiteDocuments ?
-    new Date(concert.dateLimiteDocuments).toLocaleDateString('fr-FR') :
+  const dateLimite = date.dateLimiteDocuments ?
+    new Date(date.dateLimiteDocuments).toLocaleDateString('fr-FR') :
     new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'); // +3 jours par défaut
 
-  const lienDocuments = `${window.location.origin}/documents/${concert.id || concert._id}`;
+  const lienDocuments = `${window.location.origin}/documents/${date.id || date._id}`;
 
   return {
     ...baseVariables,
@@ -102,20 +102,20 @@ export const formatRelanceVariables = (concert, contact, documentsManquants = []
  * TEMPORAIREMENT NON UTILISÉE: L'envoi d'email de contrat est désactivé
  * Fonction conservée pour réactivation future
  * 
- * @param {Object} concert - Données du concert
+ * @param {Object} date - Données de la date
  * @param {Object} contact - Données du contact
  * @param {Object} contrat - Données du contrat
  * @returns {Object} Variables pour template contrat
  */
-export const formatContratVariables = (concert, contact, contrat) => {
-  const baseVariables = formatConcertVariables(concert, contact);
+export const formatContratVariables = (date, contact, contrat) => {
+  const baseVariables = formatDateVariables(date, contact);
   
   // Assurer la robustesse face aux objets undefined/null
   const contratData = contrat || {};
-  const concertData = concert || {};
+  const dateData = date || {};
   
-  // Le montant peut être dans contrat.montantTotal, concert.montant, ou concert.prix
-  const montantBrut = contratData.montantTotal || concertData.montant || concertData.prix || 0;
+  // Le montant peut être dans contrat.montantTotal, date.montant, ou date.prix
+  const montantBrut = contratData.montantTotal || dateData.montant || dateData.prix || 0;
   const montantFormate = montantBrut ? 
     new Intl.NumberFormat('fr-FR', { 
       style: 'currency', 
@@ -150,17 +150,17 @@ export const formatContratVariables = (concert, contact, contrat) => {
 
 /**
  * Formate les variables pour le template confirmation concert
- * @param {Object} concert - Données du concert
+ * @param {Object} date - Données de la date
  * @param {Object} contact - Données du contact
- * @param {Object} detailsTechniques - Détails techniques du concert
+ * @param {Object} detailsTechniques - Détails techniques de la date
  * @returns {Object} Variables pour template confirmation
  */
-export const formatConfirmationVariables = (concert, contact, detailsTechniques = {}) => {
-  const baseVariables = formatConcertVariables(concert, contact);
+export const formatConfirmationVariables = (date, contact, detailsTechniques = {}) => {
+  const baseVariables = formatDateVariables(date, contact);
   
   const heureArrivee = detailsTechniques.heureArrivee || 
-    (concert.heure ? 
-      new Date(`2000-01-01T${concert.heure}`).getTime() - (2.5 * 60 * 60 * 1000) : // -2h30 par défaut
+    (date.heure ? 
+      new Date(`2000-01-01T${date.heure}`).getTime() - (2.5 * 60 * 60 * 1000) : // -2h30 par défaut
       '18:00'
     );
 

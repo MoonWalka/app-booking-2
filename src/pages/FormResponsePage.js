@@ -28,19 +28,19 @@ const PublicFormLayout = ({ children }) => {
 };
 
 const FormResponsePage = () => {
-  const { concertId, token, id } = useParams(); // Récupérer concertId, token ou id
+  const { dateId, token, id } = useParams(); // Récupérer dateId, token ou id
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [formLinkId, setFormLinkId] = useState(null);
   const [contactEmail, setContactEmail] = useState('');
-  const [concert, setConcert] = useState(null);
+  const [concert, setDate] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [error, setError] = useState(null);
   const [expired, setExpired] = useState(false);
   const [completed, setCompleted] = useState(false);
 
   // Déterminer si nous sommes en mode public ou en mode admin
-  const isPublicForm = !!concertId && !!token;
+  const isPublicForm = !!dateId && !!token;
   const isAdminValidation = !!id;
 
   useEffect(() => {
@@ -57,15 +57,15 @@ const FormResponsePage = () => {
           if (submissionDoc.exists()) {
             const submissionData = submissionDoc.data();
             
-            // Récupérer le concert associé
-            if (submissionData.concertId) {
-              const concertDoc = await getDoc(doc(db, 'concerts', submissionData.concertId));
-              if (concertDoc.exists()) {
-                setConcert(concertDoc.data());
+            // Récupérer le date associé
+            if (submissionData.dateId) {
+              const dateDoc = await getDoc(doc(db, 'concerts', submissionData.dateId));
+              if (dateDoc.exists()) {
+                setDate(dateDoc.data());
                 
                 // Récupérer le lieu si nécessaire
-                if (concertDoc.data().lieuId) {
-                  const lieuDoc = await getDoc(doc(db, 'lieux', concertDoc.data().lieuId));
+                if (dateDoc.data().lieuId) {
+                  const lieuDoc = await getDoc(doc(db, 'lieux', dateDoc.data().lieuId));
                   if (lieuDoc.exists()) {
                     setLieu(lieuDoc.data());
                   }
@@ -87,18 +87,18 @@ const FormResponsePage = () => {
       return;
     }
     
-    // En mode formulaire public (route /formulaire/:concertId/:token)
+    // En mode formulaire public (route /formulaire/:dateId/:token)
     if (isPublicForm) {
       const validateToken = async () => {
         setLoading(true);
         try {
-          console.log("Validation du token:", token, "pour le concert:", concertId);
+          console.log("Validation du token:", token, "pour le concert:", dateId);
           
           // Vérifier si le token existe dans la collection formLinks
           const formsQuery = query(
             collection(db, 'formLinks'),
             where('token', '==', token),
-            where('concertId', '==', concertId)
+            where('dateId', '==', dateId)
           );
           
           const formsSnapshot = await getDocs(formsQuery);
@@ -140,30 +140,30 @@ const FormResponsePage = () => {
             return;
           }
           
-          console.log("Token validé avec succès, chargement du concert:", concertId);
+          console.log("Token validé avec succès, chargement du concert:", dateId);
           
           // Récupérer les données du concert
-          const concertDoc = await getDoc(doc(db, 'concerts', concertId));
-          if (concertDoc.exists()) {
-            const concertData = concertDoc.data();
-            setConcert(concertData);
+          const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+          if (dateDoc.exists()) {
+            const dateData = dateDoc.data();
+            setDate(dateData);
             
-            console.log("Concert trouvé:", concertData);
+            console.log("Date trouvé:", dateData);
             
             // Récupérer les données du lieu
-            if (concertData.lieuId) {
-              const lieuDoc = await getDoc(doc(db, 'lieux', concertData.lieuId));
+            if (dateData.lieuId) {
+              const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
               if (lieuDoc.exists()) {
                 const lieuData = lieuDoc.data();
                 setLieu(lieuData);
                 console.log("Lieu trouvé:", lieuData);
               } else {
-                console.log("Lieu non trouvé:", concertData.lieuId);
+                console.log("Lieu non trouvé:", dateData.lieuId);
               }
             }
           } else {
-            console.error("Concert non trouvé:", concertId);
-            setError("Le concert associé à ce formulaire n'existe pas ou a été supprimé.");
+            console.error("Date non trouvé:", dateId);
+            setError("Le date associé à ce formulaire n'existe pas ou a été supprimé.");
             setLoading(false);
             return;
           }
@@ -180,7 +180,7 @@ const FormResponsePage = () => {
       setError("Lien de formulaire invalide. Il manque des paramètres nécessaires.");
       setLoading(false);
     }
-  }, [concertId, token, id, isPublicForm, isAdminValidation]);
+  }, [dateId, token, id, isPublicForm, isAdminValidation]);
 
   // Fonction pour formater la date
   const formatDate = (dateValue) => {
@@ -255,7 +255,7 @@ const FormResponsePage = () => {
         {/* Titre principal selon la maquette */}
         <h1 className={styles.pageTitle}>Formulaire Contact</h1>
 
-        {/* Informations du concert selon la maquette */}
+        {/* Informations du date selon la maquette */}
         {concert && (
           <Card 
             title="Informations sur le concert"
@@ -289,7 +289,7 @@ const FormResponsePage = () => {
             
             <PublicContactForm 
               token={token} 
-              concertId={concertId} 
+              dateId={dateId} 
               formLinkId={formLinkId} 
               contactEmail={contactEmail}
               lieu={lieu}

@@ -32,8 +32,8 @@ import { useOrganization } from '@/context/OrganizationContext';
  * @returns {string|null} returns.error - Message d'erreur éventuel
  * @returns {Object} returns.stats - Statistiques détaillées des lieux
  * @returns {number} returns.stats.total - Nombre total de lieux
- * @returns {number} returns.stats.avecConcerts - Lieux avec concerts associés
- * @returns {number} returns.stats.sansConcerts - Lieux sans concerts associés
+ * @returns {number} returns.stats.avecDates - Lieux avec concerts associés
+ * @returns {number} returns.stats.sansDates - Lieux sans concerts associés
  * @returns {number} returns.stats.festivals - Nombre de festivals
  * @returns {number} returns.stats.salles - Nombre de salles
  * @returns {number} returns.stats.bars - Nombre de bars
@@ -51,7 +51,7 @@ import { useOrganization } from '@/context/OrganizationContext';
  *   <div>
  *     <h2>Lieux ({stats.total})</h2>
  *     <p>Festivals: {stats.festivals}, Salles: {stats.salles}</p>
- *     <p>Avec concerts: {stats.avecConcerts}</p>
+ *     <p>Avec concerts: {stats.avecDates}</p>
  *     
  *     {lieux.map(lieu => (
  *       <div key={lieu.id}>
@@ -95,7 +95,7 @@ import { useOrganization } from '@/context/OrganizationContext';
  * - Tri côté serveur pour optimiser les performances
  * - Calcul des statistiques en une seule passe
  * 
- * @usedBy LieuxList, LieuxDashboard, LieuxStats, ConcertForm
+ * @usedBy LieuxList, LieuxDashboard, LieuxStats, DateForm
  */
 
 const useLieuxQuery = () => {
@@ -104,8 +104,8 @@ const useLieuxQuery = () => {
   const [error, setError] = useState(null);
   const [stats, setStats] = useState({
     total: 0,
-    avecConcerts: 0,
-    sansConcerts: 0,
+    avecDates: 0,
+    sansDates: 0,
     festivals: 0,
     salles: 0,
     bars: 0,
@@ -139,8 +139,8 @@ const useLieuxQuery = () => {
         }));
         
         // Calculate stats
-        let avecConcerts = 0;
-        let sansConcerts = 0;
+        let avecDates = 0;
+        let sansDates = 0;
         let festivals = 0;
         let salles = 0;
         let bars = 0;
@@ -148,9 +148,9 @@ const useLieuxQuery = () => {
         
         lieuxData.forEach(lieu => {
           if (lieu.concertsAssocies && lieu.concertsAssocies.length > 0) {
-            avecConcerts++;
+            avecDates++;
           } else {
-            sansConcerts++;
+            sansDates++;
           }
           
           // Count venue types
@@ -162,8 +162,8 @@ const useLieuxQuery = () => {
         
         setStats({
           total: lieuxData.length,
-          avecConcerts,
-          sansConcerts,
+          avecDates,
+          sansDates,
           festivals,
           salles,
           bars,

@@ -12,10 +12,10 @@ const FormPageHeader = ({ title, subtitle, concertInfo }) => {
       {concertInfo && (
         <div className={styles.concertInfo}>
           <p className={styles.concertName}>
-            {concertInfo.titre || concertInfo.nom || 'Concert'}
+            {concertInfo.titre || concertInfo.nom || 'Date'}
           </p>
           {concertInfo.dateDebut && (
-            <p className={styles.concertDate}>
+            <p className={styles.dateDate}>
               {new Date(concertInfo.dateDebut).toLocaleDateString('fr-FR', {
                 weekday: 'long',
                 year: 'numeric',

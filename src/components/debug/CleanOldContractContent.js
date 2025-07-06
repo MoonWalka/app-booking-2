@@ -39,7 +39,7 @@ const CleanOldContractContent = () => {
           if (hasOldVariables) {
             loadedContracts.push({
               id: doc.id,
-              concertId: data.concertId,
+              dateId: data.dateId,
               status: data.status,
               createdAt: data.createdAt,
               hasTemplateSnapshot: !!data.templateSnapshot,
@@ -160,7 +160,7 @@ const CleanOldContractContent = () => {
                     Contrat {contract.id.substring(0, 8)}...
                   </span>
                   <span className={styles.templateType}>
-                    (Concert: {contract.concertId ? contract.concertId.substring(0, 8) + '...' : 'N/A'})
+                    (Date: {contract.dateId ? contract.dateId.substring(0, 8) + '...' : 'N/A'})
                   </span>
                   {contract.hasTemplateSnapshot && (
                     <span className="badge bg-info ms-2">A un template snapshot</span>

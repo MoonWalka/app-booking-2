@@ -56,7 +56,7 @@ import useGenericSearch from './useGenericSearch';
  *     prix: { type: 'range', min: 0, max: 1000 }
  *   },
  *   defaultPresets: [
- *     { name: 'Concerts confirmés', filters: { statut: 'confirmé' } },
+ *     { name: 'Dates confirmés', filters: { statut: 'confirmé' } },
  *     { name: 'Ce mois', filters: { date: { mode: 'thisMonth' } } }
  *   ]
  * });

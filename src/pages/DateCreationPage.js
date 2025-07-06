@@ -22,7 +22,7 @@ function DateCreationPage({ params = {} }) {
   const DEBUG_MODE = false;
   
   const { currentOrganization } = useOrganization();
-  const { openConcertsListTab, openDateDetailsTab, getActiveTab, closeTab } = useTabs();
+  const { openDatesListTab, openDateDetailsTab, getActiveTab, closeTab } = useTabs();
   
   // Récupérer les données pré-remplies depuis les paramètres de l'onglet
   const activeTab = getActiveTab();
@@ -228,7 +228,7 @@ function DateCreationPage({ params = {} }) {
       // Attendre un peu pour que l'événement de rafraîchissement soit traité
       setTimeout(() => {
         // Ouvrir la liste des concerts pour voir le nouveau concert
-        openConcertsListTab();
+        openDatesListTab();
         
         // Fermer l'onglet actuel
         const currentTab = getActiveTab();
@@ -291,14 +291,14 @@ function DateCreationPage({ params = {} }) {
 
       console.log('🔍 DEBUG - Sauvegarde de la date:', dateData);
       
-      const docRef = await addDoc(collection(db, 'concerts'), dateData);
+      const docRef = await addDoc(collection(db, 'dates'), dateData);
       
       console.log('✅ Date créée avec succès! ID:', docRef.id);
       
       // Émettre un événement pour forcer le rafraîchissement des listes
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('concertCreated', { 
-          detail: { concertId: docRef.id } 
+        window.dispatchEvent(new CustomEvent('dateCreated', { 
+          detail: { dateId: docRef.id } 
         }));
       }
       
@@ -313,7 +313,7 @@ function DateCreationPage({ params = {} }) {
         openDateDetailsTab(docRef.id, dateTitle);
       } else {
         // Ouvrir l'onglet des concerts pour voir la nouvelle date
-        openConcertsListTab();
+        openDatesListTab();
       }
       
       // Fermer l'onglet actuel
@@ -337,7 +337,7 @@ function DateCreationPage({ params = {} }) {
           <div>
             <h1 className={styles.pageTitle}>
               <i className="bi bi-calendar-plus me-3"></i>
-              Nouvelle Date de Concert
+              Nouvelle Date de Date
             </h1>
             <p className={styles.pageSubtitle}>
               Créez une nouvelle date en associant un artiste/projet avec un organisateur

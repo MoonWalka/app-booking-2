@@ -5,10 +5,10 @@ import styles from './EntityEmptyState.module.css';
 
 /**
  * État vide générique pour toutes les listes d'entités
- * Remplace ArtistesEmptyState, ConcertsEmptyState, etc.
+ * Remplace ArtistesEmptyState, DatesEmptyState, etc.
  * 
  * @param {Object} props - Props du composant
- * @param {string} props.entityType - Type d'entité (artistes, concerts, etc.)
+ * @param {string} props.entityType - Type d'entité (artistes, dates, etc.)
  * @param {string} props.entityTypeSingular - Type d'entité au singulier
  * @param {string} props.icon - Classe d'icône Bootstrap Icons
  * @param {string} props.searchTerm - Terme de recherche actuel

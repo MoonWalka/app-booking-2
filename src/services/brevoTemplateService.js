@@ -64,7 +64,7 @@ class BrevoTemplateService {
 
   /**
    * Envoie un email formulaire programmateur avec template Brevo
-   * @param {Object} date - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {string} lienFormulaire - URL du formulaire
    * @returns {Promise<Object>} - Résultat de l'envoi
@@ -129,7 +129,7 @@ class BrevoTemplateService {
 
   /**
    * Envoie un email de relance documents avec template Brevo
-   * @param {Object} date - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {Array} documentsManquants - Liste des documents manquants
    * @param {number} nombreRelance - Numéro de la relance
@@ -180,7 +180,7 @@ class BrevoTemplateService {
    * TEMPORAIREMENT DÉSACTIVÉ: Cette fonction n'est pas appelée actuellement
    * Conservée pour réactivation future avec une solution API stable
    * 
-   * @param {Object} date - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {Object} contrat - Données du contrat
    * @returns {Promise<Object>} - Résultat de l'envoi
@@ -270,7 +270,7 @@ class BrevoTemplateService {
 
   /**
    * Envoie un email de confirmation date avec template Brevo
-   * @param {Object} date - Données du concert
+   * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
    * @param {Object} detailsTechniques - Détails techniques de la date
    * @returns {Promise<Object>} - Résultat de l'envoi

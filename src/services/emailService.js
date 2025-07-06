@@ -395,7 +395,7 @@ class EmailService {
    * Envoie un email de confirmation avec template Brevo optimisé
    * @param {Object} date - Données de la date
    * @param {Object} contact - Données du contact
-   * @param {Object} detailsTechniques - Détails techniques du concert
+   * @param {Object} detailsTechniques - Détails techniques de la date
    * @returns {Promise<Object>} - Résultat de l'envoi
    */
   async sendBrevoConfirmationEmail(date, contact, detailsTechniques = {}) {
@@ -406,7 +406,7 @@ class EmailService {
    * Envoie un email à plusieurs contacts avec template Brevo
    * @param {string} templateName - Nom du template
    * @param {Array} contacts - Liste des contacts
-   * @param {Object} baseData - Données de base (concert, etc.)
+   * @param {Object} baseData - Données de base (date, etc.)
    * @param {Object} templateSpecificData - Données spécifiques au template
    * @returns {Promise<Object>} - Résultats des envois
    */

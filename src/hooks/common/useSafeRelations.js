@@ -5,7 +5,7 @@ import { db } from '@services/firebase-service';
 /**
  * Hook sécurisé pour charger les relations sans créer de boucles infinies
  * 
- * @param {string} entityType - Type de l'entité principale (concert, artiste, etc.)
+ * @param {string} entityType - Type de l'entité principale (date, artiste, etc.)
  * @param {string} entityId - ID de l'entité principale
  * @param {number} depth - Profondeur de chargement des relations (défaut: 1)
  * @param {Object} options - Options de configuration
@@ -29,17 +29,17 @@ const useSafeRelations = (entityType, entityId, depth = 1, options = {}) => {
 
   // Configuration des relations par type d'entité (memoized pour performance)
   const relationConfigs = useMemo(() => ({
-    concert: {
-      artistes: { collection: 'artistes', field: 'artistesIds', isArray: true, reverseField: 'concertsIds' },
+    date: {
+      artistes: { collection: 'artistes', field: 'artistesIds', isArray: true, reverseField: 'datesIds' },
       lieu: { collection: 'lieux', field: 'lieuId', isArray: false },
       contact: { collection: 'contacts', field: 'contactIds', isArray: true }, // Format harmonisé
-      structure: { collection: 'structures', field: 'structureId', isArray: false, reverseField: 'concertsIds' }
+      structure: { collection: 'structures', field: 'structureId', isArray: false, reverseField: 'datesIds' }
     },
     artiste: {
-      concerts: { collection: 'concerts', field: 'concertsIds', isArray: true, reverseField: 'artistesIds' }
+      dates: { collection: 'dates', field: 'datesIds', isArray: true, reverseField: 'artistesIds' }
     },
     lieu: {
-      concerts: { collection: 'concerts', field: 'concertsIds', isArray: true, reverseField: 'lieuId' },
+      dates: { collection: 'dates', field: 'datesIds', isArray: true, reverseField: 'lieuId' },
       contacts: { collection: 'contacts', field: 'contactIds', isArray: true, reverseField: 'lieuxIds' }
     },
     contact: {
@@ -48,7 +48,7 @@ const useSafeRelations = (entityType, entityId, depth = 1, options = {}) => {
     },
     structure: {
       contacts: { collection: 'contacts', field: 'contactsIds', isArray: true, reverseField: 'structureId' },
-      concerts: { collection: 'concerts', field: 'concertsIds', isArray: true, reverseField: 'structureId' }
+      dates: { collection: 'dates', field: 'datesIds', isArray: true, reverseField: 'structureId' }
     }
   }), []);
 
@@ -103,7 +103,7 @@ const useSafeRelations = (entityType, entityId, depth = 1, options = {}) => {
               
               let relationIds = entityData[relationConfig.field];
               
-              // Gestion spéciale pour les relations inverses (ex: concerts d'un lieu)
+              // Gestion spéciale pour les relations inverses (ex: dates d'un lieu)
               if (relationConfig.reverseField && !relationIds) {
                 // Chercher les entités qui pointent vers cette entité
                 try {

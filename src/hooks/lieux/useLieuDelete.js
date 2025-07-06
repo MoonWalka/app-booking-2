@@ -29,10 +29,10 @@ const useLieuDelete = (onDeleteSuccess) => {
     // Entités liées à vérifier
     relatedEntities: [
       {
-        collection: 'concerts',
+        collection: 'dates',
         field: 'lieuId',
         referenceType: 'direct',
-        message: 'Ce lieu ne peut pas être supprimé car il a des concerts associés.',
+        message: 'Ce lieu ne peut pas être supprimé car il a des dates associées.',
         detailsField: 'titre',
         detailsLimit: 5
       },

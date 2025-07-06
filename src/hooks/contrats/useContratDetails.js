@@ -19,8 +19,8 @@ const useContratDetails = (contratId) => {
   // Configuration des entités liées pour useGenericEntityDetails
   const relatedEntities = [
     { 
-      name: 'concert', 
-      collection: 'concerts', 
+      name: 'date', 
+      collection: 'dates', 
       idField: 'dateId',
       type: 'one-to-one',
       essential: true
@@ -69,9 +69,9 @@ const useContratDetails = (contratId) => {
     }
   ];
   
-  // Requêtes personnalisées pour charger les entités liées indirectement (via le concert)
+  // Requêtes personnalisées pour charger les entités liées indirectement (via la date)
   const customQueries = {
-    // Requête personnalisée pour charger le contact via le concert
+    // Requête personnalisée pour charger le contact via la date
     contact: async (contratData) => {
       console.log('[DEBUG] Chargement contact pour contrat:', contratData);
       
@@ -81,9 +81,9 @@ const useContratDetails = (contratId) => {
       }
       
       try {
-        // Récupérer d'abord le concert
-        console.log('[DEBUG] Récupération du concert:', contratData.dateId);
-        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
+        // Récupérer d'abord la date
+        console.log('[DEBUG] Récupération de la date:', contratData.dateId);
+        const dateDoc = await getDoc(doc(db, 'dates', contratData.dateId));
         
         if (!dateDoc.exists()) {
           console.log('[DEBUG] Date non trouvé');
@@ -91,10 +91,10 @@ const useContratDetails = (contratId) => {
         }
         
         const dateData = dateDoc.data();
-        console.log('[DEBUG] Données du concert:', dateData);
+        console.log('[DEBUG] Données de la date:', dateData);
         
         if (!dateData.contactId) {
-          console.log('[DEBUG] Pas de contactId dans le concert');
+          console.log('[DEBUG] Pas de contactId dans la date');
           return null;
         }
         
@@ -117,7 +117,7 @@ const useContratDetails = (contratId) => {
       }
     },
     
-    // Requête personnalisée pour charger le lieu via le concert
+    // Requête personnalisée pour charger le lieu via la date
     lieu: async (contratData) => {
       console.log('[DEBUG] Chargement lieu pour contrat:', contratData);
       
@@ -127,7 +127,7 @@ const useContratDetails = (contratId) => {
       }
       
       try {
-        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
+        const dateDoc = await getDoc(doc(db, 'dates', contratData.dateId));
         
         if (!dateDoc.exists()) {
           console.log('[DEBUG] Date non trouvé pour le lieu');
@@ -138,7 +138,7 @@ const useContratDetails = (contratId) => {
         console.log('[DEBUG] Données du date pour lieu:', dateData);
         
         if (!dateData.lieuId) {
-          console.log('[DEBUG] Pas de lieuId dans le concert');
+          console.log('[DEBUG] Pas de lieuId dans la date');
           return null;
         }
         
@@ -160,7 +160,7 @@ const useContratDetails = (contratId) => {
       }
     },
     
-    // Requête personnalisée pour charger l'artiste via le concert
+    // Requête personnalisée pour charger l'artiste via la date
     artiste: async (contratData) => {
       console.log('[DEBUG] Chargement artiste pour contrat:', contratData);
       
@@ -170,7 +170,7 @@ const useContratDetails = (contratId) => {
       }
       
       try {
-        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
+        const dateDoc = await getDoc(doc(db, 'dates', contratData.dateId));
         
         if (!dateDoc.exists()) {
           console.log('[DEBUG] Date non trouvé pour artiste');
@@ -181,7 +181,7 @@ const useContratDetails = (contratId) => {
         console.log('[DEBUG] Données du date pour artiste:', dateData);
         
         if (!dateData.artisteId) {
-          console.log('[DEBUG] Pas d\'artisteId dans le concert');
+          console.log('[DEBUG] Pas d\'artisteId dans la date');
           return null;
         }
         
@@ -226,8 +226,8 @@ const useContratDetails = (contratId) => {
       }
       
       try {
-        // Récupérer d'abord le concert
-        const dateDoc = await getDoc(doc(db, 'concerts', contratData.dateId));
+        // Récupérer d'abord la date
+        const dateDoc = await getDoc(doc(db, 'dates', contratData.dateId));
         
         if (!dateDoc.exists()) {
           console.log('[DEBUG] Date non trouvé pour structure');
@@ -238,7 +238,7 @@ const useContratDetails = (contratId) => {
         console.log('[DEBUG] Données du date pour structure:', dateData);
         
         if (!dateData.contactId) {
-          console.log('[DEBUG] Pas de contactId dans le concert');
+          console.log('[DEBUG] Pas de contactId dans la date');
           return null;
         }
         
@@ -351,7 +351,7 @@ const useContratDetails = (contratId) => {
     // Mapping des propriétés pour garantir la compatibilité avec l'ancien hook
     contrat: genericDetails.entity,
     setContrat: genericDetails.updateFormData,
-    concert: genericDetails.relatedData.concert || null,
+    date: genericDetails.relatedData.date || null,
     template: genericDetails.relatedData.template || null,
     contact: genericDetails.relatedData.contact || null,
     lieu: genericDetails.relatedData.lieu || null,

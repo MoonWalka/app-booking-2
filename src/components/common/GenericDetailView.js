@@ -14,7 +14,7 @@ import styles from './GenericDetailView.module.css';
  * Composant générique pour afficher les détails d'une entité
  * Utilise la configuration centralisée pour déterminer l'affichage
  * 
- * @param {string} entityType - Type de l'entité (artiste, lieu, concert, etc.)
+ * @param {string} entityType - Type de l'entité (artiste, lieu, date, etc.)
  * @param {Object} customSections - Sections personnalisées (optionnel)
  * @param {Function} onEdit - Fonction appelée lors du clic sur Modifier
  * @param {Function} onDelete - Fonction appelée lors du clic sur Supprimer
@@ -42,7 +42,7 @@ const GenericDetailView = ({
       console.log('📍 Lieu data:', {
         contactsAssocies: entity.contactsAssocies,
         contacts: entity.contacts,
-        concerts: entity.concerts,
+        dates: entity.dates,
         presentation: entity.presentation,
         description: entity.description,
         allFields: Object.keys(entity)
@@ -53,8 +53,8 @@ const GenericDetailView = ({
       console.log('🏢 Structure data:', {
         contacts: entity.contacts,
         contactIds: entity.contactIds, // Format harmonisé
-        concerts: entity.concerts,
-        concertsIds: entity.concertsIds,
+        dates: entity.dates,
+        datesIds: entity.datesIds,
         allFields: Object.keys(entity),
         fullData: entity
       });

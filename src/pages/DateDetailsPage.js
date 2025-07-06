@@ -10,7 +10,7 @@ import { fr } from 'date-fns/locale';
 import styles from './DateDetailsPage.module.css';
 
 /**
- * Page de détails et d'édition d'une date de concert
+ * Page de détails et d'édition d'une date
  */
 function DateDetailsPage({ params = {} }) {
   const { currentOrganization } = useOrganization();
@@ -124,13 +124,13 @@ function DateDetailsPage({ params = {} }) {
     }
   }, [currentOrganization?.id]);
 
-  // Charger les données du concert
+  // Charger les données de la date
   const loadDateData = useCallback(async () => {
     if (!dateId) return;
     
     try {
       setLoading(true);
-      const docRef = doc(db, 'concerts', dateId);
+      const docRef = doc(db, 'dates', dateId);
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
@@ -138,7 +138,7 @@ function DateDetailsPage({ params = {} }) {
         setDateData({ id: docSnap.id, ...data });
         
         // Log pour debug des champs disponibles
-        console.log('[DateDetailsPage] Données du date chargées:', {
+        console.log('[DateDetailsPage] Données de la date chargées:', {
           montant: data.montant,
           montantPropose: data.montantPropose,
           prix: data.prix,
@@ -179,7 +179,7 @@ function DateDetailsPage({ params = {} }) {
         });
       }
     } catch (error) {
-      console.error('Erreur lors du chargement du concert:', error);
+      console.error('Erreur lors du chargement de la date:', error);
     } finally {
       setLoading(false);
     }
@@ -277,7 +277,7 @@ function DateDetailsPage({ params = {} }) {
     
     setSaving(true);
     try {
-      const docRef = doc(db, 'concerts', dateId);
+      const docRef = doc(db, 'dates', dateId);
       
       // Préparer les données avec mapping intelligent
       const dataToSave = {
@@ -421,7 +421,7 @@ function DateDetailsPage({ params = {} }) {
                 {formData.lieuNom || 'Lieu non défini'} / {formData.structureNom}
                 {formData.lieuVille && ` – ${formData.lieuVille}`}
               </p>
-              <p className={styles.dateType}>Date (1)</p>
+              <p className={styles.dateType}>Concert (1)</p>
               {(formData.heureDebut || formData.heureFin) && (
                 <p className={styles.dateTime}>
                   {formData.heureDebut || '00:00'} – {formData.heureFin || '00:00'}

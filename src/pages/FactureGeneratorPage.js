@@ -237,7 +237,7 @@ const FactureGeneratorPage = () => {
     console.log('[generateFacturesFromContrat] BIC depuis entrepriseData:', entrepriseData?.bic);
     console.log('[generateFacturesFromContrat] ORDRE depuis entrepriseData:', entrepriseData?.ordre);
     console.log('[generateFacturesFromContrat] Contractant2 (destinataire):', contratData.contractant2);
-    console.log('[generateFacturesFromContrat] Structure depuis concert:', {
+    console.log('[generateFacturesFromContrat] Structure depuis la date:', {
       structureNom: dateData.structureNom,
       structureAdresse: dateData.structureAdresse,
       structureCodePostal: dateData.structureCodePostal,
@@ -251,7 +251,7 @@ const FactureGeneratorPage = () => {
     
     // Données communes à toutes les factures
     const commonData = {
-      // Informations du concert
+      // Informations de la date
       dateId: dateData.id,
       
       // Informations du destinataire (organisateur) - contractant2 dans le contrat
@@ -490,23 +490,23 @@ const FactureGeneratorPage = () => {
             throw new Error('Facture introuvable');
           }
           
-          // Charger le date associé
+          // Charger la date associée
           let dateData = null;
           if (factureData.dateId) {
-            const concertRef = doc(db, 'concerts', factureData.dateId);
-            const concertSnap = await getDoc(concertRef);
-            if (concertSnap.exists()) {
-              dateData = { id: concertSnap.id, ...concertSnap.data() };
+            const dateRef = doc(db, 'dates', factureData.dateId);
+            const dateSnap = await getDoc(dateRef);
+            if (dateSnap.exists()) {
+              dateData = { id: dateSnap.id, ...dateSnap.data() };
             }
           }
           
-          // Charger toutes les factures du même concert/contrat
+          // Charger toutes les factures de la même date/contrat
           let allFactures = [factureData];
           let factureIndex = 0;
           
           if (factureData.dateId) {
             try {
-              // Chercher toutes les factures du même concert
+              // Chercher toutes les factures de la même date
               const facturesRef = collection(db, 'organizations', currentOrganization.id, 'factures');
               const q = query(facturesRef, where('dateId', '==', factureData.dateId));
               const snapshot = await getDocs(q);
@@ -613,15 +613,15 @@ const FactureGeneratorPage = () => {
           console.error('[FactureGeneratorPage] Erreur chargement infos bancaires:', error);
         }
         
-        // Charger le concert
-        const concertRef = doc(db, 'concerts', dateId);
-        const concertSnap = await getDoc(concertRef);
+        // Charger la date
+        const dateRef = doc(db, 'dates', dateId);
+        const dateSnap = await getDoc(dateRef);
         
-        if (!concertSnap.exists()) {
+        if (!dateSnap.exists()) {
           throw new Error('Date introuvable');
         }
         
-        const dateData = { id: concertSnap.id, ...concertSnap.data() };
+        const dateData = { id: dateSnap.id, ...dateSnap.data() };
         
         // Charger les données complètes de la structure si elle existe
         let structureData = null;
@@ -640,7 +640,7 @@ const FactureGeneratorPage = () => {
         
         // Charger le contrat si nécessaire
         if (fromContrat && dateId) {
-          console.log('[FactureGeneratorPage] Chargement du contrat pour concert:', dateId);
+          console.log('[FactureGeneratorPage] Chargement du contrat pour la date:', dateId);
           const contratData = await contratService.getContratByDate(dateId);
           
           if (contratData) {
@@ -681,7 +681,7 @@ const FactureGeneratorPage = () => {
               generatePreview(generatedFactures[0]);
             }
           } else {
-            console.log('[FactureGeneratorPage] Aucun contrat trouvé pour ce concert');
+            console.log('[FactureGeneratorPage] Aucun contrat trouvé pour cette date');
           }
         }
         

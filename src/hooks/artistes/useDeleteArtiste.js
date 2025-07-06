@@ -29,10 +29,10 @@ const useDeleteArtiste = (onDeleteSuccess) => {
     // Entités liées à vérifier
     relatedEntities: [
       {
-        collection: 'concerts',
+        collection: 'dates',
         field: 'artisteId',
         referenceType: 'direct',
-        message: 'Cet artiste ne peut pas être supprimé car il a des concerts associés.',
+        message: 'Cet artiste ne peut pas être supprimé car il a des dates associées.',
         detailsField: 'titre',
         detailsLimit: 5
       },

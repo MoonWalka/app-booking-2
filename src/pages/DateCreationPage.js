@@ -227,7 +227,7 @@ function DateCreationPage({ params = {} }) {
       
       // Attendre un peu pour que l'événement de rafraîchissement soit traité
       setTimeout(() => {
-        // Ouvrir la liste des concerts pour voir le nouveau concert
+        // Ouvrir la liste des dates pour voir la nouvelle date
         openDatesListTab();
         
         // Fermer l'onglet actuel
@@ -271,7 +271,7 @@ function DateCreationPage({ params = {} }) {
     setLoading(true);
 
     try {
-      // Créer le document date dans la collection concerts
+      // Créer le document date dans la collection dates
       const dateData = {
         date: formData.date,
         artisteId: formData.artisteId,
@@ -312,7 +312,7 @@ function DateCreationPage({ params = {} }) {
           : 'Détails de la date';
         openDateDetailsTab(docRef.id, dateTitle);
       } else {
-        // Ouvrir l'onglet des concerts pour voir la nouvelle date
+        // Ouvrir l'onglet des dates pour voir la nouvelle date
         openDatesListTab();
       }
       
@@ -568,7 +568,7 @@ function DateCreationPage({ params = {} }) {
   statut: 'En cours'
 }, null, 2)}
                     </pre>
-                    <small className="text-muted">Ces données seront envoyées à la collection "concerts"</small>
+                    <small className="text-muted">Ces données seront envoyées à la collection "dates"</small>
                   </div>
                 )}
 

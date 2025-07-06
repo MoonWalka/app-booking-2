@@ -25,12 +25,12 @@
  * - Intégration avec les paramètres d'entreprise
  * - Système d'alertes et notifications
  * 
- * @param {Object} date - Données complètes du concert
- * @param {string} date.id - ID unique du concert
- * @param {string} date.titre - Titre du concert
- * @param {Object} date.date - Date du date (Firestore timestamp)
- * @param {string} date.heure - Heure du concert
- * @param {number} date.montant - Montant du concert
+ * @param {Object} date - Données complètes de la date
+ * @param {string} date.id - ID unique de la date
+ * @param {string} date.titre - Titre de la date
+ * @param {Object} date.date - Date de la date (Firestore timestamp)
+ * @param {string} date.heure - Heure de la date
+ * @param {number} date.montant - Montant de la date
  * 
  * @param {Object} contact - Données du contact (anciennement programmateur)
  * @param {string} contact.nom - Nom du contact
@@ -45,7 +45,7 @@
  * @param {string} artiste.genre - Genre musical
  * @param {string} artiste.contact - Contact de l'artiste
  * 
- * @param {Object} lieu - Données du lieu de concert
+ * @param {Object} lieu - Données du lieu de l'événement
  * @param {string} lieu.nom - Nom du lieu
  * @param {string} lieu.adresse - Adresse du lieu
  * @param {string} lieu.capacite - Capacité du lieu
@@ -88,7 +88,7 @@
  *   saveGeneratedContract,
  *   showSuccess,
  *   errorMessage
- * } = useContratGenerator(concert, contact, artiste, lieu);
+ * } = useContratGenerator(date, contact, artiste, lieu);
  * 
  * // Sélection de template
  * <select value={selectedTemplateId} onChange={handleTemplateChange}>
@@ -130,7 +130,7 @@
  * @workflow
  * 1. Chargement des templates de contrats disponibles
  * 2. Récupération des informations d'entreprise
- * 3. Vérification d'existence de contrat pour le concert
+ * 3. Vérification d'existence de contrat pour la date
  * 4. Sélection automatique du template par défaut
  * 5. Préparation des variables contextuelles
  * 6. Validation des données avant génération
@@ -198,7 +198,7 @@ import {
 import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
 import { useOrganization } from '@/context/OrganizationContext';
 
-export const useContratGenerator = (concert, contact, artiste, lieu, contratData = null) => {
+export const useContratGenerator = (date, contact, artiste, lieu, contratData = null) => {
   // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
   const programmateur = contact;
   const { currentOrganization } = useOrganization();
@@ -221,8 +221,8 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
   // Valider les données avant génération du PDF
   const validateDataBeforeGeneration = () => {
     // Vérifier si les données essentielles sont présentes
-    if (!concert || !date.id) {
-      console.error("Données de date manquantes ou invalides:", concert);
+    if (!date || !date.id) {
+      console.error("Données de date manquantes ou invalides:", date);
       return false;
     }
     
@@ -329,10 +329,10 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
           }
         }
         
-        // Vérifier si un contrat existe déjà pour ce concert
-        if (concert?.id) {
-          console.log("Recherche d'un contrat existant pour le concert:", date.id);
-          // Récupérer tous les contrats pour ce concert
+        // Vérifier si un contrat existe déjà pour cette date
+        if (date?.id) {
+          console.log("Recherche d'un contrat existant pour la date:", date.id);
+          // Récupérer tous les contrats pour cette date
           const contratsQuery = query(
             collection(db, 'contrats'),
             where('dateId', '==', date.id)
@@ -371,7 +371,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
               }
             }
           } else {
-            console.log("Aucun contrat existant pour ce concert");
+            console.log("Aucun contrat existant pour cette date");
           }
         }
       } catch (error) {
@@ -386,7 +386,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
     };
 
     fetchData();
-  }, [concert?.id, contact?.structureId, currentOrganization?.id]);
+  }, [date?.id, contact?.structureId, currentOrganization?.id]);
   
   // Mettre à jour le modèle sélectionné quand l'ID change
   useEffect(() => {
@@ -767,29 +767,29 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
       artiste_structure_nom: artiste?.structureNom || artiste?.structure || 'Non spécifiée',
       artiste_structure_siret: artiste?.structureSiret || 'Non spécifié',
       
-      // Variables concert
-      concert_titre: concert?.titre || 'Non spécifié',
+      // Variables date (événement)
+      concert_titre: date?.titre || 'Non spécifié',
       concert_date: (() => {
-        if (!concert?.date) return 'Non spécifiée';
+        if (!date?.date) return 'Non spécifiée';
         
         // Gérer différents formats de date possibles
         let dateObj;
         
         // Si c'est un timestamp Firestore
-        if (concert.date.seconds) {
-          dateObj = new Date(concert.date.seconds * 1000);
+        if (date.date.seconds) {
+          dateObj = new Date(date.date.seconds * 1000);
         } 
         // Si c'est une string de date
-        else if (typeof concert.date === 'string') {
-          dateObj = new Date(concert.date);
+        else if (typeof date.date === 'string') {
+          dateObj = new Date(date.date);
         }
         // Si c'est déjà un objet Date
-        else if (concert.date instanceof Date) {
-          dateObj = concert.date;
+        else if (date.date instanceof Date) {
+          dateObj = date.date;
         }
         // Si c'est un timestamp numérique
-        else if (typeof concert.date === 'number') {
-          dateObj = new Date(concert.date);
+        else if (typeof date.date === 'number') {
+          dateObj = new Date(date.date);
         } else {
           return 'Non spécifiée';
         }
@@ -801,12 +801,12 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         
         return dateObj.toLocaleDateString('fr-FR');
       })(),
-      concert_heure: concert?.heure || 'Non spécifiée',
-      concert_montant: concert?.montant 
-        ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
+      concert_heure: date?.heure || 'Non spécifiée',
+      concert_montant: date?.montant 
+        ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(date.montant)
         : 'Non spécifié',
-      concert_montant_lettres: montantEnLettres(concert?.montant),
-      concert_type: contratData?.representations?.type || concert?.type || 'Date',
+      concert_montant_lettres: montantEnLettres(date?.montant),
+      concert_type: contratData?.representations?.type || date?.type || 'Date',
       
       // Variables lieu
       lieu_nom: lieu?.nom || 'Non spécifié',
@@ -882,28 +882,28 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
       nomArtiste: artiste?.nom || 'Non spécifié',
       genreArtiste: artiste?.genre || 'Non spécifié',
       contactArtiste: artiste?.contact || 'Non spécifié',
-      titreDate: concert?.titre || 'Non spécifié',
+      titreDate: date?.titre || 'Non spécifié',
       dateDate: (() => {
-        if (!concert?.date) return 'Non spécifiée';
+        if (!date?.date) return 'Non spécifiée';
         
         // Gérer différents formats de date possibles
         let dateObj;
         
         // Si c'est un timestamp Firestore
-        if (concert.date.seconds) {
-          dateObj = new Date(concert.date.seconds * 1000);
+        if (date.date.seconds) {
+          dateObj = new Date(date.date.seconds * 1000);
         } 
         // Si c'est une string de date
-        else if (typeof concert.date === 'string') {
-          dateObj = new Date(concert.date);
+        else if (typeof date.date === 'string') {
+          dateObj = new Date(date.date);
         }
         // Si c'est déjà un objet Date
-        else if (concert.date instanceof Date) {
-          dateObj = concert.date;
+        else if (date.date instanceof Date) {
+          dateObj = date.date;
         }
         // Si c'est un timestamp numérique
-        else if (typeof concert.date === 'number') {
-          dateObj = new Date(concert.date);
+        else if (typeof date.date === 'number') {
+          dateObj = new Date(date.date);
         } else {
           return 'Non spécifiée';
         }
@@ -915,13 +915,13 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         
         return dateObj.toLocaleDateString('fr-FR');
       })(),
-      heureDate: concert?.heure || 'Non spécifiée',
-      montantDate: concert?.montant 
-        ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
+      heureDate: date?.heure || 'Non spécifiée',
+      montantDate: date?.montant 
+        ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(date.montant)
         : 'Non spécifié',
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [structureData, programmateur, artiste, lieu, concert, entrepriseInfo, contratData]);
+  }, [structureData, programmateur, artiste, lieu, date, entrepriseInfo, contratData]);
   
   // Fonction pour sauvegarder le contrat généré
   const saveGeneratedContract = async (url) => {
@@ -988,7 +988,7 @@ export const useContratGenerator = (concert, contact, artiste, lieu, contratData
         
         return contratId;
       } else {
-        console.log("Création d'un nouveau contrat pour le concert:", date.id);
+        console.log("Création d'un nouveau contrat pour la date:", date.id);
         const contratData = {
           dateId: date.id,
           templateId: selectedTemplateId,

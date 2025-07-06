@@ -145,9 +145,9 @@ const ParametresExport = () => {
             <div className={styles.exportButtons}>
               <Button 
                 variant="outline-primary" 
-                onClick={() => exportData('concerts')}
+                onClick={() => exportData('dates')}
               >
-                Exporter les concerts
+                Exporter les dates
               </Button>
               <Button 
                 variant="outline-primary"

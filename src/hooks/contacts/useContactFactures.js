@@ -5,7 +5,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook pour récupérer les factures associées à un contact ou une structure
- * Les factures sont liées via les concerts
+ * Les factures sont liées via les dates
  */
 export const useContactFactures = (entityId, entityType = 'contact') => {
   const [factures, setFactures] = useState([]);
@@ -52,17 +52,17 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
           }
         }
 
-        // 2. Récupérer tous les concerts de la structure
-        console.log('[useContactFactures] Recherche des concerts pour la structure:', structureId);
-        const concertsQuery = query(
+        // 2. Récupérer toutes les dates de la structure
+        console.log('[useContactFactures] Recherche des dates pour la structure:', structureId);
+        const datesQuery = query(
           collection(db, 'dates'),
           where('structureId', '==', structureId)
         );
-        const concertsSnapshot = await getDocs(concertsQuery);
-        console.log('[useContactFactures] Nombre de concerts trouvés:', concertsSnapshot.size);
+        const datesSnapshot = await getDocs(datesQuery);
+        console.log('[useContactFactures] Nombre de dates trouvées:', datesSnapshot.size);
 
-        // 3. Récupérer les factures pour chaque concert
-        const facturesPromises = concertsSnapshot.docs.map(async (dateDoc) => {
+        // 3. Récupérer les factures pour chaque date
+        const facturesPromises = datesSnapshot.docs.map(async (dateDoc) => {
           const dateData = { id: dateDoc.id, ...dateDoc.data() };
           
           const facturesQuery = query(
@@ -76,7 +76,7 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
           return facturesSnapshot.docs.map(factureDoc => ({
             id: factureDoc.id,
             ...factureDoc.data(),
-            concert: dateData
+            date: dateData
           }));
         });
 

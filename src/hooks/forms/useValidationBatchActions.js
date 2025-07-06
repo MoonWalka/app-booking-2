@@ -83,7 +83,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
       }
 
       // Récupérer les données du date pour vérifier s'il a déjà un contact
-      const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+      const dateDoc = await getDoc(doc(db, 'dates', dateId));
       const dateData = dateDoc.data();
       
       // Utiliser le contact existant du date en priorité
@@ -118,7 +118,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
             programmId: programmId
           });
           
-          await updateDoc(doc(db, 'concerts', dateId), {
+          await updateDoc(doc(db, 'dates', dateId), {
             contactId: programmId
           });
           
@@ -164,7 +164,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
             telephone: signataireData.telephone || '',
             fonction: signataireData.fonction || '',
             // Relations
-            concertsIds: [dateId],
+            datesIds: [dateId],
             lieuxIds: [],
             structureId: structureId || '',
             structureNom: structureFields.nom || '',
@@ -200,7 +200,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
             currentContactIds.push(signataireId);
           }
           
-          await updateDoc(doc(db, 'concerts', dateId), {
+          await updateDoc(doc(db, 'dates', dateId), {
             contactsWithRoles: updatedContactsWithRoles,
             contactIds: currentContactIds // ✅ AJOUT CRUCIAL pour les relations bidirectionnelles
           });
@@ -382,7 +382,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
         const newLieuRef = await addDoc(collection(db, 'lieux'), newLieuData);
         
         // Mettre à jour le date avec l'ID du lieu
-        await updateDoc(doc(db, 'concerts', dateId), {
+        await updateDoc(doc(db, 'dates', dateId), {
           lieuId: newLieuRef.id,
           lieuNom: newLieuData.nom,
           lieuVille: newLieuData.ville
@@ -395,7 +395,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
       // 5. MISE À JOUR DU CONCERT AVEC RÉFÉRENCES
       // ==========================================
       
-      const concertUpdates = {
+      const dateUpdates = {
         formValidated: true,
         formSubmissionId: formId,
         formValidatedAt: new Date()
@@ -403,7 +403,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
 
       // Ajouter les références aux entités créées/mises à jour
       if (programmId) {
-        concertUpdates.contactId = programmId;
+        dateUpdates.contactId = programmId;
         
         // ✅ CORRECTION: Assurer que contactIds est mis à jour pour les relations bidirectionnelles
         const currentContactIds = dateData.contactIds && Array.isArray(dateData.contactIds) 
@@ -419,12 +419,12 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
           currentContactIds.push(signataireId);
         }
         
-        concertUpdates.contactIds = currentContactIds;
+        dateUpdates.contactIds = currentContactIds;
         console.log("✅ contactIds mis à jour pour relations bidirectionnelles:", currentContactIds);
       }
       
       if (structureId) {
-        concertUpdates.structureId = structureId;
+        dateUpdates.structureId = structureId;
       }
 
       // Ajouter les champs de contact/structure/lieu pour affichage rapide
@@ -432,16 +432,16 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
         const [category, field] = fieldPath.split('.');
         
         if (category === 'contact') {
-          concertUpdates[`contact${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
+          dateUpdates[`contact${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
         } else if (category === 'structure') {
-          concertUpdates[`structure${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
+          dateUpdates[`structure${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
         } else if (category === 'lieu') {
-          concertUpdates[`lieu${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
+          dateUpdates[`lieu${field.charAt(0).toUpperCase() + field.slice(1)}`] = value;
         }
       });
       
-      await updateDoc(doc(db, 'concerts', dateId), concertUpdates);
-      console.log("Date mis à jour avec les références:", concertUpdates);
+      await updateDoc(doc(db, 'dates', dateId), dateUpdates);
+      console.log("Date mise à jour avec les références:", dateUpdates);
 
       if (setValidated) {
         setValidated(true);
@@ -450,7 +450,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
       // Déclencher les relances automatiques après validation du formulaire
       try {
         // Récupérer les données du date mis à jour
-        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        const dateDoc = await getDoc(doc(db, 'dates', dateId));
         if (dateDoc.exists()) {
           const dateData = { id: dateId, ...dateDoc.data() };
           const formulaireData = { 

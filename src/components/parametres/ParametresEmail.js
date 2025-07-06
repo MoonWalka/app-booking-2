@@ -364,8 +364,8 @@ const ParametresEmail = () => {
             <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
             <p>Nous avons bien reçu votre demande d'informations concernant :</p>
             <div class="highlight">
-              <h3><span class="variable">{{concert_nom}}</span></h3>
-              <p><strong>Date :</strong> <span class="variable">{{concert_date}}</span></p>
+              <h3><span class="variable">{{date_nom}}</span></h3>
+              <p><strong>Date :</strong> <span class="variable">{{date_date}}</span></p>
             </div>
             <p>Nous reviendrons vers vous dans les plus brefs délais.</p>
           </div>
@@ -381,7 +381,7 @@ const ParametresEmail = () => {
           </div>
           <div class="content">
             <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
-            <p>Concernant <strong><span class="variable">{{concert_nom}}</span></strong>, il nous manque :</p>
+            <p>Concernant <strong><span class="variable">{{date_nom}}</span></strong>, il nous manque :</p>
             <div class="highlight">
               <p><span class="variable">{{documents_manquants}}</span></p>
             </div>
@@ -399,7 +399,7 @@ const ParametresEmail = () => {
           </div>
           <div class="content">
             <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
-            <p>Votre contrat pour <strong><span class="variable">{{concert_nom}}</span></strong> est finalisé.</p>
+            <p>Votre contrat pour <strong><span class="variable">{{date_nom}}</span></strong> est finalisé.</p>
             <p>Vous trouverez le contrat signé en pièce jointe.</p>
           </div>
           <div class="footer">
@@ -416,8 +416,8 @@ const ParametresEmail = () => {
             <h2>Bonjour <span class="variable">{{contact_prenom}} {{contact_nom}}</span>,</h2>
             <p>Nous confirmons votre réservation :</p>
             <div class="highlight">
-              <h3><span class="variable">{{concert_nom}}</span></h3>
-              <p><strong>Date :</strong> <span class="variable">{{concert_date}}</span></p>
+              <h3><span class="variable">{{date_nom}}</span></h3>
+              <p><strong>Date :</strong> <span class="variable">{{date_date}}</span></p>
             </div>
             <p>Nous vous souhaitons un excellent événement !</p>
           </div>

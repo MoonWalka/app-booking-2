@@ -8,7 +8,7 @@ const ParametresNotifications = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
   const [localState, setLocalState] = useState(parametres.notifications || {
     email: true,
-    concerts: true,
+    dates: true,
     contrats: true,
     artistes: true,
     contacts: true,
@@ -86,10 +86,10 @@ const ParametresNotifications = () => {
           <Form.Group className={styles.notificationGroup}>
             <Form.Check 
               type="switch"
-              id="notification-concerts"
-              label="Nouveaux concerts"
-              name="concerts"
-              checked={localState.concerts}
+              id="notification-dates"
+              label="Nouvelles dates"
+              name="dates"
+              checked={localState.dates}
               onChange={handleChange}
             />
           </Form.Group>

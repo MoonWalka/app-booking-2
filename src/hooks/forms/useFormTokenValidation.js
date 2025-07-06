@@ -54,8 +54,8 @@ export function useFormTokenValidation(dateId, token) {
           return;
         }
 
-        // Récupérer les données du concert
-        const dateDoc = await getDoc(doc(db, 'concerts', dateId));
+        // Récupérer les données de la date
+        const dateDoc = await getDoc(doc(db, 'dates', dateId));
         if (!dateDoc.exists()) {
           setState(prev => ({
             ...prev,
@@ -128,7 +128,7 @@ export function useFormTokenValidation(dateId, token) {
         });
 
         debugLog('[useFormTokenValidation] Validation réussie:', {
-          concertNom: dateData.titre || dateData.nom,
+          dateNom: dateData.titre || dateData.nom,
           isCompleted: validationResult.alreadyValidated
         }, 'success');
 

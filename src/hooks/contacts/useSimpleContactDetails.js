@@ -17,7 +17,7 @@ export default function useSimpleContactDetails(id) {
   const [contact, setContact] = useState(null);
   const [structure, setStructure] = useState(null);
   const [lieux, setLieux] = useState([]);
-  const [concerts, setDates] = useState([]);
+  const [dates, setDates] = useState([]);
   const [artistes, setArtistes] = useState([]);
   
   // États de chargement
@@ -178,7 +178,7 @@ export default function useSimpleContactDetails(id) {
   }, [currentOrganization?.id, id]);
 
   // Fonction pour charger les artistes associés (même logique complexe que l'original)
-  const fetchArtistesAssocies = useCallback(async (contactEntity, concertsData) => {
+  const fetchArtistesAssocies = useCallback(async (contactEntity, datesData) => {
     try {
       setLoadingArtistes(true);
       setErrorArtistes(null);
@@ -197,10 +197,10 @@ export default function useSimpleContactDetails(id) {
       
       console.log(`[DEBUG] useSimpleContactDetails - Artistes avec contactId=${id}:`, artistesLoaded.length);
       
-      // Méthode 2: Chercher les artistes via les concerts
-      if (concertsData && concertsData.length > 0) {
-        // Extraire les artisteIds des concerts
-        const artisteIdsFromDates = concertsData.flatMap(dateItem => {
+      // Méthode 2: Chercher les artistes via les dates
+      if (datesData && datesData.length > 0) {
+        // Extraire les artisteIds des dates
+        const artisteIdsFromDates = datesData.flatMap(dateItem => {
           const artisteIds = [];
           
           // Vérifier les différents formats de stockage des artistes
@@ -355,19 +355,19 @@ export default function useSimpleContactDetails(id) {
           fetchStructureAssociee(contactData)
         ]);
 
-        // 3. CHARGER LES ARTISTES APRÈS LES CONCERTS (car ils en dépendent)
-        // Attendre que les concerts soient chargés puis charger les artistes
-        if (concertsPromise.status === 'fulfilled') {
-          // Récupérer les concerts qui viennent d'être chargés
-          const concertsConstraints = [where('contactIds', 'array-contains', id)];
+        // 3. CHARGER LES ARTISTES APRÈS LES DATES (car ils en dépendent)
+        // Attendre que les dates soient chargées puis charger les artistes
+        if (datesPromise.status === 'fulfilled') {
+          // Récupérer les dates qui viennent d'être chargées
+          const datesConstraints = [where('contactIds', 'array-contains', id)];
           if (currentOrganization?.id) {
-            concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
+            datesConstraints.push(where('organizationId', '==', currentOrganization.id));
           }
-          let concertsQuery = query(collection(db, 'dates'), ...concertsConstraints);
-          let querySnapshot = await getDocs(concertsQuery);
-          let concertsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          let datesQuery = query(collection(db, 'dates'), ...datesConstraints);
+          let querySnapshot = await getDocs(datesQuery);
+          let datesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           
-          await fetchArtistesAssocies(contactData, concertsData);
+          await fetchArtistesAssocies(contactData, datesData);
         }
 
       } catch (err) {
@@ -386,7 +386,7 @@ export default function useSimpleContactDetails(id) {
     contact: contact ? `Contact ${contact.id}` : 'NULL',
     structure: structure ? `Structure ${structure.id}` : 'NULL',
     lieux: `${lieux.length} lieux`,
-    concerts: `${concerts.length} concerts`,
+    dates: `${dates.length} dates`,
     artistes: `${artistes.length} artistes`,
     loading,
     error: error || 'NULL'
@@ -399,7 +399,7 @@ export default function useSimpleContactDetails(id) {
     contact,
     structure,
     lieux,
-    concerts,
+    dates,
     artistes,
     
     // États de chargement

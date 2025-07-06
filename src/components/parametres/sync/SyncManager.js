@@ -13,7 +13,7 @@ import styles from './SyncManager.module.css';
 const SyncManager = () => {
   const [loading, setLoading] = useState(false);
   const [collections, setCollections] = useState({
-    concerts: true,
+    dates: true,
     lieux: true,
     contacts: true,
     artistes: true,

@@ -5,7 +5,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 
 /**
  * Hook pour récupérer les contrats associés à un contact ou une structure
- * Les contrats sont liés via les concerts
+ * Les contrats sont liés via les dates
  */
 export const useContactContrats = (entityId, entityType = 'contact') => {
   const [contrats, setContrats] = useState([]);
@@ -109,23 +109,23 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
           }
         }
 
-        // 2. Récupérer tous les concerts de la structure
-        console.log('[useContactContrats] Recherche des concerts pour la structure:', structureId);
-        const concertsQuery = query(
+        // 2. Récupérer toutes les dates de la structure
+        console.log('[useContactContrats] Recherche des dates pour la structure:', structureId);
+        const datesQuery = query(
           collection(db, 'dates'),
           where('structureId', '==', structureId)
         );
-        const concertsSnapshot = await getDocs(concertsQuery);
-        console.log('[useContactContrats] Nombre de concerts trouvés:', concertsSnapshot.size);
+        const datesSnapshot = await getDocs(datesQuery);
+        console.log('[useContactContrats] Nombre de dates trouvées:', datesSnapshot.size);
         
-        if (concertsSnapshot.empty) {
+        if (datesSnapshot.empty) {
           console.log('[useContactContrats] Aucun date trouvé pour cette structure');
           setContrats([]);
           return;
         }
 
-        // 3. Récupérer les contrats pour chaque concert
-        const contratsPromises = concertsSnapshot.docs.map(async (dateDoc) => {
+        // 3. Récupérer les contrats pour chaque date
+        const contratsPromises = datesSnapshot.docs.map(async (dateDoc) => {
           const dateData = { id: dateDoc.id, ...dateDoc.data() };
           
           // Rechercher dans la collection contrats globale
@@ -159,7 +159,7 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
 
             return {
               ...contrat,
-              concert: dateData,
+              date: dateData,
               dateId: dateDoc.id,
               structureId: structureId, // Ajouter structureId pour les handlers devis
               // Ajouter des champs utiles pour l'affichage

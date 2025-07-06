@@ -98,7 +98,7 @@ const TypesSalleContent = () => {
                     type="text"
                     value={formData.nom}
                     onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-                    placeholder="Ex: Salle de concert, Club, Festival..."
+                    placeholder="Ex: Salle de spectacle, Club, Festival..."
                     required
                   />
                 </Form.Group>

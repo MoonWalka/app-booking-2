@@ -7,7 +7,7 @@ import { db } from '@/services/firebase-service';
 import { getCurrentOrganization } from '@/services/firebase-service';
 
 export const diagnosticDates = async () => {
-  console.log('🔍 === DIAGNOSTIC CONCERTS ===');
+  console.log('🔍 === DIAGNOSTIC DATES ===');
   
   // 1. Vérifier l'organisation courante
   const currentOrg = getCurrentOrganization();

@@ -29,10 +29,10 @@ const useDeleteContact = (onDeleteSuccess) => {
     // Entités liées à vérifier
     relatedEntities: [
       {
-        collection: 'concerts',
+        collection: 'dates',
         field: 'contactIds', // Nouveau format
         referenceType: 'array', // Nouveau format array
-        message: 'Ce contact ne peut pas être supprimé car il a des concerts associés.',
+        message: 'Ce contact ne peut pas être supprimé car il a des dates associées.',
         detailsField: 'titre',
         detailsLimit: 5
       },

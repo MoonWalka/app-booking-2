@@ -86,12 +86,18 @@ export const CONTRACT_VARIABLES = {
   'artiste_genre': { label: 'Genre musical', category: 'artiste', source: 'artiste.genre' },
   'artiste_contact': { label: 'Contact de l\'artiste', category: 'artiste', source: 'artiste.contact' },
   
-  // Variables concert
-  'concert_titre': { label: 'Titre du concert', category: 'concert', source: 'date.titre' },
-  'concert_date': { label: 'Date du concert', category: 'concert', source: 'date.date', format: 'date' },
-  'concert_heure': { label: 'Heure du concert', category: 'concert', source: 'date.heure' },
-  'concert_montant': { label: 'Montant (en chiffres)', category: 'concert', source: 'date.montant', format: 'currency' },
-  'concert_montant_lettres': { label: 'Montant (en lettres)', category: 'concert', source: 'date.montant', format: 'currency_letters' },
+  // Variables date
+  'date_titre': { label: 'Titre de la date', category: 'date', source: 'date.titre' },
+  'date_date': { label: 'Date', category: 'date', source: 'date.date', format: 'date' },
+  'date_heure': { label: 'Heure', category: 'date', source: 'date.heure' },
+  'date_montant': { label: 'Montant (en chiffres)', category: 'date', source: 'date.montant', format: 'currency' },
+  'date_montant_lettres': { label: 'Montant (en lettres)', category: 'date', source: 'date.montant', format: 'currency_letters' },
+  // Variables de compatibilité concert (obsolètes)
+  'concert_titre': { label: 'Titre du concert', category: 'date', source: 'date.titre' },
+  'concert_date': { label: 'Date du concert', category: 'date', source: 'date.date', format: 'date' },
+  'concert_heure': { label: 'Heure du concert', category: 'date', source: 'date.heure' },
+  'concert_montant': { label: 'Montant (en chiffres)', category: 'date', source: 'date.montant', format: 'currency' },
+  'concert_montant_lettres': { label: 'Montant (en lettres)', category: 'date', source: 'date.montant', format: 'currency_letters' },
   
   // Variables Prestations (nouveau système)
   'spectacle_nom': { label: 'Nom du spectacle', category: 'prestations', source: 'contratData.prestations.nomSpectacle' },
@@ -255,6 +261,8 @@ export const bodyVariables = [
   "programmateur_representant",
   "programmateur_qualite_representant",
   "artiste_nom", "artiste_genre",
+  "date_titre", "date_date", "date_montant",
+  "date_montant_lettres",
   "concert_titre", "concert_date", "concert_montant",
   "concert_montant_lettres",
   "lieu_nom", "lieu_adresse", "lieu_code_postal", "lieu_ville", "lieu_capacite",
@@ -350,6 +358,10 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{contact_qualite_representant}/g, 'Présidente')
     .replace(/{artiste_nom}/g, 'Les Rockeurs du Dimanche')
     .replace(/{artiste_genre}/g, 'Rock Alternatif')
+    .replace(/{date_titre}/g, 'Date de printemps')
+    .replace(/{date_date}/g, '15/05/2025')
+    .replace(/{date_montant}/g, '800')
+    .replace(/{date_montant_lettres}/g, 'Huit cents euros')
     .replace(/{concert_titre}/g, 'Date de printemps')
     .replace(/{concert_date}/g, '15/05/2025')
     .replace(/{concert_montant}/g, '800')
@@ -421,6 +433,10 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/\[contact_qualite_representant\]/g, 'Présidente')
     .replace(/\[artiste_nom\]/g, 'Les Rockeurs du Dimanche')
     .replace(/\[artiste_genre\]/g, 'Rock Alternatif')
+    .replace(/\[date_titre\]/g, 'Date de printemps')
+    .replace(/\[date_date\]/g, '15/05/2025')
+    .replace(/\[date_montant\]/g, '800')
+    .replace(/\[date_montant_lettres\]/g, 'Huit cents euros')
     .replace(/\[concert_titre\]/g, 'Date de printemps')
     .replace(/\[concert_date\]/g, '15/05/2025')
     .replace(/\[concert_montant\]/g, '800')

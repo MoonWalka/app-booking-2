@@ -40,7 +40,8 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
     telephone2: '', // Téléphone secondaire
     mobile: '',
     fonction: '',
-    notes: ''
+    notes: '',
+    actif: true // Ajout du champ actif avec valeur par défaut à true
   });
 
   // Effet pour initialiser les données en mode édition
@@ -63,7 +64,8 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         telephone2: initialData.telephone2 || initialData.telPerso || '',
         mobile: initialData.mobile || '',
         fonction: initialData.fonction || '',
-        notes: initialData.notes || ''
+        notes: initialData.notes || '',
+        actif: initialData.actif !== undefined ? initialData.actif : true
       });
     } else if (!editMode) {
       // Réinitialiser en mode création
@@ -84,7 +86,8 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         telephone2: '',
         mobile: '',
         fonction: '',
-        notes: ''
+        notes: '',
+        actif: true
       });
     }
   }, [editMode, initialData]);
@@ -147,7 +150,8 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
           departement: formData.departement || undefined,
           region: formData.region || undefined,
           pays: formData.pays || 'France',
-          notes: formData.notes || undefined
+          notes: formData.notes || undefined,
+          actif: formData.actif
         };
         
         // Mettre à jour via le service relationnel
@@ -186,7 +190,8 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
           tags: [],
           source: formData.source || 'Prospection',
           notes: formData.notes || undefined,
-          commentaires: []
+          commentaires: [],
+          actif: formData.actif
         };
 
         console.log('🆕 [PersonneCreationModal] Création nouvelle personne:', personneData);
@@ -473,6 +478,22 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
                 <option value="Réseau social">Réseau social</option>
                 <option value="Autre">Autre</option>
               </Form.Select>
+            </div>
+          </div>
+
+          {/* Checkbox Actif */}
+          <div className="row mb-4">
+            <div className="col-12">
+              <Form.Check
+                type="checkbox"
+                id="actif-checkbox"
+                label="Contact actif"
+                checked={formData.actif}
+                onChange={(e) => handleInputChange('actif', e.target.checked)}
+              />
+              <Form.Text className="text-muted">
+                Décochez cette case si vous ne travaillez plus avec ce contact
+              </Form.Text>
             </div>
           </div>
 

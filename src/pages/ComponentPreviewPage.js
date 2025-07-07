@@ -11,10 +11,8 @@ const componentRegistry = {
   'contratTemplatesEditPage': () => import('./contratTemplatesEditPage'),
   
   // Composants de paramètres
-  'ParametresEntreprise': () => import('../components/parametres/ParametresEntreprise'),
   'ParametresFactures': () => import('../components/parametres/ParametresFactures'),
   'ParametresGeneraux': () => import('../components/parametres/ParametresGeneraux'),
-  'ParametresCompte': () => import('../components/parametres/ParametresCompte'),
   'ParametresNotifications': () => import('../components/parametres/ParametresNotifications'),
   'ParametresEmail': () => import('../components/parametres/ParametresEmail'),
   'ParametresApparence': () => import('../components/parametres/ParametresApparence'),

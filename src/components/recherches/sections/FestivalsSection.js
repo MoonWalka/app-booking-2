@@ -59,10 +59,19 @@ const FestivalsSection = ({ onCriteriaChange }) => {
       // Convertir les semaines sélectionnées en description lisible
       const periodeDescription = getPeriodeDescription(newSemainesDiffusion);
       onCriteriaChange({
-        id: `semainesDiffusion_${Date.now()}`,
-        field: 'Période de diffusion',
-        operator: 'parmi',
-        value: periodeDescription
+        id: 'festivals_semainesDiffusion',
+        field: fieldMapping.semainesDiffusion,
+        operator: 'contient',
+        value: periodeDescription,
+        label: 'Période de diffusion',
+        displayValue: periodeDescription,
+        section: 'festivals'
+      });
+    } else {
+      // Si aucune semaine sélectionnée, supprimer le critère
+      onCriteriaChange({
+        id: 'festivals_semainesDiffusion',
+        remove: true
       });
     }
   };
@@ -91,6 +100,14 @@ const FestivalsSection = ({ onCriteriaChange }) => {
     return descriptions.join(', ');
   };
 
+  // Mapping des champs vers Firebase
+  const fieldMapping = {
+    nomFestival: 'nomFestival',
+    commentaires: 'diffusionCommentaires1', // ou notes selon la structure
+    bouclage: 'bouclage',
+    semainesDiffusion: 'periodeFestivalComplete'
+  };
+
   const handleFieldChange = (field, value, operator = null) => {
     const newData = { ...formData };
     
@@ -105,27 +122,56 @@ const FestivalsSection = ({ onCriteriaChange }) => {
     
     setFormData(newData);
     
-    // Notifier le parent du changement
-    if (field === 'bouclage' && value.length > 0) {
-      const selectedLabels = value.map(v => 
-        mois.find(m => m.value === v)?.label || v
-      );
-      onCriteriaChange({
-        id: `bouclage_${Date.now()}`,
-        field: 'Bouclage',
-        operator: 'parmi',
-        value: selectedLabels.join(', ')
-      });
-    } else if (value && field !== 'bouclage' && field !== 'semainesDiffusion') {
-      const displayField = field === 'nomFestival' ? 'Nom du festival' : 'Commentaires';
+    // Notifier le parent uniquement si la valeur est significative
+    const hasValue = (field === 'bouclage' && value.length > 0) || 
+                     (field !== 'bouclage' && field !== 'semainesDiffusion' && value);
+    
+    if (hasValue) {
+      const mappedField = fieldMapping[field] || field;
+      let criteriaValue = value;
+      let displayValue = value;
+      let criteriaOperator = operator || newData[field]?.operator || 'egal';
       
+      if (field === 'bouclage') {
+        const selectedLabels = value.map(v => 
+          mois.find(m => m.value === v)?.label || v
+        );
+        displayValue = selectedLabels.join(', ');
+        criteriaOperator = 'parmi';
+      } else if (field !== 'semainesDiffusion') {
+        criteriaValue = newData[field].value;
+        criteriaOperator = newData[field].operator;
+      }
+      
+      const criteriaId = `festivals_${field}`;
       onCriteriaChange({
-        id: `${field}_${Date.now()}`,
-        field: displayField,
-        operator: newData[field].operator,
-        value: newData[field].value
+        id: criteriaId,
+        field: mappedField,
+        operator: criteriaOperator,
+        value: criteriaValue,
+        label: getFieldLabel(field),
+        displayValue: displayValue,
+        section: 'festivals'
+      });
+    } else if (!value || (field === 'bouclage' && value.length === 0)) {
+      // Si la valeur est vide, supprimer le critère
+      const criteriaId = `festivals_${field}`;
+      onCriteriaChange({
+        id: criteriaId,
+        remove: true
       });
     }
+  };
+
+  // Helper pour obtenir un label lisible pour le champ
+  const getFieldLabel = (field) => {
+    const labels = {
+      nomFestival: 'Nom du festival',
+      commentaires: 'Commentaires',
+      bouclage: 'Bouclage',
+      semainesDiffusion: 'Période de diffusion'
+    };
+    return labels[field] || field;
   };
 
   const handleMoisToggle = (moisValue) => {

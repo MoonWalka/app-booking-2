@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ParametresEntreprise from '../components/parametres/ParametresEntreprise';
+// Suppression des imports de l'ancien système
+// import ParametresEntreprise from '../components/parametres/ParametresEntreprise';
+// import ParametresCompte from '../components/parametres/ParametresCompte';
 import ParametresGeneraux from '../components/parametres/ParametresGeneraux';
-import ParametresCompte from '../components/parametres/ParametresCompte';
 import ParametresNotifications from '../components/parametres/ParametresNotifications';
 import ParametresEmail from '../components/parametres/ParametresEmail';
 import ParametresApparence from '../components/parametres/ParametresApparence';
@@ -23,7 +24,7 @@ import FactureTemplatesPage from './factureTemplatesPage';
 import FactureTemplatesEditPage from './factureTemplatesEditPage';
 
 const ParametresPage = () => {
-  const [activeTab, setActiveTab] = useState('entreprise');
+  const [activeTab, setActiveTab] = useState('generaux');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,7 +35,7 @@ const ParametresPage = () => {
     const urlParams = new URLSearchParams(location.search);
     const forceTab = urlParams.get('tab');
     
-    let newActiveTab = 'entreprise'; // valeur par défaut
+    let newActiveTab = 'generaux'; // valeur par défaut
     
     // Si un tab est forcé via URL param, l'utiliser en priorité
     if (forceTab) {
@@ -45,8 +46,6 @@ const ParametresPage = () => {
       newActiveTab = 'factures-modeles';
     } else if (path.includes('/parametres/factures')) {
       newActiveTab = 'factures';
-    } else if (path.includes('/parametres/compte')) {
-      newActiveTab = 'compte';
     } else if (path.includes('/parametres/notifications')) {
       newActiveTab = 'notifications';
     } else if (path.includes('/parametres/email')) {
@@ -65,15 +64,17 @@ const ParametresPage = () => {
       newActiveTab = 'test-organizationid';
     } else if (path.includes('/parametres/generaux')) {
       newActiveTab = 'generaux';
-    } else if (path.includes('/parametres/entreprise') || path === '/parametres') {
-      newActiveTab = 'entreprise';
+    } else if (path.includes('/parametres/entreprise') || path.includes('/parametres/compte')) {
+      // Redirection vers le nouveau système
+      navigate('/collaboration/parametrage');
+      return;
     }
     
     // Ne mettre à jour que si l'onglet a vraiment changé
     if (newActiveTab !== activeTab) {
       setActiveTab(newActiveTab);
     }
-  }, [location.pathname, location.search, activeTab]);
+  }, [location.pathname, location.search, activeTab, navigate]);
 
   // Gestionnaire pour le changement d'onglet (navigation uniquement) - Stabilisé avec useCallback
   const handleTabChange = useCallback((tab) => {
@@ -90,9 +91,6 @@ const ParametresPage = () => {
         break;
       case 'factures-modeles':
         navigate('/parametres/factures-modeles');
-        break;
-      case 'compte':
-        navigate('/parametres/compte');
         break;
       case 'notifications':
         navigate('/parametres/notifications');
@@ -121,9 +119,6 @@ const ParametresPage = () => {
       case 'generaux':
         navigate('/parametres/generaux');
         break;
-      case 'entreprise':
-        navigate('/parametres/entreprise');
-        break;
       default:
         navigate('/parametres');
         break;
@@ -143,12 +138,8 @@ const ParametresPage = () => {
     
     // Sinon, rendu en fonction de l'onglet actif
     switch (activeTab) {
-      case 'entreprise':
-        return <ParametresEntreprise />;
       case 'generaux':
         return <ParametresGeneraux />;
-      case 'compte':
-        return <ParametresCompte />;
       case 'notifications':
         return <ParametresNotifications />;
       case 'email':
@@ -175,15 +166,13 @@ const ParametresPage = () => {
       case 'factures-modeles':
         return <FactureTemplatesPage />;
       default:
-        return <ParametresEntreprise />;
+        return <ParametresGeneraux />;
     }
   };
 
   // Stabilisation de la liste des onglets avec useMemo
   const tabList = useMemo(() => [
-    { label: 'Entreprise', key: 'entreprise' },
     { label: 'Paramètres généraux', key: 'generaux' },
-    { label: 'Compte utilisateur', key: 'compte' },
     { label: 'Organisations', key: 'organisations' },
     { label: 'Notifications', key: 'notifications' },
     { label: 'Configuration Email', key: 'email' },
@@ -202,6 +191,22 @@ const ParametresPage = () => {
   return (
     <Container fluid className="p-4">
       <h2 className="mb-4">Paramètres</h2>
+      
+      {/* Message d'information sur la migration */}
+      <Alert variant="info" className="mb-4">
+        <h5>🔄 Migration vers le nouveau système</h5>
+        <p>
+          Les paramètres <strong>Entreprise</strong> et <strong>Compte utilisateur</strong> ont été déplacés vers 
+          <strong> Collaboration > Paramétrage</strong> pour une meilleure organisation.
+        </p>
+        <p className="mb-0">
+          <a href="/collaboration/parametrage" className="btn btn-primary btn-sm">
+            <i className="bi bi-arrow-right me-2"></i>
+            Accéder au nouveau paramétrage
+          </a>
+        </p>
+      </Alert>
+      
       <Row>
         <Col md={3}>
           <TabNavigation

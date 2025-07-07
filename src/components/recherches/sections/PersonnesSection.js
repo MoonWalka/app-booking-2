@@ -7,6 +7,7 @@ import styles from './Sections.module.css';
  */
 const PersonnesSection = ({ onCriteriaChange }) => {
   const [formData, setFormData] = useState({
+    estActif: 'indifferent',
     estPrioritaire: 'indifferent',
     fonctions: [],
     fonctionRecherche: ''
@@ -59,7 +60,8 @@ const PersonnesSection = ({ onCriteriaChange }) => {
       if ((Array.isArray(value) && value.length > 0) || (!Array.isArray(value) && value !== 'indifferent')) {
         onCriteriaChange({
           id: criteriaId,
-          field: field === 'estPrioritaire' ? 'Est prioritaire' : 'Fonctions',
+          field: field === 'estPrioritaire' ? 'Est prioritaire' : 
+                 field === 'estActif' ? 'Est actif' : 'Fonctions',
           operator: field === 'fonctions' ? 'parmi' : '=',
           value: displayValue
         });
@@ -91,6 +93,40 @@ const PersonnesSection = ({ onCriteriaChange }) => {
         </Card.Header>
         <Card.Body>
           <Row>
+            {/* Est actif */}
+            <Col md={12} className="mb-4">
+              <Form.Label className="fw-bold">Est actif</Form.Label>
+              <div className="d-flex gap-4">
+                <Form.Check 
+                  type="radio"
+                  inline
+                  label="Oui"
+                  name="estActif"
+                  value="oui"
+                  checked={formData.estActif === 'oui'}
+                  onChange={(e) => handleFieldChange('estActif', e.target.value)}
+                />
+                <Form.Check 
+                  type="radio"
+                  inline
+                  label="Non"
+                  name="estActif"
+                  value="non"
+                  checked={formData.estActif === 'non'}
+                  onChange={(e) => handleFieldChange('estActif', e.target.value)}
+                />
+                <Form.Check 
+                  type="radio"
+                  inline
+                  label="Indifférent"
+                  name="estActif"
+                  value="indifferent"
+                  checked={formData.estActif === 'indifferent'}
+                  onChange={(e) => handleFieldChange('estActif', e.target.value)}
+                />
+              </div>
+            </Col>
+
             {/* Est prioritaire */}
             <Col md={12} className="mb-4">
               <Form.Label className="fw-bold">Est prioritaire</Form.Label>

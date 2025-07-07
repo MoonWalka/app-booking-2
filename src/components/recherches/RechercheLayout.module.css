@@ -243,3 +243,51 @@
     padding: 1rem;
   }
 }
+
+/* Styles pour les résultats de recherche */
+.resultsContainer {
+  padding: 1.5rem;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--bs-gray-200);
+}
+
+.resultsHeader h4 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--bs-gray-800);
+}
+
+.resultsList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Scrollbar pour les résultats */
+.resultsList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.resultsList::-webkit-scrollbar-track {
+  background: var(--bs-gray-100);
+}
+
+.resultsList::-webkit-scrollbar-thumb {
+  background: var(--bs-gray-400);
+  border-radius: 4px;
+}
+
+.resultsList::-webkit-scrollbar-thumb:hover {
+  background: var(--bs-gray-500);
+}

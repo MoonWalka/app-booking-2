@@ -79,19 +79,24 @@ const DateInfoSection = React.memo(({ formData, onChange, formErrors }) => {
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="statut" className={styles.formLabel}>Statut</label>
+        <label htmlFor="niveau" className={styles.formLabel}>Niveau de la date</label>
         <select
           className={styles.formSelect}
-          id="statut"
-          name="statut"
-          value={formData.statut || 'En attente'}
+          id="niveau"
+          name="niveau"
+          value={formData.niveau || 'incomplete'}
           onChange={onChange}
         >
-          <option value="En attente">En attente</option>
-          <option value="Confirmé">Confirmé</option>
-          <option value="Annulé">Annulé</option>
-          <option value="Terminé">Terminé</option>
+          <option value="incomplete">Incomplète</option>
+          <option value="interet">Intérêt</option>
+          <option value="option">Option</option>
+          <option value="confirme">Confirmé</option>
+          <option value="annule">Annulé</option>
+          <option value="reporte">Reporté</option>
         </select>
+        <small className={styles.formHelpText}>
+          Niveau d'avancement de la date
+        </small>
       </div>
     </CardSection>
   );

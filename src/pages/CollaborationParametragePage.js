@@ -6,7 +6,7 @@ import { db } from '@/services/firebase-service';
 import { useOrganization } from '@/context/OrganizationContext';
 import GroupesPermissionsManager from '../components/parametrage/GroupesPermissionsManager';
 import EntreprisesManager from '../components/collaboration/EntreprisesManagerFirebase';
-import CollaborateursManager from '../components/collaboration/CollaborateursManager';
+import CollaborateursManagerFirebase from '../components/collaboration/CollaborateursManagerFirebase';
 import styles from './CollaborationParametragePage.module.css';
 
 const CollaborationParametragePage = () => {
@@ -186,7 +186,7 @@ const CollaborationParametragePage = () => {
 
   // Rendu de la gestion des collaborateurs
   const renderCollaborateursConfig = () => (
-    <CollaborateursManager />
+    <CollaborateursManagerFirebase />
   );
 
   // Rendu de la configuration des tâches

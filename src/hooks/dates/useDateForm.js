@@ -293,6 +293,7 @@ export const useDateForm = (dateId) => {
       date: null,
       heure: '',
       statut: 'planifié',
+      niveau: 'incomplete', // Niveau par défaut
       lieuId: '',
       artisteId: '',
       description: '',

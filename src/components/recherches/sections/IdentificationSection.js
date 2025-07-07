@@ -45,6 +45,28 @@ const IdentificationSection = ({ onCriteriaChange }) => {
     { id: 'jean', label: 'Jean Martin' }
   ];
 
+  // Mapping des champs UI vers les champs Firebase
+  const fieldMapping = {
+    nom: 'nom',
+    codeClient: 'codeClient', // À vérifier si ce champ existe dans Firebase
+    email: 'email',
+    telephone: 'telephone',
+    estActive: 'active',
+    estClient: 'client',
+    source: 'source',
+    dateModificationDebut: 'updatedAt',
+    dateModificationFin: 'updatedAt',
+    dateCreationDebut: 'createdAt',
+    dateCreationFin: 'createdAt',
+    creePar: 'createdBy',
+    modifiePar: 'updatedBy',
+    commentaireContenu: 'notes',
+    commentaireDateDebut: 'commentDate',
+    commentaireDateFin: 'commentDate',
+    commentaireCollaborateurs: 'commentAuthor',
+    fanzineBarreaux: 'fanzineBarreaux'
+  };
+
   const handleFieldChange = (field, value, operator = null) => {
     const newData = { ...formData };
     
@@ -58,16 +80,82 @@ const IdentificationSection = ({ onCriteriaChange }) => {
     
     setFormData(newData);
     
-    // Notifier le parent du changement
-    if (value || (typeof value === 'boolean' && value === true)) {
-      const criteriaId = `${field}_${Date.now()}`;
+    // Notifier le parent uniquement si la valeur est significative
+    const hasValue = value && value !== '' && value !== 'indifferent';
+    
+    if (hasValue || (typeof value === 'boolean')) {
+      const mappedField = fieldMapping[field] || field;
+      let criteriaValue = typeof newData[field] === 'object' ? newData[field].value : value;
+      let criteriaOperator = operator || newData[field]?.operator || 'egal';
+      
+      // Gestion spéciale pour les champs de date (plage)
+      if (field.includes('Debut') || field.includes('Fin')) {
+        const isStart = field.includes('Debut');
+        const baseField = field.replace(/Debut|Fin/, '');
+        const startValue = formData[baseField + 'Debut'] || '';
+        const endValue = formData[baseField + 'Fin'] || '';
+        
+        if (startValue && endValue) {
+          criteriaOperator = 'entre';
+          criteriaValue = { min: startValue, max: endValue };
+        } else if (startValue) {
+          criteriaOperator = 'superieur';
+          criteriaValue = startValue;
+        } else if (endValue) {
+          criteriaOperator = 'inferieur';
+          criteriaValue = endValue;
+        }
+      }
+      
+      // Gestion spéciale pour les booléens
+      if (field === 'estActive' || field === 'estClient') {
+        if (value === 'oui') criteriaValue = true;
+        else if (value === 'non') criteriaValue = false;
+        else return; // Ne pas envoyer si indifférent
+      }
+      
+      const criteriaId = `identification_${field}`;
       onCriteriaChange({
         id: criteriaId,
-        field: field,
-        operator: operator || newData[field]?.operator || '=',
-        value: typeof newData[field] === 'object' ? newData[field].value : value
+        field: mappedField,
+        operator: criteriaOperator,
+        value: criteriaValue,
+        section: 'identification',
+        label: getFieldLabel(field)
+      });
+    } else {
+      // Si la valeur est vide, supprimer le critère
+      const criteriaId = `identification_${field}`;
+      onCriteriaChange({
+        id: criteriaId,
+        remove: true
       });
     }
+  };
+
+  // Helper pour obtenir un label lisible pour le champ
+  const getFieldLabel = (field) => {
+    const labels = {
+      nom: 'Nom',
+      codeClient: 'Code client',
+      email: 'Email',
+      telephone: 'Téléphone',
+      estActive: 'Est active',
+      estClient: 'Est client',
+      source: 'Source',
+      dateModificationDebut: 'Date de modification',
+      dateModificationFin: 'Date de modification',
+      dateCreationDebut: 'Date de création',
+      dateCreationFin: 'Date de création',
+      creePar: 'Créé par',
+      modifiePar: 'Modifié par',
+      commentaireContenu: 'Commentaire contient',
+      commentaireDateDebut: 'Date commentaire',
+      commentaireDateFin: 'Date commentaire',
+      commentaireCollaborateurs: 'Auteur commentaire',
+      fanzineBarreaux: 'Fanzine barreaux'
+    };
+    return labels[field] || field;
   };
 
   return (

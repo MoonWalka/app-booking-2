@@ -51,7 +51,8 @@ const MesRecherchesPage = ({ activeSection, onCriteriaChange, selectedCriteria }
         );
       
       case 'mes-selections':
-        return <MesSelectionsSection onCriteriaChange={onCriteriaChange} />;
+        // Handled directly in RechercheLayout
+        return null;
       
       case 'suivi':
         return (

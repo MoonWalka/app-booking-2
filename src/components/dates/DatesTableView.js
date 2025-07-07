@@ -4,6 +4,7 @@ import Table from '@/components/ui/Table';
 import ActionButtons from '@/components/ui/ActionButtons';
 import EntityEmptyState from '@/components/ui/EntityEmptyState';
 import Alert from '@/components/ui/Alert';
+import NiveauDisplay from './NiveauDisplay';
 import styles from '@/pages/TableauDeBordPage.module.css';
 import datesTableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
 
@@ -45,21 +46,7 @@ const DatesTableView = ({
       label: 'Niveau',
       key: 'niveau',
       sortable: true,
-      render: (item) => {
-        const niveau = item.niveau || 1;
-        return (
-          <div className={styles.niveauCell}>
-            <div className={styles.niveauIcon}>
-              {Array.from({ length: 3 }, (_, index) => (
-                <div 
-                  key={index}
-                  className={`${styles.niveauBar} ${index < niveau ? styles.niveauBarActive : styles.niveauBarInactive}`}
-                ></div>
-              ))}
-            </div>
-          </div>
-        );
-      }
+      render: (item) => <NiveauDisplay niveau={item.niveau || 'incomplete'} />
     },
     {
       label: 'Artiste',

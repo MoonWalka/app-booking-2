@@ -39,22 +39,24 @@ const DateInfoSection = ({ entity, section }) => {
 
   const getStatusBadgeClass = (statut) => {
     switch (statut) {
-      case 'contrat': return 'success';
-      case 'preaccord': return 'primary';
-      case 'acompte': return 'warning';
-      case 'solde': return 'info';
+      case 'incomplete': return 'secondary';
+      case 'interet': return 'info';
+      case 'option': return 'warning';
+      case 'confirme': return 'success';
       case 'annule': return 'danger';
+      case 'reporte': return 'primary';
       default: return 'secondary';
     }
   };
 
   const getStatusLabel = (statut) => {
     switch (statut) {
-      case 'contrat': return 'Contrat';
-      case 'preaccord': return 'Pré-accord';
-      case 'acompte': return 'Acompte';
-      case 'solde': return 'Soldé';
+      case 'incomplete': return 'Incomplète';
+      case 'interet': return 'Intérêt';
+      case 'option': return 'Option';
+      case 'confirme': return 'Confirmé';
       case 'annule': return 'Annulé';
+      case 'reporte': return 'Reporté';
       default: return statut || 'Non défini';
     }
   };
@@ -105,10 +107,10 @@ const DateInfoSection = ({ entity, section }) => {
           </div>
           
           <div className={styles.infoItem}>
-            <div className={styles.label}>Statut:</div>
+            <div className={styles.label}>Niveau:</div>
             <div className={styles.value}>
-              <span className={`${styles.statusBadge} ${styles[getStatusBadgeClass(entity?.statut)]}`}>
-                {getStatusLabel(entity?.statut)}
+              <span className={`${styles.statusBadge} ${styles[getStatusBadgeClass(entity?.niveau)]}`}>
+                {getStatusLabel(entity?.niveau)}
               </span>
             </div>
           </div>

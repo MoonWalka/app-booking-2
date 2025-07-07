@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Row, Col, Card } from 'react-bootstrap';
+import { RESEAUX_HIERARCHY } from '../../../config/tagsHierarchy';
 import styles from './Sections.module.css';
 
 /**
@@ -9,58 +10,8 @@ const ReseauxSection = ({ onCriteriaChange }) => {
   const [selectedReseaux, setSelectedReseaux] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Liste complète des réseaux
-  const reseauxDisponibles = [
-    { id: 'actes-if', label: 'Actes IF' },
-    { id: 'ajc-jazze-croise', label: 'AJC - Jazzé Croisé' },
-    { id: 'apresmai', label: 'AprèsMai' },
-    { id: 'atp', label: 'ATP' },
-    { id: 'avant-mardi', label: 'Avant-Mardi' },
-    { id: 'bretagne-en-scene', label: 'Bretagne en Scène' },
-    { id: 'ccr', label: 'CCR' },
-    { id: 'cnc', label: 'CNC' },
-    { id: 'cnt', label: 'CNT' },
-    { id: 'cnv', label: 'CNV' },
-    { id: 'collectif-culture-bar-bars', label: 'Collectif Culture Bar-Bars' },
-    { id: 'collectif-des-festivals', label: 'Collectif des festivals' },
-    { id: 'fedelima', label: 'FEDELIMA' },
-    { id: 'federation-de-la-vie', label: 'Fédération De-ci De-là' },
-    { id: 'federation-des-suds', label: 'Fédération des Suds' },
-    { id: 'ferarock', label: 'FERAROCK' },
-    { id: 'ffm', label: 'FFM - Fédération France Musique' },
-    { id: 'france-festivals', label: 'France Festivals' },
-    { id: 'futurs-composes', label: 'Futurs Composés' },
-    { id: 'grand-bureau', label: 'Grand Bureau' },
-    { id: 'grabuge', label: 'GRABUGE' },
-    { id: 'ici-et-la', label: 'Ici et là' },
-    { id: 'irma', label: 'IRMA' },
-    { id: 'jazz-en-france', label: 'Jazz en France' },
-    { id: 'le-cry', label: 'Le Cry' },
-    { id: 'le-maillon', label: 'Le Maillon' },
-    { id: 'le-paj', label: 'Le PAJ' },
-    { id: 'le-pole', label: 'Le Pôle' },
-    { id: 'le-ramdam', label: 'Le RAMDAM' },
-    { id: 'le-raoul', label: 'Le RAOUL' },
-    { id: 'le-rim', label: 'Le RIM' },
-    { id: 'le-rif', label: 'Le RIF' },
-    { id: 'les-independances', label: 'Les Indépendances' },
-    { id: 'les-trans', label: 'Les Trans' },
-    { id: 'map', label: 'MAP - Musiques Actuelles en Pays de la Loire' },
-    { id: 'octopus', label: 'Octopus' },
-    { id: 'paca-rock', label: 'PACA Rock' },
-    { id: 'paz', label: 'PAZ' },
-    { id: 'prodiss', label: 'PRODISS' },
-    { id: 'profedim', label: 'PROFEDIM' },
-    { id: 'reseau-92', label: 'Réseau 92' },
-    { id: 'reseau-chanson', label: 'Réseau Chanson' },
-    { id: 'reseau-printemps', label: 'Réseau Printemps' },
-    { id: 'reseau-ratp', label: 'Réseau RATP' },
-    { id: 'sma', label: 'SMA - Syndicat des Musiques Actuelles' },
-    { id: 'snsp', label: 'SNSP' },
-    { id: 'supermonde', label: 'Supermonde' },
-    { id: 'synptac', label: 'SYNPTAC' },
-    { id: 'zone-franche', label: 'Zone Franche' }
-  ];
+  // Utilisation de la hiérarchie officielle des réseaux
+  const reseauxDisponibles = RESEAUX_HIERARCHY;
 
   // Filtrer les réseaux selon la recherche
   const reseauxFiltres = reseauxDisponibles.filter(reseau =>
@@ -73,19 +24,34 @@ const ReseauxSection = ({ onCriteriaChange }) => {
       : [...selectedReseaux, reseauId];
     
     setSelectedReseaux(newSelected);
-    
-    // Notifier le parent
-    if (newSelected.length > 0) {
-      const selectedLabels = newSelected.map(id => {
+    updateCriteria(newSelected);
+  };
+
+  const updateCriteria = (selectedIds) => {
+    if (selectedIds.length > 0) {
+      // Récupérer les labels pour l'affichage
+      const selectedInfo = selectedIds.map(id => {
         const reseau = reseauxDisponibles.find(r => r.id === id);
-        return reseau ? reseau.label : id;
+        return {
+          id: id,
+          label: reseau ? reseau.label : id
+        };
       });
       
       onCriteriaChange({
-        id: `reseaux_${Date.now()}`,
-        field: 'Réseaux',
+        id: 'reseaux_selection',
+        field: 'tags',
         operator: 'parmi',
-        value: selectedLabels.join(', ')
+        value: selectedIds, // Envoyer les IDs pour Firebase
+        label: 'Réseaux',
+        displayValue: selectedInfo.map(r => r.label).join(', '),
+        section: 'reseaux'
+      });
+    } else {
+      // Si aucune sélection, supprimer le critère
+      onCriteriaChange({
+        id: 'reseaux_selection',
+        remove: true
       });
     }
   };
@@ -94,19 +60,12 @@ const ReseauxSection = ({ onCriteriaChange }) => {
     if (selectedReseaux.length === reseauxFiltres.length) {
       // Tout désélectionner
       setSelectedReseaux([]);
+      updateCriteria([]);
     } else {
       // Tout sélectionner (seulement les réseaux filtrés)
       const allIds = reseauxFiltres.map(r => r.id);
       setSelectedReseaux(allIds);
-      
-      // Notifier le parent
-      const selectedLabels = reseauxFiltres.map(r => r.label);
-      onCriteriaChange({
-        id: `reseaux_${Date.now()}`,
-        field: 'Réseaux',
-        operator: 'parmi',
-        value: selectedLabels.join(', ')
-      });
+      updateCriteria(allIds);
     }
   };
 

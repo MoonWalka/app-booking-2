@@ -6,84 +6,63 @@ import styles from './Sections.module.css';
  * Section Dates pour la recherche multi-critères
  */
 const DatesSection = ({ onCriteriaChange }) => {
+  // Mapping des champs vers Firebase
+  const fieldMapping = {
+    niveau: 'niveau',
+    date: 'date',
+    titre: 'titre',
+    montant: 'montant',
+    artisteNom: 'artisteNom',
+    lieuNom: 'lieuNom',
+    type: 'type',
+    notes: 'notes'
+  };
+
   const [formData, setFormData] = useState({
     // Dates et niveaux
-    niveauDate: [],
+    niveau: [],
     dateDebut: { from: '', to: '' },
-    statut: [],
     
-    // Artistes et projets
-    projet: '',
-    artistes: { value: '', operator: 'contient' },
+    // Titre et recherche
+    titre: { value: '', operator: 'contient' },
     
-    // Chiffre d'affaire
-    montantHT: { min: '', max: '' },
-    cachetSource: 'contrat',
-    cachetType: 'representation',
-    caGlobal: false,
+    // Artistes et lieux
+    artisteNom: { value: '', operator: 'contient' },
+    lieuNom: { value: '', operator: 'contient' },
     
-    // Types d'événements
-    typesEvenements: [],
-    marqueurs: '',
+    // Montant
+    montant: { min: '', max: '' },
     
-    // Types de contrats
-    typesContrats: [],
-    
-    // Général
-    priseOption: { from: '', to: '' },
-    collaborateur: { value: '', operator: 'contient' },
-    filtreFanzine: false
+    // Notes
+    notes: { value: '', operator: 'contient' }
   });
 
-  const niveauxDate = [
-    { value: 'option', label: 'Option' },
-    { value: 'confirme', label: 'Confirmé' },
-    { value: 'interesse', label: 'Intéressé' },
-    { value: 'proposition', label: 'Proposition' }
-  ];
-
-  const statuts = [
+  const niveaux = [
     { value: 'incomplete', label: 'Incomplète' },
     { value: 'interet', label: 'Intérêt' },
     { value: 'option', label: 'Option' },
-    { value: 'confirmee', label: 'Confirmée' },
-    { value: 'annulee', label: 'Annulée' },
-    { value: 'reportee', label: 'Reportée' }
+    { value: 'confirme', label: 'Confirmé' },
+    { value: 'annule', label: 'Annulé' },
+    { value: 'reporte', label: 'Reporté' }
   ];
 
-  const typesEvenements = [
-    { value: 'concert', label: 'Concert' },
-    { value: 'conference', label: 'Conférence' },
-    { value: 'atelier', label: 'Atelier' },
-    { value: 'masterclass', label: 'Masterclass' },
-    { value: 'showcase', label: 'Showcase' },
-    { value: 'festival', label: 'Festival' },
-    { value: 'residence', label: 'Résidence' },
-    { value: 'rencontre', label: 'Rencontre' }
-  ];
-
-  const typesContrats = [
-    { value: 'cession', label: 'Cession' },
-    { value: 'corealisation', label: 'Co-réalisation' },
-    { value: 'promo_locale', label: 'Promo locale' },
-    { value: 'location', label: 'Location' },
-    { value: 'prestation', label: 'Prestation' },
-    { value: 'partenariat', label: 'Partenariat' }
-  ];
 
   const operators = [
     { value: 'contient', label: 'Contient' },
     { value: 'egal', label: 'Égal à' },
     { value: 'commence', label: 'Commence par' },
     { value: 'termine', label: 'Se termine par' },
-    { value: 'different', label: 'Différent de' }
+    { value: 'different', label: 'Différent de' },
+    { value: 'non_renseigne', label: 'Non renseigné' }
   ];
 
-  const handleFieldChange = (field, value, subField = null) => {
+  const handleFieldChange = (field, value, subField = null, operator = null) => {
     const newData = { ...formData };
     
     if (subField) {
       newData[field] = { ...newData[field], [subField]: value };
+    } else if (operator !== null) {
+      newData[field] = { ...newData[field], operator };
     } else if (typeof newData[field] === 'object' && 'value' in newData[field]) {
       newData[field] = { ...newData[field], value };
     } else {
@@ -92,7 +71,7 @@ const DatesSection = ({ onCriteriaChange }) => {
     
     setFormData(newData);
     
-    // Logique de notification selon le type de champ
+    // Notifier le parent selon le type de champ
     notifyChange(field, newData[field]);
   };
 
@@ -111,59 +90,139 @@ const DatesSection = ({ onCriteriaChange }) => {
   };
 
   const notifyChange = (field, value) => {
-    // Logique de notification simplifiée - à adapter selon les besoins
-    if (!value || (Array.isArray(value) && value.length === 0)) return;
-    
-    let displayField = '';
+    const mappedField = fieldMapping[field] || field;
+    let criteriaValue = value;
     let displayValue = '';
-    let operator = '=';
+    let criteriaOperator = 'egal';
+    let label = '';
     
-    switch(field) {
-      case 'niveauDate':
-        displayField = 'Niveau de date';
-        displayValue = value.map(v => niveauxDate.find(n => n.value === v)?.label).join(', ');
-        operator = 'parmi';
-        break;
-      case 'statut':
-        displayField = 'Statut';
-        displayValue = value.map(v => statuts.find(s => s.value === v)?.label).join(', ');
-        operator = 'parmi';
-        break;
-      case 'typesEvenements':
-        displayField = 'Types d\'événements';
-        displayValue = value.map(v => typesEvenements.find(t => t.value === v)?.label).join(', ');
-        operator = 'parmi';
-        break;
-      case 'typesContrats':
-        displayField = 'Types de contrats';
-        displayValue = value.map(v => typesContrats.find(t => t.value === v)?.label).join(', ');
-        operator = 'parmi';
-        break;
-      case 'dateDebut':
-        if (value.from && value.to) {
-          displayField = 'Date début';
-          displayValue = `${value.from} à ${value.to}`;
-          operator = 'entre';
-        }
-        break;
-      case 'montantHT':
-        if (value.min && value.max) {
-          displayField = 'Montant HT';
-          displayValue = `${value.min}€ et ${value.max}€`;
-          operator = 'entre';
-        }
-        break;
-      default:
+    // Gestion selon le type de champ
+    if (field === 'niveau') {
+      if (!value || value.length === 0) {
+        onCriteriaChange({
+          id: `dates_${field}`,
+          remove: true
+        });
         return;
+      }
+      
+      const selectedLabels = value.map(v => 
+        niveaux.find(opt => opt.value === v)?.label || v
+      );
+      
+      criteriaOperator = 'parmi';
+      displayValue = selectedLabels.join(', ');
+      label = 'Niveau';
+      
+    } else if (field === 'dateDebut') {
+      if (!value.from && !value.to) {
+        onCriteriaChange({
+          id: `dates_${field}`,
+          remove: true
+        });
+        return;
+      }
+      
+      if (value.from && value.to) {
+        criteriaOperator = 'entre';
+        criteriaValue = {
+          min: value.from,
+          max: value.to
+        };
+        displayValue = `du ${value.from} au ${value.to}`;
+      } else if (value.from) {
+        criteriaOperator = 'superieur';
+        criteriaValue = value.from;
+        displayValue = `après le ${value.from}`;
+      } else if (value.to) {
+        criteriaOperator = 'inferieur';
+        criteriaValue = value.to;
+        displayValue = `avant le ${value.to}`;
+      }
+      
+      label = 'Date';
+      mappedField = 'date';
+      
+    } else if (field === 'montant') {
+      if (!value.min && !value.max) {
+        onCriteriaChange({
+          id: `dates_${field}`,
+          remove: true
+        });
+        return;
+      }
+      
+      if (value.min && value.max) {
+        criteriaOperator = 'entre';
+        criteriaValue = {
+          min: parseFloat(value.min),
+          max: parseFloat(value.max)
+        };
+        displayValue = `${value.min}€ - ${value.max}€`;
+      } else if (value.min) {
+        criteriaOperator = 'superieur';
+        criteriaValue = parseFloat(value.min);
+        displayValue = `≥ ${value.min}€`;
+      } else if (value.max) {
+        criteriaOperator = 'inferieur';
+        criteriaValue = parseFloat(value.max);
+        displayValue = `≤ ${value.max}€`;
+      }
+      
+      label = 'Montant';
+      
+    } else if (typeof value === 'object' && 'value' in value && 'operator' in value) {
+      // Champs texte avec opérateur
+      if (!value.value) {
+        onCriteriaChange({
+          id: `dates_${field}`,
+          remove: true
+        });
+        return;
+      }
+      
+      criteriaOperator = value.operator;
+      criteriaValue = value.value;
+      displayValue = value.value;
+      
+      const labels = {
+        titre: 'Titre',
+        artisteNom: 'Artiste',
+        lieuNom: 'Lieu',
+        notes: 'Notes'
+      };
+      label = labels[field] || field;
+    } else {
+      return; // Ne rien faire pour les autres cas
     }
     
-    if (displayValue) {
+    // Envoyer le critère
+    onCriteriaChange({
+      id: `dates_${field}`,
+      field: mappedField,
+      operator: criteriaOperator,
+      value: criteriaValue,
+      label: label,
+      displayValue: displayValue,
+      section: 'dates'
+    });
+  };
+
+  const handleSelectAll = () => {
+    const allValues = niveaux.map(opt => opt.value);
+    const currentValues = formData.niveau;
+    
+    if (currentValues.length === allValues.length) {
+      // Tout désélectionner
+      setFormData(prev => ({ ...prev, niveau: [] }));
       onCriteriaChange({
-        id: `${field}_${Date.now()}`,
-        field: displayField,
-        operator: operator,
-        value: displayValue
+        id: `dates_niveau`,
+        remove: true
       });
+    } else {
+      // Tout sélectionner
+      setFormData(prev => ({ ...prev, niveau: allValues }));
+      notifyChange('niveau', allValues);
     }
   };
 
@@ -175,97 +234,118 @@ const DatesSection = ({ onCriteriaChange }) => {
       </h4>
 
       <Accordion defaultActiveKey="0">
-        {/* Dates et niveaux */}
+        {/* Informations principales */}
         <Accordion.Item eventKey="0">
           <Accordion.Header>
-            <i className="bi bi-calendar-check me-2"></i>
-            Dates et niveaux
+            <i className="bi bi-info-circle me-2"></i>
+            Informations principales
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <Col md={12} className="mb-3">
+              {/* Titre */}
+              <Col md={12} className="mb-4">
+                <Form.Label>Titre</Form.Label>
+                <div className="d-flex gap-2">
+                  <Form.Select 
+                    size="sm"
+                    style={{ maxWidth: '150px' }}
+                    value={formData.titre.operator}
+                    onChange={(e) => handleFieldChange('titre', formData.titre.value, null, e.target.value)}
+                  >
+                    {operators.map(op => (
+                      <option key={op.value} value={op.value}>{op.label}</option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control 
+                    type="text"
+                    value={formData.titre.value}
+                    onChange={(e) => handleFieldChange('titre', e.target.value)}
+                    placeholder="Rechercher dans le titre..."
+                  />
+                </div>
+              </Col>
+
+              {/* Niveau */}
+              <Col md={12} className="mb-4">
                 <Form.Label className="fw-bold">Niveau de la date</Form.Label>
+                <Form.Text className="d-block mb-3 text-muted">
+                  Filtre : parmi les niveaux sélectionnés
+                </Form.Text>
+
+                {/* Sélectionner tout */}
+                <div className="mb-3">
+                  <Form.Check 
+                    type="checkbox"
+                    id="select-all-niveau"
+                    label={<strong>Tout sélectionner</strong>}
+                    checked={formData.niveau.length === niveaux.length}
+                    onChange={handleSelectAll}
+                  />
+                </div>
+
                 <Row>
-                  {niveauxDate.map(niveau => (
+                  {niveaux.map(niveau => (
                     <Col md={3} key={niveau.value} className="mb-2">
                       <Form.Check 
                         type="checkbox"
                         id={`niveau-${niveau.value}`}
                         label={niveau.label}
-                        checked={formData.niveauDate.includes(niveau.value)}
-                        onChange={() => handleMultiSelect('niveauDate', niveau.value)}
+                        checked={formData.niveau.includes(niveau.value)}
+                        onChange={() => handleMultiSelect('niveau', niveau.value)}
                       />
                     </Col>
                   ))}
                 </Row>
               </Col>
 
-              <Col md={6} className="mb-3">
-                <Form.Label>Date début (période)</Form.Label>
-                <InputGroup>
-                  <Form.Control
-                    type="date"
-                    value={formData.dateDebut.from}
-                    onChange={(e) => handleFieldChange('dateDebut', e.target.value, 'from')}
-                  />
-                  <InputGroup.Text>à</InputGroup.Text>
-                  <Form.Control
-                    type="date"
-                    value={formData.dateDebut.to}
-                    onChange={(e) => handleFieldChange('dateDebut', e.target.value, 'to')}
-                  />
-                </InputGroup>
-              </Col>
 
-              <Col md={12} className="mb-3">
-                <Form.Label className="fw-bold">Statut</Form.Label>
+              {/* Plage de dates */}
+              <Col md={12} className="mb-4">
+                <Form.Label>Période</Form.Label>
                 <Row>
-                  {statuts.map(statut => (
-                    <Col md={4} lg={2} key={statut.value} className="mb-2">
-                      <Form.Check 
-                        type="checkbox"
-                        id={`statut-${statut.value}`}
-                        label={statut.label}
-                        checked={formData.statut.includes(statut.value)}
-                        onChange={() => handleMultiSelect('statut', statut.value)}
+                  <Col md={6}>
+                    <InputGroup>
+                      <InputGroup.Text>Du</InputGroup.Text>
+                      <Form.Control
+                        type="date"
+                        value={formData.dateDebut.from}
+                        onChange={(e) => handleFieldChange('dateDebut', e.target.value, 'from')}
                       />
-                    </Col>
-                  ))}
+                    </InputGroup>
+                  </Col>
+                  <Col md={6}>
+                    <InputGroup>
+                      <InputGroup.Text>Au</InputGroup.Text>
+                      <Form.Control
+                        type="date"
+                        value={formData.dateDebut.to}
+                        onChange={(e) => handleFieldChange('dateDebut', e.target.value, 'to')}
+                      />
+                    </InputGroup>
+                  </Col>
                 </Row>
               </Col>
             </Row>
           </Accordion.Body>
         </Accordion.Item>
 
-        {/* Artistes et projets */}
+        {/* Relations */}
         <Accordion.Item eventKey="1">
           <Accordion.Header>
-            <i className="bi bi-people me-2"></i>
-            Artistes et projets
+            <i className="bi bi-link-45deg me-2"></i>
+            Relations
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <Col md={6} className="mb-3">
-                <Form.Label>Projet</Form.Label>
-                <Form.Select
-                  value={formData.projet}
-                  onChange={(e) => handleFieldChange('projet', e.target.value)}
-                >
-                  <option value="">-- Sélectionner un projet --</option>
-                  <option value="projet1">Projet 1</option>
-                  <option value="projet2">Projet 2</option>
-                  <option value="projet3">Projet 3</option>
-                </Form.Select>
-              </Col>
-
-              <Col md={6} className="mb-3">
-                <Form.Label>Artistes et projets liés</Form.Label>
+              {/* Artiste */}
+              <Col md={12} className="mb-4">
+                <Form.Label>Artiste</Form.Label>
                 <div className="d-flex gap-2">
                   <Form.Select 
                     size="sm"
                     style={{ maxWidth: '150px' }}
-                    value={formData.artistes.operator}
-                    onChange={(e) => handleFieldChange('artistes', formData.artistes.value, 'operator')}
+                    value={formData.artisteNom.operator}
+                    onChange={(e) => handleFieldChange('artisteNom', formData.artisteNom.value, null, e.target.value)}
                   >
                     {operators.map(op => (
                       <option key={op.value} value={op.value}>{op.label}</option>
@@ -273,9 +353,32 @@ const DatesSection = ({ onCriteriaChange }) => {
                   </Form.Select>
                   <Form.Control 
                     type="text"
-                    value={formData.artistes.value}
-                    onChange={(e) => handleFieldChange('artistes', e.target.value, 'value')}
-                    placeholder="Rechercher..."
+                    value={formData.artisteNom.value}
+                    onChange={(e) => handleFieldChange('artisteNom', e.target.value)}
+                    placeholder="Nom de l'artiste..."
+                  />
+                </div>
+              </Col>
+
+              {/* Lieu */}
+              <Col md={12} className="mb-4">
+                <Form.Label>Lieu</Form.Label>
+                <div className="d-flex gap-2">
+                  <Form.Select 
+                    size="sm"
+                    style={{ maxWidth: '150px' }}
+                    value={formData.lieuNom.operator}
+                    onChange={(e) => handleFieldChange('lieuNom', formData.lieuNom.value, null, e.target.value)}
+                  >
+                    {operators.map(op => (
+                      <option key={op.value} value={op.value}>{op.label}</option>
+                    ))}
+                  </Form.Select>
+                  <Form.Control 
+                    type="text"
+                    value={formData.lieuNom.value}
+                    onChange={(e) => handleFieldChange('lieuNom', e.target.value)}
+                    placeholder="Nom du lieu..."
                   />
                 </div>
               </Col>
@@ -283,191 +386,59 @@ const DatesSection = ({ onCriteriaChange }) => {
           </Accordion.Body>
         </Accordion.Item>
 
-        {/* Chiffre d'affaire */}
+        {/* Informations financières */}
         <Accordion.Item eventKey="2">
           <Accordion.Header>
             <i className="bi bi-currency-euro me-2"></i>
-            Chiffre d'affaire
+            Informations financières
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <Col md={6} className="mb-3">
-                <Form.Label>Montants HT</Form.Label>
+              {/* Montant */}
+              <Col md={12} className="mb-4">
+                <Form.Label>Montant</Form.Label>
                 <InputGroup>
                   <InputGroup.Text>Entre</InputGroup.Text>
                   <Form.Control
                     type="number"
-                    value={formData.montantHT.min}
-                    onChange={(e) => handleFieldChange('montantHT', e.target.value, 'min')}
-                    placeholder="0"
+                    value={formData.montant.min}
+                    onChange={(e) => handleFieldChange('montant', e.target.value, 'min')}
+                    placeholder="Min"
                     min="0"
+                    step="0.01"
                   />
                   <InputGroup.Text>et</InputGroup.Text>
                   <Form.Control
                     type="number"
-                    value={formData.montantHT.max}
-                    onChange={(e) => handleFieldChange('montantHT', e.target.value, 'max')}
-                    placeholder="50000"
+                    value={formData.montant.max}
+                    onChange={(e) => handleFieldChange('montant', e.target.value, 'max')}
+                    placeholder="Max"
                     min="0"
+                    step="0.01"
                   />
                   <InputGroup.Text>€</InputGroup.Text>
                 </InputGroup>
               </Col>
-
-              <Col md={6} className="mb-3">
-                <Form.Label>Cachet</Form.Label>
-                <div className="mb-2">
-                  <Form.Check
-                    type="radio"
-                    id="cachet-contrat"
-                    name="cachetSource"
-                    label="Issu du contrat"
-                    value="contrat"
-                    checked={formData.cachetSource === 'contrat'}
-                    onChange={(e) => handleFieldChange('cachetSource', e.target.value)}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="cachet-date"
-                    name="cachetSource"
-                    label="Sinon de la date"
-                    value="date"
-                    checked={formData.cachetSource === 'date'}
-                    onChange={(e) => handleFieldChange('cachetSource', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Form.Check
-                    type="radio"
-                    id="cachet-representation"
-                    name="cachetType"
-                    label="Par représentation"
-                    value="representation"
-                    checked={formData.cachetType === 'representation'}
-                    onChange={(e) => handleFieldChange('cachetType', e.target.value)}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="cachet-date-type"
-                    name="cachetType"
-                    label="Par date"
-                    value="date"
-                    checked={formData.cachetType === 'date'}
-                    onChange={(e) => handleFieldChange('cachetType', e.target.value)}
-                  />
-                </div>
-              </Col>
-
-              <Col md={12} className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  id="ca-global"
-                  label="Chiffre d'affaire global par organisateur"
-                  checked={formData.caGlobal}
-                  onChange={(e) => handleFieldChange('caGlobal', e.target.checked)}
-                />
-              </Col>
             </Row>
           </Accordion.Body>
         </Accordion.Item>
 
-        {/* Types d'événements */}
+        {/* Notes */}
         <Accordion.Item eventKey="3">
           <Accordion.Header>
-            <i className="bi bi-tags me-2"></i>
-            Types d'événements
+            <i className="bi bi-sticky me-2"></i>
+            Notes
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <Col md={12} className="mb-3">
-                <Form.Label className="fw-bold">Types d'événements</Form.Label>
-                <Row>
-                  {typesEvenements.map(type => (
-                    <Col md={4} lg={3} key={type.value} className="mb-2">
-                      <Form.Check 
-                        type="checkbox"
-                        id={`type-event-${type.value}`}
-                        label={type.label}
-                        checked={formData.typesEvenements.includes(type.value)}
-                        onChange={() => handleMultiSelect('typesEvenements', type.value)}
-                      />
-                    </Col>
-                  ))}
-                </Row>
-              </Col>
-
-              <Col md={6} className="mb-3">
-                <Form.Label>Marqueurs</Form.Label>
-                <Form.Select
-                  value={formData.marqueurs}
-                  onChange={(e) => handleFieldChange('marqueurs', e.target.value)}
-                >
-                  <option value="">-- Sélectionner --</option>
-                  <option value="marqueur1">Marqueur 1</option>
-                  <option value="marqueur2">Marqueur 2</option>
-                  <option value="marqueur3">Marqueur 3</option>
-                </Form.Select>
-              </Col>
-            </Row>
-          </Accordion.Body>
-        </Accordion.Item>
-
-        {/* Types de contrats */}
-        <Accordion.Item eventKey="4">
-          <Accordion.Header>
-            <i className="bi bi-file-text me-2"></i>
-            Types de contrats
-          </Accordion.Header>
-          <Accordion.Body>
-            <Row>
-              {typesContrats.map(type => (
-                <Col md={4} key={type.value} className="mb-2">
-                  <Form.Check 
-                    type="checkbox"
-                    id={`type-contrat-${type.value}`}
-                    label={type.label}
-                    checked={formData.typesContrats.includes(type.value)}
-                    onChange={() => handleMultiSelect('typesContrats', type.value)}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Accordion.Body>
-        </Accordion.Item>
-
-        {/* Général */}
-        <Accordion.Item eventKey="5">
-          <Accordion.Header>
-            <i className="bi bi-gear me-2"></i>
-            Général
-          </Accordion.Header>
-          <Accordion.Body>
-            <Row>
-              <Col md={6} className="mb-3">
-                <Form.Label>Prise d'option (période)</Form.Label>
-                <InputGroup>
-                  <Form.Control
-                    type="date"
-                    value={formData.priseOption.from}
-                    onChange={(e) => handleFieldChange('priseOption', e.target.value, 'from')}
-                  />
-                  <InputGroup.Text>à</InputGroup.Text>
-                  <Form.Control
-                    type="date"
-                    value={formData.priseOption.to}
-                    onChange={(e) => handleFieldChange('priseOption', e.target.value, 'to')}
-                  />
-                </InputGroup>
-              </Col>
-
-              <Col md={6} className="mb-3">
-                <Form.Label>Collaborateur</Form.Label>
+              <Col md={12}>
+                <Form.Label>Notes</Form.Label>
                 <div className="d-flex gap-2">
                   <Form.Select 
                     size="sm"
                     style={{ maxWidth: '150px' }}
-                    value={formData.collaborateur.operator}
-                    onChange={(e) => handleFieldChange('collaborateur', formData.collaborateur.value, 'operator')}
+                    value={formData.notes.operator}
+                    onChange={(e) => handleFieldChange('notes', formData.notes.value, null, e.target.value)}
                   >
                     {operators.map(op => (
                       <option key={op.value} value={op.value}>{op.label}</option>
@@ -475,21 +446,11 @@ const DatesSection = ({ onCriteriaChange }) => {
                   </Form.Select>
                   <Form.Control 
                     type="text"
-                    value={formData.collaborateur.value}
-                    onChange={(e) => handleFieldChange('collaborateur', e.target.value, 'value')}
-                    placeholder="Nom du collaborateur"
+                    value={formData.notes.value}
+                    onChange={(e) => handleFieldChange('notes', e.target.value)}
+                    placeholder="Rechercher dans les notes..."
                   />
                 </div>
-              </Col>
-
-              <Col md={12} className="mb-3">
-                <Form.Check
-                  type="checkbox"
-                  id="filtre-fanzine"
-                  label="Filtre 'fanzine barreaux'"
-                  checked={formData.filtreFanzine}
-                  onChange={(e) => handleFieldChange('filtreFanzine', e.target.checked)}
-                />
               </Col>
             </Row>
           </Accordion.Body>

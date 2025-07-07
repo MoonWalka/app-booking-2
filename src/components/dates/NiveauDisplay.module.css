@@ -1,0 +1,77 @@
+.niveauCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+}
+
+.niveauBars {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+}
+
+.niveauBar {
+  width: 4px;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.niveauBar:nth-child(1) {
+  height: 8px;
+}
+
+.niveauBar:nth-child(2) {
+  height: 14px;
+}
+
+.niveauBar:nth-child(3) {
+  height: 20px;
+}
+
+.niveauBarActive {
+  background-color: var(--bs-primary);
+}
+
+.niveauBarInactive {
+  background-color: var(--bs-gray-300);
+}
+
+/* Couleurs spécifiques par niveau */
+.niveauBarActive.incomplete {
+  background-color: var(--bs-secondary);
+}
+
+.niveauBarActive.interet {
+  background-color: var(--bs-info);
+}
+
+.niveauBarActive.option {
+  background-color: var(--bs-warning);
+}
+
+.niveauBarActive.confirme {
+  background-color: var(--bs-success);
+}
+
+/* Styles pour les icônes */
+.niveauIcon {
+  font-size: 1.5rem;
+}
+
+.annule .niveauIcon {
+  color: var(--bs-danger);
+}
+
+.reporte .niveauIcon {
+  color: var(--bs-primary);
+}
+
+/* Hover effects */
+.niveauCell:hover .niveauBar {
+  transform: scaleY(1.1);
+}
+
+.niveauCell:hover .niveauIcon {
+  transform: scale(1.1);
+}

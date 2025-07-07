@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Row, Col, Card } from 'react-bootstrap';
+import { Form, Row, Col, Card, Accordion, Badge } from 'react-bootstrap';
+import { GENRES_HIERARCHY } from '../../../config/tagsHierarchy';
 import styles from './Sections.module.css';
 
 /**
@@ -7,73 +8,72 @@ import styles from './Sections.module.css';
  */
 const GenresSection = ({ onCriteriaChange }) => {
   const [selectedGenres, setSelectedGenres] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState([]);
 
-  // Liste complète des genres musicaux
-  const genresDisponibles = [
-    { id: 'rock', label: 'Rock' },
-    { id: 'rock-alternatif', label: 'Rock alternatif' },
-    { id: 'rock-progressif', label: 'Rock progressif' },
-    { id: 'hard-rock', label: 'Hard rock' },
-    { id: 'punk', label: 'Punk' },
-    { id: 'metal', label: 'Metal' },
-    { id: 'pop', label: 'Pop' },
-    { id: 'pop-rock', label: 'Pop rock' },
-    { id: 'electro-pop', label: 'Electro pop' },
-    { id: 'indie-pop', label: 'Indie pop' },
-    { id: 'jazz', label: 'Jazz' },
-    { id: 'jazz-fusion', label: 'Jazz fusion' },
-    { id: 'jazz-manouche', label: 'Jazz manouche' },
-    { id: 'blues', label: 'Blues' },
-    { id: 'blues-rock', label: 'Blues rock' },
-    { id: 'folk', label: 'Folk' },
-    { id: 'chanson', label: 'Chanson' },
-    { id: 'chanson-francaise', label: 'Chanson française' },
-    { id: 'variete', label: 'Variété' },
-    { id: 'hip-hop', label: 'Hip-hop' },
-    { id: 'rap', label: 'Rap' },
-    { id: 'trap', label: 'Trap' },
-    { id: 'rnb', label: 'R&B' },
-    { id: 'soul', label: 'Soul' },
-    { id: 'funk', label: 'Funk' },
-    { id: 'reggae', label: 'Reggae' },
-    { id: 'dub', label: 'Dub' },
-    { id: 'ska', label: 'Ska' },
-    { id: 'electro', label: 'Électro' },
-    { id: 'techno', label: 'Techno' },
-    { id: 'house', label: 'House' },
-    { id: 'drum-and-bass', label: 'Drum and bass' },
-    { id: 'dubstep', label: 'Dubstep' },
-    { id: 'ambient', label: 'Ambient' },
-    { id: 'experimental', label: 'Expérimental' },
-    { id: 'musique-du-monde', label: 'Musique du monde' },
-    { id: 'musique-africaine', label: 'Musique africaine' },
-    { id: 'musique-latine', label: 'Musique latine' },
-    { id: 'salsa', label: 'Salsa' },
-    { id: 'flamenco', label: 'Flamenco' },
-    { id: 'musique-orientale', label: 'Musique orientale' },
-    { id: 'musique-classique', label: 'Musique classique' },
-    { id: 'musique-contemporaine', label: 'Musique contemporaine' },
-    { id: 'musique-traditionnelle', label: 'Musique traditionnelle' },
-    { id: 'musique-bretonne', label: 'Musique bretonne' },
-    { id: 'musique-celtique', label: 'Musique celtique' },
-    { id: 'country', label: 'Country' },
-    { id: 'bluegrass', label: 'Bluegrass' },
-    { id: 'indie', label: 'Indie' },
-    { id: 'indie-rock', label: 'Indie rock' },
-    { id: 'post-rock', label: 'Post-rock' },
-    { id: 'shoegaze', label: 'Shoegaze' },
-    { id: 'noise', label: 'Noise' },
-    { id: 'musique-enfants', label: 'Musique pour enfants' },
-    { id: 'spoken-word', label: 'Spoken word' },
-    { id: 'slam', label: 'Slam' },
-    { id: 'autres', label: 'Autres' }
-  ];
+  // Utilisation de la hiérarchie officielle des genres
+  const categoriesGenres = GENRES_HIERARCHY.map(category => ({
+    ...category,
+    // Mapper les icônes appropriées
+    icon: getIconForGenre(category.id),
+    // Aplatir la hiérarchie pour les sous-catégories
+    genres: flattenGenres(category)
+  }));
 
-  // Filtrer les genres selon la recherche
-  const genresFiltres = genresDisponibles.filter(genre =>
-    genre.label.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Helper pour obtenir l'icône appropriée pour chaque catégorie de genre
+  function getIconForGenre(categoryId) {
+    const icons = {
+      'musique': 'bi-music-note-beamed',
+      'arts-vivants': 'bi-people',
+      'pluridisciplinaire': 'bi-diagram-3',
+      'arts-plastiques': 'bi-palette',
+      'cinema': 'bi-film',
+      'expositions': 'bi-easel',
+      'video-arts-numeriques': 'bi-camera-video',
+      'jeune-public': 'bi-balloon'
+    };
+    return icons[categoryId] || 'bi-tag';
+  }
+
+  // Helper pour aplatir les genres avec leurs sous-catégories
+  function flattenGenres(category) {
+    const genres = [];
+    
+    function traverse(items, parentId = '') {
+      items.forEach(item => {
+        const fullId = parentId ? `${parentId}.${item.id}` : item.id;
+        genres.push({
+          id: fullId,
+          label: item.label,
+          level: parentId ? 2 : 1
+        });
+        
+        if (item.children && item.children.length > 0) {
+          traverse(item.children, fullId);
+        }
+      });
+    }
+    
+    if (category.children) {
+      traverse(category.children, category.id);
+    } else {
+      // Si pas d'enfants, ajouter la catégorie elle-même comme genre
+      genres.push({
+        id: category.id,
+        label: category.label,
+        level: 0
+      });
+    }
+    
+    return genres;
+  }
+
+  const handleCategoryToggle = (categoryId) => {
+    setExpandedCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
 
   const handleGenreToggle = (genreId) => {
     const newSelected = selectedGenres.includes(genreId)
@@ -81,46 +81,59 @@ const GenresSection = ({ onCriteriaChange }) => {
       : [...selectedGenres, genreId];
     
     setSelectedGenres(newSelected);
-    
-    // Notifier le parent
-    if (newSelected.length > 0) {
-      const selectedLabels = newSelected.map(id => {
-        const genre = genresDisponibles.find(g => g.id === id);
-        return genre ? genre.label : id;
+    updateCriteria(newSelected);
+  };
+
+  const updateCriteria = (selectedIds) => {
+    if (selectedIds.length > 0) {
+      // Récupérer les labels pour l'affichage
+      const selectedInfo = selectedIds.map(id => {
+        for (const cat of categoriesGenres) {
+          const genre = cat.genres.find(g => g.id === id);
+          if (genre) {
+            return {
+              id: id,
+              label: genre.label
+            };
+          }
+        }
+        return { id: id, label: id };
       });
       
       onCriteriaChange({
-        id: `genres_${Date.now()}`,
-        field: 'Genres',
+        id: 'genres_selection',
+        field: 'tags', // Utiliser tags comme pour les activités
         operator: 'parmi',
-        value: selectedLabels.join(', ')
+        value: selectedIds, // Envoyer les IDs pour Firebase
+        label: 'Genres',
+        displayValue: selectedInfo.map(g => g.label).join(', '),
+        section: 'genres'
       });
-    }
-  };
-
-  const handleSelectAll = () => {
-    if (selectedGenres.length === genresFiltres.length) {
-      // Tout désélectionner
-      setSelectedGenres([]);
     } else {
-      // Tout sélectionner (seulement les genres filtrés)
-      const allIds = genresFiltres.map(g => g.id);
-      setSelectedGenres(allIds);
-      
-      // Notifier le parent
-      const selectedLabels = genresFiltres.map(g => g.label);
+      // Si aucune sélection, supprimer le critère
       onCriteriaChange({
-        id: `genres_${Date.now()}`,
-        field: 'Genres',
-        operator: 'parmi',
-        value: selectedLabels.join(', ')
+        id: 'genres_selection',
+        remove: true
       });
     }
   };
 
-  const allSelected = genresFiltres.length > 0 && 
-    genresFiltres.every(g => selectedGenres.includes(g.id));
-  const someSelected = genresFiltres.some(g => selectedGenres.includes(g.id)) && !allSelected;
+  const handleCategorySelectAll = (category) => {
+    const categoryGenreIds = category.genres.map(g => g.id);
+    const allSelected = categoryGenreIds.every(id => selectedGenres.includes(id));
+    
+    let newSelected;
+    if (allSelected) {
+      // Désélectionner tous les genres de cette catégorie
+      newSelected = selectedGenres.filter(id => !categoryGenreIds.includes(id));
+    } else {
+      // Sélectionner tous les genres de cette catégorie
+      newSelected = [...new Set([...selectedGenres, ...categoryGenreIds])];
+    }
+    
+    setSelectedGenres(newSelected);
+    updateCriteria(newSelected);
+  };
 
   return (
     <div className={styles.sectionContent}>
@@ -137,19 +150,10 @@ const GenresSection = ({ onCriteriaChange }) => {
           </h5>
         </Card.Header>
         <Card.Body>
-          <Form.Label className="fw-bold">Genres</Form.Label>
+          <Form.Label className="fw-bold mb-3">Genres</Form.Label>
           <Form.Text className="d-block mb-3 text-muted">
             Filtre : parmi les genres sélectionnés
           </Form.Text>
-
-          {/* Barre de recherche */}
-          <Form.Control 
-            type="text"
-            placeholder="Rechercher un genre..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="mb-3"
-          />
 
           {/* Résumé des sélections */}
           {selectedGenres.length > 0 && (
@@ -161,49 +165,66 @@ const GenresSection = ({ onCriteriaChange }) => {
             </div>
           )}
 
-          {/* Sélectionner tout */}
-          <div className="mb-3">
-            <Form.Check 
-              type="checkbox"
-              id="select-all-genres"
-              label={<strong>Tout sélectionner ({genresFiltres.length})</strong>}
-              checked={allSelected}
-              indeterminate={someSelected}
-              onChange={handleSelectAll}
-            />
-          </div>
+          {/* Arborescence des catégories */}
+          <Accordion>
+            {categoriesGenres.map((category, index) => {
+              const categoryGenreIds = category.genres.map(g => g.id);
+              const selectedInCategory = categoryGenreIds.filter(id => selectedGenres.includes(id)).length;
+              const allSelected = selectedInCategory === category.genres.length;
+              const someSelected = selectedInCategory > 0 && !allSelected;
 
-          <hr className="my-2" />
-
-          {/* Liste des genres */}
-          <div 
-            className="border rounded p-3" 
-            style={{ 
-              maxHeight: '400px', 
-              overflowY: 'auto',
-              backgroundColor: 'var(--bs-gray-50)'
-            }}
-          >
-            {genresFiltres.length === 0 ? (
-              <p className="text-muted text-center mb-0">
-                Aucun genre ne correspond à votre recherche
-              </p>
-            ) : (
-              <Row>
-                {genresFiltres.map(genre => (
-                  <Col md={6} lg={4} key={genre.id} className="mb-2">
-                    <Form.Check 
-                      type="checkbox"
-                      id={`genre-${genre.id}`}
-                      label={genre.label}
-                      checked={selectedGenres.includes(genre.id)}
-                      onChange={() => handleGenreToggle(genre.id)}
-                    />
-                  </Col>
-                ))}
-              </Row>
-            )}
-          </div>
+              return (
+                <Accordion.Item key={category.id} eventKey={index.toString()}>
+                  <Accordion.Header>
+                    <div className="d-flex align-items-center w-100">
+                      <i className={`${category.icon} me-2`}></i>
+                      <span className="flex-grow-1">{category.label}</span>
+                      {selectedInCategory > 0 && (
+                        <Badge bg="primary" className="me-2">
+                          {selectedInCategory}
+                        </Badge>
+                      )}
+                    </div>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    {category.genres.length > 1 && (
+                      <>
+                        {/* Sélectionner tout */}
+                        <div className="mb-3">
+                          <Form.Check 
+                            type="checkbox"
+                            id={`select-all-${category.id}`}
+                            label={<strong>Tout sélectionner</strong>}
+                            checked={allSelected}
+                            indeterminate={someSelected}
+                            onChange={() => handleCategorySelectAll(category)}
+                          />
+                        </div>
+                        
+                        <hr className="my-2" />
+                      </>
+                    )}
+                    
+                    {/* Liste des genres */}
+                    <Row>
+                      {category.genres.map(genre => (
+                        <Col md={6} key={genre.id} className="mb-2">
+                          <Form.Check 
+                            type="checkbox"
+                            id={`genre-${genre.id}`}
+                            label={genre.label}
+                            checked={selectedGenres.includes(genre.id)}
+                            onChange={() => handleGenreToggle(genre.id)}
+                            style={{ paddingLeft: genre.level > 0 ? `${genre.level * 20}px` : 0 }}
+                          />
+                        </Col>
+                      ))}
+                    </Row>
+                  </Accordion.Body>
+                </Accordion.Item>
+              );
+            })}
+          </Accordion>
         </Card.Body>
       </Card>
     </div>

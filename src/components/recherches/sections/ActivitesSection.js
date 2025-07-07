@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Row, Col, Card, Accordion, Badge } from 'react-bootstrap';
+import { TAGS_HIERARCHY } from '../../../config/tagsHierarchy';
 import styles from './Sections.module.css';
 
 /**
@@ -9,146 +10,64 @@ const ActivitesSection = ({ onCriteriaChange }) => {
   const [selectedActivites, setSelectedActivites] = useState([]);
   const [expandedCategories, setExpandedCategories] = useState([]);
 
-  // Structure hiérarchique des activités
-  const categoriesActivites = [
-    {
-      id: 'organisme-institution',
-      label: 'Organisme / institution',
-      icon: 'bi-building',
-      activites: [
-        { id: 'mairie', label: 'Mairie' },
-        { id: 'conseil-departemental', label: 'Conseil départemental' },
-        { id: 'conseil-regional', label: 'Conseil régional' },
-        { id: 'ministere', label: 'Ministère' },
-        { id: 'association', label: 'Association' },
-        { id: 'fondation', label: 'Fondation' },
-        { id: 'syndicat', label: 'Syndicat' }
-      ]
-    },
-    {
-      id: 'disque',
-      label: 'Disque',
-      icon: 'bi-vinyl',
-      activites: [
-        { id: 'label', label: 'Label' },
-        { id: 'distributeur', label: 'Distributeur' },
-        { id: 'producteur-phonographique', label: 'Producteur phonographique' },
-        { id: 'studio-enregistrement', label: "Studio d'enregistrement" },
-        { id: 'mastering', label: 'Mastering' }
-      ]
-    },
-    {
-      id: 'ressource-formation',
-      label: 'Ressource / Formation',
-      icon: 'bi-book',
-      activites: [
-        { id: 'centre-ressources', label: 'Centre de ressources' },
-        { id: 'organisme-formation', label: 'Organisme de formation' },
-        { id: 'ecole-musique', label: 'École de musique' },
-        { id: 'conservatoire', label: 'Conservatoire' },
-        { id: 'universite', label: 'Université' }
-      ]
-    },
-    {
-      id: 'media',
-      label: 'Média',
-      icon: 'bi-newspaper',
-      activites: [
-        { id: 'radio', label: 'Radio' },
-        { id: 'television', label: 'Télévision' },
-        { id: 'presse-ecrite', label: 'Presse écrite' },
-        { id: 'web-media', label: 'Web média' },
-        { id: 'podcast', label: 'Podcast' },
-        { id: 'blog', label: 'Blog' }
-      ]
-    },
-    {
-      id: 'artiste',
-      label: 'Artiste',
-      icon: 'bi-music-note-beamed',
-      activites: [
-        { id: 'musicien', label: 'Musicien' },
-        { id: 'chanteur', label: 'Chanteur' },
-        { id: 'groupe', label: 'Groupe' },
-        { id: 'dj', label: 'DJ' },
-        { id: 'compositeur', label: 'Compositeur' },
-        { id: 'auteur', label: 'Auteur' }
-      ]
-    },
-    {
-      id: 'public',
-      label: 'Public',
-      icon: 'bi-people',
-      activites: [
-        { id: 'spectateur', label: 'Spectateur' },
-        { id: 'abonne', label: 'Abonné' },
-        { id: 'fan', label: 'Fan' },
-        { id: 'amateur', label: 'Amateur' }
-      ]
-    },
-    {
-      id: 'adherent',
-      label: 'Adhérent',
-      icon: 'bi-person-check',
-      activites: [
-        { id: 'membre-actif', label: 'Membre actif' },
-        { id: 'membre-bienfaiteur', label: 'Membre bienfaiteur' },
-        { id: 'membre-honneur', label: "Membre d'honneur" }
-      ]
-    },
-    {
-      id: 'personnel',
-      label: 'Personnel',
-      icon: 'bi-person-badge',
-      activites: [
-        { id: 'salarie', label: 'Salarié' },
-        { id: 'intermittent', label: 'Intermittent' },
-        { id: 'stagiaire', label: 'Stagiaire' },
-        { id: 'service-civique', label: 'Service civique' },
-        { id: 'benevole', label: 'Bénévole' }
-      ]
-    },
-    {
-      id: 'diffuseur',
-      label: 'Diffuseur',
-      icon: 'bi-broadcast',
-      activites: [
-        { id: 'salle-spectacle', label: 'Salle de spectacle' },
-        { id: 'festival', label: 'Festival' },
-        { id: 'cafe-concert', label: 'Café-concert' },
-        { id: 'club', label: 'Club' },
-        { id: 'theatre', label: 'Théâtre' },
-        { id: 'centre-culturel', label: 'Centre culturel' }
-      ]
-    },
-    {
-      id: 'agent-entrepreneur',
-      label: 'Agent, entrepreneur de spectacles',
-      icon: 'bi-briefcase',
-      activites: [
-        { id: 'agent-artistique', label: 'Agent artistique' },
-        { id: 'tourneur', label: 'Tourneur' },
-        { id: 'producteur-spectacle', label: 'Producteur de spectacle' },
-        { id: 'entrepreneur-spectacle', label: 'Entrepreneur de spectacle' }
-      ]
-    },
-    {
-      id: 'prestataire',
-      label: 'Prestataire',
-      icon: 'bi-tools',
-      activites: [
-        { id: 'technicien-son', label: 'Technicien son' },
-        { id: 'technicien-lumiere', label: 'Technicien lumière' },
-        { id: 'location-materiel', label: 'Location de matériel' },
-        { id: 'transport', label: 'Transport' },
-        { id: 'securite', label: 'Sécurité' },
-        { id: 'catering', label: 'Catering' },
-        { id: 'graphiste', label: 'Graphiste' },
-        { id: 'photographe', label: 'Photographe' },
-        { id: 'videaste', label: 'Vidéaste' }
-      ]
+  // Utilisation de la hiérarchie officielle des tags
+  // Filtrer seulement les catégories d'activités (exclure genres, réseaux, mots-clés)
+  const categoriesActivites = TAGS_HIERARCHY.filter(cat => 
+    ['organisme-institution', 'disque', 'ressource-formation', 'media', 'artiste', 
+     'public', 'adherent', 'personnel', 'diffuseur', 'agent-entrepreneur', 'prestataire'].includes(cat.id)
+  ).map(category => ({
+    ...category,
+    // Mapper les icônes appropriées
+    icon: getIconForCategory(category.id),
+    // Aplatir la hiérarchie pour les sous-catégories imbriquées
+    activites: flattenActivities(category)
+  }));
+
+  // Helper pour obtenir l'icône appropriée pour chaque catégorie
+  function getIconForCategory(categoryId) {
+    const icons = {
+      'organisme-institution': 'bi-building',
+      'disque': 'bi-vinyl',
+      'ressource-formation': 'bi-book',
+      'media': 'bi-newspaper',
+      'artiste': 'bi-music-note-beamed',
+      'public': 'bi-people',
+      'adherent': 'bi-person-check',
+      'personnel': 'bi-person-badge',
+      'diffuseur': 'bi-broadcast',
+      'agent-entrepreneur': 'bi-briefcase',
+      'prestataire': 'bi-tools'
+    };
+    return icons[categoryId] || 'bi-tag';
+  }
+
+  // Helper pour aplatir les activités avec leurs sous-catégories
+  function flattenActivities(category) {
+    const activities = [];
+    
+    function traverse(items, parentId = '') {
+      items.forEach(item => {
+        // Ajouter l'activité avec son chemin complet pour l'identifiant
+        const fullId = parentId ? `${parentId}.${item.id}` : item.id;
+        activities.push({
+          id: fullId,
+          label: item.label,
+          level: parentId ? 2 : 1
+        });
+        
+        // Si l'item a des enfants, les parcourir récursivement
+        if (item.children && item.children.length > 0) {
+          traverse(item.children, fullId);
+        }
+      });
     }
-  ];
+    
+    if (category.children) {
+      traverse(category.children, category.id);
+    }
+    
+    return activities;
+  }
 
   const handleCategoryToggle = (categoryId) => {
     setExpandedCategories(prev => 
@@ -158,29 +77,45 @@ const ActivitesSection = ({ onCriteriaChange }) => {
     );
   };
 
-  const handleActivityToggle = (activityId, categoryLabel, activityLabel) => {
+  const handleActivityToggle = (activityId) => {
     const newSelected = selectedActivites.includes(activityId)
       ? selectedActivites.filter(id => id !== activityId)
       : [...selectedActivites, activityId];
     
     setSelectedActivites(newSelected);
-    
-    // Notifier le parent
-    if (newSelected.length > 0) {
-      const selectedLabels = newSelected.map(id => {
-        // Retrouver le label de l'activité
+    updateCriteria(newSelected);
+  };
+
+  const updateCriteria = (selectedIds) => {
+    if (selectedIds.length > 0) {
+      // Récupérer les labels pour l'affichage
+      const selectedInfo = selectedIds.map(id => {
         for (const cat of categoriesActivites) {
           const activity = cat.activites.find(a => a.id === id);
-          if (activity) return activity.label;
+          if (activity) {
+            return {
+              id: id,
+              label: activity.label
+            };
+          }
         }
-        return id;
+        return { id: id, label: id };
       });
       
       onCriteriaChange({
-        id: `activites_${Date.now()}`,
-        field: 'Activités',
+        id: 'activites_selection',
+        field: 'tags',
         operator: 'parmi',
-        value: selectedLabels.join(', ')
+        value: selectedIds, // Envoyer les IDs pour Firebase
+        label: 'Activités',
+        displayValue: selectedInfo.map(a => a.label).join(', '),
+        section: 'activites'
+      });
+    } else {
+      // Si aucune sélection, supprimer le critère
+      onCriteriaChange({
+        id: 'activites_selection',
+        remove: true
       });
     }
   };
@@ -199,24 +134,7 @@ const ActivitesSection = ({ onCriteriaChange }) => {
     }
     
     setSelectedActivites(newSelected);
-    
-    // Notifier le parent
-    if (newSelected.length > 0) {
-      const selectedLabels = newSelected.map(id => {
-        for (const cat of categoriesActivites) {
-          const activity = cat.activites.find(a => a.id === id);
-          if (activity) return activity.label;
-        }
-        return id;
-      });
-      
-      onCriteriaChange({
-        id: `activites_${Date.now()}`,
-        field: 'Activités',
-        operator: 'parmi',
-        value: selectedLabels.join(', ')
-      });
-    }
+    updateCriteria(newSelected);
   };
 
   return (
@@ -294,7 +212,8 @@ const ActivitesSection = ({ onCriteriaChange }) => {
                             id={`activite-${activite.id}`}
                             label={activite.label}
                             checked={selectedActivites.includes(activite.id)}
-                            onChange={() => handleActivityToggle(activite.id, category.label, activite.label)}
+                            onChange={() => handleActivityToggle(activite.id)}
+                            style={{ paddingLeft: activite.level > 1 ? `${(activite.level - 1) * 20}px` : 0 }}
                           />
                         </Col>
                       ))}

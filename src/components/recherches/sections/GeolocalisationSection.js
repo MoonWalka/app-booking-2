@@ -10,7 +10,7 @@ const GeolocalisationSection = ({ onCriteriaChange }) => {
     geolocalisationOperator: 'parmi',
     codePostal: { value: '', operator: 'commence' },
     ville: { value: '', operator: 'contient' },
-    pays: { value: 'france', operator: 'egal' },
+    pays: { value: '', operator: 'egal' }, // Pas de valeur par défaut
     region: { value: '', operator: 'egal' },
     departement: { value: '', operator: 'egal' }
   });
@@ -155,6 +155,15 @@ const GeolocalisationSection = ({ onCriteriaChange }) => {
     { value: '95', label: '95 - Val-d\'Oise' }
   ];
 
+  // Mapping des champs vers Firebase
+  const fieldMapping = {
+    codePostal: 'codePostal',
+    ville: 'ville',
+    pays: 'pays',
+    region: 'region',
+    departement: 'departement'
+  };
+
   const handleFieldChange = (field, value, operator = null) => {
     const newData = { ...formData };
     
@@ -168,30 +177,58 @@ const GeolocalisationSection = ({ onCriteriaChange }) => {
     
     setFormData(newData);
     
-    // Notifier le parent du changement
-    if (value) {
-      const criteriaId = `${field}_${Date.now()}`;
-      let displayValue = value;
+    // Notifier le parent uniquement si la valeur est significative
+    const hasValue = value && value !== '';
+    
+    if (hasValue) {
+      const mappedField = fieldMapping[field] || field;
+      let criteriaValue = typeof newData[field] === 'object' ? newData[field].value : value;
+      let criteriaOperator = operator || newData[field]?.operator || 'egal';
+      let displayValue = criteriaValue;
       
-      // Pour les sélections, afficher le label
+      // Pour les sélections, récupérer le label pour l'affichage
       if (field === 'pays') {
-        const paysObj = pays.find(p => p.value === value);
-        displayValue = paysObj ? paysObj.label : value;
+        const paysObj = pays.find(p => p.value === criteriaValue);
+        displayValue = paysObj ? paysObj.label : criteriaValue;
       } else if (field === 'region') {
-        const regionObj = regions.find(r => r.value === value);
-        displayValue = regionObj ? regionObj.label : value;
+        const regionObj = regions.find(r => r.value === criteriaValue);
+        displayValue = regionObj ? regionObj.label : criteriaValue;
       } else if (field === 'departement') {
-        const deptObj = departements.find(d => d.value === value);
-        displayValue = deptObj ? deptObj.label : value;
+        const deptObj = departements.find(d => d.value === criteriaValue);
+        displayValue = deptObj ? deptObj.label : criteriaValue;
       }
       
+      const criteriaId = `geolocalisation_${field}`;
       onCriteriaChange({
         id: criteriaId,
-        field: field.charAt(0).toUpperCase() + field.slice(1),
-        operator: operator || newData[field]?.operator || '=',
-        value: typeof newData[field] === 'object' ? newData[field].value : displayValue
+        field: mappedField,
+        operator: criteriaOperator,
+        value: criteriaValue, // Valeur réelle pour Firebase
+        label: getFieldLabel(field),
+        displayValue: displayValue, // Label pour l'affichage
+        section: 'geolocalisation'
+      });
+    } else {
+      // Si la valeur est vide, supprimer le critère
+      const criteriaId = `geolocalisation_${field}`;
+      onCriteriaChange({
+        id: criteriaId,
+        remove: true
       });
     }
+  };
+
+  // Helper pour obtenir un label lisible pour le champ
+  const getFieldLabel = (field) => {
+    const labels = {
+      codePostal: 'Code postal',
+      ville: 'Ville',
+      pays: 'Pays',
+      region: 'Région',
+      departement: 'Département',
+      geolocalisationOperator: 'Géolocalisation'
+    };
+    return labels[field] || field;
   };
 
   return (
@@ -320,6 +357,7 @@ const GeolocalisationSection = ({ onCriteriaChange }) => {
                   value={formData.pays.value}
                   onChange={(e) => handleFieldChange('pays', e.target.value)}
                 >
+                  <option value="">-- Sélectionner --</option>
                   {pays.map(p => (
                     <option key={p.value} value={p.value}>{p.label}</option>
                   ))}

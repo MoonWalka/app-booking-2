@@ -13,42 +13,90 @@ const SallesSection = ({ onCriteriaChange }) => {
     profondeur: { min: '', max: '' }
   });
 
+  // Mapping des champs vers Firebase
+  const fieldMapping = {
+    jauge: ['salleJauge1', 'salleJauge2', 'salleJauge3'], // Plusieurs champs possibles
+    largeur: 'salleOuverture',
+    hauteur: 'salleHauteur',
+    profondeur: 'salleProfondeur'
+  };
+
   const handleRangeChange = (field, type, value) => {
     const newData = { ...formData };
     newData[field][type] = value;
     setFormData(newData);
     
-    // Notifier le parent si les deux valeurs sont remplies
-    if (newData[field].min && newData[field].max) {
-      let displayField = '';
-      let unit = '';
+    // Notifier le parent si au moins une valeur est remplie
+    const hasMinOrMax = newData[field].min || newData[field].max;
+    
+    if (hasMinOrMax) {
+      let mappedField = fieldMapping[field];
+      let criteriaOperator = 'entre';
+      let criteriaValue = { min: null, max: null };
+      let displayValue = '';
       
-      switch(field) {
-        case 'jauge':
-          displayField = 'Jauge';
-          unit = ' places';
-          break;
-        case 'largeur':
-          displayField = 'Largeur';
-          unit = ' m';
-          break;
-        case 'hauteur':
-          displayField = 'Hauteur';
-          unit = ' m';
-          break;
-        case 'profondeur':
-          displayField = 'Profondeur';
-          unit = ' m';
-          break;
+      // Gestion des cas où on n'a qu'une valeur
+      if (newData[field].min && !newData[field].max) {
+        criteriaOperator = 'superieur';
+        criteriaValue = parseFloat(newData[field].min);
+        displayValue = `≥ ${newData[field].min}`;
+      } else if (!newData[field].min && newData[field].max) {
+        criteriaOperator = 'inferieur';
+        criteriaValue = parseFloat(newData[field].max);
+        displayValue = `≤ ${newData[field].max}`;
+      } else if (newData[field].min && newData[field].max) {
+        criteriaValue = {
+          min: parseFloat(newData[field].min),
+          max: parseFloat(newData[field].max)
+        };
+        displayValue = `${newData[field].min} - ${newData[field].max}`;
       }
       
+      // Pour la jauge, on cherchera dans les 3 champs possibles
+      if (field === 'jauge' && Array.isArray(mappedField)) {
+        mappedField = mappedField[0]; // On utilisera le premier champ comme référence
+      }
+      
+      const criteriaId = `salles_${field}`;
       onCriteriaChange({
-        id: `${field}_${Date.now()}`,
-        field: displayField,
-        operator: 'entre',
-        value: `${newData[field].min}${unit} et ${newData[field].max}${unit}`
+        id: criteriaId,
+        field: mappedField,
+        operator: criteriaOperator,
+        value: criteriaValue,
+        label: getFieldLabel(field),
+        displayValue: displayValue + getFieldUnit(field),
+        section: 'salles'
+      });
+    } else {
+      // Si les deux valeurs sont vides, supprimer le critère
+      const criteriaId = `salles_${field}`;
+      onCriteriaChange({
+        id: criteriaId,
+        remove: true
       });
     }
+  };
+
+  // Helper pour obtenir un label lisible pour le champ
+  const getFieldLabel = (field) => {
+    const labels = {
+      jauge: 'Jauge',
+      largeur: 'Largeur de scène',
+      hauteur: 'Hauteur de scène',
+      profondeur: 'Profondeur de scène'
+    };
+    return labels[field] || field;
+  };
+
+  // Helper pour obtenir l'unité du champ
+  const getFieldUnit = (field) => {
+    const units = {
+      jauge: ' places',
+      largeur: ' m',
+      hauteur: ' m',
+      profondeur: ' m'
+    };
+    return units[field] || '';
   };
 
   const renderRangeInput = (field, label, placeholder, unit) => {

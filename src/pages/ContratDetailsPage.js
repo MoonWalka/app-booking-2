@@ -27,7 +27,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   // Use custom hooks to handle data fetching and logic
   const{ 
     contrat, 
-    concert, 
+    date, 
     template, 
     contact,
     programmateur, // Rétrocompatibilité
@@ -49,7 +49,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   // Debug logs pour voir les données récupérées
   console.log('[DEBUG ContratDetailsPage] Données récupérées:', {
     contrat,
-    concert,
+    date,
     template,
     contact,
     programmateur,

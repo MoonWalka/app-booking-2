@@ -82,7 +82,7 @@ const StructureFormEnhanced = () => {
 
   // État pour les associations
   const [contactsAssocies, setContactsAssocies] = useState([]);
-  const [datesAssociees, setDatesAssocies] = useState([]);
+  const [datesAssociees, setDatesAssociees] = useState([]);
   const [contratsAssocies] = useState([]);
   const [lieuxAssocies, setLieuxAssocies] = useState([]);
 
@@ -455,7 +455,7 @@ const StructureFormEnhanced = () => {
         // Supprimer adresseLieu pour éviter la duplication
         signataire,
         contactIds: contactsAssocies.map(p => p.id), // Format harmonisé
-        datesIds: datesAssocies.map(c => c.id),
+        datesIds: datesAssociees.map(c => c.id),
         lieuxIds: lieuxAssocies.map(l => l.id),
         contratsIds: contratsAssocies.map(c => c.id),
         updatedAt: new Date()
@@ -729,7 +729,7 @@ const StructureFormEnhanced = () => {
                 
                 // Si on a des nouveaux concerts à charger
                 const loadNewDates = async () => {
-                  const currentIds = datesAssocies.map(c => c.id);
+                  const currentIds = datesAssociees.map(c => c.id);
                   const idsToLoad = newDateIds.filter(id => !currentIds.includes(id));
                   
                   if (idsToLoad.length > 0) {

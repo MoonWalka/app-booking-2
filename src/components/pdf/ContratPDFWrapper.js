@@ -78,7 +78,7 @@ const createSafeData = (data) => {
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
     template: effectiveTemplate,
-    concert: date || dateData || {},
+    concert: concert || dateData || {},
     contact: contact || contactData || {},  // Nouveau format
     programmateur: programmateur || programmateurData || {},  // Rétrocompatibilité
     artiste: artiste || artisteData || {},

@@ -116,7 +116,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
         setTimeout(() => {
           generatePDFPreview(ContratPDFWrapper, {
             contrat,
-            concert,
+            date,
             template,
             contact: contact || programmateur, // Priorité au contact, fallback programmateur
             programmateur: contact || programmateur, // Rétrocompatibilité
@@ -136,7 +136,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   // Prepare data for PDF generation - utiliser useMemo pour s'assurer que les données sont à jour
   const pdfData = React.useMemo(() => ({
     contrat,
-    concert,
+    date,
     template,
     contact: contact || programmateur, // Priorité au contact, fallback programmateur
     programmateur: contact || programmateur, // Rétrocompatibilité
@@ -169,7 +169,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
     console.log('[DEBUG handleDownload] structure disponible:', structure);
     
     handleDownloadPdf(ContratPDFWrapper, pdfData);
-  }, [concert, template, pdfData, structure, handleDownloadPdf]);
+  }, [date, template, pdfData, structure, handleDownloadPdf]);
 
   // Flag pour éviter les téléchargements multiples
   const [autoDownloadTriggered, setAutoDownloadTriggered] = React.useState(false);
@@ -254,7 +254,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
       {/* Contract Header */}
       <ContratHeader 
         contrat={contrat} 
-        concert={concert}
+        date={date}
         artiste={artiste}
         lieu={lieu}
       />
@@ -263,7 +263,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
       <ContratActions 
         contrat={contrat}
         template={template}
-        concert={concert}
+        date={date}
         isLoading={isActionLoading || isDeleting}
         onPdfViewerToggle={togglePdfViewer}
         onSendContrat={handleSendContrat}
@@ -287,7 +287,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
       {/* Contract information card */}
       <ContratInfoCard 
         contrat={contrat}
-        concert={concert}
+        date={date}
         template={template}
         lieu={lieu}
         artiste={artiste}

@@ -153,7 +153,7 @@ const StructureFormEnhanced = () => {
           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
         });
         const concerts = (await Promise.all(concertPromises)).filter(c => c !== null);
-        setDatesAssocies(concerts);
+        setDatesAssociees(concerts);
       }
 
       // Charger les lieux associés
@@ -742,7 +742,7 @@ const StructureFormEnhanced = () => {
                       );
                       
                       const validDates = newDates.filter(c => c !== null);
-                      setDatesAssocies(prev => [...prev, ...validDates]);
+                      setDatesAssociees(prev => [...prev, ...validDates]);
                     } catch (error) {
                       console.error('Erreur lors du chargement des dates:', error);
                     }
@@ -751,7 +751,7 @@ const StructureFormEnhanced = () => {
                   // Si on a des dates à retirer
                   const idsToRemove = currentIds.filter(id => !newDateIds.includes(id));
                   if (idsToRemove.length > 0) {
-                    setDatesAssocies(prev => prev.filter(c => !idsToRemove.includes(c.id)));
+                    setDatesAssociees(prev => prev.filter(c => !idsToRemove.includes(c.id)));
                   }
                 };
                 

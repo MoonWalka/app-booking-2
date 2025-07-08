@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
-import styles from './OrganizationSelector.module.css';
+import styles from './EntrepriseSelector.module.css';
 
-const OrganizationSelector = ({ className = '', isMobile = false, onDropdownToggle }) => {
+const EntrepriseSelector = ({ className = '', isMobile = false, onDropdownToggle }) => {
   const { currentUser } = useAuth();
   const { 
-    currentOrg, 
-    userOrgs, 
-    switchOrganization, 
+    currentEntreprise, 
+    userEntreprises, 
+    switchEntreprise, 
     loading 
-  } = useOrganization();
+  } = useEntreprise();
 
   const [showDropdown, setShowDropdown] = useState(false);
   
@@ -35,22 +35,22 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
     return 'Utilisateur';
   };
 
-  const handleOrganizationChange = useCallback(async (orgId) => {
-    if (orgId && orgId !== currentOrg?.id) {
-      await switchOrganization(orgId);
+  const handleEntrepriseChange = useCallback(async (entrepriseId) => {
+    if (entrepriseId && entrepriseId !== currentEntreprise?.id) {
+      await switchEntreprise(entrepriseId);
       setShowDropdown(false);
       // Recharger la page pour s'assurer que toutes les données sont mises à jour
       window.location.reload();
     }
-  }, [currentOrg?.id, switchOrganization]);
+  }, [currentEntreprise?.id, switchEntreprise]);
 
-  const handleCreateOrganization = useCallback(() => {
+  const handleCreateEntreprise = useCallback(() => {
     setShowDropdown(false);
     // Rediriger vers la page d'onboarding en mode création
     window.location.href = '/onboarding?action=create';
   }, []);
 
-  const handleJoinOrganization = useCallback(() => {
+  const handleJoinEntreprise = useCallback(() => {
     setShowDropdown(false);
     // Rediriger vers la page d'onboarding en mode rejoindre
     window.location.href = '/onboarding?action=join';
@@ -68,7 +68,7 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
     }
 
     // Cas première connexion : seulement 2 options (créer/rejoindre)
-    const totalItems = !userOrgs || userOrgs.length === 0 ? 2 : userOrgs.length + 3;
+    const totalItems = !userEntreprises || userEntreprises.length === 0 ? 2 : userEntreprises.length + 3;
     
     switch (event.key) {
       case 'Escape':
@@ -92,24 +92,24 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
       case ' ':
         event.preventDefault();
         // Première connexion : seulement créer/rejoindre
-        if (!userOrgs || userOrgs.length === 0) {
+        if (!userEntreprises || userEntreprises.length === 0) {
           if (selectedIndex === 0) {
-            handleCreateOrganization();
+            handleCreateEntreprise();
           } else if (selectedIndex === 1) {
-            handleJoinOrganization();
+            handleJoinEntreprise();
           }
         } else {
-          // Utilisateur avec organisations existantes
-          if (userOrgs && selectedIndex >= 0 && selectedIndex < userOrgs.length) {
-            const selectedOrg = userOrgs[selectedIndex];
-            handleOrganizationChange(selectedOrg.id);
-          } else if (selectedIndex === (userOrgs?.length || 0)) {
-            handleCreateOrganization();
-          } else if (selectedIndex === (userOrgs?.length || 0) + 1) {
-            handleJoinOrganization();
-          } else if (selectedIndex === (userOrgs?.length || 0) + 2) {
+          // Utilisateur avec entreprises existantes
+          if (userEntreprises && selectedIndex >= 0 && selectedIndex < userEntreprises.length) {
+            const selectedEntreprise = userEntreprises[selectedIndex];
+            handleEntrepriseChange(selectedEntreprise.id);
+          } else if (selectedIndex === (userEntreprises?.length || 0)) {
+            handleCreateEntreprise();
+          } else if (selectedIndex === (userEntreprises?.length || 0) + 1) {
+            handleJoinEntreprise();
+          } else if (selectedIndex === (userEntreprises?.length || 0) + 2) {
             setShowDropdown(false);
-            window.location.href = '/parametres/organisations';
+            window.location.href = '/parametres/entreprises';
           }
         }
         break;
@@ -122,7 +122,7 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
       default:
         break;
     }
-  }, [showDropdown, selectedIndex, userOrgs, handleOrganizationChange, handleCreateOrganization, handleJoinOrganization]);
+  }, [showDropdown, selectedIndex, userEntreprises, handleEntrepriseChange, handleCreateEntreprise, handleJoinEntreprise]);
 
   // Fermeture automatique lors d'un clic extérieur
   useEffect(() => {
@@ -144,10 +144,10 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
     };
   }, [showDropdown, handleKeyDown]);
 
-  // Si l'utilisateur n'a pas d'organisations, afficher les options d'inscription
-  if (!userOrgs || userOrgs.length === 0) {
+  // Si l'utilisateur n'a pas d'entreprises, afficher les options d'inscription
+  if (!userEntreprises || userEntreprises.length === 0) {
     return (
-      <div className={`${styles.organizationSelector} ${className}`}>
+      <div className={`${styles.entrepriseSelector} ${className}`}>
         <button
           ref={buttonRef}
           className={styles.userProfileButton}
@@ -156,8 +156,8 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
           onKeyDown={handleKeyDown}
           aria-expanded={showDropdown}
           aria-haspopup="listbox"
-          aria-controls="organization-dropdown"
-          aria-label="Sélecteur d'organisation et profil utilisateur"
+          aria-controls="entreprise-dropdown"
+          aria-label="Sélecteur d'entreprise et profil utilisateur"
           role="combobox"
         >
           <div className={styles.userAvatar}>
@@ -175,7 +175,7 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
 
         {showDropdown && (
           <div 
-            id="organization-dropdown"
+            id="entreprise-dropdown"
             className={styles.dropdownMenu}
             role="listbox"
             aria-label="Options d'inscription"
@@ -197,7 +197,7 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
             <div className={styles.dropdownSection}>
               <div className={styles.welcomeMessage}>
                 <i className="bi bi-info-circle" style={{marginRight: '8px', color: 'var(--tc-color-accent)'}}></i>
-                Bienvenue ! Commencez par créer ou rejoindre une organisation.
+                Bienvenue ! Commencez par créer ou rejoindre une entreprise.
               </div>
             </div>
             
@@ -209,14 +209,14 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
               
               <button
                 className={styles.dropdownItem}
-                onClick={handleCreateOrganization}
+                onClick={handleCreateEntreprise}
                 data-index={0}
                 tabIndex={selectedIndex === 0 ? 0 : -1}
               >
                 <div className={styles.itemContent}>
                   <i className={`bi bi-plus-circle ${styles.itemIcon}`} aria-hidden="true"></i>
                   <div className={styles.itemInfo}>
-                    <div className={styles.itemTitle}>Créer une organisation</div>
+                    <div className={styles.itemTitle}>Créer une entreprise</div>
                     <div className={styles.itemSubtitle}>Configurez votre propre espace de travail</div>
                   </div>
                 </div>
@@ -224,14 +224,14 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
               
               <button
                 className={styles.dropdownItem}
-                onClick={handleJoinOrganization}
+                onClick={handleJoinEntreprise}
                 data-index={1}
                 tabIndex={selectedIndex === 1 ? 0 : -1}
               >
                 <div className={styles.itemContent}>
                   <i className={`bi bi-people ${styles.itemIcon}`} aria-hidden="true"></i>
                   <div className={styles.itemInfo}>
-                    <div className={styles.itemTitle}>Rejoindre une organisation</div>
+                    <div className={styles.itemTitle}>Rejoindre une entreprise</div>
                     <div className={styles.itemSubtitle}>Utilisez un code d'invitation existant</div>
                   </div>
                 </div>
@@ -254,7 +254,7 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
 
   if (loading) {
     return (
-      <div className={`${styles.organizationSelector} ${className}`}>
+      <div className={`${styles.entrepriseSelector} ${className}`}>
         <div className={styles.loadingContainer}>
           <div className={styles.loadingSpinner} role="status" aria-label="Chargement..."></div>
           <span className={styles.loadingText}>Chargement...</span>
@@ -263,9 +263,9 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
     );
   }
 
-  // Interface utilisateur avec dropdown d'organisations
+  // Interface utilisateur avec dropdown d'entreprises
   return (
-    <div className={`${styles.organizationSelector} ${isMobile ? 'mobile' : ''} ${className}`} ref={dropdownRef}>
+    <div className={`${styles.entrepriseSelector} ${isMobile ? 'mobile' : ''} ${className}`} ref={dropdownRef}>
       <button
         ref={buttonRef}
         className={styles.userProfileButton}
@@ -274,8 +274,8 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
         onKeyDown={handleKeyDown}
         aria-expanded={showDropdown}
         aria-haspopup="listbox"
-        aria-controls="organization-dropdown-main"
-        aria-label="Sélecteur d'organisation et profil utilisateur"
+        aria-controls="entreprise-dropdown-main"
+        aria-label="Sélecteur d'entreprise et profil utilisateur"
         role="combobox"
       >
         <div className={styles.userAvatar}>
@@ -287,16 +287,16 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
             {getUserDisplayName()}
           </div>
           
-          <div className={styles.organizationInfo}>
-            {currentOrg ? (
+          <div className={styles.entrepriseInfo}>
+            {currentEntreprise ? (
               <>
                 <i className="bi bi-building" aria-hidden="true"></i>
-                <span>{currentOrg.name}</span>
+                <span>{currentEntreprise.name}</span>
               </>
             ) : (
               <>
                 <i className="bi bi-exclamation-circle" aria-hidden="true"></i>
-                <span>Aucune organisation</span>
+                <span>Aucune entreprise</span>
               </>
             )}
           </div>
@@ -307,10 +307,10 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
 
       {showDropdown && (
         <div 
-          id="organization-dropdown-main"
+          id="entreprise-dropdown-main"
           className={styles.dropdownMenu}
           role="listbox"
-          aria-label="Liste des organisations"
+          aria-label="Liste des entreprises"
         >
           {/* Informations utilisateur */}
           <div className={styles.dropdownHeader}>
@@ -325,32 +325,32 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
           
           <div className={styles.dropdownDivider}></div>
           
-          {/* Liste des organisations existantes */}
+          {/* Liste des entreprises existantes */}
           <div className={styles.dropdownSection}>
-            <div className={styles.dropdownSectionTitle}>Mes organisations</div>
+            <div className={styles.dropdownSectionTitle}>Mes entreprises</div>
             
-            {userOrgs.map((org, index) => (
+            {userEntreprises.map((entreprise, index) => (
               <button
-                key={org.id}
-                className={`${styles.dropdownItem} ${org.id === currentOrg?.id ? styles.dropdownItemActive : ''}`}
-                onClick={() => handleOrganizationChange(org.id)}
+                key={entreprise.id}
+                className={`${styles.dropdownItem} ${entreprise.id === currentEntreprise?.id ? styles.dropdownItemActive : ''}`}
+                onClick={() => handleEntrepriseChange(entreprise.id)}
                 role="option"
-                aria-selected={org.id === currentOrg?.id}
+                aria-selected={entreprise.id === currentEntreprise?.id}
                 data-index={index}
                 tabIndex={selectedIndex === index ? 0 : -1}
               >
                 <div className={styles.itemContent}>
                   <div className={styles.itemInfo}>
                     <div className={styles.itemTitle}>
-                      {org.name}
-                      {org.userRole === 'owner' && ' (Propriétaire)'}
-                      {org.userRole === 'admin' && ' (Admin)'}
+                      {entreprise.name}
+                      {entreprise.userRole === 'owner' && ' (Propriétaire)'}
+                      {entreprise.userRole === 'admin' && ' (Admin)'}
                     </div>
                     <div className={styles.itemSubtitle}>
-                      {org.settings?.timezone || 'Europe/Paris'} • {org.settings?.currency || 'EUR'}
+                      {entreprise.settings?.timezone || 'Europe/Paris'} • {entreprise.settings?.currency || 'EUR'}
                     </div>
                   </div>
-                  {org.id === currentOrg?.id && (
+                  {entreprise.id === currentEntreprise?.id && (
                     <i className={`bi bi-check-circle-fill ${styles.activeIcon}`} aria-hidden="true"></i>
                   )}
                 </div>
@@ -366,25 +366,25 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
             
             <button
               className={styles.dropdownItem}
-              onClick={handleCreateOrganization}
-              data-index={userOrgs.length}
-              tabIndex={selectedIndex === userOrgs.length ? 0 : -1}
+              onClick={handleCreateEntreprise}
+              data-index={userEntreprises.length}
+              tabIndex={selectedIndex === userEntreprises.length ? 0 : -1}
             >
               <div className={styles.itemContent}>
                 <i className={`bi bi-plus-circle ${styles.itemIcon}`} aria-hidden="true"></i>
-                <span>Créer une organisation</span>
+                <span>Créer une entreprise</span>
               </div>
             </button>
             
             <button
               className={styles.dropdownItem}
-              onClick={handleJoinOrganization}
-              data-index={userOrgs.length + 1}
-              tabIndex={selectedIndex === userOrgs.length + 1 ? 0 : -1}
+              onClick={handleJoinEntreprise}
+              data-index={userEntreprises.length + 1}
+              tabIndex={selectedIndex === userEntreprises.length + 1 ? 0 : -1}
             >
               <div className={styles.itemContent}>
                 <i className={`bi bi-people ${styles.itemIcon}`} aria-hidden="true"></i>
-                <span>Rejoindre une organisation</span>
+                <span>Rejoindre une entreprise</span>
               </div>
             </button>
             
@@ -394,14 +394,14 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
               className={styles.dropdownItem}
               onClick={() => {
                 setShowDropdown(false);
-                window.location.href = '/parametres/organisations';
+                window.location.href = '/parametres/entreprises';
               }}
-              data-index={userOrgs.length + 2}
-              tabIndex={selectedIndex === userOrgs.length + 2 ? 0 : -1}
+              data-index={userEntreprises.length + 2}
+              tabIndex={selectedIndex === userEntreprises.length + 2 ? 0 : -1}
             >
               <div className={styles.itemContent}>
                 <i className={`bi bi-gear ${styles.itemIcon}`} aria-hidden="true"></i>
-                <span>Gérer les organisations</span>
+                <span>Gérer les entreprises</span>
               </div>
             </button>
           </div>
@@ -420,4 +420,4 @@ const OrganizationSelector = ({ className = '', isMobile = false, onDropdownTogg
   );
 };
 
-export default OrganizationSelector; 
+export default EntrepriseSelector;

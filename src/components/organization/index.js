@@ -1,2 +1,2 @@
-export { default as OrganizationSelector } from './OrganizationSelector';
+export { default as EntrepriseSelector } from './EntrepriseSelector';
 export { default as OnboardingFlow } from './OnboardingFlow'; 

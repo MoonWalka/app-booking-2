@@ -1,7 +1,7 @@
 /**
- * OrganizationSelector - Composant de sélection d'organisation utilisateur
+ * EntrepriseSelector - Composant de sélection d'entreprise utilisateur
  * Conforme aux standards TourCraft CSS et design system harmonisé
- * Dernière mise à jour: 1 juin 2025
+ * Dernière mise à jour: 8 juillet 2025
  */
 
 /* Import des standards TourCraft */
@@ -12,7 +12,7 @@
  * CONTAINER PRINCIPAL - INTÉGRÉ SIDEBAR
  * ======================================== */
 
-.organizationSelector {
+.entrepriseSelector {
   position: relative;
   width: 100%;
   /* Suppression du padding conteneur pour intégration parfaite */
@@ -103,8 +103,8 @@
   white-space: nowrap;
 }
 
-/* Cache l'info organisation dans le mode menu replié */
-.organizationInfo {
+/* Cache l'info entreprise dans le mode menu replié */
+.entrepriseInfo {
   display: none;
 }
 
@@ -297,7 +297,7 @@
   outline-offset: -2px;
 }
 
-/* Item actif (organisation courante) */
+/* Item actif (entreprise courante) */
 .dropdownItemActive {
   background-color: rgba(255, 255, 255, 0.15);
   color: var(--tc-text-light);

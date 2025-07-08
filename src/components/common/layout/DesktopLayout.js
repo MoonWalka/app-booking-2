@@ -6,7 +6,7 @@ import TabManagerProduction from '@/components/tabs/TabManagerProduction';
 import Button from '@ui/Button';
 import { useAuth } from '@/context/AuthContext.js';
 import { useResponsive } from '@/hooks/common';
-import { OrganizationSelector } from '@/components/organization';
+import { EntrepriseSelector } from '@/components/organization';
 import { useContactModals } from '@/context/ContactModalsContext';
 import ContactModalsContainer from '@/components/contacts/modal/ContactModalsContainer';
 import { APP_NAME } from '@/config.js';
@@ -683,7 +683,7 @@ function DesktopLayout({ children }) {
               />
               <div className={`${sidebarStyles.userMenuPanel} ${sidebarStyles.mobileUserPanel}`}>
                 <div className={sidebarStyles.subMenuHeader}>
-                  <h4>Profil & Organisation</h4>
+                  <h4>Profil & Entreprise</h4>
                   <button 
                     className={sidebarStyles.closeSubMenu}
                     onClick={() => setIsUserMenuOpen(false)}
@@ -703,10 +703,10 @@ function DesktopLayout({ children }) {
                     </div>
                   </div>
                   
-                  {/* Sélecteur d'organisation */}
+                  {/* Sélecteur d'entreprise */}
                   <div className={sidebarStyles.organizationSection}>
-                    <h5>Organisation</h5>
-                    <OrganizationSelector />
+                    <h5>Entreprise</h5>
+                    <EntrepriseSelector />
                   </div>
                 </div>
               </div>
@@ -774,7 +774,7 @@ function DesktopLayout({ children }) {
             />
             <div className={`${sidebarStyles.userMenuPanel} ${isOrgDropdownOpen ? sidebarStyles.expanded : ''}`}>
               <div className={sidebarStyles.subMenuHeader}>
-                <h4>Profil & Organisation</h4>
+                <h4>Profil & Entreprise</h4>
                 <button 
                   className={sidebarStyles.closeSubMenu}
                   onClick={() => setIsUserMenuOpen(false)}
@@ -794,10 +794,10 @@ function DesktopLayout({ children }) {
                   </div>
                 </div>
                 
-                {/* Sélecteur d'organisation */}
+                {/* Sélecteur d'entreprise */}
                 <div className={sidebarStyles.organizationSection}>
-                  <h5>Organisation</h5>
-                  <OrganizationSelector onDropdownToggle={setIsOrgDropdownOpen} />
+                  <h5>Entreprise</h5>
+                  <EntrepriseSelector onDropdownToggle={setIsOrgDropdownOpen} />
                 </div>
               </div>
             </div>

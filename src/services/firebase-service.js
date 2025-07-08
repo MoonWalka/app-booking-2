@@ -257,75 +257,75 @@ export const CURRENT_MODE = IS_LOCAL_MODE ? 'local' : 'production';
 export { IS_LOCAL_MODE };
 
 // =========================
-// MULTI-ORGANISATION
+// MULTI-ENTREPRISE
 // =========================
 
-// Variable pour stocker l'ID de l'organisation courante
-let currentOrganizationId = null;
+// Variable pour stocker l'ID de l'entreprise courante
+let currentEntrepriseId = null;
 
-// Définir l'organisation courante
-export const setCurrentOrganization = (orgId) => {
-  currentOrganizationId = orgId;
+// Définir l'entreprise courante
+export const setCurrentEntreprise = (entrepriseId) => {
+  currentEntrepriseId = entrepriseId;
   if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('currentOrganizationId', orgId);
+    localStorage.setItem('currentEntrepriseId', entrepriseId);
   }
-  console.log('🏢 Organisation courante définie:', orgId);
+  console.log('🏢 Entreprise courante définie:', entrepriseId);
 };
 
-// Obtenir l'organisation courante
-export const getCurrentOrganization = () => {
-  if (!currentOrganizationId && typeof localStorage !== 'undefined') {
-    currentOrganizationId = localStorage.getItem('currentOrganizationId');
+// Obtenir l'entreprise courante
+export const getCurrentEntreprise = () => {
+  if (!currentEntrepriseId && typeof localStorage !== 'undefined') {
+    currentEntrepriseId = localStorage.getItem('currentEntrepriseId');
   }
-  return currentOrganizationId;
+  return currentEntrepriseId;
 };
 
-// Effacer l'organisation courante
-export const clearCurrentOrganization = () => {
-  currentOrganizationId = null;
+// Effacer l'entreprise courante
+export const clearCurrentEntreprise = () => {
+  currentEntrepriseId = null;
   if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('currentOrganizationId');
+    localStorage.removeItem('currentEntrepriseId');
   }
 };
 
-// Obtenir une collection avec contexte organisationnel
-export const getOrgCollection = (collectionName) => {
-  const orgId = getCurrentOrganization();
-  if (!orgId) {
-    console.warn('⚠️ Aucune organisation sélectionnée pour la collection:', collectionName);
-    throw new Error('Aucune organisation sélectionnée');
+// Obtenir une collection avec contexte entreprise
+export const getEntCollection = (collectionName) => {
+  const entrepriseId = getCurrentEntreprise();
+  if (!entrepriseId) {
+    console.warn('⚠️ Aucune entreprise sélectionnée pour la collection:', collectionName);
+    throw new Error('Aucune entreprise sélectionnée');
   }
   
-  const orgCollectionName = `${collectionName}_org_${orgId}`;
-  console.log('📁 Accès à la collection organisationnelle:', orgCollectionName);
+  const entCollectionName = `${collectionName}_ent_${entrepriseId}`;
+  console.log('📁 Accès à la collection entreprise:', entCollectionName);
   
-  return collection(db, orgCollectionName);
+  return collection(db, entCollectionName);
 };
 
-// Obtenir un document avec contexte organisationnel
-export const getOrgDoc = (collectionName, docId) => {
-  const orgId = getCurrentOrganization();
-  if (!orgId) {
-    throw new Error('Aucune organisation sélectionnée');
+// Obtenir un document avec contexte entreprise
+export const getEntDoc = (collectionName, docId) => {
+  const entrepriseId = getCurrentEntreprise();
+  if (!entrepriseId) {
+    throw new Error('Aucune entreprise sélectionnée');
   }
   
-  const orgCollectionName = `${collectionName}_org_${orgId}`;
-  return doc(db, orgCollectionName, docId);
+  const entCollectionName = `${collectionName}_ent_${entrepriseId}`;
+  return doc(db, entCollectionName, docId);
 };
 
-// Créer une nouvelle organisation
-export const createOrganization = async (orgData, userId) => {
-  console.log('🏢 Création d\'une nouvelle organisation:', orgData.name);
+// Créer une nouvelle entreprise
+export const createEntreprise = async (entrepriseData, userId) => {
+  console.log('🏢 Création d\'une nouvelle entreprise:', entrepriseData.name);
   
   try {
-    // Créer l'ID de l'organisation
-    const orgRef = doc(collection(db, 'organizations'));
-    const orgId = orgRef.id;
+    // Créer l'ID de l'entreprise
+    const entrepriseRef = doc(collection(db, 'entreprises'));
+    const entrepriseId = entrepriseRef.id;
     
-    // Préparer les données de l'organisation
-    const organizationData = {
-      ...orgData,
-      slug: orgData.slug || orgData.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+    // Préparer les données de l'entreprise
+    const entrepriseDataToSave = {
+      ...entrepriseData,
+      slug: entrepriseData.slug || entrepriseData.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
       ownerId: userId,
       members: {
         [userId]: {
@@ -337,86 +337,86 @@ export const createOrganization = async (orgData, userId) => {
       settings: {
         timezone: 'Europe/Paris',
         currency: 'EUR',
-        ...orgData.settings
+        ...entrepriseData.settings
       },
       createdAt: serverTimestamp(),
       isActive: true
     };
     
-    // Créer l'organisation
-    await setDoc(orgRef, organizationData);
+    // Créer l'entreprise
+    await setDoc(entrepriseRef, entrepriseDataToSave);
     
-    // Ajouter l'organisation à l'index utilisateur
-    const userOrgRef = doc(db, 'user_organizations', userId);
-    await setDoc(userOrgRef, {
-      organizations: {
-        [orgId]: {
+    // Ajouter l'entreprise à l'index utilisateur
+    const userEntRef = doc(db, 'user_entreprises', userId);
+    await setDoc(userEntRef, {
+      entreprises: {
+        [entrepriseId]: {
           role: 'owner',
           joinedAt: serverTimestamp()
         }
       },
-      defaultOrganization: orgId
+      defaultEntreprise: entrepriseId
     }, { merge: true });
     
-    console.log('✅ Organisation créée avec succès:', orgId);
-    return orgId;
+    console.log('✅ Entreprise créée avec succès:', entrepriseId);
+    return entrepriseId;
   } catch (error) {
-    console.error('❌ Erreur lors de la création de l\'organisation:', error);
+    console.error('❌ Erreur lors de la création de l\'entreprise:', error);
     throw error;
   }
 };
 
-// Obtenir les organisations d'un utilisateur
-export const getUserOrganizations = async (userId) => {
-  console.log('🔍 Récupération des organisations pour l\'utilisateur:', userId);
-  console.log('[DEBUG getUserOrganizations] Recherche dans user_organizations/', userId);
+// Obtenir les entreprises d'un utilisateur
+export const getUserEntreprises = async (userId) => {
+  console.log('🔍 Récupération des entreprises pour l\'utilisateur:', userId);
+  console.log('[DEBUG getUserEntreprises] Recherche dans user_entreprises/', userId);
   
   try {
-    const userOrgDoc = await getDoc(doc(db, 'user_organizations', userId));
-    console.log('[DEBUG getUserOrganizations] Document trouvé ?', userOrgDoc.exists());
+    const userEntDoc = await getDoc(doc(db, 'user_entreprises', userId));
+    console.log('[DEBUG getUserEntreprises] Document trouvé ?', userEntDoc.exists());
     
-    if (!userOrgDoc.exists()) {
-      console.log('ℹ️ Aucune organisation trouvée pour cet utilisateur');
-      console.log('[DEBUG] Le document user_organizations/', userId, 'n\'existe pas dans Firestore');
+    if (!userEntDoc.exists()) {
+      console.log('ℹ️ Aucune entreprise trouvée pour cet utilisateur');
+      console.log('[DEBUG] Le document user_entreprises/', userId, 'n\'existe pas dans Firestore');
       return [];
     }
     
-    const userData = userOrgDoc.data();
-    const orgIds = Object.keys(userData.organizations || {});
+    const userData = userEntDoc.data();
+    const entIds = Object.keys(userData.entreprises || {});
     
-    // Récupérer les détails de chaque organisation
-    const orgPromises = orgIds.map(orgId => 
-      getDoc(doc(db, 'organizations', orgId))
+    // Récupérer les détails de chaque entreprise
+    const entPromises = entIds.map(entId => 
+      getDoc(doc(db, 'entreprises', entId))
     );
     
-    const orgDocs = await Promise.all(orgPromises);
-    const organizations = orgDocs
+    const entDocs = await Promise.all(entPromises);
+    const entreprises = entDocs
       .filter(doc => doc.exists())
       .map(doc => ({ 
         id: doc.id, 
         ...doc.data(),
-        userRole: userData.organizations[doc.id].role 
+        userRole: userData.entreprises[doc.id].role 
       }));
     
-    console.log(`✅ ${organizations.length} organisation(s) trouvée(s)`);
-    return { organizations, defaultOrganization: userData.defaultOrganization };
+    console.log(`✅ ${entreprises.length} entreprise(s) trouvée(s)`);
+    return { entreprises, defaultEntreprise: userData.defaultEntreprise };
   } catch (error) {
-    console.error('❌ Erreur lors de la récupération des organisations:', error);
+    console.error('❌ Erreur lors de la récupération des entreprises:', error);
     throw error;
   }
 };
 
-// Inviter un utilisateur dans une organisation
-export const inviteUserToOrganization = async (orgId, email, role = 'member') => {
-  console.log('📧 Invitation d\'un utilisateur:', email, 'dans l\'organisation:', orgId);
+// Inviter un utilisateur dans une entreprise
+export const inviteUserToEntreprise = async (entrepriseId, email, role = 'member') => {
+  console.log('📧 Invitation d\'un utilisateur:', email, 'dans l\'entreprise:', entrepriseId);
   
   try {
     // Ici, nous créerions normalement une invitation
     // Pour l'instant, nous allons créer une entrée dans une collection d'invitations
-    const invitationRef = doc(collection(db, 'organization_invitations'));
+    const invitationRef = doc(collection(db, 'entreprise_invitations'));
     
     await setDoc(invitationRef, {
-      organizationId: orgId,
+      entrepriseId: entrepriseId,
       email: email,
       role: role,
       status: 'pending',
@@ -432,13 +432,13 @@ export const inviteUserToOrganization = async (orgId, email, role = 'member') =>
   }
 };
 
-// Mettre à jour les paramètres d'une organisation
-export const updateOrganizationSettings = async (orgId, settings) => {
-  console.log('⚙️ Mise à jour des paramètres de l\'organisation:', orgId);
+// Mettre à jour les paramètres d'une entreprise
+export const updateEntrepriseSettings = async (entrepriseId, settings) => {
+  console.log('⚙️ Mise à jour des paramètres de l\'entreprise:', entrepriseId);
   
   try {
-    const orgRef = doc(db, 'organizations', orgId);
-    await updateDoc(orgRef, {
+    const entRef = doc(db, 'entreprises', entrepriseId);
+    await updateDoc(entRef, {
       settings: settings,
       updatedAt: serverTimestamp()
     });
@@ -450,19 +450,19 @@ export const updateOrganizationSettings = async (orgId, settings) => {
   }
 };
 
-// Générer un code d'invitation pour rejoindre une organisation
-export const generateInvitationCode = async (orgId, createdBy, role = 'member', expiresInDays = 7) => {
-  console.log('🎫 Génération d\'un code d\'invitation pour l\'organisation:', orgId);
+// Générer un code d'invitation pour rejoindre une entreprise
+export const generateInvitationCode = async (entrepriseId, createdBy, role = 'member', expiresInDays = 7) => {
+  console.log('🎫 Génération d\'un code d\'invitation pour l\'entreprise:', entrepriseId);
   
   try {
     // Générer un code unique de 8 caractères
     const code = Math.random().toString(36).substring(2, 10).toUpperCase();
     
-    const invitationRef = doc(collection(db, 'organization_invitations'));
+    const invitationRef = doc(collection(db, 'entreprise_invitations'));
     
     await setDoc(invitationRef, {
       code: code,
-      organizationId: orgId,
+      entrepriseId: entrepriseId,
       role: role,
       createdBy: createdBy,
       status: 'active',
@@ -480,14 +480,14 @@ export const generateInvitationCode = async (orgId, createdBy, role = 'member', 
   }
 };
 
-// Rejoindre une organisation avec un code d'invitation
-export const joinOrganization = async (invitationCode, userId) => {
-  console.log('🔗 Tentative de rejoindre une organisation avec le code:', invitationCode);
+// Rejoindre une entreprise avec un code d'invitation
+export const joinEntreprise = async (invitationCode, userId) => {
+  console.log('🔗 Tentative de rejoindre une entreprise avec le code:', invitationCode);
   
   try {
     // Rechercher l'invitation par code
     const invitationsQuery = query(
-      collection(db, 'organization_invitations'),
+      collection(db, 'entreprise_invitations'),
       where('code', '==', invitationCode.toUpperCase()),
       where('status', '==', 'active')
     );
@@ -516,27 +516,27 @@ export const joinOrganization = async (invitationCode, userId) => {
       throw new Error('Ce code d\'invitation a atteint sa limite d\'utilisation');
     }
     
-    const orgId = invitation.organizationId;
+    const entId = invitation.entrepriseId;
     const role = invitation.role;
     
-    // Vérifier que l'organisation existe
-    const orgDoc = await getDoc(doc(db, 'organizations', orgId));
-    if (!orgDoc.exists()) {
-      throw new Error('Organisation introuvable');
+    // Vérifier que l'entreprise existe
+    const entDoc = await getDoc(doc(db, 'entreprises', entId));
+    if (!entDoc.exists()) {
+      throw new Error('Entreprise introuvable');
     }
     
-    // Vérifier que l'utilisateur n'est pas déjà membre de cette organisation
-    const userOrgDoc = await getDoc(doc(db, 'user_organizations', userId));
-    if (userOrgDoc.exists()) {
-      const userData = userOrgDoc.data();
-      if (userData.organizations && userData.organizations[orgId]) {
-        throw new Error('Vous êtes déjà membre de cette organisation');
+    // Vérifier que l'utilisateur n'est pas déjà membre de cette entreprise
+    const userEntDoc = await getDoc(doc(db, 'user_entreprises', userId));
+    if (userEntDoc.exists()) {
+      const userData = userEntDoc.data();
+      if (userData.entreprises && userData.entreprises[entId]) {
+        throw new Error('Vous êtes déjà membre de cette entreprise');
       }
     }
     
-    // Ajouter l'utilisateur à l'organisation
-    const orgRef = doc(db, 'organizations', orgId);
-    await updateDoc(orgRef, {
+    // Ajouter l'utilisateur à l'entreprise
+    const entRef = doc(db, 'entreprises', entId);
+    await updateDoc(entRef, {
       [`members.${userId}`]: {
         role: role,
         joinedAt: serverTimestamp(),
@@ -545,11 +545,11 @@ export const joinOrganization = async (invitationCode, userId) => {
       updatedAt: serverTimestamp()
     });
     
-    // Ajouter l'organisation à l'index utilisateur
-    const userOrgRef = doc(db, 'user_organizations', userId);
-    await setDoc(userOrgRef, {
-      organizations: {
-        [orgId]: {
+    // Ajouter l'entreprise à l'index utilisateur
+    const userEntRef = doc(db, 'user_entreprises', userId);
+    await setDoc(userEntRef, {
+      entreprises: {
+        [entId]: {
           role: role,
           joinedAt: serverTimestamp()
         }
@@ -562,31 +562,31 @@ export const joinOrganization = async (invitationCode, userId) => {
       lastUsedAt: serverTimestamp()
     });
     
-    console.log('✅ Utilisateur ajouté à l\'organisation avec succès');
+    console.log('✅ Utilisateur ajouté à l\'entreprise avec succès');
     return {
-      organizationId: orgId,
-      organizationName: orgDoc.data().name,
+      entrepriseId: entId,
+      entrepriseName: entDoc.data().name,
       role: role
     };
   } catch (error) {
-    console.error('❌ Erreur lors de la tentative de rejoindre l\'organisation:', error);
+    console.error('❌ Erreur lors de la tentative de rejoindre l\'entreprise:', error);
     throw error;
   }
 };
 
-// Obtenir les membres d'une organisation
-export const getOrganizationMembers = async (orgId) => {
-  console.log('👥 Récupération des membres de l\'organisation:', orgId);
+// Obtenir les membres d'une entreprise
+export const getEntrepriseMembers = async (entrepriseId) => {
+  console.log('👥 Récupération des membres de l\'entreprise:', entrepriseId);
   
   try {
-    const orgDoc = await getDoc(doc(db, 'organizations', orgId));
+    const entDoc = await getDoc(doc(db, 'entreprises', entrepriseId));
     
-    if (!orgDoc.exists()) {
-      throw new Error('Organisation introuvable');
+    if (!entDoc.exists()) {
+      throw new Error('Entreprise introuvable');
     }
     
-    const orgData = orgDoc.data();
-    const members = orgData.members || {};
+    const entData = entDoc.data();
+    const members = entData.members || {};
     
     // Pour chaque membre, récupérer les informations utilisateur
     const memberIds = Object.keys(members);
@@ -634,43 +634,43 @@ export const getOrganizationMembers = async (orgId) => {
   }
 };
 
-// Quitter une organisation
-export const leaveOrganization = async (orgId, userId) => {
-  console.log('🚪 Quitter l\'organisation:', orgId);
+// Quitter une entreprise
+export const leaveEntreprise = async (entrepriseId, userId) => {
+  console.log('🚪 Quitter l\'entreprise:', entrepriseId);
   
   try {
-    // Vérifier que l'utilisateur est membre de l'organisation
-    const orgDoc = await getDoc(doc(db, 'organizations', orgId));
-    if (!orgDoc.exists()) {
-      throw new Error('Organisation introuvable');
+    // Vérifier que l'utilisateur est membre de l'entreprise
+    const entDoc = await getDoc(doc(db, 'entreprises', entrepriseId));
+    if (!entDoc.exists()) {
+      throw new Error('Entreprise introuvable');
     }
     
-    const orgData = orgDoc.data();
-    if (!orgData.members || !orgData.members[userId]) {
-      throw new Error('Vous n\'êtes pas membre de cette organisation');
+    const entData = entDoc.data();
+    if (!entData.members || !entData.members[userId]) {
+      throw new Error('Vous n\'êtes pas membre de cette entreprise');
     }
     
-    // Empêcher le propriétaire de quitter son organisation
-    if (orgData.ownerId === userId) {
-      throw new Error('Le propriétaire ne peut pas quitter son organisation. Transférez d\'abord la propriété ou supprimez l\'organisation.');
+    // Empêcher le propriétaire de quitter son entreprise
+    if (entData.ownerId === userId) {
+      throw new Error('Le propriétaire ne peut pas quitter son entreprise. Transférez d\'abord la propriété ou supprimez l\'entreprise.');
     }
     
-    // Retirer l'utilisateur de l'organisation
-    const orgRef = doc(db, 'organizations', orgId);
-    await updateDoc(orgRef, {
+    // Retirer l'utilisateur de l'entreprise
+    const entRef = doc(db, 'entreprises', entrepriseId);
+    await updateDoc(entRef, {
       [`members.${userId}`]: deleteField(),
       updatedAt: serverTimestamp()
     });
     
-    // Retirer l'organisation de l'index utilisateur
-    const userOrgRef = doc(db, 'user_organizations', userId);
-    await updateDoc(userOrgRef, {
-      [`organizations.${orgId}`]: deleteField()
+    // Retirer l'entreprise de l'index utilisateur
+    const userEntRef = doc(db, 'user_entreprises', userId);
+    await updateDoc(userEntRef, {
+      [`entreprises.${entrepriseId}`]: deleteField()
     });
     
-    console.log('✅ Organisation quittée avec succès');
+    console.log('✅ Entreprise quittée avec succès');
   } catch (error) {
-    console.error('❌ Erreur lors de la tentative de quitter l\'organisation:', error);
+    console.error('❌ Erreur lors de la tentative de quitter l\'entreprise:', error);
     throw error;
   }
 };

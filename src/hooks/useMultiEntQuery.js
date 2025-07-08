@@ -13,16 +13,16 @@ import {
   doc
 } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
- * Hook pour les requêtes Firestore avec contexte organisationnel
- * @param {string} collectionName - Nom de la collection (sans le préfixe org)
+ * Hook pour les requêtes Firestore avec contexte entreprise
+ * @param {string} collectionName - Nom de la collection (sans le préfixe ent)
  * @param {Object} options - Options de requête
  * @returns {Object} - { data, loading, error, refetch }
  */
-export const useMultiOrgQuery = (collectionName, options = {}) => {
-  const { currentOrg } = useOrganization();
+export const useMultiEntQuery = (collectionName, options = {}) => {
+  const { currentEntreprise } = useEntreprise();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,8 +36,8 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
   } = options;
 
   const fetchData = useCallback(async () => {
-    if (!currentOrg) {
-      console.log('⚠️ Pas d\'organisation sélectionnée, utilisation des données globales');
+    if (!currentEntreprise) {
+      console.log('⚠️ Pas d\'entreprise sélectionnée, utilisation des données globales');
       
       try {
         setLoading(true);
@@ -92,33 +92,33 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
       setLoading(true);
       setError(null);
 
-      // 1. Tentative avec collection organisationnelle
-      const orgCollectionName = `${collectionName}_org_${currentOrg.id}`;
-      console.log(`📁 Tentative hook multi-org: ${orgCollectionName}`);
+      // 1. Tentative avec collection entreprise
+      const entCollectionName = `${collectionName}_ent_${currentEntreprise.id}`;
+      console.log(`📁 Tentative hook multi-ent: ${entCollectionName}`);
 
-      const orgCollection = collection(db, orgCollectionName);
-      let orgQuery = query(orgCollection);
+      const entCollection = collection(db, entCollectionName);
+      let entQuery = query(entCollection);
 
       // Appliquer les filtres
       filters.forEach(filter => {
         if (filter.field && filter.operator && filter.value !== undefined) {
-          orgQuery = query(orgQuery, where(filter.field, filter.operator, filter.value));
+          entQuery = query(entQuery, where(filter.field, filter.operator, filter.value));
         }
       });
 
       // Appliquer le tri
       if (orderByField) {
-        orgQuery = query(orgQuery, orderBy(orderByField, orderDirection));
+        entQuery = query(entQuery, orderBy(orderByField, orderDirection));
       }
 
       // Appliquer la limite
       if (limitCount) {
-        orgQuery = query(orgQuery, limit(limitCount));
+        entQuery = query(entQuery, limit(limitCount));
       }
 
-      // Tester d'abord si la collection organisationnelle existe et a des données
+      // Tester d'abord si la collection entreprise existe et a des données
       const testSnapshot = await new Promise((resolve, reject) => {
-        const unsubscribe = onSnapshot(orgQuery, 
+        const unsubscribe = onSnapshot(entQuery, 
           (snapshot) => {
             unsubscribe(); // Arrêter l'écoute test
             resolve(snapshot);
@@ -131,39 +131,39 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
       });
 
       if (testSnapshot.docs.length > 0) {
-        console.log(`✅ Collection organisationnelle trouvée: ${testSnapshot.docs.length} éléments`);
+        console.log(`✅ Collection entreprise trouvée: ${testSnapshot.docs.length} éléments`);
         
-        // Utiliser la collection organisationnelle
-        onSnapshot(orgQuery, 
+        // Utiliser la collection entreprise
+        onSnapshot(entQuery, 
           (snapshot) => {
             const results = snapshot.docs.map(doc => ({
               id: doc.id,
               ...doc.data(),
-              _source: 'organizational'
+              _source: 'entreprise'
             }));
             setData(results);
             setLoading(false);
           },
           (err) => {
-            console.error('❌ Erreur écoute organisationnelle:', err);
+            console.error('❌ Erreur écoute entreprise:', err);
             setError(err.message);
             setLoading(false);
           }
         );
       } else {
-        throw new Error('Collection organisationnelle vide');
+        throw new Error('Collection entreprise vide');
       }
 
-    } catch (orgError) {
+    } catch (entError) {
       console.log(`🔄 Fallback vers collection standard: ${collectionName}`);
       
       try {
-        // 2. Fallback vers collection standard avec filtre organizationId
+        // 2. Fallback vers collection standard avec filtre entrepriseId
         const standardCollection = collection(db, collectionName);
         let fallbackQuery = query(standardCollection);
 
-        // Ajouter le filtre organizationId
-        fallbackQuery = query(fallbackQuery, where('organizationId', '==', currentOrg.id));
+        // Ajouter le filtre entrepriseId
+        fallbackQuery = query(fallbackQuery, where('entrepriseId', '==', currentEntreprise.id));
 
         // Appliquer les autres filtres
         filters.forEach(filter => {
@@ -182,7 +182,7 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
           fallbackQuery = query(fallbackQuery, limit(limitCount));
         }
 
-        // Tester avec filtre organizationId
+        // Tester avec filtre entrepriseId
         const testFilteredSnapshot = await new Promise((resolve, reject) => {
           const unsubscribe = onSnapshot(fallbackQuery, 
             (snapshot) => {
@@ -197,7 +197,7 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
         });
 
         if (testFilteredSnapshot.docs.length > 0) {
-          console.log(`✅ Collection standard avec filtre org: ${testFilteredSnapshot.docs.length} éléments`);
+          console.log(`✅ Collection standard avec filtre ent: ${testFilteredSnapshot.docs.length} éléments`);
           
           onSnapshot(fallbackQuery, 
             (snapshot) => {
@@ -226,7 +226,7 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
         const legacyCollection = collection(db, collectionName);
         let legacyQuery = query(legacyCollection);
 
-        // Appliquer seulement les filtres utilisateur (pas organizationId)
+        // Appliquer seulement les filtres utilisateur (pas entrepriseId)
         filters.forEach(filter => {
           if (filter.field && filter.operator && filter.value !== undefined) {
             legacyQuery = query(legacyQuery, where(filter.field, filter.operator, filter.value));
@@ -263,7 +263,7 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
         );
       }
     }
-  }, [currentOrg, collectionName, filters, orderByField, orderDirection, limitCount]);
+  }, [currentEntreprise, collectionName, filters, orderByField, orderDirection, limitCount]);
 
   // Écouter les changements en temps réel si demandé
   useEffect(() => {
@@ -274,9 +274,9 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
   const buildConstraints = useCallback(() => {
     const constraints = [];
     
-    // Ajouter le filtre organisation si disponible
-    if (currentOrg) {
-      constraints.push(where('organizationId', '==', currentOrg.id));
+    // Ajouter le filtre entreprise si disponible
+    if (currentEntreprise) {
+      constraints.push(where('entrepriseId', '==', currentEntreprise.id));
     }
     
     // Ajouter les filtres personnalisés
@@ -297,7 +297,7 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
     }
     
     return constraints;
-  }, [currentOrg, filters, orderByField, orderDirection, limitCount]);
+  }, [currentEntreprise, filters, orderByField, orderDirection, limitCount]);
 
   return {
     data,
@@ -309,10 +309,10 @@ export const useMultiOrgQuery = (collectionName, options = {}) => {
 };
 
 /**
- * Hook pour obtenir un document unique avec contexte organisationnel
+ * Hook pour obtenir un document unique avec contexte entreprise
  */
-export const useMultiOrgDocument = (collectionName, documentId) => {
-  const { currentOrg } = useOrganization();
+export const useMultiEntDocument = (collectionName, documentId) => {
+  const { currentEntreprise } = useEntreprise();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -353,26 +353,26 @@ export const useMultiOrgDocument = (collectionName, documentId) => {
 };
 
 /**
- * Hook pour les mutations avec contexte organisationnel
+ * Hook pour les mutations avec contexte entreprise
  */
-export const useMultiOrgMutation = (collectionName) => {
-  const { currentOrg } = useOrganization();
+export const useMultiEntMutation = (collectionName) => {
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const create = useCallback(async (data) => {
-    if (!currentOrg) {
-      throw new Error('Aucune organisation sélectionnée');
+    if (!currentEntreprise) {
+      throw new Error('Aucune entreprise sélectionnée');
     }
 
     setLoading(true);
     setError(null);
 
     try {
-      const orgCollection = collection(db, collectionName);
-      const docRef = await addDoc(orgCollection, {
+      const entCollection = collection(db, collectionName);
+      const docRef = await addDoc(entCollection, {
         ...data,
-        organizationId: currentOrg.id,
+        entrepriseId: currentEntreprise.id,
         createdAt: new Date(),
         updatedAt: new Date()
       });
@@ -388,8 +388,8 @@ export const useMultiOrgMutation = (collectionName) => {
   }, [currentOrg, collectionName]);
 
   const update = useCallback(async (documentId, data) => {
-    if (!currentOrg) {
-      throw new Error('Aucune organisation sélectionnée');
+    if (!currentEntreprise) {
+      throw new Error('Aucune entreprise sélectionnée');
     }
 
     setLoading(true);
@@ -400,7 +400,7 @@ export const useMultiOrgMutation = (collectionName) => {
       await updateDoc(docRef, {
         ...data,
         updatedAt: new Date(),
-        organizationId: currentOrg.id
+        entrepriseId: currentEntreprise.id
       });
     } catch (err) {
       console.error('❌ Erreur lors de la mise à jour:', err);
@@ -412,8 +412,8 @@ export const useMultiOrgMutation = (collectionName) => {
   }, [currentOrg, collectionName]);
 
   const remove = useCallback(async (documentId) => {
-    if (!currentOrg) {
-      throw new Error('Aucune organisation sélectionnée');
+    if (!currentEntreprise) {
+      throw new Error('Aucune entreprise sélectionnée');
     }
 
     setLoading(true);

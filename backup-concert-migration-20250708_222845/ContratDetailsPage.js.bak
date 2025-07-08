@@ -62,7 +62,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   });
   
   // Log spécifique quand toutes les données sont chargées
-  if (contrat && date concert &&concert && template && !loading) {
+  if (contrat && concert && template && !loading) {
     console.log('[DEBUG ContratDetailsPage] TOUTES LES DONNÉES CHARGÉES:', {
       contact,
       lieu,
@@ -78,7 +78,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
     handleMarkAsSigned, 
     actionError,
     isActionLoading
-  } = useContratActions(contratId, contrat, setContrat, date, contact || programmateur, refresh);
+  } = useContratActions(contratId, contrat, setContrat, concert, contact || programmateur, refresh);
 
   // Hook for PDF preview functionality
   const {
@@ -131,7 +131,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
       // Nettoyer l'URL après traitement
       navigate(`/contrats/${contratId}`, { replace: true });
     }
-  }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, date, template, contact, programmateur, lieu, artiste, entreprise, structure]);
+  }, [searchParams, loading, contrat, showPdfViewer, contratId, navigate, togglePdfViewer, setPreviewType, generatePDFPreview, concert, template, contact, programmateur, lieu, artiste, entreprise, structure]);
 
   // Prepare data for PDF generation - utiliser useMemo pour s'assurer que les données sont à jour
   const pdfData = React.useMemo(() => ({
@@ -144,7 +144,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
     artiste,
     entreprise,
     structure
-  }), [contrat, date, template, contact, programmateur, lieu, artiste, entreprise, structure]);
+  }), [contrat, concert, template, contact, programmateur, lieu, artiste, entreprise, structure]);
 
   // Handle navigation back to contracts list
   const handleNavigateBack = () => {
@@ -159,7 +159,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   // Handle downloading PDF with Puppeteer
   const handleDownload = React.useCallback(() => {
     // Vérifier que les données essentielles sont chargées
-    if (!date || !template) {
+    if (!concert || !template) {
       alert('Les données du contrat sont encore en cours de chargement. Veuillez réessayer dans un instant.');
       return;
     }
@@ -177,7 +177,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   // Gérer le téléchargement automatique pour la route /download
   useEffect(() => {
     // Déclencher le téléchargement automatique si autoDownload est activé et pas encore déclenché
-    if (autoDownload && !loading && contrat && date concert &&concert && template && !isDownloading && !autoDownloadTriggered) {
+    if (autoDownload && !loading && contrat && concert && template && !isDownloading && !autoDownloadTriggered) {
       console.log('[ContratDetailsPage] Déclenchement du téléchargement automatique');
       
       // Marquer comme déclenché pour éviter les doublons
@@ -197,7 +197,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
       
       return () => clearTimeout(timer);
     }
-  }, [autoDownload, loading, contrat, date, template, contact, lieu, artiste, isDownloading, autoDownloadTriggered, handleDownload]);
+  }, [autoDownload, loading, contrat, concert, template, contact, lieu, artiste, isDownloading, autoDownloadTriggered, handleDownload]);
 
   // Loading state
   if (loading) {
@@ -330,7 +330,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
             <Modal.Title>Confirmer la suppression</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Êtes-vous sûr de vouloir supprimer le contrat pour "{contrat.nom || date?.titre || 'ce contrat'}" ?</p>
+            <p>Êtes-vous sûr de vouloir supprimer le contrat pour "{contrat.nom || concert?.titre || 'ce contrat'}" ?</p>
             <p className="text-danger">Cette action est irréversible.</p>
           </Modal.Body>
           <Modal.Footer>

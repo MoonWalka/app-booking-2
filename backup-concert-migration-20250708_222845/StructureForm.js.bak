@@ -82,7 +82,7 @@ const StructureFormEnhanced = () => {
 
   // État pour les associations
   const [contactsAssocies, setContactsAssocies] = useState([]);
-  const [datesAssociees, setDatesAssocies] = useState([]);
+  const [concertsAssocies, setDatesAssocies] = useState([]);
   const [contratsAssocies] = useState([]);
   const [lieuxAssocies, setLieuxAssocies] = useState([]);
 
@@ -146,9 +146,9 @@ const StructureFormEnhanced = () => {
         setContactsAssocies(contacts);
       }
 
-      // Charger les dates associés
-      if (structure.datesIds?.length > 0) {
-        const concertPromises = structure.datesIds.map(async (id) => {
+      // Charger les concerts associés
+      if (structure.concertsIds?.length > 0) {
+        const concertPromises = structure.concertsIds.map(async (id) => {
           const docSnap = await getDoc(doc(db, 'dates', id));
           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
         });
@@ -455,7 +455,7 @@ const StructureFormEnhanced = () => {
         // Supprimer adresseLieu pour éviter la duplication
         signataire,
         contactIds: contactsAssocies.map(p => p.id), // Format harmonisé
-        datesIds: datesAssocies.map(c => c.id),
+        concertsIds: concertsAssocies.map(c => c.id),
         lieuxIds: lieuxAssocies.map(l => l.id),
         contratsIds: contratsAssocies.map(c => c.id),
         updatedAt: new Date()
@@ -722,14 +722,14 @@ const StructureFormEnhanced = () => {
 
             {/* Section Dates associés */}
             <StructureDatesManagementSection
-              dateIds={datesAssociees.map(c => c.id)}
+              dateIds={concertsAssocies.map(c => c.id)}
               onChange={(dateIds) => {
-                // Gérer la mise à jour des dates
+                // Gérer la mise à jour des concerts
                 const newDateIds = Array.isArray(dateIds) ? dateIds : [dateIds].filter(Boolean);
                 
                 // Si on a des nouveaux concerts à charger
                 const loadNewDates = async () => {
-                  const currentIds = datesAssocies.map(c => c.id);
+                  const currentIds = concertsAssocies.map(c => c.id);
                   const idsToLoad = newDateIds.filter(id => !currentIds.includes(id));
                   
                   if (idsToLoad.length > 0) {
@@ -744,11 +744,11 @@ const StructureFormEnhanced = () => {
                       const validDates = newDates.filter(c => c !== null);
                       setDatesAssocies(prev => [...prev, ...validDates]);
                     } catch (error) {
-                      console.error('Erreur lors du chargement des dates:', error);
+                      console.error('Erreur lors du chargement des concerts:', error);
                     }
                   }
                   
-                  // Si on a des dates à retirer
+                  // Si on a des concerts à retirer
                   const idsToRemove = currentIds.filter(id => !newDateIds.includes(id));
                   if (idsToRemove.length > 0) {
                     setDatesAssocies(prev => prev.filter(c => !idsToRemove.includes(c.id)));

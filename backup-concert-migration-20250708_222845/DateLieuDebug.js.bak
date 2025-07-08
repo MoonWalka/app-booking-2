@@ -35,7 +35,7 @@ function DateLieuDebug() {
         console.log('🔍 DEBUG CONCERT-LIEU pour ID:', id);
 
         // 1. Charger directement depuis Firebase
-        const dateDoc = await getDoc(doc(db, 'dates', id));
+        const dateDoc = await getDoc(doc(db, 'concerts', id));
         let firebaseData = null;
         let lieuData = null;
 
@@ -85,7 +85,7 @@ function DateLieuDebug() {
     };
 
     loadDebugData();
-  }, [id, hookResult?.date?.id, hookResult]); // Re-run si les données du hook changent
+  }, [id, hookResult?.concert?.id, hookResult]); // Re-run si les données du hook changent
 
   if (debugData.loading || hookResult?.loading) {
     return <div className={styles.debugContainer}>Chargement du debug...</div>;
@@ -166,12 +166,12 @@ function DateLieuDebug() {
         <h4>3. Analyse du problème</h4>
         <ul>
           {/* Vérifier si le date a un lieuId */}
-          {!debugData.firebaseData?.date?.lieuId && (
+          {!debugData.firebaseData?.concert?.lieuId && (
             <li className={styles.error}>❌ Le date n'a pas de lieuId défini dans Firebase</li>
           )}
           
           {/* Vérifier si le lieu existe */}
-          {debugData.firebaseData?.date?.lieuId && !debugData.firebaseData?.lieu && (
+          {debugData.firebaseData?.concert?.lieuId && !debugData.firebaseData?.lieu && (
             <li className={styles.error}>❌ Le lieu référencé n'existe pas dans Firebase</li>
           )}
           
@@ -181,12 +181,12 @@ function DateLieuDebug() {
           )}
           
           {/* Vérifier la cohérence des entrepriseId */}
-          {debugData.firebaseData?.date?.entrepriseId !== debugData.firebaseData?.lieu?.entrepriseId && (
+          {debugData.firebaseData?.concert?.entrepriseId !== debugData.firebaseData?.lieu?.entrepriseId && (
             <li className={styles.warning}>⚠️ Les entrepriseId ne correspondent pas</li>
           )}
           
           {/* Vérifier si le hook charge le lieu */}
-          {debugData.firebaseData?.date?.lieuId && !hookResult?.lieu && (
+          {debugData.firebaseData?.concert?.lieuId && !hookResult?.lieu && (
             <li className={styles.error}>❌ Le hook ne charge pas le lieu malgré un lieuId valide</li>
           )}
           

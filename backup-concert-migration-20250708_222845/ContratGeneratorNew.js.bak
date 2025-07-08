@@ -219,7 +219,7 @@ const ContratGeneratorNew = ({
       if (!dateId) return;
       
       try {
-        console.log('[ContratGeneratorNew] Recherche d\'un contrat existant pour la date:', dateId);
+        console.log('[ContratGeneratorNew] Recherche d\'un contrat existant pour le concert:', dateId);
         const existingContrat = await contratService.getContratByDate(dateId);
         
         if (existingContrat) {
@@ -258,7 +258,7 @@ const ContratGeneratorNew = ({
       try {
         console.log('[ContratGeneratorNew] Recherche devis pour concert:', dateId);
         
-        // Chercher les devis pour cette date
+        // Chercher les devis pour ce concert
         const devisList = await devisService.getDevisByDate(dateId);
         
         if (devisList && devisList.length > 0) {
@@ -267,7 +267,7 @@ const ContratGeneratorNew = ({
           console.log('[ContratGeneratorNew] Devis trouvé:', latestDevis);
           setDevisData(latestDevis);
         } else {
-          console.log('[ContratGeneratorNew] Aucun devis trouvé pour cette date');
+          console.log('[ContratGeneratorNew] Aucun devis trouvé pour ce concert');
         }
       } catch (error) {
         console.error('[ContratGeneratorNew] Erreur chargement devis:', error);
@@ -306,8 +306,8 @@ const ContratGeneratorNew = ({
         },
         negociation: {
           ...prev.negociation,
-          montantNet: preContratData.montantHT || date?.montant || 0,
-          montantBrut: preContratData.montantHT || date?.montant || 0,
+          montantNet: preContratData.montantHT || concert?.montant || 0,
+          montantBrut: preContratData.montantHT || concert?.montant || 0,
           tauxTva: 0, // Sera calculé depuis les prestations
           montantTva: 0, // Sera calculé après
           montantTTC: 0, // Sera calculé après
@@ -337,14 +337,14 @@ const ContratGeneratorNew = ({
       }));
     }
 
-    if (date) {
+    if (concert) {
       setContratData(prev => ({
         ...prev,
         representations: {
           ...prev.representations,
-          debut: date.dateDebut || date.date || '',
-          fin: date.dateFin || date.date || '',
-          salle: lieu?.nom || date.libelle || date.lieuNom || ''
+          debut: concert.dateDebut || concert.date || '',
+          fin: concert.dateFin || concert.date || '',
+          salle: lieu?.nom || concert.libelle || concert.lieuNom || ''
         }
       }));
     }
@@ -378,7 +378,7 @@ const ContratGeneratorNew = ({
     } else {
       console.log('[ContratGeneratorNew] Aucune donnée entreprise disponible pour le producteur');
     }
-  }, [structure, date, artiste, lieu, preContratData, entrepriseData]);
+  }, [structure, concert, artiste, lieu, preContratData, entrepriseData]);
 
   // Initialiser les champs émetteur et destinataire
   useEffect(() => {
@@ -566,7 +566,7 @@ const ContratGeneratorNew = ({
       
       console.log('[ContratGeneratorNew] Contrat sauvegardé avec succès:', savedContrat);
 
-      // Mettre à jour le statut de la date
+      // Mettre à jour le statut du concert
       await contratService.updateContratStatus(dateId, 'draft');
 
       setAlertType('success');
@@ -1820,7 +1820,7 @@ const ContratGeneratorNew = ({
               {/* Section Dossier */}
               {activeTab === 'dossier' && (
                 <>
-                  <h6>{date?.titre || 'Sans titre'}</h6>
+                  <h6>{concert?.titre || 'Sans titre'}</h6>
                   <Form.Control
                     type="text"
                     placeholder="Recherche"
@@ -1912,7 +1912,7 @@ const ContratGeneratorNew = ({
                   ) : (
                     <Alert variant="warning" className="small p-2">
                       <i className="bi bi-exclamation-triangle me-2"></i>
-                      Aucun devis créé pour cette date
+                      Aucun devis créé pour ce concert
                     </Alert>
                   )}
                 </>

@@ -39,7 +39,7 @@ function StructureView({ id: propId }) {
   const artistes = relatedData?.artistes || [];
   
   const contactsList = contacts || [];
-  const concertsList = dates || [];
+  const concertsList = concerts || [];
   const lieuxList = lieux || [];
   const artistesList = artistes || [];
 

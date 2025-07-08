@@ -6,13 +6,13 @@ import { formatDateFr } from '@/utils/dateUtils';
 /**
  * Component displaying contract and date information
  */
-const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact }) => {
+const ContratInfoCard = ({ contrat, date, template, lieu, artiste, contact }) => {
   // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
   const programmateur = contact;
   // Logs de debug pour voir les données reçues
   console.log('[DEBUG ContratInfoCard] Props reçues:', {
     contrat,
-    concert,
+    date,
     template,
     lieu,
     artiste,
@@ -21,27 +21,27 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact })
   });
 
   // Obtenir le montant formaté
-  const montant = concert?.montant 
-    ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
+  const montant = date?.montant 
+    ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(date.montant)
     : 'Non spécifié';
 
-  console.log('[DEBUG ContratInfoCard] Montant calculé:', montant, 'concert?.montant:', concert?.montant);
+  console.log('[DEBUG ContratInfoCard] Montant calculé:', montant, 'date?.montant:', date?.montant);
 
   // Formatage de la date et heure du spectacle
-  const dateSpectacle = concert?.date && concert?.heure
-    ? `${formatDateFr(concert.date)} à ${concert.heure}`
-    : concert?.date 
-    ? formatDateFr(concert.date)
+  const dateSpectacle = date?.date && date?.heure
+    ? `${formatDateFr(date.date)} à ${date.heure}`
+    : date?.date 
+    ? formatDateFr(date.date)
     : 'Non spécifiée';
 
-  console.log('[DEBUG ContratInfoCard] Date spectacle calculée:', dateSpectacle, 'concert?.date:', concert?.concert, 'concert?.heure:', concert?.heure);
+  console.log('[DEBUG ContratInfoCard] Date spectacle calculée:', dateSpectacle, 'date?.date:', date?.date, 'date?.heure:', date?.heure);
 
   // Lieu complet avec ville si disponible
   const lieuComplet = lieu?.nom && lieu?.ville
     ? `${lieu.nom} - ${lieu.ville}`
-    : lieu?.nom || concert?.lieuNom || 'Non spécifié';
+    : lieu?.nom || date?.lieuNom || 'Non spécifié';
 
-  console.log('[DEBUG ContratInfoCard] Lieu complet calculé:', lieuComplet, 'lieu:', lieu, 'concert?.lieuNom:', concert?.lieuNom);
+  console.log('[DEBUG ContratInfoCard] Lieu complet calculé:', lieuComplet, 'lieu:', lieu, 'date?.lieuNom:', date?.lieuNom);
 
   // Badge de statut intégré
   const getStatusBadge = () => {
@@ -79,9 +79,9 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact })
 
   // Formatage du contact avec nom complet et structure
   const formatContact = () => {
-    console.log('[DEBUG ContratInfoCard] formatContact - contact:', programmateur, 'concert?.programmateurNom:', concert?.programmateurNom);
+    console.log('[DEBUG ContratInfoCard] formatContact - contact:', programmateur, 'date?.programmateurNom:', date?.programmateurNom);
     
-    if (!programmateur && !concert?.programmateurNom) {
+    if (!programmateur && !date?.programmateurNom) {
       return 'Non spécifié';
     }
 
@@ -106,8 +106,8 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact })
       }
     }
 
-    // Fallback sur les données du concert
-    return concert.programmateurNom;
+    // Fallback sur les données de la date
+    return date.programmateurNom;
   };
 
   return (
@@ -124,7 +124,7 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact })
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Date</div>
-            <div className={styles.infoValue}>{concert?.titre || 'Date sans titre'}</div>
+            <div className={styles.infoValue}>{date?.titre || 'Date sans titre'}</div>
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Date du spectacle</div>
@@ -136,7 +136,7 @@ const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact })
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Artiste</div>
-            <div className={styles.infoValue}>{artiste?.nom || concert?.artisteNom || 'Non spécifié'}</div>
+            <div className={styles.infoValue}>{artiste?.nom || date?.artisteNom || 'Non spécifié'}</div>
           </div>
           <div className={styles.infoItem}>
             <div className={styles.infoLabel}>Contact</div>

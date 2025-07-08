@@ -42,8 +42,8 @@ async function debugPersonnesList() {
     console.log('✅ Connecté avec succès');
 
     // Récupérer l'organisation ID (Sophie Madet)
-    const organizationId = 'rWJomQFxoWYJLJNJMmJl';
-    console.log('📊 Organisation ID:', organizationId);
+    const entrepriseId = 'rWJomQFxoWYJLJNJMmJl';
+    console.log('📊 Organisation ID:', entrepriseId);
 
     // 1. Compter toutes les personnes
     const allPersonnesQuery = query(collection(db, 'personnes'));
@@ -53,10 +53,10 @@ async function debugPersonnesList() {
     // 2. Compter les personnes de l'organisation
     const orgPersonnesQuery = query(
       collection(db, 'personnes'),
-      where('organizationId', '==', organizationId)
+      where('entrepriseId', '==', entrepriseId)
     );
     const orgPersonnesSnapshot = await getDocs(orgPersonnesQuery);
-    console.log(`📋 Nombre de personnes pour l'organisation ${organizationId}: ${orgPersonnesSnapshot.size}`);
+    console.log(`📋 Nombre de personnes pour l'organisation ${entrepriseId}: ${orgPersonnesSnapshot.size}`);
 
     // 3. Afficher les détails des personnes de l'organisation
     if (orgPersonnesSnapshot.size > 0) {
@@ -65,7 +65,7 @@ async function debugPersonnesList() {
         const data = doc.data();
         console.log(`\n${index + 1}. ${data.prenom || ''} ${data.nom || ''} (ID: ${doc.id})`);
         console.log(`   - Email: ${data.email || 'N/A'}`);
-        console.log(`   - Organisation ID: ${data.organizationId}`);
+        console.log(`   - Organisation ID: ${data.entrepriseId}`);
         console.log(`   - Personne libre: ${data.isPersonneLibre ? 'Oui' : 'Non'}`);
         console.log(`   - Tags: ${data.tags?.join(', ') || 'Aucun'}`);
       });
@@ -76,22 +76,22 @@ async function debugPersonnesList() {
     const orgIds = new Set();
     allPersonnesSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.organizationId) {
-        orgIds.add(data.organizationId);
+      if (data.entrepriseId) {
+        orgIds.add(data.entrepriseId);
       }
     });
     console.log(`Nombre d'organisations différentes: ${orgIds.size}`);
     console.log('IDs:', Array.from(orgIds));
 
-    // 5. Vérifier si des personnes n'ont pas d'organizationId
+    // 5. Vérifier si des personnes n'ont pas d'entrepriseId
     let countNoOrg = 0;
     allPersonnesSnapshot.forEach(doc => {
       const data = doc.data();
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         countNoOrg++;
       }
     });
-    console.log(`\n⚠️  Personnes sans organizationId: ${countNoOrg}`);
+    console.log(`\n⚠️  Personnes sans entrepriseId: ${countNoOrg}`);
 
   } catch (error) {
     console.error('❌ Erreur:', error);

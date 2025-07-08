@@ -38,7 +38,7 @@
 - **Multi-entreprises** : Possibilité de gérer plusieurs entreprises
 - **Entreprise principale** : Désignation d'une entreprise principale
 - **Synchronisation** : Compatibilité avec l'ancien système
-- **Stockage** : `collaborationConfig/{organizationId}`
+- **Stockage** : `collaborationConfig/{entrepriseId}`
 
 ### **Gestion des collaborateurs**
 - **Profils complets** : Informations détaillées des collaborateurs

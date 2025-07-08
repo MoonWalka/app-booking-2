@@ -11,7 +11,7 @@ L'utilisateur a raison - nous avons fait du "patching" au lieu d'une analyse app
 #### a) **SystemAuditTool.js** ⭐
 - Audit complet du système
 - Analyse les relations entre toutes les entités
-- Vérifie les organizationId
+- Vérifie les entrepriseId
 - Identifie les problèmes structurels
 
 #### b) **EntityRelationsDebugger.js** ⭐
@@ -38,7 +38,7 @@ L'utilisateur a raison - nous avons fait du "patching" au lieu d'une analyse app
 
 #### b) **diagnostic-contacts-lieux.js**
 - Diagnostic des collections vides
-- Vérification des organizationId
+- Vérification des entrepriseId
 - Test des requêtes Firebase
 
 #### c) **check-lieu-contact-relation.js**
@@ -54,7 +54,7 @@ diagnosticContactsLieux()
 
 // 2. Vérifier les résultats pour:
 // - Collections vides
-// - Documents sans organizationId
+// - Documents sans entrepriseId
 // - Formats de données incohérents
 ```
 
@@ -111,7 +111,7 @@ auditLieuContactRelations()
 #### Corrections Prioritaires
 1. **CRITICAL**: Lieux sans ID
 2. **HIGH**: Structures imbriquées dans les arrays
-3. **HIGH**: organizationId manquants
+3. **HIGH**: entrepriseId manquants
 4. **MEDIUM**: Relations bidirectionnelles manquantes
 5. **LOW**: Migration des formats obsolètes
 
@@ -138,7 +138,7 @@ fixIdentifiedProblems(false)
 - Données dupliquées sous différents formats
 
 ### 3. Problèmes d'Organization
-- Entités sans organizationId
+- Entités sans entrepriseId
 - Mélange d'entités de différentes organisations
 - Requêtes qui ne filtrent pas par organisation
 
@@ -157,7 +157,7 @@ fixIdentifiedProblems(false)
 ### Court Terme
 1. Corriger les lieux sans ID
 2. Nettoyer les structures imbriquées
-3. Ajouter les organizationId manquants
+3. Ajouter les entrepriseId manquants
 4. Réparer les relations bidirectionnelles
 
 ### Moyen Terme

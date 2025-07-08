@@ -95,7 +95,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
             const structuresRef = collection(db, 'structures');
             const q = query(
               structuresRef,
-              where('organizationId', '==', dateData.organizationId),
+              where('entrepriseId', '==', dateData.entrepriseId),
               where('raisonSociale', '==', dateData.structureRaisonSociale)
             );
             

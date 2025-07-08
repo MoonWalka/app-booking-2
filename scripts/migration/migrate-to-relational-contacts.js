@@ -63,9 +63,9 @@ const stats = {
 /**
  * Nettoyer et normaliser les données d'une structure
  */
-function normalizeStructureData(structureData, organizationId) {
+function normalizeStructureData(structureData, entrepriseId) {
   const normalized = {
-    organizationId,
+    entrepriseId,
     
     // Informations principales
     raisonSociale: (structureData.raisonSociale || '').trim(),
@@ -123,7 +123,7 @@ function normalizeStructureData(structureData, organizationId) {
 /**
  * Nettoyer et normaliser les données d'une personne
  */
-function normalizePersonneData(personneData, organizationId, isPersonneLibre = false) {
+function normalizePersonneData(personneData, entrepriseId, isPersonneLibre = false) {
   // Gérer le cas où nom contient prénom et nom
   let prenom = personneData.prenom || '';
   let nom = personneData.nom || personneData.nomFamille || '';
@@ -135,7 +135,7 @@ function normalizePersonneData(personneData, organizationId, isPersonneLibre = f
   }
 
   const normalized = {
-    organizationId,
+    entrepriseId,
     
     // Identité
     civilite: personneData.civilite || null,
@@ -185,9 +185,9 @@ function normalizePersonneData(personneData, organizationId, isPersonneLibre = f
 /**
  * Créer les données d'une liaison
  */
-function createLiaisonData(organizationId, structureId, personneId, personneData, isFirst = false) {
+function createLiaisonData(entrepriseId, structureId, personneId, personneData, isFirst = false) {
   return {
-    organizationId,
+    entrepriseId,
     structureId,
     personneId,
     
@@ -213,9 +213,9 @@ function createLiaisonData(organizationId, structureId, personneId, personneData
 /**
  * Trouver ou créer une structure
  */
-async function upsertStructure(structureData, organizationId, userId) {
+async function upsertStructure(structureData, entrepriseId, userId) {
   try {
-    const normalizedData = normalizeStructureData(structureData, organizationId);
+    const normalizedData = normalizeStructureData(structureData, entrepriseId);
     
     if (!normalizedData.raisonSociale) {
       throw new Error('Raison sociale manquante');
@@ -224,7 +224,7 @@ async function upsertStructure(structureData, organizationId, userId) {
     // Chercher une structure existante
     const existingQuery = query(
       collection(db, 'structures'),
-      where('organizationId', '==', organizationId),
+      where('entrepriseId', '==', entrepriseId),
       where('raisonSociale', '==', normalizedData.raisonSociale)
     );
     
@@ -237,7 +237,7 @@ async function upsertStructure(structureData, organizationId, userId) {
       
       // Détecter les doublons potentiels
       if (existingSnapshot.size > 1) {
-        const key = `${organizationId}:${normalizedData.raisonSociale}`;
+        const key = `${entrepriseId}:${normalizedData.raisonSociale}`;
         if (!stats.duplicates.structures.has(key)) {
           stats.duplicates.structures.set(key, []);
         }
@@ -274,9 +274,9 @@ async function upsertStructure(structureData, organizationId, userId) {
 /**
  * Trouver ou créer une personne
  */
-async function upsertPersonne(personneData, organizationId, userId, isPersonneLibre = false) {
+async function upsertPersonne(personneData, entrepriseId, userId, isPersonneLibre = false) {
   try {
-    const normalizedData = normalizePersonneData(personneData, organizationId, isPersonneLibre);
+    const normalizedData = normalizePersonneData(personneData, entrepriseId, isPersonneLibre);
     
     if (!normalizedData.email || !normalizedData.prenom || !normalizedData.nom) {
       throw new Error(`Données personne incomplètes: ${JSON.stringify({
@@ -289,7 +289,7 @@ async function upsertPersonne(personneData, organizationId, userId, isPersonneLi
     // Chercher une personne existante par email
     const existingQuery = query(
       collection(db, 'personnes'),
-      where('organizationId', '==', organizationId),
+      where('entrepriseId', '==', entrepriseId),
       where('email', '==', normalizedData.email)
     );
     
@@ -313,7 +313,7 @@ async function upsertPersonne(personneData, organizationId, userId, isPersonneLi
       
       // Détecter les doublons potentiels
       if (existingSnapshot.size > 1) {
-        const key = `${organizationId}:${normalizedData.email}`;
+        const key = `${entrepriseId}:${normalizedData.email}`;
         if (!stats.duplicates.personnes.has(key)) {
           stats.duplicates.personnes.set(key, []);
         }
@@ -350,14 +350,14 @@ async function upsertPersonne(personneData, organizationId, userId, isPersonneLi
 /**
  * Créer une liaison structure-personne
  */
-async function createLiaison(organizationId, structureId, personneId, personneData, userId, isFirst = false) {
+async function createLiaison(entrepriseId, structureId, personneId, personneData, userId, isFirst = false) {
   try {
-    const liaisonData = createLiaisonData(organizationId, structureId, personneId, personneData, isFirst);
+    const liaisonData = createLiaisonData(entrepriseId, structureId, personneId, personneData, isFirst);
     
     // Vérifier si la liaison existe déjà
     const existingQuery = query(
       collection(db, 'liaisons'),
-      where('organizationId', '==', organizationId),
+      where('entrepriseId', '==', entrepriseId),
       where('structureId', '==', structureId),
       where('personneId', '==', personneId)
     );
@@ -422,7 +422,7 @@ async function migrateContact(contactDoc, userId) {
       // Migrer une structure avec ses personnes
       const structureId = await upsertStructure(
         contactData.structure || {},
-        contactData.organizationId,
+        contactData.entrepriseId,
         userId
       );
       
@@ -434,14 +434,14 @@ async function migrateContact(contactDoc, userId) {
         try {
           const personneId = await upsertPersonne(
             personneData,
-            contactData.organizationId,
+            contactData.entrepriseId,
             userId,
             false // Pas une personne libre
           );
           
           // Créer la liaison
           await createLiaison(
-            contactData.organizationId,
+            contactData.entrepriseId,
             structureId,
             personneId,
             personneData,
@@ -458,7 +458,7 @@ async function migrateContact(contactDoc, userId) {
       // Migrer une personne libre
       await upsertPersonne(
         contactData.personne || {},
-        contactData.organizationId,
+        contactData.entrepriseId,
         userId,
         true // Personne libre
       );
@@ -479,14 +479,14 @@ async function migrateContact(contactDoc, userId) {
 /**
  * Migrer tous les contacts d'une organisation
  */
-async function migrateOrganizationContacts(organizationId, userId) {
-  console.log(`🏢 Migration organisation: ${organizationId}\n`);
+async function migrateOrganizationContacts(entrepriseId, userId) {
+  console.log(`🏢 Migration organisation: ${entrepriseId}\n`);
   
   try {
     // Récupérer tous les contacts de l'organisation
     const contactsQuery = query(
       collection(db, 'contacts_unified'),
-      where('organizationId', '==', organizationId)
+      where('entrepriseId', '==', entrepriseId)
     );
     
     const contactsSnapshot = await getDocs(contactsQuery);
@@ -507,7 +507,7 @@ async function migrateOrganizationContacts(organizationId, userId) {
     }
     
   } catch (error) {
-    console.error(`❌ Erreur migration organisation ${organizationId}:`, error.message);
+    console.error(`❌ Erreur migration organisation ${entrepriseId}:`, error.message);
     throw error;
   }
 }
@@ -581,14 +581,14 @@ async function main() {
   try {
     // Vérifier les arguments
     if (process.argv.length < 5) {
-      console.log('Usage: node migrate-to-relational-contacts.js <email> <password> <organizationId> [--dry-run]');
+      console.log('Usage: node migrate-to-relational-contacts.js <email> <password> <entrepriseId> [--dry-run]');
       console.log('Example: node migrate-to-relational-contacts.js admin@example.com password123 org-123');
       console.log('\nOptions:');
       console.log('  --dry-run    Simuler la migration sans écrire dans Firestore');
       process.exit(1);
     }
     
-    const [,, email, password, organizationId] = process.argv;
+    const [,, email, password, entrepriseId] = process.argv;
     const isDryRun = process.argv.includes('--dry-run');
     
     if (isDryRun) {
@@ -603,13 +603,13 @@ async function main() {
     
     // Vérifier que les collections cibles existent
     console.log('🔍 Vérification des collections cibles...');
-    const testQuery = query(collection(db, 'structures'), where('organizationId', '==', 'test'));
+    const testQuery = query(collection(db, 'structures'), where('entrepriseId', '==', 'test'));
     await getDocs(testQuery);
     console.log('✅ Collections cibles accessibles\n');
     
     if (!isDryRun) {
       // Lancer la migration
-      await migrateOrganizationContacts(organizationId, userId);
+      await migrateOrganizationContacts(entrepriseId, userId);
     } else {
       console.log('🧪 Simulation terminée - utilisez sans --dry-run pour migrer');
     }

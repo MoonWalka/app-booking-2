@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Script d'audit pour vérifier la séparation des données entre organisations
- * Ce script vérifie si les données sont correctement filtrées par organizationId
+ * Ce script vérifie si les données sont correctement filtrées par entrepriseId
  */
 
 const admin = require('firebase-admin');
@@ -26,15 +26,15 @@ async function auditCollection(collectionName) {
     const snapshot = await db.collection(collectionName).get();
     const totalDocs = snapshot.size;
     
-    // Analyser les organizationIds
+    // Analyser les entrepriseIds
     const orgStats = {};
     const docsWithoutOrgId = [];
     
     snapshot.forEach(doc => {
       const data = doc.data();
       
-      if (data.organizationId) {
-        orgStats[data.organizationId] = (orgStats[data.organizationId] || 0) + 1;
+      if (data.entrepriseId) {
+        orgStats[data.entrepriseId] = (orgStats[data.entrepriseId] || 0) + 1;
       } else {
         docsWithoutOrgId.push({
           id: doc.id,
@@ -45,16 +45,16 @@ async function auditCollection(collectionName) {
     
     // Afficher les résultats
     console.log(`Total documents: ${totalDocs}`);
-    console.log(`Documents sans organizationId: ${docsWithoutOrgId.length}`);
+    console.log(`Documents sans entrepriseId: ${docsWithoutOrgId.length}`);
     console.log(`\nRépartition par organisation:`);
     
     Object.entries(orgStats).forEach(([orgId, count]) => {
       console.log(`  - ${orgId}: ${count} documents (${((count/totalDocs)*100).toFixed(1)}%)`);
     });
     
-    // Afficher les documents sans organizationId
+    // Afficher les documents sans entrepriseId
     if (docsWithoutOrgId.length > 0) {
-      console.log(`\n⚠️  Documents sans organizationId:`);
+      console.log(`\n⚠️  Documents sans entrepriseId:`);
       docsWithoutOrgId.slice(0, 5).forEach(doc => {
         console.log(`  - ${doc.id}: ${doc.preview}`);
       });
@@ -100,10 +100,10 @@ async function main() {
   if (problematicCollections.length > 0) {
     console.log('\n🚨 Collections avec des problèmes:');
     problematicCollections.forEach(r => {
-      console.log(`  - ${r.collection}: ${r.withoutOrgId} documents sans organizationId (${((r.withoutOrgId/r.total)*100).toFixed(1)}%)`);
+      console.log(`  - ${r.collection}: ${r.withoutOrgId} documents sans entrepriseId (${((r.withoutOrgId/r.total)*100).toFixed(1)}%)`);
     });
   } else {
-    console.log('\n✅ Toutes les collections ont un organizationId sur tous les documents');
+    console.log('\n✅ Toutes les collections ont un entrepriseId sur tous les documents');
   }
   
   // Vérifier la cohérence des organizations
@@ -138,9 +138,9 @@ async function main() {
   
   if (problematicCollections.length > 0) {
     report.recommendations.push(
-      "1. Ajouter organizationId aux documents qui n'en ont pas",
-      "2. Implémenter des règles de sécurité Firestore pour forcer organizationId",
-      "3. Modifier ListWithFilters pour toujours filtrer par organizationId"
+      "1. Ajouter entrepriseId aux documents qui n'en ont pas",
+      "2. Implémenter des règles de sécurité Firestore pour forcer entrepriseId",
+      "3. Modifier ListWithFilters pour toujours filtrer par entrepriseId"
     );
   }
   

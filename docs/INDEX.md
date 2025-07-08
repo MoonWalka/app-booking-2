@@ -138,7 +138,7 @@ Documentation système multi-organisation
 - Audits complets du système multi-organisation
 - Rapports de corrections finales
 - Analyses de sécurité et hooks delete
-- Audits supplémentaires et organizationId
+- Audits supplémentaires et entrepriseId
 
 #### 📂 [rapports/nettoyage/](rapports/nettoyage/)
 Rapports de nettoyage post-migration
@@ -189,7 +189,7 @@ Documentation des workflows métier
 ## 🚀 Documents Importants
 
 ### Multi-Organisation
-- [Guide Migration OrganizationId](guides/MIGRATION_ORGANIZATIONID_GUIDE.md)
+- [Guide Migration EntrepriseId](guides/MIGRATION_ORGANIZATIONID_GUIDE.md)
 - [Rapports Audit Multi-Org](rapports/multi-organisation/)
 - [Audit Hooks Delete Organization](rapports/multi-organisation/AUDIT_HOOKS_DELETE_ORGANIZATION.md)
 

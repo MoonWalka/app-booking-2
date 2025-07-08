@@ -127,7 +127,7 @@ getCollectionName(entityType) {
 // IMPACT: Contacts B et C perdent la relation
 ```
 
-#### 2. Corruption des organizationId
+#### 2. Corruption des entrepriseId
 - Documents assignés à la mauvaise organisation
 - Fuite de données entre tenants
 - Relations cross-organisation non détectées
@@ -228,7 +228,7 @@ const updateWithLock = (entityId, operation) => {
 | Composant | Risque | Impact | Temps Migration | Temps Rollback |
 |-----------|--------|--------|-----------------|----------------|
 | Relations bidirectionnelles | 🔴 Élevé | Critical | 4-6h | 2-3h |
-| OrganizationId | 🟡 Moyen | High | 2-3h | 1h |
+| EntrepriseId | 🟡 Moyen | High | 2-3h | 1h |
 | Structures imbriquées | 🟡 Moyen | Medium | 1-2h | 30min |
 | Services externes | 🟢 Faible | Medium | 1h | 15min |
 

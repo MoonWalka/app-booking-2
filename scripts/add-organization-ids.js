@@ -1,5 +1,5 @@
 /**
- * Script pour ajouter les organizationId manquants aux documents
+ * Script pour ajouter les entrepriseId manquants aux documents
  */
 
 const admin = require('firebase-admin');
@@ -12,25 +12,25 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-async function addOrganizationIds(targetOrgId) {
+async function addEntrepriseIds(targetOrgId) {
   if (!targetOrgId) {
-    console.error('❌ Veuillez fournir un organizationId');
-    console.log('Usage: node scripts/add-organization-ids.js <organizationId>');
+    console.error('❌ Veuillez fournir un entrepriseId');
+    console.log('Usage: node scripts/add-entreprise-ids.js <entrepriseId>');
     process.exit(1);
   }
 
   const collections = ['concerts', 'contacts', 'lieux', 'structures', 'artistes'];
   const results = {};
 
-  console.log(`\n🎯 Ajout de l'organizationId: ${targetOrgId}`);
+  console.log(`\n🎯 Ajout de l'entrepriseId: ${targetOrgId}`);
 
   for (const collectionName of collections) {
     console.log(`\n📝 Traitement de la collection: ${collectionName}`);
     
     try {
-      // Récupérer tous les documents sans organizationId
+      // Récupérer tous les documents sans entrepriseId
       const snapshot = await db.collection(collectionName)
-        .where('organizationId', '==', null)
+        .where('entrepriseId', '==', null)
         .get();
 
       console.log(`📊 ${snapshot.size} documents à mettre à jour`);
@@ -51,7 +51,7 @@ async function addOrganizationIds(targetOrgId) {
 
         batchDocs.forEach(doc => {
           batch.update(doc.ref, {
-            organizationId: targetOrgId,
+            entrepriseId: targetOrgId,
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
           });
         });
@@ -77,10 +77,10 @@ async function addOrganizationIds(targetOrgId) {
   console.table(results);
 }
 
-// Récupérer l'organizationId depuis les arguments
+// Récupérer l'entrepriseId depuis les arguments
 const targetOrgId = process.argv[2];
 
-addOrganizationIds(targetOrgId).then(() => {
+addEntrepriseIds(targetOrgId).then(() => {
   console.log('\n✅ Mise à jour terminée');
   process.exit(0);
 }).catch(error => {

@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Form, Modal, Alert, Nav } from 'react-bootstrap
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import './EntreprisesManager.css';
 
 /**
@@ -11,7 +11,7 @@ import './EntreprisesManager.css';
  * Gère les entreprises dans la collection collaborationConfig
  */
 const EntreprisesManagerFirebase = () => {
-    const { currentOrganization } = useOrganization();
+    const { currentEntreprise } = useEntreprise();
     const [entreprisesList, setEntreprisesList] = useState([]);
     const [selectedEntreprise, setSelectedEntreprise] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -23,7 +23,7 @@ const EntreprisesManagerFirebase = () => {
     const [loading, setLoading] = useState(false);
     
     // État pour le formulaire d'entreprise
-    const [currentEntreprise, setCurrentEntreprise] = useState({
+    const [entrepriseForm, setEntrepriseForm] = useState({
         id: null,
         raisonSociale: '',
         code: '',
@@ -64,14 +64,14 @@ const EntreprisesManagerFirebase = () => {
     // Charger les entreprises depuis Firebase
     useEffect(() => {
         const loadEntreprises = async () => {
-            if (!currentOrganization?.id) return;
+            if (!currentEntreprise?.id) return;
             
             setLoading(true);
             try {
                 let loadedEntreprises = [];
                 
                 // Charger depuis collaborationConfig
-                const configDoc = await getDoc(doc(db, 'collaborationConfig', currentOrganization.id));
+                const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
                 
                 if (configDoc.exists()) {
                     const data = configDoc.data();
@@ -81,7 +81,7 @@ const EntreprisesManagerFirebase = () => {
                 }
                 
                 // Charger aussi l'entreprise principale depuis organizations/settings/entreprise
-                const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
+                const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
                 const entrepriseDoc = await getDoc(entrepriseRef);
                 
                 if (entrepriseDoc.exists()) {
@@ -114,14 +114,14 @@ const EntreprisesManagerFirebase = () => {
         };
         
         loadEntreprises();
-    }, [currentOrganization?.id]);
+    }, [currentEntreprise?.id]);
 
     const handleShowModal = (entreprise = null) => {
         if (entreprise) {
-            setCurrentEntreprise({ ...entreprise });
+            setEntrepriseForm({ ...entreprise });
             setIsEditing(true);
         } else {
-            setCurrentEntreprise({
+            setEntrepriseForm({
                 id: null,
                 raisonSociale: '',
                 code: '',
@@ -159,7 +159,7 @@ const EntreprisesManagerFirebase = () => {
     };
 
     const handleSave = async () => {
-        if (!currentEntreprise.raisonSociale.trim() || !currentOrganization?.id) {
+        if (!entrepriseForm.raisonSociale.trim()) {
             return;
         }
 
@@ -168,15 +168,15 @@ const EntreprisesManagerFirebase = () => {
             
             if (isEditing) {
                 updatedList = entreprisesList.map(entreprise => 
-                    entreprise.id === currentEntreprise.id ? currentEntreprise : entreprise
+                    entreprise.id === entrepriseForm.id ? entrepriseForm : entreprise
                 );
                 
-                if (selectedEntreprise?.id === currentEntreprise.id) {
-                    setSelectedEntreprise(currentEntreprise);
+                if (selectedEntreprise?.id === entrepriseForm.id) {
+                    setSelectedEntreprise(entrepriseForm);
                 }
             } else {
                 const newEntreprise = {
-                    ...currentEntreprise,
+                    ...entrepriseForm,
                     id: `entreprise_${Date.now()}`
                 };
                 updatedList = [...entreprisesList, newEntreprise];
@@ -197,28 +197,28 @@ const EntreprisesManagerFirebase = () => {
             setShowModal(false);
             
             // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
-            if (currentEntreprise.principal || currentEntreprise.id === 'main') {
-                const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
+            if (entrepriseForm.principal || entrepriseForm.id === 'main') {
+                const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
                 
                 // Préparer les données en nettoyant les undefined
                 const dataToSave = cleanUndefinedValues({
-                    nom: currentEntreprise.raisonSociale,
-                    adresse: currentEntreprise.adresse,
-                    codePostal: currentEntreprise.codePostal,
-                    ville: currentEntreprise.ville,
-                    telephone: currentEntreprise.telephone,
-                    email: currentEntreprise.email,
-                    siteWeb: currentEntreprise.site,
-                    siret: currentEntreprise.siret,
-                    codeAPE: currentEntreprise.ape,
-                    numeroTVAIntracommunautaire: currentEntreprise.tva,
-                    licenceSpectacle: currentEntreprise.licence,
-                    representantLegal: currentEntreprise.signataire,
-                    qualiteRepresentant: currentEntreprise.fonction,
-                    coordonneesBancaires: currentEntreprise.coordonneesBancaires,
-                    iban: currentEntreprise.iban,
-                    bic: currentEntreprise.bic,
-                    banque: currentEntreprise.banque,
+                    nom: entrepriseForm.raisonSociale,
+                    adresse: entrepriseForm.adresse,
+                    codePostal: entrepriseForm.codePostal,
+                    ville: entrepriseForm.ville,
+                    telephone: entrepriseForm.telephone,
+                    email: entrepriseForm.email,
+                    siteWeb: entrepriseForm.site,
+                    siret: entrepriseForm.siret,
+                    codeAPE: entrepriseForm.ape,
+                    numeroTVAIntracommunautaire: entrepriseForm.tva,
+                    licenceSpectacle: entrepriseForm.licence,
+                    representantLegal: entrepriseForm.signataire,
+                    qualiteRepresentant: entrepriseForm.fonction,
+                    coordonneesBancaires: entrepriseForm.coordonneesBancaires,
+                    iban: entrepriseForm.iban,
+                    bic: entrepriseForm.bic,
+                    banque: entrepriseForm.banque,
                     updatedAt: new Date().toISOString()
                 });
                 
@@ -268,9 +268,9 @@ const EntreprisesManagerFirebase = () => {
     };
 
     const saveEntreprisesToFirebase = async (entreprises) => {
-        if (!currentOrganization?.id) return;
+        if (!currentEntreprise?.id) return;
         
-        const configRef = doc(db, 'collaborationConfig', currentOrganization.id);
+        const configRef = doc(db, 'collaborationConfig', currentEntreprise.id);
         const configDoc = await getDoc(configRef);
         
         const configData = configDoc.exists() ? configDoc.data() : {};
@@ -282,7 +282,7 @@ const EntreprisesManagerFirebase = () => {
             ...configData,
             entreprises: cleanedEntreprises,
             updatedAt: new Date(),
-            organizationId: currentOrganization.id
+            entrepriseId: currentEntreprise.id
         }, { merge: true });
     };
 
@@ -295,7 +295,7 @@ const EntreprisesManagerFirebase = () => {
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setCurrentEntreprise(prev => ({
+        setEntrepriseForm(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
@@ -323,7 +323,7 @@ const EntreprisesManagerFirebase = () => {
             
             // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
             if (selectedEntreprise.principal || selectedEntreprise.id === 'main') {
-                const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
+                const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
                 
                 // Préparer les données en nettoyant les undefined
                 const dataToSave = cleanUndefinedValues({
@@ -991,7 +991,7 @@ const EntreprisesManagerFirebase = () => {
                                 <Form.Control
                                     type="text"
                                     name="raisonSociale"
-                                    value={currentEntreprise.raisonSociale}
+                                    value={entrepriseForm.raisonSociale}
                                     onChange={handleInputChange}
                                     required
                                     autoFocus
@@ -1004,7 +1004,7 @@ const EntreprisesManagerFirebase = () => {
                                 <Form.Control
                                     type="text"
                                     name="code"
-                                    value={currentEntreprise.code}
+                                    value={entrepriseForm.code}
                                     onChange={handleInputChange}
                                     required
                                 />
@@ -1017,7 +1017,7 @@ const EntreprisesManagerFirebase = () => {
                         <Form.Control
                             type="text"
                             name="adresse"
-                            value={currentEntreprise.adresse}
+                            value={entrepriseForm.adresse}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
@@ -1029,7 +1029,7 @@ const EntreprisesManagerFirebase = () => {
                                 <Form.Control
                                     type="text"
                                     name="codePostal"
-                                    value={currentEntreprise.codePostal}
+                                    value={entrepriseForm.codePostal}
                                     onChange={handleInputChange}
                                 />
                             </Form.Group>
@@ -1040,7 +1040,7 @@ const EntreprisesManagerFirebase = () => {
                                 <Form.Control
                                     type="text"
                                     name="ville"
-                                    value={currentEntreprise.ville}
+                                    value={entrepriseForm.ville}
                                     onChange={handleInputChange}
                                 />
                             </Form.Group>
@@ -1054,7 +1054,7 @@ const EntreprisesManagerFirebase = () => {
                                 <Form.Control
                                     type="tel"
                                     name="telephone"
-                                    value={currentEntreprise.telephone}
+                                    value={entrepriseForm.telephone}
                                     onChange={handleInputChange}
                                 />
                             </Form.Group>
@@ -1065,7 +1065,7 @@ const EntreprisesManagerFirebase = () => {
                                 <Form.Control
                                     type="email"
                                     name="email"
-                                    value={currentEntreprise.email}
+                                    value={entrepriseForm.email}
                                     onChange={handleInputChange}
                                 />
                             </Form.Group>
@@ -1078,7 +1078,7 @@ const EntreprisesManagerFirebase = () => {
                                 type="checkbox"
                                 label="Principal"
                                 name="principal"
-                                checked={currentEntreprise.principal}
+                                checked={entrepriseForm.principal}
                                 onChange={handleInputChange}
                             />
                         </Col>
@@ -1087,7 +1087,7 @@ const EntreprisesManagerFirebase = () => {
                                 type="checkbox"
                                 label="Assujettie"
                                 name="assujettie"
-                                checked={currentEntreprise.assujettie}
+                                checked={entrepriseForm.assujettie}
                                 onChange={handleInputChange}
                             />
                         </Col>
@@ -1101,7 +1101,7 @@ const EntreprisesManagerFirebase = () => {
                 <Button 
                     variant="primary" 
                     onClick={handleSave}
-                    disabled={!currentEntreprise.raisonSociale.trim()}
+                    disabled={!entrepriseForm.raisonSociale.trim()}
                 >
                     {isEditing ? 'Modifier' : 'Ajouter'}
                 </Button>

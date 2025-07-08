@@ -90,7 +90,7 @@ async function checkOrganizationContext() {
     for (const org of organizations) {
       const concertsQuery = query(
         collection(db, 'concerts'),
-        where('organizationId', '==', org.id)
+        where('entrepriseId', '==', org.id)
       );
       const snapshot = await getDocs(concertsQuery);
       console.log(`- ${org.nom}: ${snapshot.size} concerts`);
@@ -117,10 +117,10 @@ async function checkOrganizationContext() {
     if (concertDoc.exists) {
       const concertData = concertDoc.data();
       console.log('- Concert ID:', concertId);
-      console.log('- Organization ID du concert:', concertData.organizationId);
+      console.log('- Organization ID du concert:', concertData.entrepriseId);
       
       // Trouver à quelle organisation il appartient
-      const orgMatch = organizations.find(org => org.id === concertData.organizationId);
+      const orgMatch = organizations.find(org => org.id === concertData.entrepriseId);
       if (orgMatch) {
         console.log(`- Appartient à: ${orgMatch.nom} (${orgMatch.email})`);
       } else {
@@ -131,22 +131,22 @@ async function checkOrganizationContext() {
     // 4. Vérifier la cohérence des données
     console.log('\n4. Vérification de cohérence:');
     
-    // Vérifier les concerts sans organizationId
+    // Vérifier les concerts sans entrepriseId
     const allConcertsSnapshot = await getDocs(collection(db, 'concerts'));
     let withoutOrgId = 0;
     let wrongOrgId = 0;
     
     allConcertsSnapshot.forEach(doc => {
       const data = doc.data();
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         withoutOrgId++;
-      } else if (!organizations.find(org => org.id === data.organizationId)) {
+      } else if (!organizations.find(org => org.id === data.entrepriseId)) {
         wrongOrgId++;
       }
     });
     
-    console.log(`- Concerts sans organizationId: ${withoutOrgId}`);
-    console.log(`- Concerts avec organizationId invalide: ${wrongOrgId}`);
+    console.log(`- Concerts sans entrepriseId: ${withoutOrgId}`);
+    console.log(`- Concerts avec entrepriseId invalide: ${wrongOrgId}`);
     console.log(`- Total concerts: ${allConcertsSnapshot.size}`);
     
     // 5. Suggestion

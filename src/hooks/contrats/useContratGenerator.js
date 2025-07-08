@@ -196,12 +196,12 @@ import {
   serverTimestamp
 } from '@/services/firebase-service';
 import { ensureDefaultTemplate } from '@/utils/createDefaultContractTemplate';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 export const useContratGenerator = (date, contact, artiste, lieu, contratData = null) => {
   // Support rétrocompatibilité pour l'ancien paramètre 'programmateur'
   const programmateur = contact;
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [templates, setTemplates] = useState([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -260,13 +260,13 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
         );
         const templatesSnapshot = await getDocs(templatesQuery);
         
-        // Filtrer les templates : garder ceux de l'organisation courante OU ceux sans organizationId (globaux)
+        // Filtrer les templates : garder ceux de l'entreprise courante OU ceux sans entrepriseId (globaux)
         let allDocs = templatesSnapshot.docs;
-        if (currentOrganization?.id) {
+        if (currentEntreprise?.id) {
           allDocs = templatesSnapshot.docs.filter(doc => {
             const data = doc.data();
-            // Garder le template s'il appartient à l'organisation courante OU s'il n'a pas d'organizationId (template global)
-            return data.organizationId === currentOrganization.id || !data.organizationId;
+            // Garder le template s'il appartient à l'entreprise courante OU s'il n'a pas d'entrepriseId (template global)
+            return data.entrepriseId === currentEntreprise.id || !data.entrepriseId;
           });
         }
         
@@ -341,11 +341,11 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
           
           // Filtrer par organisation si nécessaire
           let contratDocs = contratsSnapshot.docs;
-          if (currentOrganization?.id) {
-            // Privilégier les contrats de l'organisation courante, mais accepter aussi ceux sans organizationId
+          if (currentEntreprise?.id) {
+            // Privilégier les contrats de l'entreprise courante, mais accepter aussi ceux sans entrepriseId
             contratDocs = contratsSnapshot.docs.filter(doc => {
               const data = doc.data();
-              return data.organizationId === currentOrganization.id || !data.organizationId;
+              return data.entrepriseId === currentEntreprise.id || !data.entrepriseId;
             });
           }
           
@@ -386,7 +386,7 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
     };
 
     fetchData();
-  }, [date?.id, contact?.structureId, currentOrganization?.id]);
+  }, [date?.id, contact?.structureId, currentEntreprise?.id]);
   
   // Mettre à jour le modèle sélectionné quand l'ID change
   useEffect(() => {
@@ -998,7 +998,7 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
           status: 'generated',
           pdfUrl: url,
           variables,
-          ...(currentOrganization?.id && { organizationId: currentOrganization.id })
+          ...(currentEntreprise?.id && { entrepriseId: currentEntreprise.id })
         };
         
         console.log("Données du contrat à enregistrer:", contratData);

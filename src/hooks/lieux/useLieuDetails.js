@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useGenericEntityDetails } from '@/hooks/common';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
 
 /**
@@ -19,7 +19,7 @@ const useLieuDetails = (id, locationParam) => {
   const navigate = useNavigate();
   const locationData = useLocation();
   // eslint-disable-next-line no-unused-vars
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // Support du paramètre locationParam optionnel (pour compatibilité future)
   // eslint-disable-next-line no-unused-vars
@@ -140,23 +140,23 @@ const useLieuDetails = (id, locationParam) => {
         // Méthode 2bis: NOUVELLE - Recherche contact qui contient ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 2bis: Recherche contact qui contient ce lieu');
         
-        // Récupérer l'organizationId depuis le localStorage ou sessionStorage
-        // qui est géré par le contexte OrganizationContext
-        let organizationId = null;
+        // Récupérer l'entrepriseId depuis le localStorage ou sessionStorage
+        // qui est géré par le contexte EntrepriseContext
+        let entrepriseId = null;
         try {
           // Récupérer l'organisation courante depuis le stockage local de l'application
-          const storedOrg = localStorage.getItem('currentOrganization');
+          const storedOrg = localStorage.getItem('currentEntreprise');
           if (storedOrg) {
             const orgData = JSON.parse(storedOrg);
-            organizationId = orgData?.id;
+            entrepriseId = orgData?.id;
           }
         } catch (error) {
-          console.warn('[useLieuDetails] Impossible de récupérer l\'organizationId depuis localStorage:', error);
+          console.warn('[useLieuDetails] Impossible de récupérer l\'entrepriseId depuis localStorage:', error);
         }
         
         const contactsConstraints = [where('lieuxIds', 'array-contains', lieuData.id)];
-        if (organizationId) {
-          contactsConstraints.push(where('organizationId', '==', organizationId));
+        if (entrepriseId) {
+          contactsConstraints.push(where('entrepriseId', '==', entrepriseId));
         }
         const contactsQuery = query(
           collection(db, 'contacts'),
@@ -168,8 +168,8 @@ const useLieuDetails = (id, locationParam) => {
         // Fallback: essayer avec lieuxAssocies
         if (contactsSnapshot.empty) {
           const contactsConstraints2 = [where('lieuxAssocies', 'array-contains', lieuData.id)];
-          if (organizationId) {
-            contactsConstraints2.push(where('organizationId', '==', organizationId));
+          if (entrepriseId) {
+            contactsConstraints2.push(where('entrepriseId', '==', entrepriseId));
           }
           const contactsQuery2 = query(
             collection(db, 'contacts'),
@@ -188,8 +188,8 @@ const useLieuDetails = (id, locationParam) => {
         // Méthode 3: NOUVELLE - Trouver le contact via les dates de ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 3: Recherche contact via dates du lieu');
         const datesConstraints = [where('lieuId', '==', lieuData.id)];
-        if (organizationId) {
-          datesConstraints.push(where('organizationId', '==', organizationId));
+        if (entrepriseId) {
+          datesConstraints.push(where('entrepriseId', '==', entrepriseId));
         }
         const datesQuery = query(
           collection(db, 'dates'),
@@ -261,21 +261,21 @@ const useLieuDetails = (id, locationParam) => {
         // Méthode 3: NOUVELLE - Via le contact des dates de ce lieu
         console.log('[useLieuDetails] 🔍 Méthode 3: Recherche structure via contact des dates');
         
-        // Récupérer l'organizationId depuis le localStorage
-        let organizationId = null;
+        // Récupérer l'entrepriseId depuis le localStorage
+        let entrepriseId = null;
         try {
-          const storedOrg = localStorage.getItem('currentOrganization');
+          const storedOrg = localStorage.getItem('currentEntreprise');
           if (storedOrg) {
             const orgData = JSON.parse(storedOrg);
-            organizationId = orgData?.id;
+            entrepriseId = orgData?.id;
           }
         } catch (error) {
-          console.warn('[useLieuDetails] Impossible de récupérer l\'organizationId depuis localStorage:', error);
+          console.warn('[useLieuDetails] Impossible de récupérer l\'entrepriseId depuis localStorage:', error);
         }
         
         const datesConstraints = [where('lieuId', '==', lieuData.id)];
-        if (organizationId) {
-          datesConstraints.push(where('organizationId', '==', organizationId));
+        if (entrepriseId) {
+          datesConstraints.push(where('entrepriseId', '==', entrepriseId));
         }
         const datesQuery = query(
           collection(db, 'dates'),
@@ -326,11 +326,11 @@ const useLieuDetails = (id, locationParam) => {
         const { collection, query, where, getDocs } = await import('@/services/firebase-service');
         const { db } = await import('@/services/firebase-service');
         
-        // 🔒 CORRECTION CRITIQUE: Ajouter le filtre organizationId
-        const organizationId = localStorage.getItem('currentOrganizationId');
+        // 🔒 CORRECTION CRITIQUE: Ajouter le filtre entrepriseId
+        const entrepriseId = localStorage.getItem('currentEntrepriseId');
         const constraints = [where('lieuId', '==', lieuData.id)];
-        if (organizationId) {
-          constraints.push(where('organizationId', '==', organizationId));
+        if (entrepriseId) {
+          constraints.push(where('entrepriseId', '==', entrepriseId));
         }
         
         // Rechercher tous les dates qui ont ce lieu
@@ -367,11 +367,11 @@ const useLieuDetails = (id, locationParam) => {
         const { collection, query, where, getDocs, doc, getDoc } = await import('@/services/firebase-service');
         const { db } = await import('@/services/firebase-service');
         
-        // 🔒 CORRECTION CRITIQUE: Ajouter le filtre organizationId pour les artistes
-        const organizationId = localStorage.getItem('currentOrganizationId');
+        // 🔒 CORRECTION CRITIQUE: Ajouter le filtre entrepriseId pour les artistes
+        const entrepriseId = localStorage.getItem('currentEntrepriseId');
         const constraints = [where('lieuId', '==', lieuData.id)];
-        if (organizationId) {
-          constraints.push(where('organizationId', '==', organizationId));
+        if (entrepriseId) {
+          constraints.push(where('entrepriseId', '==', entrepriseId));
         }
         
         // D'abord récupérer tous les dates de ce lieu

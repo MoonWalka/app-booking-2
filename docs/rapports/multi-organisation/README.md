@@ -7,7 +7,7 @@ Ce dossier contient tous les rapports liés au système multi-organisation de To
 ### Audits
 - `AUDIT_MULTI_ORGANISATION.md` - Audit initial du système multi-organisation
 - `AUDIT_HOOKS_DELETE_ORGANIZATION.md` - Audit des hooks de suppression
-- `RAPPORT_AUDIT_ORGANIZATION_ID_HOOKS.md` - Audit détaillé des hooks et organizationId
+- `RAPPORT_AUDIT_ENTREPRISE_ID_HOOKS.md` - Audit détaillé des hooks et entrepriseId
 
 ### Corrections
 - `RAPPORT_CORRECTIONS_MULTI_ORG_FINAL.md` - Rapport final des corrections appliquées

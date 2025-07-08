@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Script pour vérifier quelles entités n'ont pas d'organizationId
+ * Script pour vérifier quelles entités n'ont pas d'entrepriseId
  */
 
 const admin = require('firebase-admin');
@@ -25,8 +25,8 @@ try {
 
 const db = admin.firestore();
 
-async function checkOrganizationIds() {
-  console.log('🔍 Vérification des documents sans organizationId...\n');
+async function checkEntrepriseIds() {
+  console.log('🔍 Vérification des documents sans entrepriseId...\n');
   
   const collections = ['contacts', 'lieux', 'concerts', 'structures', 'artistes', 'contrats'];
   const results = {};
@@ -39,14 +39,14 @@ async function checkOrganizationIds() {
       const snapshot = await db.collection(collectionName).get();
       const totalDocs = snapshot.size;
       
-      // Compter ceux sans organizationId
+      // Compter ceux sans entrepriseId
       let withOrgId = 0;
       let withoutOrgId = 0;
       const samplesWithout = [];
       
       snapshot.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId) {
+        if (data.entrepriseId) {
           withOrgId++;
         } else {
           withoutOrgId++;
@@ -69,11 +69,11 @@ async function checkOrganizationIds() {
         samplesWithout
       };
       
-      console.log(`  ✅ Avec organizationId: ${withOrgId} (${results[collectionName].percentage}%)`);
-      console.log(`  ❌ Sans organizationId: ${withoutOrgId}`);
+      console.log(`  ✅ Avec entrepriseId: ${withOrgId} (${results[collectionName].percentage}%)`);
+      console.log(`  ❌ Sans entrepriseId: ${withoutOrgId}`);
       
       if (samplesWithout.length > 0) {
-        console.log(`  📋 Exemples sans organizationId:`);
+        console.log(`  📋 Exemples sans entrepriseId:`);
         samplesWithout.forEach(sample => {
           console.log(`     - ${sample.id}: ${sample.nom} (créé: ${sample.createdAt})`);
         });
@@ -94,7 +94,7 @@ async function checkOrganizationIds() {
       console.log(`${collection}: ERREUR - ${stats.error}`);
     } else {
       const status = stats.withoutOrgId === 0 ? '✅' : '⚠️';
-      console.log(`${status} ${collection}: ${stats.withoutOrgId}/${stats.total} sans organizationId (${(100 - parseFloat(stats.percentage)).toFixed(1)}%)`);
+      console.log(`${status} ${collection}: ${stats.withoutOrgId}/${stats.total} sans entrepriseId (${(100 - parseFloat(stats.percentage)).toFixed(1)}%)`);
     }
   }
   
@@ -106,17 +106,17 @@ async function checkOrganizationIds() {
   if (problemCollections.length > 0) {
     console.log('\n\n⚠️  ACTIONS RECOMMANDÉES:');
     console.log('='.repeat(60));
-    console.log(`Les collections suivantes ont des documents sans organizationId:`);
+    console.log(`Les collections suivantes ont des documents sans entrepriseId:`);
     console.log(`- ${problemCollections.join('\n- ')}`);
     console.log('\nPour corriger, exécutez:');
-    console.log(`node scripts/add-organization-ids.js`);
+    console.log(`node scripts/add-entreprise-ids.js`);
   } else {
-    console.log('\n\n✅ Toutes les collections ont des organizationId!');
+    console.log('\n\n✅ Toutes les collections ont des entrepriseId!');
   }
 }
 
 // Exécution
-checkOrganizationIds()
+checkEntrepriseIds()
   .then(() => {
     console.log('\n✅ Vérification terminée');
     process.exit(0);

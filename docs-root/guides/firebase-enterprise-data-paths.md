@@ -3,19 +3,19 @@
 ## Current Storage Locations
 
 ### 1. **Collaboration Config Path**
-- Path: `collaborationConfig/{organizationId}`
+- Path: `collaborationConfig/{entrepriseId}`
 - Used by: `CollaborationParametragePage`
 - Contains: Enterprise config in `entreprise` field
 - Note: Currently using mock data in `EntreprisesManager`
 
 ### 2. **Organization Settings Path**
-- Path: `organizations/{organizationId}/settings/entreprise`
+- Path: `organizations/{entrepriseId}/settings/entreprise`
 - Used by: `useEntrepriseForm` hook and `ParametresEntreprise` component
 - Contains: Company details like name, address, SIRET, etc.
 - This is the main path for enterprise data
 
 ### 3. **Organization Parameters Path**
-- Path: `organizations/{organizationId}/parametres/settings`
+- Path: `organizations/{entrepriseId}/parametres/settings`
 - Used by: `ParametresContext`
 - Contains: All app settings including `entreprise` section
 - This is a backup/legacy path

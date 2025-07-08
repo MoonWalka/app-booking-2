@@ -4,13 +4,13 @@ console.log('================================\n');
 
 // Ce script simule ce que fait ContactViewTabs
 const testData = {
-  organizationId: 'test-org-123',
+  entrepriseId: 'test-org-123',
   structureId: 'structure-456',
   structureName: 'Structure Test'
 };
 
 console.log('📊 Données de test:');
-console.log('- organizationId:', testData.organizationId);
+console.log('- entrepriseId:', testData.entrepriseId);
 console.log('- structureId:', testData.structureId);
 console.log('- structureName:', testData.structureName);
 console.log('\n');

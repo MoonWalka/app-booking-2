@@ -7,7 +7,7 @@
  * {
  *   contact: { nom, prenom, email... },
  *   structure: { ... },
- *   organizationId: "..."
+ *   entrepriseId: "..."
  * }
  * 
  * Vers une structure aplatie :
@@ -15,7 +15,7 @@
  *   nom: "...",
  *   prenom: "...",
  *   email: "...",
- *   organizationId: "..."
+ *   entrepriseId: "..."
  * }
  */
 
@@ -68,7 +68,7 @@ async function fixNestedContacts() {
             structureNom: data.structureNom || data.structure?.raisonSociale || '',
             
             // Conserver les autres champs existants
-            organizationId: data.organizationId,
+            entrepriseId: data.entrepriseId,
             concertsAssocies: data.concertsAssocies || [],
             createdAt: data.createdAt,
             updatedAt: data.updatedAt || new Date()

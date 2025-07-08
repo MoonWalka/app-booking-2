@@ -2,12 +2,12 @@ import { collection, query, where, getDocs, doc, getDoc, addDoc, updateDoc, dele
 import { db } from '@/services/firebase-service';
 
 const projetService = {
-  async getProjetsByOrganization(organizationId) {
+  async getProjetsByOrganization(entrepriseId) {
     try {
       const projetsRef = collection(db, 'projets');
       const q = query(
         projetsRef, 
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         orderBy('intitule', 'asc')
       );
       const snapshot = await getDocs(q);

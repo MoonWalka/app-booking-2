@@ -48,7 +48,7 @@ Le système de suivi de relances permet aux utilisateurs de TourCraft de créer,
   entityType: "concert", // "concert", "contrat", "contact", "autre"
   entityId: "concert-id-123",
   entityName: "Concert du 15 juin",
-  organizationId: "org-id-123",
+  entrepriseId: "org-id-123",
   userId: "user-id-456",
   createdAt: "2025-06-05T10:00:00.000Z",
   updatedAt: "2025-06-05T10:00:00.000Z",
@@ -69,9 +69,9 @@ Les règles sont définies dans `/firestore.rules` :
 
 Les index optimisés sont définis dans `/firestore.indexes.json` :
 
-1. `organizationId` + `dateEcheance` (tri par date)
-2. `organizationId` + `status` + `dateEcheance` (filtrage par statut)
-3. `organizationId` + `entityType` + `entityId` (relances par entité)
+1. `entrepriseId` + `dateEcheance` (tri par date)
+2. `entrepriseId` + `status` + `dateEcheance` (filtrage par statut)
+3. `entrepriseId` + `entityType` + `entityId` (relances par entité)
 
 ## Intégration
 

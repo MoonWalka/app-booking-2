@@ -1,0 +1,1022 @@
+{
+  "summary": {
+    "totalFiles": 545,
+    "filesWithFirebase": 107,
+    "totalIssues": 218,
+    "criticalIssues": 121,
+    "riskLevel": "HIGH"
+  },
+  "criticalIssues": [
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 818,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/contrats/useContratGenerator.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 738,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/factureService.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 624,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/factureService.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 547,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/firebase-service.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 460,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/firebase-service.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 457,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/structures/desktop/StructureForm.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 415,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/firebase-service.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 394,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/contacts/desktop/ContactFormMaquette.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 390,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/contacts/mobile/ContactForm.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 382,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/useMultiOrgQuery.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 381,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/contacts/mobile/ContactForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 361,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/generics/actions/useGenericAction.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 355,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/common/useGenericEntityDetails.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 351,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/firebase-service.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 347,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/firebase-service.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 343,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/structures/desktop/StructureForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 341,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/contacts/mobile/ContactForm.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 338,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/common/useEntitySearch.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 335,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/forms/PublicContactForm.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 308,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/forms/useValidationBatchActions.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 304,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/artistes/desktop/ArtisteForm.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 281,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/relancesAutomatiquesService.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 270,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/artistes/desktop/ArtisteForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 263,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/contrats/useContratGenerator.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 236,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/firestoreService.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 228,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/concerts/useConcertDetails.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 210,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/pages/contratTemplatesPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 209,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/services/factureService.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 199,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/forms/useFormValidationData.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 188,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/seedConcerts.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 183,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/forms/useValidationBatchActions.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 163,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/contacts/desktop/ContactForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 161,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/services/bidirectionalRelationsService.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 158,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/dataCompatibilityHelper.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 149,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/seedConcerts.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 145,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/FactureDetailsPage.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 142,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/parametres/useEntrepriseForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 141,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/services/firebase-service.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 136,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/syncService.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 134,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/common/useFormSubmission.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 130,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/createDefaultContractTemplate.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 126,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/contacts/desktop/ContactLieuxSection.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 126,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/seedEmulator.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 125,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/services/firestoreService.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 122,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/forms/useValidationBatchActions.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 122,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/generics/actions/useGenericAction.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 120,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/concerts/useConcertFormsManagement.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 120,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/relances/useRelanceForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 118,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/contacts/desktop/ContactFormMaquette.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 118,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/common/useFirestoreSubscription.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 118,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/hooks/generics/actions/useGenericAction.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 118,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/seedEmulator.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 116,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/common/useSafeRelations.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 110,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/seedEmulator.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 109,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/structures/desktop/StructuresList.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 107,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/context/ParametresContext.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 104,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/FormResponsePage.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 102,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/seedEmulator.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 97,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/forms/FormGenerator.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 97,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/common/useEntitySearch.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 96,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/parametres/ParametresFactures.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 95,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/forms/useFormTokenValidation.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 93,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/services/structureService.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 87,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/scripts/migrateToMultiOrg.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 87,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/services/syncService.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 86,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/contrats/useContratDetails.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 83,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/migrationHelper.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 81,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/pages/factureTemplatesPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 78,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/lieux/desktop/sections/LieuConcertsSection.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 73,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/FactureGenerationPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 72,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/structures/index.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 67,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/scripts/migrateToMultiOrg.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 63,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/scripts/migrateToMultiOrg.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 63,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/structureService.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 63,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/migrationHelper.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 62,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/forms/PublicContactForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 60,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/parametres/ParametresFactures.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 60,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/pages/contratTemplatesEditPage.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 59,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/debug/OrganizationIdTest.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 59,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/utils/migrationHelper.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 55,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/addCoordinatesToLieux.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 49,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/parametres/useEntrepriseForm.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 48,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/context/ParametresContext.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 46,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/lieux/desktop/sections/LieuStructuresSection.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 45,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/contacts/desktop/ContactStructuresSection.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 39,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/services/syncService.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 38,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/concerts/useConcertWatcher.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 36,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/concerts/useConcertFormWithRelations.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 36,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/contratTemplatesPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 35,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/lieux/desktop/sections/LieuOrganizerSection.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 34,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/structures/core/useStructureDetails.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 34,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/contratTemplatesEditPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 32,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/FacturesPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 31,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/debug/OrganizationIdDebug.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 31,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/forms/FormGenerator.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 31,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/concerts/useConcertAssociations.js"
+    },
+    {
+      "type": "CREATE_WITHOUT_ORGANIZATION_ID",
+      "severity": "CRITICAL",
+      "line": 30,
+      "message": "Opération de création sans organizationId",
+      "suggestion": "Ajouter organizationId aux données avant création",
+      "file": "src/components/debug/OrganizationIdTest.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 29,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/debug/OrganizationIdFixer.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 29,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/concertsDiagnostic.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 28,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/contacts/desktop/sections/ContactConcertsSectionV2.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 28,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/forms/useValidationBatchActions.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 28,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/ContratsPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 28,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/factureTemplatesPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 27,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/factureTemplatesEditPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 24,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/fixOrganizationIds.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 23,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/artistes/desktop/ArtisteView.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 23,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/hooks/contrats/useContratActions.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 23,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/pages/ContratGenerationPage.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 22,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/artistes/mobile/ArtisteView.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 21,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/fixNumeroIntracommunautaire.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 20,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/forms/FormSubmissionViewer.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 17,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/contacts/ContactsDebug.jsx"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 16,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/fixConcertDates.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 14,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/createDefaultContractTemplate.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 13,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/artistes/handlers/paginationHandler.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 13,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/artistes/mobile/handlers/paginationHandler.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 13,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/templateDiagnostic.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 13,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/utils/testMapFix.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 12,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/molecules/handlers/paginationHandler.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 9,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/artistes/mobile/utils/concertUtils.js"
+    },
+    {
+      "type": "READ_WITHOUT_ORGANIZATION_FILTER",
+      "severity": "CRITICAL",
+      "line": 9,
+      "message": "Requêtes de lecture sans filtre organizationId",
+      "suggestion": "Ajouter where(\"organizationId\", \"==\", currentOrganization.id)",
+      "file": "src/components/artistes/utils/concertUtils.js"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "Corriger toutes les opérations CREATE sans organizationId",
+      "impact": "CRITICAL",
+      "effort": "MEDIUM"
+    },
+    {
+      "priority": 2,
+      "action": "Ajouter des filtres organizationId à toutes les requêtes READ",
+      "impact": "CRITICAL",
+      "effort": "HIGH"
+    },
+    {
+      "priority": 3,
+      "action": "Implémenter des tests automatisés pour les hooks Firebase",
+      "impact": "HIGH",
+      "effort": "HIGH"
+    },
+    {
+      "priority": 4,
+      "action": "Créer un middleware global pour intercepter les opérations Firebase",
+      "impact": "HIGH",
+      "effort": "MEDIUM"
+    }
+  ],
+  "actionPlan": {
+    "immediate": [
+      "Exécuter le script de correction des organizationId manquants",
+      "Corriger les opérations CREATE critiques identifiées",
+      "Ajouter useOrganization aux hooks qui en manquent"
+    ],
+    "shortTerm": [
+      "Implémenter des tests runtime pour tous les hooks",
+      "Créer un linter personnalisé pour les règles Firebase",
+      "Ajouter des validations TypeScript strictes"
+    ],
+    "longTerm": [
+      "Mettre en place un système de monitoring Firebase",
+      "Implémenter des tests end-to-end automatisés",
+      "Créer une documentation des patterns approuvés"
+    ]
+  }
+}

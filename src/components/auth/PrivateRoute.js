@@ -1,8 +1,8 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
-import { OnboardingFlow } from '@/components/organization';
+import { useEntreprise } from '@/context/EntrepriseContext';
+import { OnboardingFlow } from '@/components/entreprise';
 import Alert from '@/components/ui/Alert';
 
 /**
@@ -16,7 +16,7 @@ import Alert from '@/components/ui/Alert';
  */
 const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
   const { currentUser, loading: authLoading, isAuthenticated, isAdmin, initialized } = useAuth();
-  const { loading: orgLoading, needsOnboarding, currentOrg } = useOrganization();
+  const { loading: orgLoading, needsOnboarding, currentEntreprise } = useEntreprise();
   const location = useLocation();
 
   // 🔧 FIX BOUCLE: Attendre que l'authentification ET l'organisation soient COMPLÈTEMENT initialisées
@@ -47,7 +47,7 @@ const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
     isUserAuthenticated,
     initialized,
     needsOnboarding,
-    hasOrg: !!currentOrg
+    hasOrg: !!currentEntreprise
   });
 
   // 🔧 FIX BOUCLE: Éviter redirection si déjà sur /login
@@ -119,7 +119,7 @@ const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
   }
 
   // ✅ Utilisateur authentifié avec les bonnes permissions et une organisation
-  console.log('✅ PrivateRoute - Accès autorisé pour:', currentUser.email, 'vers:', location.pathname, 'Org:', currentOrg?.name);
+  console.log('✅ PrivateRoute - Accès autorisé pour:', currentUser.email, 'vers:', location.pathname, 'Org:', currentEntreprise?.name);
   
   return children;
 };

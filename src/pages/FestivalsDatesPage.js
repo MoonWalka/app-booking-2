@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Container, Button, Form } from 'react-bootstrap';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { toast } from 'react-toastify';
 import styles from './FestivalsDatesPage.module.css';
 
 const FestivalsDatesPage = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [festivals, setFestivals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedFestivals, setSelectedFestivals] = useState(new Set());
@@ -19,14 +19,14 @@ const FestivalsDatesPage = () => {
 
   // Charger tous les festivals de l'organisation
   useEffect(() => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setLoading(false);
       return;
     }
 
     const festivalsQuery = query(
       collection(db, 'festivals'),
-      where('organizationId', '==', currentOrganization.id)
+      where('entrepriseId', '==', currentEntreprise.id)
     );
 
     const unsubscribe = onSnapshot(
@@ -51,7 +51,7 @@ const FestivalsDatesPage = () => {
     );
 
     return () => unsubscribe();
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // Gestion de la sélection
   const handleSelectFestival = (festivalId) => {

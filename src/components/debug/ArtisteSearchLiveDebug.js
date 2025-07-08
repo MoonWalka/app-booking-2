@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Alert, Card, Form, Table, Badge } from 'react-bootstrap';
 import { useEntitySearch } from '@/hooks/common/useEntitySearch';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 
 const ArtisteSearchLiveDebug = () => {
   const { currentUser } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [manualSearchTerm, setManualSearchTerm] = useState('');
   
   // Utiliser exactement le même hook que dans DateForm
@@ -55,9 +55,9 @@ const ArtisteSearchLiveDebug = () => {
               <strong>Utilisateur:</strong> {currentUser?.email || 'Non connecté'}
             </div>
             <div className="col-md-6">
-              <strong>Organisation:</strong> {currentOrganization?.name || 'Aucune'}
-              {currentOrganization?.id && (
-                <code className="ms-2">({currentOrganization.id})</code>
+              <strong>Organisation:</strong> {currentEntreprise?.name || 'Aucune'}
+              {currentEntreprise?.id && (
+                <code className="ms-2">({currentEntreprise.id})</code>
               )}
             </div>
           </div>
@@ -156,7 +156,7 @@ const ArtisteSearchLiveDebug = () => {
                 <strong>Aucun résultat trouvé</strong>
                 <br />
                 <small>
-                  Vérifiez que l'artiste existe et appartient à votre organisation "{currentOrganization?.name}"
+                  Vérifiez que l'artiste existe et appartient à votre organisation "{currentEntreprise?.name}"
                 </small>
               </Alert>
             )}
@@ -186,7 +186,7 @@ const ArtisteSearchLiveDebug = () => {
                         <td>{artiste.email || '-'}</td>
                         <td>
                           <code className="small">
-                            {artiste.organizationId || 'MANQUANT'}
+                            {artiste.entrepriseId || 'MANQUANT'}
                           </code>
                         </td>
                         <td>
@@ -208,7 +208,7 @@ const ArtisteSearchLiveDebug = () => {
         <ul className="mb-0">
           <li>Tapez exactement le même terme que dans le formulaire de concert</li>
           <li>Vérifiez que vous êtes dans la bonne organisation</li>
-          <li>Si aucun résultat : l'artiste existe-t-il vraiment ? Avec le bon organizationId ?</li>
+          <li>Si aucun résultat : l'artiste existe-t-il vraiment ? Avec le bon entrepriseId ?</li>
           <li>Regardez les logs de la console pour plus d'informations</li>
         </ul>
       </Alert>

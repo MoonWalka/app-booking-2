@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Form, Row, Col, Badge, Alert } from 'react-bootstrap';
 import { db } from '@/services/firebase-service';
 import { doc, getDoc } from 'firebase/firestore';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Button from '@/components/ui/Button';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { httpsCallable } from 'firebase/functions';
@@ -21,7 +21,7 @@ const sendUnifiedEmailFunction = httpsCallable(functions, 'sendUnifiedEmail');
  * Permet de tester la connexion, lister les templates et envoyer des emails de test
  */
 const BrevoDiagnostic = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
   const [templateLoading, setTemplateLoading] = useState(false);
@@ -72,17 +72,17 @@ const BrevoDiagnostic = () => {
     setError('');
     setMessage('');
     
-    addDebugLog('info', 'Chargement configuration Brevo', { organizationId: currentOrganization?.id });
+    addDebugLog('info', 'Chargement configuration Brevo', { entrepriseId: currentEntreprise?.id });
 
     try {
-      if (!currentOrganization?.id) {
+      if (!currentEntreprise?.id) {
         setError('Aucune organisation sélectionnée');
         return;
       }
 
       // Charger les paramètres de l'organisation
       const parametresDoc = await getDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
       );
       
       if (parametresDoc.exists()) {
@@ -320,7 +320,7 @@ const BrevoDiagnostic = () => {
         concert: 'Date Test Debug',
         lien: 'https://app.tourcraft.com/formulaire/test-debug-123',
         test_mode: true,
-        organization_name: currentOrganization?.name || 'TourCraft',
+        organization_name: currentEntreprise?.name || 'TourCraft',
         date: new Date().toLocaleDateString('fr-FR')
       };
       
@@ -402,7 +402,7 @@ const BrevoDiagnostic = () => {
           templateId: parseInt(selectedTemplate),
           templateData: variables,
           useBrevo: true,
-          organizationId: currentOrganization?.id
+          entrepriseId: currentEntreprise?.id
         });
       }
 
@@ -440,7 +440,7 @@ const BrevoDiagnostic = () => {
   useEffect(() => {
     loadBrevoConfig();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   return (
     <div className={styles.container}>
@@ -475,7 +475,7 @@ const BrevoDiagnostic = () => {
                 <Col md={6}>
                   <div className={styles.statusItem}>
                     <span className={styles.statusLabel}>Organisation:</span>
-                    <strong>{currentOrganization?.name || 'Non sélectionnée'}</strong>
+                    <strong>{currentEntreprise?.name || 'Non sélectionnée'}</strong>
                   </div>
                   
                   <div className={styles.statusItem}>

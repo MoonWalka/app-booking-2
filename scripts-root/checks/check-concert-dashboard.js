@@ -84,7 +84,7 @@ async function checkConcertDashboard() {
     
     // 2. Vérifier les champs requis pour le tableau de bord
     console.log('\n=== Analyse des champs requis ===');
-    console.log('organizationId:', concertData.organizationId || '❌ MANQUANT');
+    console.log('entrepriseId:', concertData.entrepriseId || '❌ MANQUANT');
     console.log('date:', concertData.date || '❌ MANQUANT');
     console.log('structureId:', concertData.structureId || '❌ MANQUANT');
     console.log('artisteNom:', concertData.artisteNom || '❌ MANQUANT');
@@ -98,20 +98,20 @@ async function checkConcertDashboard() {
         const structureData = structureDoc.data();
         console.log('✓ Structure trouvée:', concertData.structureId);
         console.log('- Nom:', structureData.nom || structureData.structureRaisonSociale);
-        console.log('- OrganizationId:', structureData.organizationId);
+        console.log('- EntrepriseId:', structureData.entrepriseId);
       } else {
         console.log('✗ Structure introuvable!');
       }
     }
     
     // 4. Simuler la requête du tableau de bord
-    if (concertData.organizationId) {
+    if (concertData.entrepriseId) {
       console.log('\n=== Simulation requête tableau de bord ===');
-      console.log(`Requête: where('organizationId', '==', '${concertData.organizationId}')`);
+      console.log(`Requête: where('entrepriseId', '==', '${concertData.entrepriseId}')`);
       
       const concertsQuery = query(
         collection(db, 'concerts'),
-        where('organizationId', '==', concertData.organizationId),
+        where('entrepriseId', '==', concertData.entrepriseId),
         orderBy('date', 'desc')
       );
       
@@ -134,7 +134,7 @@ async function checkConcertDashboard() {
         }
       } catch (error) {
         console.log('Erreur lors de la requête:', error.message);
-        console.log('Cela peut indiquer un problème d\'index sur organizationId + date');
+        console.log('Cela peut indiquer un problème d\'index sur entrepriseId + date');
       }
     }
     
@@ -153,7 +153,7 @@ async function checkConcertDashboard() {
       const workingConcert = recentConcerts.docs[0];
       const workingData = workingConcert.data();
       console.log('ID:', workingConcert.id);
-      console.log('- organizationId:', workingData.organizationId);
+      console.log('- entrepriseId:', workingData.entrepriseId);
       console.log('- date:', workingData.date);
       console.log('- artisteNom:', workingData.artisteNom);
       console.log('- structureId:', workingData.structureId);

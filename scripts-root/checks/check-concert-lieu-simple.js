@@ -31,7 +31,7 @@ async function checkConcertLieu() {
         id: doc.id,
         titre: concert.titre || 'Sans titre',
         lieuId: concert.lieuId || null,
-        organizationId: concert.organizationId || null,
+        entrepriseId: concert.entrepriseId || null,
         lieu: null
       };
       
@@ -46,7 +46,7 @@ async function checkConcertLieu() {
               nom: lieuData.nom || 'Sans nom',
               adresse: lieuData.adresse || null,
               ville: lieuData.ville || null,
-              organizationId: lieuData.organizationId || null
+              entrepriseId: lieuData.entrepriseId || null
             };
           } else {
             result.lieu = { exists: false, error: 'Document lieu introuvable' };
@@ -66,21 +66,21 @@ async function checkConcertLieu() {
       console.log(`Concert ${index + 1}: ${result.titre}`);
       console.log(`  - ID: ${result.id}`);
       console.log(`  - lieuId: ${result.lieuId || 'NON DÉFINI'}`);
-      console.log(`  - organizationId: ${result.organizationId || 'NON DÉFINI'}`);
+      console.log(`  - entrepriseId: ${result.entrepriseId || 'NON DÉFINI'}`);
       
       if (result.lieuId) {
         if (result.lieu && result.lieu.exists) {
           console.log(`  - Lieu trouvé: ${result.lieu.nom}`);
           console.log(`    - Adresse: ${result.lieu.adresse || 'NON DÉFINIE'}`);
           console.log(`    - Ville: ${result.lieu.ville || 'NON DÉFINIE'}`);
-          console.log(`    - OrganizationId lieu: ${result.lieu.organizationId || 'NON DÉFINI'}`);
+          console.log(`    - EntrepriseId lieu: ${result.lieu.entrepriseId || 'NON DÉFINI'}`);
           
           if (!result.lieu.adresse) {
             console.log('    ⚠️  PAS D\'ADRESSE - La carte ne s\'affichera pas!');
           }
           
-          if (result.organizationId !== result.lieu.organizationId) {
-            console.log('    ⚠️  OrganizationId différents!');
+          if (result.entrepriseId !== result.lieu.entrepriseId) {
+            console.log('    ⚠️  EntrepriseId différents!');
           }
         } else {
           console.log(`  ❌ Lieu introuvable: ${result.lieu?.error || 'Erreur inconnue'}`);
@@ -101,7 +101,7 @@ async function checkConcertLieu() {
       lieuTrouve: results.filter(r => r.lieu?.exists).length,
       lieuIntrouvable: results.filter(r => r.lieuId && !r.lieu?.exists).length,
       lieuSansAdresse: results.filter(r => r.lieu?.exists && !r.lieu.adresse).length,
-      organizationDifferente: results.filter(r => r.lieu?.exists && r.organizationId !== r.lieu.organizationId).length
+      organizationDifferente: results.filter(r => r.lieu?.exists && r.entrepriseId !== r.lieu.entrepriseId).length
     };
     
     console.log(`Total concerts analysés: ${stats.total}`);
@@ -110,7 +110,7 @@ async function checkConcertLieu() {
     console.log(`Lieux trouvés: ${stats.lieuTrouve}`);
     console.log(`Lieux introuvables: ${stats.lieuIntrouvable}`);
     console.log(`Lieux sans adresse: ${stats.lieuSansAdresse}`);
-    console.log(`OrganizationId différents: ${stats.organizationDifferente}`);
+    console.log(`EntrepriseId différents: ${stats.organizationDifferente}`);
     
   } catch (error) {
     console.error('Erreur:', error);

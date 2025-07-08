@@ -29,7 +29,7 @@ async function fixPersonneLibreStatus() {
       
       // Récupérer toutes les personnes de cette organisation
       const personnesSnapshot = await db.collection('personnes')
-        .where('organizationId', '==', orgId)
+        .where('entrepriseId', '==', orgId)
         .get();
       
       console.log(`  👥 ${personnesSnapshot.size} personnes trouvées`);
@@ -44,7 +44,7 @@ async function fixPersonneLibreStatus() {
         const liaisonsSnapshot = await db.collection('liaisons')
           .where('personneId', '==', personneId)
           .where('actif', '==', true)
-          .where('organizationId', '==', orgId)
+          .where('entrepriseId', '==', orgId)
           .get();
         
         const hasActiveLiaisons = !liaisonsSnapshot.empty;

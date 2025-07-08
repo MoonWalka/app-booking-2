@@ -9,7 +9,7 @@ import Button from '@/components/ui/Button';
 import FacturesTableView from '@/components/factures/FacturesTableView';
 import factureService from '@/services/factureService';
 // useResponsive retiré car isMobile non utilisé
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import '@styles/index.css';
 
 const FacturesPage = () => {
@@ -18,11 +18,11 @@ const FacturesPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   // isMobile retiré car non utilisé
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
   useEffect(() => {
     const fetchFactures = async () => {
-      if (!currentOrganization?.id) {
+      if (!currentEntreprise?.id) {
         setLoading(false);
         return;
       }
@@ -31,7 +31,7 @@ const FacturesPage = () => {
       try {
         // Récupérer les factures depuis la collection de l'organisation
         const facturesQuery = query(
-          collection(db, 'organizations', currentOrganization.id, 'factures'), 
+          collection(db, 'organizations', currentEntreprise.id, 'factures'), 
           orderBy('dateFacture', 'desc')
         );
         const facturesSnapshot = await getDocs(facturesQuery);
@@ -51,7 +51,7 @@ const FacturesPage = () => {
     };
 
     fetchFactures();
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // Fonction retirée car non utilisée
 
@@ -106,7 +106,7 @@ const FacturesPage = () => {
               onDelete={async (facture) => {
                 if (window.confirm(`Êtes-vous sûr de vouloir supprimer la facture ${facture.reference || facture.numeroFacture} ?`)) {
                   try {
-                    await factureService.deleteFacture(facture.id, currentOrganization.id);
+                    await factureService.deleteFacture(facture.id, currentEntreprise.id);
                     // Mettre à jour l'état local immédiatement
                     setFactures(prev => prev.filter(f => f.id !== facture.id));
                   } catch (error) {

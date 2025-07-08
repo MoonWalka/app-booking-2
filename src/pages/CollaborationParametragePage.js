@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import GroupesPermissionsManager from '../components/parametrage/GroupesPermissionsManager';
 import EntreprisesManager from '../components/collaboration/EntreprisesManagerFirebase';
 import CollaborateursManagerFirebase from '../components/collaboration/CollaborateursManagerFirebase';
@@ -16,7 +16,7 @@ const CollaborationParametragePage = () => {
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // Configuration entreprise
   const [entrepriseConfig, setEntrepriseConfig] = useState({
@@ -89,11 +89,11 @@ const CollaborationParametragePage = () => {
   }, [location.pathname, activeTab]);
 
   const loadConfiguration = useCallback(async () => {
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     setLoading(true);
     try {
-      const configDoc = await getDoc(doc(db, 'collaborationConfig', currentOrganization.id));
+      const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
       
       if (configDoc.exists()) {
         const data = configDoc.data();
@@ -107,17 +107,17 @@ const CollaborationParametragePage = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // Charger la configuration au montage
   useEffect(() => {
-    if (currentOrganization?.id) {
+    if (currentEntreprise?.id) {
       loadConfiguration();
     }
-  }, [currentOrganization?.id, loadConfiguration]);
+  }, [currentEntreprise?.id, loadConfiguration]);
 
   const saveConfiguration = async () => {
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     setSaving(true);
     try {
@@ -127,10 +127,10 @@ const CollaborationParametragePage = () => {
         taches: tachesConfig,
         permissions: permissionsConfig,
         updatedAt: new Date(),
-        organizationId: currentOrganization.id
+        entrepriseId: currentEntreprise.id
       };
 
-      await setDoc(doc(db, 'collaborationConfig', currentOrganization.id), configData, { merge: true });
+      await setDoc(doc(db, 'collaborationConfig', currentEntreprise.id), configData, { merge: true });
       
       // Afficher un message de succès
       alert('Configuration sauvegardée avec succès !');

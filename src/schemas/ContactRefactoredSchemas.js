@@ -13,7 +13,7 @@ import * as Yup from 'yup';
  */
 export const structureSchema = Yup.object().shape({
   // Identifiants
-  organizationId: Yup.string().required('Organisation requise'),
+  entrepriseId: Yup.string().required('Organisation requise'),
   
   // Informations principales
   raisonSociale: Yup.string()
@@ -198,7 +198,7 @@ export const structureSchema = Yup.object().shape({
  */
 export const personneSchema = Yup.object().shape({
   // Identifiants
-  organizationId: Yup.string().required('Organisation requise'),
+  entrepriseId: Yup.string().required('Organisation requise'),
   
   // Identité
   civilite: Yup.string()
@@ -333,7 +333,7 @@ export const personneSchema = Yup.object().shape({
  */
 export const liaisonSchema = Yup.object().shape({
   // Identifiants
-  organizationId: Yup.string().required('Organisation requise'),
+  entrepriseId: Yup.string().required('Organisation requise'),
   structureId: Yup.string().required('Structure requise'),
   personneId: Yup.string().required('Personne requise'),
   
@@ -383,7 +383,7 @@ export const liaisonSchema = Yup.object().shape({
  */
 export const qualificationSchema = Yup.object().shape({
   // Identifiants
-  organizationId: Yup.string().required('Organisation requise'),
+  entrepriseId: Yup.string().required('Organisation requise'),
   
   // Hiérarchie
   parentId: Yup.string().nullable(),

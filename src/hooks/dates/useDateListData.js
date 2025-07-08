@@ -14,7 +14,7 @@ import {
 } from '@/services/firebase-service';
 import logger from '@/services/loggerService';
 import cacheService from '@/services/cacheService';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook to fetch dates, form data, and contracts
@@ -28,10 +28,10 @@ export const useDateListData = () => {
   logger.log('🔄 Initialisation du hook useDateListData');
   
   // Organisation context
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // DEBUG: Log l'organisation
-  console.log('[useDateListData] currentOrganization:', currentOrganization);
+  console.log('[useDateListData] currentEntreprise:', currentEntreprise);
   
   const [dates, setDates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -274,9 +274,9 @@ export const useDateListData = () => {
       const datesRef = collection(db, 'dates');
       
       // Vérifier qu'on a une organisation
-      if (!currentOrganization?.id) {
+      if (!currentEntreprise?.id) {
         logger.warn('Pas d\'organisation courante - impossible de charger les dates');
-        console.error('[useDateListData] PAS D\'ORGANISATION ! currentOrganization:', currentOrganization);
+        console.error('[useDateListData] PAS D\'ORGANISATION ! currentEntreprise:', currentEntreprise);
         setError('Aucune organisation sélectionnée');
         setLoading(false);
         setLoadingMore(false);
@@ -286,7 +286,7 @@ export const useDateListData = () => {
       // TEMPORAIRE: Requête simplifiée sans index
       let q = query(
         datesRef, 
-        where('organizationId', '==', currentOrganization.id),
+        where('entrepriseId', '==', currentEntreprise.id),
         limit(pageSize)
       );
       
@@ -295,7 +295,7 @@ export const useDateListData = () => {
         // TEMPORAIRE: Pagination simplifiée sans index
         q = query(
           datesRef, 
-          where('organizationId', '==', currentOrganization.id),
+          where('entrepriseId', '==', currentEntreprise.id),
           startAfter(lastVisibleRef.current), 
           limit(pageSize)
         );
@@ -362,7 +362,7 @@ export const useDateListData = () => {
           const formsRef = collection(db, 'formulaires');
           const formsQuery = query(
             formsRef, 
-            where('organizationId', '==', currentOrganization.id),
+            where('entrepriseId', '==', currentEntreprise.id),
             where('dateId', 'in', dateIds)
           );
           const formsSnapshot = await getDocs(formsQuery);
@@ -394,7 +394,7 @@ export const useDateListData = () => {
           const contractsRef = collection(db, 'contrats');
           const contractsQuery = query(
             contractsRef, 
-            where('organizationId', '==', currentOrganization.id),
+            where('entrepriseId', '==', currentEntreprise.id),
             where('dateId', 'in', dateIds)
           );
           const contractsSnapshot = await getDocs(contractsQuery);
@@ -411,7 +411,7 @@ export const useDateListData = () => {
           setDatesWithContracts(contractsMap);
           
           // 3. Récupération des factures UNIQUEMENT pour les dates actuels
-          const facturesRef = collection(db, 'organizations', currentOrganization.id, 'factures');
+          const facturesRef = collection(db, 'organizations', currentEntreprise.id, 'factures');
           const facturesQuery = query(
             facturesRef, 
             where('dateId', 'in', dateIds)
@@ -458,7 +458,7 @@ export const useDateListData = () => {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [fetchEntitiesBatch, currentOrganization?.id]);
+  }, [fetchEntitiesBatch, currentEntreprise?.id]);
 
   // Effet initial pour charger les données - STABILISATION DES DÉPENDANCES
   const stableFetchRef = useRef();

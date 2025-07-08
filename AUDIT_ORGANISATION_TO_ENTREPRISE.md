@@ -4,6 +4,64 @@
 
 Cet audit identifie toutes les références à "organisation" qui doivent être renommées en "entreprise" dans le projet TourCraft.
 
+## État de la migration - 8 Juillet 2025 - VÉRIFICATION FINALE
+
+⚠️ **ATTENTION : Migration partiellement complète - 52 fichiers restants**
+
+### ✅ Éléments déjà migrés :
+
+1. **Contexte principal** : 
+   - `OrganizationContext` → `EntrepriseContext` ✓
+   - `useOrganization` → `useEntreprise` ✓
+   - `currentOrg` → `currentEntreprise` ✓
+   - `userOrgs` → `userEntreprises` ✓
+
+2. **Hook multi-entreprise** :
+   - `useMultiOrgQuery` → `useMultiEntQuery` ✓
+   - Préfixe `_org_` → `_ent_` ✓
+
+3. **Sélecteur d'entreprise** :
+   - `OrganizationSelector` → `EntrepriseSelector` ✓
+
+4. **Onboarding** :
+   - `OnboardingFlow.js` : Toutes les références migrées ✓
+   - Textes UI : "organisation" → "entreprise" ✓
+   - Variables : `orgData` → `entrepriseData` ✓
+
+5. **Utilisation dans le code** :
+   - 116 fichiers utilisent maintenant `useEntreprise` ✓
+   - Faute de frappe `currentEntrepriseanization` corrigée ✓
+
+6. **Structure de dossiers** :
+   - `/src/components/organization/` → `/src/components/entreprise/` ✓
+   - Tous les imports mis à jour ✓
+
+7. **Variables et paramètres** (hors Firebase) :
+   - `entrepriseId` → `entrepriseId` dans le code applicatif ✓
+   - `orgId` → `entrepriseId` dans les callbacks ✓
+   - Messages et commentaires mis à jour ✓
+
+### ❌ Éléments restants :
+
+1. **52 fichiers contiennent encore "organization" (192 occurrences)** :
+   - `EntrepriseContextDiagnostic.js` - 25 occurrences (variables locales)
+   - `brevoEmailIntegration.test.js` - 11 occurrences
+   - `factureService.js` - 10 occurrences
+   - `ParametresPage.js` - 10 occurrences
+   - Et 48 autres fichiers...
+
+2. **Collections Firestore** (reporté volontairement) :
+   - Collection `organizations` → `entreprises`
+   - Collection `user_organizations` → `user_entreprises`
+   - Collection `organization_invitations` → `entreprise_invitations`
+   - Conservées pour compatibilité avec les données existantes
+
+3. **Types d'occurrences restantes** :
+   - Variables locales : `organizationContext` dans les diagnostics
+   - Tests : références dans les tests d'intégration
+   - Services : références dans factureService.js
+   - Configuration : références aux collections Firebase
+
 ## 1. Contexte et Hooks principaux
 
 ### OrganizationContext.js
@@ -27,7 +85,7 @@ Cet audit identifie toutes les références à "organisation" qui doivent être 
   - `useMultiOrgQuery` → `useMultiEntrepriseQuery`
   - `useMultiOrgDocument` → `useMultiEntrepriseDocument`
   - `useMultiOrgMutation` → `useMultiEntrepriseMutation`
-  - `organizationId` (field) → `entrepriseId`
+  - `entrepriseId` (field) → `entrepriseId`
   - `_org_` (prefix) → `_ent_`
   - Logs et commentaires
 
@@ -36,7 +94,7 @@ Cet audit identifie toutes les références à "organisation" qui doivent être 
 ### firebase-service.js
 - **Fichier** : `/src/services/firebase-service.js`
 - **Éléments à renommer** :
-  - `currentOrganizationId` → `currentEntrepriseId`
+  - `currentEntrepriseId` → `currentEntrepriseId`
   - `setCurrentOrganization` → `setCurrentEntreprise`
   - `getCurrentOrganization` → `getCurrentEntreprise`
   - `clearCurrentOrganization` → `clearCurrentEntreprise`
@@ -53,7 +111,7 @@ Cet audit identifie toutes les références à "organisation" qui doivent être 
   - Collection `organizations` → `entreprises`
   - Collection `organization_invitations` → `entreprise_invitations`
   - Collection `user_organizations` → `user_entreprises`
-  - LocalStorage key `currentOrganizationId` → `currentEntrepriseId`
+  - LocalStorage key `currentEntrepriseId` → `currentEntrepriseId`
 
 ## 3. Composants UI
 
@@ -146,22 +204,22 @@ Cet audit identifie toutes les références à "organisation" qui doivent être 
 - Collections avec suffixe `_org_` → `_ent_`
 
 ### Champs à renommer dans les documents
-- `organizationId` → `entrepriseId`
+- `entrepriseId` → `entrepriseId`
 - `defaultOrganization` → `defaultEntreprise`
 - Références dans les membres, invitations, etc.
 
 ## 7. Autres fichiers impactés
 
 ### Services
-- Tous les services utilisant `organizationId` ou accédant aux collections org
+- Tous les services utilisant `entrepriseId` ou accédant aux collections org
 - Services de contacts, factures, contrats, etc.
 
 ### Hooks
-- Hooks utilisant `useOrganization` ou `organizationId`
+- Hooks utilisant `useOrganization` ou `entrepriseId`
 - Hooks de recherche et de données
 
 ### Composants de debug
-- `OrganizationIdFixer.js`
+- `EntrepriseIdFixer.js`
 - `OrganizationContextDiagnostic.js`
 - `ArtisteOrganizationMatcher.js`
 - Autres outils de debug
@@ -185,7 +243,7 @@ Cet audit identifie toutes les références à "organisation" qui doivent être 
 
 ### Phase 3 : Migration des données
 1. Migrer les collections Firestore
-2. Mettre à jour tous les `organizationId` → `entrepriseId`
+2. Mettre à jour tous les `entrepriseId` → `entrepriseId`
 3. Nettoyer les anciennes collections
 
 ### Phase 4 : Nettoyage
@@ -226,10 +284,27 @@ Cet audit identifie toutes les références à "organisation" qui doivent être 
 - **Onboarding** : S'assurer que le workflow de création d'entreprise fonctionne correctement
 - **Compatibilité** : Maintenir la compatibilité avec les données existantes pendant la transition
 
-## 10. Estimation
+## 10. Estimation et Statut Final
 
-- **Fichiers impactés** : ~350+
-- **Collections Firestore** : 3 principales + collections avec suffixe
-- **Complexité** : Élevée (système central de l'application)
-- **Temps estimé** : 2-3 jours pour une migration complète et sûre
-- **Onboarding** : +0.5 jour pour la migration spécifique de l'onboarding
+### Travail accompli :
+- **116 fichiers** migrés automatiquement (imports EntrepriseContext)
+- **240 fichiers** migrés pour organizationId → entrepriseId
+- **18 fichiers debug** supprimés
+- **Contexte, hooks et composants** : 100% migrés
+- **Onboarding** : 100% migré
+
+### Travail restant :
+- **52 fichiers** avec 192 occurrences de "organization"
+- Principalement dans :
+  - Tests d'intégration
+  - Outils de diagnostic
+  - Services (factureService.js)
+  - Références aux collections Firebase
+
+### Recommandations :
+1. **Prioriser** : Les 52 fichiers restants sont majoritairement des tests et outils de debug
+2. **Collections Firebase** : Garder les noms actuels jusqu'à une migration des données
+3. **Variables locales** : Certaines occurrences dans EntrepriseContextDiagnostic.js sont des variables locales qui pourraient rester ainsi pour la clarté du code
+
+### Conclusion :
+La migration est fonctionnellement complète à **~80%**. Les éléments critiques (contexte, hooks, composants UI) sont tous migrés. Les occurrences restantes sont principalement dans des fichiers non critiques ou sont liées aux collections Firebase.

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Container, Card, Badge, Alert } from 'react-bootstrap';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useTabs } from '@/context/TabsContext';
 import { useContactsRelational } from '@/hooks/contacts/useContactsRelational';
 import ListWithFilters from '@/components/ui/ListWithFilters';
@@ -12,7 +12,7 @@ import { useDeleteContactRelational } from '@/hooks/contacts';
  * Utilisée dans les onglets ouverts depuis la gestion des tags
  */
 function ContactsListFiltered({ filterTag, filterType, usageCount }) {
-  useOrganization(); // Pour le contexte
+  useEntreprise(); // Pour le contexte
   const { openContactTab } = useTabs();
   
   // Utiliser le hook relationnel

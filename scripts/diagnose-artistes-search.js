@@ -19,8 +19,8 @@ const db = admin.firestore();
 async function diagnoseArtistesSearch() {
   console.log('🔍 DIAGNOSTIC RECHERCHE ARTISTES\n');
   
-  const organizationId = '9LjkCJG04pEzbABdHkSf';
-  console.log(`Organisation cible : ${organizationId}\n`);
+  const entrepriseId = '9LjkCJG04pEzbABdHkSf';
+  console.log(`Organisation cible : ${entrepriseId}\n`);
   
   try {
     // 1. Compter tous les artistes
@@ -28,14 +28,14 @@ async function diagnoseArtistesSearch() {
     const allArtistesSnapshot = await db.collection('artistes').get();
     console.log(`   Total artistes dans la base : ${allArtistesSnapshot.size}`);
     
-    // 2. Analyser les organizationId
-    console.log('\n2️⃣ Analyse des organizationId :');
+    // 2. Analyser les entrepriseId
+    console.log('\n2️⃣ Analyse des entrepriseId :');
     const orgStats = {};
     let noOrgCount = 0;
     
     allArtistesSnapshot.forEach(doc => {
       const data = doc.data();
-      const orgId = data.organizationId;
+      const orgId = data.entrepriseId;
       
       if (!orgId) {
         noOrgCount++;
@@ -44,17 +44,17 @@ async function diagnoseArtistesSearch() {
       }
     });
     
-    console.log(`   Sans organizationId : ${noOrgCount}`);
+    console.log(`   Sans entrepriseId : ${noOrgCount}`);
     console.log('   Distribution par organisation :');
     Object.entries(orgStats).forEach(([orgId, count]) => {
-      const marker = orgId === organizationId ? ' ⭐' : '';
+      const marker = orgId === entrepriseId ? ' ⭐' : '';
       console.log(`     - ${orgId}: ${count} artistes${marker}`);
     });
     
     // 3. Rechercher spécifiquement pour l'organisation cible
-    console.log(`\n3️⃣ Artistes de l'organisation ${organizationId} :`);
+    console.log(`\n3️⃣ Artistes de l'organisation ${entrepriseId} :`);
     const orgArtistesSnapshot = await db.collection('artistes')
-      .where('organizationId', '==', organizationId)
+      .where('entrepriseId', '==', entrepriseId)
       .get();
     
     console.log(`   Nombre trouvé : ${orgArtistesSnapshot.size}`);
@@ -93,8 +93,8 @@ async function diagnoseArtistesSearch() {
       caseInsensitiveMatches.forEach(artiste => {
         console.log(`     - Nom: "${artiste.nom}"`);
         console.log(`       ID: ${artiste.id}`);
-        console.log(`       OrganizationId: ${artiste.organizationId || 'AUCUN'}`);
-        console.log(`       Correspond à l'org cible: ${artiste.organizationId === organizationId ? '✅ OUI' : '❌ NON'}`);
+        console.log(`       EntrepriseId: ${artiste.entrepriseId || 'AUCUN'}`);
+        console.log(`       Correspond à l'org cible: ${artiste.entrepriseId === entrepriseId ? '✅ OUI' : '❌ NON'}`);
       });
     }
     
@@ -104,23 +104,23 @@ async function diagnoseArtistesSearch() {
     allArtistesSnapshot.forEach(doc => {
       const data = doc.data();
       if (data.nom && data.nom.toLowerCase().startsWith('m')) {
-        partialMatches.push({ id: doc.id, nom: data.nom, organizationId: data.organizationId });
+        partialMatches.push({ id: doc.id, nom: data.nom, entrepriseId: data.entrepriseId });
       }
     });
     
     console.log(`   Trouvés : ${partialMatches.length} artiste(s)`);
     if (partialMatches.length > 0 && partialMatches.length <= 10) {
       partialMatches.forEach(a => {
-        const orgMatch = a.organizationId === organizationId ? '✅' : '❌';
-        console.log(`     - "${a.nom}" (Org: ${a.organizationId || 'AUCUN'} ${orgMatch})`);
+        const orgMatch = a.entrepriseId === entrepriseId ? '✅' : '❌';
+        console.log(`     - "${a.nom}" (Org: ${a.entrepriseId || 'AUCUN'} ${orgMatch})`);
       });
     }
     
     // 6. Vérifier les index Firestore
     console.log('\n6️⃣ Recommandations :');
-    console.log('   - Vérifier que les index composites sont créés pour (organizationId, createdAt)');
-    console.log('   - S\'assurer que les règles de sécurité permettent la lecture avec organizationId');
-    console.log('   - Vérifier la cohérence des types de données (string vs null pour organizationId)');
+    console.log('   - Vérifier que les index composites sont créés pour (entrepriseId, createdAt)');
+    console.log('   - S\'assurer que les règles de sécurité permettent la lecture avec entrepriseId');
+    console.log('   - Vérifier la cohérence des types de données (string vs null pour entrepriseId)');
     
   } catch (error) {
     console.error('❌ Erreur lors du diagnostic :', error);

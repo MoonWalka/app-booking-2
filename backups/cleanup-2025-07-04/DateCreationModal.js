@@ -65,7 +65,7 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
     try {
       const q = query(
         collection(db, 'artistes'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentOrganization.id)
       );
       const querySnapshot = await getDocs(q);
       const artistes = [];
@@ -120,7 +120,7 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
     try {
       const q = query(
         collection(db, 'contacts'),
-        where('organizationId', '==', currentOrganization.id),
+        where('entrepriseId', '==', currentOrganization.id),
         where('type', '==', 'structure')
       );
       const querySnapshot = await getDocs(q);
@@ -231,7 +231,7 @@ function DateCreationModal({ show, onHide, onCreated, prefilledData = {} }) {
         organisateurId: formData.organisateurId,
         organisateurNom: formData.organisateurNom,
         libelle: formData.libelle,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentOrganization.id,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         statut: 'En cours' // Statut par défaut

@@ -149,7 +149,7 @@ async function addSignataireToExistingConcerts() {
           email: signataireData.email || '',
           telephone: signataireData.telephone || '',
           fonction: signataireData.fonction || '',
-          organizationId: concertData.organizationId,
+          entrepriseId: concertData.entrepriseId,
           concertsIds: [concertId],
           lieuxIds: [],
           structureId: '',

@@ -3,13 +3,13 @@ import { Card, Button, Table, Modal, Form, Alert, Badge, InputGroup } from 'reac
 import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch, FaChevronRight, FaChevronDown, FaFilter } from 'react-icons/fa';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useTabs } from '@/context/TabsContext';
 import { TAGS_HIERARCHY, GENRES_HIERARCHY, RESEAUX_HIERARCHY, MOTS_CLES_HIERARCHY } from '@/config/tagsHierarchy';
 import './TagsManager.css';
 
 const TagsManager = ({ type, title, buttonLabel }) => {
-    const { currentOrganization } = useOrganization();
+    const { currentEntreprise } = useEntreprise();
     const { openTab } = useTabs();
     const [itemsList, setItemsList] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
@@ -263,7 +263,7 @@ const TagsManager = ({ type, title, buttonLabel }) => {
 
     // Fonction pour charger les vraies données d'utilisation depuis Firestore
     const loadRealUsageData = useCallback(async () => {
-        if (!currentOrganization?.id) {
+        if (!currentEntreprise?.id) {
             return;
         }
 
@@ -271,7 +271,7 @@ const TagsManager = ({ type, title, buttonLabel }) => {
             // Requête pour tous les contacts avec des tags
             const contactsQuery = query(
                 collection(db, 'contacts'),
-                where('organizationId', '==', currentOrganization.id)
+                where('entrepriseId', '==', currentEntreprise.id)
             );
             
             const contactsSnapshot = await getDocs(contactsQuery);
@@ -309,14 +309,14 @@ const TagsManager = ({ type, title, buttonLabel }) => {
         } catch (error) {
             console.error('TagsManager: Erreur lors du chargement des données d\'utilisation:', error);
         }
-    }, [currentOrganization?.id, currentHierarchy]);
+    }, [currentEntreprise?.id, currentHierarchy]);
 
     // Charger les données d'utilisation au montage
     useEffect(() => {
-        if (currentOrganization?.id && ['activites', 'genres', 'reseaux', 'mots-cles'].includes(type)) {
+        if (currentEntreprise?.id && ['activites', 'genres', 'reseaux', 'mots-cles'].includes(type)) {
             loadRealUsageData();
         }
-    }, [currentOrganization?.id, type, loadRealUsageData]);
+    }, [currentEntreprise?.id, type, loadRealUsageData]);
 
     const getUsageCount = (itemId) => {
         // Pour tous les types avec hiérarchie, utiliser les vraies données (y compris 0 si jamais utilisé)

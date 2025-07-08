@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Form, Card, Row, Col } from 'react-bootstrap';
 import { doc, getDoc, updateDoc, serverTimestamp, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useTabs } from '@/context/TabsContext';
 import { useAuth } from '@/context/AuthContext';
 import { format } from 'date-fns';
@@ -13,7 +13,7 @@ import styles from './DateDetailsPage.module.css';
  * Page de détails et d'édition d'une date
  */
 function DateDetailsPage({ params = {} }) {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { currentUser } = useAuth();
   const { getActiveTab, closeTab, openTab } = useTabs();
   
@@ -46,7 +46,7 @@ function DateDetailsPage({ params = {} }) {
 
   // Charger les données financières depuis les documents liés
   const loadFinancialData = useCallback(async (dateId) => {
-    if (!dateId || !currentOrganization?.id) return null;
+    if (!dateId || !currentEntreprise?.id) return null;
     
     try {
       // 1. Essayer de récupérer le contrat (relation 1:1 avec dateId)
@@ -84,7 +84,7 @@ function DateDetailsPage({ params = {} }) {
 
       // 3. Si pas de pré-contrat, chercher une facture
       const facturesQuery = query(
-        collection(db, 'organizations', currentOrganization.id, 'factures'),
+        collection(db, 'organizations', currentEntreprise.id, 'factures'),
         where('dateId', '==', dateId),
         orderBy('dateFacture', 'desc')
       );
@@ -122,7 +122,7 @@ function DateDetailsPage({ params = {} }) {
       console.error('[DateDetailsPage] Erreur lors du chargement des données financières:', error);
       return null;
     }
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // Charger les données de la date
   const loadDateData = useCallback(async () => {
@@ -187,13 +187,13 @@ function DateDetailsPage({ params = {} }) {
 
   // Charger les festivals
   const loadFestivals = useCallback(async () => {
-    if (!currentOrganization?.id || !contactId) return;
+    if (!currentEntreprise?.id || !contactId) return;
     
     try {
       // Charger uniquement les festivals dont le contact est propriétaire
       const q = query(
         collection(db, 'festivals'),
-        where('organizationId', '==', currentOrganization.id),
+        where('entrepriseId', '==', currentEntreprise.id),
         where('contactId', '==', contactId)
       );
       const querySnapshot = await getDocs(q);
@@ -208,16 +208,16 @@ function DateDetailsPage({ params = {} }) {
     } catch (error) {
       console.error('Erreur lors du chargement des festivals:', error);
     }
-  }, [currentOrganization?.id, contactId]);
+  }, [currentEntreprise?.id, contactId]);
 
   // Charger les collaborateurs
   const loadCollaborateurs = useCallback(async () => {
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     try {
       const q = query(
         collection(db, 'collaborateurs'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       const querySnapshot = await getDocs(q);
       const collaborateursData = [];
@@ -230,7 +230,7 @@ function DateDetailsPage({ params = {} }) {
     } catch (error) {
       console.error('Erreur lors du chargement des collaborateurs:', error);
     }
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   useEffect(() => {
     loadDateData();

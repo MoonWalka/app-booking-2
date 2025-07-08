@@ -7,7 +7,7 @@ import { personnesService } from '@/services/contacts/personnesService';
 import { datesService } from '@/services/dateService';
 import { getPreContratsByDate } from '@/services/preContratService';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import EntityViewTabs from '@/components/common/EntityViewTabs';
 import TagsSelectionModal from '@/components/ui/TagsSelectionModal';
 import AssociatePersonModal from '@/components/ui/AssociatePersonModal';
@@ -65,7 +65,7 @@ function ContactViewTabs({ id, viewType = null }) {
   const { openDateCreationTab } = useTabs();
   const { openCommentModal, openPersonneModal } = useContactModals();
   const { currentUser } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const navigate = useNavigate();
   
   // Hook relationnel direct
@@ -87,7 +87,7 @@ function ContactViewTabs({ id, viewType = null }) {
   
   // Récupération directe des données - SANS setState !
   const contact = useMemo(() => {
-    if (!cleanId || !currentOrganization?.id) {
+    if (!cleanId || !currentEntreprise?.id) {
       return null;
     }
     
@@ -121,7 +121,7 @@ function ContactViewTabs({ id, viewType = null }) {
     }
     
     return null;
-  }, [cleanId, currentOrganization?.id, entityType, getStructureWithPersonnes, getPersonneWithStructures]);
+  }, [cleanId, currentEntreprise?.id, entityType, getStructureWithPersonnes, getPersonneWithStructures]);
   
   // Effet pour gérer le type d'entité automatiquement
   React.useEffect(() => {
@@ -139,7 +139,7 @@ function ContactViewTabs({ id, viewType = null }) {
   
   // Effet pour gérer loading et error
   React.useEffect(() => {
-    if (!cleanId || !currentOrganization?.id) {
+    if (!cleanId || !currentEntreprise?.id) {
       setLoading(false);
       setError(!cleanId ? 'ID manquant' : 'Organisation manquante');
       return;
@@ -155,7 +155,7 @@ function ContactViewTabs({ id, viewType = null }) {
       setError('Contact non trouvé');
     }
     // Sinon, on est toujours en loading
-  }, [cleanId, currentOrganization?.id, contact, structures.length, personnes.length]);
+  }, [cleanId, currentEntreprise?.id, contact, structures.length, personnes.length]);
   
   
   // Déterminer le type de contact
@@ -195,7 +195,7 @@ function ContactViewTabs({ id, viewType = null }) {
       title: `Nouveau commentaire - ${personneNom}`,
       onSave: async (content) => {
         try {
-          const personneData = await personnesService.getPersonne(personneId, currentOrganization.id);
+          const personneData = await personnesService.getPersonne(personneId, currentEntreprise.id);
           
           if (!personneData) throw new Error('Fiche personne non trouvée');
           
@@ -224,7 +224,7 @@ function ContactViewTabs({ id, viewType = null }) {
         }
       }
     });
-  }, [openCommentModal, currentOrganization?.id, currentUser?.uid, currentUser?.displayName, currentUser?.email]);
+  }, [openCommentModal, currentEntreprise?.id, currentUser?.uid, currentUser?.displayName, currentUser?.email]);
 
   // Gestion des personnes
   const handleEditPerson = useCallback((personne) => {
@@ -239,7 +239,7 @@ function ContactViewTabs({ id, viewType = null }) {
       // Dans le modèle relationnel, utiliser directement l'ID de la personne
       if (personne.id) {
         // Récupérer la personne via le service relationnel
-        const personneData = await personnesService.getPersonne(personne.id, currentOrganization.id);
+        const personneData = await personnesService.getPersonne(personne.id, currentEntreprise.id);
         
         if (personneData) {
           const existingComments = personneData.commentaires || [];
@@ -266,7 +266,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('Erreur lors de la gestion du commentaire personne:', error);
       alert('Erreur lors de l\'ouverture du commentaire pour cette personne');
     }
-  }, [currentOrganization?.id, openCreateCommentModal]);
+  }, [currentEntreprise?.id, openCreateCommentModal]);
 
   const navigateToEntity = useCallback((entityType, entityId, entityName) => {
     if (!entityId) return;
@@ -495,12 +495,12 @@ function ContactViewTabs({ id, viewType = null }) {
   // Charger les dates pour les structures
   const loadStructureDates = useCallback(async () => {
     console.log('🔍 [ContactViewTabs] DÉBUT loadStructureDates');
-    console.log('  - currentOrganization?.id:', currentOrganization?.id);
+    console.log('  - currentEntreprise?.id:', currentEntreprise?.id);
     console.log('  - cleanId:', cleanId);
     console.log('  - entityType:', entityType);
     console.log('  - structureName:', structureName);
     
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       console.log('❌ [ContactViewTabs] Pas d\'organisation, arrêt du chargement');
       setDatesData([]);
       return;
@@ -512,14 +512,14 @@ function ContactViewTabs({ id, viewType = null }) {
       // Essayer d'abord avec l'ID de la structure si disponible
       if (cleanId && entityType === 'structure') {
         console.log('🔎 [ContactViewTabs] Tentative 1: Chargement par structureId:', cleanId);
-        dates = await datesService.getDatesByStructureId(currentOrganization.id, cleanId);
+        dates = await datesService.getDatesByStructureId(currentEntreprise.id, cleanId);
         console.log(`  → Résultat: ${dates.length} dates trouvées`);
       }
       
       // Si pas de résultats ou pas d'ID, essayer avec le nom
       if (dates.length === 0 && structureName) {
         console.log('🔎 [ContactViewTabs] Tentative 2: Chargement par structureName:', structureName);
-        dates = await datesService.getDatesByStructure(currentOrganization.id, structureName);
+        dates = await datesService.getDatesByStructure(currentEntreprise.id, structureName);
         console.log(`  → Résultat: ${dates.length} dates trouvées`);
       }
       
@@ -560,7 +560,7 @@ function ContactViewTabs({ id, viewType = null }) {
       console.error('Erreur chargement dates structure:', error);
       setDatesData([]);
     }
-  }, [currentOrganization?.id, structureName, cleanId, entityType]);
+  }, [currentEntreprise?.id, structureName, cleanId, entityType]);
 
   // Charger les dates au changement de structure avec debouncing
   React.useEffect(() => {

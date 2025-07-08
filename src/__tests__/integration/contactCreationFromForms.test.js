@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { collection, getDocs, deleteDoc, doc, getDoc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../services/firebase-service';
 import { AuthContext } from '../../context/AuthContext';
-import { OrganizationContext } from '../../context/OrganizationContext';
+import { EntrepriseContext } from '../../context/EntrepriseContext';
 import LieuForm from '../../components/lieux/LieuForm';
 import DateForm from '../../components/dates/DateForm';
 import ContactsList from '../../components/contacts/ContactsList';
@@ -27,7 +27,7 @@ const cleanupTestData = async () => {
   for (const collectionName of collections) {
     const q = query(
       collection(db, collectionName),
-      where('organizationId', '==', mockOrganization.id)
+      where('entrepriseId', '==', mockOrganization.id)
     );
     const snapshot = await getDocs(q);
     
@@ -41,12 +41,12 @@ const cleanupTestData = async () => {
 const TestWrapper = ({ children }) => (
   <BrowserRouter>
     <AuthContext.Provider value={{ user: mockUser }}>
-      <OrganizationContext.Provider value={{ 
-        currentOrganization: mockOrganization,
+      <EntrepriseContext.Provider value={{ 
+        currentEntreprise: mockOrganization,
         organizations: [mockOrganization]
       }}>
         {children}
-      </OrganizationContext.Provider>
+      </EntrepriseContext.Provider>
     </AuthContext.Provider>
   </BrowserRouter>
 );
@@ -104,7 +104,7 @@ describe('Création de contacts depuis différents formulaires', () => {
         const lieuxQuery = query(
           collection(db, 'lieux'),
           where('nom', '==', 'Salle de date Test'),
-          where('organizationId', '==', mockOrganization.id)
+          where('entrepriseId', '==', mockOrganization.id)
         );
         const lieuxSnapshot = await getDocs(lieuxQuery);
         expect(lieuxSnapshot.size).toBe(1);
@@ -114,7 +114,7 @@ describe('Création de contacts depuis différents formulaires', () => {
         const contactsQuery = query(
           collection(db, 'contacts'),
           where('nom', '==', 'Jean Dupont Test'),
-          where('organizationId', '==', mockOrganization.id)
+          where('entrepriseId', '==', mockOrganization.id)
         );
         const contactsSnapshot = await getDocs(contactsQuery);
         expect(contactsSnapshot.size).toBe(1);
@@ -195,7 +195,7 @@ describe('Création de contacts depuis différents formulaires', () => {
         const datesQuery = query(
           collection(db, 'dates'),
           where('nom', '==', 'Festival Test 2024'),
-          where('organizationId', '==', mockOrganization.id)
+          where('entrepriseId', '==', mockOrganization.id)
         );
         const datesSnapshot = await getDocs(datesQuery);
         expect(datesSnapshot.size).toBe(1);
@@ -205,7 +205,7 @@ describe('Création de contacts depuis différents formulaires', () => {
         const contactsQuery = query(
           collection(db, 'contacts'),
           where('nom', '==', 'Marie Martin Test'),
-          where('organizationId', '==', mockOrganization.id)
+          where('entrepriseId', '==', mockOrganization.id)
         );
         const contactsSnapshot = await getDocs(contactsQuery);
         expect(contactsSnapshot.size).toBe(1);

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useTabs } from '@/context/TabsContext';
 import { toast } from 'react-toastify';
 import styles from './DateCreationPage.module.css';
@@ -21,7 +21,7 @@ function DateCreationPage({ params = {} }) {
   // Mode debug (à activer temporairement)
   const DEBUG_MODE = false;
   
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { openDatesListTab, openDateDetailsTab, getActiveTab, closeTab } = useTabs();
   
   // Récupérer les données pré-remplies depuis les paramètres de l'onglet
@@ -73,14 +73,14 @@ function DateCreationPage({ params = {} }) {
       // Charger les artistes
       const qArtistes = query(
         collection(db, 'artistes'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       const artistesSnapshot = await getDocs(qArtistes);
       
       // Charger les projets
       const qProjets = query(
         collection(db, 'projets'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       const projetsSnapshot = await getDocs(qProjets);
       
@@ -152,13 +152,13 @@ function DateCreationPage({ params = {} }) {
     } catch (error) {
       console.error('Erreur lors du chargement des artistes:', error);
     }
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   const loadStructures = useCallback(async () => {
     try {
       const q = query(
         collection(db, 'structures'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       const querySnapshot = await getDocs(q);
       const structures = [];
@@ -176,16 +176,16 @@ function DateCreationPage({ params = {} }) {
     } catch (error) {
       console.error('Erreur lors du chargement des structures:', error);
     }
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
 
   // Charger les données au montage du composant
   useEffect(() => {
-    if (currentOrganization?.id) {
+    if (currentEntreprise?.id) {
       loadArtistes();
       loadStructures();
     }
-  }, [currentOrganization, loadArtistes, loadStructures]);
+  }, [currentEntreprise, loadArtistes, loadStructures]);
 
   // Filtrer les résultats pour les dropdowns
   const filteredArtistes = artistesData.filter(artiste =>
@@ -263,7 +263,7 @@ function DateCreationPage({ params = {} }) {
       return;
     }
 
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       alert('Aucune organisation sélectionnée');
       return;
     }
@@ -283,7 +283,7 @@ function DateCreationPage({ params = {} }) {
         organisateurId: formData.structureId,
         organisateurNom: formData.structureNom,
         libelle: formData.libelle,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         statut: 'En cours' // Statut par défaut
@@ -412,11 +412,11 @@ function DateCreationPage({ params = {} }) {
               <strong>Dropdown visible: {showArtisteDropdown && filteredArtistes.length > 0 ? '✅ OUI' : '❌ NON'}</strong>
             </div>
             
-            {currentOrganization && (
+            {currentEntreprise && (
               <div>
                 <strong>Organization:</strong><br/>
-                ID: {currentOrganization.id}<br/>
-                Nom: {currentOrganization.name}
+                ID: {currentEntreprise.id}<br/>
+                Nom: {currentEntreprise.name}
               </div>
             )}
           </div>
@@ -564,7 +564,7 @@ function DateCreationPage({ params = {} }) {
   structureId: formData.structureId,
   structureNom: formData.structureNom,
   libelle: formData.libelle,
-  organizationId: currentOrganization?.id,
+  entrepriseId: currentEntreprise?.id,
   statut: 'En cours'
 }, null, 2)}
                     </pre>

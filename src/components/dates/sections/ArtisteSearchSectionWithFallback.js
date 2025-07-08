@@ -5,10 +5,10 @@ import { collection, query, getDocs, limit, orderBy, doc, updateDoc } from '@/se
 import { db } from '@/services/firebase-service';
 import EntitySelector from '@/components/ui/EntitySelector';
 import Button from '@/components/ui/Button';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
- * Version améliorée de ArtisteSearchSection qui peut chercher sans filtre organizationId
+ * Version améliorée de ArtisteSearchSection qui peut chercher sans filtre entrepriseId
  * si aucun résultat n'est trouvé avec le filtre
  */
 const ArtisteSearchSectionWithFallback = ({ 
@@ -17,7 +17,7 @@ const ArtisteSearchSectionWithFallback = ({
   displayMode = 'form',
   className = ''
 }) => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [showAllArtistes, setShowAllArtistes] = useState(false);
   const [allArtistesResults, setAllArtistesResults] = useState([]);
   const [isLoadingAll, setIsLoadingAll] = useState(false);
@@ -44,7 +44,7 @@ const ArtisteSearchSectionWithFallback = ({
     }
   });
 
-  // Rechercher dans TOUS les artistes (sans filtre organizationId)
+  // Rechercher dans TOUS les artistes (sans filtre entrepriseId)
   const searchAllArtistes = async (term) => {
     if (!term || term.length < 2) {
       setAllArtistesResults([]);
@@ -86,25 +86,25 @@ const ArtisteSearchSectionWithFallback = ({
     }
   }, [searchTerm, results.length, isSearching]);
 
-  // Gérer la sélection d'un artiste sans organizationId
+  // Gérer la sélection d'un artiste sans entrepriseId
   const handleSelectWithFix = async (artiste) => {
-    if (!artiste.organizationId && currentOrganization?.id) {
+    if (!artiste.entrepriseId && currentEntreprise?.id) {
       const confirmFix = window.confirm(
         `L'artiste "${artiste.nom}" n'appartient à aucune organisation.\n\n` +
-        `Voulez-vous l'associer à votre organisation "${currentOrganization.name}" ?`
+        `Voulez-vous l'associer à votre organisation "${currentEntreprise.name}" ?`
       );
       
       if (confirmFix) {
         try {
-          // Mettre à jour l'artiste avec l'organizationId
+          // Mettre à jour l'artiste avec l'entrepriseId
           const artisteRef = doc(db, 'artistes', artiste.id);
           await updateDoc(artisteRef, {
-            organizationId: currentOrganization.id,
+            entrepriseId: currentEntreprise.id,
             updatedAt: new Date()
           });
           
           // Mettre à jour l'objet local
-          artiste.organizationId = currentOrganization.id;
+          artiste.entrepriseId = currentEntreprise.id;
           console.log(`✅ Artiste ${artiste.nom} associé à l'organisation`);
         } catch (error) {
           console.error('Erreur lors de la mise à jour de l\'artiste:', error);
@@ -158,7 +158,7 @@ const ArtisteSearchSectionWithFallback = ({
       )}
       
       {/* Avertissement pour les artistes sans organization */}
-      {showAllArtistes && allArtistesResults.some(a => !a.organizationId) && (
+      {showAllArtistes && allArtistesResults.some(a => !a.entrepriseId) && (
         <div className="alert alert-info mt-2">
           <small>
             <i className="bi bi-info-circle me-2"></i>

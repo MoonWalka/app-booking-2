@@ -1,0 +1,690 @@
+RAPPORT DE MIGRATION CONCERT → DATE
+===================================
+Date: Tue Jul  8 15:00:26 CEST 2025
+Mode: DRY-RUN
+
+
+🎯 PHASE 1: Collections Firebase
+================================
+📝 src//components/debug/TestWorkflowButton.js:243
+   - AVANT:       const collections = ['concerts', 'lieux', 'contacts', 'artistes'];
+   + APRÈS:       const collections = ['dates', 'lieux', 'contacts', 'artistes'];
+
+📝 src//components/debug/TestWorkflowButton2.js:444
+   - AVANT:       const collections = ['concerts', 'lieux', 'contacts', 'artistes'];
+   + APRÈS:       const collections = ['dates', 'lieux', 'contacts', 'artistes'];
+
+📝 src//components/debug/OrganizationIdDebug.js:27
+   - AVANT:   const collections = ['contacts', 'lieux', 'concerts', 'structures'];
+   + APRÈS:   const collections = ['contacts', 'lieux', 'dates', 'structures'];
+
+📝 src//components/debug/ContactsMigrationFinal.js:100
+   - AVANT:     const collections = ['concerts', 'lieux', 'contrats', 'devis'];
+   + APRÈS:     const collections = ['dates', 'lieux', 'contrats', 'devis'];
+
+📝 src//components/debug/FestitestContactFinder.js:41
+   - AVANT:       const collections = ['contacts', 'structures', 'concerts', 'lieux', 'contrats', 'factures', 'artistes'];
+   + APRÈS:       const collections = ['contacts', 'structures', 'dates', 'lieux', 'contrats', 'factures', 'artistes'];
+
+📝 src//components/debug/OrganizationIdFixer.js:18
+   - AVANT:     const collections = ['contacts', 'lieux', 'concerts', 'artistes', 'structures'];
+   + APRÈS:     const collections = ['contacts', 'lieux', 'dates', 'artistes', 'structures'];
+
+📝 src//components/debug/MigrationConcertToDate.js:27
+   - AVANT:     const concertsRef = collection(db, 'concerts');
+   + APRÈS:     const datesRef = collection(db, 'dates');
+
+📝 src//components/debug/MigrationConcertToDate.js:146
+   - AVANT:     const concertsCount = (await getDocs(collection(db, 'concerts'))).size;
+   + APRÈS:     const datesCount = (await getDocs(collection(db, 'dates'))).size;
+
+📝 src//components/debug/MigrationConcertToDate.js:228
+   - AVANT:             <li>Cette migration transforme la collection "concerts" en "dates"</li>
+   + APRÈS:             <li>Cette migration transforme la collection "dates" en "dates"</li>
+
+📝 src//components/debug/MigrationConcertToDate.js:384
+   - AVANT:                   <li>Une fois validé, supprimez l'ancienne collection "concerts"</li>
+   + APRÈS:                   <li>Une fois validé, supprimez l'ancienne collection "dates"</li>
+
+📝 src//components/debug/ListDebugger.js:23
+   - AVANT:       const collections = ['contacts', 'lieux', 'concerts', 'structures'];
+   + APRÈS:       const collections = ['contacts', 'lieux', 'dates', 'structures'];
+
+
+🎯 PHASE 2: Propriétés d'objets
+================================
+
+📌 Migration: concertsAssocies → datesAssociees
+📝 src//components/structures/desktop/StructureForm.js:85
+   - AVANT:   const [concertsAssocies, setDatesAssocies] = useState([]);
+   + APRÈS:   const [datesAssociees, setDatesAssocies] = useState([]);
+
+📝 src//components/structures/desktop/StructureForm.js:458
+   - AVANT:         concertsIds: concertsAssocies.map(c => c.id),
+   + APRÈS:         concertsIds: datesAssociees.map(c => c.id),
+
+📝 src//components/structures/desktop/StructureForm.js:725
+   - AVANT:               dateIds={concertsAssocies.map(c => c.id)}
+   + APRÈS:               dateIds={datesAssociees.map(c => c.id)}
+
+📝 src//components/structures/desktop/StructureForm.js:732
+   - AVANT:                   const currentIds = concertsAssocies.map(c => c.id);
+   + APRÈS:                   const currentIds = datesAssociees.map(c => c.id);
+
+📝 src//components/contacts/sections/ContactDatesSection.js:15
+   - AVANT:   concertsAssocies,
+   + APRÈS:   datesAssociees,
+
+📝 src//components/contacts/sections/ContactDatesSection.js:24
+   - AVANT:       title={`Dates associés (${concertsAssocies.length})`}
+   + APRÈS:       title={`Dates associés (${datesAssociees.length})`}
+
+📝 src//components/contacts/sections/ContactDatesSection.js:83
+   - AVANT:         ) : concertsAssocies.length > 0 ? (
+   + APRÈS:         ) : datesAssociees.length > 0 ? (
+
+📝 src//components/contacts/sections/ContactDatesSection.js:96
+   - AVANT:                 {concertsAssocies.map((concert) => (
+   + APRÈS:                 {datesAssociees.map((concert) => (
+
+📝 src//components/contacts/mobile/ContactView.js:185
+   - AVANT:         {contact.concertsAssocies && contact.concertsAssocies.length > 0 ? (
+   + APRÈS:         {contact.datesAssociees && contact.datesAssociees.length > 0 ? (
+
+📝 src//components/contacts/mobile/ContactView.js:187
+   - AVANT:             {contact.concertsAssocies.slice(0, 3).map(concert => (
+   + APRÈS:             {contact.datesAssociees.slice(0, 3).map(concert => (
+
+📝 src//components/contacts/mobile/ContactView.js:206
+   - AVANT:             {contact.concertsAssocies.length > 3 && (
+   + APRÈS:             {contact.datesAssociees.length > 3 && (
+
+📝 src//components/contacts/mobile/ContactView.js:211
+   - AVANT:                 Voir tous les concerts ({contact.concertsAssocies.length})
+   + APRÈS:                 Voir tous les concerts ({contact.datesAssociees.length})
+
+📝 src//components/contacts/mobile/ContactView.js:228
+   - AVANT:         <HistoriqueEchanges contactId={id} concerts={contact.concertsAssocies || []} />
+   + APRÈS:         <HistoriqueEchanges contactId={id} concerts={contact.datesAssociees || []} />
+
+📝 src//components/artistes/desktop/ArtisteView.js:35
+   - AVANT:           artisteData.concertsAssocies = concertsSnapshot.docs.map(doc => ({
+   + APRÈS:           artisteData.datesAssociees = concertsSnapshot.docs.map(doc => ({
+
+📝 src//components/artistes/desktop/ArtisteView.js:145
+   - AVANT:                       <span>{artiste.concertsAssocies?.length || 0} concerts</span>
+   + APRÈS:                       <span>{artiste.datesAssociees?.length || 0} concerts</span>
+
+📝 src//components/artistes/desktop/ArtisteView.js:345
+   - AVANT:             title={`Dates associés (${artiste.concertsAssocies?.length || 0})`}
+   + APRÈS:             title={`Dates associés (${artiste.datesAssociees?.length || 0})`}
+
+📝 src//components/artistes/desktop/ArtisteView.js:359
+   - AVANT:             {artiste.concertsAssocies && artiste.concertsAssocies.length > 0 ? (
+   + APRÈS:             {artiste.datesAssociees && artiste.datesAssociees.length > 0 ? (
+
+📝 src//components/artistes/desktop/ArtisteView.js:361
+   - AVANT:                 {artiste.concertsAssocies.map((concert, index) => (
+   + APRÈS:                 {artiste.datesAssociees.map((concert, index) => (
+
+📝 src//components/artistes/desktop/ArtisteView.js:434
+   - AVANT:                         {artiste.concertsAssocies?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
+   + APRÈS:                         {artiste.datesAssociees?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
+
+📝 src//components/artistes/desktop/ArtisteView.js:478
+   - AVANT:                   {artiste.concertsAssocies?.length || 0}
+   + APRÈS:                   {artiste.datesAssociees?.length || 0}
+
+📝 src//components/artistes/mobile/ArtisteView.js:34
+   - AVANT:           artisteData.concertsAssocies = concertsSnapshot.docs.map(doc => ({
+   + APRÈS:           artisteData.datesAssociees = concertsSnapshot.docs.map(doc => ({
+
+📝 src//components/artistes/mobile/ArtisteView.js:103
+   - AVANT:               <span>{artiste.concertsAssocies?.length || 0} concerts</span>
+   + APRÈS:               <span>{artiste.datesAssociees?.length || 0} concerts</span>
+
+📝 src//components/artistes/mobile/ArtisteView.js:209
+   - AVANT:             {(!artiste.concertsAssocies || artiste.concertsAssocies.length === 0) ? (
+   + APRÈS:             {(!artiste.datesAssociees || artiste.datesAssociees.length === 0) ? (
+
+📝 src//components/artistes/mobile/ArtisteView.js:224
+   - AVANT:                   <h3>Dates ({artiste.concertsAssocies.length})</h3>
+   + APRÈS:                   <h3>Dates ({artiste.datesAssociees.length})</h3>
+
+📝 src//components/artistes/mobile/ArtisteView.js:234
+   - AVANT:                   {artiste.concertsAssocies.map(concert => (
+   + APRÈS:                   {artiste.datesAssociees.map(concert => (
+
+📝 src//components/artistes/mobile/ArtisteView.js:285
+   - AVANT:                           {artiste.concertsAssocies?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
+   + APRÈS:                           {artiste.datesAssociees?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
+
+📝 src//components/debug/MigrationConcertToDate.js:77
+   - AVANT:         fields: ['concertsIds', 'concertsAssocies'],
+   + APRÈS:         fields: ['concertsIds', 'datesAssociees'],
+
+📝 src//components/debug/MigrationConcertToDate.js:82
+   - AVANT:         fields: ['concertsIds', 'concertsAssocies'],
+   + APRÈS:         fields: ['concertsIds', 'datesAssociees'],
+
+📝 src//components/debug/DataStructureFixer.js:114
+   - AVANT:                 concertsAssocies: data.concertsAssocies || [],
+   + APRÈS:                 datesAssociees: data.datesAssociees || [],
+
+📝 src//hooks/generics/actions/useGenericAction.js:164
+   - AVANT:           concertsAssocies: entityData.concertsAssocies || [],
+   + APRÈS:           datesAssociees: entityData.datesAssociees || [],
+
+📝 src//hooks/generics/actions/useGenericAction.js:294
+   - AVANT:           concertsAssocies: updateData.concertsAssocies || [],
+   + APRÈS:           datesAssociees: updateData.datesAssociees || [],
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:112
+   - AVANT:       // Méthode 1: Vérifier si le contact a des concertsIds ou concertsAssocies dans ses données
+   + APRÈS:       // Méthode 1: Vérifier si le contact a des concertsIds ou datesAssociees dans ses données
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:113
+   - AVANT:       if (contactEntity.concertsIds?.length > 0 || contactEntity.concertsAssocies?.length > 0) {
+   + APRÈS:       if (contactEntity.concertsIds?.length > 0 || contactEntity.datesAssociees?.length > 0) {
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:114
+   - AVANT:         const concertRefs = contactEntity.concertsIds || contactEntity.concertsAssocies || [];
+   + APRÈS:         const concertRefs = contactEntity.concertsIds || contactEntity.datesAssociees || [];
+
+📝 src//hooks/lieux/useLieuxQuery.js:150
+   - AVANT:           if (lieu.concertsAssocies && lieu.concertsAssocies.length > 0) {
+   + APRÈS:           if (lieu.datesAssociees && lieu.datesAssociees.length > 0) {
+
+📝 src//hooks/common/useFormSubmission.js:175
+   - AVANT:           concertsAssocies: processedData.concertsAssocies || [],
+   + APRÈS:           datesAssociees: processedData.datesAssociees || [],
+
+📝 src//hooks/artistes/useSearchAndFilter.js:29
+   - AVANT:  *     avecDates: (artiste) => artiste.concertsAssocies?.length > 0,
+   + APRÈS:  *     avecDates: (artiste) => artiste.datesAssociees?.length > 0,
+
+📝 src//hooks/artistes/useSearchAndFilter.js:30
+   - AVANT:  *     sansDates: (artiste) => !artiste.concertsAssocies || artiste.concertsAssocies.length === 0
+   + APRÈS:  *     sansDates: (artiste) => !artiste.datesAssociees || artiste.datesAssociees.length === 0
+
+📝 src//hooks/artistes/useSearchAndFilter.js:53
+   - AVANT:       avecDates: (artiste) => artiste.concertsAssocies?.length > 0,
+   + APRÈS:       avecDates: (artiste) => artiste.datesAssociees?.length > 0,
+
+📝 src//hooks/artistes/useSearchAndFilter.js:54
+   - AVANT:       sansDates: (artiste) => !artiste.concertsAssocies || artiste.concertsAssocies.length === 0
+   + APRÈS:       sansDates: (artiste) => !artiste.datesAssociees || artiste.datesAssociees.length === 0
+
+
+📌 Migration: concertsIds → datesIds
+📝 src//components/structures/desktop/StructureForm.js:150
+   - AVANT:       if (structure.concertsIds?.length > 0) {
+   + APRÈS:       if (structure.datesIds?.length > 0) {
+
+📝 src//components/structures/desktop/StructureForm.js:151
+   - AVANT:         const concertPromises = structure.concertsIds.map(async (id) => {
+   + APRÈS:         const concertPromises = structure.datesIds.map(async (id) => {
+
+📝 src//components/structures/desktop/StructureForm.js:458
+   - AVANT:         concertsIds: concertsAssocies.map(c => c.id),
+   + APRÈS:         datesIds: concertsAssocies.map(c => c.id),
+
+📝 src//components/debug/ContactMigrationTool.js:161
+   - AVANT:         if (contactData.concertsIds && contactData.concertsIds.length > 0) {
+   + APRÈS:         if (contactData.datesIds && contactData.datesIds.length > 0) {
+
+📝 src//components/debug/ContactMigrationTool.js:162
+   - AVANT:           addLog(`🎵 Recherche de ${contactData.concertsIds.length} concert(s)...`);
+   + APRÈS:           addLog(`🎵 Recherche de ${contactData.datesIds.length} concert(s)...`);
+
+📝 src//components/debug/ContactMigrationTool.js:163
+   - AVANT:           for (const dateId of contactData.concertsIds) {
+   + APRÈS:           for (const dateId of contactData.datesIds) {
+
+📝 src//components/debug/ContactCreationTester.js:63
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/ContactCreationTester.js:112
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/ContactCreationTester.js:166
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/ContactCreationTester.js:222
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/ContactCreationTester.js:284
+   - AVANT:           contactFinal.concertsIds?.includes(dateId) &&
+   + APRÈS:           contactFinal.datesIds?.includes(dateId) &&
+
+📝 src//components/debug/ContactCreationTester.js:320
+   - AVANT:             `${data.nom} - Lieux: ${data.lieuxIds?.length || 0}, Dates: ${data.concertsIds?.length || 0}, Structure: ${data.structureNom || 'Aucune'}`);
+   + APRÈS:             `${data.nom} - Lieux: ${data.lieuxIds?.length || 0}, Dates: ${data.datesIds?.length || 0}, Structure: ${data.structureNom || 'Aucune'}`);
+
+📝 src//components/debug/ContactCreationTester.js:372
+   - AVANT:       const concertsIds = contactData.concertsIds || [];
+   + APRÈS:       const datesIds = contactData.datesIds || [];
+
+📝 src//components/debug/ContactCreationTester.js:374
+   - AVANT:       if (!concertsIds.includes(sourceId)) {
+   + APRÈS:       if (!datesIds.includes(sourceId)) {
+
+📝 src//components/debug/ContactCreationTester.js:377
+   - AVANT:             concertsIds: [...concertsIds, sourceId],
+   + APRÈS:             datesIds: [...datesIds, sourceId],
+
+📝 src//components/debug/ContactCreationTester.js:426
+   - AVANT:         if (dateData.contactIds?.includes(contactId) && contactData.concertsIds?.includes(entityId)) {
+   + APRÈS:         if (dateData.contactIds?.includes(contactId) && contactData.datesIds?.includes(entityId)) {
+
+📝 src//components/debug/SophieMadetMigration.js:42
+   - AVANT:     concertsIds: ["con-1749569483128-xw9cfj"]
+   + APRÈS:     datesIds: ["con-1749569483128-xw9cfj"]
+
+📝 src//components/debug/SophieMadetMigration.js:196
+   - AVANT:           concertsIds: completeData.concertsIds || [],
+   + APRÈS:           datesIds: completeData.datesIds || [],
+
+📝 src//components/debug/BidirectionalRelationsFixer.js:43
+   - AVANT:           la liste concertsIds de cet artiste.
+   + APRÈS:           la liste datesIds de cet artiste.
+
+📝 src//components/debug/EntityCreationTester.js:70
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/EntityCreationTester.js:111
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/EntityCreationTester.js:157
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/EntityCreationTester.js:201
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/EntityCreationTester.js:214
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/EntityCreationTester.js:275
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/EntityCreationTester.js:341
+   - AVANT:         concertsIds: [],
+   + APRÈS:         datesIds: [],
+
+📝 src//components/debug/EntityCreationTester.js:370
+   - AVANT:         concertsIds: [dateId],
+   + APRÈS:         datesIds: [dateId],
+
+📝 src//components/debug/EntityCreationTester.js:374
+   - AVANT:         concertsIds: [dateId],
+   + APRÈS:         datesIds: [dateId],
+
+📝 src//components/debug/EntityCreationTester.js:428
+   - AVANT:       const concertsIds = contactData.concertsIds || [];
+   + APRÈS:       const datesIds = contactData.datesIds || [];
+
+📝 src//components/debug/EntityCreationTester.js:430
+   - AVANT:       if (!concertsIds.includes(sourceId)) {
+   + APRÈS:       if (!datesIds.includes(sourceId)) {
+
+📝 src//components/debug/EntityCreationTester.js:433
+   - AVANT:             concertsIds: [...concertsIds, sourceId],
+   + APRÈS:             datesIds: [...datesIds, sourceId],
+
+📝 src//components/debug/EntityCreationTester.js:444
+   - AVANT:       const concertsIds = lieuData.concertsIds || [];
+   + APRÈS:       const datesIds = lieuData.datesIds || [];
+
+📝 src//components/debug/EntityCreationTester.js:446
+   - AVANT:       if (!concertsIds.includes(sourceId)) {
+   + APRÈS:       if (!datesIds.includes(sourceId)) {
+
+📝 src//components/debug/EntityCreationTester.js:449
+   - AVANT:             concertsIds: [...concertsIds, sourceId],
+   + APRÈS:             datesIds: [...datesIds, sourceId],
+
+📝 src//components/debug/EntityCreationTester.js:481
+   - AVANT:         if (dateData.contactId === targetId && contactData.concertsIds?.includes(entityId)) {
+   + APRÈS:         if (dateData.contactId === targetId && contactData.datesIds?.includes(entityId)) {
+
+📝 src//components/debug/EntityCreationTester.js:494
+   - AVANT:         if (dateData.lieuIds?.includes(targetId) && lieuData.concertsIds?.includes(entityId)) {
+   + APRÈS:         if (dateData.lieuIds?.includes(targetId) && lieuData.datesIds?.includes(entityId)) {
+
+📝 src//components/debug/EntityRelationsDebugger.js:82
+   - AVANT:     // 1. Dates liés via concertsIds
+   + APRÈS:     // 1. Dates liés via datesIds
+
+📝 src//components/debug/EntityRelationsDebugger.js:83
+   - AVANT:     if (artiste.concertsIds && artiste.concertsIds.length > 0) {
+   + APRÈS:     if (artiste.datesIds && artiste.datesIds.length > 0) {
+
+📝 src//components/debug/EntityRelationsDebugger.js:84
+   - AVANT:       console.log(`📋 L'artiste a ${artiste.concertsIds.length} concerts dans concertsIds`);
+   + APRÈS:       console.log(`📋 L'artiste a ${artiste.datesIds.length} concerts dans datesIds`);
+
+📝 src//components/debug/EntityRelationsDebugger.js:87
+   - AVANT:       for (const dateId of artiste.concertsIds) {
+   + APRÈS:       for (const dateId of artiste.datesIds) {
+
+📝 src//components/debug/EntityRelationsDebugger.js:105
+   - AVANT:             message: `Date ${dateId} dans concertsIds n'existe pas`
+   + APRÈS:             message: `Date ${dateId} dans datesIds n'existe pas`
+
+📝 src//components/debug/EntityRelationsDebugger.js:122
+   - AVANT:       const isInArtisteDatesIds = artiste.concertsIds?.includes(doc.id);
+   + APRÈS:       const isInArtisteDatesIds = artiste.datesIds?.includes(doc.id);
+
+📝 src//components/debug/EntityRelationsDebugger.js:133
+   - AVANT:           message: `Date ${doc.id} (${dateData.titre}) pointe vers l'artiste mais n'est pas dans concertsIds`,
+   + APRÈS:           message: `Date ${doc.id} (${dateData.titre}) pointe vers l'artiste mais n'est pas dans datesIds`,
+
+📝 src//components/debug/EntityRelationsDebugger.js:138
+   - AVANT:             field: 'concertsIds',
+   + APRÈS:             field: 'datesIds',
+
+📝 src//components/debug/EntityRelationsDebugger.js:155
+   - AVANT:         const hasDateInList = artisteData.concertsIds?.includes(results.entity.id);
+   + APRÈS:         const hasDateInList = artisteData.datesIds?.includes(results.entity.id);
+
+📝 src//components/debug/EntityRelationsDebugger.js:167
+   - AVANT:             message: `L'artiste ${artisteData.nom} n'a pas ce date dans sa liste concertsIds`,
+   + APRÈS:             message: `L'artiste ${artisteData.nom} n'a pas ce date dans sa liste datesIds`,
+
+📝 src//components/debug/EntityRelationsDebugger.js:172
+   - AVANT:               field: 'concertsIds',
+   + APRÈS:               field: 'datesIds',
+
+📝 src//components/debug/EntityRelationsDebugger.js:194
+   - AVANT:         const hasDateInList = lieuData.concertsIds?.includes(results.entity.id);
+   + APRÈS:         const hasDateInList = lieuData.datesIds?.includes(results.entity.id);
+
+📝 src//components/debug/EntityRelationsDebugger.js:206
+   - AVANT:             message: `Le lieu ${lieuData.nom} n'a pas ce date dans sa liste concertsIds`,
+   + APRÈS:             message: `Le lieu ${lieuData.nom} n'a pas ce date dans sa liste datesIds`,
+
+📝 src//components/debug/EntityRelationsDebugger.js:211
+   - AVANT:               field: 'concertsIds',
+   + APRÈS:               field: 'datesIds',
+
+📝 src//components/debug/EntityRelationsDebugger.js:225
+   - AVANT:     if (lieu.concertsIds && lieu.concertsIds.length > 0) {
+   + APRÈS:     if (lieu.datesIds && lieu.datesIds.length > 0) {
+
+📝 src//components/debug/EntityRelationsDebugger.js:227
+   - AVANT:       for (const dateId of lieu.concertsIds) {
+   + APRÈS:       for (const dateId of lieu.datesIds) {
+
+📝 src//components/debug/EntityRelationsDebugger.js:247
+   - AVANT:     if (contact.concertsIds && contact.concertsIds.length > 0) {
+   + APRÈS:     if (contact.datesIds && contact.datesIds.length > 0) {
+
+📝 src//components/debug/EntityRelationsDebugger.js:249
+   - AVANT:       for (const dateId of contact.concertsIds) {
+   + APRÈS:       for (const dateId of contact.datesIds) {
+
+📝 src//components/debug/EntityRelationsDebugger.js:373
+   - AVANT:                                   {entity.isInArtisteDatesIds ? ' ✅ Présent dans concertsIds' : ' ❌ Manquant dans concertsIds'}
+   + APRÈS:                                   {entity.isInArtisteDatesIds ? ' ✅ Présent dans datesIds' : ' ❌ Manquant dans datesIds'}
+
+📝 src//components/debug/MigrationConcertToDate.js:77
+   - AVANT:         fields: ['concertsIds', 'concertsAssocies'],
+   + APRÈS:         fields: ['datesIds', 'concertsAssocies'],
+
+📝 src//components/debug/MigrationConcertToDate.js:82
+   - AVANT:         fields: ['concertsIds', 'concertsAssocies'],
+   + APRÈS:         fields: ['datesIds', 'concertsAssocies'],
+
+📝 src//components/debug/MigrationConcertToDate.js:87
+   - AVANT:         fields: ['concertsIds'],
+   + APRÈS:         fields: ['datesIds'],
+
+📝 src//components/debug/MigrationConcertToDate.js:92
+   - AVANT:         fields: ['concertsIds'],
+   + APRÈS:         fields: ['datesIds'],
+
+📝 src//hooks/generics/actions/useGenericAction.js:163
+   - AVANT:           concertsIds: entityData.concertsIds || [],
+   + APRÈS:           datesIds: entityData.datesIds || [],
+
+📝 src//hooks/generics/actions/useGenericAction.js:293
+   - AVANT:           concertsIds: updateData.concertsIds || [],
+   + APRÈS:           datesIds: updateData.datesIds || [],
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:112
+   - AVANT:       // Méthode 1: Vérifier si le contact a des concertsIds ou concertsAssocies dans ses données
+   + APRÈS:       // Méthode 1: Vérifier si le contact a des datesIds ou concertsAssocies dans ses données
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:113
+   - AVANT:       if (contactEntity.concertsIds?.length > 0 || contactEntity.concertsAssocies?.length > 0) {
+   + APRÈS:       if (contactEntity.datesIds?.length > 0 || contactEntity.concertsAssocies?.length > 0) {
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:114
+   - AVANT:         const concertRefs = contactEntity.concertsIds || contactEntity.concertsAssocies || [];
+   + APRÈS:         const concertRefs = contactEntity.datesIds || contactEntity.concertsAssocies || [];
+
+📝 src//hooks/common/useEntitySearch.js:342
+   - AVANT:             concertsIds: [],
+   + APRÈS:             datesIds: [],
+
+📝 src//hooks/common/useEntitySearch.js:398
+   - AVANT:             concertsIds: [],
+   + APRÈS:             datesIds: [],
+
+
+🎯 PHASE 3: Variables dans les boucles
+=====================================
+
+📌 Migration: .map((concert → .map((date
+📝 src//components/contacts/sections/ContactDatesSection.js:53
+   - AVANT:               {filteredDateResults.map((concert) => (
+   + APRÈS:               {filteredDateResults.map((concert) => (
+
+📝 src//components/contacts/sections/ContactDatesSection.js:96
+   - AVANT:                 {concertsAssocies.map((concert) => (
+   + APRÈS:                 {concertsAssocies.map((concert) => (
+
+📝 src//components/contacts/mobile/ContactView.js:187
+   - AVANT:             {contact.concertsAssocies.slice(0, 3).map(concert => (
+   + APRÈS:             {contact.concertsAssocies.slice(0, 3).map(concert => (
+
+📝 src//components/contacts/EchangeForm.js:157
+   - AVANT:             concerts.map(concert => {
+   + APRÈS:             concerts.map(concert => {
+
+📝 src//components/lieux/mobile/LieuView.js:230
+   - AVANT:             {lieu.concerts.map(concert => (
+   + APRÈS:             {lieu.concerts.map(concert => (
+
+📝 src//components/artistes/desktop/ArtisteView.js:361
+   - AVANT:                 {artiste.concertsAssocies.map((concert, index) => (
+   + APRÈS:                 {artiste.concertsAssocies.map((concert, index) => (
+
+📝 src//components/artistes/mobile/ArtisteView.js:234
+   - AVANT:                   {artiste.concertsAssocies.map(concert => (
+   + APRÈS:                   {artiste.concertsAssocies.map(concert => (
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:116
+   - AVANT:         const concertPromises = concertRefs.map(concertRef => {
+   + APRÈS:         const concertPromises = concertRefs.map(concertRef => {
+
+
+🎯 PHASE 4: Déclarations de variables
+====================================
+📝 src//components/structures/desktop/StructureForm.js:151
+   - AVANT:         const concertPromises = structure.concertsIds.map(async (id) => {
+   + APRÈS:         const concertPromises = structure.concertsIds.map(async (id) => {
+
+📝 src//components/structures/desktop/StructureForm.js:155
+   - AVANT:         const concerts = (await Promise.all(concertPromises)).filter(c => c !== null);
+   + APRÈS:         const concerts = (await Promise.all(concertPromises)).filter(c => c !== null);
+
+📝 src//components/structures/desktop/StructureView.js:37
+   - AVANT:   const concerts = relatedData?.concerts || [];
+   + APRÈS:   const concerts = relatedData?.concerts || [];
+
+📝 src//components/structures/desktop/StructureView.js:42
+   - AVANT:   const concertsList = concerts || [];
+   + APRÈS:   const concertsList = concerts || [];
+
+📝 src//components/lieux/desktop/LieuView.js:38
+   - AVANT:   const concerts = relatedData?.concerts || [];
+   + APRÈS:   const concerts = relatedData?.concerts || [];
+
+📝 src//components/lieux/desktop/LieuView.js:43
+   - AVANT:   const concertsArray = concerts || [];
+   + APRÈS:   const concertsArray = concerts || [];
+
+📝 src//components/artistes/desktop/ArtisteView.js:31
+   - AVANT:           const concertsRef = collection(db, 'dates');
+   + APRÈS:           const concertsRef = collection(db, 'dates');
+
+📝 src//components/artistes/desktop/ArtisteView.js:33
+   - AVANT:           const concertsSnapshot = await getDocs(q);
+   + APRÈS:           const concertsSnapshot = await getDocs(q);
+
+📝 src//components/artistes/mobile/ArtisteView.js:30
+   - AVANT:           const concertsRef = collection(db, 'dates');
+   + APRÈS:           const concertsRef = collection(db, 'dates');
+
+📝 src//components/artistes/mobile/ArtisteView.js:32
+   - AVANT:           const concertsSnapshot = await getDocs(q);
+   + APRÈS:           const concertsSnapshot = await getDocs(q);
+
+📝 src//components/debug/TestWorkflowButton.js:140
+   - AVANT:       const concertRef = await addDoc(collection(db, 'dates'), dateData);
+   + APRÈS:       const concertRef = await addDoc(collection(db, 'dates'), dateData);
+
+📝 src//components/debug/TestWorkflowButton2.js:152
+   - AVANT:       const concertRef = await addDoc(collection(db, 'dates'), dateData);
+   + APRÈS:       const concertRef = await addDoc(collection(db, 'dates'), dateData);
+
+📝 src//components/debug/TestWorkflowButton2.js:302
+   - AVANT:       const concertRef = await addDoc(collection(db, 'dates'), dateData);
+   + APRÈS:       const concertRef = await addDoc(collection(db, 'dates'), dateData);
+
+📝 src//components/debug/ContactCreationTester.js:372
+   - AVANT:       const concertsIds = contactData.concertsIds || [];
+   + APRÈS:       const concertsIds = contactData.concertsIds || [];
+
+📝 src//components/debug/EntityCreationTester.js:428
+   - AVANT:       const concertsIds = contactData.concertsIds || [];
+   + APRÈS:       const concertsIds = contactData.concertsIds || [];
+
+📝 src//components/debug/EntityCreationTester.js:444
+   - AVANT:       const concertsIds = lieuData.concertsIds || [];
+   + APRÈS:       const concertsIds = lieuData.concertsIds || [];
+
+📝 src//components/debug/EntityRelationsDebugger.js:113
+   - AVANT:     const concertsQuery = query(
+   + APRÈS:     const concertsQuery = query(
+
+📝 src//components/debug/EntityRelationsDebugger.js:117
+   - AVANT:     const concertsSnapshot = await getDocs(concertsQuery);
+   + APRÈS:     const concertsSnapshot = await getDocs(concertsQuery);
+
+📝 src//components/debug/MigrationConcertToDate.js:27
+   - AVANT:     const concertsRef = collection(db, 'concerts');
+   + APRÈS:     const concertsRef = collection(db, 'concerts');
+
+📝 src//components/debug/MigrationConcertToDate.js:146
+   - AVANT:     const concertsCount = (await getDocs(collection(db, 'concerts'))).size;
+   + APRÈS:     const concertsCount = (await getDocs(collection(db, 'concerts'))).size;
+
+📝 src//hooks/generics/status/useGenericEntityStatus.js:36
+   - AVANT:  * const concertStatusConfig = {
+   + APRÈS:  * const concertStatusConfig = {
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:114
+   - AVANT:         const concertRefs = contactEntity.concertsIds || contactEntity.concertsAssocies || [];
+   + APRÈS:         const concertRefs = contactEntity.concertsIds || contactEntity.concertsAssocies || [];
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:116
+   - AVANT:         const concertPromises = concertRefs.map(concertRef => {
+   + APRÈS:         const concertPromises = concertRefs.map(concertRef => {
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:132
+   - AVANT:         const concertResults = await Promise.all(concertPromises);
+   + APRÈS:         const concertResults = await Promise.all(concertPromises);
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:140
+   - AVANT:         const concertsConstraints = [where('contactIds', 'array-contains', id)];
+   + APRÈS:         const concertsConstraints = [where('contactIds', 'array-contains', id)];
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:144
+   - AVANT:         let concertsQuery = query(
+   + APRÈS:         let concertsQuery = query(
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:149
+   - AVANT:         let concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+   + APRÈS:         let concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+📝 src//hooks/contacts/useSimpleContactDetails.js:153
+   - AVANT:           const concertsConstraints2 = [where('contactId', '==', id)];
+   + APRÈS:           const concertsConstraints2 = [where('contactId', '==', id)];
+
+
+🎯 PHASE 5: Textes UI
+====================
+📝 src//components/lieux/LieuxList.js:107
+   - AVANT:         label: 'Avec concerts',
+   + APRÈS:         label: 'Avec dates',
+
+📝 src//pages/DebugToolsPage.js:87
+   - AVANT:         <Tab eventKey="migration-concert-date" title="🔄 Migration Concerts→Dates">
+   + APRÈS:         <Tab eventKey="migration-concert-date" title="🔄 Migration Dates→Dates">
+
+
+📊 RÉSUMÉ
+=========
+Total de modifications identifiées: 155
+
+📁 Fichiers impactés:
+src//components/artistes/desktop/ArtisteView.js
+src//components/artistes/mobile/ArtisteView.js
+src//components/contacts/EchangeForm.js
+src//components/contacts/mobile/ContactView.js
+src//components/contacts/sections/ContactDatesSection.js
+src//components/debug/BidirectionalRelationsFixer.js
+src//components/debug/ContactCreationTester.js
+src//components/debug/ContactMigrationTool.js
+src//components/debug/ContactsMigrationFinal.js
+src//components/debug/DataStructureFixer.js
+src//components/debug/EntityCreationTester.js
+src//components/debug/EntityRelationsDebugger.js
+src//components/debug/FestitestContactFinder.js
+src//components/debug/ListDebugger.js
+src//components/debug/MigrationConcertToDate.js
+src//components/debug/OrganizationIdDebug.js
+src//components/debug/OrganizationIdFixer.js
+src//components/debug/SophieMadetMigration.js
+src//components/debug/TestWorkflowButton.js
+src//components/debug/TestWorkflowButton2.js
+src//components/lieux/LieuxList.js
+src//components/lieux/desktop/LieuView.js
+src//components/lieux/mobile/LieuView.js
+src//components/structures/desktop/StructureForm.js
+src//components/structures/desktop/StructureView.js
+src//hooks/artistes/useSearchAndFilter.js
+src//hooks/common/useEntitySearch.js
+src//hooks/common/useFormSubmission.js
+src//hooks/contacts/useSimpleContactDetails.js
+src//hooks/generics/actions/useGenericAction.js
+src//hooks/generics/status/useGenericEntityStatus.js
+src//hooks/lieux/useLieuxQuery.js
+src//pages/DebugToolsPage.js
+
+⚠️  AVERTISSEMENTS:
+- Certaines modifications nécessitent une vérification manuelle
+- Les types 'Concert' ne doivent PAS être modifiés
+- Les textes UI doivent être vérifiés pour le contexte

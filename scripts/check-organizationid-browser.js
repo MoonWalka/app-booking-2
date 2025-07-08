@@ -1,9 +1,9 @@
 /**
- * Script pour vérifier les documents sans organizationId directement dans le navigateur
+ * Script pour vérifier les documents sans entrepriseId directement dans le navigateur
  * À exécuter dans la console du navigateur après connexion à l'application
  */
 
-async function checkOrganizationIds() {
+async function checkEntrepriseIds() {
   // Vérifier que Firebase est disponible
   if (!window.firebase || !window.firebase.firestore) {
     console.error('❌ Firebase non disponible. Assurez-vous d\'être connecté à l\'application.');
@@ -11,7 +11,7 @@ async function checkOrganizationIds() {
   }
   
   const db = window.firebase.firestore();
-  console.log('🔍 Vérification des documents sans organizationId...\n');
+  console.log('🔍 Vérification des documents sans entrepriseId...\n');
   
   const collections = ['contacts', 'lieux', 'concerts', 'structures', 'artistes', 'contrats'];
   const results = {};
@@ -24,7 +24,7 @@ async function checkOrganizationIds() {
       const snapshot = await db.collection(collectionName).get();
       const totalDocs = snapshot.size;
       
-      // Compter ceux sans organizationId
+      // Compter ceux sans entrepriseId
       let withOrgId = 0;
       let withoutOrgId = 0;
       const samplesWithout = [];
@@ -32,19 +32,19 @@ async function checkOrganizationIds() {
       
       snapshot.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId) {
+        if (data.entrepriseId) {
           withOrgId++;
-          // Garder quelques échantillons avec organizationId
+          // Garder quelques échantillons avec entrepriseId
           if (samplesWithOrgId.length < 3) {
             samplesWithOrgId.push({
               id: doc.id,
               nom: data.nom || data.titre || data.raisonSociale || 'Sans nom',
-              organizationId: data.organizationId
+              entrepriseId: data.entrepriseId
             });
           }
         } else {
           withoutOrgId++;
-          // Garder quelques échantillons sans organizationId
+          // Garder quelques échantillons sans entrepriseId
           if (samplesWithout.length < 5) {
             samplesWithout.push({
               id: doc.id,
@@ -64,18 +64,18 @@ async function checkOrganizationIds() {
         samplesWithOrgId
       };
       
-      console.log(`  ✅ Avec organizationId: ${withOrgId} (${results[collectionName].percentage}%)`);
-      console.log(`  ❌ Sans organizationId: ${withoutOrgId}`);
+      console.log(`  ✅ Avec entrepriseId: ${withOrgId} (${results[collectionName].percentage}%)`);
+      console.log(`  ❌ Sans entrepriseId: ${withoutOrgId}`);
       
       if (samplesWithOrgId.length > 0) {
-        console.log(`  📋 Exemples AVEC organizationId:`);
+        console.log(`  📋 Exemples AVEC entrepriseId:`);
         samplesWithOrgId.forEach(sample => {
-          console.log(`     - ${sample.id}: ${sample.nom} (org: ${sample.organizationId})`);
+          console.log(`     - ${sample.id}: ${sample.nom} (org: ${sample.entrepriseId})`);
         });
       }
       
       if (samplesWithout.length > 0) {
-        console.log(`  📋 Exemples SANS organizationId:`);
+        console.log(`  📋 Exemples SANS entrepriseId:`);
         samplesWithout.forEach(sample => {
           console.log(`     - ${sample.id}: ${sample.nom} (créé: ${sample.createdAt})`);
         });
@@ -96,7 +96,7 @@ async function checkOrganizationIds() {
       console.log(`${collection}: ERREUR - ${stats.error}`);
     } else {
       const status = stats.withoutOrgId === 0 ? '✅' : '⚠️';
-      console.log(`${status} ${collection}: ${stats.withoutOrgId}/${stats.total} sans organizationId (${(100 - parseFloat(stats.percentage)).toFixed(1)}%)`);
+      console.log(`${status} ${collection}: ${stats.withoutOrgId}/${stats.total} sans entrepriseId (${(100 - parseFloat(stats.percentage)).toFixed(1)}%)`);
     }
   }
   
@@ -108,31 +108,31 @@ async function checkOrganizationIds() {
   if (problemCollections.length > 0) {
     console.log('\n\n⚠️  ACTIONS RECOMMANDÉES:');
     console.log('='.repeat(60));
-    console.log(`Les collections suivantes ont des documents sans organizationId:`);
+    console.log(`Les collections suivantes ont des documents sans entrepriseId:`);
     console.log(`- ${problemCollections.join('\n- ')}`);
     console.log('\nCes documents ne seront PAS visibles dans l\'interface!');
-    console.log('Il faut leur ajouter un organizationId pour qu\'ils apparaissent.');
+    console.log('Il faut leur ajouter un entrepriseId pour qu\'ils apparaissent.');
   } else {
-    console.log('\n\n✅ Toutes les collections ont des organizationId!');
+    console.log('\n\n✅ Toutes les collections ont des entrepriseId!');
   }
   
   return results;
 }
 
-// Fonction pour corriger les documents sans organizationId
-async function fixMissingOrganizationIds(collectionName, organizationId) {
+// Fonction pour corriger les documents sans entrepriseId
+async function fixMissingEntrepriseIds(collectionName, entrepriseId) {
   if (!window.firebase || !window.firebase.firestore) {
     console.error('❌ Firebase non disponible.');
     return;
   }
   
-  if (!organizationId) {
-    console.error('❌ organizationId requis');
+  if (!entrepriseId) {
+    console.error('❌ entrepriseId requis');
     return;
   }
   
   const db = window.firebase.firestore();
-  console.log(`🔧 Correction des documents sans organizationId dans ${collectionName}...`);
+  console.log(`🔧 Correction des documents sans entrepriseId dans ${collectionName}...`);
   
   try {
     const snapshot = await db.collection(collectionName).get();
@@ -140,8 +140,8 @@ async function fixMissingOrganizationIds(collectionName, organizationId) {
     
     for (const doc of snapshot.docs) {
       const data = doc.data();
-      if (!data.organizationId) {
-        await doc.ref.update({ organizationId });
+      if (!data.entrepriseId) {
+        await doc.ref.update({ entrepriseId });
         fixed++;
         console.log(`  ✅ Corrigé: ${doc.id} - ${data.nom || data.titre || 'Sans nom'}`);
       }
@@ -155,14 +155,14 @@ async function fixMissingOrganizationIds(collectionName, organizationId) {
 
 // Instructions
 console.log('📚 INSTRUCTIONS:');
-console.log('1. Pour vérifier les documents sans organizationId:');
-console.log('   checkOrganizationIds()');
-console.log('\n2. Pour corriger une collection (remplacez ORG_ID par votre organizationId):');
-console.log('   fixMissingOrganizationIds("contacts", "ORG_ID")');
-console.log('   fixMissingOrganizationIds("lieux", "ORG_ID")');
-console.log('\n3. Pour obtenir votre organizationId actuel:');
+console.log('1. Pour vérifier les documents sans entrepriseId:');
+console.log('   checkEntrepriseIds()');
+console.log('\n2. Pour corriger une collection (remplacez ORG_ID par votre entrepriseId):');
+console.log('   fixMissingEntrepriseIds("contacts", "ORG_ID")');
+console.log('   fixMissingEntrepriseIds("lieux", "ORG_ID")');
+console.log('\n3. Pour obtenir votre entrepriseId actuel:');
 console.log('   JSON.parse(localStorage.getItem("organizationContext"))?.currentOrganization?.id');
 
 // Exporter les fonctions pour utilisation
-window.checkOrganizationIds = checkOrganizationIds;
-window.fixMissingOrganizationIds = fixMissingOrganizationIds;
+window.checkEntrepriseIds = checkEntrepriseIds;
+window.fixMissingEntrepriseIds = fixMissingEntrepriseIds;

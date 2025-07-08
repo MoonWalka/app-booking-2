@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Container, Row, Col, Card, Alert, Modal, Button } from 'react-bootstrap';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTabs } from '@/context/TabsContext';
 import { doc, getDoc } from '@/services/firebase-service';
@@ -21,7 +21,7 @@ function DevisEditor({ dateId, structureId, devisId }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { currentOrg } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { currentUser } = useAuth();
   
   // Variable devis retirée car non utilisée
@@ -99,7 +99,7 @@ function DevisEditor({ dateId, structureId, devisId }) {
     montantTTC: 0,
     
     // Métadonnées
-    organizationId: currentOrg?.id,
+    entrepriseId: currentEntreprise?.id,
     createdAt: new Date(),
     updatedAt: new Date()
   });
@@ -152,7 +152,7 @@ function DevisEditor({ dateId, structureId, devisId }) {
     };
 
     loadDevis();
-  }, [finalDevisId, devisData, currentOrg?.id, currentUser]);
+  }, [finalDevisId, devisData, currentEntreprise?.id, currentUser]);
 
   // Charger les données du date si dateId fourni
   useEffect(() => {

@@ -32,7 +32,7 @@ Migrer vers un **modèle Business-centrée unifié** inspiré du format XLS prof
 // Document de type "structure" (entité business principale)
 {
   id: "contact_festival_jazz",
-  organizationId: "org_456",
+  entrepriseId: "org_456",
   entityType: "structure",
   
   // === DONNÉES STRUCTURE (Entité business principale) ===
@@ -170,7 +170,7 @@ Migrer vers un **modèle Business-centrée unifié** inspiré du format XLS prof
 // Document de type "personne_libre" (personne sans structure)
 {
   id: "contact_personne_libre_123",
-  organizationId: "org_456", 
+  entrepriseId: "org_456", 
   entityType: "personne_libre",
   
   // === DONNÉES PERSONNE PRINCIPALE ===

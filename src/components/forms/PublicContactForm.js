@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, updateDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import AddressInput from '@/components/ui/AddressInput';
 import Card from '@/components/ui/Card';
 import styles from '@/pages/FormResponsePage.module.css';
@@ -9,7 +9,8 @@ import styles from '@/pages/FormResponsePage.module.css';
 // Import conditionnel du bouton de test
 let TestFormButton = null;
 if (process.env.NODE_ENV === 'development') {
-  TestFormButton = require('@/components/debug/TestFormButton').default;
+  // TestFormButton = require('@/components/debug/TestFormButton').default;
+  // Fichier supprimé - fonctionnalité désactivée temporairement
 }
 
 const PublicContactForm = ({ 
@@ -21,7 +22,7 @@ const PublicContactForm = ({
   programmateurEmail, // Rétrocompatibilité
   lieu // Données du lieu depuis le concert
 }) => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // États du formulaire restructuré
   const [formData, setFormData] = useState({
@@ -354,8 +355,8 @@ const PublicContactForm = ({
         token,
         submittedAt: serverTimestamp(),
         status: 'pending',
-        // ✅ FIX: Ajouter automatiquement l'organizationId
-        ...(currentOrganization?.id && { organizationId: currentOrganization.id }),
+        // ✅ FIX: Ajouter automatiquement l'entrepriseId
+        ...(currentEntreprise?.id && { entrepriseId: currentEntreprise.id }),
         
         // DONNÉES DU LIEU (prioritaire)
         lieuData: {

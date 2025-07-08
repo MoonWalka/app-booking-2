@@ -4,22 +4,22 @@ import { db } from './firebase-service';
 class DateService {
   /**
    * Récupère les dates d'une structure par son ID
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'entreprise
    * @param {string} structureId - ID de la structure
    * @returns {Promise<Array>} Liste des dates
    */
-  async getDatesByStructureId(organizationId, structureId) {
+  async getDatesByStructureId(entrepriseId, structureId) {
     try {
       console.log('🔍 [DateService] getDatesByStructureId appelé avec:', {
-        organizationId,
+        entrepriseId,
         structureId
       });
       
       // Recherche par structureId d'abord
-      console.log('  📋 Requête 1: where organizationId ==', organizationId, 'AND structureId ==', structureId);
+      console.log('  📋 Requête 1: where entrepriseId ==', entrepriseId, 'AND structureId ==', structureId);
       let datesQuery = query(
         collection(db, 'dates'),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('structureId', '==', structureId)
       );
       
@@ -42,10 +42,10 @@ class DateService {
       
       // Si pas de résultats, essayer avec organisateurId (ancienne nomenclature)
       if (dates.length === 0) {
-        console.log('  📋 Requête 2: where organizationId ==', organizationId, 'AND organisateurId ==', structureId);
+        console.log('  📋 Requête 2: where entrepriseId ==', entrepriseId, 'AND organisateurId ==', structureId);
         datesQuery = query(
           collection(db, 'dates'),
-          where('organizationId', '==', organizationId),
+          where('entrepriseId', '==', entrepriseId),
           where('organisateurId', '==', structureId)
         );
         
@@ -76,18 +76,18 @@ class DateService {
   }
   /**
    * R�cup�re les dates d'une structure
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'entreprise
    * @param {string} structureName - Nom de la structure
    * @returns {Promise<Array>} Liste des dates
    */
-  async getDatesByStructure(organizationId, structureName) {
+  async getDatesByStructure(entrepriseId, structureName) {
     try {
-      console.log('[DateService] Recherche des dates pour:', { organizationId, structureName });
+      console.log('[DateService] Recherche des dates pour:', { entrepriseId, structureName });
       
       // Recherche par structureNom d'abord
       let datesQuery = query(
         collection(db, 'dates'),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('structureNom', '==', structureName)
       );
       
@@ -104,7 +104,7 @@ class DateService {
         console.log('[DateService] Aucun date trouvé avec structureNom, essai avec organisateurNom');
         datesQuery = query(
           collection(db, 'dates'),
-          where('organizationId', '==', organizationId),
+          where('entrepriseId', '==', entrepriseId),
           where('organisateurNom', '==', structureName)
         );
         
@@ -122,7 +122,7 @@ class DateService {
         console.log('[DateService] Aucun date trouvé avec organisateurNom, essai avec structureRaisonSociale');
         datesQuery = query(
           collection(db, 'dates'),
-          where('organizationId', '==', organizationId),
+          where('entrepriseId', '==', entrepriseId),
           where('structureRaisonSociale', '==', structureName)
         );
         
@@ -140,7 +140,7 @@ class DateService {
         console.log('[DateService] Aucun date trouvé, essai avec structure.raisonSociale');
         datesQuery = query(
           collection(db, 'dates'),
-          where('organizationId', '==', organizationId),
+          where('entrepriseId', '==', entrepriseId),
           where('structure.raisonSociale', '==', structureName)
         );
         

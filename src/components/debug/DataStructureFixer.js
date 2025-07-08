@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { collection, getDocs, doc, updateDoc, deleteField } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 import styles from './DataStructureFixer.module.css';
 
 const DataStructureFixer = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [scanning, setScanning] = useState(false);
   const [fixing, setFixing] = useState(false);
   const [results, setResults] = useState(null);
@@ -53,8 +53,8 @@ const DataStructureFixer = () => {
             });
           }
           
-          // Vérifier organizationId manquant
-          if (!data.organizationId) {
+          // Vérifier entrepriseId manquant
+          if (!data.entrepriseId) {
             issues.missingOrgId.push({
               id: docSnap.id,
               nom: data.nom || 'Sans nom'
@@ -110,7 +110,7 @@ const DataStructureFixer = () => {
                 telephone: data.contact.telephone || '',
                 structureId: data.structureId || '',
                 structureNom: data.structureNom || data.structure?.raisonSociale || '',
-                organizationId: data.organizationId || currentOrganization?.id,
+                entrepriseId: data.entrepriseId || currentEntreprise?.id,
                 concertsAssocies: data.concertsAssocies || [],
                 createdAt: data.createdAt,
                 updatedAt: data.updatedAt || new Date()
@@ -136,7 +136,7 @@ const DataStructureFixer = () => {
                 siteWeb: data.lieu.siteWeb || '',
                 capacite: data.lieu.capacite || 0,
                 equipements: data.lieu.equipements || [],
-                organizationId: data.organizationId || currentOrganization?.id,
+                entrepriseId: data.entrepriseId || currentEntreprise?.id,
                 createdAt: data.createdAt,
                 updatedAt: data.updatedAt || new Date()
               };
@@ -153,7 +153,7 @@ const DataStructureFixer = () => {
                 email: data.artiste.email || '',
                 telephone: data.artiste.telephone || '',
                 siteWeb: data.artiste.siteWeb || '',
-                organizationId: data.organizationId || currentOrganization?.id,
+                entrepriseId: data.entrepriseId || currentEntreprise?.id,
                 createdAt: data.createdAt,
                 updatedAt: data.updatedAt || new Date()
               };
@@ -174,7 +174,7 @@ const DataStructureFixer = () => {
                 pays: data.structure.pays || 'France',
                 siret: data.structure.siret || '',
                 tva: data.structure.tva || '',
-                organizationId: data.organizationId || currentOrganization?.id,
+                entrepriseId: data.entrepriseId || currentEntreprise?.id,
                 createdAt: data.createdAt,
                 updatedAt: data.updatedAt || new Date()
               };
@@ -278,9 +278,9 @@ const DataStructureFixer = () => {
     }
   };
 
-  // Corriger les organizationId manquants
+  // Corriger les entrepriseId manquants
   const fixMissingOrgIds = async () => {
-    if (!results || !currentOrganization?.id) {
+    if (!results || !currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -300,7 +300,7 @@ const DataStructureFixer = () => {
           try {
             const docRef = doc(db, collName, item.id);
             await updateDoc(docRef, {
-              organizationId: currentOrganization.id
+              entrepriseId: currentEntreprise.id
             });
             fixed++;
           } catch (err) {
@@ -380,7 +380,7 @@ const DataStructureFixer = () => {
                   </div>
                   
                   <div className={`${styles.stat} ${issues.missingOrgId.length > 0 ? styles.statWarning : styles.statSuccess}`}>
-                    <span className={styles.statLabel}>Sans organizationId:</span>
+                    <span className={styles.statLabel}>Sans entrepriseId:</span>
                     <span className={styles.statValue}>{issues.missingOrgId.length}</span>
                   </div>
                   
@@ -437,7 +437,7 @@ const DataStructureFixer = () => {
                     if (Object.values(results).some(r => r.nested.length > 0)) {
                       await fixNestedStructures();
                     }
-                    if (Object.values(results).some(r => r.missingOrgId.length > 0) && currentOrganization?.id) {
+                    if (Object.values(results).some(r => r.missingOrgId.length > 0) && currentEntreprise?.id) {
                       await fixMissingOrgIds();
                     }
                   }}
@@ -476,10 +476,10 @@ const DataStructureFixer = () => {
                     variant="outline-warning"
                     size="sm"
                     onClick={fixMissingOrgIds}
-                    disabled={fixing || !currentOrganization?.id}
+                    disabled={fixing || !currentEntreprise?.id}
                   >
                     <i className="bi bi-building me-2"></i>
-                    OrganizationId seulement
+                    EntrepriseId seulement
                   </Button>
                 )}
                 
@@ -505,7 +505,7 @@ const DataStructureFixer = () => {
             {fixResults.orgIds ? (
               <ul>
                 {Object.entries(fixResults.orgIds).map(([coll, count]) => (
-                  <li key={coll}>{coll}: {count} organizationId ajoutés</li>
+                  <li key={coll}>{coll}: {count} entrepriseId ajoutés</li>
                 ))}
               </ul>
             ) : (

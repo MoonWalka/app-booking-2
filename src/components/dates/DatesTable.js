@@ -1,7 +1,7 @@
 // src/components/dates/DatesTable.js
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { collection, getDocs, query, where, orderBy } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
 import ListWithFilters from '@/components/ui/ListWithFilters';
@@ -43,7 +43,7 @@ function DatesTable({
   headerActions,
   className
 }) {
-  const { currentOrg } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,7 +51,7 @@ function DatesTable({
   // Charger les données Firebase
   useEffect(() => {
     const loadData = async () => {
-      if (!currentOrg?.id) {
+      if (!currentEntreprise?.id) {
         setLoading(false);
         return;
       }
@@ -63,7 +63,7 @@ function DatesTable({
         // Charger les dates depuis Firebase
         const datesQuery = query(
           collection(db, 'dates'),
-          where('organizationId', '==', currentOrg.id),
+          where('entrepriseId', '==', currentEntreprise.id),
           orderBy(config.sort?.field || 'date', config.sort?.direction || 'desc')
         );
         
@@ -111,7 +111,7 @@ function DatesTable({
     };
 
     loadData();
-  }, [currentOrg?.id, config.sort, config.testData]);
+  }, [currentEntreprise?.id, config.sort, config.testData]);
   // Filtrer les colonnes selon le rôle utilisateur
   const getVisibleColumns = () => {
     if (!config.columns) return [];

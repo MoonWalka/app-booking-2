@@ -1,4 +1,4 @@
-// Script de diagnostic pour analyser le problème d'organizationId
+// Script de diagnostic pour analyser le problème d'entrepriseId
 // À exécuter dans la console du navigateur
 
 console.log('🔍 DIAGNOSTIC COMPLET - Analyse des collections');
@@ -25,31 +25,31 @@ async function getAllDocuments(collectionName) {
     
     console.log(`✅ ${docs.length} documents trouvés dans ${collectionName}`);
     
-    // Analyser les organizationId
+    // Analyser les entrepriseId
     const orgIds = new Set();
-    const withoutOrganizationId = [];
+    const withoutEntrepriseId = [];
     const organizationCounts = {};
     
     docs.forEach(doc => {
-      if (doc.organizationId) {
-        orgIds.add(doc.organizationId);
-        organizationCounts[doc.organizationId] = (organizationCounts[doc.organizationId] || 0) + 1;
+      if (doc.entrepriseId) {
+        orgIds.add(doc.entrepriseId);
+        organizationCounts[doc.entrepriseId] = (organizationCounts[doc.entrepriseId] || 0) + 1;
       } else {
-        withoutOrganizationId.push(doc);
+        withoutEntrepriseId.push(doc);
       }
     });
     
     console.log(`📊 Statistiques ${collectionName}:`, {
       total: docs.length,
-      avecOrganizationId: docs.length - withoutOrganizationId.length,
-      sansOrganizationId: withoutOrganizationId.length,
+      avecEntrepriseId: docs.length - withoutEntrepriseId.length,
+      sansEntrepriseId: withoutEntrepriseId.length,
       organizationsDifferentes: orgIds.size,
       repartitionParOrganization: organizationCounts
     });
     
-    if (withoutOrganizationId.length > 0) {
-      console.log(`⚠️ Documents sans organizationId dans ${collectionName}:`, 
-        withoutOrganizationId.slice(0, 3).map(d => ({
+    if (withoutEntrepriseId.length > 0) {
+      console.log(`⚠️ Documents sans entrepriseId dans ${collectionName}:`, 
+        withoutEntrepriseId.slice(0, 3).map(d => ({
           id: d.id,
           nom: d.nom || d.titre || d.raisonSociale,
           createdAt: d.createdAt
@@ -60,8 +60,8 @@ async function getAllDocuments(collectionName) {
     return {
       collectionName,
       total: docs.length,
-      withOrganizationId: docs.length - withoutOrganizationId.length,
-      withoutOrganizationId: withoutOrganizationId.length,
+      withEntrepriseId: docs.length - withoutEntrepriseId.length,
+      withoutEntrepriseId: withoutEntrepriseId.length,
       organizations: Object.keys(organizationCounts),
       organizationCounts,
       sampleDocs: docs.slice(0, 2)
@@ -73,16 +73,16 @@ async function getAllDocuments(collectionName) {
   }
 }
 
-// Fonction pour analyser avec filtre organizationId
-async function getDocumentsWithOrganizationId(collectionName, organizationId) {
+// Fonction pour analyser avec filtre entrepriseId
+async function getDocumentsWithEntrepriseId(collectionName, entrepriseId) {
   try {
-    console.log(`\n🎯 Test requête filtrée: ${collectionName} avec organizationId = ${organizationId}`);
+    console.log(`\n🎯 Test requête filtrée: ${collectionName} avec entrepriseId = ${entrepriseId}`);
     
     const { db } = await import('./src/services/firebase-service.js');
     const { collection, getDocs, query, where } = await import('firebase/firestore');
     
     const collectionRef = collection(db, collectionName);
-    const q = query(collectionRef, where('organizationId', '==', organizationId));
+    const q = query(collectionRef, where('entrepriseId', '==', entrepriseId));
     const snapshot = await getDocs(q);
     
     const docs = [];
@@ -93,13 +93,13 @@ async function getDocumentsWithOrganizationId(collectionName, organizationId) {
       });
     });
     
-    console.log(`✅ ${docs.length} documents trouvés avec organizationId = ${organizationId}`);
+    console.log(`✅ ${docs.length} documents trouvés avec entrepriseId = ${entrepriseId}`);
     
     if (docs.length > 0) {
       console.log(`📄 Premier document:`, {
         id: docs[0].id,
         nom: docs[0].nom || docs[0].titre || docs[0].raisonSociale,
-        organizationId: docs[0].organizationId,
+        entrepriseId: docs[0].entrepriseId,
         structureId: docs[0].structureId,
         allFields: Object.keys(docs[0])
       });
@@ -118,12 +118,12 @@ async function diagnosticComplet() {
   try {
     console.log('🚀 Début du diagnostic complet');
     
-    // Récupérer l'organizationId actuel
-    const currentOrgId = localStorage.getItem('currentOrganizationId');
-    console.log(`🏢 OrganizationId actuel: ${currentOrgId}`);
+    // Récupérer l'entrepriseId actuel
+    const currentOrgId = localStorage.getItem('currentEntrepriseId');
+    console.log(`🏢 EntrepriseId actuel: ${currentOrgId}`);
     
     if (!currentOrgId) {
-      console.error('❌ Pas d\'organizationId dans localStorage !');
+      console.error('❌ Pas d\'entrepriseId dans localStorage !');
       return;
     }
     
@@ -142,7 +142,7 @@ async function diagnosticComplet() {
     const filteredResults = {};
     
     for (const collectionName of collections) {
-      filteredResults[collectionName] = await getDocumentsWithOrganizationId(collectionName, currentOrgId);
+      filteredResults[collectionName] = await getDocumentsWithEntrepriseId(collectionName, currentOrgId);
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
@@ -151,8 +151,8 @@ async function diagnosticComplet() {
       collections.map(col => ({
         Collection: col,
         'Total': results[col]?.total || 0,
-        'Avec OrgId': results[col]?.withOrganizationId || 0,
-        'Sans OrgId': results[col]?.withoutOrganizationId || 0,
+        'Avec OrgId': results[col]?.withEntrepriseId || 0,
+        'Sans OrgId': results[col]?.withoutEntrepriseId || 0,
         'Filtrés': filteredResults[col]?.length || 0,
         'Status': filteredResults[col]?.length > 0 ? '✅ OK' : '❌ VIDE'
       }))

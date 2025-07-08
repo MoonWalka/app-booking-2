@@ -2862,13 +2862,13 @@
         {
           "file": "src/services/concertService.js",
           "line": 11,
-          "content": "async getConcertsByStructureId(organizationId, structureId) {",
+          "content": "async getConcertsByStructureId(entrepriseId, structureId) {",
           "module": "other"
         },
         {
           "file": "src/services/concertService.js",
           "line": 13,
-          "content": "console.log('[ConcertService] Recherche des concerts par structureId:', { organizationId, structureId });",
+          "content": "console.log('[ConcertService] Recherche des concerts par structureId:', { entrepriseId, structureId });",
           "module": "other"
         },
         {
@@ -3072,7 +3072,7 @@
         {
           "file": "src/services/structureService.js",
           "line": 27,
-          "content": "export async function ensureStructureEntity(structureId, structureData = {}, organizationId = null) {",
+          "content": "export async function ensureStructureEntity(structureId, structureData = {}, entrepriseId = null) {",
           "module": "other"
         },
         {
@@ -12298,19 +12298,19 @@
           "module": "other"
         },
         {
-          "file": "src/components/debug/OrganizationIdDebug.js",
+          "file": "src/components/debug/EntrepriseIdDebug.js",
           "line": 27,
           "content": "const collections = ['contacts', 'lieux', 'concerts', 'structures'];",
           "module": "other"
         },
         {
-          "file": "src/components/debug/OrganizationIdFixer.js",
+          "file": "src/components/debug/EntrepriseIdFixer.js",
           "line": 18,
           "content": "const collections = ['contacts', 'lieux', 'concerts', 'artistes', 'structures'];",
           "module": "other"
         },
         {
-          "file": "src/components/debug/OrganizationIdFixer.js",
+          "file": "src/components/debug/EntrepriseIdFixer.js",
           "line": 105,
           "content": "'structures',",
           "module": "other"
@@ -12342,7 +12342,7 @@
         {
           "file": "src/components/debug/RelationalMigrationFixer.js",
           "line": 47,
-          "content": "getDocs(query(collection(db, 'structures'), where('organizationId', '==', currentOrganization.id))),",
+          "content": "getDocs(query(collection(db, 'structures'), where('entrepriseId', '==', currentOrganization.id))),",
           "module": "other"
         },
         {
@@ -12486,7 +12486,7 @@
         {
           "file": "src/components/debug/RelationalMigrationFixer.js",
           "line": 243,
-          "content": "getDocs(query(collection(db, 'structures'), where('organizationId', '==', currentOrganization.id))),",
+          "content": "getDocs(query(collection(db, 'structures'), where('entrepriseId', '==', currentOrganization.id))),",
           "module": "other"
         },
         {
@@ -17266,103 +17266,103 @@
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 98,
           "content": "// 3. Optionnel : Corriger aussi les concerts et structures si nécessaire",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 134,
           "content": "// 4. Structures",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 135,
           "content": "console.log('\\n🏛️ Vérification des structures...');",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 136,
           "content": "const allStructuresQuery = query(collection(db, 'structures'));",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 139,
           "content": "let structuresFixed = 0;",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 142,
           "content": "allStructuresSnapshot.forEach(docSnapshot => {",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 145,
           "content": "structuresToFix.push({",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 152,
           "content": "console.log(`Structures à corriger: ${structuresToFix.length}`);",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 153,
           "content": "fixLog.push(`Structures à corriger: ${structuresToFix.length}`);",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 155,
           "content": "// Corriger les structures",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 158,
           "content": "await updateDoc(doc(db, 'structures', structure.id), {",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 161,
           "content": "structuresFixed++;",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 162,
           "content": "console.log(`✅ Structure corrigée: ${structure.nom} (${structure.id})`);",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 165,
           "content": "console.error(`❌ Erreur structure ${structure.id}:`, error);",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 174,
           "content": "structures: { total: structuresToFix.length, fixed: structuresFixed }",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 181,
           "content": "console.log(`Structures: ${structuresFixed}/${structuresToFix.length} corrigés`);",
           "module": "other"
         },
         {
-          "file": "src/debug/OrganizationIdFixer.js",
+          "file": "src/debug/EntrepriseIdFixer.js",
           "line": 235,
           "content": "<p><strong>Structures:</strong> {fixResults.structures.fixed}/{fixResults.structures.total} corrigés</p>",
           "module": "other"
@@ -23424,13 +23424,13 @@
         {
           "file": "src/services/concertService.js",
           "line": 11,
-          "content": "async getConcertsByStructureId(organizationId, structureId) {",
+          "content": "async getConcertsByStructureId(entrepriseId, structureId) {",
           "module": "other"
         },
         {
           "file": "src/services/concertService.js",
           "line": 13,
-          "content": "console.log('[ConcertService] Recherche des concerts par structureId:', { organizationId, structureId });",
+          "content": "console.log('[ConcertService] Recherche des concerts par structureId:', { entrepriseId, structureId });",
           "module": "other"
         },
         {
@@ -23466,13 +23466,13 @@
         {
           "file": "src/services/concertService.js",
           "line": 40,
-          "content": "async getConcertsByStructure(organizationId, structureName) {",
+          "content": "async getConcertsByStructure(entrepriseId, structureName) {",
           "module": "other"
         },
         {
           "file": "src/services/concertService.js",
           "line": 42,
-          "content": "console.log('[ConcertService] Recherche des concerts pour:', { organizationId, structureName });",
+          "content": "console.log('[ConcertService] Recherche des concerts pour:', { entrepriseId, structureName });",
           "module": "other"
         },
         {
@@ -23538,7 +23538,7 @@
         {
           "file": "src/services/contacts/duplicatesService.js",
           "line": 101,
-          "content": "static async detectStructureDuplicates(organizationId, threshold = 0.8) {",
+          "content": "static async detectStructureDuplicates(entrepriseId, threshold = 0.8) {",
           "module": "contacts"
         },
         {
@@ -23556,7 +23556,7 @@
         {
           "file": "src/services/contacts/duplicatesService.js",
           "line": 106,
-          "content": "const structuresResult = await structuresService.listStructures(organizationId);",
+          "content": "const structuresResult = await structuresService.listStructures(entrepriseId);",
           "module": "contacts"
         },
         {
@@ -23772,7 +23772,7 @@
         {
           "file": "src/services/contacts/duplicatesService.js",
           "line": 609,
-          "content": "structures: await this.detectStructureDuplicates(organizationId),",
+          "content": "structures: await this.detectStructureDuplicates(entrepriseId),",
           "module": "contacts"
         },
         {
@@ -23934,7 +23934,7 @@
         {
           "file": "src/services/contacts/importExportService.js",
           "line": 532,
-          "content": "static async exportByStructures(organizationId, includeInactive) {",
+          "content": "static async exportByStructures(entrepriseId, includeInactive) {",
           "module": "contacts"
         },
         {
@@ -24096,7 +24096,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 29,
-          "content": "async createStructure(data, organizationId, userId) {",
+          "content": "async createStructure(data, entrepriseId, userId) {",
           "module": "contacts"
         },
         {
@@ -24270,7 +24270,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 197,
-          "content": "async listStructures(organizationId, filters = {}) {",
+          "content": "async listStructures(entrepriseId, filters = {}) {",
           "module": "contacts"
         },
         {
@@ -24306,7 +24306,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 244,
-          "content": "async searchStructures(organizationId, searchTerm) {",
+          "content": "async searchStructures(entrepriseId, searchTerm) {",
           "module": "contacts"
         },
         {
@@ -24318,7 +24318,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 248,
-          "content": "const allStructures = await this.listStructures(organizationId);",
+          "content": "const allStructures = await this.listStructures(entrepriseId);",
           "module": "contacts"
         },
         {
@@ -24402,7 +24402,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 316,
-          "content": "async upsertStructure(data, organizationId, userId) {",
+          "content": "async upsertStructure(data, entrepriseId, userId) {",
           "module": "contacts"
         },
         {
@@ -24420,7 +24420,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 333,
-          "content": "const result = await this.createStructure(data, organizationId, userId);",
+          "content": "const result = await this.createStructure(data, entrepriseId, userId);",
           "module": "contacts"
         },
         {
@@ -24468,7 +24468,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 362,
-          "content": "async bulkImportStructures(structures, organizationId, userId) {",
+          "content": "async bulkImportStructures(structures, entrepriseId, userId) {",
           "module": "contacts"
         },
         {
@@ -24486,7 +24486,7 @@
         {
           "file": "src/services/contacts/structuresService.js",
           "line": 377,
-          "content": "const result = await this.upsertStructure(structure, organizationId, userId);",
+          "content": "const result = await this.upsertStructure(structure, entrepriseId, userId);",
           "module": "contacts"
         },
         {
@@ -24774,7 +24774,7 @@
         {
           "file": "src/services/structureService.js",
           "line": 27,
-          "content": "export async function ensureStructureEntity(structureId, structureData = {}, organizationId = null) {",
+          "content": "export async function ensureStructureEntity(structureId, structureData = {}, entrepriseId = null) {",
           "module": "other"
         },
         {
@@ -25264,13 +25264,13 @@
           "module": "other"
         },
         {
-          "file": "src/utils/fixOrganizationIds.js",
+          "file": "src/utils/fixEntrepriseIds.js",
           "line": 99,
           "content": "structures: { success: 0, errors: [] },",
           "module": "other"
         },
         {
-          "file": "src/utils/fixOrganizationIds.js",
+          "file": "src/utils/fixEntrepriseIds.js",
           "line": 103,
           "content": "const collections = ['contacts', 'lieux', 'structures', 'concerts'];",
           "module": "other"

@@ -1,5 +1,5 @@
 /**
- * Script d'audit pour vérifier la gestion de l'organizationId dans tous les services Firebase
+ * Script d'audit pour vérifier la gestion de l'entrepriseId dans tous les services Firebase
  * Vérifie les opérations CRUD (Create, Read, Update, Delete) et leur conformité
  */
 
@@ -18,7 +18,7 @@ const firebasePatterns = {
   deleteDoc: /deleteDoc\s*\(/g,
   getDocs: /getDocs\s*\(/g,
   getDoc: /getDoc\s*\(/g,
-  organizationId: /organizationId/g,
+  entrepriseId: /entrepriseId/g,
   currentOrganization: /currentOrganization/g,
   useOrganization: /useOrganization/g
 };
@@ -49,8 +49,8 @@ function analyzeFile(filePath) {
       delete: []
     },
     collections: new Set(),
-    hasOrganizationIdCheck: false,
-    hasOrganizationIdInWrites: false,
+    hasEntrepriseIdCheck: false,
+    hasEntrepriseIdInWrites: false,
     usesOrganizationContext: false,
     issues: []
   };
@@ -71,16 +71,16 @@ function analyzeFile(filePath) {
   if (firebasePatterns.addDoc.test(content) || firebasePatterns.setDoc.test(content)) {
     analysis.operations.create.push({
       type: 'addDoc/setDoc',
-      hasOrganizationId: /organizationId.*:/.test(content) // Vérifie si organizationId est dans les données
+      hasEntrepriseId: /entrepriseId.*:/.test(content) // Vérifie si entrepriseId est dans les données
     });
     
-    // Vérifier si organizationId est ajouté lors de la création
+    // Vérifier si entrepriseId est ajouté lors de la création
     const createBlocks = content.match(/(?:addDoc|setDoc)\s*\([^)]+\)/gs) || [];
     createBlocks.forEach(block => {
-      if (!block.includes('organizationId')) {
-        analysis.issues.push('CREATE operation sans organizationId trouvée');
+      if (!block.includes('entrepriseId')) {
+        analysis.issues.push('CREATE operation sans entrepriseId trouvée');
       } else {
-        analysis.hasOrganizationIdInWrites = true;
+        analysis.hasEntrepriseIdInWrites = true;
       }
     });
   }
@@ -91,13 +91,13 @@ function analyzeFile(filePath) {
       type: 'query/getDocs/getDoc'
     });
     
-    // Vérifier la présence de where('organizationId', ...)
-    const whereMatches = content.match(/where\s*\(\s*['"`]organizationId['"`]/g) || [];
+    // Vérifier la présence de where('entrepriseId', ...)
+    const whereMatches = content.match(/where\s*\(\s*['"`]entrepriseId['"`]/g) || [];
     if (whereMatches.length > 0) {
-      analysis.hasOrganizationIdCheck = true;
+      analysis.hasEntrepriseIdCheck = true;
     } else if (firebasePatterns.query.test(content)) {
-      // Si des queries sont faites sans filtre organizationId
-      analysis.issues.push('Queries sans filtre organizationId détectées');
+      // Si des queries sont faites sans filtre entrepriseId
+      analysis.issues.push('Queries sans filtre entrepriseId détectées');
     }
   }
   
@@ -107,12 +107,12 @@ function analyzeFile(filePath) {
       type: 'updateDoc'
     });
     
-    // Vérifier si les updates incluent organizationId (généralement pas nécessaire)
+    // Vérifier si les updates incluent entrepriseId (généralement pas nécessaire)
     const updateBlocks = content.match(/updateDoc\s*\([^)]+\)/gs) || [];
     updateBlocks.forEach(block => {
-      // Les updates ne devraient généralement pas modifier l'organizationId
-      if (block.includes('organizationId')) {
-        analysis.issues.push('UPDATE modifiant organizationId détecté - à vérifier');
+      // Les updates ne devraient généralement pas modifier l'entrepriseId
+      if (block.includes('entrepriseId')) {
+        analysis.issues.push('UPDATE modifiant entrepriseId détecté - à vérifier');
       }
     });
   }
@@ -122,7 +122,7 @@ function analyzeFile(filePath) {
     analysis.operations.delete.push({
       type: 'deleteDoc'
     });
-    // Les deletes n'ont généralement pas besoin de vérifier organizationId
+    // Les deletes n'ont généralement pas besoin de vérifier entrepriseId
     // mais devraient idéalement vérifier les permissions avant
   }
   
@@ -130,11 +130,11 @@ function analyzeFile(filePath) {
   const hasCreateOps = analysis.operations.create.length > 0;
   const hasReadOps = analysis.operations.read.length > 0;
   
-  if (hasCreateOps && !analysis.hasOrganizationIdInWrites) {
-    analysis.issues.push('❌ CREATE sans organizationId');
+  if (hasCreateOps && !analysis.hasEntrepriseIdInWrites) {
+    analysis.issues.push('❌ CREATE sans entrepriseId');
   }
   
-  if (hasReadOps && !analysis.hasOrganizationIdCheck && analysis.collections.size > 0) {
+  if (hasReadOps && !analysis.hasEntrepriseIdCheck && analysis.collections.size > 0) {
     // Exceptions pour certaines collections globales
     const globalCollections = ['parametres', 'users'];
     const usesOnlyGlobalCollections = Array.from(analysis.collections).every(col => 
@@ -142,7 +142,7 @@ function analyzeFile(filePath) {
     );
     
     if (!usesOnlyGlobalCollections) {
-      analysis.issues.push('❌ READ sans filtre organizationId');
+      analysis.issues.push('❌ READ sans filtre entrepriseId');
     }
   }
   
@@ -171,7 +171,7 @@ function scanDirectory(dir, results = []) {
 }
 
 // Lancer l'audit
-console.log('🔍 Audit des services Firebase pour la gestion de l\'organizationId\n');
+console.log('🔍 Audit des services Firebase pour la gestion de l\'entrepriseId\n');
 
 const srcPath = path.join(process.cwd(), 'src');
 const results = scanDirectory(srcPath);
@@ -250,15 +250,15 @@ console.log('\n' + '='.repeat(80));
 console.log('💡 RECOMMANDATIONS\n');
 
 console.log('1. Pour les opérations CREATE (addDoc, setDoc):');
-console.log('   - Toujours inclure organizationId: currentOrganization?.id dans les données');
+console.log('   - Toujours inclure entrepriseId: currentOrganization?.id dans les données');
 console.log('   - Utiliser le hook useOrganization() pour accéder à currentOrganization\n');
 
 console.log('2. Pour les opérations READ (query, getDocs):');
-console.log('   - Ajouter where("organizationId", "==", currentOrganization.id) aux queries');
+console.log('   - Ajouter where("entrepriseId", "==", currentOrganization.id) aux queries');
 console.log('   - Exceptions: collections globales (parametres, users)\n');
 
 console.log('3. Pour les hooks génériques:');
-console.log('   - useGenericEntityDetails, useGenericEntityList devraient gérer organizationId automatiquement');
+console.log('   - useGenericEntityDetails, useGenericEntityList devraient gérer entrepriseId automatiquement');
 console.log('   - Vérifier que les hooks spécifiques utilisent ces hooks génériques\n');
 
 console.log('4. Services à corriger en priorité:');
@@ -283,9 +283,9 @@ const report = {
   },
   details: results,
   recommendations: [
-    'Toujours inclure organizationId dans les opérations CREATE',
-    'Filtrer par organizationId dans les opérations READ',
-    'Utiliser les hooks génériques qui gèrent automatiquement organizationId',
+    'Toujours inclure entrepriseId dans les opérations CREATE',
+    'Filtrer par entrepriseId dans les opérations READ',
+    'Utiliser les hooks génériques qui gèrent automatiquement entrepriseId',
     'Vérifier les permissions avant les opérations DELETE'
   ]
 };

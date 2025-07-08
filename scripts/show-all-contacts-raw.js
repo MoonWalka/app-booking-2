@@ -13,7 +13,7 @@ console.log(`
 
 (async function showAllContactsRaw() {
   const { db, collection, getDocs } = window.firebase;
-  const currentOrgId = window.currentOrganizationId || localStorage.getItem('currentOrganizationId');
+  const currentOrgId = window.currentEntrepriseId || localStorage.getItem('currentEntrepriseId');
   
   console.log('🔍 Chargement de TOUS les contacts sans filtre...');
   console.log('Organisation actuelle:', currentOrgId);
@@ -43,21 +43,21 @@ console.log(`
     // Compter les structures
     allStructures.forEach(doc => {
       const data = doc.data();
-      const orgId = data.organizationId || 'SANS_ORGANISATION';
+      const orgId = data.entrepriseId || 'SANS_ORGANISATION';
       stats.structures[orgId] = (stats.structures[orgId] || 0) + 1;
     });
     
     // Compter les personnes
     allPersonnes.forEach(doc => {
       const data = doc.data();
-      const orgId = data.organizationId || 'SANS_ORGANISATION';
+      const orgId = data.entrepriseId || 'SANS_ORGANISATION';
       stats.personnes[orgId] = (stats.personnes[orgId] || 0) + 1;
     });
     
     // Compter les liaisons
     allLiaisons.forEach(doc => {
       const data = doc.data();
-      const orgId = data.organizationId || 'SANS_ORGANISATION';
+      const orgId = data.entrepriseId || 'SANS_ORGANISATION';
       stats.liaisons[orgId] = (stats.liaisons[orgId] || 0) + 1;
     });
     
@@ -86,21 +86,21 @@ console.log(`
     
     allStructures.forEach(doc => {
       const data = doc.data();
-      if (data.organizationId === currentOrgId) {
+      if (data.entrepriseId === currentOrgId) {
         myStructures.push({ id: doc.id, ...data });
       }
     });
     
     allPersonnes.forEach(doc => {
       const data = doc.data();
-      if (data.organizationId === currentOrgId) {
+      if (data.entrepriseId === currentOrgId) {
         myPersonnes.push({ id: doc.id, ...data });
       }
     });
     
     allLiaisons.forEach(doc => {
       const data = doc.data();
-      if (data.organizationId === currentOrgId) {
+      if (data.entrepriseId === currentOrgId) {
         myLiaisons.push({ id: doc.id, ...data });
       }
     });

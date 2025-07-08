@@ -246,11 +246,11 @@ Représenté(e) par : {representant_entreprise}</p>
 ];
 
 // Fonction pour vérifier si un modèle existe déjà
-async function templateExists(name, organizationId) {
+async function templateExists(name, entrepriseId) {
   const q = query(
     collection(db, 'contratTemplates'),
     where('name', '==', name),
-    where('organizationId', '==', organizationId)
+    where('entrepriseId', '==', entrepriseId)
   );
   const snapshot = await getDocs(q);
   return !snapshot.empty;
@@ -264,10 +264,10 @@ async function migrateTemplates() {
     // Demander les credentials
     const email = process.argv[2];
     const password = process.argv[3];
-    const organizationId = process.argv[4];
+    const entrepriseId = process.argv[4];
     
-    if (!email || !password || !organizationId) {
-      console.error('❌ Usage: node migrate-contract-templates.js <email> <password> <organizationId>');
+    if (!email || !password || !entrepriseId) {
+      console.error('❌ Usage: node migrate-contract-templates.js <email> <password> <entrepriseId>');
       process.exit(1);
     }
     
@@ -281,7 +281,7 @@ async function migrateTemplates() {
       console.log(`📄 Migration du modèle: ${model.name}`);
       
       // Vérifier si le modèle existe déjà
-      const exists = await templateExists(model.name, organizationId);
+      const exists = await templateExists(model.name, entrepriseId);
       if (exists) {
         console.log(`⚠️  Le modèle "${model.name}" existe déjà, ignoré.\n`);
         continue;
@@ -311,7 +311,7 @@ async function migrateTemplates() {
           </div>
         </div>`,
         isDefault: false,
-        organizationId: organizationId,
+        entrepriseId: entrepriseId,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         createdBy: email,

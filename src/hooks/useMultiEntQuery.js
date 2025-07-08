@@ -318,7 +318,7 @@ export const useMultiEntDocument = (collectionName, documentId) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!currentOrg || !documentId) {
+    if (!currentEntreprise || !documentId) {
       setData(null);
       setLoading(false);
       return;
@@ -347,7 +347,7 @@ export const useMultiEntDocument = (collectionName, documentId) => {
     };
 
     fetchDocument();
-  }, [currentOrg, collectionName, documentId]);
+  }, [currentEntreprise, collectionName, documentId]);
 
   return { data, loading, error };
 };
@@ -385,7 +385,7 @@ export const useMultiEntMutation = (collectionName) => {
     } finally {
       setLoading(false);
     }
-  }, [currentOrg, collectionName]);
+  }, [currentEntreprise, collectionName]);
 
   const update = useCallback(async (documentId, data) => {
     if (!currentEntreprise) {
@@ -409,7 +409,7 @@ export const useMultiEntMutation = (collectionName) => {
     } finally {
       setLoading(false);
     }
-  }, [currentOrg, collectionName]);
+  }, [currentEntreprise, collectionName]);
 
   const remove = useCallback(async (documentId) => {
     if (!currentEntreprise) {
@@ -429,7 +429,7 @@ export const useMultiEntMutation = (collectionName) => {
     } finally {
       setLoading(false);
     }
-  }, [currentOrg, collectionName]);
+  }, [currentEntreprise, collectionName]);
 
   return {
     create,

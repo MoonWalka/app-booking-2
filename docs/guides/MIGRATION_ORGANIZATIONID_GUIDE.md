@@ -1,8 +1,8 @@
-# Guide de Migration - Ajout d'organizationId aux Documents Existants
+# Guide de Migration - Ajout d'entrepriseId aux Documents Existants
 
 ## Contexte
 
-Les résultats du test d'isolation multi-organisation montrent que certains documents n'ont pas d'`organizationId`. Ces documents ont été créés **avant** l'implémentation du système multi-organisation et doivent être migrés.
+Les résultats du test d'isolation multi-organisation montrent que certains documents n'ont pas d'`entrepriseId`. Ces documents ont été créés **avant** l'implémentation du système multi-organisation et doivent être migrés.
 
 ## État Actuel (Exemple)
 
@@ -11,17 +11,17 @@ Score de Sécurité: 46%
 - Documents totaux: 13
 - Documents de l'organisation: 6
 - Documents exposés: 7
-- Sans organizationId: 7
+- Sans entrepriseId: 7
 
 Collections affectées:
-- contacts: 4 documents sans organizationId
-- artistes: 1 document sans organizationId
-- lieux: 2 documents sans organizationId
+- contacts: 4 documents sans entrepriseId
+- artistes: 1 document sans entrepriseId
+- lieux: 2 documents sans entrepriseId
 ```
 
 ## Solution : Script de Migration
 
-Un script de migration a été créé pour ajouter l'`organizationId` aux documents existants.
+Un script de migration a été créé pour ajouter l'`entrepriseId` aux documents existants.
 
 ### 1. Installation des Dépendances
 
@@ -46,7 +46,7 @@ node scripts/migrate-missing-organizationid.js
 ```
 
 Cette commande va :
-- Lister tous les documents sans organizationId
+- Lister tous les documents sans entrepriseId
 - Afficher les organisations disponibles
 - Donner les instructions d'utilisation
 
@@ -80,15 +80,15 @@ Si vous préférez migrer manuellement via la console Firebase :
 
 1. Aller dans Firestore Console
 2. Sélectionner la collection (ex: `contacts`)
-3. Pour chaque document sans organizationId :
+3. Pour chaque document sans entrepriseId :
    - Cliquer sur le document
-   - Ajouter le champ : `organizationId: "tTvA6fzQpi6u3kx8wZO8"`
+   - Ajouter le champ : `entrepriseId: "tTvA6fzQpi6u3kx8wZO8"`
    - Sauvegarder
 
 ## Bonnes Pratiques Post-Migration
 
 1. **Vérifier régulièrement** avec le test d'isolation
-2. **Former l'équipe** sur l'importance de l'organizationId
+2. **Former l'équipe** sur l'importance de l'entrepriseId
 3. **Documenter** quelle organisation possède quelles données
 4. **Sauvegarder** avant toute migration importante
 

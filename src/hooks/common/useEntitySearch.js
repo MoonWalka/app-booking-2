@@ -10,7 +10,7 @@ import {
   serverTimestamp,
   db
 } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook générique pour la recherche d'entités (lieux, contacts, artistes, concerts, etc.)
@@ -39,7 +39,7 @@ export const useEntitySearch = (options) => {
     customSearchFunction = null
   } = options;
   
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
   // console.log('Parsed options:', { entityType, searchField, onSelect: !!onSelect });
 
@@ -81,10 +81,10 @@ export const useEntitySearch = (options) => {
       
       if (isDateFormat && entityType === 'concerts') {
         // Recherche exacte sur le champ date avec filtre organisation
-        if (currentOrganization?.id) {
+        if (currentEntreprise?.id) {
           searchQuery = query(
             entitiesRef,
-            where('organizationId', '==', currentOrganization.id),
+            where('entrepriseId', '==', currentEntreprise.id),
             where('date', '==', searchTerm),
             limit(maxResults)
           );
@@ -97,19 +97,19 @@ export const useEntitySearch = (options) => {
       } else {
         // Pour une recherche plus large, récupérer plus de résultats et filtrer localement
         // Cela permet de trouver "chez tutu" même en tapant "tutu"
-        if (currentOrganization?.id) {
+        if (currentEntreprise?.id) {
           // TEMPORAIRE: Requête sans orderBy jusqu'à ce que l'index soit créé
           // TODO: Réactiver orderBy une fois l'index créé
           searchQuery = query(
             entitiesRef,
-            where('organizationId', '==', currentOrganization.id),
+            where('entrepriseId', '==', currentEntreprise.id),
             limit(maxResults * 10) // Récupérer plus pour compenser l'absence de tri
           );
           
           /* Version avec orderBy - à réactiver après création de l'index:
           searchQuery = query(
             entitiesRef,
-            where('organizationId', '==', currentOrganization.id),
+            where('entrepriseId', '==', currentEntreprise.id),
             orderBy('createdAt', 'desc'),
             limit(maxResults * 5)
           );
@@ -176,7 +176,7 @@ export const useEntitySearch = (options) => {
     } finally {
       setIsSearching(false);
     }
-  }, [searchTerm, entityType, customSearchFunction, maxResults, additionalSearchFields, filterResults, currentOrganization?.id]);
+  }, [searchTerm, entityType, customSearchFunction, maxResults, additionalSearchFields, filterResults, currentEntreprise?.id]);
 
   // Référence stable pour performSearch
   const performSearchRef = useRef();
@@ -282,17 +282,17 @@ export const useEntitySearch = (options) => {
     
     try {
       
-      // VÉRIFICATION CRITIQUE - organizationId OBLIGATOIRE
-      let organizationId = currentOrganization?.id;
+      // VÉRIFICATION CRITIQUE - entrepriseId OBLIGATOIRE
+      let entrepriseId = currentEntreprise?.id;
       
-      if (!organizationId) {
+      if (!entrepriseId) {
         // Fallback : essayer de récupérer depuis localStorage
-        organizationId = localStorage.getItem('currentOrganizationId');
-        console.warn('⚠️ organizationId manquant dans le contexte, utilisation du localStorage:', organizationId);
+        entrepriseId = localStorage.getItem('currentEntrepriseId');
+        console.warn('⚠️ entrepriseId manquant dans le contexte, utilisation du localStorage:', entrepriseId);
       }
       
-      if (!organizationId) {
-        console.error('❌ organizationId manquant lors de la création');
+      if (!entrepriseId) {
+        console.error('❌ entrepriseId manquant lors de la création');
         alert('Erreur : Aucune organisation sélectionnée. Veuillez vous reconnecter.');
         return null;
       }
@@ -301,7 +301,7 @@ export const useEntitySearch = (options) => {
       let entityData = {
         nom: searchTermString.trim(),
         nomLowercase: searchTermString.trim().toLowerCase(),
-        organizationId: organizationId, // CRITIQUE pour multi-org
+        entrepriseId: entrepriseId, // CRITIQUE pour multi-org
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         ...entityAdditionalData

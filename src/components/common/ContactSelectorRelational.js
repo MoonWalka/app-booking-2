@@ -4,7 +4,7 @@ import CardSection from '@/components/ui/CardSection';
 import SearchDropdown from '@/components/dates/sections/SearchDropdown';
 import SelectedEntityCard from '@/components/dates/sections/SelectedEntityCard';
 import contactServiceRelational from '@/services/contactServiceRelational';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useNavigate } from 'react-router-dom';
 import styles from './ContactSelectorRelational.module.css';
 
@@ -44,7 +44,7 @@ const ContactSelectorRelational = ({
   
   const dropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const navigate = useNavigate();
 
   // Charger les contacts existants au montage
@@ -111,7 +111,7 @@ const ContactSelectorRelational = ({
       try {
         const results = await contactServiceRelational.searchContacts(
           searchTerm,
-          currentOrganization?.id
+          currentEntreprise?.id
         );
         
         // Filtrer les contacts déjà sélectionnés
@@ -134,7 +134,7 @@ const ContactSelectorRelational = ({
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [searchTerm, currentOrganization?.id, contactsList]);
+  }, [searchTerm, currentEntreprise?.id, contactsList]);
 
   // Gérer l'ajout d'un contact
   const handleAddContact = useCallback((contact) => {

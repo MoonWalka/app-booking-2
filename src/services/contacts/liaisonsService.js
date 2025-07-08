@@ -35,7 +35,7 @@ class LiaisonsService {
       // Vérifier l'unicité de la liaison
       const existingQuery = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', validation.data.organizationId),
+        where('entrepriseId', '==', validation.data.entrepriseId),
         where('structureId', '==', validation.data.structureId),
         where('personneId', '==', validation.data.personneId)
       );
@@ -108,7 +108,7 @@ class LiaisonsService {
       if (updates.prioritaire === true) {
         const prioritairesQuery = query(
           collection(db, COLLECTION_NAME),
-          where('organizationId', '==', currentData.organizationId),
+          where('entrepriseId', '==', currentData.entrepriseId),
           where('structureId', '==', currentData.structureId),
           where('prioritaire', '==', true)
         );
@@ -322,11 +322,11 @@ class LiaisonsService {
   /**
    * Récupérer les contacts actifs d'une organisation
    */
-  async getActiveContacts(organizationId, filters = {}) {
+  async getActiveContacts(entrepriseId, filters = {}) {
     try {
       let q = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('actif', '==', true)
       );
 
@@ -366,11 +366,11 @@ class LiaisonsService {
   /**
    * Statistiques des liaisons
    */
-  async getStatistics(organizationId) {
+  async getStatistics(entrepriseId) {
     try {
       const allLiaisonsQuery = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
       const allLiaisonsSnapshot = await getDocs(allLiaisonsQuery);
 

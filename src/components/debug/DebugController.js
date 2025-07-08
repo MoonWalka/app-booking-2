@@ -3,7 +3,7 @@
  * Bouton flottant discret dans le coin de l'écran
  */
 import React, { useState } from 'react';
-import OrganizationIdDebug from './OrganizationIdDebug';
+// import OrganizationIdDebug from './OrganizationIdDebug'; // Supprimé
 import styles from './DebugController.module.css';
 
 const DebugController = () => {
@@ -21,11 +21,11 @@ const DebugController = () => {
       </button>
 
       {/* Panneau de debug */}
-      <OrganizationIdDebug
+      {/* <OrganizationIdDebug
         isVisible={isDebugVisible}
         onClose={() => setIsDebugVisible(false)}
         initialPosition={{ x: 20, y: 100 }}
-      />
+      /> */}
     </>
   );
 };

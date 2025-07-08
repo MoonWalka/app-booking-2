@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Script de diagnostic pour identifier les contacts manquants
- * Vérifie les problèmes d'organizationId et autres anomalies
+ * Vérifie les problèmes d'entrepriseId et autres anomalies
  */
 
 console.log(`
@@ -13,7 +13,7 @@ console.log(`
 
 (async function diagnosticContacts() {
   const { db, collection, getDocs, query, where } = window.firebase;
-  const currentOrgId = window.currentOrganizationId || localStorage.getItem('currentOrganizationId');
+  const currentOrgId = window.currentEntrepriseId || localStorage.getItem('currentEntrepriseId');
   
   console.log('🔍 Diagnostic des contacts...');
   console.log('Organisation actuelle:', currentOrgId);
@@ -38,16 +38,16 @@ console.log(`
     
     structuresSnapshot.forEach(doc => {
       const data = doc.data();
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         structuresSansOrgId++;
-      } else if (data.organizationId !== currentOrgId) {
+      } else if (data.entrepriseId !== currentOrgId) {
         structuresAutreOrgId++;
-        structuresByOrg[data.organizationId] = (structuresByOrg[data.organizationId] || 0) + 1;
+        structuresByOrg[data.entrepriseId] = (structuresByOrg[data.entrepriseId] || 0) + 1;
       }
     });
     
-    console.log('- Structures SANS organizationId:', structuresSansOrgId);
-    console.log('- Structures avec AUTRE organizationId:', structuresAutreOrgId);
+    console.log('- Structures SANS entrepriseId:', structuresSansOrgId);
+    console.log('- Structures avec AUTRE entrepriseId:', structuresAutreOrgId);
     if (Object.keys(structuresByOrg).length > 0) {
       console.log('  Répartition par organisation:', structuresByOrg);
     }
@@ -65,16 +65,16 @@ console.log(`
       const data = doc.data();
       personnesIds.add(doc.id);
       
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         personnesSansOrgId++;
-      } else if (data.organizationId !== currentOrgId) {
+      } else if (data.entrepriseId !== currentOrgId) {
         personnesAutreOrgId++;
-        personnesByOrg[data.organizationId] = (personnesByOrg[data.organizationId] || 0) + 1;
+        personnesByOrg[data.entrepriseId] = (personnesByOrg[data.entrepriseId] || 0) + 1;
       }
     });
     
-    console.log('- Personnes SANS organizationId:', personnesSansOrgId);
-    console.log('- Personnes avec AUTRE organizationId:', personnesAutreOrgId);
+    console.log('- Personnes SANS entrepriseId:', personnesSansOrgId);
+    console.log('- Personnes avec AUTRE entrepriseId:', personnesAutreOrgId);
     if (Object.keys(personnesByOrg).length > 0) {
       console.log('  Répartition par organisation:', personnesByOrg);
     }
@@ -104,8 +104,8 @@ console.log(`
     // 5. Vérifier les contacts visibles avec les filtres actuels
     console.log('\\n✅ CONTACTS VISIBLES AVEC LES FILTRES ACTUELS:');
     
-    const structuresQuery = query(collection(db, 'structures'), where('organizationId', '==', currentOrgId));
-    const personnesQuery = query(collection(db, 'personnes'), where('organizationId', '==', currentOrgId));
+    const structuresQuery = query(collection(db, 'structures'), where('entrepriseId', '==', currentOrgId));
+    const personnesQuery = query(collection(db, 'personnes'), where('entrepriseId', '==', currentOrgId));
     
     const structuresVisibles = await getDocs(structuresQuery);
     const personnesVisibles = await getDocs(personnesQuery);
@@ -123,7 +123,7 @@ console.log(`
       
       if (structuresSansOrgId > 0 || personnesSansOrgId > 0) {
         console.log('\\n🔧 ACTION RECOMMANDÉE:');
-        console.log('Exécuter le script fix-contacts-without-organizationid.js pour assigner l\\'organizationId manquant');
+        console.log('Exécuter le script fix-contacts-without-organizationid.js pour assigner l\\'entrepriseId manquant');
       }
       
       if (structuresAutreOrgId > 0 || personnesAutreOrgId > 0) {
@@ -136,7 +136,7 @@ console.log(`
         console.log(personnesLibresSansFlag, 'personnes sans liaison devraient être marquées comme "personne libre"');
       }
     } else {
-      console.log('✅ Aucun problème d\\'organizationId détecté');
+      console.log('✅ Aucun problème d\\'entrepriseId détecté');
     }
     
     // 7. Exemples de contacts problématiques
@@ -145,7 +145,7 @@ console.log(`
       
       let count = 0;
       structuresSnapshot.forEach(doc => {
-        if (count < 5 && !doc.data().organizationId) {
+        if (count < 5 && !doc.data().entrepriseId) {
           console.log('- Structure:', doc.data().nom || 'Sans nom', '(ID:', doc.id + ')');
           count++;
         }
@@ -153,7 +153,7 @@ console.log(`
       
       count = 0;
       personnesSnapshot.forEach(doc => {
-        if (count < 5 && !doc.data().organizationId) {
+        if (count < 5 && !doc.data().entrepriseId) {
           const data = doc.data();
           const nom = data.nom || data.prenom || 'Sans nom';
           console.log('- Personne:', nom, '(ID:', doc.id + ')');

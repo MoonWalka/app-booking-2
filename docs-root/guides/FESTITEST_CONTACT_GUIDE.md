@@ -8,7 +8,7 @@ Trouver les métadonnées du contact nommé "festitest" dans la base de données
 ### Collections Firebase
 Les contacts peuvent être stockés dans deux types de collections :
 - `contacts` : Collection principale (ancienne structure)
-- `contacts_org_{organizationId}` : Collections organisationnelles (nouvelle structure multi-organisation)
+- `contacts_org_{entrepriseId}` : Collections organisationnelles (nouvelle structure multi-organisation)
 
 ### Champs de métadonnées typiques
 ```javascript
@@ -29,7 +29,7 @@ Les contacts peuvent être stockés dans deux types de collections :
   pays: "France",
   
   // Métadonnées organisationnelles
-  organizationId: "org_id",
+  entrepriseId: "org_id",
   
   // Relations bidirectionnelles
   structureId: "structure_id_associée",
@@ -124,9 +124,9 @@ await window.createFestitestContactNow();
 ## 🏗️ Structure organisationnelle
 
 L'application utilise un système multi-organisation où :
-- Chaque organisation a ses propres collections : `{collection}_org_{organizationId}`
+- Chaque organisation a ses propres collections : `{collection}_org_{entrepriseId}`
 - Les contacts peuvent être dans `contacts` (global) ou `contacts_org_123` (organisationnel)
-- L'ID d'organisation est stocké dans `organizationId`
+- L'ID d'organisation est stocké dans `entrepriseId`
 
 ## 🔄 Relations bidirectionnelles
 

@@ -43,17 +43,17 @@ async function findOrganizations() {
       });
     }
     
-    // Chercher dans contacts_unified pour trouver des organizationId
+    // Chercher dans contacts_unified pour trouver des entrepriseId
     const contactsQuery = query(collection(db, 'contacts_unified'), limit(5));
     const contactsSnapshot = await getDocs(contactsQuery);
     
     if (!contactsSnapshot.empty) {
-      console.log('📋 OrganizationIds trouvés dans contacts_unified:');
+      console.log('📋 EntrepriseIds trouvés dans contacts_unified:');
       const orgIds = new Set();
       contactsSnapshot.docs.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId) {
-          orgIds.add(data.organizationId);
+        if (data.entrepriseId) {
+          orgIds.add(data.entrepriseId);
         }
       });
       
@@ -67,14 +67,14 @@ async function findOrganizations() {
     console.log('💡 Suggestions:');
     if (orgsSnapshot.empty && contactsSnapshot.empty) {
       console.log('  - Aucune organisation trouvée');
-      console.log('  - Utilisez un organizationId test: "org-test-123"');
+      console.log('  - Utilisez un entrepriseId test: "org-test-123"');
     } else if (!orgsSnapshot.empty) {
       const firstOrg = orgsSnapshot.docs[0];
       console.log(`  - Utilisez l'organisation existante: "${firstOrg.id}"`);
       console.log(`  - Commande: node scripts/setup/setup-firestore-relational-contacts.js admin@example.com password123 ${firstOrg.id}`);
     } else if (orgIds.size > 0) {
       const firstOrgId = Array.from(orgIds)[0];
-      console.log(`  - Utilisez l'organizationId existant: "${firstOrgId}"`);
+      console.log(`  - Utilisez l'entrepriseId existant: "${firstOrgId}"`);
       console.log(`  - Commande: node scripts/setup/setup-firestore-relational-contacts.js admin@example.com password123 ${firstOrgId}`);
     }
     

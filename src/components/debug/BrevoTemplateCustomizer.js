@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Card, Alert, Row, Col, Form, Modal, Tab, Tabs } from 'react-bootstrap';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { decryptSensitiveFields } from '@/utils/cryptoUtils';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -12,7 +12,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
  * Interface ultra simple pour les utilisateurs non-techniques
  */
 const BrevoTemplateCustomizer = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [message, setMessage] = useState('');
@@ -103,12 +103,12 @@ const BrevoTemplateCustomizer = () => {
 
   // Charger la configuration Brevo
   const loadBrevoConfig = useCallback(async () => {
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     setLoading(true);
     try {
       const parametresDoc = await getDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
       );
       
       if (parametresDoc.exists()) {
@@ -122,7 +122,7 @@ const BrevoTemplateCustomizer = () => {
           // Initialiser le nom de l'organisation
           setDesignConfig(prev => ({
             ...prev,
-            organizationName: decryptedConfig.fromName || currentOrganization.name || 'TourCraft'
+            organizationName: decryptedConfig.fromName || currentEntreprise.name || 'TourCraft'
           }));
         } else {
           setError('Brevo n\'est pas configuré pour cette organisation');
@@ -133,7 +133,7 @@ const BrevoTemplateCustomizer = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentOrganization?.id, currentOrganization?.name]);
+  }, [currentEntreprise?.id, currentEntreprise?.name]);
 
   // Générer le HTML avec la configuration personnalisée
   const generateCustomHTML = useCallback((templateType, forCreation = false) => {

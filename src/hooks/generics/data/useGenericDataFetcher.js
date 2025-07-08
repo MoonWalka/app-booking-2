@@ -26,7 +26,7 @@ import {
   getDoc,
   onSnapshot
 } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook générique pour la récupération de données
@@ -84,7 +84,7 @@ import { useOrganization } from '@/context/OrganizationContext';
  */
 const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
   // Organisation context
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo
   const stableFetchConfig = useMemo(() => ({
@@ -227,9 +227,9 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     const constraints = [];
     
     // ⚠️ IMPORTANT: Toujours filtrer par organisation si disponible
-    if (currentOrganization?.id) {
-      console.log(`[useGenericDataFetcher] Filtrage par organizationId: ${currentOrganization.id} pour ${entityType}`);
-      constraints.push(where('organizationId', '==', currentOrganization.id));
+    if (currentEntreprise?.id) {
+      console.log(`[useGenericDataFetcher] Filtrage par entrepriseId: ${currentEntreprise.id} pour ${entityType}`);
+      constraints.push(where('entrepriseId', '==', currentEntreprise.id));
     } else {
       console.warn(`[useGenericDataFetcher] ⚠️ Pas d'organisation courante pour filtrer ${entityType}`);
     }
@@ -262,7 +262,7 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     }
     
     return q;
-  }, [entityType, stableFetchConfig, currentOrganization?.id]);
+  }, [entityType, stableFetchConfig, currentEntreprise?.id]);
   
   // ✅ CORRECTION 7: Transformation des données stable
   const processData = useCallback((rawData) => {
@@ -313,8 +313,8 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
         if (docSnap.exists()) {
           const docData = docSnap.data();
           // Vérifier l'organisation pour le mode single
-          if (currentOrganization?.id && docData.organizationId !== currentOrganization.id) {
-            console.warn(`[useGenericDataFetcher] Document ${docSnap.id} n'appartient pas à l'organisation ${currentOrganization.id}`);
+          if (currentEntreprise?.id && docData.entrepriseId !== currentEntreprise.id) {
+            console.warn(`[useGenericDataFetcher] Document ${docSnap.id} n'appartient pas à l'organisation ${currentEntreprise.id}`);
             result = null;
           } else {
             result = { id: docSnap.id, ...docData };
@@ -379,7 +379,7 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     stableOptions.maxRetries,
     stableOptions.retryDelay,
     retryCount,
-    currentOrganization?.id
+    currentEntreprise?.id
   ]);
   
   // ✅ CORRECTION 9: Configuration de l'écoute en temps réel stable

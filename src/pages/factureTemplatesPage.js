@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getDoc, setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Button from '@/components/ui/Button';
 import FactureTemplateEditorModal from '@/components/factures/FactureTemplateEditorModal';
 import styles from '@/components/parametres/ParametresGeneraux.module.css';
@@ -10,7 +10,7 @@ import factureStyles from '@/components/parametres/ParametresFactures.module.css
 
 const FactureTemplatesPage = () => {
   const { user } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [parameters, setParameters] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -19,12 +19,12 @@ const FactureTemplatesPage = () => {
 
   // Charger les paramètres de facturation
   const loadParameters = useCallback(async () => {
-    if (!user || !currentOrganization?.id) return;
+    if (!user || !currentEntreprise?.id) return;
     
     try {
       setIsLoading(true);
       // Charger les paramètres depuis un document unique
-      const parametersRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'factureParameters');
+      const parametersRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'factureParameters');
       const parametersDoc = await getDoc(parametersRef);
       
       if (parametersDoc.exists()) {
@@ -63,26 +63,26 @@ const FactureTemplatesPage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [user, currentOrganization]);
+  }, [user, currentEntreprise]);
 
   useEffect(() => {
     loadParameters();
-  }, [user, currentOrganization, loadParameters]);
+  }, [user, currentEntreprise, loadParameters]);
 
   // Sauvegarder les paramètres
   const handleSaveParameters = async (configData) => {
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     try {
       setError(null);
-      const parametersRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'factureParameters');
+      const parametersRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'factureParameters');
       
       // Sauvegarder les paramètres
       await setDoc(parametersRef, {
         ...configData,
         updatedAt: serverTimestamp(),
         updatedBy: user.uid,
-        organizationId: currentOrganization.id
+        entrepriseId: currentEntreprise.id
       });
       
       setSuccess('Paramètres de facturation mis à jour avec succès');

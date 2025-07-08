@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook pour récupérer les factures associées à un contact ou une structure
@@ -12,14 +12,14 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  const { currentOrganization } = useOrganization();
-  const organizationId = currentOrganization?.id;
+  const { currentEntreprise } = useEntreprise();
+  const entrepriseId = currentEntreprise?.id;
 
   useEffect(() => {
-    console.log('[useContactFactures] Hook appelé avec:', { entityId, entityType, organizationId });
+    console.log('[useContactFactures] Hook appelé avec:', { entityId, entityType, entrepriseId });
     
-    if (!entityId || !organizationId) {
-      console.log('[useContactFactures] Pas d\'entityId ou organizationId, arrêt');
+    if (!entityId || !entrepriseId) {
+      console.log('[useContactFactures] Pas d\'entityId ou entrepriseId, arrêt');
       setFactures([]);
       return;
     }
@@ -66,7 +66,7 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
           const dateData = { id: dateDoc.id, ...dateDoc.data() };
           
           const facturesQuery = query(
-            collection(db, 'organizations', organizationId, 'factures'),
+            collection(db, 'organizations', entrepriseId, 'factures'),
             where('dateId', '==', dateDoc.id)
           );
           const facturesSnapshot = await getDocs(facturesQuery);
@@ -102,7 +102,7 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
     };
 
     fetchContactFactures();
-  }, [entityId, entityType, organizationId, refreshKey]);
+  }, [entityId, entityType, entrepriseId, refreshKey]);
 
   const refetch = () => {
     setRefreshKey(prev => prev + 1);

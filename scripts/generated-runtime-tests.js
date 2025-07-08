@@ -339,23 +339,23 @@ export const testAllHooks = async () => {
 export const testFirebaseOperations = async () => {
   const testResults = [];
   
-  // Test création avec organizationId
+  // Test création avec entrepriseId
   try {
-    console.log('🧪 Test création avec organizationId...');
+    console.log('🧪 Test création avec entrepriseId...');
     // Simuler création d'un document
     const testDoc = {
       nom: 'Test Document',
-      organizationId: 'test-org-id',
+      entrepriseId: 'test-org-id',
       createdAt: new Date()
     };
-    testResults.push({ operation: 'CREATE', status: 'SUCCESS', hasOrganizationId: true });
+    testResults.push({ operation: 'CREATE', status: 'SUCCESS', hasEntrepriseId: true });
   } catch (error) {
     testResults.push({ operation: 'CREATE', status: 'ERROR', error: error.message });
   }
   
-  // Test lecture avec filtre organizationId
+  // Test lecture avec filtre entrepriseId
   try {
-    console.log('🧪 Test lecture avec filtre organizationId...');
+    console.log('🧪 Test lecture avec filtre entrepriseId...');
     // Simuler une requête filtrée
     testResults.push({ operation: 'READ', status: 'SUCCESS', hasFilter: true });
   } catch (error) {
@@ -372,7 +372,7 @@ export const testUserWorkflows = async () => {
       steps: [
         'Naviguer vers /contacts/nouveau',
         'Remplir le formulaire',
-        'Vérifier que organizationId est ajouté',
+        'Vérifier que entrepriseId est ajouté',
         'Soumettre le formulaire',
         'Vérifier que le contact apparaît dans la liste'
       ]
@@ -382,7 +382,7 @@ export const testUserWorkflows = async () => {
       steps: [
         'Naviguer vers /lieux/nouveau',
         'Remplir le formulaire de lieu',
-        'Vérifier que organizationId est ajouté',
+        'Vérifier que entrepriseId est ajouté',
         'Soumettre le formulaire',
         'Vérifier que le lieu apparaît dans la liste'
       ]

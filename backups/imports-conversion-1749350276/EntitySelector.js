@@ -131,7 +131,7 @@ const EntitySelector = ({
           entityType, 
           currentConfig, 
           currentOrganization,
-          organizationId: currentOrganization?.id,
+          entrepriseId: currentOrganization?.id,
           filters 
         });
         const collectionRef = collection(db, currentConfig.collection || entityType);
@@ -141,7 +141,7 @@ const EntitySelector = ({
         
         // Ajouter le filtre organisation si disponible
         if (currentOrganization?.id) {
-          queryConditions.push(where('organizationId', '==', currentOrganization.id));
+          queryConditions.push(where('entrepriseId', '==', currentOrganization.id));
         }
         
         // Ajout des filtres supplémentaires
@@ -179,7 +179,7 @@ const EntitySelector = ({
         console.log('[EntitySelector] Loaded entities:', {
           count: loadedEntities.length,
           entities: loadedEntities.slice(0, 3), // Afficher les 3 premières pour debug
-          hasOrganizationId: loadedEntities.length > 0 ? loadedEntities[0].organizationId : 'no entities'
+          hasEntrepriseId: loadedEntities.length > 0 ? loadedEntities[0].entrepriseId : 'no entities'
         });
         
         // Tri côté client pour éviter les problèmes d'index Firestore

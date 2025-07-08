@@ -118,7 +118,7 @@ Les métadonnées à stocker incluent :
     hauteur: String
   },
   
-  organizationId: String, // Multi-organisation
+  entrepriseId: String, // Multi-organisation
   createdAt: Timestamp,
   updatedAt: Timestamp
 }

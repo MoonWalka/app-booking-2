@@ -1,7 +1,7 @@
 // src/components/dates/PublicationsList.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { collection, getDocs, query, where, orderBy } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
 import ListWithFilters from '@/components/ui/ListWithFilters';
@@ -15,7 +15,7 @@ import AddButton from '@/components/ui/AddButton';
  */
 function PublicationsList() {
   const navigate = useNavigate();
-  const { currentOrg } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ function PublicationsList() {
   // Charger les données Firebase
   useEffect(() => {
     const loadData = async () => {
-      if (!currentOrg?.id) {
+      if (!currentEntreprise?.id) {
         setLoading(false);
         return;
       }
@@ -36,7 +36,7 @@ function PublicationsList() {
         // Même requête que TableauDeBordPage pour éviter les problèmes d'index
         const datesQuery = query(
           collection(db, 'dates'),
-          where('organizationId', '==', currentOrg.id),
+          where('entrepriseId', '==', currentEntreprise.id),
           orderBy('date', 'desc') // Même ordre que TableauDeBordPage
         );
         
@@ -75,7 +75,7 @@ function PublicationsList() {
     };
 
     loadData();
-  }, [currentOrg?.id]);
+  }, [currentEntreprise?.id]);
 
   // Helper pour dériver le code collaborateur
   const deriveCollaboratorCode = (structureName) => {

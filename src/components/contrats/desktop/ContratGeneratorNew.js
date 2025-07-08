@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col, Button, Form, Table, Alert } from 'react-bootstrap';
 import RepresentationsSection from '@/components/common/RepresentationsSection';
 import { useTabs } from '@/context/TabsContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { doc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import contratService from '@/services/contratService';
@@ -24,7 +24,7 @@ const ContratGeneratorNew = ({
 }) => {
   const navigate = useNavigate();
   const { openTab } = useTabs();
-  const { currentOrganization: currentOrg } = useOrganization();
+  const { currentEntreprise: currentEntreprise } = useEntreprise();
   
   // État pour l'onglet actif du panneau latéral
   const [activeTab, setActiveTab] = useState('dossier');
@@ -135,13 +135,13 @@ const ContratGeneratorNew = ({
   // Charger les données de l'entreprise du label
   useEffect(() => {
     const loadEntrepriseData = async () => {
-      if (!currentOrg?.id) return;
+      if (!currentEntreprise?.id) return;
       
       try {
-        console.log('[ContratGeneratorNew] Chargement des données de l\'entreprise pour org:', currentOrg.id);
+        console.log('[ContratGeneratorNew] Chargement des données de l\'entreprise pour org:', currentEntreprise.id);
         
         // Essayer d'abord le chemin principal: organizations/{id}/settings/entreprise
-        const entrepriseRef = doc(db, 'organizations', currentOrg.id, 'settings', 'entreprise');
+        const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
         const entrepriseDoc = await getDoc(entrepriseRef);
         
         if (entrepriseDoc.exists()) {
@@ -152,7 +152,7 @@ const ContratGeneratorNew = ({
         }
         
         // Fallback sur organizations/{id}/parametres/settings
-        const parametresRef = doc(db, 'organizations', currentOrg.id, 'parametres', 'settings');
+        const parametresRef = doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings');
         const parametresDoc = await getDoc(parametresRef);
         
         if (parametresDoc.exists()) {
@@ -165,7 +165,7 @@ const ContratGeneratorNew = ({
         }
         
         // Dernier fallback sur l'ancien chemin (pour compatibilité)
-        const oldParametresDoc = await getDoc(doc(db, 'parametres', currentOrg.id));
+        const oldParametresDoc = await getDoc(doc(db, 'parametres', currentEntreprise.id));
         
         if (oldParametresDoc.exists()) {
           const parametres = oldParametresDoc.data();
@@ -182,18 +182,18 @@ const ContratGeneratorNew = ({
     };
     
     loadEntrepriseData();
-  }, [currentOrg?.id]);
+  }, [currentEntreprise?.id]);
 
   // Charger les paramètres de facturation (incluant TVA)
   useEffect(() => {
     const loadFactureParams = async () => {
-      if (!currentOrg?.id) return;
+      if (!currentEntreprise?.id) return;
       
       try {
         console.log('[ContratGeneratorNew] Chargement des paramètres de facturation');
         
         // Charger les paramètres de facturation
-        const factureParamsRef = doc(db, 'organizations', currentOrg.id, 'settings', 'factureParameters');
+        const factureParamsRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'factureParameters');
         const factureParamsDoc = await getDoc(factureParamsRef);
         
         if (factureParamsDoc.exists()) {
@@ -211,7 +211,7 @@ const ContratGeneratorNew = ({
     };
     
     loadFactureParams();
-  }, [currentOrg?.id]);
+  }, [currentEntreprise?.id]);
 
   // Charger un contrat existant s'il existe
   useEffect(() => {
@@ -556,13 +556,13 @@ const ContratGeneratorNew = ({
         artisteId: artiste?.id || null,
         lieuId: lieu?.id || null,
         // Ajouter les métadonnées
-        organizationId: currentOrg?.id
+        entrepriseId: currentEntreprise?.id
       };
 
       console.log('[ContratGeneratorNew] Données à sauvegarder:', dataToSave);
 
       // Sauvegarder le contrat
-      const savedContrat = await contratService.saveContrat(dateId, dataToSave, currentOrg?.id);
+      const savedContrat = await contratService.saveContrat(dateId, dataToSave, currentEntreprise?.id);
       
       console.log('[ContratGeneratorNew] Contrat sauvegardé avec succès:', savedContrat);
 
@@ -607,13 +607,13 @@ const ContratGeneratorNew = ({
         structureId: structure?.id || null,
         artisteId: artiste?.id || null,
         lieuId: lieu?.id || null,
-        organizationId: currentOrg?.id
+        entrepriseId: currentEntreprise?.id
       };
 
-      await contratService.saveContrat(dateId, dataToSave, currentOrg?.id);
+      await contratService.saveContrat(dateId, dataToSave, currentEntreprise?.id);
       
       // Générer un numéro de contrat
-      const contratNumber = await contratService.generateContratNumber(currentOrg?.id);
+      const contratNumber = await contratService.generateContratNumber(currentEntreprise?.id);
       console.log('[ContratGeneratorNew] Numéro de contrat généré:', contratNumber);
       
       // Finaliser le contrat
@@ -664,11 +664,11 @@ const ContratGeneratorNew = ({
         structureId: structure?.id || null,
         artisteId: artiste?.id || null,
         lieuId: lieu?.id || null,
-        organizationId: currentOrg?.id
+        entrepriseId: currentEntreprise?.id
       };
 
       // Sauvegarder le contrat
-      const savedContrat = await contratService.saveContrat(dateId, dataToSave, currentOrg?.id);
+      const savedContrat = await contratService.saveContrat(dateId, dataToSave, currentEntreprise?.id);
       console.log('[ContratGeneratorNew] Contrat sauvegardé automatiquement:', savedContrat);
 
       // Mettre à jour le statut du date si c'est la première fois

@@ -1,5 +1,5 @@
 /**
- * Utilitaire pour corriger les organizationIds des artistes
+ * Utilitaire pour corriger les entrepriseIds des artistes
  * Utilisé pour la migration et la maintenance des données
  * Version: 2.0
  */
@@ -8,24 +8,24 @@ import { collection, getDocs, updateDoc, doc, where, query } from 'firebase/fire
 import { db } from '@/services/firebase-service';
 
 /**
- * Corrige les organizationIds manquants pour les artistes
- * @param {string} organizationId - L'ID de l'organisation
+ * Corrige les entrepriseIds manquants pour les artistes
+ * @param {string} entrepriseId - L'ID de l'organisation
  * @returns {Promise<Object>} Résultat de la correction
  */
-export async function fixArtistesOrganizationIds(organizationId) {
-  console.log('[fixArtistesOrganizationIds] Début de la correction pour:', organizationId);
+export async function fixArtistesEntrepriseIds(entrepriseId) {
+  console.log('[fixArtistesEntrepriseIds] Début de la correction pour:', entrepriseId);
   
   try {
-    // Chercher les artistes sans organizationId
+    // Chercher les artistes sans entrepriseId
     const artistesQuery = query(
       collection(db, 'artistes'),
-      where('organizationId', '==', null)
+      where('entrepriseId', '==', null)
     );
     
     const snapshot = await getDocs(artistesQuery);
     
     if (snapshot.empty) {
-      console.log('[fixArtistesOrganizationIds] Aucun artiste à corriger');
+      console.log('[fixArtistesEntrepriseIds] Aucun artiste à corriger');
       return {
         success: true,
         count: 0,
@@ -40,9 +40,9 @@ export async function fixArtistesOrganizationIds(organizationId) {
       const artisteRef = doc(db, 'artistes', artisteDoc.id);
       promises.push(
         updateDoc(artisteRef, {
-          organizationId: organizationId,
+          entrepriseId: entrepriseId,
           _fixedAt: new Date().toISOString(),
-          _fixedBy: 'fixArtistesOrganizationIds'
+          _fixedBy: 'fixArtistesEntrepriseIds'
         })
       );
       fixed++;
@@ -50,7 +50,7 @@ export async function fixArtistesOrganizationIds(organizationId) {
     
     await Promise.all(promises);
     
-    console.log(`[fixArtistesOrganizationIds] ${fixed} artistes corrigés`);
+    console.log(`[fixArtistesEntrepriseIds] ${fixed} artistes corrigés`);
     
     return {
       success: true,
@@ -59,7 +59,7 @@ export async function fixArtistesOrganizationIds(organizationId) {
     };
     
   } catch (error) {
-    console.error('[fixArtistesOrganizationIds] Erreur:', error);
+    console.error('[fixArtistesEntrepriseIds] Erreur:', error);
     return {
       success: false,
       count: 0,
@@ -70,10 +70,10 @@ export async function fixArtistesOrganizationIds(organizationId) {
 }
 
 /**
- * Vérifie l'état des organizationIds des artistes
+ * Vérifie l'état des entrepriseIds des artistes
  * @returns {Promise<Object>} État des artistes
  */
-export async function checkArtistesOrganizationIds() {
+export async function checkArtistesEntrepriseIds() {
   try {
     const snapshot = await getDocs(collection(db, 'artistes'));
     
@@ -83,7 +83,7 @@ export async function checkArtistesOrganizationIds() {
     
     snapshot.forEach((doc) => {
       const data = doc.data();
-      if (data.organizationId) {
+      if (data.entrepriseId) {
         withOrgId++;
       } else {
         withoutOrgId++;
@@ -102,7 +102,7 @@ export async function checkArtistesOrganizationIds() {
     };
     
   } catch (error) {
-    console.error('[checkArtistesOrganizationIds] Erreur:', error);
+    console.error('[checkArtistesEntrepriseIds] Erreur:', error);
     throw error;
   }
 }
@@ -119,7 +119,7 @@ export function installArtistesFixers() {
   // selon les besoins futurs
   
   return {
-    checkStatus: checkArtistesOrganizationIds,
-    fix: fixArtistesOrganizationIds
+    checkStatus: checkArtistesEntrepriseIds,
+    fix: fixArtistesEntrepriseIds
   };
 }

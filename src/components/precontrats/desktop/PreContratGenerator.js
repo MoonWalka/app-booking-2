@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Card, Alert, Modal, Spinner } from 'react-bootstrap';
 import { collection, query, where, getDocs } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useTabs } from '@/context/TabsContext';
 import RepresentationsSection from '@/components/common/RepresentationsSection';
 import preContratService from '@/services/preContratService';
@@ -10,13 +10,13 @@ import devisService from '@/services/devisService';
 import styles from './PreContratGenerator.module.css';
 import '@styles/index.css';
 
-const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => {
+const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
   console.log('[WORKFLOW_TEST] 4. Chargement des données de structure dans le pré-contrat - PreContratGenerator reçoit:', {
     structure: structure?.id || 'aucune',
     structureData: structure
   });
   
-  const { currentOrg } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { openTab } = useTabs();
   // État pour l'onglet actif du panneau latéral
   const [activeTab, setActiveTab] = useState('dossier');
@@ -114,19 +114,19 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
   const [hasUnvalidatedPublicData, setHasUnvalidatedPublicData] = useState(false);
   const [devisData, setDevisData] = useState(null);
 
-  // Charger le pré-contrat existant pour ce concert
+  // Charger le pré-contrat existant pour ce date
   useEffect(() => {
     const loadExistingPreContrat = async () => {
-      if (!concert?.id || !currentOrg?.id) return;
+      if (!date?.id || !currentEntreprise?.id) return;
 
       try {
-        console.log('[PreContratGenerator] Recherche pré-contrat existant pour concert:', date.id);
+        console.log('[PreContratGenerator] Recherche pré-contrat existant pour date:', date.id);
         
-        // Rechercher un pré-contrat existant pour ce concert
+        // Rechercher un pré-contrat existant pour ce date
         const q = query(
           collection(db, 'preContrats'),
           where('dateId', '==', date.id),
-          where('organizationId', '==', currentOrg.id)
+          where('entrepriseId', '==', currentEntreprise.id)
         );
         
         const querySnapshot = await getDocs(q);
@@ -170,7 +170,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               nomSignataire: preContratData.publicFormData.nomSignataire || prev.nomSignataire,
               qualiteSignataire: preContratData.publicFormData.qualiteSignataire || prev.qualiteSignataire,
               
-              // Données concert
+              // Données date
               horaireDebut: preContratData.publicFormData.horaireDebut || prev.horaireDebut,
               horaireFin: preContratData.publicFormData.horaireFin || prev.horaireFin,
               payant: preContratData.publicFormData.payant || prev.payant,
@@ -237,17 +237,17 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     };
     
     loadExistingPreContrat();
-  }, [concert?.id, currentOrg?.id, devisData]);
+  }, [date?.id, currentEntreprise?.id, devisData]);
 
-  // Charger le devis associé au concert
+  // Charger le devis associé au date
   useEffect(() => {
     const loadDevisDuDate = async () => {
-      if (!concert?.id) return;
+      if (!date?.id) return;
 
       try {
-        console.log('[PreContratGenerator] Recherche devis pour concert:', date.id);
+        console.log('[PreContratGenerator] Recherche devis pour date:', date.id);
         
-        // Chercher les devis pour ce concert
+        // Chercher les devis pour ce date
         const devisList = await devisService.getDevisByDate(date.id);
         
         if (devisList && devisList.length > 0) {
@@ -323,7 +323,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     };
     
     loadDevisDuDate();
-  }, [concert?.id]);
+  }, [date?.id]);
 
   // Initialiser les données depuis les props (exécuté une seule fois au chargement)
   useEffect(() => {
@@ -390,22 +390,22 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
       }));
     }
 
-    if (concert) {
+    if (date) {
       setFormData(prev => ({
         ...prev,
-        projet: prev.projet || concert.projetNom || concert.propositionArtistique || '',
-        debut: prev.debut || concert.date || concert.dateDebut || '',
-        fin: prev.fin || concert.dateFin || concert.date || '',
-        montantHT: prev.montantHT || concert.montant || '',
-        salle: prev.salle || lieu?.nom || concert.lieuNom || ''
+        projet: prev.projet || date.projetNom || date.propositionArtistique || '',
+        debut: prev.debut || date.date || date.dateDebut || '',
+        fin: prev.fin || date.dateFin || date.date || '',
+        montantHT: prev.montantHT || date.montant || '',
+        salle: prev.salle || lieu?.nom || date.lieuNom || ''
       }));
     }
-  }, [structure, artiste, concert, lieu, existingPreContrat]);
+  }, [structure, artiste, date, lieu, existingPreContrat]);
 
   // Charger les responsables d'administration liés à la structure
   useEffect(() => {
     const loadResponsablesAdmin = async () => {
-      if (!structure?.id || !currentOrg?.id) return;
+      if (!structure?.id || !currentEntreprise?.id) return;
 
       try {
         setLoadingResponsables(true);
@@ -416,7 +416,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         const q = query(
           liaisonsRef,
           where('structureId', '==', structure.id),
-          where('organizationId', '==', currentOrg.id),
+          where('entrepriseId', '==', currentEntreprise.id),
           where('actif', '==', true)
         );
         
@@ -475,7 +475,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     };
 
     loadResponsablesAdmin();
-  }, [structure, currentOrg]);
+  }, [structure, currentEntreprise]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -486,7 +486,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
 
   const handleSave = async () => {
     try {
-      if (!currentOrg?.id) {
+      if (!currentEntreprise?.id) {
         throw new Error('Organisation non définie');
       }
 
@@ -501,7 +501,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         const result = await preContratService.createPreContrat(
           formData,
           date.id,
-          currentOrg.id
+          currentEntreprise.id
         );
         setPreContratId(result.id);
         setPreContratToken(result.token);
@@ -539,7 +539,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
     setIsSending(true);
     
     try {
-      if (!currentOrg?.id) {
+      if (!currentEntreprise?.id) {
         throw new Error('Organisation non définie');
       }
 
@@ -549,7 +549,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
         const result = await preContratService.createPreContrat(
           formData,
           date.id,
-          currentOrg.id
+          currentEntreprise.id
         );
         currentPreContratId = result.id;
         setPreContratId(result.id);
@@ -617,7 +617,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
             onClick={() => {
               openTab({
                 id: `confirmation-${date.id}`,
-                title: `Confirmation - ${concert.artisteNom || 'Date'}`,
+                title: `Confirmation - ${date.artisteNom || 'Date'}`,
                 path: `/confirmation?dateId=${date.id}`,
                 component: 'ConfirmationPage',
                 params: { dateId: date.id },
@@ -652,7 +652,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               <div className={styles.publicLinkContainer}>
                 <i className="bi bi-link-45deg"></i>
                 <a 
-                  href={`${window.location.origin}/pre-contrat/${concert?.id}/${preContratToken}`}
+                  href={`${window.location.origin}/pre-contrat/${date?.id}/${preContratToken}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.publicLink}
@@ -663,7 +663,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                   type="button"
                   className={styles.copyButton}
                   onClick={() => {
-                    const link = `${window.location.origin}/pre-contrat/${concert?.id}/${preContratToken}`;
+                    const link = `${window.location.origin}/pre-contrat/${date?.id}/${preContratToken}`;
                     navigator.clipboard.writeText(link);
                     setAlertType('success');
                     setAlertMessage('Lien copié dans le presse-papier');
@@ -1236,7 +1236,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
               {/* Section Dossier */}
               {activeTab === 'dossier' && (
                 <>
-                  <h6>{concert?.titre || 'Sans titre'}</h6>
+                  <h6>{date?.titre || 'Sans titre'}</h6>
                   <Form.Control
                     type="text"
                     placeholder="Recherche"
@@ -1310,7 +1310,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
                   ) : (
                     <Alert variant="warning" className="small">
                       <i className="bi bi-exclamation-triangle me-2"></i>
-                      Aucun devis associé à ce concert
+                      Aucun devis associé à ce date
                     </Alert>
                   )}
                 </>
@@ -1361,7 +1361,7 @@ const PreContratGenerator = ({ concert, contact, artiste, lieu, structure }) => 
             ))}
           </ul>
           <p className="mb-0">
-            <strong>Date :</strong> {concert?.titre || concert?.nom || 'Sans titre'}
+            <strong>Date :</strong> {date?.titre || date?.nom || 'Sans titre'}
           </p>
           <p className="mb-0">
             <strong>Structure :</strong> {formData.raisonSociale || 'Non renseignée'}

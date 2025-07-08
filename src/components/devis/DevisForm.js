@@ -5,7 +5,7 @@ import { getStructureById } from '@/services/structureService';
 import projetService from '@/services/projetService';
 import contactServiceRelational from '@/services/contactServiceRelational';
 import collaborateurService from '@/services/collaborateurService';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useParametres } from '@/context/ParametresContext';
 import { useAuth } from '@/context/AuthContext';
 
@@ -13,7 +13,7 @@ import { useAuth } from '@/context/AuthContext';
  * Formulaire d'édition de devis
  */
 function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = false }) {
-  const { currentOrg } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { parametres } = useParametres();
   const { user } = useAuth();
   
@@ -178,16 +178,16 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
   // Charger les données depuis Firebase
   useEffect(() => {
     const loadData = async () => {
-      if (!currentOrg?.id) return;
+      if (!currentEntreprise?.id) return;
       
       setLoading(true);
       try {
         // Charger les projets
-        const projetsData = await projetService.getProjetsByOrganization(currentOrg.id);
+        const projetsData = await projetService.getProjetsByOrganization(currentEntreprise.id);
         setProjets(projetsData);
         
         // Charger les collaborateurs
-        const collaborateursData = await collaborateurService.getCollaborateursByOrganization(currentOrg.id);
+        const collaborateursData = await collaborateurService.getCollaborateursByOrganization(currentEntreprise.id);
         setCollaborateurs(collaborateursData);
         
         // Charger les contacts (selon la structure si présente)
@@ -195,7 +195,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
           const contactsData = await contactServiceRelational.getContactsByStructure(devisData.structureId);
           setContacts(contactsData);
         } else {
-          const contactsData = await contactServiceRelational.getContactsByOrganization(currentOrg.id);
+          const contactsData = await contactServiceRelational.getContactsByOrganization(currentEntreprise.id);
           setContacts(contactsData);
         }
       } catch (error) {
@@ -206,18 +206,18 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
     };
     
     loadData();
-  }, [currentOrg?.id, devisData.structureId]);
+  }, [currentEntreprise?.id, devisData.structureId]);
 
   // Auto-remplir le nom de l'entreprise depuis les paramètres
   useEffect(() => {
-    if (!devisData.entreprise && (parametres?.entreprise?.nom || currentOrg?.name)) {
-      const nomEntreprise = parametres?.entreprise?.nom || currentOrg?.name;
+    if (!devisData.entreprise && (parametres?.entreprise?.nom || currentEntreprise?.name)) {
+      const nomEntreprise = parametres?.entreprise?.nom || currentEntreprise?.name;
       setDevisData(prev => ({
         ...prev,
         entreprise: nomEntreprise
       }));
     }
-  }, [parametres?.entreprise?.nom, currentOrg?.name, devisData.entreprise, setDevisData]);
+  }, [parametres?.entreprise?.nom, currentEntreprise?.name, devisData.entreprise, setDevisData]);
 
   // Auto-remplir l'adresse administrative depuis la structure
   useEffect(() => {
@@ -424,12 +424,12 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                   <Form.Label>Entreprise</Form.Label>
                   <Form.Control
                     type="text"
-                    value={devisData.entreprise || parametres?.entreprise?.nom || currentOrg?.name || ''}
+                    value={devisData.entreprise || parametres?.entreprise?.nom || currentEntreprise?.name || ''}
                     onChange={(e) => setDevisData(prev => ({ ...prev, entreprise: e.target.value }))}
                     disabled={readonly}
                     placeholder="Nom de l'entreprise"
                   />
-                  {(parametres?.entreprise?.nom || currentOrg?.name) && !devisData.entreprise && (
+                  {(parametres?.entreprise?.nom || currentEntreprise?.name) && !devisData.entreprise && (
                     <Form.Text className="text-muted">
                       <i className="bi bi-info-circle me-1"></i>
                       Auto-rempli depuis les paramètres de l'entreprise

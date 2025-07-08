@@ -47,7 +47,7 @@ Le système actuel de contacts TourCraft présente une **limitation majeure** : 
   artistesIds: ["artiste1"],
   
   // Métadonnées
-  organizationId: "org123",
+  entrepriseId: "org123",
   createdAt: Timestamp,
   updatedAt: Timestamp
 }
@@ -149,7 +149,7 @@ if (formData.signataireData && !existingSignataire) {
     ...formData.signataireData,
     nom: `${formData.signataireData.prenom} ${formData.signataireData.nom}`,
     nomLowercase: `${formData.signataireData.prenom} ${formData.signataireData.nom}`.toLowerCase(),
-    organizationId: currentOrganization.id,
+    entrepriseId: currentOrganization.id,
     concertsIds: [concertId],
     isFromPublicForm: true,
     createdAt: Timestamp.now(),

@@ -2,7 +2,7 @@
 
 /**
  * Script de migration sécurisé pour aplatir les structures de données imbriquées
- * et garantir la cohérence des organizationId
+ * et garantir la cohérence des entrepriseId
  * 
  * Usage: node scripts/migrate-nested-data-secure.js [--dry-run] [--organization=orgId]
  */
@@ -44,7 +44,7 @@ const stats = {
 /**
  * Aplatit une structure imbriquée
  */
-function flattenNestedStructure(data, entityType, docId, organizationId) {
+function flattenNestedStructure(data, entityType, docId, entrepriseId) {
   let flattened = { ...data };
   let wasNested = false;
   
@@ -59,7 +59,7 @@ function flattenNestedStructure(data, entityType, docId, organizationId) {
     flattened = {
       ...data[nestedField],
       id: docId,
-      organizationId: data.organizationId || organizationId,
+      entrepriseId: data.entrepriseId || entrepriseId,
       // Préserver les métadonnées
       createdAt: data.createdAt || data[nestedField].createdAt || admin.firestore.Timestamp.now(),
       updatedAt: admin.firestore.Timestamp.now()
@@ -92,7 +92,7 @@ function flattenNestedStructure(data, entityType, docId, organizationId) {
 /**
  * Vérifie et corrige les relations cross-organisation
  */
-async function validateRelations(data, entityType, organizationId) {
+async function validateRelations(data, entityType, entrepriseId) {
   const relationFields = ['contacts', 'lieux', 'artistes', 'structures', 'concerts'];
   const cleanedData = { ...data };
   let hasInvalidRelations = false;
@@ -109,7 +109,7 @@ async function validateRelations(data, entityType, organizationId) {
         
         if (relatedDoc.exists) {
           const relatedData = relatedDoc.data();
-          if (relatedData.organizationId === organizationId) {
+          if (relatedData.entrepriseId === entrepriseId) {
             validIds.push(relatedId);
           } else {
             console.log(`    ❌ Relation cross-org détectée: ${entityType}/${data.id} -> ${field}/${relatedId}`);
@@ -138,7 +138,7 @@ async function migrateCollection(collectionName) {
   
   // Filtrer par organisation si spécifiée
   if (SPECIFIC_ORG) {
-    query = query.where('organizationId', '==', SPECIFIC_ORG);
+    query = query.where('entrepriseId', '==', SPECIFIC_ORG);
   }
   
   const snapshot = await query.get();
@@ -156,13 +156,13 @@ async function migrateCollection(collectionName) {
     let needsUpdate = false;
     let updatedData = { ...data };
     
-    // 1. Vérifier et ajouter organizationId si manquant
-    if (!data.organizationId) {
-      console.log(`  ⚠️  organizationId manquant: ${collectionName}/${docId}`);
+    // 1. Vérifier et ajouter entrepriseId si manquant
+    if (!data.entrepriseId) {
+      console.log(`  ⚠️  entrepriseId manquant: ${collectionName}/${docId}`);
       stats.missingOrgId++;
       
       if (SPECIFIC_ORG) {
-        updatedData.organizationId = SPECIFIC_ORG;
+        updatedData.entrepriseId = SPECIFIC_ORG;
         needsUpdate = true;
       } else {
         console.log(`    ⏭️  Ignoré (pas d'organisation spécifiée)`);
@@ -175,7 +175,7 @@ async function migrateCollection(collectionName) {
       updatedData, 
       collectionName, 
       docId,
-      updatedData.organizationId
+      updatedData.entrepriseId
     );
     
     if (wasNested) {
@@ -185,11 +185,11 @@ async function migrateCollection(collectionName) {
     }
     
     // 3. Valider et nettoyer les relations
-    if (!DRY_RUN && updatedData.organizationId) {
+    if (!DRY_RUN && updatedData.entrepriseId) {
       const { cleanedData, hasInvalidRelations } = await validateRelations(
         updatedData,
         collectionName,
-        updatedData.organizationId
+        updatedData.entrepriseId
       );
       
       if (hasInvalidRelations) {
@@ -271,7 +271,7 @@ async function main() {
     console.log(`Documents scannés: ${totalScanned}`);
     console.log(`Structures imbriquées trouvées: ${totalNested}`);
     console.log(`Documents corrigés: ${totalFixed}`);
-    console.log(`OrganizationId manquants: ${stats.missingOrgId}`);
+    console.log(`EntrepriseId manquants: ${stats.missingOrgId}`);
     console.log(`Relations cross-organisation: ${stats.crossOrgRelations}`);
     
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);

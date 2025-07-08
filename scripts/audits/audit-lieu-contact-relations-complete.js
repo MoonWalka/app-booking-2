@@ -7,7 +7,7 @@
  * 2. Les formats de relations (ID vs objets)
  * 3. Les relations bidirectionnelles
  * 4. Les incohérences et problèmes cachés
- * 5. Les organizationId manquants
+ * 5. Les entrepriseId manquants
  */
 
 console.log('🔍 AUDIT COMPLET DU SYSTÈME DE RELATIONS LIEU-CONTACT');
@@ -66,23 +66,23 @@ async function auditLieuContactRelations() {
       const analysis = {
         id: lieuDoc.id,
         nom: lieu.nom || 'Sans nom',
-        organizationId: lieu.organizationId,
+        entrepriseId: lieu.entrepriseId,
         problems: [],
         contactsFormat: null,
         contactsCount: 0,
         contactsDetails: []
       };
 
-      // Vérifier organizationId
-      if (!lieu.organizationId) {
-        analysis.problems.push('organizationId manquant');
+      // Vérifier entrepriseId
+      if (!lieu.entrepriseId) {
+        analysis.problems.push('entrepriseId manquant');
         report.organizationProblems.push({
-          type: 'lieu_missing_organizationId',
+          type: 'lieu_missing_entrepriseId',
           id: lieuDoc.id,
           nom: lieu.nom
         });
       } else {
-        lieuxByOrg[lieu.organizationId] = (lieuxByOrg[lieu.organizationId] || 0) + 1;
+        lieuxByOrg[lieu.entrepriseId] = (lieuxByOrg[lieu.entrepriseId] || 0) + 1;
       }
 
       // Analyser le format des contacts
@@ -173,23 +173,23 @@ async function auditLieuContactRelations() {
       const analysis = {
         id: contactDoc.id,
         nom: contact.nom || 'Sans nom',
-        organizationId: contact.organizationId,
+        entrepriseId: contact.entrepriseId,
         problems: [],
         lieuxFormat: null,
         lieuxCount: 0,
         lieuxDetails: []
       };
 
-      // Vérifier organizationId
-      if (!contact.organizationId) {
-        analysis.problems.push('organizationId manquant');
+      // Vérifier entrepriseId
+      if (!contact.entrepriseId) {
+        analysis.problems.push('entrepriseId manquant');
         report.organizationProblems.push({
-          type: 'contact_missing_organizationId',
+          type: 'contact_missing_entrepriseId',
           id: contactDoc.id,
           nom: contact.nom
         });
       } else {
-        contactsByOrg[contact.organizationId] = (contactsByOrg[contact.organizationId] || 0) + 1;
+        contactsByOrg[contact.entrepriseId] = (contactsByOrg[contact.entrepriseId] || 0) + 1;
       }
 
       // Analyser le format des lieux
@@ -379,8 +379,8 @@ async function auditLieuContactRelations() {
     if (report.organizationProblems.length > 0) {
       report.recommendations.push({
         priority: 'CRITICAL',
-        action: 'Corriger les organizationId manquants',
-        impact: `${report.organizationProblems.length} entités sans organizationId`
+        action: 'Corriger les entrepriseId manquants',
+        impact: `${report.organizationProblems.length} entités sans entrepriseId`
       });
     }
     
@@ -462,7 +462,7 @@ async function fixIdentifiedProblems(dryRun = true) {
   
   const fixes = {
     bidirectionalFixed: 0,
-    organizationIdFixed: 0,
+    entrepriseIdFixed: 0,
     formatMigrated: 0
   };
   
@@ -492,7 +492,7 @@ async function fixIdentifiedProblems(dryRun = true) {
   
   console.log(`\n📊 Résumé des corrections ${dryRun ? '(simulation)' : ''}:`);
   console.log(`   - Relations bidirectionnelles: ${fixes.bidirectionalFixed}`);
-  console.log(`   - OrganizationId: ${fixes.organizationIdFixed}`);
+  console.log(`   - EntrepriseId: ${fixes.entrepriseIdFixed}`);
   console.log(`   - Formats migrés: ${fixes.formatMigrated}`);
   
   if (dryRun) {

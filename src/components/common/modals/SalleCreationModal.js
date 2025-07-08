@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Modal, Tab, Tabs, Form, Row, Col, Button, Alert } from 'react-bootstrap';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { toast } from 'react-toastify';
 
 const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [activeTab, setActiveTab] = useState('general');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -104,7 +104,7 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
     try {
       const salleData = {
         ...formData,
-        organizationId: currentOrganization?.id,
+        entrepriseId: currentEntreprise?.id,
         createdAt: new Date(),
         updatedAt: new Date()
       };

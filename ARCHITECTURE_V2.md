@@ -95,7 +95,7 @@ Migration du système "programmateurs" vers un système de "contacts" unifié :
 
 Architecture native pour supporter plusieurs organisations :
 - **OrganizationContext** - Contexte global pour l'organisation courante
-- Isolation des données par `organizationId`
+- Isolation des données par `entrepriseId`
 - Changement d'organisation sans rechargement
 - Migration automatique des données RIB
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
 
 /**
@@ -11,7 +11,7 @@ import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
  * Avec les paramètres demandés pour les projets
  */
 function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('informations');
   
@@ -98,7 +98,7 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
       return;
     }
 
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       alert('Aucune organisation sélectionnée');
       return;
     }
@@ -108,7 +108,7 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
     try {
       const projetData = {
         ...formData,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         updatedAt: serverTimestamp(),
         // Convertir les montants en nombres si renseignés
         montantHT: formData.montantHT ? parseFloat(formData.montantHT) : null,

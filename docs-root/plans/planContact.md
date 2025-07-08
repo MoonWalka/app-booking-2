@@ -11,9 +11,9 @@ Où tu en es
 Refactor minimal qui règle 90 % des douleurs
 
 Nouvelle collection	Clés & index (Firestore)	Contenu principal	Remarques
-structures	organizationId, raisonSociale (composite unique)	Tous les champs structure + tags + isClient	Une seule fiche par organisation
-personnes	organizationId, email (composite unique)	Champs personne (nom, email, phones)	1 fiche unique ⇢ évite duplications
-liaisons	organizationId, structureId, personId (composite)	fonction, actif, prioritaire, interesse, createdAt	1 doc = 1 lien N-à-N
+structures	entrepriseId, raisonSociale (composite unique)	Tous les champs structure + tags + isClient	Une seule fiche par organisation
+personnes	entrepriseId, email (composite unique)	Champs personne (nom, email, phones)	1 fiche unique ⇢ évite duplications
+liaisons	entrepriseId, structureId, personId (composite)	fonction, actif, prioritaire, interesse, createdAt	1 doc = 1 lien N-à-N
 
 Option Firestore : fais de liaisons une sous-collection de chaque structure si tu préfères des path courts, mais la collection racine est plus simple pour les requêtes globales (filtrer “contacts actifs” par orgId).
 
@@ -27,13 +27,13 @@ Option Firestore : fais de liaisons une sous-collection de chaque structure si t
 
 for (const doc of contactsUnified) {
   if (doc.entityType === 'structure') {
-    const structId = await upsertStructure(doc.structure, doc.organizationId);
+    const structId = await upsertStructure(doc.structure, doc.entrepriseId);
     for (const p of doc.personnes ?? []) {
-      const personId = await upsertPerson(p, doc.organizationId);
+      const personId = await upsertPerson(p, doc.entrepriseId);
       await createOrUpdateLiaison(structId, personId, p.fonction);
     }
   } else { // personne_libre
-    const personId = await upsertPerson(doc.personne, doc.organizationId);
+    const personId = await upsertPerson(doc.personne, doc.entrepriseId);
   }
 }
 
@@ -48,7 +48,7 @@ for (const doc of contactsUnified) {
 	•	Ajoute les flags directement dans la liaison ; un simple where('prioritaire', '==', true) te retrouve les contacts principaux.
 	•	Pour le filtre “contacts actifs”, ta requête devient :
 
-query(liaisons, where('organizationId','==',orgId), where('actif','==',true))
+query(liaisons, where('entrepriseId','==',orgId), where('actif','==',true))
 
 
 	5.	Taxonomie hiérarchique
@@ -117,20 +117,20 @@ Dis-moi si tu veux :
 
   // Nouvelles collections:
   - structures: Organisations uniques par
-  organizationId + raisonSociale
-  - personnes: Personnes uniques par organizationId +
+  entrepriseId + raisonSociale
+  - personnes: Personnes uniques par entrepriseId +
    email
   - liaisons: Relations N-à-N entre structures et
   personnes
 
   1.2 Index composites à créer
 
-  structures: organizationId + raisonSociale (unique)
-  personnes: organizationId + email (unique)
-  liaisons: organizationId + structureId + personneId
+  structures: entrepriseId + raisonSociale (unique)
+  personnes: entrepriseId + email (unique)
+  liaisons: entrepriseId + structureId + personneId
    (unique)
-  liaisons: organizationId + actif (pour filtres)
-  liaisons: organizationId + prioritaire (pour
+  liaisons: entrepriseId + actif (pour filtres)
+  liaisons: entrepriseId + prioritaire (pour
   exports)
 
   1.3 Schémas de validation
@@ -257,7 +257,7 @@ Dis-moi si tu veux :
 #### 2. Services métier implémentés
 - **`/src/services/contacts/structuresService.js`**
   - CRUD complet avec validation
-  - Vérification unicité par organizationId + raisonSociale
+  - Vérification unicité par entrepriseId + raisonSociale
   - Import en masse avec upsert
   - Gestion du statut client
   
@@ -302,20 +302,20 @@ Dis-moi si tu veux :
 
 ```javascript
 // Collection "structures"
-- organizationId + raisonSociale (ASC)
-- organizationId + isClient (ASC)
-- organizationId + tags (ARRAY_CONTAINS)
-- organizationId + createdAt (DESC)
+- entrepriseId + raisonSociale (ASC)
+- entrepriseId + isClient (ASC)
+- entrepriseId + tags (ARRAY_CONTAINS)
+- entrepriseId + createdAt (DESC)
 
 // Collection "personnes"
-- organizationId + email (ASC)
-- organizationId + nom (ASC) + prenom (ASC)
-- organizationId + isPersonneLibre (ASC)
+- entrepriseId + email (ASC)
+- entrepriseId + nom (ASC) + prenom (ASC)
+- entrepriseId + isPersonneLibre (ASC)
 
 // Collection "liaisons"
-- organizationId + structureId + personneId (ASC)
-- organizationId + actif (ASC)
-- organizationId + prioritaire (ASC)
+- entrepriseId + structureId + personneId (ASC)
+- entrepriseId + actif (ASC)
+- entrepriseId + prioritaire (ASC)
 - structureId + actif (ASC) + prioritaire (DESC)
 - personneId + actif (ASC) + dateDebut (DESC)
 ```
@@ -325,7 +325,7 @@ Dis-moi si tu veux :
 - Vérification appartenance organisation via `user_organizations`
 - Création/lecture réservées aux membres
 - Suppression réservée aux admins
-- organizationId immutable après création
+- entrepriseId immutable après création
 
 ### 🎯 Prochaines étapes prioritaires
 
@@ -456,27 +456,27 @@ node scripts/setup/setup-simple.js
 📋 **URL Console** : https://console.firebase.google.com/project/app-booking-26571/firestore/indexes
 
 **Collection "structures"** :
-- organizationId (ASC) + raisonSociale (ASC)
-- organizationId (ASC) + isClient (ASC)
-- organizationId (ASC) + tags (ARRAY_CONTAINS)
-- organizationId (ASC) + createdAt (DESC)
+- entrepriseId (ASC) + raisonSociale (ASC)
+- entrepriseId (ASC) + isClient (ASC)
+- entrepriseId (ASC) + tags (ARRAY_CONTAINS)
+- entrepriseId (ASC) + createdAt (DESC)
 
 **Collection "personnes"** :
-- organizationId (ASC) + email (ASC)
-- organizationId (ASC) + nom (ASC) + prenom (ASC)
-- organizationId (ASC) + isPersonneLibre (ASC)
-- organizationId (ASC) + tags (ARRAY_CONTAINS)
+- entrepriseId (ASC) + email (ASC)
+- entrepriseId (ASC) + nom (ASC) + prenom (ASC)
+- entrepriseId (ASC) + isPersonneLibre (ASC)
+- entrepriseId (ASC) + tags (ARRAY_CONTAINS)
 
 **Collection "liaisons"** :
-- organizationId (ASC) + structureId (ASC) + personneId (ASC)
-- organizationId (ASC) + actif (ASC)
-- organizationId (ASC) + prioritaire (ASC)
+- entrepriseId (ASC) + structureId (ASC) + personneId (ASC)
+- entrepriseId (ASC) + actif (ASC)
+- entrepriseId (ASC) + prioritaire (ASC)
 - structureId (ASC) + actif (ASC) + prioritaire (DESC)
 - personneId (ASC) + actif (ASC) + dateDebut (DESC)
 
 **Collection "qualifications"** :
-- organizationId (ASC) + parentId (ASC) + ordre (ASC)
-- organizationId (ASC) + type (ASC) + actif (ASC)
+- entrepriseId (ASC) + parentId (ASC) + ordre (ASC)
+- entrepriseId (ASC) + type (ASC) + actif (ASC)
 
 ### 🚀 Commandes pour la suite
 
@@ -516,7 +516,7 @@ firebase deploy --only firestore:indexes
 
 **Résultat** : ✅ 15 index composites créés automatiquement
 
-- **Collection structures** : 4 index (organizationId combos)
+- **Collection structures** : 4 index (entrepriseId combos)
 - **Collection personnes** : 4 index (unicité + recherche)
 - **Collection liaisons** : 5 index (relations N-à-N optimisées)
 - **Collection qualifications** : 2 index (hiérarchie taxonomique)
@@ -828,7 +828,7 @@ Phase 1 - Infrastructure hooks terminée !
   - Données normalisées : Plus de duplication entre
   structures
   - Unicité garantie : Une structure par
-  organizationId + raisonSociale
+  entrepriseId + raisonSociale
   - Performance optimisée : Utilise les index
   composites
   - Interface moderne : Champs adaptés aux besoins

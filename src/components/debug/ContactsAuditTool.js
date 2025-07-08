@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button, Alert, Spinner } from 'react-bootstrap';
 import { db, collection, getDocs, query, where } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import styles from './ContactsAuditTool.module.css';
 
 /**
@@ -11,7 +11,7 @@ import styles from './ContactsAuditTool.module.css';
  */
 const ContactsAuditTool = () => {
   const { currentUser } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
@@ -24,15 +24,15 @@ const ContactsAuditTool = () => {
     setActiveAudit('relational');
     
     try {
-      const currentOrgId = currentOrganization?.id;
-      if (!currentOrgId) {
+      const currentEntrepriseId = currentEntreprise?.id;
+      if (!currentEntrepriseId) {
         throw new Error('Aucune organisation sélectionnée');
       }
 
       // Récupérer toutes les données
-      const structuresQuery = query(collection(db, 'structures'), where('organizationId', '==', currentOrgId));
-      const personnesQuery = query(collection(db, 'personnes'), where('organizationId', '==', currentOrgId));
-      const liaisonsQuery = query(collection(db, 'liaisons'), where('organizationId', '==', currentOrgId));
+      const structuresQuery = query(collection(db, 'structures'), where('entrepriseId', '==', currentEntrepriseId));
+      const personnesQuery = query(collection(db, 'personnes'), where('entrepriseId', '==', currentEntrepriseId));
+      const liaisonsQuery = query(collection(db, 'liaisons'), where('entrepriseId', '==', currentEntrepriseId));
       
       const [structuresSnapshot, personnesSnapshot, liaisonsSnapshot] = await Promise.all([
         getDocs(structuresQuery),
@@ -163,8 +163,8 @@ const ContactsAuditTool = () => {
     setActiveAudit('raw');
     
     try {
-      const currentOrgId = currentOrganization?.id;
-      if (!currentOrgId) {
+      const currentEntrepriseId = currentEntreprise?.id;
+      if (!currentEntrepriseId) {
         throw new Error('Aucune organisation sélectionnée');
       }
 
@@ -184,19 +184,19 @@ const ContactsAuditTool = () => {
       
       allStructures.forEach(doc => {
         const data = doc.data();
-        const orgId = data.organizationId || 'SANS_ORGANISATION';
+        const orgId = data.entrepriseId || 'SANS_ORGANISATION';
         stats.structures[orgId] = (stats.structures[orgId] || 0) + 1;
       });
       
       allPersonnes.forEach(doc => {
         const data = doc.data();
-        const orgId = data.organizationId || 'SANS_ORGANISATION';
+        const orgId = data.entrepriseId || 'SANS_ORGANISATION';
         stats.personnes[orgId] = (stats.personnes[orgId] || 0) + 1;
       });
       
       allLiaisons.forEach(doc => {
         const data = doc.data();
-        const orgId = data.organizationId || 'SANS_ORGANISATION';
+        const orgId = data.entrepriseId || 'SANS_ORGANISATION';
         stats.liaisons[orgId] = (stats.liaisons[orgId] || 0) + 1;
       });
 
@@ -207,21 +207,21 @@ const ContactsAuditTool = () => {
       
       allStructures.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId === currentOrgId) {
+        if (data.entrepriseId === currentEntrepriseId) {
           myStructures.push({ id: doc.id, ...data });
         }
       });
       
       allPersonnes.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId === currentOrgId) {
+        if (data.entrepriseId === currentEntrepriseId) {
           myPersonnes.push({ id: doc.id, ...data });
         }
       });
       
       allLiaisons.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId === currentOrgId) {
+        if (data.entrepriseId === currentEntrepriseId) {
           myLiaisons.push({ id: doc.id, ...data });
         }
       });
@@ -273,7 +273,7 @@ const ContactsAuditTool = () => {
           },
           stats,
           monOrganisation: {
-            id: currentOrgId,
+            id: currentEntrepriseId,
             structures: myStructures.length,
             personnes: myPersonnes.length,
             liaisons: myLiaisons.length,
@@ -301,12 +301,12 @@ const ContactsAuditTool = () => {
     setActiveAudit('unlinked');
     
     try {
-      const currentOrgId = currentOrganization?.id;
-      if (!currentOrgId) {
+      const currentEntrepriseId = currentEntreprise?.id;
+      if (!currentEntrepriseId) {
         throw new Error('Aucune organisation sélectionnée');
       }
 
-      const personnesQuery = query(collection(db, 'personnes'), where('organizationId', '==', currentOrgId));
+      const personnesQuery = query(collection(db, 'personnes'), where('entrepriseId', '==', currentEntrepriseId));
       const personnesSnapshot = await getDocs(personnesQuery);
       const liaisonsSnapshot = await getDocs(collection(db, 'liaisons'));
       
@@ -325,7 +325,7 @@ const ContactsAuditTool = () => {
             ...liaison
           });
           
-          if (liaison.actif !== false && liaison.organizationId === currentOrgId) {
+          if (liaison.actif !== false && liaison.entrepriseId === currentEntrepriseId) {
             if (!liaisonsActives.has(liaison.personneId)) {
               liaisonsActives.set(liaison.personneId, []);
             }

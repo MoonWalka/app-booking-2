@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, where, onSnapshot } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 import { ActionButtons } from '@/components/ui/ActionButtons';
 import AddButton from '@/components/ui/AddButton';
@@ -17,7 +17,7 @@ import { useLieuDelete } from '@/hooks/lieux';
  */
 function LieuxList() {
   const navigate = useNavigate();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [lieux, setLieux] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,14 +32,14 @@ function LieuxList() {
 
   // Chargement des données des lieux
   useEffect(() => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setLoading(false);
       return;
     }
 
     const q = query(
       collection(db, 'lieux'),
-      where('organizationId', '==', currentOrganization.id)
+      where('entrepriseId', '==', currentEntreprise.id)
     );
 
     const unsubscribe = onSnapshot(q, 
@@ -60,7 +60,7 @@ function LieuxList() {
     );
 
     return () => unsubscribe();
-  }, [currentOrganization?.id, refreshKey]);
+  }, [currentEntreprise?.id, refreshKey]);
 
   // Fonction de rafraîchissement
   const refreshData = () => {

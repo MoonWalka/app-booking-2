@@ -2,7 +2,7 @@
 
 ## Problème
 
-La recherche d'artistes dans le formulaire de concert ne trouve pas les artistes existants car ils n'ont pas d'`organizationId`, ce qui crée des doublons.
+La recherche d'artistes dans le formulaire de concert ne trouve pas les artistes existants car ils n'ont pas d'`entrepriseId`, ce qui crée des doublons.
 
 ## Solution implémentée
 
@@ -10,7 +10,7 @@ La recherche d'artistes dans le formulaire de concert ne trouve pas les artistes
 
 J'ai créé un nouveau composant qui :
 
-1. **Cherche d'abord avec le filtre organizationId** (comportement normal)
+1. **Cherche d'abord avec le filtre entrepriseId** (comportement normal)
 2. **Si aucun résultat**, cherche dans TOUS les artistes
 3. **Affiche un avertissement** si des artistes sont trouvés dans d'autres organisations
 4. **Propose d'associer l'artiste** à votre organisation lors de la sélection
@@ -18,7 +18,7 @@ J'ai créé un nouveau composant qui :
 ### 2. Fonctionnalités
 
 - **Recherche en deux temps** : D'abord filtrée, puis globale
-- **Association automatique** : Propose d'ajouter l'organizationId lors de la sélection
+- **Association automatique** : Propose d'ajouter l'entrepriseId lors de la sélection
 - **Indicateurs visuels** : Avertissements clairs sur l'état des artistes
 - **Prévention des doublons** : Permet de sélectionner les artistes existants
 
@@ -50,7 +50,7 @@ import ArtisteSearchSectionWithFallback from '../sections/ArtisteSearchSectionWi
 Pour une solution permanente, il faut :
 
 1. **Corriger les données existantes** via l'outil de debug
-2. **S'assurer que tous les artistes ont un organizationId**
+2. **S'assurer que tous les artistes ont un entrepriseId**
 3. **Revenir à ArtisteSearchSection** une fois les données corrigées
 
 ## Avantages de cette approche

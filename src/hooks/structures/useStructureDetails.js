@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGenericEntityDetails } from '@/hooks/common';
 import { showSuccessToast, showErrorToast } from '@/utils/toasts';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook optimisé pour la gestion des détails d'une structure
@@ -14,7 +14,7 @@ import { useOrganization } from '@/context/OrganizationContext';
  */
 const useStructureDetails = (id) => {
   const navigate = useNavigate();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // Configuration de base pour le hook générique
   const detailsHook = useGenericEntityDetails({
@@ -137,8 +137,8 @@ const useStructureDetails = (id) => {
             console.log('[DEBUG] Recherche par référence inverse (structureId)');
             
             const constraints = [where('structureId', '==', structureData.id)];
-            if (currentOrganization?.id) {
-              constraints.push(where('organizationId', '==', currentOrganization.id));
+            if (currentEntreprise?.id) {
+              constraints.push(where('entrepriseId', '==', currentEntreprise.id));
             }
             const contactsQuery = query(
               collection(db, 'contacts'),
@@ -213,8 +213,8 @@ const useStructureDetails = (id) => {
           
           // Méthode 2: Chercher par structureId (référence dans le date)
           const dateConstraints = [where('structureId', '==', structureData.id)];
-          if (currentOrganization?.id) {
-            dateConstraints.push(where('organizationId', '==', currentOrganization.id));
+          if (currentEntreprise?.id) {
+            dateConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
           }
           const datesQuery = query(
             collection(db, 'dates'),
@@ -245,8 +245,8 @@ const useStructureDetails = (id) => {
               
               for (const contactId of contactIds) {
                 const datesByProgConstraints = [where('contactIds', 'array-contains', contactId)];
-                if (currentOrganization?.id) {
-                  datesByProgConstraints.push(where('organizationId', '==', currentOrganization.id));
+                if (currentEntreprise?.id) {
+                  datesByProgConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
                 }
                 const datesByProgQuery = query(
                   collection(db, 'dates'),
@@ -324,8 +324,8 @@ const useStructureDetails = (id) => {
           
           // Méthode 2: Recherche par référence inverse (lieux qui référencent cette structure)
           const lieuxConstraints = [where('structureId', '==', structureData.id)];
-          if (currentOrganization?.id) {
-            lieuxConstraints.push(where('organizationId', '==', currentOrganization.id));
+          if (currentEntreprise?.id) {
+            lieuxConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
           }
           const lieuxQuery = query(
             collection(db, 'lieux'),
@@ -347,8 +347,8 @@ const useStructureDetails = (id) => {
           // Méthode 3: NOUVELLE - Via les dates de cette structure
           console.log('[useStructureDetails] 🔍 Méthode 3: Recherche lieux via dates de la structure');
           const dateConstraints2 = [where('structureId', '==', structureData.id)];
-          if (currentOrganization?.id) {
-            dateConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          if (currentEntreprise?.id) {
+            dateConstraints2.push(where('entrepriseId', '==', currentEntreprise.id));
           }
           const datesQuery = query(
             collection(db, 'dates'),
@@ -451,8 +451,8 @@ const useStructureDetails = (id) => {
           // Méthode 2: Charger les artistes via les dates de cette structure
           // D'abord récupérer les dates de cette structure
           const dateConstraints3 = [where('structureId', '==', structureData.id)];
-          if (currentOrganization?.id) {
-            dateConstraints3.push(where('organizationId', '==', currentOrganization.id));
+          if (currentEntreprise?.id) {
+            dateConstraints3.push(where('entrepriseId', '==', currentEntreprise.id));
           }
           const datesQuery = query(
             collection(db, 'dates'),

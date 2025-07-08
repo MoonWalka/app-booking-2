@@ -29,19 +29,19 @@ class SelectionsService {
    * @param {Array} selectionData.criteres - Critères de recherche
    * @param {boolean} selectionData.shared - Si la sélection est partagée
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<Object>} - Résultat de la création
    */
-  async createSelection(selectionData, userId, organizationId) {
+  async createSelection(selectionData, userId, entrepriseId) {
     try {
-      if (!userId || !organizationId) {
-        throw new Error('userId et organizationId sont requis');
+      if (!userId || !entrepriseId) {
+        throw new Error('userId et entrepriseId sont requis');
       }
 
       const newSelection = {
         ...selectionData,
         userId,
-        organizationId,
+        entrepriseId,
         shared: selectionData.shared || false,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
@@ -68,13 +68,13 @@ class SelectionsService {
   /**
    * Récupérer toutes les sélections de l'utilisateur et de l'organisation
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<Object>} - Liste des sélections
    */
-  async getUserSelections(userId, organizationId) {
+  async getUserSelections(userId, entrepriseId) {
     try {
-      if (!userId || !organizationId) {
-        throw new Error('userId et organizationId sont requis');
+      if (!userId || !entrepriseId) {
+        throw new Error('userId et entrepriseId sont requis');
       }
 
       // Requête pour récupérer :
@@ -82,7 +82,7 @@ class SelectionsService {
       // 2. Les sélections partagées de l'organisation
       const q = query(
         collection(db, this.collectionName),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         orderBy('createdAt', 'desc')
       );
 
@@ -216,12 +216,12 @@ class SelectionsService {
    * Récupérer les sélections par type
    * @param {string} type - Type de recherche (contacts, dates, etc.)
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<Object>} - Liste des sélections du type
    */
-  async getSelectionsByType(type, userId, organizationId) {
+  async getSelectionsByType(type, userId, entrepriseId) {
     try {
-      const result = await this.getUserSelections(userId, organizationId);
+      const result = await this.getUserSelections(userId, entrepriseId);
       
       if (!result.success) {
         return result;

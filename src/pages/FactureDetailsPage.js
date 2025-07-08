@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useParametres } from '@/context/ParametresContext';
 import { doc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
@@ -21,7 +21,7 @@ const FactureDetailsPage = ({
   const { factureId: factureIdFromParams } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // Priorité aux props depuis le TabManager, fallback vers useParams pour navigation directe
   const factureId = factureIdFromProps || factureIdFromParams;
@@ -30,7 +30,7 @@ const FactureDetailsPage = ({
   console.log('[FactureDetailsPage] factureId depuis props:', factureIdFromProps);
   console.log('[FactureDetailsPage] factureId depuis params:', factureIdFromParams);
   console.log('[FactureDetailsPage] factureId final utilisé:', factureId);
-  console.log('[FactureDetailsPage] currentOrganization:', currentOrganization);
+  console.log('[FactureDetailsPage] currentEntreprise:', currentEntreprise);
   
   const [facture, setFacture] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -41,14 +41,14 @@ const FactureDetailsPage = ({
   // Charger les détails de la facture
   useEffect(() => {
     const loadFacture = async () => {
-      if (!user || !currentOrganization?.id || !factureId) {
-        console.log('Missing required data:', { user: !!user, orgId: currentOrganization?.id, factureId });
+      if (!user || !currentEntreprise?.id || !factureId) {
+        console.log('Missing required data:', { user: !!user, orgId: currentEntreprise?.id, factureId });
         return;
       }
       
       try {
         setLoading(true);
-        console.log('Loading facture:', factureId, 'from org:', currentOrganization.id);
+        console.log('Loading facture:', factureId, 'from org:', currentEntreprise.id);
         
         // Essayer plusieurs fois si nécessaire
         let attempts = 0;
@@ -56,7 +56,7 @@ const FactureDetailsPage = ({
         
         while (attempts < 3 && !factureData) {
           try {
-            factureData = await factureService.getFacture(factureId, currentOrganization.id);
+            factureData = await factureService.getFacture(factureId, currentEntreprise.id);
             console.log('Facture loaded successfully:', factureData);
           } catch (err) {
             attempts++;
@@ -84,7 +84,7 @@ const FactureDetailsPage = ({
     };
 
     loadFacture();
-  }, [factureId, user, currentOrganization]);
+  }, [factureId, user, currentEntreprise]);
 
   // Marquer comme payée
   const handleMarkAsPaid = async () => {
@@ -94,12 +94,12 @@ const FactureDetailsPage = ({
       await factureService.updateFacture(
         factureId, 
         { status: 'paid', datePaiement: new Date() },
-        currentOrganization.id,
+        currentEntreprise.id,
         user.uid
       );
       
       // Recharger la facture
-      const factureData = await factureService.getFacture(factureId, currentOrganization.id);
+      const factureData = await factureService.getFacture(factureId, currentEntreprise.id);
       setFacture(factureData);
     } catch (err) {
       console.error('Erreur lors de la mise à jour:', err);
@@ -115,12 +115,12 @@ const FactureDetailsPage = ({
       await factureService.updateFacture(
         factureId, 
         { status: 'sent', dateEnvoi: new Date() },
-        currentOrganization.id,
+        currentEntreprise.id,
         user.uid
       );
       
       // Recharger la facture
-      const factureData = await factureService.getFacture(factureId, currentOrganization.id);
+      const factureData = await factureService.getFacture(factureId, currentEntreprise.id);
       setFacture(factureData);
     } catch (err) {
       console.error('Erreur lors de la mise à jour:', err);
@@ -133,7 +133,7 @@ const FactureDetailsPage = ({
     if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette facture ? Cette action est irréversible.')) return;
     
     try {
-      await factureService.deleteFacture(factureId, currentOrganization.id);
+      await factureService.deleteFacture(factureId, currentEntreprise.id);
       
       // Rediriger vers la liste des factures
       navigate('/factures');
@@ -169,7 +169,7 @@ const FactureDetailsPage = ({
       }
       
       // Charger le template
-      const template = await factureService.getDefaultTemplateOrSystem(currentOrganization.id);
+      const template = await factureService.getDefaultTemplateOrSystem(currentEntreprise.id);
       
       // Préparer les variables
       const variables = await factureService.prepareFactureVariables({
@@ -183,7 +183,7 @@ const FactureDetailsPage = ({
         pourcentageAcompte: facture.pourcentageAcompte,
         montantAcompte: facture.montantAcompte,
         lignesSupplementaires: facture.lignesSupplementaires || []
-      }, currentOrganization.id);
+      }, currentEntreprise.id);
       
       // Remplacer les variables dans le template
       const htmlContent = factureService.replaceVariables(

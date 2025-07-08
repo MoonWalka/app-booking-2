@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { migrateToMultiOrg } from '@/utils/migrationHelper';
 import './MigrationPage.css';
 
 const MigrationPage = () => {
   const { currentUser, isAdmin } = useAuth();
-  const { refreshOrganizations } = useOrganization();
+  const { refreshEntreprises } = useEntreprise();
   
   const [migrationStatus, setMigrationStatus] = useState('idle'); // idle, running, success, error
   const [migrationResult, setMigrationResult] = useState(null);
@@ -53,7 +53,7 @@ const MigrationPage = () => {
       if (result.success) {
         setMigrationStatus('success');
         // Rafraîchir les organisations après la migration
-        await refreshOrganizations();
+        await refreshEntreprises();
       } else {
         setMigrationStatus('error');
       }

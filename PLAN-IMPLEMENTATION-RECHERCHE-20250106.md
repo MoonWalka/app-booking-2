@@ -134,7 +134,7 @@ Connecter l'interface de recherche multi-critères existante avec les données F
 
 #### 3.2 Mes sélections - Nouvelle fonctionnalité ✅ COMPLÉTÉ (07/01/2025)
 - [x] Créer collection `selections` dans Firebase (utilise la collection existante)
-- [x] Structure : `{nom, type, criteres, userId, organizationId, shared, createdAt, updatedAt}`
+- [x] Structure : `{nom, type, criteres, userId, entrepriseId, shared, createdAt, updatedAt}`
 - [x] Service selectionsService.js pour sauvegarder/charger les sélections
 - [x] UI MesSelectionsSection pour gérer les sélections
 - [x] Intégration complète dans RechercheLayout avec onLoadSelection

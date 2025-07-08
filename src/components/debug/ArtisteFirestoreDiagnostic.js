@@ -8,7 +8,7 @@ import {
   limit,
   db
 } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 
@@ -16,16 +16,16 @@ import Button from '@/components/ui/Button';
  * Diagnostic direct des requêtes Firestore pour les artistes
  */
 const ArtisteFirestoreDiagnostic = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   
   const runDiagnostic = async () => {
     setLoading(true);
-    const orgId = currentOrganization?.id;
+    const orgId = currentEntreprise?.id;
     const diagnosticResults = {
       timestamp: new Date().toISOString(),
-      organizationId: orgId,
+      entrepriseId: orgId,
       tests: []
     };
     
@@ -45,28 +45,28 @@ const ArtisteFirestoreDiagnostic = () => {
         results: test1Snapshot.docs.map(doc => ({
           id: doc.id,
           nom: doc.data().nom,
-          organizationId: doc.data().organizationId
+          entrepriseId: doc.data().entrepriseId
         }))
       });
       
-      // Test 2: Requête avec organizationId
+      // Test 2: Requête avec entrepriseId
       if (orgId) {
-        console.log('🔍 Test 2: Requête avec organizationId...');
+        console.log('🔍 Test 2: Requête avec entrepriseId...');
         const test2Query = query(
           collection(db, 'artistes'),
-          where('organizationId', '==', orgId),
+          where('entrepriseId', '==', orgId),
           limit(10)
         );
         const test2Snapshot = await getDocs(test2Query);
         
         diagnosticResults.tests.push({
-          name: `Requête avec organizationId=${orgId}`,
-          query: `where('organizationId', '==', '${orgId}')`,
+          name: `Requête avec entrepriseId=${orgId}`,
+          query: `where('entrepriseId', '==', '${orgId}')`,
           count: test2Snapshot.size,
           results: test2Snapshot.docs.map(doc => ({
             id: doc.id,
             nom: doc.data().nom,
-            organizationId: doc.data().organizationId
+            entrepriseId: doc.data().entrepriseId
           }))
         });
       }
@@ -89,7 +89,7 @@ const ArtisteFirestoreDiagnostic = () => {
             id: doc.id,
             nom: doc.data().nom,
             createdAt: doc.data().createdAt,
-            organizationId: doc.data().organizationId
+            entrepriseId: doc.data().entrepriseId
           }))
         });
       } catch (error) {
@@ -100,34 +100,34 @@ const ArtisteFirestoreDiagnostic = () => {
         });
       }
       
-      // Test 4: Requête composée (organizationId + orderBy)
+      // Test 4: Requête composée (entrepriseId + orderBy)
       if (orgId) {
         console.log('🔍 Test 4: Requête composée...');
         try {
           const test4Query = query(
             collection(db, 'artistes'),
-            where('organizationId', '==', orgId),
+            where('entrepriseId', '==', orgId),
             orderBy('createdAt', 'desc'),
             limit(10)
           );
           const test4Snapshot = await getDocs(test4Query);
           
           diagnosticResults.tests.push({
-            name: 'Requête composée (organizationId + orderBy)',
-            query: `where('organizationId', '==', '${orgId}').orderBy('createdAt', 'desc')`,
+            name: 'Requête composée (entrepriseId + orderBy)',
+            query: `where('entrepriseId', '==', '${orgId}').orderBy('createdAt', 'desc')`,
             count: test4Snapshot.size,
             results: test4Snapshot.docs.map(doc => ({
               id: doc.id,
               nom: doc.data().nom,
               createdAt: doc.data().createdAt,
-              organizationId: doc.data().organizationId
+              entrepriseId: doc.data().entrepriseId
             }))
           });
         } catch (error) {
           diagnosticResults.tests.push({
-            name: 'Requête composée (organizationId + orderBy)',
+            name: 'Requête composée (entrepriseId + orderBy)',
             error: error.message,
-            hint: 'Index composite manquant pour (organizationId, createdAt)'
+            hint: 'Index composite manquant pour (entrepriseId, createdAt)'
           });
         }
       }
@@ -147,8 +147,8 @@ const ArtisteFirestoreDiagnostic = () => {
           searchResults.push({
             id: doc.id,
             nom: data.nom,
-            organizationId: data.organizationId,
-            matchesCurrentOrg: data.organizationId === orgId
+            entrepriseId: data.entrepriseId,
+            matchesCurrentOrg: data.entrepriseId === orgId
           });
         }
       });
@@ -160,13 +160,13 @@ const ArtisteFirestoreDiagnostic = () => {
         results: searchResults
       });
       
-      // Test 6: Analyse des organizationId
-      console.log('🔍 Test 6: Analyse des organizationId...');
+      // Test 6: Analyse des entrepriseId
+      console.log('🔍 Test 6: Analyse des entrepriseId...');
       const orgAnalysis = {};
       let nullOrgCount = 0;
       
       allArtistesSnapshot.docs.forEach(doc => {
-        const orgId = doc.data().organizationId;
+        const orgId = doc.data().entrepriseId;
         if (!orgId) {
           nullOrgCount++;
         } else {
@@ -175,10 +175,10 @@ const ArtisteFirestoreDiagnostic = () => {
       });
       
       diagnosticResults.tests.push({
-        name: 'Analyse des organizationId (sur 100)',
+        name: 'Analyse des entrepriseId (sur 100)',
         nullCount: nullOrgCount,
         distribution: orgAnalysis,
-        currentOrgCount: orgAnalysis[orgId] || 0
+        currentEntrepriseCount: orgAnalysis[orgId] || 0
       });
       
     } catch (error) {
@@ -201,9 +201,9 @@ const ArtisteFirestoreDiagnostic = () => {
       </div>
       <div className="card-body">
         <div className="alert alert-info mb-3">
-          <strong>Organisation actuelle :</strong> {currentOrganization?.name || 'Aucune'}
+          <strong>Organisation actuelle :</strong> {currentEntreprise?.name || 'Aucune'}
           <br />
-          <strong>ID :</strong> <code>{currentOrganization?.id || 'N/A'}</code>
+          <strong>ID :</strong> <code>{currentEntreprise?.id || 'N/A'}</code>
         </div>
         
         <Button 
@@ -258,10 +258,10 @@ const ArtisteFirestoreDiagnostic = () => {
                               <br />
                               <small>
                                 ID: {result.id.slice(0, 8)}...
-                                {result.organizationId && (
-                                  <> | Org: {result.organizationId === currentOrganization?.id ? 
+                                {result.entrepriseId && (
+                                  <> | Org: {result.entrepriseId === currentEntreprise?.id ? 
                                     <span className="text-success">✓ Match</span> : 
-                                    <span className="text-danger">✗ {result.organizationId.slice(0, 8)}...</span>
+                                    <span className="text-danger">✗ {result.entrepriseId.slice(0, 8)}...</span>
                                   }</>
                                 )}
                                 {result.matchesCurrentOrg !== undefined && (
@@ -286,12 +286,12 @@ const ArtisteFirestoreDiagnostic = () => {
                             {Object.entries(test.distribution).map(([orgId, count]) => (
                               <li key={orgId}>
                                 {orgId}: <strong>{count}</strong>
-                                {orgId === currentOrganization?.id && ' ⭐'}
+                                {orgId === currentEntreprise?.id && ' ⭐'}
                               </li>
                             ))}
                           </ul>
                           <p className="text-primary">
-                            Votre organisation : <strong>{test.currentOrgCount}</strong> artistes
+                            Votre organisation : <strong>{test.currentEntrepriseCount}</strong> artistes
                           </p>
                         </div>
                       )}

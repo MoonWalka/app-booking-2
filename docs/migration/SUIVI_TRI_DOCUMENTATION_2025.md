@@ -98,7 +98,7 @@
 - 🟡 **ARCHIVER** : Les autres analyses
 
 #### `/docs/rapports/multi-organisation/` (6 fichiers) ✅ ANALYSÉ
-- [x] Vérification implémentation (165 occurrences organizationId)
+- [x] Vérification implémentation (165 occurrences entrepriseId)
 - [x] Validation sécurité hooks
 - [x] État des corrections
 
@@ -296,7 +296,7 @@
 - Explique les "100% relations vides"
 
 #### ✅ Multi-Organisation
-- 165 occurrences organizationId confirmées
+- 165 occurrences entrepriseId confirmées
 - useGenericEntityDelete sécurisé
 - Système opérationnel
 

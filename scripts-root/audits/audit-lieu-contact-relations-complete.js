@@ -15,7 +15,7 @@ window.auditLieuContactRelations = async function() {
   const report = {
     totalLieux: 0,
     lieuxSansId: [],
-    lieuxSansOrganizationId: [],
+    lieuxSansEntrepriseId: [],
     lieuxAvecContactIds: 0,
     lieuxSansContactIds: 0,
     contactsAvecLieuxIds: 0,
@@ -40,9 +40,9 @@ window.auditLieuContactRelations = async function() {
         console.error('🚨 LIEU SANS ID TROUVÉ:', lieu);
       }
       
-      // Vérifier organizationId
-      if (!lieu.organizationId) {
-        report.lieuxSansOrganizationId.push({ id: lieuId, nom: lieu.nom });
+      // Vérifier entrepriseId
+      if (!lieu.entrepriseId) {
+        report.lieuxSansEntrepriseId.push({ id: lieuId, nom: lieu.nom });
       }
       
       // Analyser contactIds
@@ -130,7 +130,7 @@ window.auditLieuContactRelations = async function() {
     console.log(`📍 Lieux analysés: ${report.totalLieux}`);
     console.log(`  ✅ Avec contactIds: ${report.lieuxAvecContactIds}`);
     console.log(`  ❌ Sans contactIds: ${report.lieuxSansContactIds}`);
-    console.log(`  🚨 Sans organizationId: ${report.lieuxSansOrganizationId.length}`);
+    console.log(`  🚨 Sans entrepriseId: ${report.lieuxSansEntrepriseId.length}`);
     
     console.log(`\n👥 Contacts avec lieuxIds: ${report.contactsAvecLieuxIds}`);
     
@@ -166,8 +166,8 @@ window.auditLieuContactRelations = async function() {
       console.log('2. Exécuter BidirectionalRelationsFixer dans /debug');
     }
     
-    if (report.lieuxSansOrganizationId.length > 0) {
-      console.log('3. Exécuter OrganizationIdFixer dans /debug');
+    if (report.lieuxSansEntrepriseId.length > 0) {
+      console.log('3. Exécuter EntrepriseIdFixer dans /debug');
     }
     
     if (report.formatsProblematiiques.length > 0) {
@@ -203,7 +203,7 @@ window.diagnosticLieuSpecifique = async function(lieuId) {
     // 2. Analyser les champs
     console.log('\n📋 Analyse des champs:');
     console.log('- ID:', lieuDoc.id);
-    console.log('- organizationId:', lieu.organizationId || '❌ MANQUANT');
+    console.log('- entrepriseId:', lieu.entrepriseId || '❌ MANQUANT');
     console.log('- contactIds:', lieu.contactIds || '❌ NON DÉFINI');
     console.log('- Type de contactIds:', Array.isArray(lieu.contactIds) ? 'Array' : typeof lieu.contactIds);
     

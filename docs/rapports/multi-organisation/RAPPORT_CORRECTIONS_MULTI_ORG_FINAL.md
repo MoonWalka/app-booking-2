@@ -6,11 +6,11 @@
 
 ### 1. Index Firebase Déployés ✅
 
-Les index composites nécessaires pour les requêtes avec `organizationId` ont été ajoutés et déployés :
-- `concerts` : organizationId + date
-- `formulaires` : organizationId + concertId  
-- `contrats` : organizationId + concertId
-- `relances` : organizationId + dateEcheance/status/entityType
+Les index composites nécessaires pour les requêtes avec `entrepriseId` ont été ajoutés et déployés :
+- `concerts` : entrepriseId + date
+- `formulaires` : entrepriseId + concertId  
+- `contrats` : entrepriseId + concertId
+- `relances` : entrepriseId + dateEcheance/status/entityType
 
 **Commande exécutée :**
 ```bash
@@ -29,23 +29,23 @@ firebase deploy --only firestore:indexes
 ### 3. Hooks Génériques Corrigés ✅
 
 #### useGenericDataFetcher ✅
-- Ajout du filtrage par `organizationId` pour les collections et le mode single document
+- Ajout du filtrage par `entrepriseId` pour les collections et le mode single document
 - Vérification de la présence de l'organisation avant les requêtes
 - Gestion du cache tenant compte de l'organisation
 
 #### useGenericEntityDetails ✅
-- Utilise `useGenericDataFetcher` qui gère maintenant l'organizationId
+- Utilise `useGenericDataFetcher` qui gère maintenant l'entrepriseId
 - Vérification de l'appartenance lors des updates
 
 #### useGenericEntityForm ✅
-- Ajout automatique de `organizationId` lors de la création d'entités
+- Ajout automatique de `entrepriseId` lors de la création d'entités
 - Vérification de l'appartenance lors des mises à jour
 
 ### 4. Hooks Spécifiques Corrigés ✅
 
 #### useConcertListData ✅
 - Import de `useOrganization` ajouté
-- Filtrage par `organizationId` sur toutes les requêtes :
+- Filtrage par `entrepriseId` sur toutes les requêtes :
   - Concerts
   - Formulaires
   - Contrats
@@ -70,13 +70,13 @@ La fonctionnalité d'historique des échanges a été implémentée avec :
 - Service dédié : `historiqueEchangesService.js`
 - Hook personnalisé : `useHistoriqueEchanges.js`
 - Composants UI : `HistoriqueEchanges.js`, `EchangeForm.js`, `EchangeItem.js`
-- **Isolation par organizationId intégrée**
+- **Isolation par entrepriseId intégrée**
 
 ## État Actuel du Système
 
 ### ✅ Sécurisé
-- Tous les hooks filtrent correctement par organizationId
-- Les créations incluent automatiquement l'organizationId
+- Tous les hooks filtrent correctement par entrepriseId
+- Les créations incluent automatiquement l'entrepriseId
 - Les modifications vérifient l'appartenance
 
 ### ✅ Performant
@@ -98,17 +98,17 @@ window.testMultiOrgIsolation()
 ```
 
 ### 2. Migration des Données Existantes
-Les données créées avant ces corrections n'ont pas d'`organizationId`. Un script de migration pourrait être nécessaire pour les attribuer à la bonne organisation.
+Les données créées avant ces corrections n'ont pas d'`entrepriseId`. Un script de migration pourrait être nécessaire pour les attribuer à la bonne organisation.
 
 ### 3. Formation de l'Équipe
 S'assurer que tous les développeurs comprennent l'importance de :
 - Toujours utiliser les hooks génériques quand possible
 - Vérifier l'appartenance avant les modifications
-- Inclure `organizationId` dans toutes les créations
+- Inclure `entrepriseId` dans toutes les créations
 
 ### 4. Monitoring
 Mettre en place des alertes pour détecter :
-- Les documents créés sans organizationId
+- Les documents créés sans entrepriseId
 - Les requêtes non filtrées par organization
 - Les tentatives d'accès non autorisées
 
@@ -117,7 +117,7 @@ Mettre en place des alertes pour détecter :
 Le système multi-organisation est maintenant pleinement fonctionnel et sécurisé. L'isolation des données entre organisations est garantie par :
 - Le filtrage systématique dans tous les hooks
 - La vérification de l'appartenance avant modifications
-- L'ajout automatique de l'organizationId aux créations
+- L'ajout automatique de l'entrepriseId aux créations
 - Les index Firebase optimisés pour les performances
 
 **Status Final : ✅ OPÉRATIONNEL ET SÉCURISÉ**

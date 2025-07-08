@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { personnesService } from '@/services/contacts/personnesService';
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
@@ -20,14 +20,14 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
   const [totalPages, setTotalPages] = useState(1);
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc' ou 'desc'
   
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { openTab } = useTabs();
   const { openPersonneModal } = useContactModals();
   const itemsPerPage = 10;
 
   // Charger les personnes depuis le modèle relationnel
   const loadPersonnes = useCallback(async (page = 1) => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       console.warn('❌ [AssociatePersonModal] Organisation manquante pour charger les personnes');
       setError('Aucune organisation sélectionnée');
       return;
@@ -36,11 +36,11 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
     setLoading(true);
     setError(null);
     try {
-      console.log('🔄 [AssociatePersonModal] Chargement des personnes pour organisation:', currentOrganization.id);
-      console.log('📊 [AssociatePersonModal] Organisation complète:', currentOrganization);
+      console.log('🔄 [AssociatePersonModal] Chargement des personnes pour organisation:', currentEntreprise.id);
+      console.log('📊 [AssociatePersonModal] Organisation complète:', currentEntreprise);
       
       // Charger toutes les personnes de l'organisation
-      const result = await personnesService.listPersonnes(currentOrganization.id);
+      const result = await personnesService.listPersonnes(currentEntreprise.id);
       
       console.log('📋 [AssociatePersonModal] Résultat complet:', result);
       console.log('📋 [AssociatePersonModal] Personnes trouvées:', result.data?.length || 0);
@@ -95,7 +95,7 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
     } finally {
       setLoading(false);
     }
-  }, [currentOrganization, sortOrder]);
+  }, [currentEntreprise, sortOrder]);
 
   // Filtrer les personnes selon le terme de recherche
   const filteredPersonnes = useMemo(() => {
@@ -115,13 +115,13 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
 
   // Charger les données au montage du composant
   useEffect(() => {
-    if (isOpen && currentOrganization?.id) {
+    if (isOpen && currentEntreprise?.id) {
       console.log('🔍 [DEBUG AssociatePersonModal] - Ouverture modal');
-      console.log('📋 Organisation courante:', currentOrganization.id);
+      console.log('📋 Organisation courante:', currentEntreprise.id);
       console.log('📋 existingPersonIds à l\'ouverture:', existingPersonIds);
       loadPersonnes();
     }
-  }, [isOpen, currentOrganization?.id, loadPersonnes]);
+  }, [isOpen, currentEntreprise?.id, loadPersonnes]);
   
   // Note: existingPersonIds est volontairement omis des dépendances pour éviter de recharger
   // les personnes à chaque changement. Les personnes déjà associées sont gérées visuellement

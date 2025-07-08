@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMultiOrgQuery } from '@/hooks/useMultiOrgQuery';
+import { useMultiEntQuery } from '@/hooks/useMultiEntQuery';
 import { deleteDoc, doc, query, collection, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { Modal, Button as BootstrapButton, Form, InputGroup } from 'react-bootstrap';
@@ -23,7 +23,7 @@ const StructuresList = () => {
     data: structures = [],
     loading,
     error
-  } = useMultiOrgQuery('structures', {
+  } = useMultiEntQuery('structures', {
     orderByField: 'nom',
     orderDirection: 'asc',
     limitCount: 20
@@ -327,7 +327,7 @@ const StructuresList = () => {
         </div>
       )}
 
-      {/* Pagination désactivée temporairement - useMultiOrgQuery ne supporte pas encore la pagination */}
+      {/* Pagination désactivée temporairement - useMultiEntQuery ne supporte pas encore la pagination */}
 
       {/* Modal de suppression */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>

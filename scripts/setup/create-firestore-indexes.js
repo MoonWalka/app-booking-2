@@ -33,28 +33,28 @@ const indexes = [
   {
     collectionGroup: 'structures',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'raisonSociale', mode: 'ASCENDING' }
     ]
   },
   {
     collectionGroup: 'structures',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'isClient', mode: 'ASCENDING' }
     ]
   },
   {
     collectionGroup: 'structures',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'tags', arrayConfig: 'CONTAINS' }
     ]
   },
   {
     collectionGroup: 'structures',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'createdAt', mode: 'DESCENDING' }
     ]
   },
@@ -63,14 +63,14 @@ const indexes = [
   {
     collectionGroup: 'personnes',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'email', mode: 'ASCENDING' }
     ]
   },
   {
     collectionGroup: 'personnes',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'nom', mode: 'ASCENDING' },
       { fieldPath: 'prenom', mode: 'ASCENDING' }
     ]
@@ -78,14 +78,14 @@ const indexes = [
   {
     collectionGroup: 'personnes',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'isPersonneLibre', mode: 'ASCENDING' }
     ]
   },
   {
     collectionGroup: 'personnes',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'tags', arrayConfig: 'CONTAINS' }
     ]
   },
@@ -94,7 +94,7 @@ const indexes = [
   {
     collectionGroup: 'liaisons',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'structureId', mode: 'ASCENDING' },
       { fieldPath: 'personneId', mode: 'ASCENDING' }
     ]
@@ -102,14 +102,14 @@ const indexes = [
   {
     collectionGroup: 'liaisons',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'actif', mode: 'ASCENDING' }
     ]
   },
   {
     collectionGroup: 'liaisons',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'prioritaire', mode: 'ASCENDING' }
     ]
   },
@@ -134,7 +134,7 @@ const indexes = [
   {
     collectionGroup: 'qualifications',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'parentId', mode: 'ASCENDING' },
       { fieldPath: 'ordre', mode: 'ASCENDING' }
     ]
@@ -142,7 +142,7 @@ const indexes = [
   {
     collectionGroup: 'qualifications',
     fields: [
-      { fieldPath: 'organizationId', mode: 'ASCENDING' },
+      { fieldPath: 'entrepriseId', mode: 'ASCENDING' },
       { fieldPath: 'type', mode: 'ASCENDING' },
       { fieldPath: 'actif', mode: 'ASCENDING' }
     ]

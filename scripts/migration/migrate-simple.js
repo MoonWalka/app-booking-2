@@ -35,7 +35,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const organizationId = '9LjkCJG04pEzbABdHkSf'; // Organisation test
+const entrepriseId = '9LjkCJG04pEzbABdHkSf'; // Organisation test
 const isDryRun = process.argv.includes('--dry-run');
 
 console.log('🚀 MIGRATION CONTACTS VERS MODÈLE RELATIONNEL');
@@ -59,11 +59,11 @@ const stats = {
 /**
  * Créer une structure unique
  */
-async function createStructure(structureData, organizationId) {
+async function createStructure(structureData, entrepriseId) {
   const structureRef = doc(collection(db, 'structures'));
   
   const structure = {
-    organizationId,
+    entrepriseId,
     raisonSociale: structureData.raisonSociale || '',
     type: structureData.type || 'autre',
     email: structureData.email || '',
@@ -93,11 +93,11 @@ async function createStructure(structureData, organizationId) {
 /**
  * Créer une personne unique
  */
-async function createPersonne(personneData, organizationId) {
+async function createPersonne(personneData, entrepriseId) {
   const personneRef = doc(collection(db, 'personnes'));
   
   const personne = {
-    organizationId,
+    entrepriseId,
     prenom: personneData.prenom || '',
     nom: personneData.nom || '',
     email: personneData.email || '',
@@ -126,11 +126,11 @@ async function createPersonne(personneData, organizationId) {
 /**
  * Créer une liaison N-à-N
  */
-async function createLiaison(structureId, personneId, liaisonData, organizationId) {
+async function createLiaison(structureId, personneId, liaisonData, entrepriseId) {
   const liaisonRef = doc(collection(db, 'liaisons'));
   
   const liaison = {
-    organizationId,
+    entrepriseId,
     structureId,
     personneId,
     fonction: liaisonData.fonction || '',
@@ -160,17 +160,17 @@ async function migrateContact(contactDoc) {
   try {
     if (data.entityType === 'structure') {
       // Créer la structure
-      const structureId = await createStructure(data.structure || data, organizationId);
+      const structureId = await createStructure(data.structure || data, entrepriseId);
       stats.structuresCreated++;
       
       // Migrer les personnes associées
       if (data.personnes && Array.isArray(data.personnes)) {
         for (const personne of data.personnes) {
-          const personneId = await createPersonne(personne, organizationId);
+          const personneId = await createPersonne(personne, entrepriseId);
           stats.personnesCreated++;
           
           // Créer la liaison
-          await createLiaison(structureId, personneId, personne, organizationId);
+          await createLiaison(structureId, personneId, personne, entrepriseId);
           stats.liaisonsCreated++;
         }
       }
@@ -178,7 +178,7 @@ async function migrateContact(contactDoc) {
     } else if (data.entityType === 'personne_libre') {
       // Créer la personne libre
       const personneData = { ...(data.personne || data), isPersonneLibre: true };
-      await createPersonne(personneData, organizationId);
+      await createPersonne(personneData, entrepriseId);
       stats.personnesCreated++;
     }
     
@@ -195,13 +195,13 @@ async function migrateContact(contactDoc) {
  */
 async function main() {
   try {
-    console.log(`🎯 Organisation: ${organizationId}\n`);
+    console.log(`🎯 Organisation: ${entrepriseId}\n`);
     
     // Récupérer les contacts existants
     console.log('📋 Récupération des contacts existants...');
     const contactsQuery = query(
       collection(db, 'contacts_unified'),
-      where('organizationId', '==', organizationId)
+      where('entrepriseId', '==', entrepriseId)
     );
     const contactsSnapshot = await getDocs(contactsQuery);
     

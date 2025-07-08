@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { collection, addDoc, updateDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTaches } from '@/hooks/taches/useTaches';
 import Modal from '@/components/common/Modal';
@@ -15,7 +15,7 @@ import styles from './TachesPage.module.css';
  * Affiche un tableau complet des tâches avec possibilité de création, modification et suppression
  */
 function TachesPage() {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { currentUser } = useAuth();
   const { taches, loading, error, refreshTaches } = useTaches();
   
@@ -133,7 +133,7 @@ function TachesPage() {
       return;
     }
 
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       alert('Aucune organisation sélectionnée');
       return;
     }
@@ -141,7 +141,7 @@ function TachesPage() {
     try {
       const tacheData = {
         ...formData,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         updatedAt: serverTimestamp()
       };
 

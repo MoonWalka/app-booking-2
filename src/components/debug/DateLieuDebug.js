@@ -104,7 +104,7 @@ function DateLieuDebug() {
               <li>ID: {debugData.firebaseData.date.id}</li>
               <li>Titre: {debugData.firebaseData.date.titre || 'Sans titre'}</li>
               <li>lieuId: {debugData.firebaseData.date.lieuId || <span className={styles.error}>NON DÉFINI</span>}</li>
-              <li>organizationId: {debugData.firebaseData.date.organizationId || <span className={styles.error}>NON DÉFINI</span>}</li>
+              <li>entrepriseId: {debugData.firebaseData.date.entrepriseId || <span className={styles.error}>NON DÉFINI</span>}</li>
             </ul>
 
             {debugData.firebaseData.date.lieuId && (
@@ -117,7 +117,7 @@ function DateLieuDebug() {
                     <li>Adresse: {debugData.firebaseData.lieu.adresse || <span className={styles.warning}>NON DÉFINIE</span>}</li>
                     <li>Code postal: {debugData.firebaseData.lieu.codePostal}</li>
                     <li>Ville: {debugData.firebaseData.lieu.ville}</li>
-                    <li>organizationId: {debugData.firebaseData.lieu.organizationId}</li>
+                    <li>entrepriseId: {debugData.firebaseData.lieu.entrepriseId}</li>
                   </ul>
                 ) : (
                   <p className={styles.error}>❌ Lieu introuvable avec ID: {debugData.firebaseData.date.lieuId}</p>
@@ -180,9 +180,9 @@ function DateLieuDebug() {
             <li className={styles.warning}>⚠️ Le lieu n'a pas d'adresse, la carte ne s'affichera pas</li>
           )}
           
-          {/* Vérifier la cohérence des organizationId */}
-          {debugData.firebaseData?.concert?.organizationId !== debugData.firebaseData?.lieu?.organizationId && (
-            <li className={styles.warning}>⚠️ Les organizationId ne correspondent pas</li>
+          {/* Vérifier la cohérence des entrepriseId */}
+          {debugData.firebaseData?.concert?.entrepriseId !== debugData.firebaseData?.lieu?.entrepriseId && (
+            <li className={styles.warning}>⚠️ Les entrepriseId ne correspondent pas</li>
           )}
           
           {/* Vérifier si le hook charge le lieu */}

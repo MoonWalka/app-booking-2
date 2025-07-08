@@ -1,16 +1,16 @@
-# Rapport d'Audit - Filtrage par organizationId dans les Hooks
+# Rapport d'Audit - Filtrage par entrepriseId dans les Hooks
 
 ## Date: 3 janvier 2025
 
 ## Résumé Exécutif
 
-Cet audit examine tous les hooks spécifiques qui font des appels directs à Firebase pour vérifier s'ils filtrent correctement par `organizationId`. L'objectif est d'identifier les hooks non conformes qui nécessitent des corrections pour le support multi-organisations.
+Cet audit examine tous les hooks spécifiques qui font des appels directs à Firebase pour vérifier s'ils filtrent correctement par `entrepriseId`. L'objectif est d'identifier les hooks non conformes qui nécessitent des corrections pour le support multi-organisations.
 
 ## Hooks Conformes ✅
 
 ### 1. **useRelances** (/src/hooks/relances/useRelances.js)
 - ✅ Utilise `useOrganization` pour récupérer `currentOrganization`
-- ✅ Filtre les requêtes par `organizationId` ligne 43: `where('organizationId', '==', currentOrganization.id)`
+- ✅ Filtre les requêtes par `entrepriseId` ligne 43: `where('entrepriseId', '==', currentOrganization.id)`
 - ✅ Vérifie la présence de l'organisation avant d'exécuter les requêtes
 
 ### 2. **useRelancesAutomatiques** (/src/hooks/relances/useRelancesAutomatiques.js)
@@ -20,28 +20,28 @@ Cet audit examine tous les hooks spécifiques qui font des appels directs à Fir
 
 ### 3. **useArtistesList** (/src/hooks/artistes/useArtistesList.js)
 - ✅ Utilise `useOrganization` pour récupérer `currentOrganization`
-- ✅ Filtre par `organizationId` dans la fonction `calculateStats` ligne 99: `where('organizationId', '==', currentOrganization.id)`
-- ✅ Utilise `useGenericEntityList` qui gère automatiquement l'organizationId
+- ✅ Filtre par `entrepriseId` dans la fonction `calculateStats` ligne 99: `where('entrepriseId', '==', currentOrganization.id)`
+- ✅ Utilise `useGenericEntityList` qui gère automatiquement l'entrepriseId
 
 ### 4. **useLieuxQuery** (/src/hooks/lieux/useLieuxQuery.js)
 - ✅ Utilise `useOrganization` pour récupérer `currentOrganization`
-- ✅ Filtre par `organizationId` ligne 132: `where('organizationId', '==', currentOrganization.id)`
+- ✅ Filtre par `entrepriseId` ligne 132: `where('entrepriseId', '==', currentOrganization.id)`
 - ✅ Vérifie la présence de l'organisation avant d'exécuter les requêtes
 
 ### 5. **useMultiOrgQuery** (/src/hooks/useMultiOrgQuery.js)
 - ✅ Hook spécialement conçu pour le multi-organisation
 - ✅ Gère automatiquement les collections organisationnelles
-- ✅ Fallback vers collections standard avec filtre `organizationId`
-- ✅ Ajoute `organizationId` lors des créations dans `useMultiOrgMutation`
+- ✅ Fallback vers collections standard avec filtre `entrepriseId`
+- ✅ Ajoute `entrepriseId` lors des créations dans `useMultiOrgMutation`
 
 ## Hooks Non Conformes ❌
 
 ### 1. **useConcertListData** (/src/hooks/concerts/useConcertListData.js) ⚠️ CRITIQUE
 **Problèmes identifiés:**
 - ❌ N'importe pas `useOrganization`
-- ❌ Ne filtre pas par `organizationId` dans la requête principale des concerts (ligne 267)
-- ❌ Ne filtre pas les formulaires par `organizationId` (ligne 333)
-- ❌ Ne filtre pas les contrats par `organizationId` (ligne 361)
+- ❌ Ne filtre pas par `entrepriseId` dans la requête principale des concerts (ligne 267)
+- ❌ Ne filtre pas les formulaires par `entrepriseId` (ligne 333)
+- ❌ Ne filtre pas les contrats par `entrepriseId` (ligne 361)
 - ❌ Le cache local ne tient pas compte de l'organisation
 
 **Corrections nécessaires:**
@@ -55,7 +55,7 @@ const { currentOrganization } = useOrganization();
 // Modifier la requête des concerts (ligne 267)
 let q = query(
   concertsRef, 
-  where('organizationId', '==', currentOrganization.id),
+  where('entrepriseId', '==', currentOrganization.id),
   orderBy('date', 'desc'), 
   limit(pageSize)
 );
@@ -67,13 +67,13 @@ let q = query(
 **Problèmes identifiés:**
 - ❌ N'importe pas `useOrganization`
 - ❌ Ne vérifie pas que le contrat appartient à l'organisation avant modification/suppression
-- ❌ N'ajoute pas `organizationId` lors des mises à jour
+- ❌ N'ajoute pas `entrepriseId` lors des mises à jour
 
 **Corrections nécessaires:**
 ```javascript
 // Ajouter validation de l'appartenance avant toute action
 const contratDoc = await getDoc(doc(db, 'contrats', contratId));
-if (contratDoc.data()?.organizationId !== currentOrganization.id) {
+if (contratDoc.data()?.entrepriseId !== currentOrganization.id) {
   throw new Error('Accès non autorisé à ce contrat');
 }
 ```
@@ -81,7 +81,7 @@ if (contratDoc.data()?.organizationId !== currentOrganization.id) {
 ### 3. **useFormTokenValidation** (/src/hooks/forms/useFormTokenValidation.js) ⚠️ MODÉRÉ
 **Problèmes identifiés:**
 - ❌ N'importe pas `useOrganization`
-- ❌ Ne filtre pas les `formLinks` par `organizationId` (ligne 89)
+- ❌ Ne filtre pas les `formLinks` par `entrepriseId` (ligne 89)
 - ⚠️ Utilise `useGenericEntityDetails` pour le concert mais sans vérifier l'organisation
 
 **Note:** Ce hook est utilisé pour les formulaires publics, donc le filtrage par organisation pourrait ne pas être nécessaire selon le cas d'usage.
@@ -91,10 +91,10 @@ if (contratDoc.data()?.organizationId !== currentOrganization.id) {
 
 ### 5. **useFirestoreSubscription** (/src/hooks/common/useFirestoreSubscription.js) ⚠️ MODÉRÉ
 **Problèmes identifiés:**
-- ❌ Hook générique qui ne gère pas l'organizationId
+- ❌ Hook générique qui ne gère pas l'entrepriseId
 - ⚠️ Devrait accepter un paramètre optionnel pour filtrer par organisation
 
-**Note:** C'est un hook utilitaire générique, il pourrait être acceptable qu'il ne gère pas l'organizationId directement.
+**Note:** C'est un hook utilitaire générique, il pourrait être acceptable qu'il ne gère pas l'entrepriseId directement.
 
 ### 6. **useCompanySearch** (/src/hooks/common/useCompanySearch.js) ✓ OK
 **Note:** Ce hook utilise une API externe (API Entreprise), donc pas de filtrage par organisation nécessaire.
@@ -110,7 +110,7 @@ if (contratDoc.data()?.organizationId !== currentOrganization.id) {
 
 ## Hooks Génériques à Vérifier
 
-Les hooks génériques suivants devraient être vérifiés pour s'assurer qu'ils gèrent correctement l'organizationId:
+Les hooks génériques suivants devraient être vérifiés pour s'assurer qu'ils gèrent correctement l'entrepriseId:
 - `useGenericEntityList`
 - `useGenericEntityDetails`
 - `useGenericEntityForm`
@@ -120,12 +120,12 @@ Les hooks génériques suivants devraient être vérifiés pour s'assurer qu'ils
 ## Recommandations
 
 ### 1. Corrections Prioritaires (CRITIQUE)
-- **useConcertListData**: Ajouter le filtrage par organizationId sur toutes les requêtes
+- **useConcertListData**: Ajouter le filtrage par entrepriseId sur toutes les requêtes
 - **useContratActions**: Ajouter validation de l'appartenance avant modifications
 
 ### 2. Corrections Importantes (MODÉRÉ)
 - **useFormTokenValidation**: Évaluer si le filtrage est nécessaire selon le cas d'usage
-- **useFirestoreSubscription**: Ajouter support optionnel de l'organizationId
+- **useFirestoreSubscription**: Ajouter support optionnel de l'entrepriseId
 
 ### 3. Bonnes Pratiques
 - Créer un hook `useOrganizationQuery` qui encapsule automatiquement le filtrage
@@ -145,17 +145,17 @@ export const useEntityHook = () => {
     return { data: [], loading: false };
   }
   
-  // Toujours filtrer par organizationId
+  // Toujours filtrer par entrepriseId
   const q = query(
     collection(db, 'collection'),
-    where('organizationId', '==', currentOrganization.id)
+    where('entrepriseId', '==', currentOrganization.id)
   );
   
-  // Ajouter organizationId lors des créations
+  // Ajouter entrepriseId lors des créations
   const createEntity = async (data) => {
     await addDoc(collection(db, 'collection'), {
       ...data,
-      organizationId: currentOrganization.id
+      entrepriseId: currentOrganization.id
     });
   };
 };
@@ -163,4 +163,4 @@ export const useEntityHook = () => {
 
 ## Conclusion
 
-L'audit révèle que plusieurs hooks critiques ne filtrent pas correctement par `organizationId`, ce qui pourrait causer des problèmes de sécurité et d'isolation des données dans un contexte multi-organisations. Les corrections prioritaires concernent principalement les hooks de gestion des concerts et contrats qui sont au cœur du système.
+L'audit révèle que plusieurs hooks critiques ne filtrent pas correctement par `entrepriseId`, ce qui pourrait causer des problèmes de sécurité et d'isolation des données dans un contexte multi-organisations. Les corrections prioritaires concernent principalement les hooks de gestion des concerts et contrats qui sont au cœur du système.

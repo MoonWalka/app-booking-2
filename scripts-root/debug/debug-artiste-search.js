@@ -47,7 +47,7 @@ async function debugArtisteSearch() {
       artistes.push({
         id: doc.id,
         nom: data.nom || data.nomArtiste,
-        organizationId: data.organizationId,
+        entrepriseId: data.entrepriseId,
         projets: data.projets
       });
     });
@@ -56,7 +56,7 @@ async function debugArtisteSearch() {
     console.log('\n📋 Premiers artistes:');
     artistes.slice(0, 5).forEach((a, i) => {
       console.log(`  ${i + 1}. ${a.nom || 'Sans nom'} (ID: ${a.id})`);
-      console.log(`     - Organization: ${a.organizationId || 'Non définie'}`);
+      console.log(`     - Organization: ${a.entrepriseId || 'Non définie'}`);
       console.log(`     - Projets intégrés: ${a.projets ? a.projets.length : 0}`);
     });
     
@@ -78,7 +78,7 @@ async function debugArtisteSearch() {
         id: doc.id,
         intitule: data.intitule,
         artistesSelectionnes: data.artistesSelectionnes || [],
-        organizationId: data.organizationId
+        entrepriseId: data.entrepriseId
       });
       
       // Grouper par artiste
@@ -100,7 +100,7 @@ async function debugArtisteSearch() {
     projets.slice(0, 5).forEach((p, i) => {
       console.log(`  ${i + 1}. ${p.intitule || 'Sans nom'} (ID: ${p.id})`);
       console.log(`     - Artistes: ${p.artistesSelectionnes.join(', ') || 'Aucun'}`);
-      console.log(`     - Organization: ${p.organizationId || 'Non définie'}`);
+      console.log(`     - Organization: ${p.entrepriseId || 'Non définie'}`);
     });
     
     // 3. Vérifier les associations

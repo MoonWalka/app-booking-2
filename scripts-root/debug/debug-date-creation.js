@@ -67,7 +67,7 @@ async function debugDateCreation() {
       console.log(`   Lieu: ${date.lieuNom || 'Non défini'}${date.lieuVille ? ' - ' + date.lieuVille : ''}`);
       console.log(`   Libellé: ${date.libelle || 'Non défini'}`);
       console.log(`   Statut: ${date.statut || 'Non défini'}`);
-      console.log(`   Organization: ${date.organizationId || 'Non définie'}`);
+      console.log(`   Organization: ${date.entrepriseId || 'Non définie'}`);
       console.log('');
     }
     
@@ -82,7 +82,7 @@ async function debugDateCreation() {
       
       // Vérifier les champs requis
       console.log('\n✅ Vérification des champs requis:');
-      const requiredFields = ['date', 'artisteId', 'artisteNom', 'organisateurId', 'organisateurNom', 'organizationId'];
+      const requiredFields = ['date', 'artisteId', 'artisteNom', 'organisateurId', 'organisateurNom', 'entrepriseId'];
       requiredFields.forEach(field => {
         const hasField = latestDate[field] !== undefined && latestDate[field] !== null && latestDate[field] !== '';
         console.log(`   ${field}: ${hasField ? '✅' : '❌'} ${hasField ? `(${latestDate[field]})` : 'MANQUANT'}`);

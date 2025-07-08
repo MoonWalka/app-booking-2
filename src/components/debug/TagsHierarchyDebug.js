@@ -2,17 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Button, Alert, Table, Badge, Spinner } from 'react-bootstrap';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { TAGS_HIERARCHY } from '@/config/tagsHierarchy';
 
 const TagsHierarchyDebug = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [debugData, setDebugData] = useState(null);
   const [error, setError] = useState(null);
 
   const analyzeTagsUsage = useCallback(async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -24,7 +24,7 @@ const TagsHierarchyDebug = () => {
       // Requête pour tous les contacts avec des tags
       const contactsQuery = query(
         collection(db, 'contacts'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       
       const contactsSnapshot = await getDocs(contactsQuery);
@@ -95,8 +95,8 @@ const TagsHierarchyDebug = () => {
       const orphanTags = Array.from(allTagsUsed).filter(tag => !tagsInHierarchy.has(tag));
 
       setDebugData({
-        organizationId: currentOrganization.id,
-        organizationName: currentOrganization.nom,
+        entrepriseId: currentEntreprise.id,
+        organizationName: currentEntreprise.nom,
         totalContacts: contactsSnapshot.size,
         contactsWithTags: contactsWithTags.length,
         totalTagsUsed: allTagsUsed.size,
@@ -114,15 +114,15 @@ const TagsHierarchyDebug = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentOrganization?.id, currentOrganization?.nom]);
+  }, [currentEntreprise?.id, currentEntreprise?.nom]);
 
   useEffect(() => {
-    if (currentOrganization?.id) {
+    if (currentEntreprise?.id) {
       analyzeTagsUsage();
     }
-  }, [currentOrganization?.id, analyzeTagsUsage]);
+  }, [currentEntreprise?.id, analyzeTagsUsage]);
 
-  if (!currentOrganization) {
+  if (!currentEntreprise) {
     return (
       <Alert variant="warning">
         <h5>Aucune organisation sélectionnée</h5>
@@ -159,7 +159,7 @@ const TagsHierarchyDebug = () => {
                 <div className="col-md-3">
                   <h6>Organisation</h6>
                   <p>{debugData.organizationName}</p>
-                  <small className="text-muted">ID: {debugData.organizationId}</small>
+                  <small className="text-muted">ID: {debugData.entrepriseId}</small>
                 </div>
                 <div className="col-md-3">
                   <h6>Contacts</h6>

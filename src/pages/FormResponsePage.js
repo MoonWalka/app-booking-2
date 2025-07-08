@@ -33,7 +33,7 @@ const FormResponsePage = () => {
   const [loading, setLoading] = useState(true);
   const [formLinkId, setFormLinkId] = useState(null);
   const [contactEmail, setContactEmail] = useState('');
-  const [concert, setDate] = useState(null);
+  const [date, setDate] = useState(null);
   const [lieu, setLieu] = useState(null);
   const [error, setError] = useState(null);
   const [expired, setExpired] = useState(false);
@@ -92,7 +92,7 @@ const FormResponsePage = () => {
       const validateToken = async () => {
         setLoading(true);
         try {
-          console.log("Validation du token:", token, "pour le concert:", dateId);
+          console.log("Validation du token:", token, "pour le date:", dateId);
           
           // Vérifier si le token existe dans la collection formLinks
           const formsQuery = query(
@@ -140,9 +140,9 @@ const FormResponsePage = () => {
             return;
           }
           
-          console.log("Token validé avec succès, chargement du concert:", dateId);
+          console.log("Token validé avec succès, chargement du date:", dateId);
           
-          // Récupérer les données du concert
+          // Récupérer les données du date
           const dateDoc = await getDoc(doc(db, 'dates', dateId));
           if (dateDoc.exists()) {
             const dateData = dateDoc.data();
@@ -256,23 +256,23 @@ const FormResponsePage = () => {
         <h1 className={styles.pageTitle}>Formulaire Contact</h1>
 
         {/* Informations du date selon la maquette */}
-        {concert && (
+        {date && (
           <Card 
-            title="Informations sur le concert"
+            title="Informations sur le date"
             icon={<i className="bi bi-calendar-event"></i>}
           >
-              <div className={styles.concertInfoGrid}>
-                <div className={styles.concertInfoItem}>
-                  <div className={styles.concertInfoLabel}>Date</div>
-                  <div className={styles.concertInfoValue}>{formatDate(concert.date)}</div>
+              <div className={styles.dateInfoGrid}>
+                <div className={styles.dateInfoItem}>
+                  <div className={styles.dateInfoLabel}>Date</div>
+                  <div className={styles.dateInfoValue}>{formatDate(date.date)}</div>
                 </div>
-                <div className={styles.concertInfoItem}>
-                  <div className={styles.concertInfoLabel}>Lieu</div>
-                  <div className={styles.concertInfoValue}>{lieu?.nom || 'Non spécifié'}</div>
+                <div className={styles.dateInfoItem}>
+                  <div className={styles.dateInfoLabel}>Lieu</div>
+                  <div className={styles.dateInfoValue}>{lieu?.nom || 'Non spécifié'}</div>
                 </div>
-                <div className={styles.concertInfoItem}>
-                  <div className={styles.concertInfoLabel}>Montant</div>
-                  <div className={styles.concertInfoValue}>{formatMontant(concert.montant)}</div>
+                <div className={styles.dateInfoItem}>
+                  <div className={styles.dateInfoLabel}>Montant</div>
+                  <div className={styles.dateInfoValue}>{formatMontant(date.montant)}</div>
                 </div>
               </div>
           </Card>
@@ -302,7 +302,7 @@ const FormResponsePage = () => {
           <p>
             <i className="bi bi-info-circle"></i>
             Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé 
-            à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », 
+            à des fins de gestion des dates. Conformément à la loi « informatique et libertés », 
             vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier.
           </p>
         </div>
@@ -321,8 +321,8 @@ const FormResponsePage = () => {
         <div className="alert alert-danger">
           <h3>Erreur</h3>
           <p>{error}</p>
-          <button className="btn btn-primary mt-3" onClick={() => navigate('/concerts')}>
-            Retour à la liste des concerts
+          <button className="btn btn-primary mt-3" onClick={() => navigate('/dates')}>
+            Retour à la liste des dates
           </button>
         </div>
       );
@@ -346,7 +346,7 @@ const FormResponsePage = () => {
             {/* ... */}
             
             <div className="mt-4">
-              <button className="btn btn-secondary me-2" onClick={() => navigate('/concerts')}>
+              <button className="btn btn-secondary me-2" onClick={() => navigate('/dates')}>
                 Retour
               </button>
               <button className="btn btn-primary">

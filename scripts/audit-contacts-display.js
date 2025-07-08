@@ -13,7 +13,7 @@ console.log(`
 
 (async function auditContactsDisplay() {
   const { db, collection, getDocs, query, where } = window.firebase;
-  const currentOrgId = window.currentOrganizationId || localStorage.getItem('currentOrganizationId');
+  const currentOrgId = window.currentEntrepriseId || localStorage.getItem('currentEntrepriseId');
   
   console.log('🔍 Audit approfondi des contacts manquants...');
   console.log('Organisation actuelle:', currentOrgId);
@@ -24,19 +24,19 @@ console.log(`
     console.log('\\n📌 REQUÊTES SYSTÈME SIMULÉES:');
     
     // Requête structures (comme dans useContactsRelational)
-    const structuresQuery = query(collection(db, 'structures'), where('organizationId', '==', currentOrgId));
+    const structuresQuery = query(collection(db, 'structures'), where('entrepriseId', '==', currentOrgId));
     const structuresSnapshot = await getDocs(structuresQuery);
-    console.log('- Structures avec organizationId =', currentOrgId, ':', structuresSnapshot.size);
+    console.log('- Structures avec entrepriseId =', currentOrgId, ':', structuresSnapshot.size);
     
     // Requête personnes (comme dans useContactsRelational)
-    const personnesQuery = query(collection(db, 'personnes'), where('organizationId', '==', currentOrgId));
+    const personnesQuery = query(collection(db, 'personnes'), where('entrepriseId', '==', currentOrgId));
     const personnesSnapshot = await getDocs(personnesQuery);
-    console.log('- Personnes avec organizationId =', currentOrgId, ':', personnesSnapshot.size);
+    console.log('- Personnes avec entrepriseId =', currentOrgId, ':', personnesSnapshot.size);
     
     // Requête liaisons (comme dans useContactsRelational)
-    const liaisonsQuery = query(collection(db, 'liaisons'), where('organizationId', '==', currentOrgId));
+    const liaisonsQuery = query(collection(db, 'liaisons'), where('entrepriseId', '==', currentOrgId));
     const liaisonsSnapshot = await getDocs(liaisonsQuery);
-    console.log('- Liaisons avec organizationId =', currentOrgId, ':', liaisonsSnapshot.size);
+    console.log('- Liaisons avec entrepriseId =', currentOrgId, ':', liaisonsSnapshot.size);
     
     // 2. Analyser les personnes et leur statut "personne libre"
     console.log('\\n🏷️ ANALYSE DES PERSONNES LIBRES:');

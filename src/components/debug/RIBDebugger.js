@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Alert } from 'react-bootstrap';
 import Button from '@/components/ui/Button';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { migrateRIBDataForOrganization, checkRIBData } from '@/utils/migrateRIBData';
 import styles from './RIBDebugger.module.css';
 
@@ -10,7 +10,7 @@ import styles from './RIBDebugger.module.css';
  * Permet de vérifier et migrer les données RIB entre les paramètres de facturation et l'entreprise
  */
 const RIBDebugger = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -18,7 +18,7 @@ const RIBDebugger = () => {
 
   // Vérifier les données RIB
   const handleCheckRIB = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -28,7 +28,7 @@ const RIBDebugger = () => {
     setResult(null);
 
     try {
-      const data = await checkRIBData(currentOrganization.id);
+      const data = await checkRIBData(currentEntreprise.id);
       setRibData(data);
     } catch (err) {
       setError(err.message);
@@ -39,7 +39,7 @@ const RIBDebugger = () => {
 
   // Migrer les données RIB
   const handleMigrateRIB = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -49,7 +49,7 @@ const RIBDebugger = () => {
     setResult(null);
 
     try {
-      const migrationResult = await migrateRIBDataForOrganization(currentOrganization.id);
+      const migrationResult = await migrateRIBDataForOrganization(currentEntreprise.id);
       setResult(migrationResult);
       
       // Recharger les données après migration
@@ -70,8 +70,8 @@ const RIBDebugger = () => {
       </Card.Header>
       <Card.Body>
         <div className={styles.info}>
-          <p>Organisation actuelle : <strong>{currentOrganization?.name || 'Non sélectionnée'}</strong></p>
-          <p>ID : <code>{currentOrganization?.id || 'N/A'}</code></p>
+          <p>Organisation actuelle : <strong>{currentEntreprise?.name || 'Non sélectionnée'}</strong></p>
+          <p>ID : <code>{currentEntreprise?.id || 'N/A'}</code></p>
         </div>
 
         {error && (
@@ -102,7 +102,7 @@ const RIBDebugger = () => {
           <Button
             variant="primary"
             onClick={handleCheckRIB}
-            disabled={loading || !currentOrganization?.id}
+            disabled={loading || !currentEntreprise?.id}
           >
             {loading ? (
               <>
@@ -120,7 +120,7 @@ const RIBDebugger = () => {
           <Button
             variant="success"
             onClick={handleMigrateRIB}
-            disabled={loading || !currentOrganization?.id}
+            disabled={loading || !currentEntreprise?.id}
           >
             {loading ? (
               <>

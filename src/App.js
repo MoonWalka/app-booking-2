@@ -7,7 +7,7 @@ import {
   Navigate
 } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
-import { OrganizationProvider } from '@/context/OrganizationContext';
+import { EntrepriseProvider } from '@/context/EntrepriseContext';
 import { ParametresProvider } from '@/context/ParametresContext';
 import { ModalProvider } from '@/context/ModalContext';
 import { ContactModalsProvider } from '@/context/ContactModalsContext';
@@ -53,7 +53,7 @@ import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
 import MigrationPage from '@/pages/admin/MigrationPage';
-import { OnboardingFlow } from '@/components/organization';
+import { OnboardingFlow } from '@/components/entreprise';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { installGlobalFixer } from '@/utils/fixOrganizationIds';
@@ -167,7 +167,7 @@ function App() {
       <ErrorBoundary>
         <Router>
           <AuthProvider>
-            <OrganizationProvider>
+            <EntrepriseProvider>
               <ParametresProvider>
                 <ModalProvider>
                   <ContactModalsProvider>
@@ -182,8 +182,8 @@ function App() {
                     <Route path="/onboarding" element={
                       <PrivateRoute>
                         <div style={{ padding: '2rem' }}>
-                          <OnboardingFlow onComplete={(orgId) => {
-                            console.log('✅ Organisation créée/rejointe:', orgId);
+                          <OnboardingFlow onComplete={(entrepriseId) => {
+                            console.log('✅ Entreprise créée/rejointe:', entrepriseId);
                             window.location.href = '/';
                           }} />
                         </div>
@@ -601,7 +601,7 @@ function App() {
                 
                 {/* 🔍 Panneau de debug flottant - UNIQUEMENT EN DÉVELOPPEMENT */}
                 {process.env.NODE_ENV === 'development' && <DebugController />}
-              </OrganizationProvider>
+              </EntrepriseProvider>
             </AuthProvider>
           </Router>
           

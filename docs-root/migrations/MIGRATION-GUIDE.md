@@ -33,7 +33,7 @@ Ce guide vous accompagne pour migrer de l'ancien système `contacts_unified` ver
 ```bash
 # Depuis la racine du projet
 cd scripts/setup
-node setup-firestore-relational-contacts.js <email> <password> <organizationId>
+node setup-firestore-relational-contacts.js <email> <password> <entrepriseId>
 ```
 
 ### 1.2 Créer les index composites
@@ -42,33 +42,33 @@ Rendez-vous dans la [console Firestore](https://console.firebase.google.com) > I
 
 #### Collection `structures`
 ```
-- organizationId (Ascending) + raisonSociale (Ascending)
-- organizationId (Ascending) + isClient (Ascending) 
-- organizationId (Ascending) + tags (Array-contains)
-- organizationId (Ascending) + createdAt (Descending)
+- entrepriseId (Ascending) + raisonSociale (Ascending)
+- entrepriseId (Ascending) + isClient (Ascending) 
+- entrepriseId (Ascending) + tags (Array-contains)
+- entrepriseId (Ascending) + createdAt (Descending)
 ```
 
 #### Collection `personnes`
 ```
-- organizationId (Ascending) + email (Ascending)
-- organizationId (Ascending) + nom (Ascending) + prenom (Ascending)
-- organizationId (Ascending) + isPersonneLibre (Ascending)
-- organizationId (Ascending) + tags (Array-contains)
+- entrepriseId (Ascending) + email (Ascending)
+- entrepriseId (Ascending) + nom (Ascending) + prenom (Ascending)
+- entrepriseId (Ascending) + isPersonneLibre (Ascending)
+- entrepriseId (Ascending) + tags (Array-contains)
 ```
 
 #### Collection `liaisons`
 ```
-- organizationId (Ascending) + structureId (Ascending) + personneId (Ascending)
-- organizationId (Ascending) + actif (Ascending)
-- organizationId (Ascending) + prioritaire (Ascending)
+- entrepriseId (Ascending) + structureId (Ascending) + personneId (Ascending)
+- entrepriseId (Ascending) + actif (Ascending)
+- entrepriseId (Ascending) + prioritaire (Ascending)
 - structureId (Ascending) + actif (Ascending) + prioritaire (Descending)
 - personneId (Ascending) + actif (Ascending) + dateDebut (Descending)
 ```
 
 #### Collection `qualifications`
 ```
-- organizationId (Ascending) + parentId (Ascending) + ordre (Ascending)
-- organizationId (Ascending) + type (Ascending) + actif (Ascending)
+- entrepriseId (Ascending) + parentId (Ascending) + ordre (Ascending)
+- entrepriseId (Ascending) + type (Ascending) + actif (Ascending)
 ```
 
 ### 1.3 Appliquer les règles de sécurité

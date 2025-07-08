@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { doc, getDoc, updateDoc, addDoc, collection, deleteDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import LoadingSpinner from '@components/ui/LoadingSpinner';
 import ErrorMessage from '@components/ui/ErrorMessage';
 import { useEntitySearch } from '@/hooks/common';
@@ -28,7 +28,7 @@ const ContactForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // États locaux
   const [loading, setLoading] = useState(true);
@@ -193,8 +193,8 @@ const ContactForm = () => {
         
         // Méthode 1: Chercher les lieux avec ce contact dans 'contactIds' (format migré)
         const lieuxConstraints = [where('contactIds', 'array-contains', contact.id)];
-        if (currentOrganization?.id) {
-          lieuxConstraints.push(where('organizationId', '==', currentOrganization.id));
+        if (currentEntreprise?.id) {
+          lieuxConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
         }
         let lieuxQuery = query(collection(db, 'lieux'), ...lieuxConstraints);
         let querySnapshot = await getDocs(lieuxQuery);
@@ -203,8 +203,8 @@ const ContactForm = () => {
         // Méthode 2: Si rien trouvé, chercher par contactId (ancien format)
         if (lieuxLoaded.length === 0) {
           const lieuxConstraints2 = [where('contactId', '==', contact.id)];
-          if (currentOrganization?.id) {
-            lieuxConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          if (currentEntreprise?.id) {
+            lieuxConstraints2.push(where('entrepriseId', '==', currentEntreprise.id));
           }
           lieuxQuery = query(collection(db, 'lieux'), ...lieuxConstraints2);
           querySnapshot = await getDocs(lieuxQuery);
@@ -238,7 +238,7 @@ const ContactForm = () => {
     } finally {
       setLoadingAssociations(false);
     }
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // Chargement des données du contact
   useEffect(() => {
@@ -571,9 +571,9 @@ const ContactForm = () => {
       
       if (isNewFromUrl) {
         contact.createdAt = new Date();
-        // ✅ FIX: Ajouter automatiquement l'organizationId
-        if (currentOrganization?.id) {
-          contact.organizationId = currentOrganization.id;
+        // ✅ FIX: Ajouter automatiquement l'entrepriseId
+        if (currentEntreprise?.id) {
+          contact.entrepriseId = currentEntreprise.id;
         }
         const docRef = await addDoc(collection(db, 'contacts'), contact);
         savedContactId = docRef.id;

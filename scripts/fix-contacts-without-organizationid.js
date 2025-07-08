@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Script pour corriger les contacts sans organizationId
- * Assigne l'organizationId actuel aux contacts qui n'en ont pas
+ * Script pour corriger les contacts sans entrepriseId
+ * Assigne l'entrepriseId actuel aux contacts qui n'en ont pas
  */
 
 console.log(`
@@ -11,10 +11,10 @@ console.log(`
 
 // Copier et exécuter ce code dans la console du navigateur :
 
-(async function fixContactsOrganizationId() {
+(async function fixContactsEntrepriseId() {
   const { db, collection, getDocs, doc, updateDoc, writeBatch, serverTimestamp } = window.firebase;
   const { auth } = window.firebase;
-  const currentOrgId = window.currentOrganizationId || localStorage.getItem('currentOrganizationId');
+  const currentOrgId = window.currentEntrepriseId || localStorage.getItem('currentEntrepriseId');
   const currentUser = auth.currentUser;
   
   if (!currentOrgId) {
@@ -27,14 +27,14 @@ console.log(`
     return;
   }
   
-  console.log('🔧 Correction des contacts sans organizationId...');
+  console.log('🔧 Correction des contacts sans entrepriseId...');
   console.log('Organisation cible:', currentOrgId);
   console.log('Utilisateur:', currentUser.email);
   
   const confirmation = confirm(
     'ATTENTION !\\n\\n' +
     'Ce script va :\\n' +
-    '1. Assigner l\\'organizationId "' + currentOrgId + '" à tous les contacts qui n\\'en ont pas\\n' +
+    '1. Assigner l\\'entrepriseId "' + currentOrgId + '" à tous les contacts qui n\\'en ont pas\\n' +
     '2. Marquer comme "personne libre" les personnes sans liaison\\n\\n' +
     'Voulez-vous continuer ?'
   );
@@ -45,7 +45,7 @@ console.log(`
   }
   
   try {
-    // 1. Corriger les structures sans organizationId
+    // 1. Corriger les structures sans entrepriseId
     console.log('\\n🏢 CORRECTION DES STRUCTURES...');
     
     const structuresSnapshot = await getDocs(collection(db, 'structures'));
@@ -53,7 +53,7 @@ console.log(`
     
     structuresSnapshot.forEach(doc => {
       const data = doc.data();
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         structuresToFix.push({ id: doc.id, data });
       }
     });
@@ -69,10 +69,10 @@ console.log(`
         batchStructures.forEach(structure => {
           const structureRef = doc(db, 'structures', structure.id);
           batch.update(structureRef, {
-            organizationId: currentOrgId,
+            entrepriseId: currentOrgId,
             updatedAt: serverTimestamp(),
             updatedBy: currentUser.uid,
-            _migrationNote: 'organizationId ajouté par script de correction'
+            _migrationNote: 'entrepriseId ajouté par script de correction'
           });
         });
         
@@ -81,7 +81,7 @@ console.log(`
       }
     }
     
-    // 2. Corriger les personnes sans organizationId
+    // 2. Corriger les personnes sans entrepriseId
     console.log('\\n👥 CORRECTION DES PERSONNES...');
     
     const personnesSnapshot = await getDocs(collection(db, 'personnes'));
@@ -102,8 +102,8 @@ console.log(`
     personnesSnapshot.forEach(doc => {
       const data = doc.data();
       
-      // Personnes sans organizationId
-      if (!data.organizationId) {
+      // Personnes sans entrepriseId
+      if (!data.entrepriseId) {
         personnesToFix.push({ id: doc.id, data });
       }
       
@@ -113,10 +113,10 @@ console.log(`
       }
     });
     
-    console.log('Personnes sans organizationId:', personnesToFix.length);
+    console.log('Personnes sans entrepriseId:', personnesToFix.length);
     console.log('Personnes à marquer comme libres:', personnesLibresToFix.length);
     
-    // Corriger les personnes sans organizationId
+    // Corriger les personnes sans entrepriseId
     if (personnesToFix.length > 0) {
       for (let i = 0; i < personnesToFix.length; i += 500) {
         const batch = writeBatch(db);
@@ -125,10 +125,10 @@ console.log(`
         batchPersonnes.forEach(personne => {
           const personneRef = doc(db, 'personnes', personne.id);
           const updates = {
-            organizationId: currentOrgId,
+            entrepriseId: currentOrgId,
             updatedAt: serverTimestamp(),
             updatedBy: currentUser.uid,
-            _migrationNote: 'organizationId ajouté par script de correction'
+            _migrationNote: 'entrepriseId ajouté par script de correction'
           };
           
           // Si la personne n'a pas de liaison, la marquer aussi comme libre
@@ -145,7 +145,7 @@ console.log(`
       }
     }
     
-    // Marquer les personnes libres qui ont déjà un organizationId
+    // Marquer les personnes libres qui ont déjà un entrepriseId
     const personnesLibresAvecOrgId = personnesLibresToFix.filter(p => 
       !personnesToFix.some(pf => pf.id === p.id)
     );

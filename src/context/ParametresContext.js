@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { doc, getDoc, setDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from './OrganizationContext';
+import { useEntreprise } from './EntrepriseContext';
 import { 
   encryptSensitiveFields, 
   decryptSensitiveFields,
@@ -19,7 +19,7 @@ export const useParametres = () => {
 };
 
 export const ParametresProvider = ({ children }) => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [parametres, setParametres] = useState({
     entreprise: {},
     generaux: {
@@ -98,18 +98,18 @@ export const ParametresProvider = ({ children }) => {
   useEffect(() => {
     const chargerParametres = async () => {
       // Ne pas charger si aucune organisation n'est sélectionnée
-      if (!currentOrganization?.id) {
+      if (!currentEntreprise?.id) {
         console.log('ℹ️ Aucune organisation sélectionnée, paramètres par défaut utilisés');
         setLoading(false);
         return;
       }
 
       try {
-        console.log('📋 Chargement paramètres pour organisation:', currentOrganization.id);
+        console.log('📋 Chargement paramètres pour organisation:', currentEntreprise.id);
         
         // Charger depuis organizations/{id}/parametres/settings
         const parametresDoc = await getDoc(
-          doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+          doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
         );
         
         if (parametresDoc.exists()) {
@@ -204,16 +204,16 @@ export const ParametresProvider = ({ children }) => {
     };
 
     chargerParametres();
-  }, [currentOrganization?.id]); // Recharger quand l'organisation change
+  }, [currentEntreprise?.id]); // Recharger quand l'organisation change
 
   const sauvegarderParametres = useCallback(async (section, nouvellesValeurs) => {
     // Vérifier qu'une organisation est sélectionnée
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       throw new Error('Aucune organisation sélectionnée. Impossible de sauvegarder les paramètres.');
     }
 
     try {
-      console.log('💾 Sauvegarde paramètres pour organisation:', currentOrganization.id, 'section:', section);
+      console.log('💾 Sauvegarde paramètres pour organisation:', currentEntreprise.id, 'section:', section);
       
       let valeursPourSauvegarde = nouvellesValeurs;
       
@@ -249,7 +249,7 @@ export const ParametresProvider = ({ children }) => {
 
       // Sauvegarder dans organizations/{id}/parametres/settings
       await setDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings'), 
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'), 
         parametresMisAJour
       );
       
@@ -271,12 +271,12 @@ export const ParametresProvider = ({ children }) => {
       setError(err.message);
       return false;
     }
-  }, [parametres, currentOrganization?.id]);
+  }, [parametres, currentEntreprise?.id]);
 
   // Effet séparé pour gérer la migration des données mal formatées
   useEffect(() => {
     const executerMigration = async () => {
-      if (parametres._needsMigration && currentOrganization?.id && !loading) {
+      if (parametres._needsMigration && currentEntreprise?.id && !loading) {
         console.log('🔄 Exécution de la migration automatique...');
         try {
           let migrationExecuted = false;
@@ -306,7 +306,7 @@ export const ParametresProvider = ({ children }) => {
     };
     
     executerMigration();
-  }, [parametres._needsMigration, currentOrganization?.id, loading, sauvegarderParametres, parametres.tva, parametres.unites]);
+  }, [parametres._needsMigration, currentEntreprise?.id, loading, sauvegarderParametres, parametres.tva, parametres.unites]);
 
   const value = {
     parametres,

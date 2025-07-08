@@ -9,7 +9,7 @@ import { debugLog } from '@/utils/logUtils';
 import useCache from './useCache';
 import useFirestoreSubscription from './useFirestoreSubscription';
 import InstanceTracker from '@/services/InstanceTracker';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook générique pour la gestion des détails d'une entité
@@ -62,7 +62,7 @@ const useGenericEntityDetails = ({
   cacheTTL                   // TTL personnalisé pour ce hook (en ms)
 }) => {
   // Organisation context
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // DEBUG: Vérifier la réception des customQueries avec style distinctif
   console.log('🎯🎯🎯 RECEPTION useGenericEntityDetails 🎯🎯🎯');
@@ -376,9 +376,9 @@ const useGenericEntityDetails = ({
         const entityData = { [idField]: entityDoc.id, ...entityDoc.data() };
         debugLog(`📊 FETCH_ENTITY: Données brutes: ${JSON.stringify(entityData)}`, 'debug', 'useGenericEntityDetails');
         
-        // Vérifier l'organisation (seulement si l'entité a un organizationId)
-        if (currentOrganization?.id && entityData.organizationId && entityData.organizationId !== currentOrganization.id) {
-          debugLog(`❌ FETCH_ENTITY: Document ${entityDoc.id} n'appartient pas à l'organisation ${currentOrganization.id}`, 'warn', 'useGenericEntityDetails');
+        // Vérifier l'organisation (seulement si l'entité a un entrepriseId)
+        if (currentEntreprise?.id && entityData.entrepriseId && entityData.entrepriseId !== currentEntreprise.id) {
+          debugLog(`❌ FETCH_ENTITY: Document ${entityDoc.id} n'appartient pas à l'organisation ${currentEntreprise.id}`, 'warn', 'useGenericEntityDetails');
           safeSetState(setError, { message: `${entityType} non trouvé(e) ou accès non autorisé` });
           safeSetState(setLoading, false);
           instanceRef.current.currentlyFetching = false;

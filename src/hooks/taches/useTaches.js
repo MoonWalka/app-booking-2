@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook pour gérer les tâches de l'organisation courante
  * Fournit un accès en temps réel aux tâches avec tri et filtrage
  */
 export const useTaches = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [taches, setTaches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,7 +19,7 @@ export const useTaches = () => {
   };
 
   useEffect(() => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setTaches([]);
       setLoading(false);
       return;
@@ -32,7 +32,7 @@ export const useTaches = () => {
     // Note: orderBy temporairement retiré en attendant la création de l'index Firebase
     const tachesQuery = query(
       collection(db, 'taches'),
-      where('organizationId', '==', currentOrganization.id)
+      where('entrepriseId', '==', currentEntreprise.id)
     );
 
     // Écouter les changements en temps réel
@@ -83,7 +83,7 @@ export const useTaches = () => {
     return () => {
       unsubscribe();
     };
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // Fonctions utilitaires pour filtrer les tâches
   const getTachesByStatut = (statut) => {

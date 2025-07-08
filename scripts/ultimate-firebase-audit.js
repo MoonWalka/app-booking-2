@@ -46,10 +46,10 @@ const AUDIT_CONFIG = {
       delete: [/deleteDoc\s*\(/]
     },
     organizationChecks: [
-      /organizationId/,
+      /entrepriseId/,
       /currentOrganization/,
       /useOrganization/,
-      /where\s*\(\s*['"]organizationId['"],\s*['"]===?['"],/
+      /where\s*\(\s*['"]entrepriseId['"],\s*['"]===?['"],/
     ]
   }
 };
@@ -118,7 +118,7 @@ class UltimateFirebaseAudit {
         operations: { create: [], read: [], update: [], delete: [] },
         organizationChecks: {
           hasUseOrganization: false,
-          hasOrganizationIdChecks: false,
+          hasEntrepriseIdChecks: false,
           hasCurrentOrganization: false
         },
         issues: [],
@@ -168,7 +168,7 @@ class UltimateFirebaseAudit {
             analysis.operations[opType].push({
               line: index + 1,
               content: line.trim(),
-              hasOrganizationId: /organizationId/.test(line)
+              hasEntrepriseId: /entrepriseId/.test(line)
             });
           }
         });
@@ -181,33 +181,33 @@ class UltimateFirebaseAudit {
     
     if (/useOrganization/.test(content)) checks.hasUseOrganization = true;
     if (/currentOrganization/.test(content)) checks.hasCurrentOrganization = true;
-    if (/where\s*\(\s*['"]organizationId['"]/.test(content)) checks.hasOrganizationIdChecks = true;
+    if (/where\s*\(\s*['"]entrepriseId['"]/.test(content)) checks.hasEntrepriseIdChecks = true;
   }
 
   detectSpecificIssues(content, analysis) {
     const lines = content.split('\n');
     
-    // Pattern 1: CREATE sans organizationId
+    // Pattern 1: CREATE sans entrepriseId
     analysis.operations.create.forEach(op => {
-      if (!op.hasOrganizationId) {
+      if (!op.hasEntrepriseId) {
         analysis.issues.push({
-          type: 'CREATE_WITHOUT_ORGANIZATION_ID',
+          type: 'CREATE_WITHOUT_ENTREPRISE_ID',
           severity: 'CRITICAL',
           line: op.line,
-          message: 'Opération de création sans organizationId',
-          suggestion: 'Ajouter organizationId aux données avant création'
+          message: 'Opération de création sans entrepriseId',
+          suggestion: 'Ajouter entrepriseId aux données avant création'
         });
       }
     });
 
-    // Pattern 2: READ sans filtre organizationId
-    if (analysis.operations.read.length > 0 && !analysis.organizationChecks.hasOrganizationIdChecks) {
+    // Pattern 2: READ sans filtre entrepriseId
+    if (analysis.operations.read.length > 0 && !analysis.organizationChecks.hasEntrepriseIdChecks) {
       analysis.issues.push({
         type: 'READ_WITHOUT_ORGANIZATION_FILTER',
         severity: 'CRITICAL',
         line: analysis.operations.read[0].line,
-        message: 'Requêtes de lecture sans filtre organizationId',
-        suggestion: 'Ajouter where("organizationId", "==", currentOrganization.id)'
+        message: 'Requêtes de lecture sans filtre entrepriseId',
+        suggestion: 'Ajouter where("entrepriseId", "==", currentOrganization.id)'
       });
     }
 
@@ -227,12 +227,12 @@ class UltimateFirebaseAudit {
     // Pattern 4: Collection query sans contraintes
     lines.forEach((line, index) => {
       if (/collection\s*\(\s*db\s*,/.test(line) && /getDocs/.test(line)) {
-        if (!lines.slice(Math.max(0, index - 3), index + 3).some(l => /where.*organizationId/.test(l))) {
+        if (!lines.slice(Math.max(0, index - 3), index + 3).some(l => /where.*entrepriseId/.test(l))) {
           analysis.issues.push({
             type: 'COLLECTION_QUERY_WITHOUT_CONSTRAINTS',
             severity: 'HIGH',
             line: index + 1,
-            message: 'Requête collection sans contraintes organizationId',
+            message: 'Requête collection sans contraintes entrepriseId',
             suggestion: 'Ajouter des contraintes de filtrage par organisation'
           });
         }
@@ -314,23 +314,23 @@ export const testAllHooks = async () => {
 export const testFirebaseOperations = async () => {
   const testResults = [];
   
-  // Test création avec organizationId
+  // Test création avec entrepriseId
   try {
-    console.log('🧪 Test création avec organizationId...');
+    console.log('🧪 Test création avec entrepriseId...');
     // Simuler création d'un document
     const testDoc = {
       nom: 'Test Document',
-      organizationId: 'test-org-id',
+      entrepriseId: 'test-org-id',
       createdAt: new Date()
     };
-    testResults.push({ operation: 'CREATE', status: 'SUCCESS', hasOrganizationId: true });
+    testResults.push({ operation: 'CREATE', status: 'SUCCESS', hasEntrepriseId: true });
   } catch (error) {
     testResults.push({ operation: 'CREATE', status: 'ERROR', error: error.message });
   }
   
-  // Test lecture avec filtre organizationId
+  // Test lecture avec filtre entrepriseId
   try {
-    console.log('🧪 Test lecture avec filtre organizationId...');
+    console.log('🧪 Test lecture avec filtre entrepriseId...');
     // Simuler une requête filtrée
     testResults.push({ operation: 'READ', status: 'SUCCESS', hasFilter: true });
   } catch (error) {
@@ -350,7 +350,7 @@ export const testUserWorkflows = async () => {
       steps: [
         'Naviguer vers /contacts/nouveau',
         'Remplir le formulaire',
-        'Vérifier que organizationId est ajouté',
+        'Vérifier que entrepriseId est ajouté',
         'Soumettre le formulaire',
         'Vérifier que le contact apparaît dans la liste'
       ]
@@ -360,7 +360,7 @@ export const testUserWorkflows = async () => {
       steps: [
         'Naviguer vers /lieux/nouveau',
         'Remplir le formulaire de lieu',
-        'Vérifier que organizationId est ajouté',
+        'Vérifier que entrepriseId est ajouté',
         'Soumettre le formulaire',
         'Vérifier que le lieu apparaît dans la liste'
       ]
@@ -417,13 +417,13 @@ export const testUserWorkflows = async () => {
     return [
       {
         priority: 1,
-        action: 'Corriger toutes les opérations CREATE sans organizationId',
+        action: 'Corriger toutes les opérations CREATE sans entrepriseId',
         impact: 'CRITICAL',
         effort: 'MEDIUM'
       },
       {
         priority: 2,
-        action: 'Ajouter des filtres organizationId à toutes les requêtes READ',
+        action: 'Ajouter des filtres entrepriseId à toutes les requêtes READ',
         impact: 'CRITICAL', 
         effort: 'HIGH'
       },
@@ -445,7 +445,7 @@ export const testUserWorkflows = async () => {
   generateActionPlan() {
     return {
       immediate: [
-        'Exécuter le script de correction des organizationId manquants',
+        'Exécuter le script de correction des entrepriseId manquants',
         'Corriger les opérations CREATE critiques identifiées',
         'Ajouter useOrganization aux hooks qui en manquent'
       ],
@@ -484,7 +484,7 @@ export const testUserWorkflows = async () => {
   async runUltimateAudit() {
     console.log('🚀 DÉBUT DE L\'AUDIT ULTIME FIREBASE\n');
     console.log('Cet audit va analyser TOUT le code pour garantir');
-    console.log('qu\'aucun problème Firebase/organizationId ne soit raté.\n');
+    console.log('qu\'aucun problème Firebase/entrepriseId ne soit raté.\n');
     
     try {
       await this.runStaticAnalysis();

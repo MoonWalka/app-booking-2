@@ -5,8 +5,8 @@
  * 
  * Ce script :
  * 1. Vérifie la structure des documents artistes
- * 2. Identifie les artistes sans organizationId
- * 3. Peut ajouter l'organizationId manquant
+ * 2. Identifie les artistes sans entrepriseId
+ * 3. Peut ajouter l'entrepriseId manquant
  * 4. Détecte les doublons d'artistes
  */
 
@@ -48,8 +48,8 @@ async function analyzeArtistes() {
   
   const stats = {
     total: snapshot.size,
-    withOrganizationId: 0,
-    withoutOrganizationId: 0,
+    withEntrepriseId: 0,
+    withoutEntrepriseId: 0,
     withNom: 0,
     withoutNom: 0,
     duplicates: new Map()
@@ -61,11 +61,11 @@ async function analyzeArtistes() {
   snapshot.forEach(doc => {
     const data = doc.data();
     
-    // Vérifier organizationId
-    if (data.organizationId) {
-      stats.withOrganizationId++;
+    // Vérifier entrepriseId
+    if (data.entrepriseId) {
+      stats.withEntrepriseId++;
     } else {
-      stats.withoutOrganizationId++;
+      stats.withoutEntrepriseId++;
       artistesWithoutOrgId.push({ id: doc.id, data });
     }
     
@@ -94,8 +94,8 @@ async function analyzeArtistes() {
   // Afficher les résultats
   console.log(`${colors.blue}📊 Résumé de l'analyse :${colors.reset}`);
   console.log(`Total d'artistes : ${stats.total}`);
-  console.log(`Avec organizationId : ${colors.green}${stats.withOrganizationId}${colors.reset}`);
-  console.log(`Sans organizationId : ${colors.red}${stats.withoutOrganizationId}${colors.reset}`);
+  console.log(`Avec entrepriseId : ${colors.green}${stats.withEntrepriseId}${colors.reset}`);
+  console.log(`Sans entrepriseId : ${colors.red}${stats.withoutEntrepriseId}${colors.reset}`);
   console.log(`Avec nom : ${colors.green}${stats.withNom}${colors.reset}`);
   console.log(`Sans nom : ${colors.red}${stats.withoutNom}${colors.reset}`);
   console.log(`Doublons détectés : ${colors.yellow}${stats.duplicates.size}${colors.reset}\n`);
@@ -107,16 +107,16 @@ async function analyzeArtistes() {
       console.log(`\n"${nom}" (${artistes.length} occurrences) :`);
       artistes.forEach(artiste => {
         console.log(`  - ID: ${artiste.id}`);
-        console.log(`    OrganizationId: ${artiste.organizationId || 'MANQUANT'}`);
+        console.log(`    EntrepriseId: ${artiste.entrepriseId || 'MANQUANT'}`);
         console.log(`    Style: ${artiste.style || 'non défini'}`);
         console.log(`    Créé le: ${artiste.createdAt?.toDate?.() || 'date inconnue'}`);
       });
     });
   }
   
-  // Afficher les artistes sans organizationId
+  // Afficher les artistes sans entrepriseId
   if (artistesWithoutOrgId.length > 0) {
-    console.log(`\n${colors.red}❌ Artistes sans organizationId :${colors.reset}`);
+    console.log(`\n${colors.red}❌ Artistes sans entrepriseId :${colors.reset}`);
     artistesWithoutOrgId.slice(0, 10).forEach(({ id, data }) => {
       console.log(`  - ${data.nom || 'Sans nom'} (ID: ${id})`);
     });
@@ -128,14 +128,14 @@ async function analyzeArtistes() {
   return { stats, artistesWithoutOrgId, duplicates: stats.duplicates };
 }
 
-async function fixOrganizationIds(artistesWithoutOrgId, organizationId) {
-  if (!organizationId) {
-    console.log(`${colors.red}❌ Aucun organizationId fourni${colors.reset}`);
+async function fixEntrepriseIds(artistesWithoutOrgId, entrepriseId) {
+  if (!entrepriseId) {
+    console.log(`${colors.red}❌ Aucun entrepriseId fourni${colors.reset}`);
     return;
   }
   
-  console.log(`\n${colors.cyan}🔧 Correction des organizationId manquants...${colors.reset}`);
-  console.log(`OrganizationId à appliquer : ${organizationId}`);
+  console.log(`\n${colors.cyan}🔧 Correction des entrepriseId manquants...${colors.reset}`);
+  console.log(`EntrepriseId à appliquer : ${entrepriseId}`);
   
   let updated = 0;
   const batch = db.batch();
@@ -143,7 +143,7 @@ async function fixOrganizationIds(artistesWithoutOrgId, organizationId) {
   for (const { id } of artistesWithoutOrgId) {
     const ref = db.collection('artistes').doc(id);
     batch.update(ref, {
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
     updated++;
@@ -159,7 +159,7 @@ async function fixOrganizationIds(artistesWithoutOrgId, organizationId) {
     await batch.commit();
   }
   
-  console.log(`${colors.green}✅ ${updated} artistes mis à jour avec organizationId${colors.reset}`);
+  console.log(`${colors.green}✅ ${updated} artistes mis à jour avec entrepriseId${colors.reset}`);
 }
 
 async function detectAndMergeDuplicates(duplicates) {
@@ -170,9 +170,9 @@ async function detectAndMergeDuplicates(duplicates) {
   duplicates.forEach((artistes, nom) => {
     // Trouver l'artiste "principal" (le plus ancien avec le plus de données)
     const sorted = artistes.sort((a, b) => {
-      // Priorité à celui qui a un organizationId
-      if (a.organizationId && !b.organizationId) return -1;
-      if (!a.organizationId && b.organizationId) return 1;
+      // Priorité à celui qui a un entrepriseId
+      if (a.entrepriseId && !b.entrepriseId) return -1;
+      if (!a.entrepriseId && b.entrepriseId) return 1;
       
       // Puis par date de création
       const dateA = a.createdAt?.seconds || 0;
@@ -184,7 +184,7 @@ async function detectAndMergeDuplicates(duplicates) {
     const doublons = sorted.slice(1);
     
     console.log(`\n"${nom}" :`);
-    console.log(`  Principal : ${principal.id} (org: ${principal.organizationId || 'AUCUN'})`);
+    console.log(`  Principal : ${principal.id} (org: ${principal.entrepriseId || 'AUCUN'})`);
     console.log(`  Doublons : ${doublons.map(d => d.id).join(', ')}`);
     
     mergeRecommendations.push({
@@ -201,12 +201,12 @@ async function detectAndMergeDuplicates(duplicates) {
 async function main() {
   const args = process.argv.slice(2);
   const fix = args.includes('--fix');
-  const organizationId = args.find(arg => arg.startsWith('--org='))?.split('=')[1];
+  const entrepriseId = args.find(arg => arg.startsWith('--org='))?.split('=')[1];
   
   console.log(`${colors.blue}🎵 Diagnostic des artistes${colors.reset}`);
   console.log(`Mode : ${fix ? 'CORRECTION' : 'ANALYSE SEULE'}`);
-  if (organizationId) {
-    console.log(`OrganizationId : ${organizationId}`);
+  if (entrepriseId) {
+    console.log(`EntrepriseId : ${entrepriseId}`);
   }
   console.log('----------------------------\n');
   
@@ -216,9 +216,9 @@ async function main() {
     
     // Proposer des corrections
     if (artistesWithoutOrgId.length > 0 && fix) {
-      if (!organizationId) {
-        console.log(`\n${colors.yellow}⚠️  Pour corriger les organizationId manquants, utilisez :${colors.reset}`);
-        console.log(`   node fix-artistes-search.js --fix --org=VOTRE_ORGANIZATION_ID`);
+      if (!entrepriseId) {
+        console.log(`\n${colors.yellow}⚠️  Pour corriger les entrepriseId manquants, utilisez :${colors.reset}`);
+        console.log(`   node fix-artistes-search.js --fix --org=VOTRE_ENTREPRISE_ID`);
       } else {
         const readline = require('readline').createInterface({
           input: process.stdin,
@@ -226,11 +226,11 @@ async function main() {
         });
         
         const answer = await new Promise(resolve => {
-          readline.question(`\nVoulez-vous ajouter organizationId="${organizationId}" aux ${artistesWithoutOrgId.length} artistes ? (oui/non) `, resolve);
+          readline.question(`\nVoulez-vous ajouter entrepriseId="${entrepriseId}" aux ${artistesWithoutOrgId.length} artistes ? (oui/non) `, resolve);
         });
         
         if (answer.toLowerCase() === 'oui') {
-          await fixOrganizationIds(artistesWithoutOrgId, organizationId);
+          await fixEntrepriseIds(artistesWithoutOrgId, entrepriseId);
         }
         
         readline.close();

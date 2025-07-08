@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { collection, getDocs, doc, updateDoc, deleteField } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import styles from './MigrateContractVariables.module.css';
 
 /**
@@ -9,7 +9,7 @@ import styles from './MigrateContractVariables.module.css';
  * avec des variables non remplacées
  */
 const CleanOldContractContent = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [isProcessing, setIsProcessing] = useState(false);
   const [log, setLog] = useState([]);
   const [contracts, setContracts] = useState([]);
@@ -44,7 +44,7 @@ const CleanOldContractContent = () => {
               createdAt: data.createdAt,
               hasTemplateSnapshot: !!data.templateSnapshot,
               hasModeles: !!(data.contratModeles && data.contratModeles.length > 0),
-              organizationId: data.organizationId
+              entrepriseId: data.entrepriseId
             });
           }
         }

@@ -25,7 +25,7 @@ try {
 
 const db = admin.firestore();
 
-async function fixBidirectionalRelations(organizationId) {
+async function fixBidirectionalRelations(entrepriseId) {
   console.log('🔧 Réparation des relations bidirectionnelles...\n');
   
   const stats = {
@@ -39,7 +39,7 @@ async function fixBidirectionalRelations(organizationId) {
     // 1. Récupérer tous les concerts de l'organisation
     console.log('📋 Récupération des concerts...');
     const concertsSnapshot = await db.collection('concerts')
-      .where('organizationId', '==', organizationId)
+      .where('entrepriseId', '==', entrepriseId)
       .get();
     
     console.log(`   Trouvé ${concertsSnapshot.size} concerts\n`);
@@ -152,12 +152,12 @@ async function fixBidirectionalRelations(organizationId) {
 // Fonction principale
 async function main() {
   // Récupérer l'ID d'organisation depuis les arguments ou utiliser celui par défaut
-  const organizationId = process.argv[2] || '9LjkCJG04pEzbABdHkSf';
+  const entrepriseId = process.argv[2] || '9LjkCJG04pEzbABdHkSf';
   
-  console.log(`🏢 Organisation: ${organizationId}`);
+  console.log(`🏢 Organisation: ${entrepriseId}`);
   console.log('================================\n');
   
-  await fixBidirectionalRelations(organizationId);
+  await fixBidirectionalRelations(entrepriseId);
   
   process.exit(0);
 }

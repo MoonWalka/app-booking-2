@@ -178,7 +178,7 @@ const createTestContactWithAllMetadata = async () => {
       },
 
       // Métadonnées système
-      organizationId: 'test-org-metadata',
+      entrepriseId: 'test-org-metadata',
       createdAt: new Date(),
       updatedAt: new Date()
     };

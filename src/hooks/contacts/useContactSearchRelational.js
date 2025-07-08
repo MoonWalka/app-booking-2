@@ -4,7 +4,7 @@
  */
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useContactsRelational } from './useContactsRelational';
 
 /**
@@ -33,7 +33,7 @@ export const useContactSearchRelational = ({
   includePersonnesLibres = true
 } = {}) => {
   const navigate = useNavigate();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { 
     structures, 
     personnes, 
@@ -50,7 +50,7 @@ export const useContactSearchRelational = ({
 
   // Transformer les données du modèle relationnel en format compatible
   const allContacts = useMemo(() => {
-    if (!currentOrganization?.id) return [];
+    if (!currentEntreprise?.id) return [];
     
     const contacts = [];
 
@@ -203,7 +203,7 @@ export const useContactSearchRelational = ({
     }
 
     return contacts;
-  }, [structures, personnes, liaisons, currentOrganization, includeStructures, includePersonnes, includePersonnesLibres]);
+  }, [structures, personnes, liaisons, currentEntreprise, includeStructures, includePersonnes, includePersonnesLibres]);
 
   // Filtrer et rechercher
   const filteredContacts = useMemo(() => {
@@ -291,7 +291,7 @@ export const useContactSearchRelational = ({
     setSearchFilters({});
     setSelectedContact(null);
     setError(null);
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // API publique
   return {

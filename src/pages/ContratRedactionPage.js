@@ -193,7 +193,7 @@ const ContratRedactionPage = () => {
           updatedAt: serverTimestamp()
         };
         
-        await contratService.saveContrat(id, dataToUpdate, contratData.organizationId);
+        await contratService.saveContrat(id, dataToUpdate, contratData.entrepriseId);
         console.log('[ContratRedactionPage] Modèles sauvegardés avec succès');
       } catch (error) {
         console.error('[ContratRedactionPage] Erreur lors de la sauvegarde des modèles:', error);
@@ -560,7 +560,7 @@ const ContratRedactionPage = () => {
           updatedAt: serverTimestamp()
         };
         
-        await contratService.saveContrat(id, dataToUpdate, contratData?.organizationId);
+        await contratService.saveContrat(id, dataToUpdate, contratData?.entrepriseId);
         
         // Vérifier quelles variables n'ont pas été remplacées
         const variablesNonRemplacees = [];
@@ -685,7 +685,7 @@ const ContratRedactionPage = () => {
         };
 
         // Sauvegarder dans la collection contrats
-        await contratService.saveContrat(id, dataToUpdate, contratData?.organizationId);
+        await contratService.saveContrat(id, dataToUpdate, contratData?.entrepriseId);
         
         // Mettre à jour le statut dans la date
         const dateRef = doc(db, 'dates', id);

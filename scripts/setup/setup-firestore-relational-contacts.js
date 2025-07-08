@@ -40,27 +40,27 @@ function printIndexInstructions() {
   console.log('📋 INDEX COMPOSITES À CRÉER DANS FIRESTORE:\n');
   
   console.log('1. Collection "structures":');
-  console.log('   - Index: organizationId (ASC) + raisonSociale (ASC)');
-  console.log('   - Index: organizationId (ASC) + isClient (ASC)');
-  console.log('   - Index: organizationId (ASC) + tags (ARRAY_CONTAINS)');
-  console.log('   - Index: organizationId (ASC) + createdAt (DESC)\n');
+  console.log('   - Index: entrepriseId (ASC) + raisonSociale (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + isClient (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + tags (ARRAY_CONTAINS)');
+  console.log('   - Index: entrepriseId (ASC) + createdAt (DESC)\n');
   
   console.log('2. Collection "personnes":');
-  console.log('   - Index: organizationId (ASC) + email (ASC)');
-  console.log('   - Index: organizationId (ASC) + nom (ASC) + prenom (ASC)');
-  console.log('   - Index: organizationId (ASC) + isPersonneLibre (ASC)');
-  console.log('   - Index: organizationId (ASC) + tags (ARRAY_CONTAINS)\n');
+  console.log('   - Index: entrepriseId (ASC) + email (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + nom (ASC) + prenom (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + isPersonneLibre (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + tags (ARRAY_CONTAINS)\n');
   
   console.log('3. Collection "liaisons":');
-  console.log('   - Index: organizationId (ASC) + structureId (ASC) + personneId (ASC)');
-  console.log('   - Index: organizationId (ASC) + actif (ASC)');
-  console.log('   - Index: organizationId (ASC) + prioritaire (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + structureId (ASC) + personneId (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + actif (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + prioritaire (ASC)');
   console.log('   - Index: structureId (ASC) + actif (ASC) + prioritaire (DESC)');
   console.log('   - Index: personneId (ASC) + actif (ASC) + dateDebut (DESC)\n');
   
   console.log('4. Collection "qualifications" (optionnel):');
-  console.log('   - Index: organizationId (ASC) + parentId (ASC) + ordre (ASC)');
-  console.log('   - Index: organizationId (ASC) + type (ASC) + actif (ASC)\n');
+  console.log('   - Index: entrepriseId (ASC) + parentId (ASC) + ordre (ASC)');
+  console.log('   - Index: entrepriseId (ASC) + type (ASC) + actif (ASC)\n');
   
   console.log('⚠️  Ces index doivent être créés manuellement dans:');
   console.log(`   https://console.firebase.google.com/project/${firebaseConfig.projectId}/firestore/indexes\n`);
@@ -69,14 +69,14 @@ function printIndexInstructions() {
 /**
  * Créer des documents de test pour initialiser les collections
  */
-async function createTestDocuments(organizationId) {
+async function createTestDocuments(entrepriseId) {
   try {
     console.log('📝 Création de documents de test...\n');
     
     // Document test dans structures
     const structureRef = doc(collection(db, 'structures'));
     await setDoc(structureRef, {
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       raisonSociale: '_TEST_STRUCTURE_',
       type: 'autre',
       email: 'test@example.com',
@@ -90,7 +90,7 @@ async function createTestDocuments(organizationId) {
     // Document test dans personnes
     const personneRef = doc(collection(db, 'personnes'));
     await setDoc(personneRef, {
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       prenom: '_Test_',
       nom: '_User_',
       email: 'test.user@example.com',
@@ -104,7 +104,7 @@ async function createTestDocuments(organizationId) {
     // Document test dans liaisons
     const liaisonRef = doc(collection(db, 'liaisons'));
     await setDoc(liaisonRef, {
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       structureId: structureRef.id,
       personneId: personneRef.id,
       fonction: 'Test',
@@ -119,7 +119,7 @@ async function createTestDocuments(organizationId) {
     // Document test dans qualifications
     const qualificationRef = doc(collection(db, 'qualifications'));
     await setDoc(qualificationRef, {
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       parentId: null,
       label: '_Test_',
       code: '_TEST_',
@@ -163,38 +163,38 @@ service cloud.firestore {
     
     // Règles pour structures
     match /structures/{structureId} {
-      allow read: if isOrgMember(resource.data.organizationId);
-      allow create: if isOrgMember(request.resource.data.organizationId) &&
-        request.resource.data.keys().hasAll(['organizationId', 'raisonSociale']);
-      allow update: if isOrgMember(resource.data.organizationId) &&
-        request.resource.data.organizationId == resource.data.organizationId;
-      allow delete: if isOrgAdmin(resource.data.organizationId);
+      allow read: if isOrgMember(resource.data.entrepriseId);
+      allow create: if isOrgMember(request.resource.data.entrepriseId) &&
+        request.resource.data.keys().hasAll(['entrepriseId', 'raisonSociale']);
+      allow update: if isOrgMember(resource.data.entrepriseId) &&
+        request.resource.data.entrepriseId == resource.data.entrepriseId;
+      allow delete: if isOrgAdmin(resource.data.entrepriseId);
     }
     
     // Règles pour personnes
     match /personnes/{personneId} {
-      allow read: if isOrgMember(resource.data.organizationId);
-      allow create: if isOrgMember(request.resource.data.organizationId) &&
-        request.resource.data.keys().hasAll(['organizationId', 'prenom', 'nom', 'email']);
-      allow update: if isOrgMember(resource.data.organizationId) &&
-        request.resource.data.organizationId == resource.data.organizationId;
-      allow delete: if isOrgAdmin(resource.data.organizationId);
+      allow read: if isOrgMember(resource.data.entrepriseId);
+      allow create: if isOrgMember(request.resource.data.entrepriseId) &&
+        request.resource.data.keys().hasAll(['entrepriseId', 'prenom', 'nom', 'email']);
+      allow update: if isOrgMember(resource.data.entrepriseId) &&
+        request.resource.data.entrepriseId == resource.data.entrepriseId;
+      allow delete: if isOrgAdmin(resource.data.entrepriseId);
     }
     
     // Règles pour liaisons
     match /liaisons/{liaisonId} {
-      allow read: if isOrgMember(resource.data.organizationId);
-      allow create: if isOrgMember(request.resource.data.organizationId) &&
-        request.resource.data.keys().hasAll(['organizationId', 'structureId', 'personneId']);
-      allow update: if isOrgMember(resource.data.organizationId) &&
-        request.resource.data.organizationId == resource.data.organizationId;
-      allow delete: if isOrgAdmin(resource.data.organizationId);
+      allow read: if isOrgMember(resource.data.entrepriseId);
+      allow create: if isOrgMember(request.resource.data.entrepriseId) &&
+        request.resource.data.keys().hasAll(['entrepriseId', 'structureId', 'personneId']);
+      allow update: if isOrgMember(resource.data.entrepriseId) &&
+        request.resource.data.entrepriseId == resource.data.entrepriseId;
+      allow delete: if isOrgAdmin(resource.data.entrepriseId);
     }
     
     // Règles pour qualifications
     match /qualifications/{qualificationId} {
-      allow read: if isOrgMember(resource.data.organizationId);
-      allow write: if isOrgAdmin(resource.data.organizationId);
+      allow read: if isOrgMember(resource.data.entrepriseId);
+      allow write: if isOrgAdmin(resource.data.entrepriseId);
     }
   }
 }`;
@@ -210,7 +210,7 @@ async function main() {
   try {
     // Demander les credentials si nécessaire
     if (process.argv.length < 4) {
-      console.log('Usage: node setup-firestore-relational-contacts.js <email> <password> <organizationId>');
+      console.log('Usage: node setup-firestore-relational-contacts.js <email> <password> <entrepriseId>');
       console.log('Example: node setup-firestore-relational-contacts.js admin@example.com password123 org-123\n');
       
       printIndexInstructions();
@@ -218,7 +218,7 @@ async function main() {
       return;
     }
     
-    const [,, email, password, organizationId] = process.argv;
+    const [,, email, password, entrepriseId] = process.argv;
     
     // Se connecter
     console.log('🔐 Connexion à Firebase...');
@@ -226,7 +226,7 @@ async function main() {
     console.log('✅ Connecté avec succès\n');
     
     // Créer les documents de test
-    await createTestDocuments(organizationId);
+    await createTestDocuments(entrepriseId);
     
     // Afficher les instructions
     printIndexInstructions();

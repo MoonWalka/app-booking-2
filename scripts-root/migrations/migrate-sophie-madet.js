@@ -22,7 +22,7 @@ async function migrateSophieMAdet() {
     "ville": "",
     "codePostal": "",
     "pays": "France",
-    "organizationId": "9LjkCJG04pEzbABdHkSf"
+    "entrepriseId": "9LjkCJG04pEzbABdHkSf"
   };
   
   try {
@@ -30,7 +30,7 @@ async function migrateSophieMAdet() {
     console.log('🔍 Vérification dans contacts_unified...');
     const unifiedQuery = firebase.firestore()
       .collection('contacts_unified')
-      .where('organizationId', '==', sophieData.organizationId)
+      .where('entrepriseId', '==', sophieData.entrepriseId)
       .get();
     
     const unifiedSnapshot = await unifiedQuery;
@@ -79,7 +79,7 @@ async function migrateSophieMAdet() {
     
     // 3. Créer Sophie Madet selon son contexte
     const sophieUnifiedData = {
-      organizationId: sophieData.organizationId,
+      entrepriseId: sophieData.entrepriseId,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       migrationVersion: 'unified-v1',

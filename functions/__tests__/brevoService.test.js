@@ -447,7 +447,7 @@ describe('UnifiedEmailService', () => {
         to: 'test@example.com',
         subject: 'Test Subject',
         htmlContent: '<p>Test</p>',
-        organizationId: 'org-id'
+        entrepriseId: 'org-id'
       };
 
       const result = await unifiedService.sendUnifiedEmail(emailData);
@@ -500,7 +500,7 @@ describe('UnifiedEmailService', () => {
         to: 'test@example.com',
         subject: 'Test Subject',
         htmlContent: '<p>Test</p>',
-        organizationId: 'org-id'
+        entrepriseId: 'org-id'
       };
 
       const result = await unifiedService.sendUnifiedEmail(emailData);
@@ -545,7 +545,7 @@ describe('UnifiedEmailService', () => {
         to: 'test@example.com',
         subject: 'Test Subject',
         htmlContent: '<p>Test</p>',
-        organizationId: 'org-id'
+        entrepriseId: 'org-id'
       };
 
       const result = await unifiedService.sendUnifiedEmail(emailData);

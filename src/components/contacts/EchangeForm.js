@@ -157,7 +157,7 @@ function EchangeForm({ echange, onSubmit, onCancel, concerts = [], isSubmitting 
             concerts.map(concert => {
               const dateDate = concert.date?.toDate ? concert.date.toDate() : new Date(concert.date);
               return (
-                <option key={date.id} value={date.id}>
+                <option key={concert.id} value={concert.id}>
                   {concert.titre || 'Sans titre'} - {dateDate.toLocaleDateString('fr-FR')}
                 </option>
               );

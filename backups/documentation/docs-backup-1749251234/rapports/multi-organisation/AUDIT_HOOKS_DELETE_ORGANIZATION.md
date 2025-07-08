@@ -66,7 +66,7 @@ if (!entityDoc.exists()) {
 }
 
 const entityData = entityDoc.data();
-if (entityData.organizationId !== currentOrganization?.id) {
+if (entityData.entrepriseId !== currentOrganization?.id) {
   throw new Error(`Accès non autorisé à ce ${entityType}`);
 }
 
@@ -88,7 +88,7 @@ const deleteRelance = useCallback(async (relanceId) => {
     }
     
     const relanceData = relanceDoc.data();
-    if (relanceData.organizationId !== currentOrganization?.id) {
+    if (relanceData.entrepriseId !== currentOrganization?.id) {
       throw new Error('Accès non autorisé à cette relance');
     }
     

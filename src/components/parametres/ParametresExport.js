@@ -3,11 +3,11 @@ import { Form, Button, Card, Alert, ProgressBar } from 'react-bootstrap';
 import styles from './ParametresExport.module.css';
 import { useParametres } from '@/context/ParametresContext';
 import { db, collection, getDocs, query, where } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 const ParametresExport = () => {
   const { parametres, sauvegarderParametres, loading } = useParametres();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [localState, setLocalState] = useState(parametres.export || {
     formatParDefaut: 'json',
     sauvegardeAuto: true,
@@ -46,16 +46,16 @@ const ParametresExport = () => {
     setExportStatus(`Export des ${collectionName} en cours...`);
     setError('');
     
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
     
     try {
-      // Filtrer par organizationId pour n'exporter que les données de l'organisation courante
+      // Filtrer par entrepriseId pour n'exporter que les données de l'organisation courante
       const q = query(
         collection(db, collectionName),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       const querySnapshot = await getDocs(q);
       const data = [];

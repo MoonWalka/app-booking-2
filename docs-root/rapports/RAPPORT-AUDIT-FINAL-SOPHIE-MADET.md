@@ -46,7 +46,7 @@ const q = query(personnesRef, limit(itemsPerPage * 5));
 // Ligne 76-78 : Interroge uniquement contacts
 const contactsQuery = query(
   collection(db, 'contacts'),
-  where('organizationId', '==', currentOrganization.id)
+  where('entrepriseId', '==', currentOrganization.id)
 );
 ```
 

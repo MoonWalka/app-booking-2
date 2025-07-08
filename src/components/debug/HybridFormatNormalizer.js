@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { collection, getDocs, doc, updateDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
@@ -11,7 +11,7 @@ import Alert from '@/components/ui/Alert';
  * Résout le problème des fallbacks multiples (contact.structure?.raisonSociale || contact.structureRaisonSociale)
  */
 const HybridFormatNormalizer = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [analyzing, setAnalyzing] = useState(false);
   const [normalizing, setNormalizing] = useState(false);
   const [analysis, setAnalysis] = useState(null);
@@ -360,8 +360,8 @@ const HybridFormatNormalizer = () => {
           </div>
         </div>
 
-        {currentOrganization?.id && (
-          <p><strong>Organisation:</strong> {currentOrganization.name} (ID: {currentOrganization.id})</p>
+        {currentEntreprise?.id && (
+          <p><strong>Organisation:</strong> {currentEntreprise.name} (ID: {currentEntreprise.id})</p>
         )}
 
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>

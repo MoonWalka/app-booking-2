@@ -25,7 +25,7 @@ if (currentOrganization?.id) {
   
   if (entityDoc.exists()) {
     const entityData = entityDoc.data();
-    if (entityData.organizationId && entityData.organizationId !== currentOrganization.id) {
+    if (entityData.entrepriseId && entityData.entrepriseId !== currentOrganization.id) {
       showErrorToast(`Vous n'avez pas l'autorisation de supprimer cet ${entityType}`);
       return false;
     }
@@ -37,16 +37,16 @@ if (currentOrganization?.id) {
 
 **Fichier:** `src/components/parametres/ParametresExport.js`
 
-**Problème:** La fonction d'export récupérait toutes les données de la collection sans filtrer par organizationId.
+**Problème:** La fonction d'export récupérait toutes les données de la collection sans filtrer par entrepriseId.
 
 **Impact:** Un utilisateur pouvait exporter les données de toutes les organisations en CSV/JSON.
 
 **Correction Appliquée:**
 ```javascript
-// Filtrer par organizationId pour n'exporter que les données de l'organisation courante
+// Filtrer par entrepriseId pour n'exporter que les données de l'organisation courante
 const q = query(
   collection(db, collectionName),
-  where('organizationId', '==', currentOrganization.id)
+  where('entrepriseId', '==', currentOrganization.id)
 );
 ```
 
@@ -54,7 +54,7 @@ const q = query(
 
 **Fichier:** `src/services/firestoreService.js`
 
-**Problème:** Le service générique n'ajoute pas automatiquement l'organizationId lors des créations et ne filtre pas lors des lectures.
+**Problème:** Le service générique n'ajoute pas automatiquement l'entrepriseId lors des créations et ne filtre pas lors des lectures.
 
 **Impact:** Les composants utilisant ce service pourraient accéder à des données d'autres organisations.
 
@@ -63,16 +63,16 @@ const q = query(
 ## Services et Hooks Vérifiés
 
 ### ✅ Services Conformes
-- `relancesAutomatiquesService.js` - Ajoute correctement l'organizationId (ligne 273)
-- `bidirectionalRelationsService.js` - N'a pas besoin de gérer l'organizationId
-- `structureService.js` - Gère correctement l'organizationId
-- `historiqueEchangesService.js` - Filtre par organizationId dans les lectures
+- `relancesAutomatiquesService.js` - Ajoute correctement l'entrepriseId (ligne 273)
+- `bidirectionalRelationsService.js` - N'a pas besoin de gérer l'entrepriseId
+- `structureService.js` - Gère correctement l'entrepriseId
+- `historiqueEchangesService.js` - Filtre par entrepriseId dans les lectures
 
 ### ✅ Hooks Conformes (après corrections)
 - `useGenericEntityDelete` - Maintenant sécurisé
 - `useContratActions` - Déjà sécurisé avec `verifyContratOwnership()`
 - `useGenericEntityDetails` - Utilise les hooks génériques sécurisés
-- `useGenericEntitySearch` - Filtre correctement par organizationId
+- `useGenericEntitySearch` - Filtre correctement par entrepriseId
 - `useMultiOrgQuery` - Conçu spécifiquement pour le multi-organisation
 
 ### ⚠️ Services à Surveiller
@@ -88,8 +88,8 @@ window.testMultiOrgIsolation()
 ```
 
 ### Points de Vérification
-1. ✅ Les requêtes Firebase incluent le filtre organizationId
-2. ✅ Les créations d'entités incluent l'organizationId
+1. ✅ Les requêtes Firebase incluent le filtre entrepriseId
+2. ✅ Les créations d'entités incluent l'entrepriseId
 3. ✅ Les suppressions vérifient l'appartenance
 4. ✅ Les exports ne contiennent que les données de l'organisation
 5. ✅ Les index Firebase sont optimisés pour les requêtes multi-org
@@ -99,10 +99,10 @@ window.testMultiOrgIsolation()
 ### 1. Actions Immédiates
 - ✅ Déployer les corrections en production
 - ✅ Tester avec plusieurs organisations réelles
-- ⚠️ Migrer les données existantes sans organizationId
+- ⚠️ Migrer les données existantes sans entrepriseId
 
 ### 2. Actions à Court Terme
-- Refactorer `firestoreService.js` pour gérer automatiquement l'organizationId
+- Refactorer `firestoreService.js` pour gérer automatiquement l'entrepriseId
 - Ajouter des tests automatisés pour l'isolation des données
 - Former l'équipe sur les bonnes pratiques multi-organisation
 

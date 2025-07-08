@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Script pour corriger les structures sans organizationId
+ * Script pour corriger les structures sans entrepriseId
  */
 
 const { db, collection, getDocs, query, where, updateDoc, doc } = require('./firebase-node');
 
-async function fixStructuresOrganizationId() {
-  console.log('\n🔧 Correction des structures sans organizationId\n');
+async function fixStructuresEntrepriseId() {
+  console.log('\n🔧 Correction des structures sans entrepriseId\n');
   
   try {
     // Récupérer toutes les structures
@@ -16,23 +16,23 @@ async function fixStructuresOrganizationId() {
     
     console.log(`Total structures: ${structuresSnapshot.size}`);
     
-    // Filtrer les structures sans organizationId
+    // Filtrer les structures sans entrepriseId
     const structuresWithoutOrgId = [];
     structuresSnapshot.forEach(doc => {
       const data = doc.data();
-      if (!data.organizationId || data.organizationId === null || data.organizationId === undefined) {
+      if (!data.entrepriseId || data.entrepriseId === null || data.entrepriseId === undefined) {
         structuresWithoutOrgId.push({ id: doc.id, data });
       }
     });
     
-    console.log(`Structures sans organizationId: ${structuresWithoutOrgId.length}`);
+    console.log(`Structures sans entrepriseId: ${structuresWithoutOrgId.length}`);
     
     if (structuresWithoutOrgId.length === 0) {
-      console.log('✅ Toutes les structures ont un organizationId!');
+      console.log('✅ Toutes les structures ont un entrepriseId!');
       return;
     }
     
-    // L'organizationId par défaut (trouvé dans d'autres structures)
+    // L'entrepriseId par défaut (trouvé dans d'autres structures)
     const defaultOrgId = 'tTvA6fzQpi6u3kx8wZO8';
     
     // Corriger chaque structure
@@ -42,14 +42,14 @@ async function fixStructuresOrganizationId() {
       console.log(`\n📝 Correction de: ${data.nom || data.raisonSociale || id}`);
       
       await updateDoc(doc(db, 'structures', id), {
-        organizationId: defaultOrgId,
+        entrepriseId: defaultOrgId,
         updatedAt: new Date()
       });
       
       count++;
     }
     
-    console.log(`\n✅ ${count} structures corrigées avec organizationId: ${defaultOrgId}`);
+    console.log(`\n✅ ${count} structures corrigées avec entrepriseId: ${defaultOrgId}`);
     
     // Vérifier le résultat
     console.log('\n🔍 Vérification après correction:');
@@ -60,15 +60,15 @@ async function fixStructuresOrganizationId() {
     
     afterSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.organizationId) {
+      if (data.entrepriseId) {
         withOrgId++;
       } else {
         withoutOrgId++;
       }
     });
     
-    console.log(`✅ Structures avec organizationId: ${withOrgId}`);
-    console.log(`❌ Structures sans organizationId: ${withoutOrgId}`);
+    console.log(`✅ Structures avec entrepriseId: ${withOrgId}`);
+    console.log(`❌ Structures sans entrepriseId: ${withoutOrgId}`);
     
   } catch (error) {
     console.error('❌ Erreur:', error);
@@ -76,7 +76,7 @@ async function fixStructuresOrganizationId() {
 }
 
 // Exécuter le script
-fixStructuresOrganizationId()
+fixStructuresEntrepriseId()
   .then(() => {
     console.log('\n✨ Script terminé');
     process.exit(0);

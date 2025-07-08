@@ -25,7 +25,7 @@ const MesSelectionsSection = ({ onLoadSelection }) => {
   }, [currentUser]);
 
   const loadSelections = async () => {
-    if (!currentUser?.uid || !currentUser?.organizationId) {
+    if (!currentUser?.uid || !currentUser?.entrepriseId) {
       setLoading(false);
       return;
     }
@@ -36,7 +36,7 @@ const MesSelectionsSection = ({ onLoadSelection }) => {
     try {
       const result = await selectionsService.getUserSelections(
         currentUser.uid,
-        currentUser.organizationId
+        currentUser.entrepriseId
       );
 
       if (result.success) {

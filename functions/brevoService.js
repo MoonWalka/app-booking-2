@@ -333,16 +333,16 @@ class UnifiedEmailService {
   /**
    * Récupère la configuration email de l'utilisateur avec déchiffrement sécurisé
    * @param {string} userId - ID de l'utilisateur
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<Object>} - Configuration email déchiffrée
    */
-  async getEmailConfig(userId, organizationId) {
+  async getEmailConfig(userId, entrepriseId) {
     try {
-      console.log(`[DEBUG] getEmailConfig - userId: ${userId}, organizationId: ${organizationId}`);
+      console.log(`[DEBUG] getEmailConfig - userId: ${userId}, entrepriseId: ${entrepriseId}`);
       
       const userDoc = await admin.firestore()
         .collection('organizations')
-        .doc(organizationId)
+        .doc(entrepriseId)
         .collection('parametres')
         .doc('settings')
         .get();
@@ -412,8 +412,8 @@ class UnifiedEmailService {
     console.log('[DEBUG] === DÉBUT sendEmailWithFallback ===');
     console.log('[DEBUG] emailData reçu:', JSON.stringify(emailData, null, 2));
     
-    const { userId, organizationId } = emailData;
-    console.log(`[DEBUG] sendEmailWithFallback - userId: ${userId}, organizationId: ${organizationId}`);
+    const { userId, entrepriseId } = emailData;
+    console.log(`[DEBUG] sendEmailWithFallback - userId: ${userId}, entrepriseId: ${entrepriseId}`);
     console.log(`[DEBUG] emailData keys: ${Object.keys(emailData)}`);
     console.log(`[DEBUG] emailData.to: ${emailData.to}, templateName: ${emailData.templateName}`);
     
@@ -422,12 +422,12 @@ class UnifiedEmailService {
       throw new Error('Adresse email destinataire manquante');
     }
     
-    if (!userId || !organizationId) {
-      throw new Error('userId et organizationId sont requis');
+    if (!userId || !entrepriseId) {
+      throw new Error('userId et entrepriseId sont requis');
     }
     
     console.log('[DEBUG] Récupération config email...');
-    const config = await this.getEmailConfig(userId, organizationId);
+    const config = await this.getEmailConfig(userId, entrepriseId);
     console.log(`[DEBUG] Config récupérée:`, {
       provider: config.provider,
       brevoEnabled: config.brevo?.enabled,
@@ -517,7 +517,7 @@ class UnifiedEmailService {
         emailData.variables || {},
         emailData.to,
         emailData.userId,
-        emailData.organizationId
+        emailData.entrepriseId
       );
     } else {
       // Envoi SMTP simple
@@ -528,7 +528,7 @@ class UnifiedEmailService {
         text: emailData.text,
         attachments: emailData.attachments,
         userId: emailData.userId,
-        organizationId: emailData.organizationId
+        entrepriseId: emailData.entrepriseId
       });
     }
   }

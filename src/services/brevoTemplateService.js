@@ -30,8 +30,8 @@ const getBrevoTemplatesFunction = httpsCallable(functions, 'getBrevoTemplates');
  */
 class BrevoTemplateService {
   /**
-   * Récupère l'ID de l'utilisateur courant et son organisation
-   * @returns {Object} - { userId, organizationId }
+   * Récupère l'ID de l'utilisateur courant et son entreprise
+   * @returns {Object} - { userId, entrepriseId }
    */
   getCurrentUserInfo() {
     const user = auth.currentUser;
@@ -46,19 +46,19 @@ class BrevoTemplateService {
       throw new Error('Utilisateur non authentifié');
     }
 
-    const organizationId = localStorage.getItem('currentOrganizationId') || 
-                          user.organizationId || 
+    const entrepriseId = localStorage.getItem('currentEntrepriseId') || 
+                          user.entrepriseId || 
                           'default';
 
     debugLog('[BrevoTemplateService] getCurrentUserInfo - result:', {
       userId: user.uid,
-      organizationId,
-      source: localStorage.getItem('currentOrganizationId') ? 'localStorage' : (user.organizationId ? 'user.organizationId' : 'default')
+      entrepriseId,
+      source: localStorage.getItem('currentEntrepriseId') ? 'localStorage' : (user.entrepriseId ? 'user.entrepriseId' : 'default')
     }, 'info');
 
     return {
       userId: user.uid,
-      organizationId
+      entrepriseId
     };
   }
 
@@ -71,7 +71,7 @@ class BrevoTemplateService {
    */
   async sendFormulaireEmail(date, contact, lienFormulaire) {
     try {
-      const { userId, organizationId } = this.getCurrentUserInfo();
+      const { userId, entrepriseId } = this.getCurrentUserInfo();
 
       // Transformer les données TourCraft en variables Brevo
       const variables = formatFormulaireVariables(date, contact, lienFormulaire);
@@ -111,7 +111,7 @@ class BrevoTemplateService {
           to: contact.email,
           variables: finalVariables,
           userId,
-          organizationId
+          entrepriseId
         });
         
         debugLog('[BrevoTemplateService] Email formulaire envoyé via Cloud Functions:', result.data, 'success');
@@ -137,7 +137,7 @@ class BrevoTemplateService {
    */
   async sendRelanceEmail(date, contact, documentsManquants = [], nombreRelance = 1) {
     try {
-      const { userId, organizationId } = this.getCurrentUserInfo();
+      const { userId, entrepriseId } = this.getCurrentUserInfo();
 
       const variables = formatRelanceVariables(date, contact, documentsManquants, nombreRelance);
       const finalVariables = applyDefaultVariables(variables);
@@ -159,7 +159,7 @@ class BrevoTemplateService {
         to: contact.email,
         variables: finalVariables,
         userId,
-        organizationId
+        entrepriseId: entrepriseId
       });
       
       debugLog('[BrevoTemplateService] Email relance envoyé:', result.data, 'success');
@@ -189,8 +189,8 @@ class BrevoTemplateService {
     try {
       debugLog('[BrevoTemplateService] === DÉBUT SEND CONTRAT EMAIL ===');
       debugLog('[BrevoTemplateService] 1. Récupération userInfo...');
-      const { userId, organizationId } = this.getCurrentUserInfo();
-      debugLog('[BrevoTemplateService] 2. UserInfo récupéré:', { userId, organizationId });
+      const { userId, entrepriseId } = this.getCurrentUserInfo();
+      debugLog('[BrevoTemplateService] 2. UserInfo récupéré:', { userId, entrepriseId });
 
       debugLog('[BrevoTemplateService] 3. Formatage variables contrat...');
       const variables = formatContratVariables(date, contact, contrat);
@@ -236,7 +236,7 @@ class BrevoTemplateService {
           to: contact.email,
           variables: finalVariables,
           userId,
-          organizationId
+          entrepriseId
         };
         
         debugLog('[BrevoTemplateService] 11. Fallback - Paramètres pour Cloud Function:', cloudFunctionParams);
@@ -277,7 +277,7 @@ class BrevoTemplateService {
    */
   async sendConfirmationEmail(date, contact, detailsTechniques = {}) {
     try {
-      const { userId, organizationId } = this.getCurrentUserInfo();
+      const { userId, entrepriseId } = this.getCurrentUserInfo();
 
       const variables = formatConfirmationVariables(date, contact, detailsTechniques);
       const finalVariables = applyDefaultVariables(variables);
@@ -298,7 +298,7 @@ class BrevoTemplateService {
         to: contact.email,
         variables: finalVariables,
         userId,
-        organizationId
+        entrepriseId: entrepriseId
       });
       
       debugLog('[BrevoTemplateService] Email confirmation envoyé:', result.data, 'success');
@@ -556,8 +556,8 @@ class BrevoTemplateService {
   async sendTemplateDirectly(templateName, to, variables) {
     try {
       // Récupérer la configuration Brevo de l'organisation
-      const { organizationId } = this.getCurrentUserInfo();
-      const config = await this.getBrevoConfig(organizationId);
+      const { entrepriseId } = this.getCurrentUserInfo();
+      const config = await this.getBrevoConfig(entrepriseId);
       
       debugLog('[BrevoTemplateService] Configuration récupérée:', {
         hasApiKey: !!config.apiKey,
@@ -621,16 +621,16 @@ class BrevoTemplateService {
 
   /**
    * Récupère la configuration Brevo de l'organisation
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'entreprise
    * @returns {Promise<Object>} - Configuration Brevo déchiffrée
    */
-  async getBrevoConfig(organizationId) {
+  async getBrevoConfig(entrepriseId) {
     const { getDoc, doc } = await import('firebase/firestore');
     const { db } = await import('./firebase-service');
     const { decryptSensitiveFields } = await import('@/utils/cryptoUtils');
 
     const parametresDoc = await getDoc(
-      doc(db, 'organizations', organizationId, 'parametres', 'settings')
+      doc(db, 'organizations', entrepriseId, 'parametres', 'settings')
     );
 
     if (!parametresDoc.exists()) {
@@ -658,7 +658,7 @@ class BrevoTemplateService {
    */
   async testTemplate(templateName, emailTest) {
     try {
-      const { userId, organizationId } = this.getCurrentUserInfo();
+      const { userId, entrepriseId } = this.getCurrentUserInfo();
 
       // Données de démo pour le test
       const demoData = this.getDemoData();
@@ -727,7 +727,7 @@ class BrevoTemplateService {
           to: emailTest,
           variables: finalVariables,
           userId,
-          organizationId
+          entrepriseId
         });
         
         return {

@@ -185,7 +185,7 @@ contrat_envoye vs dateEnvoi
 const relancesQuery = query(
   collection(db, 'relances'),
   where('concertId', '==', concertId),
-  where('organizationId', '==', organizationId), // Bonne pratique
+  where('entrepriseId', '==', entrepriseId), // Bonne pratique
   where('automatique', '==', true)
 );
 ```

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Script pour corriger les structures sans organizationId
+ * Script pour corriger les structures sans entrepriseId
  */
 
 const { initializeApp, cert } = require('firebase-admin/app');
@@ -15,23 +15,23 @@ initializeApp({
 
 const db = getFirestore();
 
-async function fixStructuresOrganizationId() {
-  console.log('\n🔧 Correction des structures sans organizationId\n');
+async function fixStructuresEntrepriseId() {
+  console.log('\n🔧 Correction des structures sans entrepriseId\n');
   
   try {
-    // Récupérer les structures sans organizationId
+    // Récupérer les structures sans entrepriseId
     const structuresSnapshot = await db.collection('structures')
-      .where('organizationId', '==', null)
+      .where('entrepriseId', '==', null)
       .get();
     
-    console.log(`Structures sans organizationId: ${structuresSnapshot.size}`);
+    console.log(`Structures sans entrepriseId: ${structuresSnapshot.size}`);
     
     if (structuresSnapshot.empty) {
-      console.log('✅ Toutes les structures ont un organizationId!');
+      console.log('✅ Toutes les structures ont un entrepriseId!');
       return;
     }
     
-    // L'organizationId par défaut (trouvé dans d'autres structures)
+    // L'entrepriseId par défaut (trouvé dans d'autres structures)
     const defaultOrgId = 'tTvA6fzQpi6u3kx8wZO8';
     
     // Corriger chaque structure
@@ -43,7 +43,7 @@ async function fixStructuresOrganizationId() {
       console.log(`\n📝 Correction de: ${data.nom || data.raisonSociale || doc.id}`);
       
       batch.update(doc.ref, {
-        organizationId: defaultOrgId,
+        entrepriseId: defaultOrgId,
         updatedAt: new Date()
       });
       
@@ -52,7 +52,7 @@ async function fixStructuresOrganizationId() {
     
     // Appliquer les corrections
     await batch.commit();
-    console.log(`\n✅ ${count} structures corrigées avec organizationId: ${defaultOrgId}`);
+    console.log(`\n✅ ${count} structures corrigées avec entrepriseId: ${defaultOrgId}`);
     
     // Vérifier le résultat
     console.log('\n🔍 Vérification après correction:');
@@ -63,15 +63,15 @@ async function fixStructuresOrganizationId() {
     
     afterSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.organizationId) {
+      if (data.entrepriseId) {
         withOrgId++;
       } else {
         withoutOrgId++;
       }
     });
     
-    console.log(`✅ Structures avec organizationId: ${withOrgId}`);
-    console.log(`❌ Structures sans organizationId: ${withoutOrgId}`);
+    console.log(`✅ Structures avec entrepriseId: ${withOrgId}`);
+    console.log(`❌ Structures sans entrepriseId: ${withoutOrgId}`);
     
   } catch (error) {
     console.error('❌ Erreur:', error);
@@ -79,7 +79,7 @@ async function fixStructuresOrganizationId() {
 }
 
 // Exécuter le script
-fixStructuresOrganizationId()
+fixStructuresEntrepriseId()
   .then(() => {
     console.log('\n✨ Script terminé');
     process.exit(0);

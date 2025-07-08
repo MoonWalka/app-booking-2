@@ -94,9 +94,9 @@ export function useFormTokenValidation(dateId, token) {
 
         // Récupérer les données de l'organisation
         let organizationData = null;
-        if (validationResult.preContrat?.organizationId) {
+        if (validationResult.preContrat?.entrepriseId) {
           try {
-            const orgDoc = await getDoc(doc(db, 'organizations', validationResult.preContrat.organizationId));
+            const orgDoc = await getDoc(doc(db, 'organizations', validationResult.preContrat.entrepriseId));
             if (orgDoc.exists()) {
               organizationData = { id: orgDoc.id, ...orgDoc.data() };
             }

@@ -20,14 +20,14 @@ async function findEnterpriseData() {
   console.log('🔍 Recherche des données d\'entreprise dans Firebase...\n');
   
   // Remplacez par l'ID de votre organisation
-  const organizationId = 'VOTRE_ORGANIZATION_ID'; // À REMPLACER
+  const entrepriseId = 'VOTRE_ENTREPRISE_ID'; // À REMPLACER
   
-  console.log(`Organisation ID: ${organizationId}\n`);
+  console.log(`Organisation ID: ${entrepriseId}\n`);
   
   // 1. Vérifier organizations/{id}/settings/entreprise
   try {
-    const path1 = `organizations/${organizationId}/settings/entreprise`;
-    const doc1 = await getDoc(doc(db, 'organizations', organizationId, 'settings', 'entreprise'));
+    const path1 = `organizations/${entrepriseId}/settings/entreprise`;
+    const doc1 = await getDoc(doc(db, 'organizations', entrepriseId, 'settings', 'entreprise'));
     console.log(`✅ Chemin 1: ${path1}`);
     console.log('Existe:', doc1.exists());
     if (doc1.exists()) {
@@ -41,8 +41,8 @@ async function findEnterpriseData() {
   
   // 2. Vérifier organizations/{id}/parametres/settings
   try {
-    const path2 = `organizations/${organizationId}/parametres/settings`;
-    const doc2 = await getDoc(doc(db, 'organizations', organizationId, 'parametres', 'settings'));
+    const path2 = `organizations/${entrepriseId}/parametres/settings`;
+    const doc2 = await getDoc(doc(db, 'organizations', entrepriseId, 'parametres', 'settings'));
     console.log(`✅ Chemin 2: ${path2}`);
     console.log('Existe:', doc2.exists());
     if (doc2.exists()) {
@@ -60,8 +60,8 @@ async function findEnterpriseData() {
   
   // 3. Vérifier parametres/{id}
   try {
-    const path3 = `parametres/${organizationId}`;
-    const doc3 = await getDoc(doc(db, 'parametres', organizationId));
+    const path3 = `parametres/${entrepriseId}`;
+    const doc3 = await getDoc(doc(db, 'parametres', entrepriseId));
     console.log(`✅ Chemin 3: ${path3}`);
     console.log('Existe:', doc3.exists());
     if (doc3.exists()) {
@@ -79,8 +79,8 @@ async function findEnterpriseData() {
   
   // 4. Vérifier collaborationConfig/{id}
   try {
-    const path4 = `collaborationConfig/${organizationId}`;
-    const doc4 = await getDoc(doc(db, 'collaborationConfig', organizationId));
+    const path4 = `collaborationConfig/${entrepriseId}`;
+    const doc4 = await getDoc(doc(db, 'collaborationConfig', entrepriseId));
     console.log(`✅ Chemin 4: ${path4}`);
     console.log('Existe:', doc4.exists());
     if (doc4.exists()) {
@@ -99,7 +99,7 @@ async function findEnterpriseData() {
   // 5. Lister toutes les sous-collections de l'organisation
   try {
     console.log('📁 Sous-collections de l\'organisation:');
-    const orgDoc = await getDoc(doc(db, 'organizations', organizationId));
+    const orgDoc = await getDoc(doc(db, 'organizations', entrepriseId));
     if (orgDoc.exists()) {
       console.log('Document organisation existe ✅');
       // Note: Firestore ne permet pas de lister les sous-collections côté client
@@ -107,7 +107,7 @@ async function findEnterpriseData() {
       const knownSubcollections = ['settings', 'parametres', 'entreprise', 'config'];
       for (const subcoll of knownSubcollections) {
         try {
-          const snapshot = await getDocs(collection(db, 'organizations', organizationId, subcoll));
+          const snapshot = await getDocs(collection(db, 'organizations', entrepriseId, subcoll));
           if (!snapshot.empty) {
             console.log(`  - ${subcoll}/ (${snapshot.size} documents)`);
             snapshot.forEach(doc => {

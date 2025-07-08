@@ -184,13 +184,13 @@ const RechercheLayout = ({ children }) => {
 
   // Fonction pour calculer (compter les résultats)
   const handleCalculate = async () => {
-    if (!currentUser?.organizationId || selectedCriteria.length === 0) return;
+    if (!currentUser?.entrepriseId || selectedCriteria.length === 0) return;
 
     setIsLoading(true);
     try {
       // Pour l'instant on fait une recherche sur les contacts par défaut
       const results = await searchService.executeSearch({
-        organizationId: currentUser.organizationId,
+        entrepriseId: currentUser.entrepriseId,
         criteria: selectedCriteria,
         collection: 'contacts',
         pagination: { limit: 1 } // On veut juste le compte
@@ -207,12 +207,12 @@ const RechercheLayout = ({ children }) => {
 
   // Fonction pour afficher les résultats
   const handleDisplay = async () => {
-    if (!currentUser?.organizationId || selectedCriteria.length === 0) return;
+    if (!currentUser?.entrepriseId || selectedCriteria.length === 0) return;
 
     setIsLoading(true);
     try {
       const results = await searchService.executeSearch({
-        organizationId: currentUser.organizationId,
+        entrepriseId: currentUser.entrepriseId,
         criteria: selectedCriteria,
         collection: 'contacts', // TODO: permettre de choisir la collection
         pagination: { limit: 50 }
@@ -237,7 +237,7 @@ const RechercheLayout = ({ children }) => {
 
     try {
       await searchService.saveSearch({
-        organizationId: currentUser.organizationId,
+        entrepriseId: currentUser.entrepriseId,
         userId: currentUser.uid,
         name: searchName,
         criteria: selectedCriteria,

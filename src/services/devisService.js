@@ -11,7 +11,7 @@ const devisService = {
       
       // Générer un numéro de devis unique
       const year = new Date().getFullYear();
-      const count = await this.getDevisCountForYear(devisData.organizationId, year);
+      const count = await this.getDevisCountForYear(devisData.entrepriseId, year);
       const numero = `DEV-${year}-${String(count + 1).padStart(4, '0')}`;
       
       const newDevis = {
@@ -34,7 +34,7 @@ const devisService = {
           type: 'pre_contrat',
           priorite: 'normale',
           dateEcheance: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours
-          organizationId: devisData.organizationId,
+          entrepriseId: devisData.entrepriseId,
           dateId: devisData.dateId,
           contactId: devisData.contactId,
           entityType: 'devis',
@@ -113,12 +113,12 @@ const devisService = {
   },
 
   // Récupérer tous les devis d'une organisation
-  async getDevisByOrganization(organizationId) {
+  async getDevisByOrganization(entrepriseId) {
     try {
       const devisRef = collection(db, 'devis');
       const q = query(
         devisRef,
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         orderBy('createdAt', 'desc')
       );
       const snapshot = await getDocs(q);
@@ -163,13 +163,13 @@ const devisService = {
   },
 
   // Compter les devis pour une année donnée (pour la numérotation)
-  async getDevisCountForYear(organizationId, year) {
+  async getDevisCountForYear(entrepriseId, year) {
     try {
       // Requête simplifiée pour éviter l'index composite
       const devisRef = collection(db, 'devis');
       const q = query(
         devisRef,
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
       const snapshot = await getDocs(q);
       

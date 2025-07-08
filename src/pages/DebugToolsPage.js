@@ -1,51 +1,51 @@
 import React, { useState } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import DataStructureFixer from '@/components/debug/DataStructureFixer';
-import OrganizationIdDebug from '@/components/debug/OrganizationIdDebug';
+// import OrganizationIdDebug from '@/components/debug/OrganizationIdDebug'; // Supprimé
 import ListDebugger from '@/components/debug/ListDebugger';
-import ContactCreationTester from '@/components/debug/ContactCreationTester';
-import EntityCreationTester from '@/components/debug/EntityCreationTester';
+// import ContactCreationTester from '@/components/debug/ContactCreationTester'; // Supprimé
+// import EntityCreationTester from '@/components/debug/EntityCreationTester'; // Supprimé
 // import LieuMapDebug from '@/components/debug/LieuMapDebug'; // Supprimé
 import RIBDebugger from '@/components/debug/RIBDebugger';
-import ContactEmailDebug from '@/components/debug/ContactEmailDebug';
+// import ContactEmailDebug from '@/components/debug/ContactEmailDebug'; // Supprimé
 // import ArtisteSearchDebug from '@/components/debug/ArtisteSearchDebug'; // Supprimé
 import ArtisteSearchLiveDebug from '@/components/debug/ArtisteSearchLiveDebug';
-import ArtisteOrganizationMatcher from '@/components/debug/ArtisteOrganizationMatcher';
-import OrphanArtistesDebug from '@/components/debug/OrphanArtistesDebug';
-import OrganizationContextDiagnostic from '@/components/debug/OrganizationContextDiagnostic';
+// import ArtisteOrganizationMatcher from '@/components/debug/ArtisteOrganizationMatcher'; // Supprimé
+// import OrphanArtistesDebug from '@/components/debug/OrphanArtistesDebug'; // Supprimé
+import EntrepriseContextDiagnostic from '@/components/debug/EntrepriseContextDiagnostic';
 import ArtisteFirestoreDiagnostic from '@/components/debug/ArtisteFirestoreDiagnostic';
 // import SystemAuditTool from '@/components/debug/SystemAuditTool'; // Supprimé
-import EntityRelationsDebugger from '@/components/debug/EntityRelationsDebugger';
+// import EntityRelationsDebugger from '@/components/debug/EntityRelationsDebugger'; // Supprimé
 import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelationsFixer';
-import DateContactsDebug from '@/components/debug/DateContactsDebug';
-import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic';
-import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest';
+// import DateContactsDebug from '@/components/debug/DateContactsDebug'; // Supprimé
+// import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic'; // Supprimé
+// import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest'; // Supprimé
 import BrevoDiagnostic from '@/components/debug/BrevoDiagnostic';
 import ParametresMigration from '@/components/debug/ParametresMigration';
 import BrevoKeyRecovery from '@/components/debug/BrevoKeyRecovery';
 import BrevoKeyDiagnostic from '@/components/debug/BrevoKeyDiagnostic';
 import BrevoTemplateCreator from '@/components/debug/BrevoTemplateCreator';
 import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer';
-import StructuresClickDebug from '@/components/debug/StructuresClickDebug';
-import FestitestContactFinder from '@/components/debug/FestitestContactFinder';
-import ContactMigrationTool from '@/components/debug/ContactMigrationTool';
-import SophieMadetMigration from '@/components/debug/SophieMadetMigration';
+// import StructuresClickDebug from '@/components/debug/StructuresClickDebug'; // Supprimé
+// import FestitestContactFinder from '@/components/debug/FestitestContactFinder'; // Supprimé
+// import ContactMigrationTool from '@/components/debug/ContactMigrationTool'; // Supprimé
+// import SophieMadetMigration from '@/components/debug/SophieMadetMigration'; // Supprimé
 import TagsHierarchyDebug from '@/components/debug/TagsHierarchyDebug';
 import HybridFormatNormalizer from '@/components/debug/HybridFormatNormalizer';
 import RelationalMigrationFixer from '@/components/debug/RelationalMigrationFixer';
-import CheckStructureMigration from '@/components/debug/CheckStructureMigration';
-import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug';
-import StructureAddressMigration from '@/components/debug/StructureAddressMigration';
+// import CheckStructureMigration from '@/components/debug/CheckStructureMigration'; // Supprimé
+// import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug'; // Supprimé
+// import StructureAddressMigration from '@/components/debug/StructureAddressMigration'; // Supprimé
 // import FestivalsDebugger from '@/components/debug/FestivalsDebugger'; // Supprimé
 import MigrateContractTemplates from '@/components/debug/MigrateContractTemplates';
 import MigrateContractVariables from '@/components/debug/MigrateContractVariables';
 import CleanOldContractContent from '@/components/debug/CleanOldContractContent';
 import ContactsAuditTool from '@/components/debug/ContactsAuditTool';
-import ContactsFixTool from '@/components/debug/ContactsFixTool';
-import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer';
-import ContactsMigrationFinal from '@/components/debug/ContactsMigrationFinal';
+// import ContactsFixTool from '@/components/debug/ContactsFixTool'; // Supprimé
+// import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer'; // Supprimé
+// import ContactsMigrationFinal from '@/components/debug/ContactsMigrationFinal'; // Supprimé
 import QuickContactCreator from '@/components/debug/QuickContactCreator';
-import MigrationConcertToDate from '@/components/debug/MigrationConcertToDate';
+// import MigrationConcertToDate from '@/components/debug/MigrationConcertToDate'; // Supprimé
 import styles from './DebugToolsPage.module.css';
 
 const DebugToolsPage = () => {
@@ -83,14 +83,14 @@ const DebugToolsPage = () => {
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k)}
         className={styles.tabs}
-      >
-        <Tab eventKey="migration-concert-date" title="🔄 Migration Concerts→Dates">
-          <MigrationConcertToDate />
-        </Tab>
-        
-        <Tab eventKey="migration-finale" title="🚨 MIGRATION FINALE CONTACTS">
-          <ContactsMigrationFinal />
-        </Tab>
+      >        {/*  */}
+        {/* <Tab eventKey="migration-concert-date" title="🔄 Migration Concerts→Dates"> */}
+        {/* <MigrationConcertToDate /> */}
+        {/* </Tab> */}        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="migration-finale" title="🚨 MIGRATION FINALE CONTACTS"> */}
+        {/* <ContactsMigrationFinal /> */}
+        {/* </Tab> */}
         
         <Tab eventKey="quick-contact" title="👤 Création Rapide Contact">
           <QuickContactCreator />
@@ -100,29 +100,29 @@ const DebugToolsPage = () => {
           <SystemAuditTool />
         </Tab> */}
         
-        <Tab eventKey="entity-relations" title="🔗 Relations d'Entité">
+        {/* <Tab eventKey="entity-relations" title="🔗 Relations d'Entité">
           <EntityRelationsDebugger />
-        </Tab>
+        </Tab> */}
         
         <Tab eventKey="relations-fixer" title="🔧 Réparation Relations">
           <BidirectionalRelationsFixer />
-        </Tab>
-        
-        <Tab eventKey="concert-contacts" title="👥 Contacts Dates">
-          <DateContactsDebug />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="concert-contacts" title="👥 Contacts Dates"> */}
+        {/* <DateContactsDebug /> */}
+        {/* </Tab> */}
         
         <Tab eventKey="contacts-audit" title="🔍 Audit Contacts Manquants">
           <ContactsAuditTool />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="contacts-fix" title="🔧 Corriger Contacts Manquants"> */}
+        {/* <ContactsFixTool /> */}
+        {/* </Tab> */}
         
-        <Tab eventKey="contacts-fix" title="🔧 Corriger Contacts Manquants">
-          <ContactsFixTool />
-        </Tab>
-        
-        <Tab eventKey="test-delete" title="🗑️ Test Suppression">
+        {/* <Tab eventKey="test-delete" title="🗑️ Test Suppression">
           <TestDeleteContactDebug />
-        </Tab>
+        </Tab> */}
         
         <Tab eventKey="lists" title="Diagnostic des listes">
           <ListDebugger />
@@ -130,19 +130,19 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="structure" title="Structure des données">
           <DataStructureFixer />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="organization" title="Organisation ID"> */}
+        {/* <OrganizationIdDebug /> */}
+        {/* </Tab> */}
         
-        <Tab eventKey="organization" title="Organisation ID">
-          <OrganizationIdDebug />
-        </Tab>
-        
-        <Tab eventKey="contacts" title="Test Contacts">
+        {/* <Tab eventKey="contacts" title="Test Contacts">
           <ContactCreationTester />
-        </Tab>
+        </Tab> */}
         
-        <Tab eventKey="entities" title="Test Entités Complètes">
+        {/* <Tab eventKey="entities" title="Test Entités Complètes">
           <EntityCreationTester />
-        </Tab>
+        </Tab> */}
         
         {/* <Tab eventKey="lieu-map" title="Debug Cartes Lieux">
           <LieuMapDebug />
@@ -150,14 +150,14 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="rib" title="Debug RIB">
           <RIBDebugger />
-        </Tab>
-        
-        <Tab eventKey="contact-email" title="Debug Email Contact">
-          <ContactEmailDebug />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="contact-email" title="Debug Email Contact"> */}
+        {/* <ContactEmailDebug /> */}
+        {/* </Tab> */}
         
         <Tab eventKey="org-context" title="Diagnostic Organisation">
-          <OrganizationContextDiagnostic />
+          <EntrepriseContextDiagnostic />
         </Tab>
         
         <Tab eventKey="firestore-diag" title="Diagnostic Firestore">
@@ -170,23 +170,23 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="artiste-live" title="Test Recherche Live">
           <ArtisteSearchLiveDebug />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="artiste-org" title="Organisation d'Artiste"> */}
+        {/* <ArtisteOrganizationMatcher /> */}
+        {/* </Tab> */}        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="orphan-artistes" title="Artistes Orphelins"> */}
+        {/* <OrphanArtistesDebug /> */}
+        {/* </Tab> */}        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="contacts-migration" title="🔄 Migration Contacts"> */}
+        {/* <ContactsMigrationDiagnostic /> */}
+        {/* </Tab> */}
         
-        <Tab eventKey="artiste-org" title="Organisation d'Artiste">
-          <ArtisteOrganizationMatcher />
-        </Tab>
-        
-        <Tab eventKey="orphan-artistes" title="Artistes Orphelins">
-          <OrphanArtistesDebug />
-        </Tab>
-        
-        <Tab eventKey="contacts-migration" title="🔄 Migration Contacts">
-          <ContactsMigrationDiagnostic />
-        </Tab>
-        
-        <Tab eventKey="generic-detail-view-test" title="🎨 Test GenericDetailView">
+        {/* <Tab eventKey="generic-detail-view-test" title="🎨 Test GenericDetailView">
           <GenericDetailViewTest />
-        </Tab>
+        </Tab> */}
         
         <Tab eventKey="brevo-diagnostic" title="📧 Diagnostic Brevo">
           <BrevoDiagnostic />
@@ -210,23 +210,23 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="brevo-template-customizer" title="🖌️ Configurateur Templates Brevo">
           <BrevoTemplateCustomizer />
-        </Tab>
-        
-        <Tab eventKey="structures-click-debug" title="🏢 Debug Clics Structures">
-          <StructuresClickDebug />
-        </Tab>
-        
-        <Tab eventKey="festitest-contact-finder" title="🔍 Recherche Contact Festitest">
-          <FestitestContactFinder />
-        </Tab>
-        
-        <Tab eventKey="contact-migration-tool" title="🔄 Migration Automatique Contacts">
-          <ContactMigrationTool />
-        </Tab>
-        
-        <Tab eventKey="sophie-madet-migration" title="👤 Migration Sophie Madet">
-          <SophieMadetMigration />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="structures-click-debug" title="🏢 Debug Clics Structures"> */}
+        {/* <StructuresClickDebug /> */}
+        {/* </Tab> */}        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="festitest-contact-finder" title="🔍 Recherche Contact Festitest"> */}
+        {/* <FestitestContactFinder /> */}
+        {/* </Tab> */}        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="contact-migration-tool" title="🔄 Migration Automatique Contacts"> */}
+        {/* <ContactMigrationTool /> */}
+        {/* </Tab> */}        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="sophie-madet-migration" title="👤 Migration Sophie Madet"> */}
+        {/* <SophieMadetMigration /> */}
+        {/* </Tab> */}
         
         <Tab eventKey="tags-hierarchy-debug" title="🏷️ Debug Tags Hiérarchie">
           <TagsHierarchyDebug />
@@ -238,15 +238,15 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="relational-migration-fixer" title="🔗 Correction Migration Relationnelle">
           <RelationalMigrationFixer />
-        </Tab>
-        
-        <Tab eventKey="check-structure-migration" title="🔍 Vérifier Migration Structure">
-          <CheckStructureMigration />
-        </Tab>
-        
-        <Tab eventKey="structure-address-migration" title="🏠 Migration Adresses Structures">
-          <StructureAddressMigration />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="check-structure-migration" title="🔍 Vérifier Migration Structure"> */}
+        {/* <CheckStructureMigration /> */}
+        {/* </Tab> */}        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="structure-address-migration" title="🏠 Migration Adresses Structures"> */}
+        {/* <StructureAddressMigration /> */}
+        {/* </Tab> */}
         
         {/* <Tab eventKey="festivals-debug" title="🎪 Debug Festivals">
           <FestivalsDebugger />
@@ -262,11 +262,11 @@ const DebugToolsPage = () => {
         
         <Tab eventKey="clean-contracts" title="🧹 Nettoyage Contrats">
           <CleanOldContractContent />
-        </Tab>
-        
-        <Tab eventKey="unused-files" title="🔍 Fichiers Non Utilisés">
-          <UnusedFilesAnalyzer />
-        </Tab>
+        </Tab>        {/*  */}
+        {/*  */}
+        {/* <Tab eventKey="unused-files" title="🔍 Fichiers Non Utilisés"> */}
+        {/* <UnusedFilesAnalyzer /> */}
+        {/* </Tab> */}
       </Tabs>
     </div>
   );

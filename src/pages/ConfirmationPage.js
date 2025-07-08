@@ -232,7 +232,7 @@ function ConfirmationPage({ dateId: propDateId }) {
           type: 'contrat',
           priorite: 'haute',
           dateEcheance: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 jours
-          organizationId: preContrat.organizationId,
+          entrepriseId: preContrat.entrepriseId,
           dateId: preContrat.dateId,
           contactId: preContrat.contactId || null,
           entityType: 'pre_contrat',

@@ -1,5 +1,5 @@
 /**
- * Script manuel pour corriger les structures sans organizationId
+ * Script manuel pour corriger les structures sans entrepriseId
  * Utilise l'API cliente Firebase
  */
 
@@ -7,7 +7,7 @@ import { db } from '../src/services/firebase-service';
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 
 async function fixStructures() {
-  console.log('🔧 Correction manuelle des structures sans organizationId\n');
+  console.log('🔧 Correction manuelle des structures sans entrepriseId\n');
   
   try {
     // Récupérer toutes les structures
@@ -16,7 +16,7 @@ async function fixStructures() {
     
     console.log(`Total structures: ${snapshot.size}`);
     
-    // L'organizationId par défaut
+    // L'entrepriseId par défaut
     const defaultOrgId = 'tTvA6fzQpi6u3kx8wZO8';
     let count = 0;
     
@@ -24,11 +24,11 @@ async function fixStructures() {
     for (const docSnap of snapshot.docs) {
       const data = docSnap.data();
       
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         console.log(`\n📝 Correction de: ${data.nom || data.raisonSociale || docSnap.id}`);
         
         await updateDoc(doc(db, 'structures', docSnap.id), {
-          organizationId: defaultOrgId,
+          entrepriseId: defaultOrgId,
           updatedAt: new Date()
         });
         

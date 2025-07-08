@@ -1,15 +1,15 @@
 console.log('🔧 SCRIPT DE CORRECTION UNIVERSEL DES ORGANIZATION IDS');
 
-// Récupération de l'organizationId actuel
-const currentOrgId = localStorage.getItem('currentOrganizationId');
+// Récupération de l'entrepriseId actuel
+const currentOrgId = localStorage.getItem('currentEntrepriseId');
 console.log('Organization ID actuel:', currentOrgId);
 
 if (!currentOrgId) {
-  console.error('❌ Aucun organizationId trouvé dans localStorage !');
+  console.error('❌ Aucun entrepriseId trouvé dans localStorage !');
 } else {
   
   // Fonction générique pour corriger une collection
-  window.fixCollectionOrganizationId = async function(collectionName) {
+  window.fixCollectionEntrepriseId = async function(collectionName) {
     const { db } = await import('./src/services/firebase-service.js');
     const { collection, getDocs, doc, updateDoc } = await import('firebase/firestore');
     
@@ -26,13 +26,13 @@ if (!currentOrgId) {
       total++;
       const data = docSnapshot.data();
       
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         withoutOrg++;
-        console.log(`📝 ${collectionName} sans organizationId: ${docSnapshot.id} - ${data.nom || data.titre || data.name || 'sans nom'}`);
+        console.log(`📝 ${collectionName} sans entrepriseId: ${docSnapshot.id} - ${data.nom || data.titre || data.name || 'sans nom'}`);
         
         try {
           await updateDoc(doc(db, collectionName, docSnapshot.id), {
-            organizationId: currentOrgId
+            entrepriseId: currentOrgId
           });
           fixed++;
           console.log(`✅ ${collectionName} corrigé: ${data.nom || data.titre || data.name || docSnapshot.id}`);
@@ -45,7 +45,7 @@ if (!currentOrgId) {
     
     console.log(`📊 RÉSUMÉ ${collectionName.toUpperCase()}:`);
     console.log(`   Total: ${total}`);
-    console.log(`   Sans organizationId: ${withoutOrg}`);
+    console.log(`   Sans entrepriseId: ${withoutOrg}`);
     console.log(`   Corrigés: ${fixed}`);
     console.log(`   Erreurs: ${errors}`);
     
@@ -53,7 +53,7 @@ if (!currentOrgId) {
   };
   
   // Fonction pour corriger TOUTES les collections importantes
-  window.fixAllOrganizationIds = async function() {
+  window.fixAllEntrepriseIds = async function() {
     console.log('🚀 DÉBUT DE LA CORRECTION MASSIVE');
     
     const collections = [
@@ -71,7 +71,7 @@ if (!currentOrgId) {
     for (const collectionName of collections) {
       try {
         console.log(`\n🔧 ===== TRAITEMENT ${collectionName.toUpperCase()} =====`);
-        results[collectionName] = await fixCollectionOrganizationId(collectionName);
+        results[collectionName] = await fixCollectionEntrepriseId(collectionName);
       } catch (error) {
         console.error(`❌ Erreur lors du traitement de ${collectionName}:`, error);
         results[collectionName] = { error: error.message };
@@ -96,7 +96,7 @@ if (!currentOrgId) {
   };
   
   // Fonction pour vérifier l'état actuel (sans corriger)
-  window.checkAllOrganizationIds = async function() {
+  window.checkAllEntrepriseIds = async function() {
     console.log('🔍 VÉRIFICATION DE TOUTES LES COLLECTIONS');
     
     const collections = ['contacts', 'lieux', 'concerts', 'artistes', 'structures'];
@@ -115,12 +115,12 @@ if (!currentOrgId) {
         snapshot.docs.forEach(docSnapshot => {
           total++;
           const data = docSnapshot.data();
-          if (!data.organizationId) {
+          if (!data.entrepriseId) {
             withoutOrg++;
           }
         });
         
-        console.log(`📋 ${collectionName}: ${total} total, ${withoutOrg} sans organizationId`);
+        console.log(`📋 ${collectionName}: ${total} total, ${withoutOrg} sans entrepriseId`);
       } catch (error) {
         console.error(`❌ Erreur vérification ${collectionName}:`, error);
       }
@@ -128,7 +128,7 @@ if (!currentOrgId) {
   };
   
   console.log('🎯 FONCTIONS DISPONIBLES :');
-  console.log('   checkAllOrganizationIds()     // Vérifier l\'état actuel');
-  console.log('   fixAllOrganizationIds()       // Corriger TOUT automatiquement');
-  console.log('   fixCollectionOrganizationId("contacts")  // Corriger une collection spécifique');
+  console.log('   checkAllEntrepriseIds()     // Vérifier l\'état actuel');
+  console.log('   fixAllEntrepriseIds()       // Corriger TOUT automatiquement');
+  console.log('   fixCollectionEntrepriseId("contacts")  // Corriger une collection spécifique');
 } 

@@ -68,7 +68,7 @@
               telephone: data.telephone,
               structureId: data.structureId,
               structureNom: data.structureNom,
-              organizationId: data.organizationId,
+              entrepriseId: data.entrepriseId,
               createdAt: data.createdAt,
               updatedAt: data.updatedAt
             });
@@ -110,7 +110,7 @@
                 email: data.email,
                 telephone: data.telephone,
                 structureId: data.structureId,
-                organizationId: data.organizationId
+                entrepriseId: data.entrepriseId
               });
               
               console.log('🔍 Métadonnées complètes du contact organisationnel:', data);
@@ -144,7 +144,7 @@
               nom: data.nom,
               prenom: data.prenom,
               email: data.email,
-              organizationId: data.organizationId
+              entrepriseId: data.entrepriseId
             });
             count++;
           }

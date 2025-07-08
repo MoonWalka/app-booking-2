@@ -36,7 +36,7 @@ organizations/{orgId}/settings/entreprise
 Chaque organisation a ses propres données RIB complètement isolées :
 - **Multi-tenant** : Chaque organisation est un tenant isolé
 - **Pas de partage** : Les données ne sont jamais partagées entre organisations
-- **Filtre automatique** : L'application filtre automatiquement par `organizationId`
+- **Filtre automatique** : L'application filtre automatiquement par `entrepriseId`
 
 ### 4. Règles Firestore appliquées
 

@@ -50,7 +50,7 @@ function displayDocumentInfo(doc, collection) {
   console.log(`   Nom: ${data.nom || 'Non spécifié'}`);
   console.log(`   Email: ${data.email || 'Non spécifié'}`);
   console.log(`   Téléphone: ${data.telephone || 'Non spécifié'}`);
-  console.log(`   OrganizationId: ${data.organizationId || 'Non spécifié'}`);
+  console.log(`   EntrepriseId: ${data.entrepriseId || 'Non spécifié'}`);
   console.log(`   Date de création: ${formatDate(data.createdAt)}`);
   console.log(`   Dernière modification: ${formatDate(data.updatedAt)}`);
   

@@ -4,15 +4,15 @@ import styles from './ContactDatesSection.module.css';
 import CardSection from '@/components/ui/CardSection';
 
 /**
- * ContactDatesSection - Section de gestion des concerts associés à un contact
- * Permet de rechercher, ajouter et supprimer des concerts
+ * ContactDatesSection - Section de gestion des dates associés à un contact
+ * Permet de rechercher, ajouter et supprimer des dates
  */
 const ContactDatesSection = ({
-  concertSearchTerm,
+  dateSearchTerm,
   setDateSearchTerm,
   filteredDateResults,
   isSearchingDates,
-  concertsAssocies,
+  datesAssocies,
   loadingAssociations,
   handleSelectDateFromSearch,
   handleRemoveDate
@@ -21,20 +21,20 @@ const ContactDatesSection = ({
 
   return (
     <CardSection
-      title={`Dates associés (${concertsAssocies.length})`}
+      title={`Dates associés (${datesAssocies.length})`}
       icon={<i className="bi bi-music-note"></i>}
       isEditing={true}
-      className="concerts-section"
+      className="dates-section"
     >
       <div className={styles.sectionBody}>
-        {/* Recherche de concerts */}
+        {/* Recherche de dates */}
         <div className={styles.searchBar} style={{ marginBottom: '20px' }}>
           <div className={styles.searchInputGroup}>
             <input
               type="text"
               className={styles.searchInput}
               placeholder="Rechercher un date à associer..."
-              value={concertSearchTerm}
+              value={dateSearchTerm}
               onChange={(e) => setDateSearchTerm(e.target.value)}
             />
             <button
@@ -43,24 +43,24 @@ const ContactDatesSection = ({
               onClick={() => navigate('/dates/nouveau')}
             >
               <i className="bi bi-plus"></i>
-              Nouveau concert
+              Nouveau date
             </button>
           </div>
 
-          {/* Résultats de recherche de concerts */}
+          {/* Résultats de recherche de dates */}
           {filteredDateResults.length > 0 && (
             <div className={styles.searchResults}>
-              {filteredDateResults.map((concert) => (
+              {filteredDateResults.map((date) => (
                 <div
                   key={date.id}
                   className={styles.searchResultItem}
-                  onClick={() => handleSelectDateFromSearch(concert)}
+                  onClick={() => handleSelectDateFromSearch(date)}
                 >
-                  <div className={styles.dateTitle}>{concert.titre || 'Date sans titre'}</div>
-                  <div className={styles.concertDetails}>
-                    {concert.date && <span><i className="bi bi-calendar"></i> {new Date(concert.date).toLocaleDateString('fr-FR')}</span>}
-                    {concert.lieuNom && <span><i className="bi bi-geo-alt"></i> {concert.lieuNom}</span>}
-                    {concert.artisteNom && <span><i className="bi bi-person"></i> {concert.artisteNom}</span>}
+                  <div className={styles.dateTitle}>{date.titre || 'Date sans titre'}</div>
+                  <div className={styles.dateDetails}>
+                    {date.date && <span><i className="bi bi-calendar"></i> {new Date(date.date).toLocaleDateString('fr-FR')}</span>}
+                    {date.lieuNom && <span><i className="bi bi-geo-alt"></i> {date.lieuNom}</span>}
+                    {date.artisteNom && <span><i className="bi bi-person"></i> {date.artisteNom}</span>}
                   </div>
                 </div>
               ))}
@@ -70,7 +70,7 @@ const ContactDatesSection = ({
           {isSearchingDates && (
             <div className={styles.alert}>
               <div className={styles.loadingSpinner}></div>
-              Recherche de concerts en cours...
+              Recherche de dates en cours...
             </div>
           )}
         </div>
@@ -78,9 +78,9 @@ const ContactDatesSection = ({
         {loadingAssociations ? (
           <div className={styles.alert}>
             <div className={styles.loadingSpinner}></div>
-            Chargement des concerts associés...
+            Chargement des dates associés...
           </div>
-        ) : concertsAssocies.length > 0 ? (
+        ) : datesAssocies.length > 0 ? (
           <div className={styles.tableResponsive}>
             <table className={styles.table}>
               <thead>
@@ -93,19 +93,19 @@ const ContactDatesSection = ({
                 </tr>
               </thead>
               <tbody>
-                {concertsAssocies.map((concert) => (
+                {datesAssocies.map((date) => (
                   <tr key={date.id}>
                     <td>
-                      <strong>{concert.titre || 'Date sans titre'}</strong>
-                      {concert.artisteNom && <div style={{ fontSize: '12px', color: '#666' }}>Artiste: {concert.artisteNom}</div>}
+                      <strong>{date.titre || 'Date sans titre'}</strong>
+                      {date.artisteNom && <div style={{ fontSize: '12px', color: '#666' }}>Artiste: {date.artisteNom}</div>}
                     </td>
                     <td>
-                      {concert.date ? new Date(concert.date).toLocaleDateString('fr-FR') : 'Non définie'}
+                      {date.date ? new Date(date.date).toLocaleDateString('fr-FR') : 'Non définie'}
                     </td>
-                    <td>{concert.lieuNom || concert.lieu || 'Non défini'}</td>
+                    <td>{date.lieuNom || date.lieu || 'Non défini'}</td>
                     <td>
-                      <div className={`${styles.badge} ${concert.statut === 'confirme' ? styles.bgSuccess : styles.bgWarning}`}>
-                        {concert.statut || 'En négociation'}
+                      <div className={`${styles.badge} ${date.statut === 'confirme' ? styles.bgSuccess : styles.bgWarning}`}>
+                        {date.statut || 'En négociation'}
                       </div>
                     </td>
                     <td>

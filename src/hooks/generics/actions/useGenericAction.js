@@ -24,7 +24,7 @@ import {
   deleteDoc,
   startAfter
 } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook générique pour les actions CRUD
@@ -74,7 +74,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   const { 
     onSuccess, 
@@ -111,8 +111,8 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         ...data,
         createdAt: new Date(),
         updatedAt: new Date(),
-        // Ajouter l'organizationId si disponible
-        ...(currentOrganization?.id && { organizationId: currentOrganization.id })
+        // Ajouter l'entrepriseId si disponible
+        ...(currentEntreprise?.id && { entrepriseId: currentEntreprise.id })
       };
       
       console.log('💾💾💾 useGenericAction.js - CREATE', entityType);
@@ -155,7 +155,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
           } : {}),
           
           // Champs obligatoires
-          organizationId: entityData.organizationId || currentOrganization?.id,
+          entrepriseId: entityData.entrepriseId || currentEntreprise?.id,
           createdAt: entityData.createdAt || new Date(),
           updatedAt: new Date(),
           
@@ -174,9 +174,9 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         console.log('✅ Après aplatissement:', entityData);
         }
         
-        // VALIDATION FINALE - organizationId OBLIGATOIRE
-        if (!entityData.organizationId) {
-          throw new Error('❌ organizationId OBLIGATOIRE pour les contacts');
+        // VALIDATION FINALE - entrepriseId OBLIGATOIRE
+        if (!entityData.entrepriseId) {
+          throw new Error('❌ entrepriseId OBLIGATOIRE pour les contacts');
         }
       }
       
@@ -220,7 +220,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, validateBeforeAction, enableLogging, autoResetError, currentOrganization?.id]);
+  }, [entityType, validateBeforeAction, enableLogging, autoResetError, currentEntreprise?.id]);
   
   // ✅ CORRECTION: Fonction de mise à jour stabilisée
   const update = useCallback(async (id, data) => {
@@ -235,8 +235,8 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       let updateData = {
         ...data,
         updatedAt: new Date(),
-        // Préserver l'organizationId existant si non fourni
-        ...(currentOrganization?.id && !data.organizationId && { organizationId: currentOrganization.id })
+        // Préserver l'entrepriseId existant si non fourni
+        ...(currentEntreprise?.id && !data.entrepriseId && { entrepriseId: currentEntreprise.id })
       };
       
       console.log('💾💾💾 useGenericAction.js - UPDATE', entityType);
@@ -286,7 +286,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
           } : {}),
           
           // Champs obligatoires
-          organizationId: updateData.organizationId || currentOrganization?.id,
+          entrepriseId: updateData.entrepriseId || currentEntreprise?.id,
           updatedAt: new Date(),
           
           // IMPORTANT : Préserver TOUTES les relations bidirectionnelles ✅
@@ -307,12 +307,12 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         console.log('✅ Après aplatissement UPDATE:', updateData);
         }
         
-        // VALIDATION FINALE - organizationId OBLIGATOIRE
-        if (!updateData.organizationId) {
-          console.error('⚠️ organizationId manquant lors de l\'UPDATE - Ajout depuis le contexte');
-          updateData.organizationId = currentOrganization?.id;
-          if (!updateData.organizationId) {
-            throw new Error('❌ organizationId OBLIGATOIRE pour les contacts');
+        // VALIDATION FINALE - entrepriseId OBLIGATOIRE
+        if (!updateData.entrepriseId) {
+          console.error('⚠️ entrepriseId manquant lors de l\'UPDATE - Ajout depuis le contexte');
+          updateData.entrepriseId = currentEntreprise?.id;
+          if (!updateData.entrepriseId) {
+            throw new Error('❌ entrepriseId OBLIGATOIRE pour les contacts');
           }
         }
       }
@@ -352,7 +352,7 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         setTimeout(() => setError(null), 5000);
       }
     }
-  }, [entityType, enableLogging, autoResetError, currentOrganization?.id]);
+  }, [entityType, enableLogging, autoResetError, currentEntreprise?.id]);
   
   // ✅ CORRECTION: Fonction de suppression stabilisée
   const remove = useCallback(async (id) => {
@@ -481,13 +481,13 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       let q = collection(db, entityType);
       const constraints = [];
       
-      // 🔒 CORRECTION CRITIQUE: Ajouter automatiquement le filtre organizationId
+      // 🔒 CORRECTION CRITIQUE: Ajouter automatiquement le filtre entrepriseId
       if (!skipOrganizationFilter) {
-        const currentOrgId = localStorage.getItem('currentOrganizationId');
-        if (currentOrgId) {
-          constraints.push(where('organizationId', '==', currentOrgId));
+        const currentEntrepriseId = localStorage.getItem('currentEntrepriseId');
+        if (currentEntrepriseId) {
+          constraints.push(where('entrepriseId', '==', currentEntrepriseId));
           if (enableLogging) {
-            console.log(`🔒 [useGenericAction] Filtre organizationId ajouté: ${currentOrgId} pour ${entityType}`);
+            console.log(`🔒 [useGenericAction] Filtre entrepriseId ajouté: ${currentEntrepriseId} pour ${entityType}`);
           }
         }
       }

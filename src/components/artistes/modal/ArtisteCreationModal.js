@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Modal de création/édition d'un artiste
  * Avec les métadonnées simplifiées demandées
  */
 function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nom: '',
@@ -97,7 +97,7 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
       return;
     }
 
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       alert('Aucune organisation sélectionnée');
       return;
     }
@@ -121,7 +121,7 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
         }] : [],
         // Garder aussi projet pour compatibilité temporaire
         projet: formData.projet.nom ? formData.projet : null,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         updatedAt: serverTimestamp(),
         status: formData.actif ? 'active' : 'inactive'
       };

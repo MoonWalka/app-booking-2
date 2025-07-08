@@ -1,11 +1,11 @@
 console.log('🔍 DIAGNOSTIC DES DONNÉES ACTUELLES');
 
-// Récupération de l'organizationId actuel
-const currentOrgId = localStorage.getItem('currentOrganizationId');
+// Récupération de l'entrepriseId actuel
+const currentOrgId = localStorage.getItem('currentEntrepriseId');
 console.log('Organization ID actuel:', currentOrgId);
 
 if (!currentOrgId) {
-  console.error('❌ Aucun organizationId trouvé dans localStorage !');
+  console.error('❌ Aucun entrepriseId trouvé dans localStorage !');
 } else {
   // Fonction pour vérifier et corriger les contacts
   window.checkAndFixContacts = async function() {
@@ -24,14 +24,14 @@ if (!currentOrgId) {
       totalContacts++;
       const data = contactDoc.data();
       
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         contactsWithoutOrg++;
-        console.log(`Contact sans organizationId: ${contactDoc.id} - ${data.nom}`);
+        console.log(`Contact sans entrepriseId: ${contactDoc.id} - ${data.nom}`);
         
         // Correction automatique
         try {
           await updateDoc(doc(db, 'contacts', contactDoc.id), {
-            organizationId: currentOrgId
+            entrepriseId: currentOrgId
           });
           fixed++;
           console.log(`✅ Contact corrigé: ${data.nom}`);
@@ -43,7 +43,7 @@ if (!currentOrgId) {
     
     console.log(`📊 RÉSUMÉ CONTACTS:`);
     console.log(`   Total: ${totalContacts}`);
-    console.log(`   Sans organizationId: ${contactsWithoutOrg}`);
+    console.log(`   Sans entrepriseId: ${contactsWithoutOrg}`);
     console.log(`   Corrigés: ${fixed}`);
     
     return { totalContacts, contactsWithoutOrg, fixed };
@@ -66,14 +66,14 @@ if (!currentOrgId) {
       totalLieux++;
       const data = lieuDoc.data();
       
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         lieuxWithoutOrg++;
-        console.log(`Lieu sans organizationId: ${lieuDoc.id} - ${data.nom}`);
+        console.log(`Lieu sans entrepriseId: ${lieuDoc.id} - ${data.nom}`);
         
         // Correction automatique
         try {
           await updateDoc(doc(db, 'lieux', lieuDoc.id), {
-            organizationId: currentOrgId
+            entrepriseId: currentOrgId
           });
           fixed++;
           console.log(`✅ Lieu corrigé: ${data.nom}`);
@@ -85,7 +85,7 @@ if (!currentOrgId) {
     
     console.log(`📊 RÉSUMÉ LIEUX:`);
     console.log(`   Total: ${totalLieux}`);
-    console.log(`   Sans organizationId: ${lieuxWithoutOrg}`);
+    console.log(`   Sans entrepriseId: ${lieuxWithoutOrg}`);
     console.log(`   Corrigés: ${fixed}`);
     
     return { totalLieux, lieuxWithoutOrg, fixed };

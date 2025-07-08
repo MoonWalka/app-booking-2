@@ -229,9 +229,9 @@ const LieuView = () => {
           <div className="list-group">
             {lieu.concerts.map(concert => (
               <div 
-                key={date.id} 
+                key={concert.id} 
                 className="list-group-item list-group-item-action"
-                onClick={() => navigate(`/dates/${date.id}`)}
+                onClick={() => navigate(`/dates/${concert.id}`)}
               >
                 <FlexContainer justify="space-between" align="center">
                   <div>

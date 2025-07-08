@@ -1,0 +1,168 @@
+=== RAPPORT DE MIGRATION EXHAUSTIF ===
+
+Date: Tue Jul  8 21:53:29 CEST 2025
+
+1. MIGRATION CONCERT → DATE
+===========================
+
+Nombre total de fichiers contenant 'concert':      104
+Nombre total d'occurrences: 555
+
+Top 10 fichiers avec le plus d'occurrences:
+src/components/contrats/sections/ContratInfoCard.js:18
+src/pages/ContratDetailsPage.js:16
+src/hooks/contrats/contractVariables.js:16
+src/components/contrats/desktop/ContratGeneratorNew.js:16
+src/components/debug/BrevoTemplateCreator.js:15
+src/components/structures/desktop/StructureForm.js:13
+src/components/pdf/ContratPDFWrapper.js:13
+src/components/lieux/desktop/sections/LieuxListSearchFilter.js:12
+src/components/structures/desktop/StructureView.js:11
+src/components/debug/DateLieuDebug.js:11
+
+
+2. MIGRATION ORGANIZATION → ENTREPRISE
+======================================
+
+Nombre total de fichiers contenant 'organization':       52
+Nombre total d'occurrences: 192
+
+Top 10 fichiers avec le plus d'occurrences:
+src/components/debug/EntrepriseContextDiagnostic.js:25
+src/__tests__/integration/brevoEmailIntegration.test.js:11
+src/services/factureService.js:10
+src/pages/ParametresPage.js:10
+src/components/debug/BrevoTemplateCustomizer.js:9
+src/__tests__/integration/contactCreationFromForms.test.js:9
+src/pages/PreContratFormResponsePage.js:6
+src/components/debug/BrevoKeyRecovery.js:6
+src/utils/migrateRIBData.js:5
+src/utils/autoMigrateRIB.js:5
+
+
+3. ANALYSE DÉTAILLÉE DES FICHIERS CRITIQUES
+===========================================
+
+FICHIERS AVEC LE PLUS D'OCCURRENCES DE 'CONCERT':
+
+--- ContratInfoCard.js (18 occurrences) ---
+9:const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact }) => {
+15:    concert,
+24:  const montant = concert?.montant 
+25:    ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)
+28:  console.log('[DEBUG ContratInfoCard] Montant calculé:', montant, 'concert?.montant:', concert?.montant);
+31:  const dateSpectacle = concert?.date && concert?.heure
+32:    ? `${formatDateFr(concert.date)} à ${concert.heure}`
+33:    : concert?.date 
+34:    ? formatDateFr(concert.date)
+37:  console.log('[DEBUG ContratInfoCard] Date spectacle calculée:', dateSpectacle, 'concert?.date:', concert?.concert, 'concert?.heure:', concert?.heure);
+42:    : lieu?.nom || concert?.lieuNom || 'Non spécifié';
+44:  console.log('[DEBUG ContratInfoCard] Lieu complet calculé:', lieuComplet, 'lieu:', lieu, 'concert?.lieuNom:', concert?.lieuNom);
+82:    console.log('[DEBUG ContratInfoCard] formatContact - contact:', programmateur, 'concert?.programmateurNom:', concert?.programmateurNom);
+84:    if (!programmateur && !concert?.programmateurNom) {
+109:    // Fallback sur les données du concert
+110:    return concert.programmateurNom;
+127:            <div className={styles.infoValue}>{concert?.titre || 'Date sans titre'}</div>
+139:            <div className={styles.infoValue}>{artiste?.nom || concert?.artisteNom || 'Non spécifié'}</div>
+
+
+--- contractVariables.js (16 occurrences) ---
+95:  // Variables de compatibilité concert (obsolètes)
+96:  'concert_titre': { label: 'Titre du concert', category: 'date', source: 'date.titre' },
+97:  'concert_date': { label: 'Date du concert', category: 'date', source: 'date.date', format: 'date' },
+98:  'concert_heure': { label: 'Heure du concert', category: 'date', source: 'date.heure' },
+99:  'concert_montant': { label: 'Montant (en chiffres)', category: 'date', source: 'date.montant', format: 'currency' },
+100:  'concert_montant_lettres': { label: 'Montant (en lettres)', category: 'date', source: 'date.montant', format: 'currency_letters' },
+266:  "concert_titre", "concert_date", "concert_montant",
+267:  "concert_montant_lettres",
+365:    .replace(/{concert_titre}/g, 'Date de printemps')
+366:    .replace(/{concert_date}/g, '15/05/2025')
+367:    .replace(/{concert_montant}/g, '800')
+368:    .replace(/{concert_montant_lettres}/g, 'Huit cents euros')
+440:    .replace(/\[concert_titre\]/g, 'Date de printemps')
+441:    .replace(/\[concert_date\]/g, '15/05/2025')
+442:    .replace(/\[concert_montant\]/g, '800')
+443:    .replace(/\[concert_montant_lettres\]/g, 'Huit cents euros')
+
+
+FICHIERS AVEC LE PLUS D'OCCURRENCES DE 'ORGANIZATION':
+
+--- EntrepriseContextDiagnostic.js (25 occurrences) ---
+12:  const organizationContext = useEntreprise();
+38:      organizationContext: {
+39:        rawContext: organizationContext,
+40:        currentEntreprise: organizationContext.currentEntreprise,
+41:        currentEntreprise: organizationContext.currentEntreprise,
+42:        hasCurrentOrg: !!organizationContext.currentEntreprise,
+43:        hasCurrentOrganization: !!organizationContext.currentEntreprise,
+44:        currentEntrepriseId: organizationContext.currentEntreprise?.id,
+45:        currentEntrepriseId: organizationContext.currentEntreprise?.id,
+46:        userEntreprises: organizationContext.userEntreprises?.map(org => ({
+51:        loading: organizationContext.loading,
+52:        error: organizationContext.error
+62:  }, [organizationContext, authContext]);
+83:    if (organizationContext.refreshEntreprises) {
+84:      organizationContext.refreshEntreprises();
+
+
+4. RÉSUMÉ ET RECOMMANDATIONS
+============================
+
+MIGRATION CONCERT → DATE:
+- 106 fichiers contiennent encore le terme 'concert'
+- 385 occurrences totales
+- Fichiers critiques: ContratInfoCard.js, contractVariables.js, ContratGeneratorNew.js
+- Beaucoup d'occurrences dans les commentaires et les logs de débogage
+
+MIGRATION ORGANIZATION → ENTREPRISE:
+- 52 fichiers contiennent encore le terme 'organization'
+- 192 occurrences totales
+- Fichiers critiques: EntrepriseContextDiagnostic.js, services de facturation
+- Nombreuses références dans les tests et outils de débogage
+
+ACTIONS RECOMMANDÉES:
+1. Prioriser la migration des fichiers avec le plus d'occurrences
+2. Mettre à jour les variables de template de contrat
+3. Vérifier les services de facturation pour la migration organization
+4. Nettoyer les logs de débogage obsolètes
+5. Mettre à jour la documentation et les commentaires
+
+
+5. ANALYSE PAR TYPE D'OCCURRENCE
+================================
+
+OCCURRENCES DE VARIABLES 'concert_*' dans les templates:
+   2                 <p><strong>Date :</strong> <span class="variable">{{concert_date}}</span></p>
+   2                 <h3><span class="variable">{{concert_nom}}</span></h3>
+   1 <strong>Titre du spectacle :</strong> {concert_titre}<br/>
+   1 <strong>Montant en lettres :</strong> {concert_montant_lettres}</p>
+   1 <strong>Horaire :</strong> {concert_heure}<br/>
+   1 <strong>Date :</strong> {concert_date}</p>
+   1 <p>Les parties souhaitent collaborer pour la réalisation du projet culturel "{concert_titre}".</p>
+   1 <p>Le {concert_date} à {lieu_nom}</p>
+   1 <p><strong>Montant net de TVA :</strong> {concert_montant} €<br/>
+   1 <p><strong>Date :</strong> {concert_date}<br/>
+
+
+PROPS ET PARAMÈTRES 'concert':
+   4   const [concert, setDate] = useState(null);
+   1 export const useContratActions = (contratId, contrat, setContrat, concert, contact, refreshData) => {
+   1 const DateInfoSection = ({ concert, lieu }) => {
+   1 const ContratInfoCard = ({ contrat, concert, template, lieu, artiste, contact }) => {
+   1 const ContratHeader = ({ contrat, concert, artiste, lieu }) => {
+   1 const ContratGenerator = ({ concert, contact, artiste, lieu }) => {
+   1  * const { data: concert, loading, error, refetch } = useGenericDataFetcher('concerts', {
+   1  * @param {string} props.entityType - Type d'entité (concert, contrat, etc.) pour les statuts spécifiques
+   1   } = useContratGenerator(concert, contact, artiste, lieu);
+   1   } = useContratActions(contratId, contrat, setContrat, concert, contact || programmateur, refresh);
+
+
+RÉFÉRENCES À 'organizationContext':
+src/components/debug/EntrepriseContextDiagnostic.js:25
+
+RÉFÉRENCES À 'organizationId':
+   2       case 'test-organizationid':
+   1 import { installGlobalFixer } from '@/utils/fixOrganizationIds';
+   1 import { installArtistesFixers } from '@/utils/fixArtistesOrganizationIds';
+   1 // import OrganizationIdTest from '@/debug/OrganizationIdTest';
+   1 // import OrganizationIdTest from '../components/debug/OrganizationIdTest'; // Supprimé

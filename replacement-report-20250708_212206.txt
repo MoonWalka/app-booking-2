@@ -1,0 +1,13 @@
+Rapport de remplacement organizationId -> entrepriseId
+Date: Tue Jul  8 21:22:06 CEST 2025
+========================================
+
+Nombre de fichiers à traiter:      240
+
+
+=== Résumé ===
+Fichiers traités: 0
+Erreurs: 0
+Backup créé dans: backup-organizationId-20250708_212206
+
+Occurrences restantes de 'organizationId':     1887

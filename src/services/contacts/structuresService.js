@@ -24,12 +24,12 @@ const COLLECTION_NAME = 'structures';
 class StructuresService {
   /**
    * Créer une nouvelle structure
-   * Vérifie l'unicité par organizationId + raisonSociale
+   * Vérifie l'unicité par entrepriseId + raisonSociale
    */
-  async createStructure(data, organizationId, userId) {
+  async createStructure(data, entrepriseId, userId) {
     try {
       // Préparer les données pour la validation (convertir les timestamps Firebase)
-      const dataForValidation = prepareDataForValidation({ ...data, organizationId });
+      const dataForValidation = prepareDataForValidation({ ...data, entrepriseId });
       
       // Validation des données
       const validation = await validateStructure(dataForValidation);
@@ -40,7 +40,7 @@ class StructuresService {
       // Vérifier l'unicité
       const existingQuery = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('raisonSociale', '==', validation.data.raisonSociale)
       );
       const existingSnapshot = await getDocs(existingQuery);
@@ -54,7 +54,7 @@ class StructuresService {
       
       const structureData = {
         ...cleanedData,
-        organizationId,
+        entrepriseId,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         createdBy: userId,
@@ -123,7 +123,7 @@ class StructuresService {
       if (updates.raisonSociale && updates.raisonSociale !== currentData.raisonSociale) {
         const existingQuery = query(
           collection(db, COLLECTION_NAME),
-          where('organizationId', '==', currentData.organizationId),
+          where('entrepriseId', '==', currentData.entrepriseId),
           where('raisonSociale', '==', updates.raisonSociale)
         );
         const existingSnapshot = await getDocs(existingQuery);
@@ -194,11 +194,11 @@ class StructuresService {
   /**
    * Lister les structures d'une organisation
    */
-  async listStructures(organizationId, filters = {}) {
+  async listStructures(entrepriseId, filters = {}) {
     try {
       let q = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
 
       // Appliquer les filtres
@@ -241,11 +241,11 @@ class StructuresService {
   /**
    * Rechercher des structures
    */
-  async searchStructures(organizationId, searchTerm) {
+  async searchStructures(entrepriseId, searchTerm) {
     try {
       // Firestore ne supporte pas la recherche textuelle native
       // On récupère toutes les structures et on filtre côté client
-      const allStructures = await this.listStructures(organizationId);
+      const allStructures = await this.listStructures(entrepriseId);
       
       if (!allStructures.success) {
         return allStructures;
@@ -313,12 +313,12 @@ class StructuresService {
    * Créer ou mettre à jour une structure (upsert)
    * Utilisé pour l'import
    */
-  async upsertStructure(data, organizationId, userId) {
+  async upsertStructure(data, entrepriseId, userId) {
     try {
       // Chercher une structure existante
       const existingQuery = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('raisonSociale', '==', data.raisonSociale)
       );
       const existingSnapshot = await getDocs(existingQuery);
@@ -330,7 +330,7 @@ class StructuresService {
         return { ...result, id: existingDoc.id, isNew: false };
       } else {
         // Création
-        const result = await this.createStructure(data, organizationId, userId);
+        const result = await this.createStructure(data, entrepriseId, userId);
         return { ...result, isNew: true };
       }
     } catch (error) {
@@ -359,7 +359,7 @@ class StructuresService {
   /**
    * Import en masse de structures
    */
-  async bulkImportStructures(structures, organizationId, userId) {
+  async bulkImportStructures(structures, entrepriseId, userId) {
     const results = {
       success: 0,
       errors: [],
@@ -374,7 +374,7 @@ class StructuresService {
       
       await Promise.all(batch.map(async (structure, index) => {
         try {
-          const result = await this.upsertStructure(structure, organizationId, userId);
+          const result = await this.upsertStructure(structure, entrepriseId, userId);
           if (result.success) {
             results.success++;
             if (result.isNew) {

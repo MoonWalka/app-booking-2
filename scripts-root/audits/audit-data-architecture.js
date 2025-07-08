@@ -60,7 +60,7 @@ async function auditDataArchitecture() {
       console.log(`    - artisteId: ${data.artisteId || 'N/A'}`);
       console.log(`    - artisteNom: ${data.artisteNom || 'N/A'}`);
       console.log(`    - date: ${data.date?.toDate?.() || data.date || 'N/A'}`);
-      console.log(`    - organizationId: ${data.organizationId || 'N/A'}`);
+      console.log(`    - entrepriseId: ${data.entrepriseId || 'N/A'}`);
     });
 
     // 2. Analyser la collection contacts_unified
@@ -76,7 +76,7 @@ async function auditDataArchitecture() {
       const data = doc.data();
       console.log(`\n  Contact ${index + 1} (${doc.id}):`);
       console.log(`    - entityType: ${data.entityType}`);
-      console.log(`    - organizationId: ${data.organizationId || 'N/A'}`);
+      console.log(`    - entrepriseId: ${data.entrepriseId || 'N/A'}`);
       
       contactTypes.add(data.entityType);
       
@@ -108,7 +108,7 @@ async function auditDataArchitecture() {
       // Reproduire la requête de ContactViewTabs
       const filteredQuery = query(
         collection(db, 'concerts'),
-        where('organizationId', '==', concertData.organizationId),
+        where('entrepriseId', '==', concertData.entrepriseId),
         where('structureNom', '==', structureName),
         limit(10)
       );
@@ -148,8 +148,8 @@ async function auditDataArchitecture() {
     console.log('   - Alternative possible: contactId/contactIds (référence Firebase)');
     
     console.log('\n2. LOGIQUE DE FILTRAGE ACTUELLE:');
-    console.log('   - ContactViewTabs filtre par: organizationId + structureNom');
-    console.log('   - TableauDeBordPage charge tout par: organizationId uniquement');
+    console.log('   - ContactViewTabs filtre par: entrepriseId + structureNom');
+    console.log('   - TableauDeBordPage charge tout par: entrepriseId uniquement');
     
     console.log('\n3. PROBLÈMES POTENTIELS:');
     console.log('   - Dépendance sur le nom de structure (peut changer)');

@@ -23,12 +23,12 @@ const COLLECTION_NAME = 'personnes';
 class PersonnesService {
   /**
    * Créer une nouvelle personne
-   * Vérifie l'unicité par organizationId + email
+   * Vérifie l'unicité par entrepriseId + email
    */
-  async createPersonne(data, organizationId, userId) {
+  async createPersonne(data, entrepriseId, userId) {
     try {
       // Validation des données
-      const validation = await validatePersonne({ ...data, organizationId });
+      const validation = await validatePersonne({ ...data, entrepriseId });
       if (!validation.valid) {
         throw new Error(`Validation échouée: ${JSON.stringify(validation.errors)}`);
       }
@@ -37,7 +37,7 @@ class PersonnesService {
       if (validation.data.email) {
         const existingQuery = query(
           collection(db, COLLECTION_NAME),
-          where('organizationId', '==', organizationId),
+          where('entrepriseId', '==', entrepriseId),
           where('email', '==', validation.data.email)
         );
         const existingSnapshot = await getDocs(existingQuery);
@@ -57,7 +57,7 @@ class PersonnesService {
       
       const personneData = {
         ...cleanedData,
-        organizationId,
+        entrepriseId,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         createdBy: userId,
@@ -107,7 +107,7 @@ class PersonnesService {
       if (updates.email && updates.email !== currentData.email) {
         const existingQuery = query(
           collection(db, COLLECTION_NAME),
-          where('organizationId', '==', currentData.organizationId),
+          where('entrepriseId', '==', currentData.entrepriseId),
           where('email', '==', updates.email)
         );
         const existingSnapshot = await getDocs(existingQuery);
@@ -215,11 +215,11 @@ class PersonnesService {
   /**
    * Lister les personnes d'une organisation
    */
-  async listPersonnes(organizationId, filters = {}) {
+  async listPersonnes(entrepriseId, filters = {}) {
     try {
       let q = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
 
       // Appliquer les filtres
@@ -237,7 +237,7 @@ class PersonnesService {
         ...doc.data()
       }));
 
-      console.log(`[PersonnesService] ${personnes.length} personnes trouvées pour l'organisation ${organizationId}`);
+      console.log(`[PersonnesService] ${personnes.length} personnes trouvées pour l'organisation ${entrepriseId}`);
       return {
         success: true,
         data: personnes
@@ -255,11 +255,11 @@ class PersonnesService {
   /**
    * Rechercher des personnes
    */
-  async searchPersonnes(organizationId, searchTerm) {
+  async searchPersonnes(entrepriseId, searchTerm) {
     try {
       // Firestore ne supporte pas la recherche textuelle native
       // On récupère toutes les personnes et on filtre côté client
-      const allPersonnes = await this.listPersonnes(organizationId);
+      const allPersonnes = await this.listPersonnes(entrepriseId);
       
       if (!allPersonnes.success) {
         return allPersonnes;
@@ -329,12 +329,12 @@ class PersonnesService {
    * Créer ou mettre à jour une personne (upsert)
    * Utilisé pour l'import et la migration
    */
-  async upsertPersonne(data, organizationId, userId) {
+  async upsertPersonne(data, entrepriseId, userId) {
     try {
       // Chercher une personne existante par email
       const existingQuery = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('email', '==', data.email)
       );
       const existingSnapshot = await getDocs(existingQuery);
@@ -346,7 +346,7 @@ class PersonnesService {
         return { ...result, id: existingDoc.id, isNew: false };
       } else {
         // Création
-        const result = await this.createPersonne(data, organizationId, userId);
+        const result = await this.createPersonne(data, entrepriseId, userId);
         return { ...result, isNew: true };
       }
     } catch (error) {
@@ -362,11 +362,11 @@ class PersonnesService {
    * Chercher une personne par nom et prénom
    * Utilisé pour la détection de doublons
    */
-  async findPersonneByName(organizationId, prenom, nom) {
+  async findPersonneByName(entrepriseId, prenom, nom) {
     try {
       const q = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('prenom', '==', prenom),
         where('nom', '==', nom)
       );
@@ -394,7 +394,7 @@ class PersonnesService {
   /**
    * Import en masse de personnes
    */
-  async bulkImportPersonnes(personnes, organizationId, userId) {
+  async bulkImportPersonnes(personnes, entrepriseId, userId) {
     const results = {
       success: 0,
       errors: [],
@@ -409,7 +409,7 @@ class PersonnesService {
       
       await Promise.all(batch.map(async (personne, index) => {
         try {
-          const result = await this.upsertPersonne(personne, organizationId, userId);
+          const result = await this.upsertPersonne(personne, entrepriseId, userId);
           if (result.success) {
             results.success++;
             if (result.isNew) {

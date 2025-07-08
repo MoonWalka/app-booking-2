@@ -2,37 +2,37 @@ import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 
 /**
- * Utilitaire pour corriger automatiquement les organizationId manquants
+ * Utilitaire pour corriger automatiquement les entrepriseId manquants
  * À utiliser pour migrer les données existantes
  */
 
 /**
- * Corrige tous les documents d'une collection qui n'ont pas d'organizationId
+ * Corrige tous les documents d'une collection qui n'ont pas d'entrepriseId
  * @param {string} collectionName - Nom de la collection
- * @param {string} organizationId - ID de l'organisation à attribuer
+ * @param {string} entrepriseId - ID de l'organisation à attribuer
  * @returns {Promise<{success: number, errors: Array}>}
  */
-export async function fixMissingOrganizationIds(collectionName, organizationId) {
-  if (!organizationId) {
-    throw new Error('organizationId est requis');
+export async function fixMissingEntrepriseIds(collectionName, entrepriseId) {
+  if (!entrepriseId) {
+    throw new Error('entrepriseId est requis');
   }
 
-  console.log(`🔧 Correction des organizationId manquants pour ${collectionName}...`);
+  console.log(`🔧 Correction des entrepriseId manquants pour ${collectionName}...`);
   
   try {
     // Récupérer tous les documents de la collection
     const allDocsSnapshot = await getDocs(collection(db, collectionName));
     
-    // Filtrer ceux qui n'ont pas d'organizationId
+    // Filtrer ceux qui n'ont pas d'entrepriseId
     const docsToFix = [];
     allDocsSnapshot.forEach(docSnapshot => {
       const data = docSnapshot.data();
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         docsToFix.push({ id: docSnapshot.id, data });
       }
     });
 
-    console.log(`📊 Trouvé ${docsToFix.length} documents sans organizationId dans ${collectionName}`);
+    console.log(`📊 Trouvé ${docsToFix.length} documents sans entrepriseId dans ${collectionName}`);
 
     if (docsToFix.length === 0) {
       return { success: 0, errors: [] };
@@ -51,9 +51,9 @@ export async function fixMissingOrganizationIds(collectionName, organizationId) 
       currentBatch.forEach(({ id }) => {
         const docRef = doc(db, collectionName, id);
         batch.update(docRef, { 
-          organizationId,
+          entrepriseId,
           updatedAt: new Date(),
-          organizationIdAddedAt: new Date() // Pour traçabilité
+          entrepriseIdAddedAt: new Date() // Pour traçabilité
         });
       });
 
@@ -83,15 +83,15 @@ export async function fixMissingOrganizationIds(collectionName, organizationId) 
 }
 
 /**
- * Corrige tous les contacts et lieux sans organizationId
- * @param {string} organizationId - ID de l'organisation à attribuer
+ * Corrige tous les contacts et lieux sans entrepriseId
+ * @param {string} entrepriseId - ID de l'organisation à attribuer
  */
-export async function fixAllMissingOrganizationIds(organizationId) {
-  if (!organizationId) {
-    throw new Error('organizationId est requis');
+export async function fixAllMissingEntrepriseIds(entrepriseId) {
+  if (!entrepriseId) {
+    throw new Error('entrepriseId est requis');
   }
 
-  console.log(`🚀 Début de la correction automatique pour l'organisation: ${organizationId}`);
+  console.log(`🚀 Début de la correction automatique pour l'organisation: ${entrepriseId}`);
   
   const results = {
     contacts: { success: 0, errors: [] },
@@ -104,7 +104,7 @@ export async function fixAllMissingOrganizationIds(organizationId) {
 
   for (const collectionName of collections) {
     try {
-      const result = await fixMissingOrganizationIds(collectionName, organizationId);
+      const result = await fixMissingEntrepriseIds(collectionName, entrepriseId);
       results[collectionName] = result;
     } catch (error) {
       console.error(`❌ Erreur pour ${collectionName}:`, error);
@@ -130,11 +130,11 @@ export async function fixAllMissingOrganizationIds(organizationId) {
 
 /**
  * Fonction helper pour lancer la correction depuis la console
- * Usage: await window.fixOrganizationIds('9LjkCJG04pEzbABdHkSf')
+ * Usage: await window.fixEntrepriseIds('9LjkCJG04pEzbABdHkSf')
  */
 export function installGlobalFixer() {
   if (typeof window !== 'undefined') {
-    window.fixOrganizationIds = fixAllMissingOrganizationIds;
-    console.log('🔧 Helper installé! Utilisation: await window.fixOrganizationIds("votre-organization-id")');
+    window.fixEntrepriseIds = fixAllMissingEntrepriseIds;
+    console.log('🔧 Helper installé! Utilisation: await window.fixEntrepriseIds("votre-entreprise-id")');
   }
 } 

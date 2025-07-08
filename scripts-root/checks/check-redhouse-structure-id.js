@@ -36,7 +36,7 @@ async function checkRedhouseStructure() {
       console.log('- structureVille:', data.structureVille);
       console.log('- structureCodePostal:', data.structureCodePostal);
       console.log('- structureSiret:', data.structureSiret);
-      console.log('- organizationId:', data.organizationId);
+      console.log('- entrepriseId:', data.entrepriseId);
       console.log('- createdAt:', data.createdAt?.toDate());
       console.log('\nDonnées complètes:');
       console.log(JSON.stringify(data, null, 2));

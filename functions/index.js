@@ -414,7 +414,7 @@ exports.sendEmail = onRequest({
         return response.status(405).json({ error: 'Méthode non autorisée' });
       }
 
-      const { to, subject, html, text, from, attachments, template, templateData, userId, organizationId } = request.body;
+      const { to, subject, html, text, from, attachments, template, templateData, userId, entrepriseId } = request.body;
 
       // Si un template est spécifié, utiliser sendTemplatedMail
       if (template) {
@@ -425,7 +425,7 @@ exports.sendEmail = onRequest({
         }
 
         console.log(`Envoi d'email avec template: ${template} à ${to}`);
-        const result = await sendTemplatedMail(template, templateData, to, userId, organizationId);
+        const result = await sendTemplatedMail(template, templateData, to, userId, entrepriseId);
         
         response.set('Access-Control-Allow-Origin', '*');
         return response.status(200).json({
@@ -451,7 +451,7 @@ exports.sendEmail = onRequest({
         from,
         attachments,
         userId,
-        organizationId
+        entrepriseId
       });
 
       response.set('Access-Control-Allow-Origin', '*');
@@ -515,7 +515,7 @@ exports.sendUnifiedEmail = onRequest({
         to: emailData?.to,
         templateName: emailData?.templateName,
         userId: emailData?.userId,
-        organizationId: emailData?.organizationId,
+        entrepriseId: emailData?.entrepriseId,
         hasVariables: !!emailData?.variables,
         variablesKeys: emailData?.variables ? Object.keys(emailData.variables) : null
       });

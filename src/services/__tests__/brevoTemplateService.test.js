@@ -153,13 +153,13 @@ describe('BrevoTemplateService', () => {
       };
 
       const lienFormulaire = 'https://tourcraft.app/form/abc123';
-      const organizationId = 'org-456';
+      const entrepriseId = 'org-456';
 
       const result = await brevoTemplateService.sendFormulaireEmail(
         contactData,
         dateData,
         lienFormulaire,
-        organizationId
+        entrepriseId
       );
 
       expect(emailService.sendUnifiedEmail).toHaveBeenCalledWith({
@@ -174,7 +174,7 @@ describe('BrevoTemplateService', () => {
             dateDate: expect.any(String)
           }
         },
-        organizationId: 'org-456'
+        entrepriseId: 'org-456'
       });
 
       expect(result).toEqual(mockResponse);
@@ -250,12 +250,12 @@ describe('BrevoTemplateService', () => {
 
       const contactData = { email: 'artist@example.com', nom: 'Artiste Pro' };
       const dateData = { nom: 'Date Gala', date: new Date('2024-11-20') };
-      const organizationId = 'org-789';
+      const entrepriseId = 'org-789';
 
       const result = await brevoTemplateService.sendContratEmail(
         contactData,
         dateData,
-        organizationId
+        entrepriseId
       );
 
       expect(emailService.sendUnifiedEmail).toHaveBeenCalledWith({
@@ -269,7 +269,7 @@ describe('BrevoTemplateService', () => {
             dateDate: expect.any(String)
           }
         },
-        organizationId: 'org-789'
+        entrepriseId: 'org-789'
       });
 
       expect(result).toEqual(mockResponse);
@@ -309,13 +309,13 @@ describe('BrevoTemplateService', () => {
       const contactData = { email: 'contact@example.com', nom: 'Contact Pro' };
       const sujet = 'Documents manquants pour votre concert';
       const message = 'Nous attendons encore vos documents techniques.';
-      const organizationId = 'org-101';
+      const entrepriseId = 'org-101';
 
       const result = await brevoTemplateService.sendRelanceEmail(
         contactData,
         sujet,
         message,
-        organizationId
+        entrepriseId
       );
 
       expect(emailService.sendUnifiedEmail).toHaveBeenCalledWith({
@@ -328,7 +328,7 @@ describe('BrevoTemplateService', () => {
             message: 'Nous attendons encore vos documents techniques.'
           }
         },
-        organizationId: 'org-101'
+        entrepriseId: 'org-101'
       });
 
       expect(result).toEqual(mockResponse);
@@ -354,12 +354,12 @@ describe('BrevoTemplateService', () => {
 
       const contactData = { email: 'confirmed@example.com', nom: 'Contact Confirmé' };
       const dateData = { nom: 'Date Final', date: new Date('2024-10-30') };
-      const organizationId = 'org-202';
+      const entrepriseId = 'org-202';
 
       const result = await brevoTemplateService.sendConfirmationEmail(
         contactData,
         dateData,
-        organizationId
+        entrepriseId
       );
 
       expect(emailService.sendUnifiedEmail).toHaveBeenCalledWith({
@@ -372,7 +372,7 @@ describe('BrevoTemplateService', () => {
             dateDate: expect.any(String)
           }
         },
-        organizationId: 'org-202'
+        entrepriseId: 'org-202'
       });
 
       expect(result).toEqual(mockResponse);
@@ -395,13 +395,13 @@ describe('BrevoTemplateService', () => {
         sujet: 'Rappel important',
         message: 'Message de rappel'
       };
-      const organizationId = 'org-batch';
+      const entrepriseId = 'org-batch';
 
       const results = await brevoTemplateService.sendBatchEmails(
         contacts,
         templateType,
         baseData,
-        organizationId
+        entrepriseId
       );
 
       expect(emailService.sendUnifiedEmail).toHaveBeenCalledTimes(3);

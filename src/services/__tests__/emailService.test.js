@@ -18,7 +18,7 @@ jest.mock('../firebase-service', () => ({
   auth: {
     currentUser: {
       uid: 'test-user-123',
-      organizationId: 'test-org-456'
+      entrepriseId: 'test-org-456'
     }
   }
 }));
@@ -66,7 +66,7 @@ describe('EmailService', () => {
       expect(mockCallable).toHaveBeenCalledWith({
         ...emailData,
         userId: 'test-user-123',
-        organizationId: 'test-org-456'
+        entrepriseId: 'test-org-456'
       });
       expect(result.success).toBe(true);
     });
@@ -155,7 +155,7 @@ describe('EmailService', () => {
         variables: templateData,
         to: 'test@example.com',
         userId: 'test-user-123',
-        organizationId: 'test-org-456'
+        entrepriseId: 'test-org-456'
       });
       expect(result.success).toBe(true);
     });

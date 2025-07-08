@@ -13,14 +13,14 @@ console.log(`
 
 (async function findRecentlyUnlinkedContacts() {
   const { db, collection, getDocs, query, where } = window.firebase;
-  const currentOrgId = window.currentOrganizationId || localStorage.getItem('currentOrganizationId');
+  const currentOrgId = window.currentEntrepriseId || localStorage.getItem('currentEntrepriseId');
   
   console.log('🔍 Recherche des contacts récemment déliés...');
   console.log('Organisation actuelle:', currentOrgId);
   
   try {
     // 1. Récupérer toutes les données nécessaires
-    const personnesQuery = query(collection(db, 'personnes'), where('organizationId', '==', currentOrgId));
+    const personnesQuery = query(collection(db, 'personnes'), where('entrepriseId', '==', currentOrgId));
     const personnesSnapshot = await getDocs(personnesQuery);
     const liaisonsSnapshot = await getDocs(collection(db, 'liaisons'));
     
@@ -40,7 +40,7 @@ console.log(`
         });
         
         // Si liaison active et dans la bonne org
-        if (liaison.actif !== false && liaison.organizationId === currentOrgId) {
+        if (liaison.actif !== false && liaison.entrepriseId === currentOrgId) {
           if (!liaisonsActives.has(liaison.personneId)) {
             liaisonsActives.set(liaison.personneId, []);
           }

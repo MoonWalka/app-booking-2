@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useContactFactures } from '@/hooks/contacts/useContactFactures';
 import FacturesTableView from '@/components/factures/FacturesTableView';
 import factureService from '@/services/factureService';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Tableau des factures associées à un contact ou une structure
@@ -11,7 +11,7 @@ import { useOrganization } from '@/context/OrganizationContext';
 const ContactFacturesTable = ({ contactId, entityType = 'contact' }) => {
   const { factures, loading, error, refetch } = useContactFactures(contactId, entityType);
   const [localFactures, setLocalFactures] = useState([]);
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
   // Synchroniser les factures du hook avec l'état local
   React.useEffect(() => {
@@ -21,7 +21,7 @@ const ContactFacturesTable = ({ contactId, entityType = 'contact' }) => {
   const handleDelete = async (facture) => {
     if (window.confirm(`Êtes-vous sûr de vouloir supprimer la facture ${facture.reference || facture.numeroFacture} ?`)) {
       try {
-        await factureService.deleteFacture(facture.id, currentOrganization.id);
+        await factureService.deleteFacture(facture.id, currentEntreprise.id);
         console.log('Facture supprimée avec succès:', facture.id);
         
         // Mettre à jour l'état local immédiatement pour une UX rapide

@@ -9,7 +9,7 @@
 - **Composant** : `EntreprisesManagerFirebase.js`
 - **Fonctionnalités** :
   - Multi-entreprises avec entreprise principale
-  - Stockage dans `collaborationConfig/{organizationId}`
+  - Stockage dans `collaborationConfig/{entrepriseId}`
   - Synchronisation avec l'ancien emplacement
   - Gestion complète des informations administratives
   - Support des devises et statuts légaux

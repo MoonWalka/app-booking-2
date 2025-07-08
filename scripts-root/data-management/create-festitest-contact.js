@@ -34,7 +34,7 @@ window.createFestitestContact = async function() {
       pays: 'France',
       
       // Métadonnées organisationnelles
-      organizationId: currentOrgId,
+      entrepriseId: currentOrgId,
       
       // Métadonnées festivalières et professionnelles
       nomFestival: 'Festival Test 2025',

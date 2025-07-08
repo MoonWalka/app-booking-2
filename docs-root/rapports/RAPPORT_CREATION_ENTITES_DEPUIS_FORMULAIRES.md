@@ -8,21 +8,21 @@ Les structures créées depuis ConcertForm n'apparaissent pas dans la liste des 
 
 ### Analyse détaillée
 
-1. **Diagnostic Firebase** : Les structures créées récemment n'ont pas d'`organizationId`
+1. **Diagnostic Firebase** : Les structures créées récemment n'ont pas d'`entrepriseId`
    ```
    - ID: D0cEKweb8SpEKWeJtvdH
      Nom: MELTIN ' RECORDZ
-     OrganizationId: ❌ MANQUANT
+     EntrepriseId: ❌ MANQUANT
    
    - ID: Q7DHo36LZziHoFmLsVsN
      Nom: MELTIN ' RECORDZ
-     OrganizationId: ❌ MANQUANT
+     EntrepriseId: ❌ MANQUANT
    ```
 
 2. **Cause racine** : 
-   - `ListWithFilters` filtre TOUJOURS par `organizationId` (ligne 234-236)
-   - Les structures sans `organizationId` ne peuvent jamais apparaître dans la liste
-   - `useEntitySearch` peut créer des entités sans `organizationId` si le contexte n'est pas chargé
+   - `ListWithFilters` filtre TOUJOURS par `entrepriseId` (ligne 234-236)
+   - Les structures sans `entrepriseId` ne peuvent jamais apparaître dans la liste
+   - `useEntitySearch` peut créer des entités sans `entrepriseId` si le contexte n'est pas chargé
 
 3. **Problème de timing** :
    - Au moment de la création, `currentOrganization` peut être `null`
@@ -36,22 +36,22 @@ Les structures créées depuis ConcertForm n'apparaissent pas dans la liste des 
 ```javascript
 // AVANT : Échec direct si pas d'organization
 if (!currentOrganization?.id) {
-  console.error('❌ organizationId manquant');
+  console.error('❌ entrepriseId manquant');
   alert('Erreur : Aucune organisation sélectionnée.');
   return null;
 }
 
 // APRÈS : Fallback sur localStorage
-let organizationId = currentOrganization?.id;
+let entrepriseId = currentOrganization?.id;
 
-if (!organizationId) {
+if (!entrepriseId) {
   // Fallback : essayer de récupérer depuis localStorage
-  organizationId = localStorage.getItem('currentOrganizationId');
-  console.warn('⚠️ organizationId manquant dans le contexte, utilisation du localStorage:', organizationId);
+  entrepriseId = localStorage.getItem('currentEntrepriseId');
+  console.warn('⚠️ entrepriseId manquant dans le contexte, utilisation du localStorage:', entrepriseId);
 }
 
-if (!organizationId) {
-  console.error('❌ organizationId manquant lors de la création');
+if (!entrepriseId) {
+  console.error('❌ entrepriseId manquant lors de la création');
   alert('Erreur : Aucune organisation sélectionnée. Veuillez vous reconnecter.');
   return null;
 }
@@ -88,14 +88,14 @@ case 'structures':
 
 ### 1. Correction des données existantes
 
-Un script a été créé pour corriger les structures existantes sans `organizationId` :
+Un script a été créé pour corriger les structures existantes sans `entrepriseId` :
 - `/scripts/firebase-migration/fix-structures-organizationid.js`
 
 ### 2. Vérifications à faire
 
 - [ ] Tester la création d'une nouvelle structure depuis ConcertForm
 - [ ] Vérifier qu'elle apparaît bien dans la liste des structures
-- [ ] Vérifier que l'`organizationId` est bien présent
+- [ ] Vérifier que l'`entrepriseId` est bien présent
 - [ ] Tester avec différents états du contexte d'organisation
 
 ### 3. Améliorations futures recommandées
@@ -105,11 +105,11 @@ Un script a été créé pour corriger les structures existantes sans `organizat
    - Ajouter un indicateur de chargement global
 
 2. **Validation côté serveur** :
-   - Les règles Firestore devraient rejeter les documents sans `organizationId`
+   - Les règles Firestore devraient rejeter les documents sans `entrepriseId`
    - Ajouter une validation dans les Cloud Functions
 
 3. **Monitoring** :
-   - Ajouter des logs pour détecter les créations sans `organizationId`
+   - Ajouter des logs pour détecter les créations sans `entrepriseId`
    - Créer une alerte si cela se produit
 
 ## Impact

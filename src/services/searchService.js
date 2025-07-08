@@ -35,23 +35,23 @@ class SearchService {
   /**
    * Exécute une recherche multi-critères
    * @param {Object} params - Paramètres de recherche
-   * @param {string} params.organizationId - ID de l'organisation
+   * @param {string} params.entrepriseId - ID de l'organisation
    * @param {Array} params.criteria - Liste des critères de recherche
    * @param {string} params.collection - Collection cible (contacts, lieux, dates, structures)
    * @param {Object} params.pagination - Infos de pagination
    * @returns {Promise<Object>} Résultats avec données et infos de pagination
    */
-  async executeSearch({ organizationId, criteria = [], collection: collectionName = 'contacts', pagination = {} }) {
+  async executeSearch({ entrepriseId, criteria = [], collection: collectionName = 'contacts', pagination = {} }) {
     try {
       // Validation des paramètres
-      if (!organizationId) {
-        throw new Error('organizationId requis pour la recherche');
+      if (!entrepriseId) {
+        throw new Error('entrepriseId requis pour la recherche');
       }
 
       // Construction de la requête de base
       let q = query(
         collection(db, collectionName),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
 
       // Application des critères de recherche
@@ -61,7 +61,7 @@ class SearchService {
       const firestoreCriteria = processedCriteria.filter(c => c.type === 'firestore');
       const localCriteria = processedCriteria.filter(c => c.type === 'local');
 
-      // Application des critères Firestore (max 9 car on a déjà organizationId)
+      // Application des critères Firestore (max 9 car on a déjà entrepriseId)
       firestoreCriteria.slice(0, 9).forEach(criterion => {
         q = this.applyFirestoreCriterion(q, criterion);
       });
@@ -304,7 +304,7 @@ class SearchService {
     if (firestoreCriteria.length > 9) {
       warnings.push({
         type: 'firestore_limit',
-        message: `Seuls les 9 premiers critères Firestore ont été appliqués (limite: 10 avec organizationId)`,
+        message: `Seuls les 9 premiers critères Firestore ont été appliqués (limite: 10 avec entrepriseId)`,
         count: firestoreCriteria.length
       });
     }
@@ -315,7 +315,7 @@ class SearchService {
   /**
    * Recherche avec agrégation de plusieurs collections
    */
-  async searchAcrossCollections({ organizationId, criteria, collections = ['contacts', 'lieux', 'dates', 'structures'] }) {
+  async searchAcrossCollections({ entrepriseId, criteria, collections = ['contacts', 'lieux', 'dates', 'structures'] }) {
     const results = {};
     const errors = {};
 
@@ -323,7 +323,7 @@ class SearchService {
       collections.map(async (collectionName) => {
         try {
           const searchResults = await this.executeSearch({
-            organizationId,
+            entrepriseId,
             criteria,
             collection: collectionName
           });
@@ -340,9 +340,9 @@ class SearchService {
   /**
    * Sauvegarde une recherche
    */
-  async saveSearch({ organizationId, userId, name, criteria, description }) {
+  async saveSearch({ entrepriseId, userId, name, criteria, description }) {
     const searchData = {
-      organizationId,
+      entrepriseId,
       userId,
       name,
       criteria,
@@ -359,10 +359,10 @@ class SearchService {
   /**
    * Charge les recherches sauvegardées
    */
-  async loadSavedSearches({ organizationId, userId }) {
+  async loadSavedSearches({ entrepriseId, userId }) {
     const q = query(
       collection(db, 'selections'),
-      where('organizationId', '==', organizationId),
+      where('entrepriseId', '==', entrepriseId),
       where('userId', '==', userId),
       where('type', '==', 'saved_search'),
       orderBy('updatedAt', 'desc')

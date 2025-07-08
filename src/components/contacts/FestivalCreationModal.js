@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Modal, Form, Button, Nav, Tab, Row, Col } from 'react-bootstrap';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { db } from '@/services/firebase-service';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -8,7 +8,7 @@ import { GENRES_HIERARCHY } from '@/config/tagsHierarchy';
 import styles from './FestivalCreationModal.module.css';
 
 const FestivalCreationModal = ({ show, onHide, contactId, contactName }) => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [activeTab, setActiveTab] = useState('general');
   const [saving, setSaving] = useState(false);
 
@@ -89,7 +89,7 @@ const FestivalCreationModal = ({ show, onHide, contactId, contactName }) => {
         ...festivalData,
         contactId,
         contactName,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now()
       };
@@ -97,7 +97,7 @@ const FestivalCreationModal = ({ show, onHide, contactId, contactName }) => {
       console.log('[FestivalCreationModal] Création du festival avec:', {
         contactId,
         contactName,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         titre: festivalData.titre
       });
 

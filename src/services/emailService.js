@@ -19,8 +19,8 @@ const sendUnifiedEmailFunction = httpsCallable(functions, 'sendUnifiedEmail');
  */
 class EmailService {
   /**
-   * Récupère l'ID de l'utilisateur courant et son organisation
-   * @returns {Object} - { userId, organizationId }
+   * Récupère l'ID de l'utilisateur courant et son entreprise
+   * @returns {Object} - { userId, entrepriseId }
    */
   getCurrentUserInfo() {
     const user = auth.currentUser;
@@ -28,14 +28,14 @@ class EmailService {
       throw new Error('Utilisateur non authentifié');
     }
 
-    // Récupérer l'organization ID depuis localStorage ou le contexte
-    const organizationId = localStorage.getItem('currentOrganizationId') || 
-                          user.organizationId || 
+    // Récupérer l'entreprise ID depuis localStorage ou le contexte
+    const entrepriseId = localStorage.getItem('currentEntrepriseId') || 
+                          user.entrepriseId || 
                           'default';
 
     return {
       userId: user.uid,
-      organizationId
+      entrepriseId
     };
   }
 
@@ -53,14 +53,14 @@ class EmailService {
    */
   async sendMail(emailData) {
     try {
-      const { userId, organizationId } = this.getCurrentUserInfo();
+      const { userId, entrepriseId } = this.getCurrentUserInfo();
 
       debugLog('[EmailService] Envoi d\'email:', {
         to: emailData.to,
         subject: emailData.subject,
         useUnified: emailData.useUnified !== false,
         userId,
-        organizationId
+        entrepriseId
       }, 'info');
 
       // Utiliser le service unifié par défaut (avec fallback Brevo/SMTP)
@@ -68,7 +68,7 @@ class EmailService {
         const result = await sendUnifiedEmailFunction({
           ...emailData,
           userId,
-          organizationId
+          entrepriseId: entrepriseId
         });
         
         debugLog('[EmailService] Email unifié envoyé:', result.data, 'success');
@@ -82,7 +82,7 @@ class EmailService {
         const result = await sendEmailFunction({
           ...emailData,
           userId,
-          organizationId
+          entrepriseId: entrepriseId
         });
         
         debugLog('[EmailService] Email SMTP envoyé:', result.data, 'success');
@@ -111,7 +111,7 @@ class EmailService {
    */
   async sendTemplatedMail(template, templateData, to, useUnified = true) {
     try {
-      const { userId, organizationId } = this.getCurrentUserInfo();
+      const { userId, entrepriseId } = this.getCurrentUserInfo();
 
       debugLog('[EmailService] Envoi d\'email avec template:', {
         template,
@@ -119,7 +119,7 @@ class EmailService {
         templateData,
         useUnified,
         userId,
-        organizationId
+        entrepriseId
       }, 'info');
 
       // Utiliser le service unifié par défaut (Brevo avec fallback SMTP)
@@ -129,7 +129,7 @@ class EmailService {
           variables: templateData,
           to,
           userId,
-          organizationId
+          entrepriseId: entrepriseId
         });
         
         debugLog('[EmailService] Email template unifié envoyé:', result.data, 'success');
@@ -145,7 +145,7 @@ class EmailService {
           templateData,
           to,
           userId,
-          organizationId
+          entrepriseId: entrepriseId
         });
         
         debugLog('[EmailService] Email template SMTP envoyé:', result.data, 'success');

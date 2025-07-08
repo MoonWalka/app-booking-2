@@ -158,11 +158,11 @@ export async function cleanMigrationFields(collectionName) {
 
 /**
  * Migration multi-organisation
- * @param {string} organizationId - ID de l'organisation
+ * @param {string} entrepriseId - ID de l'organisation
  * @returns {Promise<Object>} Résultat de la migration
  */
-export async function migrateToMultiOrg(organizationId) {
-  console.log('[migrateToMultiOrg] Début de la migration multi-org pour:', organizationId);
+export async function migrateToMultiOrg(entrepriseId) {
+  console.log('[migrateToMultiOrg] Début de la migration multi-org pour:', entrepriseId);
   
   const collections = ['artistes', 'lieux', 'dates', 'structures', 'contacts'];
   const results = {};
@@ -176,9 +176,9 @@ export async function migrateToMultiOrg(organizationId) {
       
       snapshot.forEach((docSnapshot) => {
         const data = docSnapshot.data();
-        if (!data.organizationId) {
+        if (!data.entrepriseId) {
           batch.update(doc(db, collectionName, docSnapshot.id), {
-            organizationId: organizationId
+            entrepriseId: entrepriseId
           });
           updated++;
         }

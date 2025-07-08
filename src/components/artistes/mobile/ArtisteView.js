@@ -26,12 +26,12 @@ const ArtisteView = ({ id }) => {
             ...artisteDoc.data()
           };
           
-          // Charger les concerts liés via la relation bidirectionnelle
-          const concertsRef = collection(db, 'dates');
-          const q = query(concertsRef, where('artisteId', '==', id));
-          const concertsSnapshot = await getDocs(q);
+          // Charger les dates liés via la relation bidirectionnelle
+          const datesRef = collection(db, 'dates');
+          const q = query(datesRef, where('artisteId', '==', id));
+          const datesSnapshot = await getDocs(q);
           
-          artisteData.concertsAssocies = concertsSnapshot.docs.map(doc => ({
+          artisteData.datesAssocies = datesSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           }));
@@ -100,7 +100,7 @@ const ArtisteView = ({ id }) => {
           <div className={styles.artisteStatsMobile}>
             <div className={styles.statItem}>
               <i className="bi bi-calendar-event"></i>
-              <span>{artiste.concertsAssocies?.length || 0} concerts</span>
+              <span>{artiste.datesAssocies?.length || 0} dates</span>
             </div>
             {artiste.cachetMoyen && (
               <div className={styles.statItem}>
@@ -122,8 +122,8 @@ const ArtisteView = ({ id }) => {
           <span>Infos</span>
         </button>
         <button 
-          className={`${styles.tabButton} ${activeTab === 'concerts' ? styles.active : ''}`}
-          onClick={() => setActiveTab('concerts')}
+          className={`${styles.tabButton} ${activeTab === 'dates' ? styles.active : ''}`}
+          onClick={() => setActiveTab('dates')}
         >
           <i className="bi bi-calendar-event"></i>
           <span>Dates</span>
@@ -204,9 +204,9 @@ const ArtisteView = ({ id }) => {
           </div>
         )}
 
-        {activeTab === 'concerts' && (
-          <div className={styles.concertsContent}>
-            {(!artiste.concertsAssocies || artiste.concertsAssocies.length === 0) ? (
+        {activeTab === 'dates' && (
+          <div className={styles.datesContent}>
+            {(!artiste.datesAssocies || artiste.datesAssocies.length === 0) ? (
               <div className={styles.emptyStateMobile}>
                 <i className="bi bi-calendar-x"></i>
                 <p>Aucun date associé à cet artiste</p>
@@ -215,13 +215,13 @@ const ArtisteView = ({ id }) => {
                   onClick={() => navigate('/dates/nouveau')}
                 >
                   <i className="bi bi-plus-circle me-2"></i>
-                  Créer un concert
+                  Créer un date
                 </button>
               </div>
             ) : (
               <>
-                <div className={styles.concertsHeaderMobile}>
-                  <h3>Dates ({artiste.concertsAssocies.length})</h3>
+                <div className={styles.datesHeaderMobile}>
+                  <h3>Dates ({artiste.datesAssocies.length})</h3>
                   <button 
                     className="tc-btn tc-btn-sm tc-btn-outline-primary"
                     onClick={() => navigate('/dates/nouveau')}
@@ -230,23 +230,23 @@ const ArtisteView = ({ id }) => {
                   </button>
                 </div>
                 
-                <div className={styles.concertsListMobile}>
-                  {artiste.concertsAssocies.map(concert => (
+                <div className={styles.datesListMobile}>
+                  {artiste.datesAssocies.map(date => (
                     <div 
                       key={date.id}
-                      className={styles.concertItemMobile}
+                      className={styles.dateItemMobile}
                       onClick={() => navigate(`/dates/${date.id}`)}
                     >
                       <div className={styles.dateDate}>
-                        {new Date(concert.date).toLocaleDateString('fr-FR')}
+                        {new Date(date.date).toLocaleDateString('fr-FR')}
                       </div>
-                      <div className={styles.concertDetails}>
-                        <div className={styles.concertLieu}>{concert.lieu || 'Lieu non spécifié'}</div>
-                        <div className={styles.concertProgrammateur}>{concert.programmateurNom || '-'}</div>
+                      <div className={styles.dateDetails}>
+                        <div className={styles.dateLieu}>{date.lieu || 'Lieu non spécifié'}</div>
+                        <div className={styles.dateProgrammateur}>{date.programmateurNom || '-'}</div>
                       </div>
-                      <div className={styles.concertMontant}>
-                        {concert.montant ? 
-                          new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant) : 
+                      <div className={styles.dateMontant}>
+                        {date.montant ? 
+                          new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(date.montant) : 
                           '-'
                         }
                       </div>
@@ -282,7 +282,7 @@ const ArtisteView = ({ id }) => {
                       </div>
                       <div className={styles.contratDetails}>
                         <div className={styles.contratDate}>
-                          {artiste.concertsAssocies?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
+                          {artiste.datesAssocies?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
                         </div>
                       </div>
                       <div className={styles.contratActions}>

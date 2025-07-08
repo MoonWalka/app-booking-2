@@ -23,14 +23,14 @@ class ContactServiceRelational {
   /**
    * Recherche unifiée dans structures et personnes
    */
-  async searchContacts(searchTerm, organizationId, options = {}) {
+  async searchContacts(searchTerm, entrepriseId, options = {}) {
     const results = {
       structures: [],
       personnes: [],
       all: []
     };
 
-    if (!searchTerm || !organizationId) return results;
+    if (!searchTerm || !entrepriseId) return results;
 
     const searchLower = searchTerm.toLowerCase();
 
@@ -38,7 +38,7 @@ class ContactServiceRelational {
       // Recherche dans les structures
       const structuresQuery = query(
         collection(db, 'structures'),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
       const structuresSnap = await getDocs(structuresQuery);
       
@@ -54,7 +54,7 @@ class ContactServiceRelational {
       // Recherche dans les personnes
       const personnesQuery = query(
         collection(db, 'personnes'),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
       const personnesSnap = await getDocs(personnesQuery);
       
@@ -143,20 +143,20 @@ class ContactServiceRelational {
   /**
    * Récupère tous les contacts d'une organisation
    */
-  async getAllContacts(organizationId, options = {}) {
+  async getAllContacts(entrepriseId, options = {}) {
     const results = {
       structures: [],
       personnes: [],
       all: []
     };
 
-    if (!organizationId) return results;
+    if (!entrepriseId) return results;
 
     try {
       // Récupérer les structures
       let structuresQuery = query(
         collection(db, 'structures'),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
 
       if (options.orderBy) {
@@ -173,7 +173,7 @@ class ContactServiceRelational {
       // Récupérer les personnes
       let personnesQuery = query(
         collection(db, 'personnes'),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
 
       if (options.orderBy) {
@@ -317,8 +317,8 @@ class ContactServiceRelational {
   /**
    * Méthode de compatibilité : recherche comme l'ancien système
    */
-  async searchContactsLegacy(searchTerm, organizationId) {
-    const results = await this.searchContacts(searchTerm, organizationId);
+  async searchContactsLegacy(searchTerm, entrepriseId) {
+    const results = await this.searchContacts(searchTerm, entrepriseId);
     // Retourner dans le format attendu par les anciens composants
     return results.all.map(contact => ({
       ...contact,

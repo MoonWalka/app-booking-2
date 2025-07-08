@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, Alert, Row, Col, Badge, Modal } from 'react-bootstrap';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { decryptSensitiveFields } from '@/utils/cryptoUtils';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -12,7 +12,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
  * Ne peut que créer de nouveaux templates avec préfixe [TourCraft]
  */
 const BrevoTemplateCreator = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -101,12 +101,12 @@ const BrevoTemplateCreator = () => {
 
   // Charger la configuration Brevo
   const loadBrevoConfig = useCallback(async () => {
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     setLoading(true);
     try {
       const parametresDoc = await getDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
       );
       
       if (parametresDoc.exists()) {
@@ -126,7 +126,7 @@ const BrevoTemplateCreator = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentOrganization?.id, loadExistingTemplates]);
+  }, [currentEntreprise?.id, loadExistingTemplates]);
 
   // Générer le HTML pour un template
   const generateTemplateHTML = (type) => {

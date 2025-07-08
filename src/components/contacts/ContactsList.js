@@ -1,6 +1,6 @@
 // src/components/contacts/ContactsList.js
 import React, { useState, useMemo, useCallback } from 'react';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useTabs } from '@/context/TabsContext';
 import { useContactsRelational } from '@/hooks/contacts/useContactsRelational';
 import ListWithFilters from '@/components/ui/ListWithFilters';
@@ -15,7 +15,7 @@ import './ContactsList.module.css';
  * Architecture Business-centrée avec affichage structures + personnes libres
  */
 function ContactsList({ filterType = 'all' }) {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { openContactTab } = useTabs();
   
   // Utiliser le hook relationnel au lieu de l'ancienne approche
@@ -61,7 +61,7 @@ function ContactsList({ filterType = 'all' }) {
 
   // Transformer les données relationnelles en format compatible avec l'affichage
   const unifiedContacts = useMemo(() => {
-    if (!currentOrganization?.id) return [];
+    if (!currentEntreprise?.id) return [];
     
     const processedContacts = [];
     
@@ -136,7 +136,7 @@ function ContactsList({ filterType = 'all' }) {
     // Collecter les IDs des personnes déjà affichées avec des structures
     const personnesAvecStructure = new Set();
     liaisons
-      .filter(l => l.actif && l.organizationId === currentOrganization.id)
+      .filter(l => l.actif && l.entrepriseId === currentEntreprise.id)
       .forEach(l => personnesAvecStructure.add(l.personneId));
     
     // Ajouter les personnes sans liaison active (anciennement "personnes libres")
@@ -171,7 +171,7 @@ function ContactsList({ filterType = 'all' }) {
     }
     
     return processedContacts;
-  }, [structures, personnes, currentOrganization, filterType, getStructureWithPersonnes, liaisons]);
+  }, [structures, personnes, currentEntreprise, filterType, getStructureWithPersonnes, liaisons]);
 
   // Fonction pour ouvrir la modal d'édition - gère personnes et structures
   const handleEditContact = (item) => {

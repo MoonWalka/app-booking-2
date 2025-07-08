@@ -88,7 +88,7 @@ async updateStructure(structureId, updates, userId) {
 // Abonnement aux structures
 const structuresQuery = query(
   collection(db, 'structures'),
-  where('organizationId', '==', currentOrganization.id)
+  where('entrepriseId', '==', currentOrganization.id)
 );
 
 const unsubStructures = onSnapshot(structuresQuery, (snapshot) => {

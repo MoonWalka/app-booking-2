@@ -6,7 +6,7 @@ import TabManagerProduction from '@/components/tabs/TabManagerProduction';
 import Button from '@ui/Button';
 import { useAuth } from '@/context/AuthContext.js';
 import { useResponsive } from '@/hooks/common';
-import { EntrepriseSelector } from '@/components/organization';
+import { EntrepriseSelector } from '@/components/entreprise';
 import { useContactModals } from '@/context/ContactModalsContext';
 import ContactModalsContainer from '@/components/contacts/modal/ContactModalsContainer';
 import { APP_NAME } from '@/config.js';

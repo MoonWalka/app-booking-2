@@ -13,7 +13,7 @@ console.log(`
 
 (async function checkRecentChanges() {
   const { db, collection, getDocs, query, where } = window.firebase;
-  const currentOrgId = window.currentOrganizationId || localStorage.getItem('currentOrganizationId');
+  const currentOrgId = window.currentEntrepriseId || localStorage.getItem('currentEntrepriseId');
   
   console.log('🔍 Vérification des changements récents...');
   console.log('Organisation actuelle:', currentOrgId);
@@ -28,19 +28,19 @@ console.log(`
     console.log('- Total structures dans Firebase:', allStructures.size);
     console.log('- Total personnes dans Firebase:', allPersonnes.size);
     
-    // Compter par organizationId
+    // Compter par entrepriseId
     const structuresByOrg = {};
     const personnesByOrg = {};
     
     allStructures.forEach(doc => {
       const data = doc.data();
-      const orgId = data.organizationId || 'SANS_ORG';
+      const orgId = data.entrepriseId || 'SANS_ORG';
       structuresByOrg[orgId] = (structuresByOrg[orgId] || 0) + 1;
     });
     
     allPersonnes.forEach(doc => {
       const data = doc.data();
-      const orgId = data.organizationId || 'SANS_ORG';
+      const orgId = data.entrepriseId || 'SANS_ORG';
       personnesByOrg[orgId] = (personnesByOrg[orgId] || 0) + 1;
     });
     
@@ -71,7 +71,7 @@ console.log(`
             type: 'structure',
             nom: data.raisonSociale || 'Sans nom',
             note: data._migrationNote,
-            orgId: data.organizationId
+            orgId: data.entrepriseId
           });
         }
       }
@@ -86,7 +86,7 @@ console.log(`
             type: 'personne',
             nom: data.nom || data.prenom || 'Sans nom',
             note: data._migrationNote,
-            orgId: data.organizationId
+            orgId: data.entrepriseId
           });
         }
       }
@@ -116,7 +116,7 @@ console.log(`
     
     allLiaisons.forEach(doc => {
       const liaison = doc.data();
-      if (liaison.personneId && liaison.actif !== false && liaison.organizationId === currentOrgId) {
+      if (liaison.personneId && liaison.actif !== false && liaison.entrepriseId === currentOrgId) {
         personnesAvecLiaison.add(liaison.personneId);
       }
     });
@@ -126,13 +126,13 @@ console.log(`
       let invisible = false;
       let raison = '';
       
-      if (!data.organizationId) {
+      if (!data.entrepriseId) {
         invisible = true;
-        raison = 'Pas d\\'organizationId';
+        raison = 'Pas d\\'entrepriseId';
         countSansOrgId++;
-      } else if (data.organizationId !== currentOrgId) {
+      } else if (data.entrepriseId !== currentOrgId) {
         invisible = true;
-        raison = \`Autre organisation (\${data.organizationId})\`;
+        raison = \`Autre organisation (\${data.entrepriseId})\`;
         countAutreOrgId++;
       } else if (!personnesAvecLiaison.has(doc.id) && !data.isPersonneLibre) {
         invisible = true;
@@ -152,8 +152,8 @@ console.log(`
     });
     
     console.log('\\nPersonnes invisibles par catégorie:');
-    console.log('- Sans organizationId:', countSansOrgId);
-    console.log('- Autre organizationId:', countAutreOrgId);
+    console.log('- Sans entrepriseId:', countSansOrgId);
+    console.log('- Autre entrepriseId:', countAutreOrgId);
     console.log('- Sans liaison ni flag libre:', countSansLiaisonNiFlag);
     console.log('- TOTAL invisible:', countSansOrgId + countAutreOrgId + countSansLiaisonNiFlag);
     

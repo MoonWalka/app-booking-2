@@ -42,12 +42,12 @@ async function debugTagsIssue() {
     console.log('=====================================');
     
     // Simuler le chargement pour une organisation
-    const organizationId = 'test-org'; // Vous devrez mettre l'ID réel
+    const entrepriseId = 'test-org'; // Vous devrez mettre l'ID réel
     
     console.log('1. Requête vers Firebase pour les contacts...');
     const contactsQuery = query(
       collection(db, 'contacts'),
-      where('organizationId', '==', organizationId)
+      where('entrepriseId', '==', entrepriseId)
     );
     
     const contactsSnapshot = await getDocs(contactsQuery);
@@ -55,7 +55,7 @@ async function debugTagsIssue() {
     
     if (contactsSnapshot.size === 0) {
       console.log('   ⚠️ Aucun contact trouvé pour cette organisation');
-      console.log('   💡 Vérifiez que l\'organizationId est correct');
+      console.log('   💡 Vérifiez que l\'entrepriseId est correct');
       return;
     }
     

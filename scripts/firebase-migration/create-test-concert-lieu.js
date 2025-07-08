@@ -10,7 +10,7 @@ async function createTestData() {
 
   try {
     // Organization ID de test (à ajuster selon votre environnement)
-    const organizationId = '9LjkCJG04pEzbABdHkSf'; // Visible dans les résultats précédents
+    const entrepriseId = '9LjkCJG04pEzbABdHkSf'; // Visible dans les résultats précédents
     
     // 1. Créer un lieu de test avec adresse
     console.log('1. Création du lieu de test...');
@@ -22,7 +22,7 @@ async function createTestData() {
       pays: 'France',
       capacite: 500,
       type: 'Salle de concert',
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       dateCreation: Timestamp.now(),
       dateModification: Timestamp.now()
     };
@@ -39,7 +39,7 @@ async function createTestData() {
       email: 'jean.dupont@test.com',
       telephone: '0123456789',
       fonction: 'Programmateur',
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       dateCreation: Timestamp.now(),
       dateModification: Timestamp.now()
     };
@@ -60,7 +60,7 @@ async function createTestData() {
       contactId: contactRef.id, // IMPORTANT: Référence au contact
       lieuNom: lieuData.nom, // Pour compatibilité
       contactNom: `${contactData.prenom} ${contactData.nom}`, // Pour compatibilité
-      organizationId: organizationId,
+      entrepriseId: entrepriseId,
       notes: 'Concert de test pour vérifier l\'affichage des cartes',
       dateCreation: Timestamp.now(),
       dateModification: Timestamp.now()
@@ -101,7 +101,7 @@ Contact associé:
 - ID: ${contactRef.id}
 - Nom: ${contactData.prenom} ${contactData.nom}
 
-OrganizationId: ${organizationId}
+EntrepriseId: ${entrepriseId}
 
 Pour tester:
 1. Allez sur /concerts/${concertRef.id}

@@ -23,10 +23,10 @@ const contratService = {
    * Sauvegarde ou met à jour un contrat
    * @param {string} dateId - ID du date
    * @param {Object} contratData - Données du contrat
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<Object>} Le contrat sauvegardé
    */
-  async saveContrat(dateId, contratData, organizationId) {
+  async saveContrat(dateId, contratData, entrepriseId) {
     try {
       console.log('[ContratService] Sauvegarde du contrat pour date:', dateId);
       
@@ -34,7 +34,7 @@ const contratService = {
       const contratToSave = {
         ...contratData,
         dateId,
-        organizationId,
+        entrepriseId,
         updatedAt: serverTimestamp(),
         // Si c'est une nouvelle création, ajouter createdAt
         ...(contratData.createdAt ? {} : { createdAt: serverTimestamp() }),
@@ -65,7 +65,7 @@ const contratService = {
             type: 'envoi_document',
             priorite: 'haute',
             dateEcheance: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 jours
-            organizationId,
+            entrepriseId,
             dateId,
             contactId: contratData.organisateur?.contactId || null,
             entityType: 'contrat',
@@ -183,7 +183,7 @@ const contratService = {
             type: 'facture',
             priorite: 'normale',
             dateEcheance: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 jours
-            organizationId: contratData.organizationId,
+            entrepriseId: contratData.entrepriseId,
             dateId,
             contactId: contratData.organisateur?.contactId || null,
             entityType: 'contrat',
@@ -239,16 +239,16 @@ const contratService = {
 
   /**
    * Récupère tous les contrats d'une organisation
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<Array>} Liste des contrats
    */
-  async getContratsByOrganization(organizationId) {
+  async getContratsByOrganization(entrepriseId) {
     try {
-      console.log('[ContratService] Récupération des contrats pour organisation:', organizationId);
+      console.log('[ContratService] Récupération des contrats pour organisation:', entrepriseId);
       
       const contratsQuery = query(
         collection(db, 'contrats'),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         orderBy('updatedAt', 'desc')
       );
       
@@ -268,10 +268,10 @@ const contratService = {
 
   /**
    * Génère un numéro de contrat unique
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<string>} Numéro de contrat
    */
-  async generateContratNumber(organizationId) {
+  async generateContratNumber(entrepriseId) {
     try {
       // Format: CONT-YYYY-XXXX (ex: CONT-2024-0001)
       const year = new Date().getFullYear();
@@ -280,7 +280,7 @@ const contratService = {
       const startOfYear = new Date(year, 0, 1);
       const contratsQuery = query(
         collection(db, 'contrats'),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('createdAt', '>=', Timestamp.fromDate(startOfYear))
       );
       

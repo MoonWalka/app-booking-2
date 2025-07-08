@@ -48,13 +48,13 @@ async function migratePersonnes() {
     console.log('✅ Connecté avec succès');
 
     // Organisation Sophie Madet
-    const organizationId = 'rWJomQFxoWYJLJNJMmJl';
-    console.log(`📊 Migration pour l'organisation: ${organizationId}`);
+    const entrepriseId = 'rWJomQFxoWYJLJNJMmJl';
+    console.log(`📊 Migration pour l'organisation: ${entrepriseId}`);
 
     // 1. Récupérer tous les contacts de l'organisation
     const contactsQuery = query(
       collection(db, 'contacts_unified'),
-      where('organizationId', '==', organizationId)
+      where('entrepriseId', '==', entrepriseId)
     );
     const contactsSnapshot = await getDocs(contactsQuery);
     console.log(`📋 Nombre de contacts trouvés: ${contactsSnapshot.size}`);
@@ -87,7 +87,7 @@ async function migratePersonnes() {
             personneId = personneRef.id;
 
             const personneData = {
-              organizationId,
+              entrepriseId,
               civilite: personne.civilite || null,
               prenom: personne.prenom || '',
               nom: personne.nom || '',
@@ -129,7 +129,7 @@ async function migratePersonnes() {
           // Créer la liaison structure-personne
           const liaisonRef = doc(collection(db, 'liaisons'));
           const liaisonData = {
-            organizationId,
+            entrepriseId,
             structureId: contactId,
             personneId: personneId,
             fonction: personne.fonction || null,
@@ -157,7 +157,7 @@ async function migratePersonnes() {
         if (!email || !personnesMap.has(email)) {
           const personneRef = doc(collection(db, 'personnes'));
           const personneData = {
-            organizationId,
+            entrepriseId,
             civilite: contactData.civilite || null,
             prenom: contactData.prenom || '',
             nom: contactData.nom || '',

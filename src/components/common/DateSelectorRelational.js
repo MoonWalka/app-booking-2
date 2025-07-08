@@ -6,7 +6,7 @@ import CardSection from '@/components/ui/CardSection';
 import SearchDropdown from '@/components/dates/sections/SearchDropdown';
 import SelectedEntityCard from '@/components/dates/sections/SelectedEntityCard';
 import { datesService } from '@/services/dateService';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useNavigate } from 'react-router-dom';
 import styles from './ContactSelectorRelational.module.css'; // Réutiliser les mêmes styles
 
@@ -46,7 +46,7 @@ const DateSelectorRelational = ({
   
   const dropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const navigate = useNavigate();
 
   // Charger les dates existants au montage
@@ -90,12 +90,12 @@ const DateSelectorRelational = ({
 
   // Recherche de dates
   const handleSearch = useCallback(async (searchValue) => {
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     setIsSearching(true);
     try {
       // Rechercher dans tous les dates de l'organisation
-      const dates = await datesService.searchDates(currentOrganization.id, searchValue);
+      const dates = await datesService.searchDates(currentEntreprise.id, searchValue);
       
       // Filtrer les dates déjà sélectionnés si mode multiple
       const filteredResults = multiple 
@@ -110,7 +110,7 @@ const DateSelectorRelational = ({
     } finally {
       setIsSearching(false);
     }
-  }, [currentOrganization?.id, multiple, datesList]);
+  }, [currentEntreprise?.id, multiple, datesList]);
 
   // Débounce de la recherche
   useEffect(() => {

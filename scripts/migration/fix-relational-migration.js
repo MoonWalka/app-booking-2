@@ -39,12 +39,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Organisation à traiter (par défaut: test)
-const organizationId = process.argv[2] || '9LjkCJG04pEzbABdHkSf';
+const entrepriseId = process.argv[2] || '9LjkCJG04pEzbABdHkSf';
 const isDryRun = process.argv.includes('--dry-run');
 
 console.log('🔧 CORRECTION DE LA MIGRATION RELATIONNELLE');
 console.log('==========================================\n');
-console.log(`Organisation: ${organizationId}`);
+console.log(`Organisation: ${entrepriseId}`);
 console.log(`Mode: ${isDryRun ? 'SIMULATION' : 'PRODUCTION'}\n`);
 
 async function main() {
@@ -53,10 +53,10 @@ async function main() {
     console.log('📊 ANALYSE DE LA SITUATION ACTUELLE...\n');
     
     // Charger les données existantes
-    const structuresSnap = await getDocs(query(collection(db, 'structures'), where('organizationId', '==', organizationId)));
-    const personnesSnap = await getDocs(query(collection(db, 'personnes'), where('organizationId', '==', organizationId)));
-    const liaisonsSnap = await getDocs(query(collection(db, 'liaisons'), where('organizationId', '==', organizationId)));
-    const unifiedSnap = await getDocs(query(collection(db, 'contacts_unified'), where('organizationId', '==', organizationId)));
+    const structuresSnap = await getDocs(query(collection(db, 'structures'), where('entrepriseId', '==', entrepriseId)));
+    const personnesSnap = await getDocs(query(collection(db, 'personnes'), where('entrepriseId', '==', entrepriseId)));
+    const liaisonsSnap = await getDocs(query(collection(db, 'liaisons'), where('entrepriseId', '==', entrepriseId)));
+    const unifiedSnap = await getDocs(query(collection(db, 'contacts_unified'), where('entrepriseId', '==', entrepriseId)));
     
     console.log(`Structures existantes: ${structuresSnap.size}`);
     console.log(`Personnes existantes: ${personnesSnap.size}`);
@@ -133,7 +133,7 @@ async function main() {
           const structureId = `structure_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           
           const structureData = {
-            organizationId,
+            entrepriseId,
             raisonSociale: structure.raisonSociale || structure.nom || 'Structure sans nom',
             type: structure.type || 'autre',
             email: structure.email || '',
@@ -175,7 +175,7 @@ async function main() {
     console.log('🔗 CRÉATION DES LIAISONS...\n');
     
     // Recharger les structures pour avoir les nouvelles
-    const allStructuresSnap = await getDocs(query(collection(db, 'structures'), where('organizationId', '==', organizationId)));
+    const allStructuresSnap = await getDocs(query(collection(db, 'structures'), where('entrepriseId', '==', entrepriseId)));
     const structuresBySiret = new Map();
     allStructuresSnap.forEach(doc => {
       const structure = doc.data();
@@ -240,7 +240,7 @@ async function main() {
               if (!liaisonExistante) {
                 const liaisonId = `liaison_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                 const liaisonData = {
-                  organizationId,
+                  entrepriseId,
                   structureId: structureData.id,
                   personneId: personneData.id,
                   fonction: personneUnified.fonction || '',

@@ -1,14 +1,14 @@
 /**
- * Script de migration pour ajouter organizationId aux documents existants
+ * Script de migration pour ajouter entrepriseId aux documents existants
  * 
  * Ce script permet de migrer les documents créés avant l'implémentation
- * du système multi-organisation en leur ajoutant un organizationId.
+ * du système multi-organisation en leur ajoutant un entrepriseId.
  * 
  * Usage:
- * node scripts/migrate-missing-organizationid.js [organizationId]
+ * node scripts/migrate-missing-organizationid.js [entrepriseId]
  * 
- * Si aucun organizationId n'est fourni, le script listera les documents
- * sans organizationId et demandera confirmation.
+ * Si aucun entrepriseId n'est fourni, le script listera les documents
+ * sans entrepriseId et demandera confirmation.
  */
 
 const admin = require('firebase-admin');
@@ -36,9 +36,9 @@ const COLLECTIONS_TO_MIGRATE = [
   'relances'
 ];
 
-// Fonction pour compter les documents sans organizationId
+// Fonction pour compter les documents sans entrepriseId
 async function countDocumentsWithoutOrgId() {
-  console.log('🔍 Analyse des documents sans organizationId...\n');
+  console.log('🔍 Analyse des documents sans entrepriseId...\n');
   
   const results = {};
   let totalMissing = 0;
@@ -50,7 +50,7 @@ async function countDocumentsWithoutOrgId() {
       
       snapshot.forEach(doc => {
         const data = doc.data();
-        if (!data.organizationId) {
+        if (!data.entrepriseId) {
           missingCount++;
         }
       });
@@ -63,16 +63,16 @@ async function countDocumentsWithoutOrgId() {
       totalMissing += missingCount;
       
       if (missingCount > 0) {
-        console.log(`❌ ${collectionName}: ${missingCount}/${snapshot.size} documents sans organizationId`);
+        console.log(`❌ ${collectionName}: ${missingCount}/${snapshot.size} documents sans entrepriseId`);
       } else {
-        console.log(`✅ ${collectionName}: Tous les documents ont un organizationId`);
+        console.log(`✅ ${collectionName}: Tous les documents ont un entrepriseId`);
       }
     } catch (error) {
       console.error(`❌ Erreur lors de l'analyse de ${collectionName}:`, error.message);
     }
   }
   
-  console.log(`\n📊 Total: ${totalMissing} documents sans organizationId`);
+  console.log(`\n📊 Total: ${totalMissing} documents sans entrepriseId`);
   return { results, totalMissing };
 }
 
@@ -102,9 +102,9 @@ async function listOrganizations() {
 }
 
 // Fonction pour migrer les documents
-async function migrateDocuments(organizationId, dryRun = true) {
+async function migrateDocuments(entrepriseId, dryRun = true) {
   const mode = dryRun ? '🧪 MODE TEST' : '🚀 MODE PRODUCTION';
-  console.log(`\n${mode} - Migration vers l'organisation: ${organizationId}\n`);
+  console.log(`\n${mode} - Migration vers l'organisation: ${entrepriseId}\n`);
   
   let totalMigrated = 0;
   
@@ -117,10 +117,10 @@ async function migrateDocuments(organizationId, dryRun = true) {
       
       for (const doc of snapshot.docs) {
         const data = doc.data();
-        if (!data.organizationId) {
+        if (!data.entrepriseId) {
           if (!dryRun) {
             batch.update(doc.ref, {
-              organizationId: organizationId,
+              entrepriseId: entrepriseId,
               migratedAt: admin.firestore.FieldValue.serverTimestamp(),
               migratedFrom: 'legacy'
             });
@@ -159,25 +159,25 @@ async function migrateDocuments(organizationId, dryRun = true) {
 
 // Fonction principale
 async function main() {
-  console.log('🔧 Script de Migration - Ajout d\'organizationId\n');
+  console.log('🔧 Script de Migration - Ajout d\'entrepriseId\n');
   
   const args = process.argv.slice(2);
-  const organizationId = args[0];
+  const entrepriseId = args[0];
   
   // 1. Analyser l'état actuel
   const { totalMissing } = await countDocumentsWithoutOrgId();
   
   if (totalMissing === 0) {
-    console.log('\n✅ Aucune migration nécessaire - tous les documents ont un organizationId');
+    console.log('\n✅ Aucune migration nécessaire - tous les documents ont un entrepriseId');
     process.exit(0);
   }
   
-  // 2. Si pas d'organizationId fourni, lister les options
-  if (!organizationId) {
+  // 2. Si pas d'entrepriseId fourni, lister les options
+  if (!entrepriseId) {
     const orgs = await listOrganizations();
     
     console.log('\n📌 Usage:');
-    console.log('  node scripts/migrate-missing-organizationid.js <organizationId>');
+    console.log('  node scripts/migrate-missing-organizationid.js <entrepriseId>');
     console.log('\nExemple:');
     if (orgs.length > 0) {
       console.log(`  node scripts/migrate-missing-organizationid.js ${orgs[0].id}`);
@@ -187,9 +187,9 @@ async function main() {
   
   // 3. Vérifier que l'organisation existe
   try {
-    const orgDoc = await db.collection('organizations').doc(organizationId).get();
+    const orgDoc = await db.collection('organizations').doc(entrepriseId).get();
     if (!orgDoc.exists) {
-      console.error(`\n❌ L'organisation ${organizationId} n'existe pas`);
+      console.error(`\n❌ L'organisation ${entrepriseId} n'existe pas`);
       process.exit(1);
     }
     console.log(`\n✅ Organisation trouvée: ${orgDoc.data().name}`);
@@ -200,7 +200,7 @@ async function main() {
   
   // 4. Faire un dry run d'abord
   console.log('\n--- APERÇU DE LA MIGRATION ---');
-  await migrateDocuments(organizationId, true);
+  await migrateDocuments(entrepriseId, true);
   
   // 5. Demander confirmation
   console.log('\n⚠️  ATTENTION: Cette opération va modifier les documents en production.');
@@ -214,7 +214,7 @@ async function main() {
     
     if (answer === 'yes' || answer === 'y') {
       console.log('\n🚀 Démarrage de la migration...');
-      await migrateDocuments(organizationId, false);
+      await migrateDocuments(entrepriseId, false);
       console.log('\n✅ Migration terminée!');
       process.exit(0);
     } else {

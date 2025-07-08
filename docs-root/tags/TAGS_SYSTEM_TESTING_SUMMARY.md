@@ -38,7 +38,7 @@ The tags system has been thoroughly analyzed and appears to be **completely impl
 // Firestore integration (lines 267-308)
 const contactsQuery = query(
     collection(db, 'contacts'),
-    where('organizationId', '==', currentOrganization.id)
+    where('entrepriseId', '==', currentOrganization.id)
 );
 
 // Real count calculation (lines 276-302)

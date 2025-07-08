@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParametres } from '@/context/ParametresContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { doc, setDoc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
@@ -15,7 +15,7 @@ console.log('[UEF] Hook useEntrepriseForm importé');
 export const useEntrepriseForm = () => {
   console.log('[UEF] Appel de useEntrepriseForm');
   const { parametres, sauvegarderParametres, loading: contextLoading } = useParametres();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   const [formData, setFormData] = useState({
     nom: '',
@@ -46,10 +46,10 @@ export const useEntrepriseForm = () => {
   // Charger les données d'entreprise depuis l'organisation
   useEffect(() => {
     const loadEntrepriseData = async () => {
-      if (!currentOrganization?.id) return;
+      if (!currentEntreprise?.id) return;
       
       try {
-        const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
+        const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
         const entrepriseDoc = await getDoc(entrepriseRef);
         
         if (entrepriseDoc.exists()) {
@@ -71,7 +71,7 @@ export const useEntrepriseForm = () => {
     };
 
     loadEntrepriseData();
-  }, [currentOrganization?.id, parametres.entreprise]);
+  }, [currentEntreprise?.id, parametres.entreprise]);
 
   // Validation des données
   const validateForm = useCallback((data) => {
@@ -123,7 +123,7 @@ export const useEntrepriseForm = () => {
     setErrors({});
     
     try {
-      if (!currentOrganization?.id) {
+      if (!currentEntreprise?.id) {
         throw new Error('Aucune organisation sélectionnée');
       }
 
@@ -136,7 +136,7 @@ export const useEntrepriseForm = () => {
       }
 
       // Sauvegarder les informations d'entreprise dans l'organisation
-      const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
+      const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
       const entrepriseData = {
         ...formData,
         updatedAt: new Date().toISOString(),
@@ -157,7 +157,7 @@ export const useEntrepriseForm = () => {
     } finally {
       setLoading(false);
     }
-  }, [formData, currentOrganization?.id, validateForm, sauvegarderParametres]);
+  }, [formData, currentEntreprise?.id, validateForm, sauvegarderParametres]);
 
   // Sélection d'entreprise depuis la recherche
   const handleSelectCompany = useCallback((company) => {

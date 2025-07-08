@@ -2,12 +2,12 @@ import { collection, query, where, getDocs, doc, getDoc, updateDoc } from '@/ser
 import { db } from '@/services/firebase-service';
 
 const collaborateurService = {
-  async getCollaborateursByOrganization(organizationId) {
+  async getCollaborateursByOrganization(entrepriseId) {
     try {
       const collaborateursRef = collection(db, 'users');
       const q = query(
         collaborateursRef, 
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
       const snapshot = await getDocs(q);
       const collaborateurs = snapshot.docs.map(doc => ({

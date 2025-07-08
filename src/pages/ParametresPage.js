@@ -9,10 +9,10 @@ import ParametresNotifications from '../components/parametres/ParametresNotifica
 import ParametresEmail from '../components/parametres/ParametresEmail';
 import ParametresApparence from '../components/parametres/ParametresApparence';
 import ParametresExport from '../components/parametres/ParametresExport';
-import ParametresOrganisations from '../components/parametres/ParametresOrganisations';
+import ParametresEntreprises from '../components/parametres/ParametresEntreprises';
 import ParametresFactures from '../components/parametres/ParametresFactures';
 import SyncManager from '../components/parametres/sync/SyncManager';
-import OrganizationIdTest from '../components/debug/OrganizationIdTest';
+// import OrganizationIdTest from '../components/debug/OrganizationIdTest'; // Supprimé
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
 
@@ -54,7 +54,7 @@ const ParametresPage = () => {
       newActiveTab = 'apparence';
     } else if (path.includes('/parametres/export')) {
       newActiveTab = 'export';
-    } else if (path.includes('/parametres/organisations')) {
+    } else if (path.includes('/parametres/entreprises')) {
       newActiveTab = 'organisations';
     } else if (path.includes('/parametres/sync')) {
       newActiveTab = 'sync';
@@ -105,7 +105,7 @@ const ParametresPage = () => {
         navigate('/parametres/export');
         break;
       case 'organisations':
-        navigate('/parametres/organisations');
+        navigate('/parametres/entreprises');
         break;
       case 'sync':
         navigate('/parametres/sync');
@@ -149,7 +149,7 @@ const ParametresPage = () => {
       case 'export':
         return <ParametresExport />;
       case 'organisations':
-        return <ParametresOrganisations />;
+        return <ParametresEntreprises />;
       case 'sync':
         return <SyncManager />;
       case 'debug':
@@ -158,7 +158,10 @@ const ParametresPage = () => {
           <p>Le panneau de debug OrganizationId est maintenant disponible via le bouton flottant en bas à droite de l'écran (mode développement uniquement).</p>
         </div>;
       case 'test-organizationid':
-        return <OrganizationIdTest />;
+        return <div className="alert alert-info">
+          <h5>🔍 Fonctionnalité temporairement indisponible</h5>
+          <p>Le test OrganizationId est temporairement désactivé.</p>
+        </div>;
       case 'contrats':
         return <ContratTemplatesPage />;
       case 'factures':
@@ -183,7 +186,7 @@ const ParametresPage = () => {
     { label: 'Export et sauvegarde', key: 'export' },
     { label: 'Synchronisation des données', key: 'sync' },
     { label: '🔧 Debug OrganizationId', key: 'debug' },
-    { label: '🧪 Test OrganizationId', key: 'test-organizationid' }
+    // { label: '🧪 Test OrganizationId', key: 'test-organizationid' } // Temporairement désactivé
   ], []);
   
   const tabIndex = useMemo(() => tabList.findIndex(tab => tab.key === activeTab), [tabList, activeTab]);

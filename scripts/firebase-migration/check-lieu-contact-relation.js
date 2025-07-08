@@ -37,7 +37,7 @@ async function checkLieuContactRelation() {
     console.log('✅ Contact trouvé:', contact.id);
     console.log('   - lieuxIds:', contactData.lieuxIds || 'NON DÉFINI');
     console.log('   - lieuxAssocies:', contactData.lieuxAssocies || 'NON DÉFINI');
-    console.log('   - organizationId:', contactData.organizationId);
+    console.log('   - entrepriseId:', contactData.entrepriseId);
     
     // Chercher les lieux qui référencent ce contact
     console.log('\n🔍 Recherche des lieux qui référencent ce contact...\n');
@@ -80,7 +80,7 @@ async function checkLieuContactRelation() {
       console.log(`📍 ${doc.id}: ${lieu.nom}`);
       console.log(`   - contactsIds: ${JSON.stringify(lieu.contactsIds || [])}`);
       console.log(`   - contactId: ${lieu.contactId || 'NON DÉFINI'}`);
-      console.log(`   - organizationId: ${lieu.organizationId}`);
+      console.log(`   - entrepriseId: ${lieu.entrepriseId}`);
       console.log('');
     });
     

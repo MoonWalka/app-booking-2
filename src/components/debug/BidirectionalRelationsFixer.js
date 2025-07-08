@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { fixArtisteDateRelations } from '@/utils/fixBidirectionalRelationsBrowser';
 import Card from '../ui/Card';
 import Alert from '../ui/Alert';
 import styles from './DebugController.module.css';
 
 const BidirectionalRelationsFixer = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
   const handleFix = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -22,7 +22,7 @@ const BidirectionalRelationsFixer = () => {
     setError(null);
 
     try {
-      const stats = await fixArtisteDateRelations(currentOrganization.id);
+      const stats = await fixArtisteDateRelations(currentEntreprise.id);
       setResult(stats);
     } catch (err) {
       setError(err.message);
@@ -44,7 +44,7 @@ const BidirectionalRelationsFixer = () => {
         </p>
         
         <p className={styles.warning}>
-          <strong>Organisation actuelle:</strong> {currentOrganization?.name || 'Non définie'}
+          <strong>Organisation actuelle:</strong> {currentEntreprise?.name || 'Non définie'}
         </p>
       </div>
 
@@ -52,7 +52,7 @@ const BidirectionalRelationsFixer = () => {
         <button 
           className="btn btn-primary"
           onClick={handleFix}
-          disabled={loading || !currentOrganization}
+          disabled={loading || !currentEntreprise}
         >
           {loading ? 'Réparation en cours...' : 'Lancer la réparation'}
         </button>

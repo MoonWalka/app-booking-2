@@ -71,13 +71,13 @@ async function testDashboardQuery() {
     const currentOrgId = '9LjkCJG04pEzbABdHkSf';
     
     console.log('1. Requête exacte du TableauDeBordPage:');
-    console.log(`   where('organizationId', '==', '${currentOrgId}')`);
+    console.log(`   where('entrepriseId', '==', '${currentOrgId}')`);
     console.log(`   orderBy('date', 'desc')\n`);
     
     // Reproduire la requête exacte du tableau de bord
     const concertsQuery = query(
       collection(db, 'concerts'),
-      where('organizationId', '==', currentOrgId),
+      where('entrepriseId', '==', currentOrgId),
       orderBy('date', 'desc')
     );
     
@@ -105,7 +105,7 @@ async function testDashboardQuery() {
       console.log(`- Statut: ${data.statut || 'Sans statut'}`);
       console.log(`- Niveau: ${data.niveau || 'Non défini'}`);
       console.log(`- Montant: ${data.montant || 'Non défini'}`);
-      console.log(`- OrganizationId: ${data.organizationId}`);
+      console.log(`- EntrepriseId: ${data.entrepriseId}`);
       console.log('───────────────────────────────────────────────────────────────────\n');
     });
     
@@ -153,14 +153,14 @@ async function testDashboardQuery() {
       console.log('- Que le tableau est bien rechargé (F5 ou bouton refresh)');
     } else {
       console.log('Le concert Redhouse N\'EST PAS récupéré par la requête.');
-      console.log('Problème potentiel avec l\'organizationId ou l\'index Firestore.');
+      console.log('Problème potentiel avec l\'entrepriseId ou l\'index Firestore.');
     }
     
   } catch (error) {
     console.error('Erreur:', error);
     if (error.code === 'failed-precondition') {
       console.log('\n⚠️ ERREUR D\'INDEX FIRESTORE!');
-      console.log('L\'index composite pour organizationId + date n\'existe pas.');
+      console.log('L\'index composite pour entrepriseId + date n\'existe pas.');
       console.log('Créez l\'index en suivant le lien dans l\'erreur ci-dessus.');
     }
   }

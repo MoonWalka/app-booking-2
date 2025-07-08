@@ -21,10 +21,10 @@ import {
  * Assure qu'une structure existe et est synchronisée
  * @param {string} structureId - ID de la structure
  * @param {Object} structureData - Données de la structure (optionnel)
- * @param {string} organizationId - ID de l'organisation (optionnel)
+ * @param {string} entrepriseId - ID de l'entreprise (optionnel)
  * @returns {Promise<string>} - ID de la structure
  */
-export async function ensureStructureEntity(structureId, structureData = {}, organizationId = null) {
+export async function ensureStructureEntity(structureId, structureData = {}, entrepriseId = null) {
   if (!structureId) {
     throw new Error('ID de structure requis');
   }
@@ -57,7 +57,7 @@ export async function ensureStructureEntity(structureId, structureData = {}, org
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
         ...structureData,
-        ...(organizationId && { organizationId })
+        ...(entrepriseId && { entrepriseId })
       };
 
       await setDoc(structureRef, newStructureData);

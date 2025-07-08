@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, limit  } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import styles from './EntitySelector.module.css';
 
 /**
@@ -49,7 +49,7 @@ const EntitySelector = ({
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
   // Configuration des types d'entités supportés
   const entityConfigs = useMemo(() => ({
@@ -130,8 +130,8 @@ const EntitySelector = ({
         console.log('[EntitySelector] Loading entities:', { 
           entityType, 
           currentConfig, 
-          currentOrganization,
-          organizationId: currentOrganization?.id,
+          currentEntreprise,
+          entrepriseId: currentEntreprise?.id,
           filters 
         });
         const collectionRef = collection(db, currentConfig.collection || entityType);
@@ -140,8 +140,8 @@ const EntitySelector = ({
         const queryConditions = [];
         
         // Ajouter le filtre organisation si disponible
-        if (currentOrganization?.id) {
-          queryConditions.push(where('organizationId', '==', currentOrganization.id));
+        if (currentEntreprise?.id) {
+          queryConditions.push(where('entrepriseId', '==', currentEntreprise.id));
         }
         
         // Ajout des filtres supplémentaires
@@ -166,7 +166,7 @@ const EntitySelector = ({
         console.log('[EntitySelector] Query results:', {
           size: querySnapshot.size,
           collection: currentConfig.collection || entityType,
-          organizationFilter: currentOrganization?.id,
+          organizationFilter: currentEntreprise?.id,
           queryConditions: queryConditions.length
         });
         
@@ -179,7 +179,7 @@ const EntitySelector = ({
         console.log('[EntitySelector] Loaded entities:', {
           count: loadedEntities.length,
           entities: loadedEntities.slice(0, 3), // Afficher les 3 premières pour debug
-          hasOrganizationId: loadedEntities.length > 0 ? loadedEntities[0].organizationId : 'no entities'
+          hasEntrepriseId: loadedEntities.length > 0 ? loadedEntities[0].entrepriseId : 'no entities'
         });
         
         // Tri côté client pour éviter les problèmes d'index Firestore
@@ -201,7 +201,7 @@ const EntitySelector = ({
     
     loadEntities();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entityType, currentOrganization?.id, orderByField, maxResults, displayField, idField, filterKeys, entityConfigs]);
+  }, [entityType, currentEntreprise?.id, orderByField, maxResults, displayField, idField, filterKeys, entityConfigs]);
 
   // Filtrage des entités basé sur la recherche
   const filteredEntities = useMemo(() => {

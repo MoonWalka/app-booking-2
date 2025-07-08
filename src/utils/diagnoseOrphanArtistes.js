@@ -1,6 +1,6 @@
 /**
  * Script de diagnostic pour identifier les artistes orphelins
- * (artistes sans organizationId)
+ * (artistes sans entrepriseId)
  */
 
 import { collection, getDocs } from 'firebase/firestore';
@@ -21,12 +21,12 @@ export const diagnoseOrphanArtistes = async () => {
     
     // Identifier les orphelins
     const orphanArtistes = allArtistes.filter(artiste => 
-      !artiste.organizationId || artiste.organizationId === null || artiste.organizationId === ''
+      !artiste.entrepriseId || artiste.entrepriseId === null || artiste.entrepriseId === ''
     );
     
-    // Identifier ceux avec organizationId
+    // Identifier ceux avec entrepriseId
     const validArtistes = allArtistes.filter(artiste => 
-      artiste.organizationId && artiste.organizationId !== null && artiste.organizationId !== ''
+      artiste.entrepriseId && artiste.entrepriseId !== null && artiste.entrepriseId !== ''
     );
     
     // Analyser les doublons potentiels

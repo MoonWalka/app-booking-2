@@ -27,12 +27,12 @@ const ArtisteView = ({ id }) => {
             ...artisteDoc.data()
           };
           
-          // Charger les concerts liés via la relation bidirectionnelle
-          const concertsRef = collection(db, 'dates');
-          const q = query(concertsRef, where('artisteId', '==', id));
-          const concertsSnapshot = await getDocs(q);
+          // Charger les dates liées via la relation bidirectionnelle
+          const datesRef = collection(db, 'dates');
+          const q = query(datesRef, where('artisteId', '==', id));
+          const datesSnapshot = await getDocs(q);
           
-          artisteData.concertsAssocies = concertsSnapshot.docs.map(doc => ({
+          artisteData.datesAssociees = datesSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           }));
@@ -142,7 +142,7 @@ const ArtisteView = ({ id }) => {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--tc-space-4)', marginBottom: 'var(--tc-space-2)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--tc-space-2)' }}>
                       <i className="bi bi-calendar-event" style={{ color: 'var(--tc-color-primary)' }}></i>
-                      <span>{artiste.concertsAssocies?.length || 0} concerts</span>
+                      <span>{artiste.datesAssociees?.length || 0} dates</span>
                     </div>
                     {artiste.cachetMoyen && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--tc-space-2)' }}>
@@ -342,23 +342,23 @@ const ArtisteView = ({ id }) => {
 
           {/* Section Dates */}
           <Card 
-            title={`Dates associés (${artiste.concertsAssocies?.length || 0})`}
+            title={`Dates associées (${artiste.datesAssociees?.length || 0})`}
             icon={<i className="bi bi-calendar-event"></i>}
             actions={[
               <Button 
-                key="new-concert"
+                key="new-date"
                 onClick={() => navigate('/dates/nouveau')} 
                 variant="primary"
                 size="sm"
                 icon={<i className="bi bi-plus-circle"></i>}
               >
-                Nouveau concert
+                Nouvelle date
               </Button>
             ]}
           >
-            {artiste.concertsAssocies && artiste.concertsAssocies.length > 0 ? (
+            {artiste.datesAssociees && artiste.datesAssociees.length > 0 ? (
               <div style={{ display: 'grid', gap: 'var(--tc-space-4)' }}>
-                {artiste.concertsAssocies.map((concert, index) => (
+                {artiste.datesAssociees.map((date, index) => (
                   <div 
                     key={index} 
                     style={{
@@ -380,13 +380,13 @@ const ArtisteView = ({ id }) => {
                     }}
                   >
                     <h4 style={{ margin: '0 0 var(--tc-space-2) 0', color: 'var(--tc-color-primary)' }}>
-                      {concert.titre || 'Date sans titre'}
+                      {date.titre || 'Date sans titre'}
                     </h4>
                     <div style={{ display: 'flex', gap: 'var(--tc-space-4)', fontSize: 'var(--tc-font-size-sm)', color: 'var(--tc-color-gray-600)' }}>
-                      <span><i className="bi bi-calendar"></i> {new Date(concert.date).toLocaleDateString('fr-FR')}</span>
-                      <span><i className="bi bi-geo-alt"></i> {concert.lieu || concert.lieuNom}</span>
-                      {concert.montant && (
-                        <span><i className="bi bi-cash"></i> {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(concert.montant)}</span>
+                      <span><i className="bi bi-calendar"></i> {new Date(date.date).toLocaleDateString('fr-FR')}</span>
+                      <span><i className="bi bi-geo-alt"></i> {date.lieu || date.lieuNom}</span>
+                      {date.montant && (
+                        <span><i className="bi bi-cash"></i> {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(date.montant)}</span>
                       )}
                     </div>
                   </div>
@@ -395,13 +395,13 @@ const ArtisteView = ({ id }) => {
             ) : (
               <div style={{ textAlign: 'center', padding: 'var(--tc-space-8)', color: 'var(--tc-color-gray-500)' }}>
                 <i className="bi bi-calendar-x" style={{ fontSize: '3rem', marginBottom: 'var(--tc-space-2)' }}></i>
-                <p>Aucun date associé pour le moment.</p>
+                <p>Aucune date associée pour le moment.</p>
                 <Button 
                   onClick={() => navigate('/dates/nouveau')} 
                   variant="primary"
                   icon={<i className="bi bi-plus-circle"></i>}
                 >
-                  Créer un concert
+                  Créer une date
                 </Button>
               </div>
             )}
@@ -431,7 +431,7 @@ const ArtisteView = ({ id }) => {
                         {new Date(contrat.dateSignature).toLocaleDateString('fr-FR')}
                       </div>
                       <div style={{ fontSize: 'var(--tc-font-size-sm)', color: 'var(--tc-color-gray-600)' }}>
-                        {artiste.concertsAssocies?.find(c => c.id === contrat.dateId)?.lieu || 'Date inconnu'}
+                        {artiste.datesAssociees?.find(d => d.id === contrat.dateId)?.lieu || 'Date inconnue'}
                       </div>
                     </div>
                     {contrat.url && (
@@ -475,10 +475,10 @@ const ArtisteView = ({ id }) => {
               }}>
                 <i className="bi bi-calendar-check" style={{ fontSize: '2rem', color: 'var(--tc-color-primary)', marginBottom: 'var(--tc-space-2)' }}></i>
                 <div style={{ fontSize: 'var(--tc-font-size-lg)', fontWeight: 'var(--tc-font-weight-bold)' }}>
-                  {artiste.concertsAssocies?.length || 0}
+                  {artiste.datesAssociees?.length || 0}
                 </div>
                 <div style={{ fontSize: 'var(--tc-font-size-sm)', color: 'var(--tc-color-gray-600)' }}>
-                  Dates totaux
+                  Dates totales
                 </div>
               </div>
               

@@ -19,7 +19,7 @@ async function checkCollections() {
   contactsSnapshot.forEach(doc => {
     const data = doc.data();
     console.log('ID:', doc.id);
-    console.log('organizationId:', data.organizationId || 'MANQUANT');
+    console.log('entrepriseId:', data.entrepriseId || 'MANQUANT');
     console.log('nom:', data.contact?.nom || data.nom || 'N/A');
     console.log('---');
   });
@@ -31,7 +31,7 @@ async function checkCollections() {
   lieuxSnapshot.forEach(doc => {
     const data = doc.data();
     console.log('ID:', doc.id);
-    console.log('organizationId:', data.organizationId || 'MANQUANT');
+    console.log('entrepriseId:', data.entrepriseId || 'MANQUANT');
     console.log('nom:', data.nom || 'N/A');
     console.log('---');
   });
@@ -40,29 +40,29 @@ async function checkCollections() {
   const allContacts = await db.collection('contacts').get();
   const allLieux = await db.collection('lieux').get();
   
-  // Compter ceux sans organizationId
+  // Compter ceux sans entrepriseId
   let contactsSansOrgId = 0;
   let lieuxSansOrgId = 0;
   
   allContacts.forEach(doc => {
     const data = doc.data();
-    if (!data.organizationId) {
+    if (!data.entrepriseId) {
       contactsSansOrgId++;
     }
   });
   
   allLieux.forEach(doc => {
     const data = doc.data();
-    if (!data.organizationId) {
+    if (!data.entrepriseId) {
       lieuxSansOrgId++;
     }
   });
   
   console.log('\n=== RÉSUMÉ ===');
   console.log('Total contacts:', allContacts.size);
-  console.log('Contacts sans organizationId:', contactsSansOrgId);
+  console.log('Contacts sans entrepriseId:', contactsSansOrgId);
   console.log('Total lieux:', allLieux.size);
-  console.log('Lieux sans organizationId:', lieuxSansOrgId);
+  console.log('Lieux sans entrepriseId:', lieuxSansOrgId);
   
   // Vérifier aussi concerts et structures pour comparaison
   const concertsSnapshot = await db.collection('concerts').limit(5).get();
@@ -72,13 +72,13 @@ async function checkCollections() {
   console.log('Concerts - échantillon:');
   concertsSnapshot.forEach(doc => {
     const data = doc.data();
-    console.log('- organizationId:', data.organizationId || 'MANQUANT');
+    console.log('- entrepriseId:', data.entrepriseId || 'MANQUANT');
   });
   
   console.log('\nStructures - échantillon:');
   structuresSnapshot.forEach(doc => {
     const data = doc.data();
-    console.log('- organizationId:', data.organizationId || 'MANQUANT');
+    console.log('- entrepriseId:', data.entrepriseId || 'MANQUANT');
   });
   
   process.exit(0);

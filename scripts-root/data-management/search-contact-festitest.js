@@ -87,7 +87,7 @@ async function searchFestitestContact() {
             console.log(`   Téléphone: ${data.telephone || 'N/A'}`);
             console.log(`   Structure ID: ${data.structureId || 'N/A'}`);
             console.log(`   Structure Nom: ${data.structureNom || 'N/A'}`);
-            console.log(`   Organization ID: ${data.organizationId || 'N/A'}`);
+            console.log(`   Organization ID: ${data.entrepriseId || 'N/A'}`);
             console.log(`   Créé le: ${data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : 'N/A'}`);
             console.log(`   Modifié le: ${data.updatedAt ? new Date(data.updatedAt.seconds * 1000).toLocaleString() : 'N/A'}`);
             
@@ -123,7 +123,7 @@ async function searchFestitestContact() {
             console.log(`   Nom: ${data.nom || 'N/A'}`);
             console.log(`   Prénom: ${data.prenom || 'N/A'}`);
             console.log(`   Email: ${data.email || 'N/A'}`);
-            console.log(`   Organization ID: ${data.organizationId || 'N/A'}`);
+            console.log(`   Organization ID: ${data.entrepriseId || 'N/A'}`);
             count++;
           }
         });

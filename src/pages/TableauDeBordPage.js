@@ -5,7 +5,7 @@ import { useTabs } from '@/context/TabsContext';
 import AddButton from '@/components/ui/AddButton';
 import DatesTableView from '@/components/dates/DatesTableView';
 // useAuth import retiré car non utilisé
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { getPreContratsByDate } from '@/services/preContratService';
@@ -18,7 +18,7 @@ import styles from './TableauDeBordPage.module.css';
 const TableauDeBordPage = () => {
   const navigate = useNavigate();
   const { openTab } = useTabs();
-  const { currentOrg } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // Fonction openConfirmationPage retirée car non utilisée
   
@@ -30,7 +30,7 @@ const TableauDeBordPage = () => {
   // Charger les données du tableau de bord
   useEffect(() => {
     const loadDashboardData = async () => {
-      if (!currentOrg?.id) return;
+      if (!currentEntreprise?.id) return;
       
       try {
         setLoading(true);
@@ -38,12 +38,12 @@ const TableauDeBordPage = () => {
         // Charger les dates récentes avec leurs informations
         const datesQuery = query(
           collection(db, 'dates'),
-          where('organizationId', '==', currentOrg.id),
+          where('entrepriseId', '==', currentEntreprise.id),
           orderBy('date', 'desc')
         );
         
         const datesSnapshot = await getDocs(datesQuery);
-        console.log('🔍 DEBUG TableauDeBord - Dates trouvées:', datesSnapshot.size, 'pour org:', currentOrg.id);
+        console.log('🔍 DEBUG TableauDeBord - Dates trouvées:', datesSnapshot.size, 'pour org:', currentEntreprise.id);
         const datesData = await Promise.all(
           datesSnapshot.docs.map(async (doc) => {
             const dateData = {
@@ -163,7 +163,7 @@ const TableauDeBordPage = () => {
     };
 
     loadDashboardData();
-  }, [currentOrg?.id]);
+  }, [currentEntreprise?.id]);
 
   // Gestion de la suppression
   const handleDelete = async (item) => {
@@ -182,7 +182,7 @@ const TableauDeBordPage = () => {
         console.error('Erreur lors de la suppression du date:', error);
         // Recharger les données en cas d'erreur pour s'assurer de la cohérence
         const loadDashboardData = async () => {
-          if (!currentOrg?.id) return;
+          if (!currentEntreprise?.id) return;
           
           try {
             setLoading(true);
@@ -190,12 +190,12 @@ const TableauDeBordPage = () => {
             // Charger les dates récents avec leurs informations
             const datesQuery = query(
               collection(db, 'dates'),
-              where('organizationId', '==', currentOrg.id),
+              where('entrepriseId', '==', currentEntreprise.id),
               orderBy('date', 'desc')
             );
             
             const datesSnapshot = await getDocs(datesQuery);
-            console.log('🔍 DEBUG TableauDeBord - Dates trouvés:', datesSnapshot.size, 'pour org:', currentOrg.id);
+            console.log('🔍 DEBUG TableauDeBord - Dates trouvés:', datesSnapshot.size, 'pour org:', currentEntreprise.id);
             const datesData = await Promise.all(
               datesSnapshot.docs.map(async (doc) => {
                 const dateData = {

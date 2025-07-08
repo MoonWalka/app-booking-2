@@ -6,7 +6,7 @@
 import { db } from '@/services/firebase-service';
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 
-export async function fixArtisteDateRelations(organizationId) {
+export async function fixArtisteDateRelations(entrepriseId) {
   console.log('🔧 Réparation des relations artiste-date...');
   
   const stats = {
@@ -20,7 +20,7 @@ export async function fixArtisteDateRelations(organizationId) {
     console.log('📋 Récupération des dates...');
     const datesQuery = query(
       collection(db, 'dates'),
-      where('organizationId', '==', organizationId)
+      where('entrepriseId', '==', entrepriseId)
     );
     const datesSnapshot = await getDocs(datesQuery);
     

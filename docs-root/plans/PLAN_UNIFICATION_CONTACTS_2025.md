@@ -368,8 +368,8 @@
   - [x] ✅ Sauvegarde structureId pour relations propres
   
 - [x] **🏢 MULTI-ORGANISATION VALIDÉE** :
-  - [x] ✅ useEntitySearch filtre automatiquement par organizationId
-  - [x] ✅ ContactForm ajoute organizationId à la création
+  - [x] ✅ useEntitySearch filtre automatiquement par entrepriseId
+  - [x] ✅ ContactForm ajoute entrepriseId à la création
   - [x] ✅ Recherches lieux/structures respectent l'organisation courante
   
 - [x] **✅ MODULARISATION COMPLÉTÉE** :

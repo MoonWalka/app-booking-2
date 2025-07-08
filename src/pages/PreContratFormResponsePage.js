@@ -20,9 +20,9 @@ function PreContratFormResponsePage() {
         // Valider le token et récupérer le pré-contrat
         const validationResult = await preContratService.validateToken(dateId, token);
         
-        if (validationResult.valid && validationResult.preContrat?.organizationId) {
+        if (validationResult.valid && validationResult.preContrat?.entrepriseId) {
           // Récupérer les données de l'organisation
-          const orgDoc = await getDoc(doc(db, 'organizations', validationResult.preContrat.organizationId));
+          const orgDoc = await getDoc(doc(db, 'organizations', validationResult.preContrat.entrepriseId));
           if (orgDoc.exists()) {
             const orgData = orgDoc.data();
             setOrganizationName(orgData.name || 'TourCraft');

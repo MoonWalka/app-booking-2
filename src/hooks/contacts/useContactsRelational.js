@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { onSnapshot, collection, query, where } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import structuresService from '@/services/contacts/structuresService';
 import personnesService from '@/services/contacts/personnesService';
 import liaisonsService from '@/services/contacts/liaisonsService';
@@ -24,7 +24,7 @@ export const clearContactCache = () => {
  */
 export function useContactsRelational() {
   const { currentUser } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // États pour les données
   const [structures, setStructures] = useState([]);
@@ -46,7 +46,7 @@ export function useContactsRelational() {
 
   // Abonnements temps réel
   useEffect(() => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setLoading(false);
       return;
     }
@@ -63,7 +63,7 @@ export function useContactsRelational() {
       // Abonnement aux structures
       const structuresQuery = query(
         collection(db, 'structures'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       
       const unsubStructures = onSnapshot(structuresQuery, (snapshot) => {
@@ -80,7 +80,7 @@ export function useContactsRelational() {
             debug.comments.firebaseListener(change.doc.id, data);
             
             // Invalider le cache pour cette structure
-            const cacheKey = `structure_${change.doc.id}_${currentOrganization.id}`;
+            const cacheKey = `structure_${change.doc.id}_${currentEntreprise.id}`;
             if (contactCache.has(cacheKey)) {
               contactCache.delete(cacheKey);
               console.log('🗑️ [ContactCache] Cache invalidé pour structure:', change.doc.id);
@@ -100,7 +100,7 @@ export function useContactsRelational() {
       // Abonnement aux personnes
       const personnesQuery = query(
         collection(db, 'personnes'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       
       const unsubPersonnes = onSnapshot(personnesQuery, (snapshot) => {
@@ -117,7 +117,7 @@ export function useContactsRelational() {
             debug.comments.firebaseListener(change.doc.id, data);
             
             // Invalider le cache pour cette personne
-            const cacheKey = `personne_${change.doc.id}_${currentOrganization.id}`;
+            const cacheKey = `personne_${change.doc.id}_${currentEntreprise.id}`;
             if (contactCache.has(cacheKey)) {
               contactCache.delete(cacheKey);
               console.log('🗑️ [ContactCache] Cache invalidé pour personne:', change.doc.id);
@@ -132,7 +132,7 @@ export function useContactsRelational() {
       // Abonnement aux liaisons
       const liaisonsQuery = query(
         collection(db, 'liaisons'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentEntreprise.id)
       );
       
       const unsubLiaisons = onSnapshot(liaisonsQuery, (snapshot) => {
@@ -155,17 +155,17 @@ export function useContactsRelational() {
     return () => {
       unsubscribers.forEach(unsub => unsub());
     };
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // ==================== MÉTHODES STRUCTURES ====================
 
   const createStructure = useCallback(async (data) => {
-    if (!currentOrganization?.id || !currentUser?.uid) return;
+    if (!currentEntreprise?.id || !currentUser?.uid) return;
     
     try {
       const result = await structuresService.createStructure(
         data,
-        currentOrganization.id,
+        currentEntreprise.id,
         currentUser.uid
       );
       return result;
@@ -173,7 +173,7 @@ export function useContactsRelational() {
       console.error('Erreur création structure:', error);
       throw error;
     }
-  }, [currentOrganization?.id, currentUser?.uid]);
+  }, [currentEntreprise?.id, currentUser?.uid]);
 
   const updateStructure = useCallback(async (structureId, updates) => {
     if (!currentUser?.uid) return;
@@ -204,12 +204,12 @@ export function useContactsRelational() {
   // ==================== MÉTHODES PERSONNES ====================
 
   const createPersonne = useCallback(async (data) => {
-    if (!currentOrganization?.id || !currentUser?.uid) return;
+    if (!currentEntreprise?.id || !currentUser?.uid) return;
     
     try {
       const result = await personnesService.createPersonne(
         data,
-        currentOrganization.id,
+        currentEntreprise.id,
         currentUser.uid
       );
       return result;
@@ -217,7 +217,7 @@ export function useContactsRelational() {
       console.error('Erreur création personne:', error);
       throw error;
     }
-  }, [currentOrganization?.id, currentUser?.uid]);
+  }, [currentEntreprise?.id, currentUser?.uid]);
 
   const updatePersonne = useCallback(async (personneId, updates) => {
     if (!currentUser?.uid) return;
@@ -248,11 +248,11 @@ export function useContactsRelational() {
   // ==================== MÉTHODES LIAISONS ====================
 
   const associatePersonToStructure = useCallback(async (structureId, personneId, data = {}) => {
-    if (!currentOrganization?.id || !currentUser?.uid) return;
+    if (!currentEntreprise?.id || !currentUser?.uid) return;
     
     try {
       const liaisonData = {
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         structureId,
         personneId,
         fonction: data.fonction || '',
@@ -272,7 +272,7 @@ export function useContactsRelational() {
       console.error('Erreur association:', error);
       throw error;
     }
-  }, [currentOrganization?.id, currentUser?.uid]);
+  }, [currentEntreprise?.id, currentUser?.uid]);
 
   const dissociatePersonFromStructure = useCallback(async (liaisonId) => {
     if (!currentUser?.uid) return;
@@ -325,7 +325,7 @@ export function useContactsRelational() {
    */
   const getStructureWithPersonnes = useCallback((structureId) => {
     // Vérifier le cache d'abord
-    const cacheKey = `structure_${structureId}_${currentOrganization?.id}`;
+    const cacheKey = `structure_${structureId}_${currentEntreprise?.id}`;
     const cached = contactCache.get(cacheKey);
     
     if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
@@ -383,14 +383,14 @@ export function useContactsRelational() {
     console.log('💾 [ContactCache] Structure mise en cache:', structureId);
     
     return result;
-  }, [structures, personnes, liaisons, filters.showInactive, currentOrganization?.id]);
+  }, [structures, personnes, liaisons, filters.showInactive, currentEntreprise?.id]);
 
   /**
    * Récupérer une personne avec ses structures associées
    */
   const getPersonneWithStructures = useCallback((personneId) => {
     // Vérifier le cache d'abord
-    const cacheKey = `personne_${personneId}_${currentOrganization?.id}`;
+    const cacheKey = `personne_${personneId}_${currentEntreprise?.id}`;
     const cached = contactCache.get(cacheKey);
     
     if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
@@ -445,7 +445,7 @@ export function useContactsRelational() {
     console.log('💾 [ContactCache] Personne mise en cache:', personneId);
     
     return result;
-  }, [structures, personnes, liaisons, filters.showInactive, currentOrganization?.id]);
+  }, [structures, personnes, liaisons, filters.showInactive, currentEntreprise?.id]);
 
   /**
    * Récupérer les personnes libres (sans structure)
@@ -563,7 +563,7 @@ export function useContactsRelational() {
   // Méthode pour invalider le cache d'un contact spécifique
   const invalidateContactCache = useCallback((contactId, type = 'all') => {
     if (type === 'all' || type === 'structure') {
-      const structureCacheKey = `structure_${contactId}_${currentOrganization?.id}`;
+      const structureCacheKey = `structure_${contactId}_${currentEntreprise?.id}`;
       if (contactCache.has(structureCacheKey)) {
         contactCache.delete(structureCacheKey);
         console.log('🗑️ [ContactCache] Cache invalidé pour structure:', contactId);
@@ -571,13 +571,13 @@ export function useContactsRelational() {
     }
     
     if (type === 'all' || type === 'personne') {
-      const personneCacheKey = `personne_${contactId}_${currentOrganization?.id}`;
+      const personneCacheKey = `personne_${contactId}_${currentEntreprise?.id}`;
       if (contactCache.has(personneCacheKey)) {
         contactCache.delete(personneCacheKey);
         console.log('🗑️ [ContactCache] Cache invalidé pour personne:', contactId);
       }
     }
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   return {
     // Données

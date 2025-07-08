@@ -169,7 +169,7 @@ const useFormSubmission = (options) => {
           }),
           
           // Autres champs
-          organizationId: processedData.organizationId,
+          entrepriseId: processedData.entrepriseId,
           structureId: processedData.structureId || '',
           lieuxIds: processedData.lieuxIds || [],
           concertsAssocies: processedData.concertsAssocies || [],

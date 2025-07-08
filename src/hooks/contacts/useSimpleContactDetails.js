@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, getDocs, doc, getDoc, db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import contactServiceRelational from '@/services/contactServiceRelational';
 
 /**
@@ -11,7 +11,7 @@ export default function useSimpleContactDetails(id) {
   // 🔍 DEBUG: Log du hook
   console.log('[DEBUG useSimpleContactDetails] Hook appelé avec ID:', id);
   
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // États principaux
   const [contact, setContact] = useState(null);
@@ -64,8 +64,8 @@ export default function useSimpleContactDetails(id) {
         
         // Méthode 1: Chercher les lieux avec ce contact dans 'contactIds'
         const lieuxConstraints = [where('contactIds', 'array-contains', id)];
-        if (currentOrganization?.id) {
-          lieuxConstraints.push(where('organizationId', '==', currentOrganization.id));
+        if (currentEntreprise?.id) {
+          lieuxConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
         }
         let lieuxQuery = query(
           collection(db, 'lieux'),
@@ -77,8 +77,8 @@ export default function useSimpleContactDetails(id) {
         // Si aucun résultat, essayer avec l'ancien format contactId pour rétrocompatibilité
         if (lieuxLoaded.length === 0) {
           const lieuxConstraints2 = [where('contactId', '==', id)];
-          if (currentOrganization?.id) {
-            lieuxConstraints2.push(where('organizationId', '==', currentOrganization.id));
+          if (currentEntreprise?.id) {
+            lieuxConstraints2.push(where('entrepriseId', '==', currentEntreprise.id));
           }
           lieuxQuery = query(
             collection(db, 'lieux'),
@@ -101,26 +101,26 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingLieux(false);
     }
-  }, [currentOrganization?.id, id]);
+  }, [currentEntreprise?.id, id]);
 
-  // Fonction pour charger les concerts associés (même logique complexe que l'original)
+  // Fonction pour charger les dates associés (même logique complexe que l'original)
   const fetchDatesAssocies = useCallback(async (contactEntity) => {
     try {
       setLoadingDates(true);
       setErrorDates(null);
       
-      // Méthode 1: Vérifier si le contact a des concertsIds ou concertsAssocies dans ses données
-      if (contactEntity.concertsIds?.length > 0 || contactEntity.concertsAssocies?.length > 0) {
-        const concertRefs = contactEntity.concertsIds || contactEntity.concertsAssocies || [];
+      // Méthode 1: Vérifier si le contact a des datesIds ou datesAssocies dans ses données
+      if (contactEntity.datesIds?.length > 0 || contactEntity.datesAssocies?.length > 0) {
+        const dateRefs = contactEntity.datesIds || contactEntity.datesAssocies || [];
         
-        const concertPromises = concertRefs.map(concertRef => {
+        const datePromises = dateRefs.map(dateRef => {
           // Si c'est déjà un objet avec ID et des infos basiques, on peut l'utiliser directement
-          if (typeof concertRef === 'object' && concertRef.id && concertRef.titre) {
-            return Promise.resolve(concertRef);
+          if (typeof dateRef === 'object' && dateRef.id && dateRef.titre) {
+            return Promise.resolve(dateRef);
           }
           
           // Sinon on charge les détails complets
-          const dateId = typeof concertRef === 'object' ? concertRef.id : concertRef;
+          const dateId = typeof dateRef === 'object' ? dateRef.id : dateRef;
           return getDoc(doc(db, 'dates', dateId)).then(snapshot => {
             if (snapshot.exists()) {
               return { id: snapshot.id, ...snapshot.data() };
@@ -129,53 +129,53 @@ export default function useSimpleContactDetails(id) {
           });
         });
         
-        const concertResults = await Promise.all(concertPromises);
-        const validDates = concertResults.filter(concert => concert !== null);
+        const dateResults = await Promise.all(datePromises);
+        const validDates = dateResults.filter(date => date !== null);
         
         setDates(validDates);
       } else {
         // Méthode 2: Chercher par référence inverse dans la collection dates
         
-        // Chercher les concerts avec ce contact dans contactIds
-        const concertsConstraints = [where('contactIds', 'array-contains', id)];
-        if (currentOrganization?.id) {
-          concertsConstraints.push(where('organizationId', '==', currentOrganization.id));
+        // Chercher les dates avec ce contact dans contactIds
+        const datesConstraints = [where('contactIds', 'array-contains', id)];
+        if (currentEntreprise?.id) {
+          datesConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
         }
-        let concertsQuery = query(
+        let datesQuery = query(
           collection(db, 'dates'),
-          ...concertsConstraints
+          ...datesConstraints
         );
-        let querySnapshot = await getDocs(concertsQuery);
-        let concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let querySnapshot = await getDocs(datesQuery);
+        let datesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
         // Si aucun résultat, essayer avec l'ancien format contactId pour rétrocompatibilité
-        if (concertsLoaded.length === 0) {
-          const concertsConstraints2 = [where('contactId', '==', id)];
-          if (currentOrganization?.id) {
-            concertsConstraints2.push(where('organizationId', '==', currentOrganization.id));
+        if (datesLoaded.length === 0) {
+          const datesConstraints2 = [where('contactId', '==', id)];
+          if (currentEntreprise?.id) {
+            datesConstraints2.push(where('entrepriseId', '==', currentEntreprise.id));
           }
-          concertsQuery = query(
+          datesQuery = query(
             collection(db, 'dates'),
-            ...concertsConstraints2
+            ...datesConstraints2
           );
-          querySnapshot = await getDocs(concertsQuery);
-          concertsLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          querySnapshot = await getDocs(datesQuery);
+          datesLoaded = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
         
-        console.log(`[DIAGNOSTIC] useSimpleContactDetails - ${concertsLoaded.length} concerts trouvés par référence inverse`, { 
-          dateIds: concertsLoaded.map(dateItem => dateItem.id) 
+        console.log(`[DIAGNOSTIC] useSimpleContactDetails - ${datesLoaded.length} dates trouvés par référence inverse`, { 
+          dateIds: datesLoaded.map(dateItem => dateItem.id) 
         });
         
-        setDates(concertsLoaded);
+        setDates(datesLoaded);
       }
       
     } catch (error) {
-      console.error('[ERROR] useSimpleContactDetails - Erreur lors du chargement des concerts:', error);
+      console.error('[ERROR] useSimpleContactDetails - Erreur lors du chargement des dates:', error);
       setErrorDates(error.message);
     } finally {
       setLoadingDates(false);
     }
-  }, [currentOrganization?.id, id]);
+  }, [currentEntreprise?.id, id]);
 
   // Fonction pour charger les artistes associés (même logique complexe que l'original)
   const fetchArtistesAssocies = useCallback(async (contactEntity, datesData) => {
@@ -185,8 +185,8 @@ export default function useSimpleContactDetails(id) {
       
       // Chercher les artistes avec ce contact dans contactIds
       const artistesConstraints = [where('contactIds', 'array-contains', id)];
-      if (currentOrganization?.id) {
-        artistesConstraints.push(where('organizationId', '==', currentOrganization.id));
+      if (currentEntreprise?.id) {
+        artistesConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
       }
       let artistesQuery = query(
         collection(db, 'artistes'),
@@ -250,7 +250,7 @@ export default function useSimpleContactDetails(id) {
             }
           });
           
-          console.log(`[DEBUG] useSimpleContactDetails - ${validArtistes.length} artistes trouvés via concerts`);
+          console.log(`[DEBUG] useSimpleContactDetails - ${validArtistes.length} artistes trouvés via dates`);
         }
       }
       
@@ -266,7 +266,7 @@ export default function useSimpleContactDetails(id) {
     } finally {
       setLoadingArtistes(false);
     }
-  }, [currentOrganization?.id, id]);
+  }, [currentEntreprise?.id, id]);
 
   // Fonction pour charger la structure associée (même logique que l'original)
   const fetchStructureAssociee = useCallback(async (contactEntity) => {
@@ -360,8 +360,8 @@ export default function useSimpleContactDetails(id) {
         if (datesPromise.status === 'fulfilled') {
           // Récupérer les dates qui viennent d'être chargées
           const datesConstraints = [where('contactIds', 'array-contains', id)];
-          if (currentOrganization?.id) {
-            datesConstraints.push(where('organizationId', '==', currentOrganization.id));
+          if (currentEntreprise?.id) {
+            datesConstraints.push(where('entrepriseId', '==', currentEntreprise.id));
           }
           let datesQuery = query(collection(db, 'dates'), ...datesConstraints);
           let querySnapshot = await getDocs(datesQuery);
@@ -379,7 +379,7 @@ export default function useSimpleContactDetails(id) {
     };
 
     loadAllContactData();
-  }, [id, currentOrganization?.id, fetchLieuxAssocies, fetchDatesAssocies, fetchStructureAssociee, fetchArtistesAssocies]); // DÉPENDANCES STABLES = PAS DE BOUCLES DE RECHARGEMENT
+  }, [id, currentEntreprise?.id, fetchLieuxAssocies, fetchDatesAssocies, fetchStructureAssociee, fetchArtistesAssocies]); // DÉPENDANCES STABLES = PAS DE BOUCLES DE RECHARGEMENT
 
   // 🔍 DEBUG: Log du retour
   console.log('[DEBUG useSimpleContactDetails] Données retournées:', {

@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import {  collection, getDocs, query, where, orderBy, limit, startAfter  } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
 import { useResponsive } from '@/hooks/common';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import StatsCards from './StatsCards';
 import styles from './ListWithFilters.module.css';
 
 /**
- * Version améliorée de ListWithFilters qui filtre automatiquement par organizationId
+ * Version améliorée de ListWithFilters qui filtre automatiquement par entrepriseId
  * pour garantir la séparation des données entre organisations
  */
 const ListWithFilters = ({
@@ -34,7 +34,7 @@ const ListWithFilters = ({
   onRefresh: externalOnRefresh = null,
 }) => {
   const { isMobile } = useResponsive();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [items, setItems] = useState(initialData || []);
 
   // Fonction utilitaire pour déterminer la classe CSS selon le type de données
@@ -183,7 +183,7 @@ const ListWithFilters = ({
   }, [filterOptions, filters]);
 
   // Fonction de sanitisation des données imbriquées
-  const sanitizeNestedData = (data, organizationId) => {
+  const sanitizeNestedData = (data, entrepriseId) => {
     return data.map(item => {
       // Détecter et aplatir les structures imbriquées
       if (entityType === 'contacts' && item.contact && typeof item.contact === 'object') {
@@ -191,7 +191,7 @@ const ListWithFilters = ({
         return {
           ...item.contact,
           id: item.id,
-          organizationId: item.organizationId || organizationId,
+          entrepriseId: item.entrepriseId || entrepriseId,
           // Préserver les relations
           structures: item.structures || item.contact.structures || [],
           lieux: item.lieux || item.contact.lieux || [],
@@ -204,7 +204,7 @@ const ListWithFilters = ({
         return {
           ...item.lieu,
           id: item.id,
-          organizationId: item.organizationId || organizationId,
+          entrepriseId: item.entrepriseId || entrepriseId,
           // Préserver les relations
           contacts: item.contacts || item.lieu.contacts || [],
           structures: item.structures || item.lieu.structures || [],
@@ -217,7 +217,7 @@ const ListWithFilters = ({
         return {
           ...item.artiste,
           id: item.id,
-          organizationId: item.organizationId || organizationId,
+          entrepriseId: item.entrepriseId || entrepriseId,
           dates: item.dates || item.artiste.dates || []
         };
       }
@@ -227,7 +227,7 @@ const ListWithFilters = ({
         return {
           ...item.structure,
           id: item.id,
-          organizationId: item.organizationId || organizationId,
+          entrepriseId: item.entrepriseId || entrepriseId,
           contacts: item.contacts || item.structure.contacts || [],
           lieux: item.lieux || item.structure.lieux || []
         };
@@ -244,8 +244,8 @@ const ListWithFilters = ({
     if (initialData !== null) {
       console.log('📦 Utilisation des données externes (hooks spécialisés)');
       // Appliquer la sanitisation même sur les données externes
-      if (currentOrganization?.id) {
-        const sanitizedData = sanitizeNestedData(initialData, currentOrganization.id);
+      if (currentEntreprise?.id) {
+        const sanitizedData = sanitizeNestedData(initialData, currentEntreprise.id);
         setItems(sanitizedData);
       }
       return;
@@ -269,20 +269,20 @@ const ListWithFilters = ({
       // Construction de la requête avec les filtres
       const queryConditions = [];
       
-      // IMPORTANT: Toujours filtrer par organizationId pour la sécurité
+      // IMPORTANT: Toujours filtrer par entrepriseId pour la sécurité
       console.log('🔍 DEBUG ListWithFilters:', {
         entityType: entityType,
-        currentOrganization: currentOrganization,
-        currentOrganizationId: currentOrganization?.id,
-        localStorageId: localStorage.getItem('currentOrganizationId')
+        currentEntreprise: currentEntreprise,
+        currentEntrepriseId: currentEntreprise?.id,
+        localStorageId: localStorage.getItem('currentEntrepriseId')
       });
       
-      if (currentOrganization?.id) {
-        queryConditions.push(where('organizationId', '==', currentOrganization.id));
-        console.log('✅ Filtre organizationId appliqué:', currentOrganization.id);
+      if (currentEntreprise?.id) {
+        queryConditions.push(where('entrepriseId', '==', currentEntreprise.id));
+        console.log('✅ Filtre entrepriseId appliqué:', currentEntreprise.id);
       } else {
         console.warn('⚠️ Pas d\'organisation courante - impossible de filtrer les données');
-        console.log('🔍 DEBUG: currentOrganization complet:', currentOrganization);
+        console.log('🔍 DEBUG: currentEntreprise complet:', currentEntreprise);
         setItems([]);
         setLoading(false);
         return;
@@ -332,8 +332,8 @@ const ListWithFilters = ({
       }));
       
       // Appliquer la sanitisation des données imbriquées
-      if (currentOrganization?.id) {
-        loadedItems = sanitizeNestedData(loadedItems, currentOrganization.id);
+      if (currentEntreprise?.id) {
+        loadedItems = sanitizeNestedData(loadedItems, currentEntreprise.id);
       }
       
       // 🔍 DEBUG: Voir la structure des données
@@ -356,7 +356,7 @@ const ListWithFilters = ({
             email: loadedItems[0].email,
             telephone: loadedItems[0].telephone,
             organisation: loadedItems[0].organisation,
-            organizationId: loadedItems[0].organizationId,
+            entrepriseId: loadedItems[0].entrepriseId,
             structureId: loadedItems[0].structureId,
             allFields: Object.keys(loadedItems[0]),
             fullData: loadedItems[0]
@@ -367,9 +367,9 @@ const ListWithFilters = ({
         if (entityType === 'contacts') {
           console.log('🎯 DEBUG CONTACTS vs CONCERTS:', {
             contactsCount: loadedItems.length,
-            organizationId: currentOrganization?.id,
+            entrepriseId: currentEntreprise?.id,
             sampleContact: loadedItems[0],
-            queryUsed: 'where(organizationId, ==, ' + currentOrganization?.id + ')'
+            queryUsed: 'where(entrepriseId, ==, ' + currentEntreprise?.id + ')'
           });
         }
       }
@@ -393,7 +393,7 @@ const ListWithFilters = ({
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entityType, filters, sort, pageSize, currentOrganization?.id]);
+  }, [entityType, filters, sort, pageSize, currentEntreprise?.id]);
 
   // Recharger les données quand les paramètres changent
   useEffect(() => {

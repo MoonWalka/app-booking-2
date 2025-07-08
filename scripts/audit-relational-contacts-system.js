@@ -13,7 +13,7 @@ console.log(`
 
 (async function auditRelationalSystem() {
   const { db, collection, getDocs, query, where } = window.firebase;
-  const currentOrgId = window.currentOrganizationId || localStorage.getItem('currentOrganizationId');
+  const currentOrgId = window.currentEntrepriseId || localStorage.getItem('currentEntrepriseId');
   
   console.log('🔍 Audit du système de contacts relationnel');
   console.log('Organisation actuelle:', currentOrgId);
@@ -23,9 +23,9 @@ console.log(`
     // 1. Récupérer toutes les données
     console.log('\\n📊 CHARGEMENT DES DONNÉES...');
     
-    const structuresQuery = query(collection(db, 'structures'), where('organizationId', '==', currentOrgId));
-    const personnesQuery = query(collection(db, 'personnes'), where('organizationId', '==', currentOrgId));
-    const liaisonsQuery = query(collection(db, 'liaisons'), where('organizationId', '==', currentOrgId));
+    const structuresQuery = query(collection(db, 'structures'), where('entrepriseId', '==', currentOrgId));
+    const personnesQuery = query(collection(db, 'personnes'), where('entrepriseId', '==', currentOrgId));
+    const liaisonsQuery = query(collection(db, 'liaisons'), where('entrepriseId', '==', currentOrgId));
     
     const [structuresSnapshot, personnesSnapshot, liaisonsSnapshot] = await Promise.all([
       getDocs(structuresQuery),

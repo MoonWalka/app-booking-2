@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Alert, Card, ProgressBar, Badge } from 'react-bootstrap';
 import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 
 // Modèles codés en dur à migrer
@@ -236,7 +236,7 @@ Représenté(e) par : {representant_entreprise}</p>
 ];
 
 const MigrateContractTemplates = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { currentUser } = useAuth();
   const [migrating, setMigrating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -247,14 +247,14 @@ const MigrateContractTemplates = () => {
     const q = query(
       collection(db, 'contratTemplates'),
       where('name', '==', name),
-      where('organizationId', '==', currentOrganization.id)
+      where('entrepriseId', '==', currentEntreprise.id)
     );
     const snapshot = await getDocs(q);
     return !snapshot.empty;
   };
 
   const migrateTemplates = async () => {
-    if (!currentOrganization?.id || !currentUser?.email) {
+    if (!currentEntreprise?.id || !currentUser?.email) {
       setError('Organisation ou utilisateur non disponible');
       return;
     }
@@ -307,7 +307,7 @@ const MigrateContractTemplates = () => {
             </div>
           </div>`,
           isDefault: false,
-          organizationId: currentOrganization.id,
+          entrepriseId: currentEntreprise.id,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
           createdBy: currentUser.email,
@@ -366,12 +366,12 @@ const MigrateContractTemplates = () => {
             <Button 
               variant="primary" 
               onClick={migrateTemplates}
-              disabled={!currentOrganization?.id}
+              disabled={!currentEntreprise?.id}
             >
               <i className="bi bi-play-fill me-2"></i>
               Lancer la migration
             </Button>
-            {!currentOrganization?.id && (
+            {!currentEntreprise?.id && (
               <p className="text-danger mt-2">
                 <small>Veuillez sélectionner une organisation</small>
               </p>

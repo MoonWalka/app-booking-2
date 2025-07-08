@@ -1,5 +1,5 @@
 /**
- * Script pour vérifier et ajouter les organizationId manquants
+ * Script pour vérifier et ajouter les entrepriseId manquants
  */
 
 const admin = require('firebase-admin');
@@ -12,7 +12,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-async function checkOrganizationIds() {
+async function checkEntrepriseIds() {
   const collections = ['concerts', 'contacts', 'lieux', 'structures', 'artistes'];
   const results = {};
 
@@ -28,7 +28,7 @@ async function checkOrganizationIds() {
 
       snapshot.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId) {
+        if (data.entrepriseId) {
           withOrgId++;
         } else {
           withoutOrgId++;
@@ -49,9 +49,9 @@ async function checkOrganizationIds() {
         examples
       };
 
-      console.log(`✅ ${collectionName}: ${withOrgId}/${snapshot.size} ont un organizationId`);
+      console.log(`✅ ${collectionName}: ${withOrgId}/${snapshot.size} ont un entrepriseId`);
       if (withoutOrgId > 0) {
-        console.log(`⚠️  ${withoutOrgId} documents sans organizationId`);
+        console.log(`⚠️  ${withoutOrgId} documents sans entrepriseId`);
         console.log('Exemples:', examples);
       }
     } catch (error) {
@@ -63,11 +63,11 @@ async function checkOrganizationIds() {
   console.table(results);
 
   // Proposer de corriger
-  console.log('\n💡 Pour ajouter l\'organizationId manquant, exécutez:');
-  console.log('node scripts/add-organization-ids.js <organizationId>');
+  console.log('\n💡 Pour ajouter l\'entrepriseId manquant, exécutez:');
+  console.log('node scripts/add-entreprise-ids.js <entrepriseId>');
 }
 
-checkOrganizationIds().then(() => {
+checkEntrepriseIds().then(() => {
   console.log('\n✅ Vérification terminée');
   process.exit(0);
 }).catch(error => {

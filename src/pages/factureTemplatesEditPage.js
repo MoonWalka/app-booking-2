@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import FactureTemplateEditor from '@/components/factures/FactureTemplateEditor';
 import Spinner from '@/components/common/Spinner';
 
@@ -11,7 +11,7 @@ const FactureTemplatesEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [template, setTemplate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,11 +19,11 @@ const FactureTemplatesEditPage = () => {
   // Charger le modèle de facture
   useEffect(() => {
     const loadTemplate = async () => {
-      if (!user || !currentOrganization?.id || !id) return;
+      if (!user || !currentEntreprise?.id || !id) return;
       
       try {
         setIsLoading(true);
-        const templateRef = doc(db, 'organizations', currentOrganization.id, 'factureTemplates', id);
+        const templateRef = doc(db, 'organizations', currentEntreprise.id, 'factureTemplates', id);
         const templateSnap = await getDoc(templateRef);
         
         if (templateSnap.exists()) {
@@ -43,14 +43,14 @@ const FactureTemplatesEditPage = () => {
     };
 
     loadTemplate();
-  }, [id, user, currentOrganization]);
+  }, [id, user, currentEntreprise]);
 
   // Sauvegarder les modifications
   const handleSave = async (templateData) => {
-    if (!currentOrganization?.id || !id) return;
+    if (!currentEntreprise?.id || !id) return;
     
     try {
-      const templateRef = doc(db, 'organizations', currentOrganization.id, 'factureTemplates', id);
+      const templateRef = doc(db, 'organizations', currentEntreprise.id, 'factureTemplates', id);
       await updateDoc(templateRef, {
         ...templateData,
         updatedAt: serverTimestamp(),

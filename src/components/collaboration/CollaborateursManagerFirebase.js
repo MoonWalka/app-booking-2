@@ -4,12 +4,12 @@ import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import './CollaborateursManager.css';
 
 const CollaborateursManagerFirebase = () => {
     const { currentUser } = useAuth();
-    const { currentOrganization } = useOrganization();
+    const { currentEntreprise } = useEntreprise();
     const [collaborateursList, setCollaborateursList] = useState([]);
     const [selectedCollaborateur, setSelectedCollaborateur] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -50,13 +50,13 @@ const CollaborateursManagerFirebase = () => {
 
     // Charger les entreprises depuis Firebase
     const loadEntreprises = async () => {
-        if (!currentOrganization?.id) return;
+        if (!currentEntreprise?.id) return;
         
         try {
             let loadedEntreprises = [];
             
             // Charger depuis collaborationConfig
-            const configDoc = await getDoc(doc(db, 'collaborationConfig', currentOrganization.id));
+            const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
             
             if (configDoc.exists()) {
                 const data = configDoc.data();
@@ -66,7 +66,7 @@ const CollaborateursManagerFirebase = () => {
             }
             
             // Charger aussi l'entreprise principale depuis organizations/settings/entreprise
-            const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
+            const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
             const entrepriseDoc = await getDoc(entrepriseRef);
             
             if (entrepriseDoc.exists()) {
@@ -94,14 +94,14 @@ const CollaborateursManagerFirebase = () => {
     // Charger les collaborateurs depuis Firebase
     useEffect(() => {
         const loadCollaborateurs = async () => {
-            if (!currentOrganization?.id) return;
+            if (!currentEntreprise?.id) return;
             
             setLoading(true);
             try {
                 let collaborateurs = [];
                 
                 // Charger depuis collaborationConfig
-                const configDoc = await getDoc(doc(db, 'collaborationConfig', currentOrganization.id));
+                const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
                 
                 if (configDoc.exists()) {
                     const data = configDoc.data();
@@ -154,13 +154,13 @@ const CollaborateursManagerFirebase = () => {
         };
 
         loadCollaborateurs();
-    }, [currentOrganization?.id, currentUser]);
+    }, [currentEntreprise?.id, currentUser]);
 
     const saveCollaborateursToFirebase = async (collaborateurs) => {
-        if (!currentOrganization?.id) return;
+        if (!currentEntreprise?.id) return;
         
         try {
-            const configRef = doc(db, 'collaborationConfig', currentOrganization.id);
+            const configRef = doc(db, 'collaborationConfig', currentEntreprise.id);
             const configDoc = await getDoc(configRef);
             
             const configData = configDoc.exists() ? configDoc.data() : {};
@@ -169,7 +169,7 @@ const CollaborateursManagerFirebase = () => {
                 ...configData,
                 collaborateurs: collaborateurs,
                 updatedAt: new Date(),
-                organizationId: currentOrganization.id
+                entrepriseId: currentEntreprise.id
             }, { merge: true });
         } catch (error) {
             console.error('Erreur lors de la sauvegarde des collaborateurs:', error);

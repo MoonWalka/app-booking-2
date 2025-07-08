@@ -12,7 +12,7 @@ Renommer "organisation" en "entreprise" dans toute l'application tout en préser
 - Isolation stricte des données par entreprise
 
 ### 2. Collections organisationnelles
-- Pattern actuel : `{collection}_org_{organizationId}`
+- Pattern actuel : `{collection}_org_{entrepriseId}`
 - Nouveau pattern : `{collection}_ent_{entrepriseId}`
 - Maintenir la rétrocompatibilité pendant la migration
 
@@ -70,7 +70,7 @@ export const getCurrentEntreprise = getCurrentOrganization;
 ```javascript
 // Migration automatique au démarrage
 const migrateLocalStorage = () => {
-  const orgId = localStorage.getItem('currentOrganizationId');
+  const orgId = localStorage.getItem('currentEntrepriseId');
   if (orgId && !localStorage.getItem('currentEntrepriseId')) {
     localStorage.setItem('currentEntrepriseId', orgId);
   }
@@ -123,7 +123,7 @@ const migrateOrgToEnt = async () => {
         .doc(doc.id)
         .set({
           ...doc.data(),
-          organizationId: orgId, // Garder pour compat
+          entrepriseId: orgId, // Garder pour compat
           entrepriseId: orgId    // Nouveau champ
         });
     }
@@ -134,18 +134,18 @@ const migrateOrgToEnt = async () => {
 ### 2. Migration des champs
 ```javascript
 // migrateFields.js
-const migrateOrganizationIdFields = async () => {
+const migrateEntrepriseIdFields = async () => {
   const collections = ['users', 'invitations', ...];
   
   for (const col of collections) {
     const docs = await db.collection(col)
-      .where('organizationId', '!=', null)
+      .where('entrepriseId', '!=', null)
       .get();
     
     const batch = db.batch();
     docs.forEach(doc => {
       batch.update(doc.ref, {
-        entrepriseId: doc.data().organizationId
+        entrepriseId: doc.data().entrepriseId
       });
     });
     

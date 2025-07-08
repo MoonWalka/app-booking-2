@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useParametres } from '@/context/ParametresContext';
 import useTabsSafe from '@/hooks/useTabsSafe';
 import contratService from '@/services/contratService';
@@ -16,7 +16,7 @@ import styles from './FactureGeneratorPage.module.css';
 const FactureGeneratorPage = () => {
   const { dateId: dateIdFromParams, factureId: factureIdFromParams } = useParams();
   const { user } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { parametres } = useParametres();
   const { getActiveTab, openTab } = useTabsSafe();
   
@@ -101,9 +101,9 @@ const FactureGeneratorPage = () => {
         <!-- En-tête avec coordonnées -->
         <div class="header">
           <div class="diffuseur">
-            <h3>${data.emetteurNom || data.organisationNom || currentOrganization?.nom || 'Organisation'}</h3>
-            <p>${data.emetteurAdresse || data.organisationAdresse || currentOrganization?.adresse || ''}</p>
-            <p>${data.emetteurVille || (data.organisationCodePostal && data.organisationVille ? `${data.organisationCodePostal} ${data.organisationVille}` : '') || (currentOrganization?.codePostal && currentOrganization?.ville ? `${currentOrganization.codePostal} ${currentOrganization.ville}` : '')}</p>
+            <h3>${data.emetteurNom || data.organisationNom || currentEntreprise?.nom || 'Organisation'}</h3>
+            <p>${data.emetteurAdresse || data.organisationAdresse || currentEntreprise?.adresse || ''}</p>
+            <p>${data.emetteurVille || (data.organisationCodePostal && data.organisationVille ? `${data.organisationCodePostal} ${data.organisationVille}` : '') || (currentEntreprise?.codePostal && currentEntreprise?.ville ? `${currentEntreprise.codePostal} ${currentEntreprise.ville}` : '')}</p>
             ${data.numeroTVA ? `<p>N° TVA : ${data.numeroTVA}</p>` : ''}
           </div>
           <div class="client">
@@ -204,7 +204,7 @@ const FactureGeneratorPage = () => {
             <div class="encadre-modalites">
               <p><strong>Échéance de règlement :</strong> le ${data.echeance ? new Date(data.echeance).toLocaleDateString('fr-FR') : ''}</p>
               <p><strong>Mode de règlement :</strong> ${data.modeReglement || 'Virement bancaire'}</p>
-              <p><strong>à l'ordre de</strong> ${data.aLOrdreDe || currentOrganization?.nom || ''}</p>
+              <p><strong>à l'ordre de</strong> ${data.aLOrdreDe || currentEntreprise?.nom || ''}</p>
             </div>
           </div>
         </div>
@@ -225,10 +225,10 @@ const FactureGeneratorPage = () => {
         ` : ''}
       </div>
     `;
-  }, [currentOrganization]);
+  }, [currentEntreprise]);
 
   // Générer les factures à partir du contrat
-  const generateFacturesFromContrat = useCallback((contratData, dateData, parametres, entrepriseData, currentOrganization, structureData) => {
+  const generateFacturesFromContrat = useCallback((contratData, dateData, parametres, entrepriseData, currentEntreprise, structureData) => {
     console.log('[generateFacturesFromContrat] === DÉBUT GÉNÉRATION FACTURES ===');
     console.log('[generateFacturesFromContrat] Données contrat reçues:', contratData);
     console.log('[generateFacturesFromContrat] Paramètres entreprise:', parametres?.entreprise);
@@ -263,28 +263,28 @@ const FactureGeneratorPage = () => {
       structureTVA: contratData.contractant2?.numeroTVA || structureData?.numeroTVA || '',
       
       // Informations de l'émetteur (producteur/tourneur) - contractant1 dans le contrat
-      organisationNom: contratData.contractant1?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentOrganization?.nom,
-      organisationAdresse: contratData.contractant1?.adresse || entrepriseData?.adresse || currentOrganization?.adresse,
-      organisationCodePostal: contratData.contractant1?.codePostal || entrepriseData?.codePostal || currentOrganization?.codePostal,
-      organisationVille: contratData.contractant1?.ville || entrepriseData?.ville || currentOrganization?.ville,
+      organisationNom: contratData.contractant1?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentEntreprise?.nom,
+      organisationAdresse: contratData.contractant1?.adresse || entrepriseData?.adresse || currentEntreprise?.adresse,
+      organisationCodePostal: contratData.contractant1?.codePostal || entrepriseData?.codePostal || currentEntreprise?.codePostal,
+      organisationVille: contratData.contractant1?.ville || entrepriseData?.ville || currentEntreprise?.ville,
       
       // Champs émetteur pour FactureEditor
-      emetteurNom: contratData.contractant1?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentOrganization?.nom,
-      emetteurAdresse: contratData.contractant1?.adresse || entrepriseData?.adresse || currentOrganization?.adresse,
+      emetteurNom: contratData.contractant1?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentEntreprise?.nom,
+      emetteurAdresse: contratData.contractant1?.adresse || entrepriseData?.adresse || currentEntreprise?.adresse,
       emetteurVille: (contratData.contractant1?.codePostal && contratData.contractant1?.ville) ? 
         `${contratData.contractant1.codePostal} ${contratData.contractant1.ville}` :
         (entrepriseData?.codePostal && entrepriseData?.ville) ? 
         `${entrepriseData.codePostal} ${entrepriseData.ville}` :
-        (currentOrganization?.codePostal && currentOrganization?.ville) ?
-        `${currentOrganization.codePostal} ${currentOrganization.ville}` : '',
+        (currentEntreprise?.codePostal && currentEntreprise?.ville) ?
+        `${currentEntreprise.codePostal} ${currentEntreprise.ville}` : '',
       
       // Informations bancaires de l'émetteur
-      coordonneesBancairesEmetteur: contratData.contractant1?.coordonneesBancaires || contratData.coordonneesBancaires || parametres?.entreprise?.coordonneesBancaires || currentOrganization.coordonneesBancaires,
-      ibanEmetteur: contratData.contractant1?.iban || contratData.iban || parametres?.entreprise?.iban || currentOrganization.iban,
-      bicEmetteur: contratData.contractant1?.bic || contratData.bic || parametres?.entreprise?.bic || currentOrganization.bic,
+      coordonneesBancairesEmetteur: contratData.contractant1?.coordonneesBancaires || contratData.coordonneesBancaires || parametres?.entreprise?.coordonneesBancaires || currentEntreprise.coordonneesBancaires,
+      ibanEmetteur: contratData.contractant1?.iban || contratData.iban || parametres?.entreprise?.iban || currentEntreprise.iban,
+      bicEmetteur: contratData.contractant1?.bic || contratData.bic || parametres?.entreprise?.bic || currentEntreprise.bic,
       
       // Informations de paiement par défaut
-      aLOrdreDe: entrepriseData?.ordre || entrepriseData?.nom || contratData.contractant1?.nom || contratData.aLOrdreDe || currentOrganization?.nom,
+      aLOrdreDe: entrepriseData?.ordre || entrepriseData?.nom || contratData.contractant1?.nom || contratData.aLOrdreDe || currentEntreprise?.nom,
       
       // TVA - Calculer depuis les prestations uniquement
       tauxTVA: (() => {
@@ -329,8 +329,8 @@ const FactureGeneratorPage = () => {
         
         return tauxMoyen;
       })(),
-      numeroTVA: contratData.contractant1?.numeroTVA || entrepriseData?.tva || entrepriseData?.numeroTVA || contratData.numeroTVA || currentOrganization?.numeroTVA,
-      assujettissementTVA: contratData.contractant1?.assujettissementTVA || entrepriseData?.assujettie || contratData.assujettissementTVA || currentOrganization?.assujettissementTVA,
+      numeroTVA: contratData.contractant1?.numeroTVA || entrepriseData?.tva || entrepriseData?.numeroTVA || contratData.numeroTVA || currentEntreprise?.numeroTVA,
+      assujettissementTVA: contratData.contractant1?.assujettissementTVA || entrepriseData?.assujettie || contratData.assujettissementTVA || currentEntreprise?.assujettissementTVA,
       
       // Informations bancaires de l'entreprise (sans duplication)
       iban: entrepriseData?.iban || parametres?.entreprise?.iban || '',
@@ -472,7 +472,7 @@ const FactureGeneratorPage = () => {
   // Charger les données initiales
   useEffect(() => {
     const loadData = async () => {
-      if (!user || !currentOrganization?.id) {
+      if (!user || !currentEntreprise?.id) {
         setLoading(false);
         setError('Utilisateur ou organisation manquante');
         return;
@@ -484,7 +484,7 @@ const FactureGeneratorPage = () => {
           setLoading(true);
           
           // Charger la facture existante
-          const factureData = await factureService.getFacture(factureId, currentOrganization.id);
+          const factureData = await factureService.getFacture(factureId, currentEntreprise.id);
           
           if (!factureData) {
             throw new Error('Facture introuvable');
@@ -507,7 +507,7 @@ const FactureGeneratorPage = () => {
           if (factureData.dateId) {
             try {
               // Chercher toutes les factures de la même date
-              const facturesRef = collection(db, 'organizations', currentOrganization.id, 'factures');
+              const facturesRef = collection(db, 'organizations', currentEntreprise.id, 'factures');
               const q = query(facturesRef, where('dateId', '==', factureData.dateId));
               const snapshot = await getDocs(q);
               
@@ -596,7 +596,7 @@ const FactureGeneratorPage = () => {
         // Charger les informations bancaires de l'entreprise
         let entrepriseInfo = null;
         try {
-          const entrepriseRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'entreprise');
+          const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
           const entrepriseSnap = await getDoc(entrepriseRef);
           if (entrepriseSnap.exists()) {
             entrepriseInfo = entrepriseSnap.data();
@@ -670,7 +670,7 @@ const FactureGeneratorPage = () => {
             setContrat(contratData);
             
             // Générer les factures basées sur les échéances du contrat
-            const generatedFactures = generateFacturesFromContrat(contratData, dateData, parametres, entrepriseInfo, currentOrganization, structureData);
+            const generatedFactures = generateFacturesFromContrat(contratData, dateData, parametres, entrepriseInfo, currentEntreprise, structureData);
             console.log('[FactureGeneratorPage] Factures générées:', generatedFactures);
             setFactures(generatedFactures);
             
@@ -694,7 +694,7 @@ const FactureGeneratorPage = () => {
     };
 
     loadData();
-  }, [user, currentOrganization?.id, dateId, contratId, fromContrat, parametres, mode, factureId, generatePreview, generateFacturesFromContrat]);
+  }, [user, currentEntreprise?.id, dateId, contratId, fromContrat, parametres, mode, factureId, generatePreview, generateFacturesFromContrat]);
 
   // Note: generateFacturesFromContrat est défini plus haut avant son utilisation dans loadData
 
@@ -754,7 +754,7 @@ const FactureGeneratorPage = () => {
 
   // Sauvegarder toutes les factures
   const handleSaveFactures = async () => {
-    if (!user || !currentOrganization?.id) {
+    if (!user || !currentEntreprise?.id) {
       setError('Impossible de sauvegarder : utilisateur ou organisation manquant');
       return;
     }
@@ -800,7 +800,7 @@ const FactureGeneratorPage = () => {
           // Générer le numéro de facture si nécessaire
           let numeroFacture = facture.reference;
           if (!numeroFacture || numeroFacture.includes('attente')) {
-            numeroFacture = await factureService.generateNumeroFacture(currentOrganization.id);
+            numeroFacture = await factureService.generateNumeroFacture(currentEntreprise.id);
           }
           
           // Préparer les données de la facture
@@ -829,7 +829,7 @@ const FactureGeneratorPage = () => {
           
           const newFactureId = await factureService.createFacture(
             cleanedFactureData,
-            currentOrganization.id,
+            currentEntreprise.id,
             user.uid
           );
           

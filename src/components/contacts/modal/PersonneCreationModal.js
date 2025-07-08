@@ -1,7 +1,7 @@
 // src/components/contacts/modal/PersonneCreationModal.js
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { personnesService } from '@/services/contacts/personnesService';
 import liaisonsService from '@/services/contacts/liaisonsService';
@@ -14,7 +14,7 @@ import styles from './StructureCreationModal.module.css'; // Réutiliser les sty
  * Avec système d'onglets : Adresse, Email/Tél
  */
 function PersonneCreationModal({ show, onHide, onCreated, editMode = false, initialData = null, structureId = null }) {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
@@ -123,7 +123,7 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
       return;
     }
 
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       alert('Aucune organisation sélectionnée');
       return;
     }
@@ -197,7 +197,7 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
         console.log('🆕 [PersonneCreationModal] Création nouvelle personne:', personneData);
         console.log('📎 [PersonneCreationModal] Structure ID fourni:', structureId);
         
-        const result = await personnesService.createPersonne(personneData, currentOrganization.id, currentUser?.uid);
+        const result = await personnesService.createPersonne(personneData, currentEntreprise.id, currentUser?.uid);
         
         if (!result.success) {
           throw new Error(result.error || 'Erreur lors de la création');
@@ -210,7 +210,7 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
           console.log('🔗 [PersonneCreationModal] Création de la liaison avec la structure:', structureId);
           
           const liaisonData = {
-            organizationId: currentOrganization.id,
+            entrepriseId: currentEntreprise.id,
             structureId: structureId,
             personneId: result.id,
             fonction: formData.fonction || null,

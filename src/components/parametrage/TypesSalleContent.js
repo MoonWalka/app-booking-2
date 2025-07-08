@@ -6,7 +6,7 @@ import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
 import * as FirebaseService from '@/services/firebase-service';
 
 const TypesSalleContent = () => {
-  const { currentOrganization } = useAuth();
+  const { currentEntreprise } = useAuth();
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ nom: '' });
   const [refreshKey, setRefreshKey] = useState(0);
@@ -26,7 +26,7 @@ const TypesSalleContent = () => {
     
     const dataToSave = {
       nom: formData.nom,
-      organizationId: currentOrganization?.id,
+      entrepriseId: currentEntreprise?.id,
       createdAt: editingId ? undefined : new Date(),
       updatedAt: new Date()
     };
@@ -50,7 +50,7 @@ const TypesSalleContent = () => {
       console.error('Erreur lors de la sauvegarde:', error);
       toast.error('Erreur lors de la sauvegarde');
     }
-  }, [formData, editingId, currentOrganization]);
+  }, [formData, editingId, currentEntreprise]);
 
   const handleEdit = useCallback((type) => {
     setEditingId(type.id);

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc, deleteDoc, getDoc, Timestamp } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 // import brevoTemplateService from '@/services/brevoTemplateService'; // TEMPORAIREMENT DÉSACTIVÉ
 import { debugLog } from '@/utils/logUtils';
 
@@ -14,12 +14,12 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
   const [actionError, setActionError] = useState('');
   const [isActionLoading, setIsActionLoading] = useState(false);
   const navigate = useNavigate();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
-  // Vérifier l'appartenance du contrat à l'organisation
+  // Vérifier l'appartenance du contrat à l'entreprise
   const verifyContratOwnership = async () => {
-    if (!currentOrganization?.id) {
-      throw new Error('Aucune organisation sélectionnée');
+    if (!currentEntreprise?.id) {
+      throw new Error('Aucune entreprise sélectionnée');
     }
     
     const contratDoc = await getDoc(doc(db, 'contrats', contratId));
@@ -28,7 +28,7 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
     }
     
     const contratData = contratDoc.data();
-    if (contratData.organizationId !== currentOrganization.id) {
+    if (contratData.entrepriseId !== currentEntreprise.id) {
       throw new Error('Accès non autorisé à ce contrat');
     }
     

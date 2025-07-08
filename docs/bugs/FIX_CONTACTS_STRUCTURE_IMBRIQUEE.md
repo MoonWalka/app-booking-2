@@ -20,7 +20,7 @@ Les contacts sont sauvegardés dans Firebase avec une structure imbriquée incor
     "codePostal": "75001",
     "ville": "Paris"
   },
-  "organizationId": "org123",
+  "entrepriseId": "org123",
   "concertsAssocies": []
 }
 ```
@@ -36,7 +36,7 @@ Au lieu de la structure aplatie attendue :
   "telephone": "0123456789",
   "structureId": "struct123",
   "structureNom": "Ma Structure",
-  "organizationId": "org123",
+  "entrepriseId": "org123",
   "concertsAssocies": []
 }
 ```
@@ -125,7 +125,7 @@ const transformLoadedData = useCallback((data) => {
     structureNom: data.structureNom || '',
     concertsAssocies: data.concertsAssocies || [],
     id: data.id,
-    organizationId: data.organizationId
+    entrepriseId: data.entrepriseId
   };
 }, []);
 ```

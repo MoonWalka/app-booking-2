@@ -2,7 +2,7 @@
 /**
  * Script pour corriger le problème de séparation des données entre organisations
  * Ce script applique les corrections nécessaires pour garantir que toutes les données
- * sont correctement filtrées par organizationId
+ * sont correctement filtrées par entrepriseId
  */
 
 const fs = require('fs');
@@ -28,7 +28,7 @@ if (content.includes('useOrganization') && content.includes('currentOrganization
   console.log('✅ Les corrections semblent déjà appliquées!');
   console.log('   - Import de useOrganization: ✓');
   console.log('   - Utilisation de currentOrganization: ✓');
-  console.log('   - Filtre organizationId: ✓');
+  console.log('   - Filtre entrepriseId: ✓');
   process.exit(0);
 }
 
@@ -69,7 +69,7 @@ if (!content.includes('const { currentOrganization }')) {
   }
 }
 
-// 3. Modifier la fonction loadData pour ajouter le filtre organizationId
+// 3. Modifier la fonction loadData pour ajouter le filtre entrepriseId
 console.log('3. Modification de la fonction loadData...');
 
 // Chercher le pattern de construction de la requête
@@ -81,9 +81,9 @@ if (queryPattern.test(content)) {
       // Construction de la requête avec les filtres
       const queryConditions = [];
       
-      // IMPORTANT: Toujours filtrer par organizationId pour la sécurité
+      // IMPORTANT: Toujours filtrer par entrepriseId pour la sécurité
       if (currentOrganization?.id) {
-        queryConditions.push(where('organizationId', '==', currentOrganization.id));
+        queryConditions.push(where('entrepriseId', '==', currentOrganization.id));
       } else {
         console.warn('⚠️ Pas d\\'organisation courante - impossible de filtrer les données');
         setItems([]);
@@ -91,7 +91,7 @@ if (queryPattern.test(content)) {
         return;
       }`);
   
-  console.log('   ✓ Filtre organizationId ajouté');
+  console.log('   ✓ Filtre entrepriseId ajouté');
 }
 
 // 4. Mettre à jour la construction de la requête avec les conditions
@@ -128,7 +128,7 @@ if (content !== originalContent) {
   console.log('\n📋 Résumé des modifications:');
   console.log('   - Import de useOrganization ajouté');
   console.log('   - Hook useOrganization utilisé dans le composant');
-  console.log('   - Filtre organizationId ajouté dans loadData');
+  console.log('   - Filtre entrepriseId ajouté dans loadData');
   console.log('   - Gestion des cas sans organisation');
   console.log('   - Dépendances du useCallback mises à jour');
   

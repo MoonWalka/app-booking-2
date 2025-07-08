@@ -42,7 +42,7 @@ const [hasMore, setHasMore] = useState(true);
 
 // ✅ Après - Hook générique V2
 const { data: contacts, loading, error, loadMore, hasMore } = useGenericEntityList('contacts', {
-  organizationId: currentOrganization.id
+  entrepriseId: currentOrganization.id
 });
 ```
 

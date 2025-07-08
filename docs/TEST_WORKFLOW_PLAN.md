@@ -122,7 +122,7 @@ Créer un système de test exhaustif qui valide l'intégralité du workflow de l
 {
   "testId": "test_2025_01_15_143025",
   "timestamp": "2025-01-15T14:30:25.123Z",
-  "organizationId": "9LjkCJG04pEzbABdHkSf",
+  "entrepriseId": "9LjkCJG04pEzbABdHkSf",
   "entitiesCreated": {
     "artiste": { id: "...", nom: "..." },
     "structure": { id: "...", nom: "..." },

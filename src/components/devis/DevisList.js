@@ -1,6 +1,6 @@
 // src/components/devis/DevisList.js
 import React, { useState, useEffect } from 'react';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useTabs } from '@/context/TabsContext';
 import { collection, getDocs, query, where } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
@@ -15,7 +15,7 @@ import '@styles/index.css';
  * Liste des devis
  */
 function DevisList() {
-  const { currentOrg } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { openNewDevisTab, openDevisTab } = useTabs();
   const { isMobile } = useResponsive();
   
@@ -25,7 +25,7 @@ function DevisList() {
   // Charger les données Firebase
   useEffect(() => {
     const loadData = async () => {
-      if (!currentOrg?.id) {
+      if (!currentEntreprise?.id) {
         setLoading(false);
         return;
       }
@@ -36,7 +36,7 @@ function DevisList() {
         // Requête simplifiée pour éviter l'index composite
         const devisQuery = query(
           collection(db, 'devis'),
-          where('organizationId', '==', currentOrg.id)
+          where('entrepriseId', '==', currentEntreprise.id)
         );
         
         const devisSnapshot = await getDocs(devisQuery);
@@ -61,7 +61,7 @@ function DevisList() {
     };
 
     loadData();
-  }, [currentOrg?.id]);
+  }, [currentEntreprise?.id]);
 
   // Fonction handleUpdateDevis retirée car non utilisée actuellement
 

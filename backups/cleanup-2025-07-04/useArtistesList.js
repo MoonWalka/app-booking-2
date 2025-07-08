@@ -96,7 +96,7 @@ export const useArtistesList = ({
       
       const artistesQuery = query(
         collection(db, 'artistes'),
-        where('organizationId', '==', currentOrganization.id)
+        where('entrepriseId', '==', currentOrganization.id)
       );
       const snapshot = await getDocs(artistesQuery);
       

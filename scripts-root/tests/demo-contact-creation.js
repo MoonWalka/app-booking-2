@@ -231,7 +231,7 @@ const validateSaveStructure = (contactData) => {
       adresse: contactData.salleAdresse,
       // ... tous les champs salle
     },
-    organizationId: 'current-org-id'
+    entrepriseId: 'current-org-id'
   };
 
   console.log('📊 SECTIONS SAUVEGARDÉES:');
@@ -281,7 +281,7 @@ const generateUsageGuide = () => {
     },
     {
       step: '5. Métadonnées automatiques',
-      auto_fields: 'Dates, timestamps, organizationId',
+      auto_fields: 'Dates, timestamps, entrepriseId',
       description: 'Traçabilité et multi-organisation'
     }
   ];

@@ -186,10 +186,10 @@ class FactureService {
   /**
    * Générer un numéro de facture unique basé sur les paramètres configurés
    */
-  async generateFactureNumber(organizationId) {
+  async generateFactureNumber(entrepriseId) {
     try {
       // Charger les paramètres pour obtenir le format de numérotation
-      const parameters = await this.loadFactureParameters(organizationId);
+      const parameters = await this.loadFactureParameters(entrepriseId);
       
       const now = new Date();
       const year = now.getFullYear();
@@ -206,7 +206,7 @@ class FactureService {
         numeroBase.replace('XXXX', '');
 
       // Récupérer la dernière facture avec ce préfixe
-      const facturesRef = collection(db, 'organizations', organizationId, this.collectionName);
+      const facturesRef = collection(db, 'organizations', entrepriseId, this.collectionName);
       const q = query(
         facturesRef,
         where('numeroFacture', '>=', searchPrefix),
@@ -256,18 +256,18 @@ class FactureService {
   /**
    * Charger les paramètres de facturation pour une organisation
    */
-  async loadFactureParameters(organizationId) {
-    if (this.parametersCache && this.parametersCache.organizationId === organizationId) {
+  async loadFactureParameters(entrepriseId) {
+    if (this.parametersCache && this.parametersCache.entrepriseId === entrepriseId) {
       return this.parametersCache.parameters;
     }
 
     try {
-      const parametersRef = doc(db, 'organizations', organizationId, 'settings', 'factureParameters');
+      const parametersRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
       const parametersDoc = await getDoc(parametersRef);
       
       if (parametersDoc.exists()) {
         const parameters = parametersDoc.data().parameters || {};
-        this.parametersCache = { organizationId, parameters };
+        this.parametersCache = { entrepriseId, parameters };
         return parameters;
       }
     } catch (error) {
@@ -302,21 +302,21 @@ class FactureService {
       couleurSecondaire: '#1f2937'
     };
 
-    this.parametersCache = { organizationId, parameters: defaultParameters };
+    this.parametersCache = { entrepriseId, parameters: defaultParameters };
     return defaultParameters;
   }
 
   /**
    * Préparer les variables pour une facture
    */
-  async prepareFactureVariables(factureData, organizationId) {
+  async prepareFactureVariables(factureData, entrepriseId) {
     // Charger les paramètres
-    const parameters = await this.loadFactureParameters(organizationId);
+    const parameters = await this.loadFactureParameters(entrepriseId);
     
     // Charger les informations d'entreprise depuis l'organisation
     let entreprise = factureData.entreprise;
     try {
-      const entrepriseRef = doc(db, 'organizations', organizationId, 'settings', 'entreprise');
+      const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
       const entrepriseDoc = await getDoc(entrepriseRef);
       if (entrepriseDoc.exists()) {
         entreprise = entrepriseDoc.data();
@@ -359,7 +359,7 @@ class FactureService {
     const { montantTVA, montantTTC } = this.calculateTVA(montantHTFinal, tauxTVA);
 
     // Générer le numéro de facture
-    const numeroFacture = await this.generateFactureNumber(organizationId);
+    const numeroFacture = await this.generateFactureNumber(entrepriseId);
     
     // Calculer le montant du date (sans les lignes supplémentaires)
     let montantDate = factureData.montantTotal || parseFloat(factureData.montantHT) || 0;
@@ -636,9 +636,9 @@ class FactureService {
   /**
    * Créer une facture
    */
-  async createFacture(factureData, organizationId, userId) {
+  async createFacture(factureData, entrepriseId, userId) {
     try {
-      const facturesRef = collection(db, 'organizations', organizationId, this.collectionName);
+      const facturesRef = collection(db, 'organizations', entrepriseId, this.collectionName);
       
       const newFacture = {
         ...factureData,
@@ -646,7 +646,7 @@ class FactureService {
         createdBy: userId,
         updatedAt: serverTimestamp(),
         updatedBy: userId,
-        organizationId: organizationId
+        entrepriseId: entrepriseId
         // Le status est déjà inclus dans factureData
       };
 
@@ -680,7 +680,7 @@ class FactureService {
           type: 'envoi_document',
           priorite: 'haute',
           dateEcheance: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 jours
-          organizationId: organizationId,
+          entrepriseId: entrepriseId,
           dateId: factureData.dateId || null,
           contactId: factureData.contactId || null,
           entityType: 'facture',
@@ -703,9 +703,9 @@ class FactureService {
   /**
    * Mettre à jour une facture
    */
-  async updateFacture(factureId, updates, organizationId, userId) {
+  async updateFacture(factureId, updates, entrepriseId, userId) {
     try {
-      const factureRef = doc(db, 'organizations', organizationId, this.collectionName, factureId);
+      const factureRef = doc(db, 'organizations', entrepriseId, this.collectionName, factureId);
       
       await updateDoc(factureRef, {
         ...updates,
@@ -721,9 +721,9 @@ class FactureService {
   /**
    * Récupérer une facture
    */
-  async getFacture(factureId, organizationId) {
+  async getFacture(factureId, entrepriseId) {
     try {
-      const factureRef = doc(db, 'organizations', organizationId, this.collectionName, factureId);
+      const factureRef = doc(db, 'organizations', entrepriseId, this.collectionName, factureId);
       const factureDoc = await getDoc(factureRef);
       
       if (!factureDoc.exists()) {
@@ -743,9 +743,9 @@ class FactureService {
   /**
    * Récupérer les templates de facture
    */
-  async getFactureTemplates(organizationId) {
+  async getFactureTemplates(entrepriseId) {
     try {
-      const templatesRef = collection(db, 'organizations', organizationId, 'factureTemplates');
+      const templatesRef = collection(db, 'organizations', entrepriseId, 'factureTemplates');
       const q = query(templatesRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       
@@ -767,10 +767,10 @@ class FactureService {
   /**
    * Récupérer le template par défaut ou le modèle système
    */
-  async getDefaultTemplateOrSystem(organizationId) {
+  async getDefaultTemplateOrSystem(entrepriseId) {
     try {
       // D'abord chercher un template utilisateur par défaut
-      const templatesRef = collection(db, 'organizations', organizationId, 'factureTemplates');
+      const templatesRef = collection(db, 'organizations', entrepriseId, 'factureTemplates');
       const q = query(templatesRef, where('isDefault', '==', true), limit(1));
       const snapshot = await getDocs(q);
       
@@ -793,9 +793,9 @@ class FactureService {
   /**
    * Créer un template de facture
    */
-  async createTemplate(templateData, organizationId, userId) {
+  async createTemplate(templateData, entrepriseId, userId) {
     try {
-      const templatesRef = collection(db, 'organizations', organizationId, 'factureTemplates');
+      const templatesRef = collection(db, 'organizations', entrepriseId, 'factureTemplates');
       
       const newTemplate = {
         ...templateData,
@@ -803,7 +803,7 @@ class FactureService {
         createdBy: userId,
         updatedAt: serverTimestamp(),
         updatedBy: userId,
-        organizationId: organizationId
+        entrepriseId: entrepriseId
       };
 
       const docRef = await addDoc(templatesRef, newTemplate);
@@ -817,9 +817,9 @@ class FactureService {
   /**
    * Supprimer une facture
    */
-  async deleteFacture(factureId, organizationId) {
+  async deleteFacture(factureId, entrepriseId) {
     try {
-      const factureRef = doc(db, 'organizations', organizationId, this.collectionName, factureId);
+      const factureRef = doc(db, 'organizations', entrepriseId, this.collectionName, factureId);
       await deleteDoc(factureRef);
       return true;
     } catch (error) {

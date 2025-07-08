@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Alert } from 'react-bootstrap';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Button from '@/components/ui/Button';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
@@ -10,7 +10,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
  * Composant pour migrer les paramètres globaux vers l'organisation actuelle
  */
 const ParametresMigration = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -18,7 +18,7 @@ const ParametresMigration = () => {
 
   // Vérifier l'état de la migration
   const checkMigrationStatus = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -34,7 +34,7 @@ const ParametresMigration = () => {
 
       // Vérifier les paramètres de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
       );
       const hasOrgParams = orgDoc.exists();
 
@@ -65,7 +65,7 @@ const ParametresMigration = () => {
 
   // Effectuer la migration
   const performMigration = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -102,7 +102,7 @@ const ParametresMigration = () => {
 
       // Sauvegarder dans l'organisation
       await setDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings'),
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'),
         finalData
       );
 
@@ -135,7 +135,7 @@ const ParametresMigration = () => {
         
         <div className="mb-3">
           <p>
-            <strong>Organisation actuelle :</strong> {currentOrganization?.name || 'Non sélectionnée'}
+            <strong>Organisation actuelle :</strong> {currentEntreprise?.name || 'Non sélectionnée'}
           </p>
           
           {migrationStatus && (
@@ -173,7 +173,7 @@ const ParametresMigration = () => {
           <Button
             variant="outline-primary"
             onClick={checkMigrationStatus}
-            disabled={loading || !currentOrganization?.id}
+            disabled={loading || !currentEntreprise?.id}
           >
             🔍 Vérifier l'état
           </Button>
@@ -182,7 +182,7 @@ const ParametresMigration = () => {
             <Button
               variant="primary"
               onClick={performMigration}
-              disabled={loading || !currentOrganization?.id}
+              disabled={loading || !currentEntreprise?.id}
             >
               🔄 Migrer les paramètres
             </Button>

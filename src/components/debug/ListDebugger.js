@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { collection, getDocs, query, where } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 import styles from './DataStructureFixer.module.css';
 
 const ListDebugger = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [scanning, setScanning] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
@@ -29,12 +29,12 @@ const ListDebugger = () => {
         // 1. Compter TOUS les documents
         const allDocsSnapshot = await getDocs(collection(db, collName));
         
-        // 2. Compter les documents avec organizationId correct
+        // 2. Compter les documents avec entrepriseId correct
         let orgDocsCount = 0;
-        if (currentOrganization?.id) {
+        if (currentEntreprise?.id) {
           const orgQuery = query(
             collection(db, collName),
-            where('organizationId', '==', currentOrganization.id)
+            where('entrepriseId', '==', currentEntreprise.id)
           );
           const orgSnapshot = await getDocs(orgQuery);
           orgDocsCount = orgSnapshot.size;
@@ -66,17 +66,17 @@ const ListDebugger = () => {
                 type: 'nested',
                 topLevel: Object.keys(data).filter(k => k !== nestedField),
                 nestedKeys: Object.keys(data[nestedField]),
-                organizationId: data.organizationId
+                entrepriseId: data.entrepriseId
               });
             }
           } else {
             structures.flat++;
           }
           
-          // Vérifier organizationId
-          if (!data.organizationId) {
+          // Vérifier entrepriseId
+          if (!data.entrepriseId) {
             structures.missingOrgId++;
-          } else if (currentOrganization?.id && data.organizationId !== currentOrganization.id) {
+          } else if (currentEntreprise?.id && data.entrepriseId !== currentEntreprise.id) {
             structures.wrongOrgId++;
           }
         });
@@ -163,7 +163,7 @@ const ListDebugger = () => {
           <div className={styles.results}>
             <h4>📊 Rapport de diagnostic</h4>
             
-            {!currentOrganization?.id && (
+            {!currentEntreprise?.id && (
               <Alert variant="warning">
                 ⚠️ Aucune organisation sélectionnée - Les filtres ne peuvent pas fonctionner
               </Alert>
@@ -221,7 +221,7 @@ const ListDebugger = () => {
                         <li>{data.nested} documents ont une structure imbriquée</li>
                       )}
                       {data.missingOrgId > 0 && (
-                        <li>{data.missingOrgId} documents n'ont pas d'organizationId</li>
+                        <li>{data.missingOrgId} documents n'ont pas d'entrepriseId</li>
                       )}
                       {data.wrongOrgId > 0 && (
                         <li>{data.wrongOrgId} documents appartiennent à une autre organisation</li>
@@ -253,8 +253,8 @@ const ListDebugger = () => {
               
               {report.some(r => r.missingOrgId > 0) && (
                 <Alert variant="warning">
-                  <strong>OrganizationId manquants !</strong>
-                  <p>Certains documents n'ont pas d'organizationId.</p>
+                  <strong>EntrepriseId manquants !</strong>
+                  <p>Certains documents n'ont pas d'entrepriseId.</p>
                   <p>→ Utilisez l'outil "Structure des données" pour les ajouter.</p>
                 </Alert>
               )}

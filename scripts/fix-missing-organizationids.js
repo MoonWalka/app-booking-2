@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Script pour ajouter organizationId aux documents qui n'en ont pas
+ * Script pour ajouter entrepriseId aux documents qui n'en ont pas
  * Utilise l'API REST Firestore pour éviter les dépendances
  */
 
@@ -11,7 +11,7 @@ const path = require('path');
 
 // Configuration
 const PROJECT_ID = 'tourcraft-bb3eb';
-const DEFAULT_ORGANIZATION_ID = 'default-org'; // À remplacer par l'ID réel
+const DEFAULT_ENTREPRISE_ID = 'default-org'; // À remplacer par l'ID réel
 
 // Charger la clé API depuis le fichier .env.local
 function getApiKey() {
@@ -82,17 +82,17 @@ async function listDocuments(collectionName) {
 }
 
 // Fonction pour mettre à jour un document
-async function updateDocument(documentPath, organizationId) {
+async function updateDocument(documentPath, entrepriseId) {
   const updateData = {
     fields: {
-      organizationId: {
-        stringValue: organizationId
+      entrepriseId: {
+        stringValue: entrepriseId
       }
     }
   };
 
   try {
-    await firestoreRequest('PATCH', `/documents/${documentPath}?updateMask.fieldPaths=organizationId`, updateData);
+    await firestoreRequest('PATCH', `/documents/${documentPath}?updateMask.fieldPaths=entrepriseId`, updateData);
     return true;
   } catch (error) {
     console.error(`❌ Erreur lors de la mise à jour:`, error.message);
@@ -101,11 +101,11 @@ async function updateDocument(documentPath, organizationId) {
 }
 
 // Fonction principale
-async function fixMissingOrganizationIds() {
+async function fixMissingEntrepriseIds() {
   const collections = ['contacts', 'lieux', 'concerts', 'structures', 'artistes', 'contrats'];
   
-  console.log('🔧 Correction des documents sans organizationId...');
-  console.log(`📌 OrganizationId par défaut: ${DEFAULT_ORGANIZATION_ID}\n`);
+  console.log('🔧 Correction des documents sans entrepriseId...');
+  console.log(`📌 EntrepriseId par défaut: ${DEFAULT_ENTREPRISE_ID}\n`);
 
   for (const collection of collections) {
     console.log(`\n📁 Collection: ${collection}`);
@@ -116,7 +116,7 @@ async function fixMissingOrganizationIds() {
     
     for (const doc of documents) {
       const docName = doc.name.split('/').pop();
-      const hasOrgId = doc.fields?.organizationId?.stringValue;
+      const hasOrgId = doc.fields?.entrepriseId?.stringValue;
       
       if (!hasOrgId) {
         const displayName = 
@@ -127,7 +127,7 @@ async function fixMissingOrganizationIds() {
         
         console.log(`  🔧 Correction: ${docName} - ${displayName}`);
         
-        const success = await updateDocument(`${collection}/${docName}`, DEFAULT_ORGANIZATION_ID);
+        const success = await updateDocument(`${collection}/${docName}`, DEFAULT_ENTREPRISE_ID);
         if (success) {
           fixed++;
         }
@@ -152,13 +152,13 @@ async function main() {
     process.exit(1);
   }
 
-  if (DEFAULT_ORGANIZATION_ID === 'default-org') {
-    console.warn('⚠️  ATTENTION: Vous utilisez l\'organizationId par défaut.');
-    console.log('Pour utiliser votre vrai organizationId:');
+  if (DEFAULT_ENTREPRISE_ID === 'default-org') {
+    console.warn('⚠️  ATTENTION: Vous utilisez l\'entrepriseId par défaut.');
+    console.log('Pour utiliser votre vrai entrepriseId:');
     console.log('1. Connectez-vous à l\'application');
     console.log('2. Ouvrez la console du navigateur');
     console.log('3. Tapez: JSON.parse(localStorage.getItem("organizationContext"))?.currentOrganization?.id');
-    console.log('4. Remplacez DEFAULT_ORGANIZATION_ID dans ce script par la valeur obtenue\n');
+    console.log('4. Remplacez DEFAULT_ENTREPRISE_ID dans ce script par la valeur obtenue\n');
     
     // Attendre confirmation
     console.log('Appuyez sur Ctrl+C pour annuler ou Entrée pour continuer...');
@@ -168,7 +168,7 @@ async function main() {
   }
 
   try {
-    await fixMissingOrganizationIds();
+    await fixMissingEntrepriseIds();
   } catch (error) {
     console.error('❌ Erreur fatale:', error);
     process.exit(1);

@@ -1,7 +1,7 @@
 // src/components/contacts/modal/StructureCreationModal.js
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { structuresService } from '@/services/contacts/structuresService';
 import AddressInput from '@/components/ui/AddressInput';
@@ -13,7 +13,7 @@ import styles from './StructureCreationModal.module.css';
  * Avec système d'onglets : Adresse, Email/Tél, Administratif, Réseaux sociaux
  */
 function StructureCreationModal({ show, onHide, onCreated, editMode = false, initialData = null }) {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
@@ -216,7 +216,7 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
       return;
     }
 
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       alert('Aucune organisation sélectionnée');
       return;
     }
@@ -288,7 +288,7 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
 
         console.log('🆕 [StructureCreationModal] Création nouvelle structure:', structureData);
         
-        const result = await structuresService.createStructure(structureData, currentOrganization.id, currentUser?.uid);
+        const result = await structuresService.createStructure(structureData, currentEntreprise.id, currentUser?.uid);
         
         if (!result.success) {
           throw new Error(result.error || 'Erreur lors de la création');

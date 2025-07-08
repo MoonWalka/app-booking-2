@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { collection, getDocs, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import styles from './MigrateContractVariables.module.css';
 
 /**
@@ -9,7 +9,7 @@ import styles from './MigrateContractVariables.module.css';
  * Convertit les anciennes variables vers le nouveau format
  */
 const MigrateContractVariables = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [isMigrating, setIsMigrating] = useState(false);
   const [migrationLog, setMigrationLog] = useState([]);
   const [selectedTemplates, setSelectedTemplates] = useState([]);
@@ -101,7 +101,7 @@ const MigrateContractVariables = () => {
       templatesSnapshot.forEach((doc) => {
         const data = doc.data();
         // Filtrer par organisation si nécessaire
-        if (!data.organizationId || data.organizationId === currentOrganization?.id) {
+        if (!data.entrepriseId || data.entrepriseId === currentEntreprise?.id) {
           loadedTemplates.push({
             id: doc.id,
             ...data

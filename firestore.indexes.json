@@ -5,7 +5,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -19,7 +19,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -33,7 +33,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -47,7 +47,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -61,7 +61,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -75,7 +75,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -93,7 +93,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -107,7 +107,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -125,7 +125,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -139,7 +139,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -189,7 +189,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -207,7 +207,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -225,7 +225,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -243,7 +243,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {
@@ -257,7 +257,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "organizationId",
+          "fieldPath": "entrepriseId",
           "order": "ASCENDING"
         },
         {

@@ -75,7 +75,7 @@ async function auditCollections() {
         continue;
       }
       
-      // Analyser les organizationId
+      // Analyser les entrepriseId
       let withOrgId = 0;
       let withoutOrgId = 0;
       const orgIds = new Set();
@@ -83,9 +83,9 @@ async function auditCollections() {
       
       allSnapshot.forEach(doc => {
         const data = doc.data();
-        if (data.organizationId) {
+        if (data.entrepriseId) {
           withOrgId++;
-          orgIds.add(data.organizationId);
+          orgIds.add(data.entrepriseId);
         } else {
           withoutOrgId++;
         }
@@ -94,15 +94,15 @@ async function auditCollections() {
           samples.push({
             id: doc.id,
             name: data.nom || data.titre || data.raisonSociale || 'Sans nom',
-            hasOrgId: !!data.organizationId,
-            orgId: data.organizationId || 'NONE'
+            hasOrgId: !!data.entrepriseId,
+            orgId: data.entrepriseId || 'NONE'
           });
         }
       });
       
-      console.log(`    🔑 Avec organizationId: ${withOrgId}`);
-      console.log(`    ❌ Sans organizationId: ${withoutOrgId}`);
-      console.log(`    🏢 OrganizationIds uniques: [${Array.from(orgIds).join(', ')}]`);
+      console.log(`    🔑 Avec entrepriseId: ${withOrgId}`);
+      console.log(`    ❌ Sans entrepriseId: ${withoutOrgId}`);
+      console.log(`    🏢 EntrepriseIds uniques: [${Array.from(orgIds).join(', ')}]`);
       console.log(`    📋 Échantillons:`, samples);
       
       // Déterminer le statut
@@ -164,14 +164,14 @@ async function checkCurrentOrganization() {
 }
 
 /**
- * 4. TEST DES REQUÊTES AVEC ORGANIZATION_ID
+ * 4. TEST DES REQUÊTES AVEC ENTREPRISE_ID
  */
-async function testQueriesWithOrgId(organizationId) {
-  console.log('\n🔎 4. TEST DES REQUÊTES AVEC ORGANIZATION_ID');
+async function testQueriesWithOrgId(entrepriseId) {
+  console.log('\n🔎 4. TEST DES REQUÊTES AVEC ENTREPRISE_ID');
   console.log('-'.repeat(40));
   
-  if (!organizationId) {
-    console.log('⚠️  Pas d\'organizationId fourni, test avec requêtes générales');
+  if (!entrepriseId) {
+    console.log('⚠️  Pas d\'entrepriseId fourni, test avec requêtes générales');
     return;
   }
   
@@ -181,11 +181,11 @@ async function testQueriesWithOrgId(organizationId) {
   
   for (const collName of collectionsToTest) {
     try {
-      console.log(`\n  🔍 Test ${collName} avec organizationId: ${organizationId}`);
+      console.log(`\n  🔍 Test ${collName} avec entrepriseId: ${entrepriseId}`);
       
       const q = query(
         collection(db, collName),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
       
       const snapshot = await getDocs(q);
@@ -196,7 +196,7 @@ async function testQueriesWithOrgId(organizationId) {
         console.log(`    📋 Échantillon:`, {
           id: snapshot.docs[0].id,
           nom: sample.nom || sample.titre || 'Sans nom',
-          organizationId: sample.organizationId
+          entrepriseId: sample.entrepriseId
         });
       }
       
@@ -218,18 +218,18 @@ async function checkFirestoreIndexes() {
   
   const indexTests = [
     {
-      name: 'contacts + organizationId + nom',
+      name: 'contacts + entrepriseId + nom',
       collection: 'contacts',
       constraints: [
-        where('organizationId', '==', 'test'),
+        where('entrepriseId', '==', 'test'),
         orderBy('nom', 'asc')
       ]
     },
     {
-      name: 'lieux + organizationId + nom',
+      name: 'lieux + entrepriseId + nom',
       collection: 'lieux',
       constraints: [
-        where('organizationId', '==', 'test'),
+        where('entrepriseId', '==', 'test'),
         orderBy('nom', 'asc')
       ]
     }
@@ -268,10 +268,10 @@ async function runFullDiagnostic() {
     
     // 3. Vérifier l'organisation
     const currentOrg = await checkCurrentOrganization();
-    const organizationId = currentOrg?.id;
+    const entrepriseId = currentOrg?.id;
     
-    // 4. Tester les requêtes avec organizationId
-    await testQueriesWithOrgId(organizationId);
+    // 4. Tester les requêtes avec entrepriseId
+    await testQueriesWithOrgId(entrepriseId);
     
     // 5. Vérifier les indexes
     await checkFirestoreIndexes();
@@ -286,12 +286,12 @@ async function runFullDiagnostic() {
       if (data.status === 'EMPTY') {
         console.log(`   ⚠️  Collection ${name} est vide - c'est probablement le problème !`);
       } else if (data.status === 'MISSING_ORG_ID') {
-        console.log(`   🔧 ${data.withoutOrgId} documents sans organizationId à corriger`);
+        console.log(`   🔧 ${data.withoutOrgId} documents sans entrepriseId à corriger`);
       }
     });
     
-    if (organizationId) {
-      console.log(`🏢 Organisation courante: ${organizationId}`);
+    if (entrepriseId) {
+      console.log(`🏢 Organisation courante: ${entrepriseId}`);
     } else {
       console.log(`⚠️  Pas d'organisation courante détectée`);
     }
@@ -314,9 +314,9 @@ async function runFullDiagnostic() {
     
     if (collectionsAudit.contacts?.status === 'MISSING_ORG_ID' || 
         collectionsAudit.lieux?.status === 'MISSING_ORG_ID') {
-      console.log('🎯 ORGANIZATION_ID: Documents sans organizationId');
-      console.log('   → Exécutez le script de correction des organizationId');
-      console.log('   → Commande: fixMissingOrganizationId()');
+      console.log('🎯 ENTREPRISE_ID: Documents sans entrepriseId');
+      console.log('   → Exécutez le script de correction des entrepriseId');
+      console.log('   → Commande: fixMissingEntrepriseId()');
     }
     
   } catch (error) {

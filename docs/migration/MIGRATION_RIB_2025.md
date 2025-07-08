@@ -47,7 +47,7 @@ npm run migrate:rib
 
 ```javascript
 import { resetMigrationFlag } from '@/utils/autoMigrateRIB';
-await resetMigrationFlag(organizationId);
+await resetMigrationFlag(entrepriseId);
 ```
 
 ## Détails techniques

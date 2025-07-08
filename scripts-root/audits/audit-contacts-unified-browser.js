@@ -32,8 +32,8 @@ async function auditContactsUnified() {
         const data = doc.data();
         const type = data.entityType || 'unknown';
         types[type] = (types[type] || 0) + 1;
-        if (data.organizationId) {
-          orgIds.add(data.organizationId);
+        if (data.entrepriseId) {
+          orgIds.add(data.entrepriseId);
         }
       });
       

@@ -11,7 +11,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGenericAction from '../actions/useGenericAction';
 import useGenericValidation from '../validation/useGenericValidation';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook générique pour les formulaires d'entités - VERSION ROBUSTE
@@ -53,7 +53,7 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   } = options;
   
   const navigate = useNavigate();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   
   // ✅ CORRECTION 1: Stabilisation des données initiales avec useMemo
   const stableInitialData = useMemo(() => ({ ...initialData }), [initialData]);
@@ -191,16 +191,16 @@ const useGenericEntityForm = (formConfig = {}, options = {}) => {
   const processFormData = useCallback((dataToProcess) => {
     let processed = { ...dataToProcess };
     
-    // Ajouter organizationId si disponible
-    if (currentOrganization?.id) {
-      processed.organizationId = currentOrganization.id;
+    // Ajouter entrepriseId si disponible
+    if (currentEntreprise?.id) {
+      processed.entrepriseId = currentEntreprise.id;
     }
     
     if (transformDataRef.current && typeof transformDataRef.current === 'function') {
       processed = transformDataRef.current(processed);
     }
     return processed;
-  }, [currentOrganization]); // Dépendance complète sur currentOrganization
+  }, [currentEntreprise]); // Dépendance complète sur currentEntreprise
   
   // ✅ CORRECTION 12: Auto-save simplifié
   const triggerAutoSave = useCallback(() => {

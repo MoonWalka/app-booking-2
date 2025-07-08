@@ -171,8 +171,8 @@ const ContactDetails = () => {
 
 ### Isolation des Données
 ```javascript
-// Toutes les requêtes incluent automatiquement organizationId
-where('organizationId', '==', currentOrganization.id)
+// Toutes les requêtes incluent automatiquement entrepriseId
+where('entrepriseId', '==', currentOrganization.id)
 ```
 
 ### Migration des Données

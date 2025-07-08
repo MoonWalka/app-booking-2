@@ -189,7 +189,7 @@ const useFormValidationData = (dateId) => {
       } else {
         console.log("Recherche dans formSubmissions par dateId");
         // Chercher dans la collection formSubmissions
-        // NOTE: Ne pas filtrer par organizationId pour les formSubmissions existantes
+        // NOTE: Ne pas filtrer par entrepriseId pour les formSubmissions existantes
         // car elles n'ont pas encore ce champ
         const submissionsQuery = query(
           collection(db, 'formSubmissions'), 
@@ -201,7 +201,7 @@ const useFormValidationData = (dateId) => {
         if (submissionsSnapshot.empty) {
           console.log("Aucune soumission trouvée, recherche dans formLinks");
           // Si aucune soumission, vérifier si un lien a été généré
-          // NOTE: Ne pas filtrer par organizationId pour les formLinks existants
+          // NOTE: Ne pas filtrer par entrepriseId pour les formLinks existants
           const linksQuery = query(
             collection(db, 'formLinks'), 
             where('dateId', '==', dateId)

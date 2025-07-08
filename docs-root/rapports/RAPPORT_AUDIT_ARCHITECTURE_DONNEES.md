@@ -20,7 +20,7 @@
 ```javascript
 {
   id: "concert_id",
-  organizationId: "org_id",          // Filtrage multi-organisation
+  entrepriseId: "org_id",          // Filtrage multi-organisation
   
   // CHAMPS DE LIAISON PRINCIPAUX
   structureNom: "Nom de structure",   // 🔑 CHAMP MAÎTRE pour filtrage
@@ -49,7 +49,7 @@
 {
   id: "contact_id",
   entityType: "structure|personne_libre",
-  organizationId: "org_id",
+  entrepriseId: "org_id",
   
   // Pour entityType: "structure"
   structure: {
@@ -120,22 +120,22 @@ Concert                          │
 // Charge TOUTES les dates de l'organisation
 const concertsQuery = query(
   collection(db, 'concerts'),
-  where('organizationId', '==', currentOrg.id),
+  where('entrepriseId', '==', currentOrg.id),
   orderBy('date', 'desc')
 );
 ```
-**Critère :** `organizationId` uniquement
+**Critère :** `entrepriseId` uniquement
 
 ### 2. ContactViewTabs.js (Dates du contact)
 ```javascript
 // Filtre par nom de structure
 const concertsQuery = query(
   collection(db, 'concerts'),
-  where('organizationId', '==', organizationId),
+  where('entrepriseId', '==', entrepriseId),
   where('structureNom', '==', structureName)  // 🔑 FILTRAGE PRINCIPAL
 );
 ```
-**Critères :** `organizationId` + `structureNom`
+**Critères :** `entrepriseId` + `structureNom`
 
 **Source du structureName :**
 ```javascript
@@ -219,7 +219,7 @@ const structureName = useMemo(() =>
 // Requête modifiée
 query(
   collection(db, 'concerts'),
-  where('organizationId', '==', organizationId),
+  where('entrepriseId', '==', entrepriseId),
   where('structureId', '==', contactId)
 );
 ```
@@ -235,7 +235,7 @@ query(
 // Requête modifiée
 query(
   collection(db, 'concerts'),
-  where('organizationId', '==', organizationId),
+  where('entrepriseId', '==', entrepriseId),
   where('contactIds', 'array-contains', contactId)
 );
 ```
@@ -247,7 +247,7 @@ query(
   concertId: "concert_id",
   contactId: "contact_id",
   role: "programmateur|diffuseur|coproducteur",
-  organizationId: "org_id"
+  entrepriseId: "org_id"
 }
 ```
 
@@ -259,15 +259,15 @@ query(
 1. **Utilisateur** ouvre un contact dans ContactViewTabs
 2. **Hook** `useUnifiedContact` charge le contact depuis `contacts_unified`
 3. **Extraction** de `structure.raisonSociale` vers `structureName`
-4. **Requête** concerts filtrés par `organizationId` + `structureNom`
+4. **Requête** concerts filtrés par `entrepriseId` + `structureNom`
 5. **Affichage** dans ContactBottomTabs → ContactDatesTable
 
 ### Points de filtrage
 ```
 TableauDeBordPage ──┐
-                    ├── organizationId ──→ TOUS les concerts
+                    ├── entrepriseId ──→ TOUS les concerts
 ContactViewTabs ────┘
-                    └── organizationId + structureNom ──→ concerts du contact
+                    └── entrepriseId + structureNom ──→ concerts du contact
 ```
 
 ---
@@ -283,7 +283,7 @@ ContactViewTabs ────┘
 - Risque d'incohérence si pas synchronisé
 
 ### 3. Performance
-- Index Firebase nécessaire sur `organizationId + structureNom`
+- Index Firebase nécessaire sur `entrepriseId + structureNom`
 - Pas de contraintes d'intégrité
 
 ### 4. Évolutivité limitée
@@ -323,7 +323,7 @@ extractedData?.structureRaisonSociale
 ```
 
 **Donc pour filtrer les concerts d'un contact, il faut :**
-- `organizationId` (multi-tenant)
+- `entrepriseId` (multi-tenant)
 - `structureNom` = valeur exacte de `structure.raisonSociale` du contact
 
 ---
@@ -334,7 +334,7 @@ L'architecture actuelle utilise une **liaison par nom de structure** (`structure
 
 **Le critère de filtrage exact est :**
 ```sql
-WHERE organizationId = :orgId 
+WHERE entrepriseId = :orgId 
 AND structureNom = :structure.raisonSociale
 ```
 

@@ -34,28 +34,28 @@ L'audit révèle que le mode multi-organisation est **partiellement implémenté
 ## 2. HOOKS ❌
 
 ### ❌ Problèmes Majeurs
-- **La plupart des hooks n'utilisent PAS organizationId** dans leurs requêtes
+- **La plupart des hooks n'utilisent PAS entrepriseId** dans leurs requêtes
 - Seuls quelques hooks importent `useOrganization` mais ne l'utilisent pas effectivement
-- Les hooks génériques (`useGenericDataFetcher`, `useGenericEntityList`) ont la structure pour supporter organizationId mais ne l'implémentent pas
+- Les hooks génériques (`useGenericDataFetcher`, `useGenericEntityList`) ont la structure pour supporter entrepriseId mais ne l'implémentent pas
 
 ### 📍 Hooks Non Conformes
 - `/src/hooks/concerts/useConcertListData.js` - Pas de filtrage par organisation
-- `/src/hooks/contacts/*` - Aucune intégration d'organizationId
-- `/src/hooks/lieux/*` - Aucune intégration d'organizationId
-- `/src/hooks/artistes/*` - Aucune intégration d'organizationId
-- `/src/hooks/structures/*` - Aucune intégration d'organizationId
+- `/src/hooks/contacts/*` - Aucune intégration d'entrepriseId
+- `/src/hooks/lieux/*` - Aucune intégration d'entrepriseId
+- `/src/hooks/artistes/*` - Aucune intégration d'entrepriseId
+- `/src/hooks/structures/*` - Aucune intégration d'entrepriseId
 
 ### ⚠️ Hooks Partiellement Conformes
 - `/src/hooks/generics/data/useGenericDataFetcher.js` - Importe `useOrganization` et récupère `currentOrganization` mais ne l'utilise que pour les requêtes collection (ligne 231)
-- `/src/hooks/relances/*` - Semblent utiliser organizationId
+- `/src/hooks/relances/*` - Semblent utiliser entrepriseId
 
 ---
 
 ## 3. SERVICES FIREBASE ❌
 
 ### ❌ Problèmes Majeurs
-- **firebase-service.js** ne filtre pas automatiquement par organizationId
-- Pas de fonctions utilitaires pour ajouter organizationId aux requêtes
+- **firebase-service.js** ne filtre pas automatiquement par entrepriseId
+- Pas de fonctions utilitaires pour ajouter entrepriseId aux requêtes
 - Les collections ne sont pas préfixées par organisation (pattern `{collection}_org_{orgId}`)
 
 ### ⚠️ Points d'Attention
@@ -63,7 +63,7 @@ L'audit révèle que le mode multi-organisation est **partiellement implémenté
 - Pattern de collection organisationnelle prévu mais non utilisé (`getDocWithOrg` ligne 298)
 
 ### 📍 Services Non Conformes
-- `/src/services/firestoreService.js` - Aucune gestion d'organizationId
+- `/src/services/firestoreService.js` - Aucune gestion d'entrepriseId
 - `/src/services/concertService.js` - Probablement non conforme
 - `/src/services/structureService.js` - Probablement non conforme
 
@@ -93,7 +93,7 @@ L'audit révèle que le mode multi-organisation est **partiellement implémenté
 - Collections organisationnelles: `{collection}_org_{orgId}`
 - Vérification des membres: `isOrgMember(orgId, uid)`
 - Vérification des admins: `isOrgAdmin(orgId, uid)`
-- Validation obligatoire d'organizationId dans les données
+- Validation obligatoire d'entrepriseId dans les données
 
 ---
 
@@ -113,7 +113,7 @@ L'audit révèle que le mode multi-organisation est **partiellement implémenté
 
 ## 🚨 RISQUES CRITIQUES
 
-1. **Mélange de données** - Sans filtrage par organizationId, toutes les organisations voient toutes les données
+1. **Mélange de données** - Sans filtrage par entrepriseId, toutes les organisations voient toutes les données
 2. **Incohérence** - Les règles Firestore attendent des collections organisationnelles mais l'app utilise des collections globales
 3. **Sécurité** - Les données peuvent être accessibles cross-organisation
 
@@ -127,7 +127,7 @@ L'audit révèle que le mode multi-organisation est **partiellement implémenté
 const buildQuery = useCallback(() => {
   // Ajouter systématiquement le filtre organisation
   if (currentOrganization?.id) {
-    constraints.push(where('organizationId', '==', currentOrganization.id));
+    constraints.push(where('entrepriseId', '==', currentOrganization.id));
   }
   // ...
 });
@@ -144,11 +144,11 @@ export const getOrgCollection = (collectionName) => {
 ```
 
 ### 3. IMPORTANT - Migrer les données existantes
-- Ajouter organizationId à tous les documents existants
+- Ajouter entrepriseId à tous les documents existants
 - Ou migrer vers le pattern `{collection}_org_{orgId}`
 
 ### 4. IMPORTANT - Mettre à jour tous les hooks spécifiques
-- Ajouter organizationId dans toutes les requêtes
+- Ajouter entrepriseId dans toutes les requêtes
 - Utiliser le contexte Organisation systématiquement
 
 ### 5. MOYEN - Ajouter des tests
@@ -165,12 +165,12 @@ export const getOrgCollection = (collectionName) => {
 3. Tester l'isolation des données
 
 ### Phase 2 - Migration des Hooks (3-4 jours)
-1. Migrer tous les hooks pour utiliser organizationId
+1. Migrer tous les hooks pour utiliser entrepriseId
 2. Tester chaque module (concerts, contacts, etc.)
 3. Vérifier les performances
 
 ### Phase 3 - Migration des Données (2-3 jours)
-1. Script de migration pour ajouter organizationId
+1. Script de migration pour ajouter entrepriseId
 2. Ou migration vers collections organisationnelles
 3. Tests de régression complets
 
@@ -183,7 +183,7 @@ export const getOrgCollection = (collectionName) => {
 
 ## 📊 MÉTRIQUES DE SUCCÈS
 
-- [ ] 100% des requêtes filtrent par organizationId
+- [ ] 100% des requêtes filtrent par entrepriseId
 - [ ] Aucune donnée cross-organisation accessible
 - [ ] Tests d'isolation passants
 - [ ] Performance maintenue ou améliorée
@@ -193,4 +193,4 @@ export const getOrgCollection = (collectionName) => {
 
 ## 🔍 CONCLUSION
 
-Le système multi-organisation a des fondations solides mais nécessite une implémentation complète urgente pour éviter des problèmes de sécurité et d'intégrité des données. La priorité absolue est d'implémenter le filtrage par organizationId dans tous les hooks et services.
+Le système multi-organisation a des fondations solides mais nécessite une implémentation complète urgente pour éviter des problèmes de sécurité et d'intégrité des données. La priorité absolue est d'implémenter le filtrage par entrepriseId dans tous les hooks et services.

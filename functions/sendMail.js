@@ -88,15 +88,15 @@ const sendMailWithRetry = async (mailOptions, userSmtpConfig = null, retries = 3
 /**
  * Récupère la configuration SMTP de l'utilisateur depuis Firebase
  * @param {string} userId - ID de l'utilisateur
- * @param {string} organizationId - ID de l'organisation
+ * @param {string} entrepriseId - ID de l'organisation
  * @returns {Promise<Object>} - Configuration SMTP
  */
-const getUserSmtpConfig = async (userId, organizationId) => {
+const getUserSmtpConfig = async (userId, entrepriseId) => {
   try {
     // Récupérer les paramètres de l'utilisateur
     const userDoc = await admin.firestore()
       .collection('organizations')
-      .doc(organizationId)
+      .doc(entrepriseId)
       .collection('parametres')
       .doc('settings')
       .get();
@@ -122,7 +122,7 @@ const getUserSmtpConfig = async (userId, organizationId) => {
  * @param {string} [data.from] - Expéditeur (optionnel)
  * @param {Array} [data.attachments] - Pièces jointes (optionnel)
  * @param {string} [data.userId] - ID de l'utilisateur (pour récupérer sa config SMTP)
- * @param {string} [data.organizationId] - ID de l'organisation (pour récupérer la config SMTP)
+ * @param {string} [data.entrepriseId] - ID de l'organisation (pour récupérer la config SMTP)
  */
 const sendMail = async (data) => {
   // Validation des données requises
@@ -138,8 +138,8 @@ const sendMail = async (data) => {
 
   // Récupérer la configuration SMTP de l'utilisateur si fournie
   let userSmtpConfig = null;
-  if (data.userId && data.organizationId) {
-    userSmtpConfig = await getUserSmtpConfig(data.userId, data.organizationId);
+  if (data.userId && data.entrepriseId) {
+    userSmtpConfig = await getUserSmtpConfig(data.userId, data.entrepriseId);
   }
 
   // Configuration de l'email
@@ -352,9 +352,9 @@ const emailTemplates = {
  * @param {Object} data - Données pour le template
  * @param {string} to - Email du destinataire
  * @param {string} [userId] - ID de l'utilisateur (pour récupérer sa config SMTP)
- * @param {string} [organizationId] - ID de l'organisation
+ * @param {string} [entrepriseId] - ID de l'organisation
  */
-const sendTemplatedMail = async (templateName, data, to, userId = null, organizationId = null) => {
+const sendTemplatedMail = async (templateName, data, to, userId = null, entrepriseId = null) => {
   if (!emailTemplates[templateName]) {
     throw new Error(`Template '${templateName}' non trouvé`);
   }
@@ -366,7 +366,7 @@ const sendTemplatedMail = async (templateName, data, to, userId = null, organiza
     subject: template.subject,
     html: template.html,
     userId,
-    organizationId
+    entrepriseId
   });
 };
 

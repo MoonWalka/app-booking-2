@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Row, Col, Alert } from 'react-bootstrap';
 import Button from '@/components/ui/Button';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { doc, getDoc, setDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 
@@ -9,7 +9,7 @@ import { db } from '@/services/firebase-service';
  * Composant de configuration des paramètres de facturation
  */
 const ParametresFactures = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
@@ -53,10 +53,10 @@ const ParametresFactures = () => {
   // Charger les paramètres existants
   useEffect(() => {
     const loadParameters = async () => {
-      if (!currentOrganization?.id) return;
+      if (!currentEntreprise?.id) return;
       
       try {
-        const parametersRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'factureParameters');
+        const parametersRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'factureParameters');
         const parametersDoc = await getDoc(parametersRef);
         
         if (parametersDoc.exists()) {
@@ -72,7 +72,7 @@ const ParametresFactures = () => {
     };
 
     loadParameters();
-  }, [currentOrganization?.id]);
+  }, [currentEntreprise?.id]);
 
   // Gestion des changements
   const handleChange = (e) => {
@@ -86,13 +86,13 @@ const ParametresFactures = () => {
   // Sauvegarde
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!currentOrganization?.id) return;
+    if (!currentEntreprise?.id) return;
     
     setLoading(true);
     setError('');
     
     try {
-      const parametersRef = doc(db, 'organizations', currentOrganization.id, 'settings', 'factureParameters');
+      const parametersRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'factureParameters');
       await setDoc(parametersRef, {
         parameters,
         updatedAt: new Date().toISOString()

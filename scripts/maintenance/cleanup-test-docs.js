@@ -33,7 +33,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const organizationId = '9LjkCJG04pEzbABdHkSf';
+const entrepriseId = '9LjkCJG04pEzbABdHkSf';
 
 console.log('🧹 NETTOYAGE DES DOCUMENTS DE TEST');
 console.log('==================================\n');
@@ -51,7 +51,7 @@ async function cleanupCollection(collectionName, testFields) {
       // Chercher les documents de test
       const q = query(
         collection(db, collectionName),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where(field.name, field.operator, field.value)
       );
       
@@ -79,7 +79,7 @@ async function cleanupCollection(collectionName, testFields) {
  */
 async function main() {
   try {
-    console.log(`🎯 Organisation: ${organizationId}\n`);
+    console.log(`🎯 Organisation: ${entrepriseId}\n`);
     
     let totalDeleted = 0;
     
@@ -105,7 +105,7 @@ async function main() {
     console.log('🔗 Vérification des liaisons...');
     const liaisonsQuery = query(
       collection(db, 'liaisons'),
-      where('organizationId', '==', organizationId)
+      where('entrepriseId', '==', entrepriseId)
     );
     const liaisonsSnapshot = await getDocs(liaisonsQuery);
     
@@ -117,14 +117,14 @@ async function main() {
       try {
         const structureQuery = query(
           collection(db, 'structures'),
-          where('organizationId', '==', organizationId)
+          where('entrepriseId', '==', entrepriseId)
         );
         const structuresSnapshot = await getDocs(structureQuery);
         const structureExists = structuresSnapshot.docs.some(doc => doc.id === liaison.structureId);
         
         const personnesQuery = query(
           collection(db, 'personnes'),
-          where('organizationId', '==', organizationId)
+          where('entrepriseId', '==', entrepriseId)
         );
         const personnesSnapshot = await getDocs(personnesQuery);
         const personneExists = personnesSnapshot.docs.some(doc => doc.id === liaison.personneId);

@@ -103,12 +103,12 @@ Effectuer un tri exhaustif, sécurisé et méthodique de la documentation dans `
 
 1. **Test Multi-Organisation** 🔴
    - [ ] Vérifier que le système multi-org fonctionne
-   - [ ] Contrôler l'implémentation d'organizationId
+   - [ ] Contrôler l'implémentation d'entrepriseId
    - [ ] Tester les hooks de suppression mentionnés
 
 2. **Validation Technique** 🔴
    ```bash
-   grep -r "organizationId" src/ | wc -l
+   grep -r "entrepriseId" src/ | wc -l
    grep -r "useGenericEntityDelete" src/
    ```
 
@@ -222,7 +222,7 @@ Effectuer un tri exhaustif, sécurisé et méthodique de la documentation dans `
 ```bash
 # Vérifier l'état post-migration
 grep -r "programmateur" src/ docs/ --exclude-dir=archive
-grep -r "organizationId" src/ | wc -l
+grep -r "entrepriseId" src/ | wc -l
 find src/ -name "*Contact*" -type f | wc -l
 ```
 

@@ -116,13 +116,13 @@ class HistoriqueEchangesService {
   /**
    * Récupérer l'historique des échanges pour un contact
    */
-  async getEchangesByContact(contactId, organizationId) {
+  async getEchangesByContact(contactId, entrepriseId) {
     try {
       // Requête simplifiée temporaire sans orderBy pour éviter l'erreur d'index
       const q = query(
         collection(db, COLLECTION_NAME),
         where('contactId', '==', contactId),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
 
       const snapshot = await getDocs(q);
@@ -156,12 +156,12 @@ class HistoriqueEchangesService {
   /**
    * Récupérer l'historique des échanges pour une date
    */
-  async getEchangesByDate(dateId, organizationId) {
+  async getEchangesByDate(dateId, entrepriseId) {
     try {
       const q = query(
         collection(db, COLLECTION_NAME),
         where('dateId', '==', dateId),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         orderBy('date', 'desc')
       );
 
@@ -189,12 +189,12 @@ class HistoriqueEchangesService {
   /**
    * Récupérer les échanges avec rappel à venir
    */
-  async getEchangesAvecRappel(organizationId) {
+  async getEchangesAvecRappel(entrepriseId) {
     try {
       const now = new Date();
       const q = query(
         collection(db, COLLECTION_NAME),
-        where('organizationId', '==', organizationId),
+        where('entrepriseId', '==', entrepriseId),
         where('rappel', '>', now),
         orderBy('rappel', 'asc')
       );
@@ -223,13 +223,13 @@ class HistoriqueEchangesService {
   /**
    * Écouter les changements en temps réel pour un contact
    */
-  subscribeToContactEchanges(contactId, organizationId, callback) {
+  subscribeToContactEchanges(contactId, entrepriseId, callback) {
     try {
       // Requête simplifiée temporaire sans orderBy pour éviter l'erreur d'index
       const q = query(
         collection(db, COLLECTION_NAME),
         where('contactId', '==', contactId),
-        where('organizationId', '==', organizationId)
+        where('entrepriseId', '==', entrepriseId)
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {

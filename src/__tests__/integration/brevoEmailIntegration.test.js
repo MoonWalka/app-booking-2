@@ -13,7 +13,7 @@ import { httpsCallable } from 'firebase/functions';
 import ParametresEmail from '../../components/parametres/ParametresEmail';
 import { ParametresProvider } from '../../context/ParametresContext';
 import { AuthContext } from '../../context/AuthContext';
-import { OrganizationContext } from '../../context/OrganizationContext';
+import { EntrepriseContext } from '../../context/EntrepriseContext';
 
 // Services
 import emailService from '../../services/emailService';
@@ -68,14 +68,14 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
   const TestWrapper = ({ children }) => (
     <BrowserRouter>
       <AuthContext.Provider value={{ user: mockUser }}>
-        <OrganizationContext.Provider value={{ 
-          currentOrganization: mockOrganization,
+        <EntrepriseContext.Provider value={{ 
+          currentEntreprise: mockOrganization,
           organizations: [mockOrganization]
         }}>
           <ParametresProvider>
             {children}
           </ParametresProvider>
-        </OrganizationContext.Provider>
+        </EntrepriseContext.Provider>
       </AuthContext.Provider>
     </BrowserRouter>
   );
@@ -245,13 +245,13 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
       };
 
       const lienFormulaire = 'https://tourcraft.app/formulaire/abc123';
-      const organizationId = mockOrganization.id;
+      const entrepriseId = mockOrganization.id;
 
       const result = await brevoTemplateService.sendFormulaireEmail(
         contactData,
         dateData,
         lienFormulaire,
-        organizationId
+        entrepriseId
       );
 
       // Vérifier l'appel à Cloud Function
@@ -268,7 +268,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
             dateDate: expect.any(String)
           }
         },
-        organizationId: 'test-org-456'
+        entrepriseId: 'test-org-456'
       });
 
       expect(result.success).toBe(true);
@@ -381,7 +381,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
           to: 'test@example.com',
           subject: 'Test Timeout',
           htmlContent: '<p>Test</p>',
-          organizationId: mockOrganization.id
+          entrepriseId: mockOrganization.id
         })
       ).rejects.toThrow('Request timeout');
     });
@@ -402,7 +402,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
         to: 'test@example.com',
         subject: 'Test Retry',
         htmlContent: '<p>Test retry</p>',
-        organizationId: mockOrganization.id
+        entrepriseId: mockOrganization.id
       });
 
       expect(result.success).toBe(true);
@@ -459,7 +459,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
           to: 'test@example.com',
           subject: 'Test',
           htmlContent: '<p>Test</p>',
-          organizationId: 'unauthorized-org'
+          entrepriseId: 'unauthorized-org'
         })
       ).rejects.toThrow('Insufficient permissions');
     });
@@ -522,7 +522,7 @@ describe('Intégration Email Brevo - Workflow Complet', () => {
             to: `test${i}@example.com`,
             subject: `Test Concurrent ${i}`,
             htmlContent: `<p>Test ${i}</p>`,
-            organizationId: mockOrganization.id
+            entrepriseId: mockOrganization.id
           })
         );
       }

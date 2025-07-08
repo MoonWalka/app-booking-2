@@ -1,7 +1,7 @@
-// Script à exécuter dans la console du navigateur pour corriger les documents sans organizationId
+// Script à exécuter dans la console du navigateur pour corriger les documents sans entrepriseId
 
-// 1. D'abord, vérifier quels documents n'ont pas d'organizationId
-async function checkMissingOrganizationId() {
+// 1. D'abord, vérifier quels documents n'ont pas d'entrepriseId
+async function checkMissingEntrepriseId() {
   const { collection, getDocs, query } = window.firebase.firestore;
   const db = window.firebase.db;
   
@@ -15,13 +15,13 @@ async function checkMissingOrganizationId() {
       
       snapshot.forEach(doc => {
         const data = doc.data();
-        if (!data.organizationId) {
+        if (!data.entrepriseId) {
           missing.push({ id: doc.id, nom: data.nom || data.titre || 'Sans nom' });
         }
       });
       
       results[collName] = missing;
-      console.log(`${collName}: ${missing.length} documents sans organizationId`);
+      console.log(`${collName}: ${missing.length} documents sans entrepriseId`);
     } catch (error) {
       console.error(`Erreur pour ${collName}:`, error);
     }
@@ -30,21 +30,21 @@ async function checkMissingOrganizationId() {
   return results;
 }
 
-// 2. Corriger en ajoutant votre organizationId actuel
-async function fixMissingOrganizationId() {
+// 2. Corriger en ajoutant votre entrepriseId actuel
+async function fixMissingEntrepriseId() {
   const { collection, doc, updateDoc, getDocs } = window.firebase.firestore;
   const db = window.firebase.db;
   
-  // Récupérer l'organizationId actuel
+  // Récupérer l'entrepriseId actuel
   const orgContext = JSON.parse(localStorage.getItem("organizationContext"));
-  const organizationId = orgContext?.currentOrganization?.id;
+  const entrepriseId = orgContext?.currentOrganization?.id;
   
-  if (!organizationId) {
+  if (!entrepriseId) {
     console.error("❌ Aucune organisation trouvée. Connectez-vous d'abord.");
     return;
   }
   
-  console.log(`✅ Organisation trouvée: ${organizationId}`);
+  console.log(`✅ Organisation trouvée: ${entrepriseId}`);
   
   const collections = ['contacts', 'lieux', 'artistes', 'structures'];
   
@@ -55,9 +55,9 @@ async function fixMissingOrganizationId() {
       
       for (const docSnap of snapshot.docs) {
         const data = docSnap.data();
-        if (!data.organizationId) {
+        if (!data.entrepriseId) {
           await updateDoc(doc(db, collName, docSnap.id), { 
-            organizationId: organizationId 
+            entrepriseId: entrepriseId 
           });
           count++;
           console.log(`✅ ${collName}/${docSnap.id} mis à jour`);
@@ -77,11 +77,11 @@ async function fixMissingOrganizationId() {
 console.log(`
 📋 INSTRUCTIONS :
 
-1. Pour vérifier les documents sans organizationId :
-   checkMissingOrganizationId()
+1. Pour vérifier les documents sans entrepriseId :
+   checkMissingEntrepriseId()
 
 2. Pour corriger automatiquement :
-   fixMissingOrganizationId()
+   fixMissingEntrepriseId()
 
 3. Après correction, rafraîchissez la page (F5)
 `);

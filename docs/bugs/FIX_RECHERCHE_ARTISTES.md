@@ -6,7 +6,7 @@ La fonction de recherche d'artistes dans le formulaire d'édition de concert ne 
 
 ## Cause
 
-Le système de recherche multi-organisation filtre les résultats par `organizationId`. Si les artistes n'ont pas ce champ ou s'il ne correspond pas à l'organisation actuelle, ils ne seront pas trouvés.
+Le système de recherche multi-organisation filtre les résultats par `entrepriseId`. Si les artistes n'ont pas ce champ ou s'il ne correspond pas à l'organisation actuelle, ils ne seront pas trouvés.
 
 ## Diagnostic
 
@@ -29,9 +29,9 @@ node scripts/fix-artistes-search.js | head -50
 
 ## Solutions
 
-### Solution 1 : Ajouter organizationId aux artistes existants
+### Solution 1 : Ajouter entrepriseId aux artistes existants
 
-Si vos artistes n'ont pas d'organizationId :
+Si vos artistes n'ont pas d'entrepriseId :
 
 ```bash
 # Remplacez YOUR_ORG_ID par votre ID d'organisation
@@ -58,7 +58,7 @@ Les artistes doivent avoir cette structure minimale :
 ```javascript
 {
   nom: "Nom de l'artiste",
-  organizationId: "ID_DE_VOTRE_ORGANISATION",
+  entrepriseId: "ID_DE_VOTRE_ORGANISATION",
   createdAt: Timestamp,
   // Optionnel mais recommandé :
   style: "Genre musical",
@@ -70,12 +70,12 @@ Les artistes doivent avoir cette structure minimale :
 
 ### 1. Lors de la création d'artistes
 
-Assurez-vous que le hook `useArtisteForm` ajoute bien l'organizationId :
+Assurez-vous que le hook `useArtisteForm` ajoute bien l'entrepriseId :
 
 ```javascript
 const newArtiste = {
   ...formData,
-  organizationId: currentOrganization.id, // Important !
+  entrepriseId: currentOrganization.id, // Important !
   createdAt: serverTimestamp()
 };
 ```
@@ -100,8 +100,8 @@ Après correction, testez la recherche :
 ## Scripts utiles
 
 ```bash
-# Voir tous les artistes sans organizationId
-node scripts/fix-artistes-search.js | grep "Sans organizationId" -A 20
+# Voir tous les artistes sans entrepriseId
+node scripts/fix-artistes-search.js | grep "Sans entrepriseId" -A 20
 
 # Compter les doublons
 node scripts/fix-artistes-search.js | grep "Doublons détectés"

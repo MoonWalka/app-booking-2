@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Alert, Form } from 'react-bootstrap';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { 
   decryptSensitiveFields, 
   encryptSensitiveFields,
@@ -15,7 +15,7 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
  * Outil de récupération de la clé API Brevo après migration
  */
 const BrevoKeyRecovery = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -24,7 +24,7 @@ const BrevoKeyRecovery = () => {
 
   // Diagnostiquer le problème de clé API
   const diagnoseApiKey = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Aucune organisation sélectionnée');
       return;
     }
@@ -49,7 +49,7 @@ const BrevoKeyRecovery = () => {
 
       // 2. Lire les paramètres de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
       );
       let orgBrevoConfig = null;
       
@@ -92,7 +92,7 @@ const BrevoKeyRecovery = () => {
 
   // Récupérer la clé API depuis les paramètres globaux
   const recoverFromGlobal = async () => {
-    if (!recoveryData?.global?.apiKey || !currentOrganization?.id) {
+    if (!recoveryData?.global?.apiKey || !currentEntreprise?.id) {
       setError('Aucune clé API valide à récupérer');
       return;
     }
@@ -104,7 +104,7 @@ const BrevoKeyRecovery = () => {
     try {
       // Lire la configuration complète de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
       );
 
       if (!orgDoc.exists()) {
@@ -126,7 +126,7 @@ const BrevoKeyRecovery = () => {
       };
 
       await setDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings'),
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'),
         updatedConfig
       );
 
@@ -187,7 +187,7 @@ const BrevoKeyRecovery = () => {
   };
 
   const saveNewApiKey = async () => {
-    if (!newApiKey.trim() || !currentOrganization?.id) {
+    if (!newApiKey.trim() || !currentEntreprise?.id) {
       setError('Veuillez entrer une clé API valide');
       return;
     }
@@ -199,7 +199,7 @@ const BrevoKeyRecovery = () => {
     try {
       // Lire la configuration complète de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings')
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
       );
 
       if (!orgDoc.exists()) {
@@ -221,7 +221,7 @@ const BrevoKeyRecovery = () => {
       };
 
       await setDoc(
-        doc(db, 'organizations', currentOrganization.id, 'parametres', 'settings'),
+        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'),
         updatedConfig
       );
 
@@ -258,7 +258,7 @@ const BrevoKeyRecovery = () => {
         
         <div className="mb-3">
           <p>
-            <strong>Organisation :</strong> {currentOrganization?.name || 'Non sélectionnée'}
+            <strong>Organisation :</strong> {currentEntreprise?.name || 'Non sélectionnée'}
           </p>
         </div>
 
@@ -266,7 +266,7 @@ const BrevoKeyRecovery = () => {
           <Button
             variant="outline-primary"
             onClick={diagnoseApiKey}
-            disabled={loading || !currentOrganization?.id}
+            disabled={loading || !currentEntreprise?.id}
           >
             🔍 Diagnostiquer le problème
           </Button>
@@ -326,7 +326,7 @@ const BrevoKeyRecovery = () => {
           <Button
             variant="success"
             onClick={saveNewApiKey}
-            disabled={loading || !newApiKey.trim() || !currentOrganization?.id}
+            disabled={loading || !newApiKey.trim() || !currentEntreprise?.id}
           >
             💾 Sauvegarder la nouvelle clé
           </Button>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook pour récupérer les festivals d'un contact/structure
@@ -12,10 +12,10 @@ export const useContactFestivals = (contactId) => {
   const [festivals, setFestivals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
   useEffect(() => {
-    if (!contactId || !currentOrganization?.id) {
+    if (!contactId || !currentEntreprise?.id) {
       setFestivals([]);
       setLoading(false);
       return;
@@ -26,14 +26,14 @@ export const useContactFestivals = (contactId) => {
 
     console.log('[useContactFestivals] Recherche des festivals pour:', {
       contactId,
-      organizationId: currentOrganization.id
+      entrepriseId: currentEntreprise.id
     });
 
     try {
       // Requête pour récupérer les festivals du contact
       const festivalsQuery = query(
         collection(db, 'festivals'),
-        where('organizationId', '==', currentOrganization.id),
+        where('entrepriseId', '==', currentEntreprise.id),
         where('contactId', '==', contactId),
         orderBy('createdAt', 'desc')
       );
@@ -75,7 +75,7 @@ export const useContactFestivals = (contactId) => {
       setError(err);
       setLoading(false);
     }
-  }, [contactId, currentOrganization?.id]);
+  }, [contactId, currentEntreprise?.id]);
 
   return { festivals, loading, error };
 };

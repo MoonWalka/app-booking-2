@@ -6,12 +6,12 @@
 
 import { db, doc, getDoc, setDoc } from '@/services/firebase-service';
 
-export async function migrateRIBDataForOrganization(organizationId) {
-  console.log('🏦 Migration des données RIB pour l\'organisation:', organizationId);
+export async function migrateRIBDataForOrganization(entrepriseId) {
+  console.log('🏦 Migration des données RIB pour l\'organisation:', entrepriseId);
   
   try {
     // Récupérer les paramètres de facturation
-    const factureParamsRef = doc(db, 'organizations', organizationId, 'settings', 'factureParameters');
+    const factureParamsRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
     const factureParamsDoc = await getDoc(factureParamsRef);
     
     if (!factureParamsDoc.exists()) {
@@ -34,7 +34,7 @@ export async function migrateRIBDataForOrganization(organizationId) {
     console.log('   - Banque:', parameters.nomBanque || 'Non défini');
     
     // Récupérer les données d'entreprise existantes
-    const entrepriseRef = doc(db, 'organizations', organizationId, 'settings', 'entreprise');
+    const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
     const entrepriseDoc = await getDoc(entrepriseRef);
     
     let entrepriseData = {};
@@ -74,12 +74,12 @@ export async function migrateRIBDataForOrganization(organizationId) {
 }
 
 // Fonction de test pour vérifier les données RIB
-export async function checkRIBData(organizationId) {
-  console.log('🔍 Vérification des données RIB pour l\'organisation:', organizationId);
+export async function checkRIBData(entrepriseId) {
+  console.log('🔍 Vérification des données RIB pour l\'organisation:', entrepriseId);
   
   try {
     // Vérifier dans les paramètres de facturation
-    const factureParamsRef = doc(db, 'organizations', organizationId, 'settings', 'factureParameters');
+    const factureParamsRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
     const factureParamsDoc = await getDoc(factureParamsRef);
     
     let factureRIB = {};
@@ -93,7 +93,7 @@ export async function checkRIBData(organizationId) {
     }
     
     // Vérifier dans les données d'entreprise
-    const entrepriseRef = doc(db, 'organizations', organizationId, 'settings', 'entreprise');
+    const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
     const entrepriseDoc = await getDoc(entrepriseRef);
     
     let entrepriseRIB = {};

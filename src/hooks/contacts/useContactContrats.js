@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
  * Hook pour récupérer les contrats associés à un contact ou une structure
@@ -11,8 +11,8 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
   const [contrats, setContrats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { currentOrganization } = useOrganization();
-  const organizationId = currentOrganization?.id;
+  const { currentEntreprise } = useEntreprise();
+  const entrepriseId = currentEntreprise?.id;
 
   // Fonction pour normaliser les statuts devis Firebase vers les statuts attendus
   const normalizeDevisStatus = (status) => {
@@ -73,10 +73,10 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
   };
 
   useEffect(() => {
-    console.log('[useContactContrats] Hook appelé avec:', { entityId, entityType, organizationId });
+    console.log('[useContactContrats] Hook appelé avec:', { entityId, entityType, entrepriseId });
     
-    if (!entityId || !organizationId) {
-      console.log('[useContactContrats] Pas d\'entityId ou organizationId, arrêt');
+    if (!entityId || !entrepriseId) {
+      console.log('[useContactContrats] Pas d\'entityId ou entrepriseId, arrêt');
       setContrats([]);
       return;
     }
@@ -207,7 +207,7 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
                   structureNom: structureData.nom,
                   // Ajouter les champs requis pour le tableau
                   ref: contrat.numeroContrat || contrat.reference || `CONT-${contrat.id?.substring(0, 6)}`,
-                  entrepriseCode: contrat.entrepriseCode || currentOrganization?.nom || currentOrganization?.code || 'TC',
+                  entrepriseCode: contrat.entrepriseCode || currentEntreprise?.nom || currentEntreprise?.code || 'TC',
                   collaborateurCode: contrat.collaborateurCode || contrat.collaborateur?.code || '—',
                   type: contrat.type || 'Cession',
                   envoye: contrat.envoye || false,
@@ -254,7 +254,7 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
     };
 
     fetchContactContrats();
-  }, [entityId, entityType, organizationId, currentOrganization]);
+  }, [entityId, entityType, entrepriseId, currentEntreprise]);
 
   return { contrats, loading, error };
 };

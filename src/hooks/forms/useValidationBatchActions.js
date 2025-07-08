@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { db } from '@/services/firebase-service';
 import { doc, getDoc, updateDoc, collection, addDoc, Timestamp } from '@/services/firebase-service';
 import { ensureStructureEntity } from '@/services/structureService';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { useRelancesAutomatiques } from '@/hooks/relances/useRelancesAutomatiques';
 
 const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidated }) => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const relancesAuto = useRelancesAutomatiques();
   const [validationInProgress, setValidationInProgress] = useState(false);
 
@@ -107,7 +107,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
             ...contactFields,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now(),
-            ...(currentOrganization?.id && { organizationId: currentOrganization.id })
+            ...(currentEntreprise?.id && { entrepriseId: currentEntreprise.id })
           };
           
           const newProgRef = await addDoc(collection(db, 'contacts'), newContactData);
@@ -169,7 +169,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
             structureId: structureId || '',
             structureNom: structureFields.nom || '',
             // Métadonnées
-            organizationId: currentOrganization?.id,
+            entrepriseId: currentEntreprise?.id,
             createdAt: Timestamp.now(),
             updatedAt: Timestamp.now(),
             isFromPublicForm: true,
@@ -244,21 +244,21 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
         if (existingStructureId) {
           // Mettre à jour la structure existante
           structureId = existingStructureId;
-          await ensureStructureEntity(structureId, structureData, currentOrganization?.id);
+          await ensureStructureEntity(structureId, structureData, currentEntreprise?.id);
           console.log("Structure existante mise à jour:", structureId, structureData);
         } else {
           // Créer une nouvelle structure
           // Utiliser le SIRET comme ID si disponible, sinon générer un ID automatique
           if (structureFields.siret) {
             structureId = structureFields.siret;
-            await ensureStructureEntity(structureId, structureData, currentOrganization?.id);
+            await ensureStructureEntity(structureId, structureData, currentEntreprise?.id);
           } else {
             // Créer avec un ID automatique
             const newStructureRef = await addDoc(collection(db, 'structures'), {
               ...structureData,
               createdAt: Timestamp.now(),
               updatedAt: Timestamp.now(),
-              ...(currentOrganization?.id && { organizationId: currentOrganization.id })
+              ...(currentEntreprise?.id && { entrepriseId: currentEntreprise.id })
             });
             structureId = newStructureRef.id;
           }
@@ -355,8 +355,8 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
           contactsAssocies: [],
-          // ✅ FIX: Ajouter automatiquement l'organizationId
-          ...(currentOrganization?.id && { organizationId: currentOrganization.id })
+          // ✅ FIX: Ajouter automatiquement l'entrepriseId
+          ...(currentEntreprise?.id && { entrepriseId: currentEntreprise.id })
         };
         
         // Ajouter les coordonnées si disponibles

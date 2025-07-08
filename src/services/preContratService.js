@@ -34,10 +34,10 @@ class PreContratService {
    * Crée un nouveau pré-contrat
    * @param {Object} preContratData - Données du pré-contrat
    * @param {string} dateId - ID du date associé
-   * @param {string} organizationId - ID de l'organisation
+   * @param {string} entrepriseId - ID de l'organisation
    * @returns {Promise<Object>} - Pré-contrat créé avec ID
    */
-  async createPreContrat(preContratData, dateId, organizationId) {
+  async createPreContrat(preContratData, dateId, entrepriseId) {
     try {
       const user = auth.currentUser;
       if (!user) throw new Error('Utilisateur non authentifié');
@@ -49,7 +49,7 @@ class PreContratService {
       const preContrat = {
         ...preContratData,
         dateId,
-        organizationId,
+        entrepriseId,
         token,
         status: 'draft',
         createdAt: serverTimestamp(),
@@ -69,7 +69,7 @@ class PreContratService {
       console.log('[WORKFLOW_TEST] 3. Génération du pré-contrat - création dans Firebase');
       debugLog('[PreContratService] Création pré-contrat:', {
         dateId,
-        organizationId,
+        entrepriseId,
         destinataires: preContratData.destinataires?.length || 0,
         structureData: {
           raisonSociale: preContratData.raisonSociale,
@@ -92,7 +92,7 @@ class PreContratService {
           type: 'envoi_document',
           priorite: 'haute',
           dateEcheance: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 jours
-          organizationId,
+          entrepriseId,
           dateId,
           contactId: preContratData.contactId || null,
           entityType: 'pre_contrat',
@@ -254,7 +254,7 @@ class PreContratService {
             type: 'validation',
             priorite: 'normale',
             dateEcheance: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 jours
-            organizationId: preContrat.organizationId,
+            entrepriseId: preContrat.entrepriseId,
             dateId: preContrat.dateId,
             contactId: preContrat.contactId || null,
             entityType: 'pre_contrat',

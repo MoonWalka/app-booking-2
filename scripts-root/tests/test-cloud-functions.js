@@ -25,7 +25,7 @@ async function testUnifiedEmail() {
         <p><small>Envoyé via Cloud Function sendUnifiedEmail</small></p>
       `,
       userId: 'test-user',
-      organizationId: 'test-org'
+      entrepriseId: 'test-org'
     };
     
     const response = await axios.post(`${BASE_URL}/sendUnifiedEmail`, emailData, {

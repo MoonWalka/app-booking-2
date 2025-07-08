@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Modal, Form, Button, Table, Badge } from 'react-bootstrap';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import styles from './ContratModelsModal.module.css';
 
 /**
@@ -14,12 +14,12 @@ const ContratModelsModal = ({ show, onHide, onValidate, selectedModels = [], req
   const [sortConfig, setSortConfig] = useState({ key: 'nom', direction: 'asc' });
   const [availableModels, setAvailableModels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
   // Charger les modèles depuis Firebase
   useEffect(() => {
     const loadTemplates = async () => {
-      if (!currentOrganization?.id) {
+      if (!currentEntreprise?.id) {
         setLoading(false);
         return;
       }
@@ -27,10 +27,10 @@ const ContratModelsModal = ({ show, onHide, onValidate, selectedModels = [], req
       try {
         setLoading(true);
         // Temporairement, charger tous les modèles pour debug
-        console.log('[ContratModelsModal] Organization ID actuel:', currentOrganization.id);
+        console.log('[ContratModelsModal] Organization ID actuel:', currentEntreprise.id);
         const templatesQuery = query(
           collection(db, 'contratTemplates')
-          // where('organizationId', '==', currentOrganization.id) // Désactivé temporairement
+          // where('entrepriseId', '==', currentEntreprise.id) // Désactivé temporairement
         );
         
         const snapshot = await getDocs(templatesQuery);
@@ -39,7 +39,7 @@ const ContratModelsModal = ({ show, onHide, onValidate, selectedModels = [], req
           console.log('[ContratModelsModal] Modèle trouvé:', {
             id: doc.id,
             name: data.name,
-            organizationId: data.organizationId
+            entrepriseId: data.entrepriseId
           });
           return {
             id: doc.id,
@@ -64,7 +64,7 @@ const ContratModelsModal = ({ show, onHide, onValidate, selectedModels = [], req
     if (show) {
       loadTemplates();
     }
-  }, [show, currentOrganization?.id]);
+  }, [show, currentEntreprise?.id]);
 
   // Anciens modèles codés en dur (remplacés par Firebase)
   const oldHardcodedModels = [

@@ -9,7 +9,7 @@ import StatusBadge from '@/components/ui/StatusBadge';
 import { useDateListData } from '@/hooks/dates/useDateListData';
 import { useDateActions } from '@/hooks/dates/useDateActions';
 import useDateStatus from '@/hooks/dates/useDateStatus';
-// import { useOrganization } from '@/context/OrganizationContext'; // Pas utilisé pour l'instant
+// import { useEntreprise } from '@/context/EntrepriseContext'; // Pas utilisé pour l'instant
 // import { diagnosticDates, diagnosticDemoData } from '@/utils/datesDiagnostic';
 // import DatesDiagnostic from '@/components/debug/DatesDiagnostic';
 
@@ -24,7 +24,7 @@ function DatesList() {
   // DEBUG: Vérifier si le composant se monte
   console.log('[DatesList] Component mounted');
   // const { handleDelete } = useDateDelete(); // Pas utilisé pour l'instant
-  // const { currentOrg } = useOrganization(); // Pas utilisé pour l'instant
+  // const { currentEntreprise } = useEntreprise(); // Pas utilisé pour l'instant
   
   // Hooks spécialisés pour la logique métier des dates
   const {
@@ -727,7 +727,7 @@ function DatesList() {
         onClick={async () => {
           try {
             const { addDoc, collection, db } = await import('@/services/firebase-service');
-            const { currentOrganization } = await import('@/context/OrganizationContext').then(m => m.useOrganization());
+            const { currentEntreprise } = await import('@/context/EntrepriseContext').then(m => m.useEntreprise());
             
             const testDate = {
               titre: 'Date de test - ' + new Date().toLocaleTimeString(),
@@ -736,7 +736,7 @@ function DatesList() {
               lieuNom: 'Salle de test',
               artisteNom: 'Artiste de test',
               statut: 'contact',
-              organizationId: '9LjkCJG04pEzbABdHkSf', // L'ID qu'on a vu dans les logs
+              entrepriseId: '9LjkCJG04pEzbABdHkSf', // L'ID qu'on a vu dans les logs
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString()
             };

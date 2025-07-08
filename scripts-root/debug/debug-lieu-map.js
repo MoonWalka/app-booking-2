@@ -46,7 +46,7 @@ async function debugLieuMap() {
       const concert = concertsWithLieu[i];
       console.log(`\nConcert ${i + 1}: ${concert.titre || 'Sans titre'} (ID: ${concert.id})`);
       console.log(`- lieuId: ${concert.lieuId}`);
-      console.log(`- organizationId: ${concert.organizationId || 'NON DÉFINI'}`);
+      console.log(`- entrepriseId: ${concert.entrepriseId || 'NON DÉFINI'}`);
 
       if (concert.lieuId) {
         try {
@@ -55,7 +55,7 @@ async function debugLieuMap() {
           if (lieuDoc.exists()) {
             const lieuData = lieuDoc.data();
             console.log(`✅ Lieu trouvé: ${lieuData.nom || 'Sans nom'}`);
-            console.log(`  - organizationId: ${lieuData.organizationId || 'NON DÉFINI'}`);
+            console.log(`  - entrepriseId: ${lieuData.entrepriseId || 'NON DÉFINI'}`);
             console.log(`  - adresse: ${lieuData.adresse || 'NON DÉFINIE'}`);
             console.log(`  - codePostal: ${lieuData.codePostal || 'NON DÉFINI'}`);
             console.log(`  - ville: ${lieuData.ville || 'NON DÉFINIE'}`);
@@ -67,9 +67,9 @@ async function debugLieuMap() {
               console.log('  ⚠️ PROBLÈME: Ce lieu n\'a pas d\'adresse définie!');
             }
             
-            // Vérifier la cohérence des organizationId
-            if (concert.organizationId !== lieuData.organizationId) {
-              console.log('  ⚠️ PROBLÈME: Les organizationId ne correspondent pas!');
+            // Vérifier la cohérence des entrepriseId
+            if (concert.entrepriseId !== lieuData.entrepriseId) {
+              console.log('  ⚠️ PROBLÈME: Les entrepriseId ne correspondent pas!');
             }
           } else {
             console.log(`❌ Lieu avec ID ${concert.lieuId} introuvable!`);
@@ -105,15 +105,15 @@ async function debugLieuMap() {
       console.log(`- adresse: ${premierLieu.adresse}`);
       console.log(`- codePostal: ${premierLieu.codePostal}`);
       console.log(`- ville: ${premierLieu.ville}`);
-      console.log(`- organizationId: ${premierLieu.organizationId}`);
+      console.log(`- entrepriseId: ${premierLieu.entrepriseId}`);
     }
 
     // 4. Recommandations
     console.log('\n4. RECOMMANDATIONS:\n');
     console.log('- Vérifier que les lieux ont bien une adresse définie');
-    console.log('- Vérifier que les organizationId correspondent entre concerts et lieux');
+    console.log('- Vérifier que les entrepriseId correspondent entre concerts et lieux');
     console.log('- Vérifier les logs de la console du navigateur pour les erreurs de chargement');
-    console.log('- Vérifier que useGenericEntityDetails charge bien les relations avec le bon organizationId');
+    console.log('- Vérifier que useGenericEntityDetails charge bien les relations avec le bon entrepriseId');
 
   } catch (error) {
     console.error('Erreur lors du diagnostic:', error);

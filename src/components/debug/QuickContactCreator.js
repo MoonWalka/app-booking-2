@@ -3,12 +3,12 @@ import { Button, Card, ButtonGroup, Alert } from 'react-bootstrap';
 import { FaBuilding, FaUser, FaCheck } from 'react-icons/fa';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { toast } from 'react-toastify';
 import styles from './QuickContactCreator.module.css';
 
 function QuickContactCreator() {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [lastCreated, setLastCreated] = useState(null);
 
@@ -18,7 +18,7 @@ function QuickContactCreator() {
 
   // Créer une structure complète
   const createStructure = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       toast.error('Aucune organisation sélectionnée');
       return;
     }
@@ -64,7 +64,7 @@ function QuickContactCreator() {
         bic: `${randomElement(['BNPA', 'SOCE', 'CMCI', 'AGRI'])}FRPP`,
         
         // Métadonnées
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         tags: ['contact', 'structure'],
@@ -107,7 +107,7 @@ function QuickContactCreator() {
 
   // Créer une personne complète
   const createPersonne = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       toast.error('Aucune organisation sélectionnée');
       return;
     }
@@ -153,7 +153,7 @@ function QuickContactCreator() {
         notes: `Contact professionnel dans le domaine culturel. ${randomElement(['Très réactif', 'Expérience confirmée', 'Bon relationnel', 'Expertise technique'])}.`,
         
         // Métadonnées
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         tags: ['contact', 'personne'],
@@ -206,7 +206,7 @@ function QuickContactCreator() {
           <Button
             variant="primary"
             onClick={createStructure}
-            disabled={loading || !currentOrganization}
+            disabled={loading || !currentEntreprise}
             className="d-flex align-items-center justify-content-center"
           >
             <FaBuilding className="me-2" />
@@ -215,7 +215,7 @@ function QuickContactCreator() {
           <Button
             variant="info"
             onClick={createPersonne}
-            disabled={loading || !currentOrganization}
+            disabled={loading || !currentEntreprise}
             className="d-flex align-items-center justify-content-center"
           >
             <FaUser className="me-2" />
@@ -238,7 +238,7 @@ function QuickContactCreator() {
           </Alert>
         )}
 
-        {!currentOrganization && (
+        {!currentEntreprise && (
           <Alert variant="warning" className="mb-0">
             Veuillez sélectionner une organisation
           </Alert>

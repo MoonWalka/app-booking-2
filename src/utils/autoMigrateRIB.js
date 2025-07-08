@@ -8,9 +8,9 @@ import { db, doc, getDoc, setDoc } from '@/services/firebase-service';
 /**
  * Vérifie si la migration a déjà été effectuée pour cette organisation
  */
-async function isMigrationCompleted(organizationId) {
+async function isMigrationCompleted(entrepriseId) {
   try {
-    const migrationRef = doc(db, 'organizations', organizationId, 'migrations', 'ribMigration');
+    const migrationRef = doc(db, 'organizations', entrepriseId, 'migrations', 'ribMigration');
     const migrationDoc = await getDoc(migrationRef);
     return migrationDoc.exists() && migrationDoc.data().completed === true;
   } catch (error) {
@@ -22,9 +22,9 @@ async function isMigrationCompleted(organizationId) {
 /**
  * Marque la migration comme complétée
  */
-async function markMigrationCompleted(organizationId) {
+async function markMigrationCompleted(entrepriseId) {
   try {
-    const migrationRef = doc(db, 'organizations', organizationId, 'migrations', 'ribMigration');
+    const migrationRef = doc(db, 'organizations', entrepriseId, 'migrations', 'ribMigration');
     await setDoc(migrationRef, {
       completed: true,
       completedAt: new Date().toISOString(),
@@ -38,12 +38,12 @@ async function markMigrationCompleted(organizationId) {
 /**
  * Effectue la migration automatique des données RIB
  */
-export async function autoMigrateRIB(organizationId) {
-  if (!organizationId) return;
+export async function autoMigrateRIB(entrepriseId) {
+  if (!entrepriseId) return;
 
   try {
     // Vérifier si la migration a déjà été effectuée
-    const isCompleted = await isMigrationCompleted(organizationId);
+    const isCompleted = await isMigrationCompleted(entrepriseId);
     if (isCompleted) {
       console.log('✅ Migration RIB déjà effectuée pour cette organisation');
       return;
@@ -52,12 +52,12 @@ export async function autoMigrateRIB(organizationId) {
     console.log('🔄 Début de la migration automatique des données RIB...');
 
     // Récupérer les paramètres de facturation
-    const factureParamsRef = doc(db, 'organizations', organizationId, 'settings', 'factureParameters');
+    const factureParamsRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
     const factureParamsDoc = await getDoc(factureParamsRef);
     
     if (!factureParamsDoc.exists()) {
       console.log('ℹ️  Pas de paramètres de facturation trouvés');
-      await markMigrationCompleted(organizationId);
+      await markMigrationCompleted(entrepriseId);
       return;
     }
     
@@ -67,14 +67,14 @@ export async function autoMigrateRIB(organizationId) {
     // Vérifier s'il y a des données RIB à migrer
     if (!parameters.iban && !parameters.bic && !parameters.nomBanque) {
       console.log('ℹ️  Pas de données RIB à migrer');
-      await markMigrationCompleted(organizationId);
+      await markMigrationCompleted(entrepriseId);
       return;
     }
     
     console.log('🔍 Données RIB trouvées dans les paramètres de facturation');
     
     // Récupérer les données d'entreprise existantes
-    const entrepriseRef = doc(db, 'organizations', organizationId, 'settings', 'entreprise');
+    const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
     const entrepriseDoc = await getDoc(entrepriseRef);
     
     let entrepriseData = {};
@@ -90,7 +90,7 @@ export async function autoMigrateRIB(organizationId) {
     
     if (!needsUpdate) {
       console.log('ℹ️  Les données RIB existent déjà dans entreprise');
-      await markMigrationCompleted(organizationId);
+      await markMigrationCompleted(entrepriseId);
       return;
     }
     
@@ -113,7 +113,7 @@ export async function autoMigrateRIB(organizationId) {
     console.log('   - Banque:', updatedData.banque ? '✓' : '✗');
     
     // Marquer la migration comme complétée
-    await markMigrationCompleted(organizationId);
+    await markMigrationCompleted(entrepriseId);
     
   } catch (error) {
     console.error('❌ Erreur lors de la migration automatique RIB:', error);
@@ -123,11 +123,11 @@ export async function autoMigrateRIB(organizationId) {
 /**
  * Réinitialise le flag de migration (utile pour les tests)
  */
-export async function resetMigrationFlag(organizationId) {
-  if (!organizationId) return;
+export async function resetMigrationFlag(entrepriseId) {
+  if (!entrepriseId) return;
   
   try {
-    const migrationRef = doc(db, 'organizations', organizationId, 'migrations', 'ribMigration');
+    const migrationRef = doc(db, 'organizations', entrepriseId, 'migrations', 'ribMigration');
     await setDoc(migrationRef, {
       completed: false,
       resetAt: new Date().toISOString()

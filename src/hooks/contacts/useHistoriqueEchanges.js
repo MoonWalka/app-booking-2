@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import historiqueEchangesService, { TYPES_ECHANGES, STATUTS_ECHANGES } from '@/services/historiqueEchangesService';
 import { useAuth } from '@/context/AuthContext';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import { toast } from 'react-toastify';
 
 /**
@@ -15,11 +15,11 @@ export function useHistoriqueEchanges(contactId) {
   const [isAddingEchange, setIsAddingEchange] = useState(false);
   
   const { currentUser: user } = useAuth();
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
 
   // Charger l'historique des échanges
   useEffect(() => {
-    if (!contactId || !currentOrganization?.id) return;
+    if (!contactId || !currentEntreprise?.id) return;
 
     setLoading(true);
     setError(null);
@@ -27,7 +27,7 @@ export function useHistoriqueEchanges(contactId) {
     // S'abonner aux changements en temps réel
     const unsubscribe = historiqueEchangesService.subscribeToContactEchanges(
       contactId,
-      currentOrganization.id,
+      currentEntreprise.id,
       (result) => {
         if (result.success) {
           // Formater les échanges pour l'affichage
@@ -47,13 +47,13 @@ export function useHistoriqueEchanges(contactId) {
     return () => {
       unsubscribe();
     };
-  }, [contactId, currentOrganization?.id]);
+  }, [contactId, currentEntreprise?.id]);
 
   /**
    * Ajouter un nouvel échange
    */
   const addEchange = useCallback(async (echangeData) => {
-    if (!contactId || !currentOrganization?.id || !user?.uid) {
+    if (!contactId || !currentEntreprise?.id || !user?.uid) {
       toast.error('Impossible d\'ajouter l\'échange : données manquantes');
       return { success: false };
     }
@@ -64,7 +64,7 @@ export function useHistoriqueEchanges(contactId) {
       const newEchange = {
         ...echangeData,
         contactId,
-        organizationId: currentOrganization.id,
+        entrepriseId: currentEntreprise.id,
         userId: user.uid,
         date: echangeData.date || new Date()
       };
@@ -85,7 +85,7 @@ export function useHistoriqueEchanges(contactId) {
     } finally {
       setIsAddingEchange(false);
     }
-  }, [contactId, currentOrganization?.id, user?.uid]);
+  }, [contactId, currentEntreprise?.id, user?.uid]);
 
   /**
    * Mettre à jour un échange

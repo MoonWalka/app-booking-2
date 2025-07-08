@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { collection, getDocs, doc, setDoc, query, where, writeBatch, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
-import { useOrganization } from '@/context/OrganizationContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
@@ -14,7 +14,7 @@ import styles from './DataStructureFixer.module.css';
  * - Crée les liaisons entre structures et personnes
  */
 const RelationalMigrationFixer = () => {
-  const { currentOrganization } = useOrganization();
+  const { currentEntreprise } = useEntreprise();
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
   const [results, setResults] = useState(null);
@@ -29,7 +29,7 @@ const RelationalMigrationFixer = () => {
   };
 
   const analyzeData = async () => {
-    if (!currentOrganization?.id) {
+    if (!currentEntreprise?.id) {
       setError('Veuillez sélectionner une organisation');
       return;
     }
@@ -44,10 +44,10 @@ const RelationalMigrationFixer = () => {
 
       // Charger toutes les données
       const [structuresSnap, personnesSnap, liaisonsSnap, unifiedSnap] = await Promise.all([
-        getDocs(query(collection(db, 'structures'), where('organizationId', '==', currentOrganization.id))),
-        getDocs(query(collection(db, 'personnes'), where('organizationId', '==', currentOrganization.id))),
-        getDocs(query(collection(db, 'liaisons'), where('organizationId', '==', currentOrganization.id))),
-        getDocs(query(collection(db, 'contacts_unified'), where('organizationId', '==', currentOrganization.id)))
+        getDocs(query(collection(db, 'structures'), where('entrepriseId', '==', currentEntreprise.id))),
+        getDocs(query(collection(db, 'personnes'), where('entrepriseId', '==', currentEntreprise.id))),
+        getDocs(query(collection(db, 'liaisons'), where('entrepriseId', '==', currentEntreprise.id))),
+        getDocs(query(collection(db, 'contacts_unified'), where('entrepriseId', '==', currentEntreprise.id)))
       ]);
 
       // Analyser les personnes libres
@@ -145,7 +145,7 @@ const RelationalMigrationFixer = () => {
   };
 
   const executeFix = async () => {
-    if (!analysis || !currentOrganization?.id) return;
+    if (!analysis || !currentEntreprise?.id) return;
 
     setLoading(true);
     setError(null);
@@ -193,7 +193,7 @@ const RelationalMigrationFixer = () => {
       
       if (!dryRun && analysis.structures.details.length > 0) {
         // Recharger les contacts unifiés pour avoir toutes les données
-        const unifiedSnap = await getDocs(query(collection(db, 'contacts_unified'), where('organizationId', '==', currentOrganization.id)));
+        const unifiedSnap = await getDocs(query(collection(db, 'contacts_unified'), where('entrepriseId', '==', currentEntreprise.id)));
         
         for (const structureInfo of analysis.structures.details) {
           const unifiedDoc = unifiedSnap.docs.find(doc => doc.id === structureInfo.id);
@@ -204,7 +204,7 @@ const RelationalMigrationFixer = () => {
           
           const structureId = `structure_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           const structureData = {
-            organizationId: currentOrganization.id,
+            entrepriseId: currentEntreprise.id,
             raisonSociale: structure.raisonSociale || structure.nom || 'Structure sans nom',
             type: structure.type || 'autre',
             email: structure.email || '',
@@ -240,9 +240,9 @@ const RelationalMigrationFixer = () => {
       if (!dryRun) {
         // Recharger toutes les données pour avoir les nouvelles structures
         const [structuresSnap, personnesSnap, unifiedSnap] = await Promise.all([
-          getDocs(query(collection(db, 'structures'), where('organizationId', '==', currentOrganization.id))),
-          getDocs(query(collection(db, 'personnes'), where('organizationId', '==', currentOrganization.id))),
-          getDocs(query(collection(db, 'contacts_unified'), where('organizationId', '==', currentOrganization.id)))
+          getDocs(query(collection(db, 'structures'), where('entrepriseId', '==', currentEntreprise.id))),
+          getDocs(query(collection(db, 'personnes'), where('entrepriseId', '==', currentEntreprise.id))),
+          getDocs(query(collection(db, 'contacts_unified'), where('entrepriseId', '==', currentEntreprise.id)))
         ]);
 
         // Créer les index
@@ -293,7 +293,7 @@ const RelationalMigrationFixer = () => {
               if (personneData) {
                 const liaisonId = `liaison_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                 const liaisonData = {
-                  organizationId: currentOrganization.id,
+                  entrepriseId: currentEntreprise.id,
                   structureId: structureData.id,
                   personneId: personneData.id,
                   fonction: personneUnified.fonction || '',
@@ -361,7 +361,7 @@ const RelationalMigrationFixer = () => {
           <div className={styles.buttonGroup}>
             <Button
               onClick={analyzeData}
-              disabled={loading || !currentOrganization}
+              disabled={loading || !currentEntreprise}
               variant="secondary"
             >
               {loading ? 'Analyse...' : '📊 Analyser'}

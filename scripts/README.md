@@ -14,7 +14,7 @@ Scripts d'analyse du code et des données
 Scripts d'audit et leurs rapports
 - `audit-associations-bidirectionnelles.js` - Audit des relations bidirectionnelles
 - `audit-cleanup-migration.js` - Audit post-migration
-- `audit-firebase-organizationid.js` - Audit Firebase pour organizationId
+- `audit-firebase-organizationid.js` - Audit Firebase pour entrepriseId
 - `audit-relations-system.js` - Audit du système de relations
 
 ### 📁 cleanup/
@@ -38,8 +38,8 @@ Scripts archivés des versions précédentes
 ## 🚀 Scripts Importants
 
 ### Multi-Organisation
-- `migrate-missing-organizationid.js` - Migration des documents sans organizationId
-- `check-organization-ids.js` - Vérification des organizationId
+- `migrate-missing-organizationid.js` - Migration des documents sans entrepriseId
+- `check-entreprise-ids.js` - Vérification des entrepriseId
 
 ### Audits
 - `audit-*.js` - Tous les scripts d'audit

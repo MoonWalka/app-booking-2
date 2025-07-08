@@ -12,7 +12,7 @@ import ParametresExport from '../components/parametres/ParametresExport';
 import ParametresEntreprises from '../components/parametres/ParametresEntreprises';
 import ParametresFactures from '../components/parametres/ParametresFactures';
 import SyncManager from '../components/parametres/sync/SyncManager';
-// import OrganizationIdTest from '../components/debug/OrganizationIdTest'; // Supprimé
+// import EntrepriseIdTest from '../components/debug/EntrepriseIdTest'; // Supprimé
 import TabNavigation from '../components/common/TabNavigation';
 import '@styles/index.css';
 
@@ -60,8 +60,8 @@ const ParametresPage = () => {
       newActiveTab = 'sync';
     } else if (path.includes('/parametres/debug')) {
       newActiveTab = 'debug';
-    } else if (path.includes('/parametres/test-organizationid')) {
-      newActiveTab = 'test-organizationid';
+    } else if (path.includes('/parametres/test-entrepriseid')) {
+      newActiveTab = 'test-entrepriseid';
     } else if (path.includes('/parametres/generaux')) {
       newActiveTab = 'generaux';
     } else if (path.includes('/parametres/entreprise') || path.includes('/parametres/compte')) {
@@ -113,8 +113,8 @@ const ParametresPage = () => {
       case 'debug':
         navigate('/parametres/debug');
         break;
-      case 'test-organizationid':
-        navigate('/parametres/test-organizationid');
+      case 'test-entrepriseid':
+        navigate('/parametres/test-entrepriseid');
         break;
       case 'generaux':
         navigate('/parametres/generaux');
@@ -157,7 +157,7 @@ const ParametresPage = () => {
           <h5>🔍 Panneau de debug déplacé</h5>
           <p>Le panneau de debug OrganizationId est maintenant disponible via le bouton flottant en bas à droite de l'écran (mode développement uniquement).</p>
         </div>;
-      case 'test-organizationid':
+      case 'test-entrepriseid':
         return <div className="alert alert-info">
           <h5>🔍 Fonctionnalité temporairement indisponible</h5>
           <p>Le test OrganizationId est temporairement désactivé.</p>
@@ -185,8 +185,8 @@ const ParametresPage = () => {
     { label: 'Modèles de factures', key: 'factures-modeles' },
     { label: 'Export et sauvegarde', key: 'export' },
     { label: 'Synchronisation des données', key: 'sync' },
-    { label: '🔧 Debug OrganizationId', key: 'debug' },
-    // { label: '🧪 Test OrganizationId', key: 'test-organizationid' } // Temporairement désactivé
+    { label: '🔧 Debug EntrepriseId', key: 'debug' },
+    // { label: '🧪 Test EntrepriseId', key: 'test-entrepriseid' } // Temporairement désactivé
   ], []);
   
   const tabIndex = useMemo(() => tabList.findIndex(tab => tab.key === activeTab), [tabList, activeTab]);

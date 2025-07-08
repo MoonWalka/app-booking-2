@@ -113,7 +113,7 @@ const BrevoManager = () => {
       setError('');
 
       if (!localState.apiKey) {
-        setError('Veuillez d'abord configurer la clé API Brevo');
+        setError('Veuillez d\'abord configurer la clé API Brevo');
         return;
       }
 

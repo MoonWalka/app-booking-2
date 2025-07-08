@@ -62,7 +62,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   });
   
   // Log spécifique quand toutes les données sont chargées
-  if (contrat && date concert &&concert && template && !loading) {
+  if (contrat && date && template && !loading) {
     console.log('[DEBUG ContratDetailsPage] TOUTES LES DONNÉES CHARGÉES:', {
       contact,
       lieu,
@@ -177,7 +177,7 @@ const ContratDetailsPage = ({ autoDownload = false }) => {
   // Gérer le téléchargement automatique pour la route /download
   useEffect(() => {
     // Déclencher le téléchargement automatique si autoDownload est activé et pas encore déclenché
-    if (autoDownload && !loading && contrat && date concert &&concert && template && !isDownloading && !autoDownloadTriggered) {
+    if (autoDownload && !loading && contrat && date && template && !isDownloading && !autoDownloadTriggered) {
       console.log('[ContratDetailsPage] Déclenchement du téléchargement automatique');
       
       // Marquer comme déclenché pour éviter les doublons

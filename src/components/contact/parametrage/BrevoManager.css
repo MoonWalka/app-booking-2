@@ -1,0 +1,39 @@
+.brevo-manager {
+  /* Styles spécifiques à BrevoManager si nécessaire */
+}
+
+.brevo-manager .card {
+  border: 1px solid #e3e6f0;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.brevo-manager .card-header {
+  background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+}
+
+.brevo-manager .input-group {
+  position: relative;
+}
+
+.brevo-manager .form-label {
+  font-weight: 600;
+  color: #5a5c69;
+  margin-bottom: 0.5rem;
+}
+
+.brevo-manager .form-text {
+  font-size: 0.875rem;
+  color: #858796;
+}
+
+.brevo-manager hr {
+  border-color: #e3e6f0;
+}
+
+.brevo-manager .template-section {
+  background-color: #f8f9fc;
+  padding: 1rem;
+  border-radius: 0.35rem;
+  margin-bottom: 1rem;
+}

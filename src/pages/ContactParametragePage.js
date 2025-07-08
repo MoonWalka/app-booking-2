@@ -6,6 +6,7 @@ import TagsManager from '../components/contact/parametrage/TagsManager';
 import QualificationsManager from '../components/contact/parametrage/QualificationsManager';
 import MessagerieManager from '../components/contact/parametrage/MessagerieManager';
 import MessagesTachesManager from '../components/contact/parametrage/MessagesTachesManager';
+import BrevoManager from '../components/contact/parametrage/BrevoManager';
 import '@styles/index.css';
 
 const ContactParametragePage = () => {
@@ -47,6 +48,9 @@ const ContactParametragePage = () => {
     } else if (path.includes('/contact/parametrage/serveur-envoi')) {
       newActiveSection = 'messagerie';
       newActiveSubOption = 'serveur-envoi';
+    } else if (path.includes('/contact/parametrage/brevo')) {
+      newActiveSection = 'messagerie';
+      newActiveSubOption = 'brevo';
     } else if (path.includes('/contact/parametrage/modeles-email')) {
       newActiveSection = 'messages-taches';
       newActiveSubOption = 'modeles-email';
@@ -113,7 +117,8 @@ const ContactParametragePage = () => {
       ],
       'messagerie': [
         { label: 'Comptes de messagerie', value: 'comptes-messagerie' },
-        { label: 'Serveur d\'envoi', value: 'serveur-envoi' }
+        { label: 'Serveur d\'envoi', value: 'serveur-envoi' },
+        { label: 'Brevo', value: 'brevo' }
       ],
       'messages-taches': [
         { label: 'Modèles d\'email', value: 'modeles-email' },
@@ -231,11 +236,19 @@ const ContactParametragePage = () => {
           type: 'serveur-envoi',
           title: 'Serveurs d\'envoi',
           buttonLabel: 'Ajouter un serveur'
+        },
+        'brevo': {
+          type: 'brevo',
+          title: 'Configuration Brevo',
+          buttonLabel: ''
         }
       };
 
       const config = messagerieConfig[activeSubOption];
       if (config) {
+        if (activeSubOption === 'brevo') {
+          return <BrevoManager />;
+        }
         return <MessagerieManager {...config} />;
       }
     }

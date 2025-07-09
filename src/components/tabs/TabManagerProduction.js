@@ -179,8 +179,8 @@ const TabManagerProduction = () => {
       return <div className={styles.tabContent}>Aucun onglet actif</div>;
     }
 
-    const ComponentToRender = () => {
-      switch (tab.component) {
+    // NE PAS créer de fonction ici ! Retourner directement le JSX
+    switch (tab.component) {
         case 'DashboardPage':
           return <DashboardPage />;
         case 'ContactsPage':
@@ -318,10 +318,7 @@ const TabManagerProduction = () => {
               <pre>{JSON.stringify(tab, null, 2)}</pre>
             </div>
           );
-      }
-    };
-
-    return <ComponentToRender />;
+    }
   }, []);
 
   const handleTabRightClick = (e, tab) => {

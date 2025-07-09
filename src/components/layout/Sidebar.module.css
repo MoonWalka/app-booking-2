@@ -334,9 +334,9 @@
   border-top-right-radius: var(--tc-radius-base);
   border-bottom-right-radius: var(--tc-radius-base);
   z-index: 1000;
-  animation: slideInFromLeft 0.2s ease-out;
   display: flex;
   flex-direction: column;
+  animation: slideInFromLeft 0.2s ease-out;
 }
 
 @keyframes slideInFromLeft {
@@ -346,6 +346,20 @@
   }
   to {
     transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Quand un menu est déjà ouvert, pas d'animation slide pour le nouveau */
+.hasMenuOpen .subMenuPanel {
+  animation: fadeIn 0.2s ease-out !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
 }

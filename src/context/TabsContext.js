@@ -49,6 +49,7 @@ export const TabsProvider = ({ children }) => {
           return prevTabs;
         }
         // Activer l'onglet existant
+        console.log('[TabsContext] 🔀 CHANGEMENT D\'ONGLET - ancien:', activeTabId, '→ nouveau:', id);
         setActiveTabId(id);
         return prevTabs.map(tab => ({
           ...tab,

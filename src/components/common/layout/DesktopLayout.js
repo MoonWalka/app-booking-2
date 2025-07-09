@@ -68,6 +68,8 @@ function DesktopLayout({ children }) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   // État pour savoir si le dropdown organisation est ouvert
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
+  // État pour stocker l'historique du menu précédent
+  const [previousMenu, setPreviousMenu] = useState(null);
 
   // Navigation adaptée pour le système d'onglets
   const handleNavigation = (item) => {
@@ -409,6 +411,7 @@ function DesktopLayout({ children }) {
 
   // Gérer l'expansion/contraction des menus
   const toggleMenu = (menuId) => {
+    setPreviousMenu(expandedMenu);
     setExpandedMenu(expandedMenu === menuId ? null : menuId);
     // Fermer les sous-sous-menus quand on change de menu principal
     setExpandedSubMenu(null);
@@ -476,17 +479,20 @@ function DesktopLayout({ children }) {
                 className={sidebarStyles.subMenuOverlay}
                 onClick={() => setExpandedMenu(null)}
               />
-              <div className={sidebarStyles.subMenuPanel}>
-                <div className={sidebarStyles.subMenuHeader}>
-                  <h4>{item.label}</h4>
-                  <button 
-                    className={sidebarStyles.closeSubMenu}
-                    onClick={() => setExpandedMenu(null)}
-                  >
-                    <i className="bi bi-x"></i>
-                  </button>
-                </div>
-                <ul className={sidebarStyles.subMenu}>
+              <div 
+                className={sidebarStyles.subMenuPanel}
+                data-menu-id={item.id}
+              >
+              <div className={sidebarStyles.subMenuHeader}>
+                <h4>{item.label}</h4>
+                <button 
+                  className={sidebarStyles.closeSubMenu}
+                  onClick={() => setExpandedMenu(null)}
+                >
+                  <i className="bi bi-x"></i>
+                </button>
+              </div>
+              <ul className={sidebarStyles.subMenu}>
                   {item.subItems.map((subItem) => {
                     // Si le sous-item a des sous-éléments (sous-sous-menu)
                     if (subItem.subItems) {
@@ -716,7 +722,7 @@ function DesktopLayout({ children }) {
   // Layout Desktop (inchangé)
   return (
     <div className={layoutStyles.layoutContainer}>
-      <nav className={`${sidebarStyles.sidebar} ${isUserMenuOpen ? sidebarStyles.extended : ''}`}>
+      <nav className={`${sidebarStyles.sidebar} ${isUserMenuOpen ? sidebarStyles.extended : ''} ${expandedMenu ? sidebarStyles.hasMenuOpen : ''}`}>
         <div className={sidebarStyles.sidebarContent}>
           <ul className={sidebarStyles.navLinks}>
             {navigationGroups.map(renderNavItem)}

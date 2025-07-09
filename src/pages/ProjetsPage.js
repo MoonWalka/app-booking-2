@@ -16,8 +16,7 @@ const ProjetsPage = () => {
   
   // Récupérer la liste des projets
   const { items: projets, loading, error } = useGenericEntityList('projets', {
-    sort: { field: 'nom', direction: 'asc' },
-    refreshKey
+    sort: { field: 'nom', direction: 'asc' }
   });
   
   // Récupérer la liste des artistes pour mapper les IDs aux noms

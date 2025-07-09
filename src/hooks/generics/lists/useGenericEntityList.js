@@ -87,16 +87,16 @@ import useGenericFilteredSearch from '../search/useGenericFilteredSearch';
 const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
   // ✅ CORRECTION 1: Stabiliser la configuration avec useMemo
   const stableListConfig = useMemo(() => ({
-    pageSize: listConfig.pageSize || 20,
-    defaultSort: listConfig.defaultSort || null,
-    defaultFilters: listConfig.defaultFilters || {},
-    enableSelection: listConfig.enableSelection || false,
-    enableFilters: listConfig.enableFilters || false,
-    enableSearch: listConfig.enableSearch || false,
-    searchFields: listConfig.searchFields || [],
-    filters: listConfig.filters || {},
-    // ✅ CORRECTION 2: Ne pas inclure les fonctions dans la configuration stable
-    // onItemSelect, onItemsChange, onPageChange, transformItem seront gérées séparément
+      pageSize: listConfig.pageSize || 20,
+      defaultSort: listConfig.defaultSort || null,
+      defaultFilters: listConfig.defaultFilters || {},
+      enableSelection: listConfig.enableSelection || false,
+      enableFilters: listConfig.enableFilters || false,
+      enableSearch: listConfig.enableSearch || false,
+      searchFields: listConfig.searchFields || [],
+      filters: listConfig.filters || {},
+      // ✅ CORRECTION 2: Ne pas inclure les fonctions dans la configuration stable
+      // onItemSelect, onItemsChange, onPageChange, transformItem seront gérées séparément
   }), [
     listConfig.pageSize,
     listConfig.defaultSort,
@@ -176,15 +176,15 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
 
   // ✅ CORRECTION 6: Configuration de récupération des données stable
   const fetchConfig = useMemo(() => ({
-    mode: 'collection',
-    filters: stableListConfig.defaultFilters,
-    orderBy: sorting ? {
-      field: sorting.field,
-      direction: sorting.direction
-    } : null,
-    limit: stableListConfig.pageSize,
-    // ✅ CORRECTION 7: Callback onData stable
-    onData: (newData) => {
+      mode: 'collection',
+      filters: stableListConfig.defaultFilters,
+      orderBy: sorting ? {
+        field: sorting.field,
+        direction: sorting.direction
+      } : null,
+      limit: stableListConfig.pageSize,
+      // ✅ CORRECTION 7: Callback onData stable
+      onData: (newData) => {
       if (newData) {
         const processedItems = newData.map(transformItemStable);
         

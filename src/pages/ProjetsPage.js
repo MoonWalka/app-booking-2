@@ -1,28 +1,79 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useTabs } from '@/context/TabsContext';
-import useGenericEntityList from '../hooks/generics/lists/useGenericEntityList';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import ProjetCreationModal from '../components/projets/modal/ProjetCreationModal';
 import '@styles/index.css';
 
 const ProjetsPage = () => {
   console.log('📂 ProjetsPage - Composant chargé');
-  const [refreshKey, setRefreshKey] = useState(0);
   const [showProjetModal, setShowProjetModal] = useState(false);
   const [editProjetData, setEditProjetData] = useState(null);
+  const [projets, setProjets] = useState([]);
+  const [artistes, setArtistes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const { openDateCreationTab } = useTabs();
+  const { currentEntreprise } = useEntreprise();
   
-  // Récupérer la liste des projets
-  const { items: projets, loading, error } = useGenericEntityList('projets', {
-    sort: { field: 'nom', direction: 'asc' }
-  });
-  
-  // Récupérer la liste des artistes pour mapper les IDs aux noms
-  const { items: artistes } = useGenericEntityList('artistes', {
-    sort: { field: 'nom', direction: 'asc' }
-  });
+  // Récupérer les projets et artistes avec un simple useEffect
+  useEffect(() => {
+    if (!currentEntreprise?.id) {
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
+    
+    // Listener pour les projets
+    const projetsQuery = query(
+      collection(db, 'projets'),
+      where('entrepriseId', '==', currentEntreprise.id),
+      orderBy('nom', 'asc')
+    );
+    
+    const unsubscribeProjets = onSnapshot(projetsQuery, 
+      (snapshot) => {
+        const projetsData = [];
+        snapshot.forEach((doc) => {
+          projetsData.push({ id: doc.id, ...doc.data() });
+        });
+        setProjets(projetsData);
+        setLoading(false);
+      },
+      (err) => {
+        console.error('Erreur lors de la récupération des projets:', err);
+        setError(err);
+        setLoading(false);
+      }
+    );
+    
+    // Listener pour les artistes
+    const artistesQuery = query(
+      collection(db, 'artistes'),
+      where('entrepriseId', '==', currentEntreprise.id),
+      orderBy('nom', 'asc')
+    );
+    
+    const unsubscribeArtistes = onSnapshot(artistesQuery, 
+      (snapshot) => {
+        const artistesData = [];
+        snapshot.forEach((doc) => {
+          artistesData.push({ id: doc.id, ...doc.data() });
+        });
+        setArtistes(artistesData);
+      }
+    );
+    
+    // Cleanup
+    return () => {
+      unsubscribeProjets();
+      unsubscribeArtistes();
+    };
+  }, [currentEntreprise?.id]);
   
   // Fonction pour obtenir les noms des artistes à partir de leurs IDs
   const getArtistesNames = useCallback((artisteIds) => {
@@ -58,8 +109,7 @@ const ProjetsPage = () => {
       try {
         await deleteDoc(doc(db, 'projets', projetId));
         console.log('Projet supprimé avec succès');
-        // Rafraîchir la liste
-        setRefreshKey(prev => prev + 1);
+        // La liste se rafraîchira automatiquement grâce au listener Firebase
       } catch (error) {
         console.error('Erreur lors de la suppression du projet:', error);
         alert('Erreur lors de la suppression du projet');
@@ -74,8 +124,7 @@ const ProjetsPage = () => {
   }, []);
 
   const handleProjetCreated = useCallback(() => {
-    // Rafraîchir la liste après création/modification
-    setRefreshKey(prev => prev + 1);
+    // Le listener Firebase mettra automatiquement à jour la liste
     setEditProjetData(null);
   }, []);
 
@@ -228,7 +277,7 @@ const ProjetsPage = () => {
         </Col>
       </Row>
       
-      {/* Modal de création/édition de projet - ne rendre que si nécessaire */}
+      {/* Modal de création/édition de projet */}
       {showProjetModal && (
         <ProjetCreationModal
           show={showProjetModal}

@@ -4,7 +4,9 @@
 ## Contexte
 Cet audit identifie les éléments de l'ancien système (présent dans `main`) qui sont encore présents dans la branche `nouvelle-interface`. L'objectif est de nettoyer complètement la nouvelle interface de toute trace de l'ancien système.
 
-## 1. Terminologie "concert" → "date" (251 références restantes)
+**Note importante** : Les chiffres excluent les fichiers de backup/migration/archived.
+
+## 1. Terminologie "concert" → "date" (319 références restantes, dont seulement 2 dans des backups)
 
 ### Fichiers CSS avec l'ancienne terminologie
 ```
@@ -37,7 +39,7 @@ src/styles/base/colors.css (variables --tc-color-concert)
 - `templateVariables.js` : Définitions de variables "concert"
 - `firebaseDataUtils.js` : Références dans les commentaires
 
-## 2. Terminologie "organization" → "entreprise" (58 références restantes)
+## 2. Terminologie "organization" → "entreprise" (61 références restantes, aucune dans des backups)
 
 ### Pages avec "organization"
 - `PreContratFormResponsePage.js` : `const [organizationName, setOrganizationName]`
@@ -67,12 +69,13 @@ src/styles/base/colors.css (variables --tc-color-concert)
 - Références à `parametres` dans plusieurs fichiers
 - Utilisation de `organizationContext` au lieu de `entrepriseContext`
 
-## 4. Statistiques
+## 4. Statistiques vérifiées (hors fichiers backup)
 
-- **251 références à "concert"** dans le code
-- **58 références à "organization"** 
-- **2 fichiers CSS** avec terminologie "concerts"
-- **1 test** qui importe un composant supprimé
+- **319 références à "concert"** dans le code (seulement 2 dans des backups)
+- **61 références à "organization"** (aucune dans des backups)
+- **2 fichiers CSS dédiés** aux concerts + **33 fichiers CSS** contenant le mot "concert"
+- **1 test** qui importe un composant supprimé (ParametresEmail)
+- **1 seul dossier backup** trouvé dans src/
 
 ## 5. Plan de nettoyage recommandé
 
@@ -112,4 +115,12 @@ src/styles/base/colors.css (variables --tc-color-concert)
 
 ## Conclusion
 
-La migration vers le nouveau système n'est pas complète. Il reste **309 références** à l'ancienne terminologie qui doivent être mises à jour pour assurer la cohérence et la maintenabilité du code. Un effort systématique de rechercher/remplacer suivi d'une révision manuelle est nécessaire.
+La migration vers le nouveau système n'est pas complète. Il reste **380 références** à l'ancienne terminologie (319 "concert" + 61 "organization") qui doivent être mises à jour. Les fichiers de backup ne représentent qu'une infime partie du problème (moins de 1%). 
+
+La grande majorité des références sont dans des fichiers actifs du système :
+- Pages de contrats et formulaires
+- Hooks et services
+- Composants de debug
+- Fichiers CSS (35 fichiers au total)
+
+Un effort systématique de rechercher/remplacer suivi d'une révision manuelle est nécessaire pour finaliser la migration.

@@ -44,7 +44,7 @@ import ArtistesList from '@/components/artistes/ArtistesList';
 import ContactViewTabs from '@/components/contacts/ContactViewTabs';
 import LieuView from '@/components/lieux/desktop/LieuView';
 // import StructureViewTabs from '@/components/structures/StructureViewTabs'; // Plus utilisé - maintenant tout est des contacts
-import DateDetails from '@/components/dates/DateDetails';
+// DateDetails retiré car DateDetailsPage est utilisé
 // ContratGeneratorNew retiré car non utilisé
 
 const TabManagerProduction = () => {
@@ -52,8 +52,7 @@ const TabManagerProduction = () => {
     tabs, 
     activateTab, 
     closeTab, 
-    closeOtherTabs,
-    getActiveTab
+    closeOtherTabs
     // openTab
   } = useTabs();
 
@@ -175,65 +174,57 @@ const TabManagerProduction = () => {
   //   }
   // };
 
-  const renderTabContent = () => {
-    const activeTab = getActiveTab();
-    
-    if (!activeTab) {
+  const renderTabContent = useCallback((tab) => {
+    if (!tab) {
       return <div className={styles.tabContent}>Aucun onglet actif</div>;
     }
 
     const ComponentToRender = () => {
-      switch (activeTab.component) {
+      switch (tab.component) {
         case 'DashboardPage':
           return <DashboardPage />;
         case 'ContactsPage':
           // Rendre le composant ContactsPage complet pour gérer les sous-routes
-          console.log('[TabManager] Rendu ContactsPage pour activeTab:', activeTab);
-          console.log('[TabManager] activeTab.path:', activeTab.path);
-          return <ContactsPage tabPath={activeTab.path} />;
+          console.log('[TabManager] Rendu ContactsPage pour tab:', tab);
+          console.log('[TabManager] tab.path:', tab.path);
+          return <ContactsPage tabPath={tab.path} />;
         case 'ContactsListFiltered':
           // Afficher la liste filtrée des contacts par tag
           return <ContactsListFiltered 
-            filterTag={activeTab.params?.filterTag}
-            filterType={activeTab.params?.filterType}
-            usageCount={activeTab.params?.usageCount}
+            filterTag={tab.params?.filterTag}
+            filterType={tab.params?.filterType}
+            usageCount={tab.params?.usageCount}
           />;
         case 'ContactDetailsPage':
           // Afficher les détails d'un contact avec le nouveau layout
-          console.log('[DEBUG TabManager] activeTab pour ContactDetailsPage:', activeTab);
-          console.log('[DEBUG TabManager] contactId passé:', activeTab.params?.contactId);
-          console.log('[DEBUG TabManager] viewType passé:', activeTab.params?.viewType);
+          console.log('[DEBUG TabManager] tab pour ContactDetailsPage:', tab);
+          console.log('[DEBUG TabManager] contactId passé:', tab.params?.contactId);
+          console.log('[DEBUG TabManager] viewType passé:', tab.params?.viewType);
           return <ContactViewTabs 
-            key={activeTab.id}
-            id={activeTab.params?.contactId} 
-            viewType={activeTab.params?.viewType} 
+            key={tab.id}
+            id={tab.params?.contactId} 
+            viewType={tab.params?.viewType} 
           />;
-        case 'DatesPage':
         case 'DatesPage': // Rétrocompatibilité avec les anciens onglets
           // Afficher directement la liste des dates
           return <DatesPage />;
         case 'PublicationsPage':
           // Afficher directement la liste des publications
           return <PublicationsPage />;
-        case 'DateDetailsPage':
-          // Afficher les détails d'un concert
-          console.log('[DEBUG TabManager] Rendu DateDetailsPage avec activeTab:', activeTab);
-          console.log('[DEBUG TabManager] dateId passé:', activeTab.params?.dateId);
-          return <DateDetails id={activeTab.params?.dateId} />;
         case 'LieuxPage':
           // Afficher directement la liste des lieux
           return <LieuxList />;
         case 'LieuDetailsPage':
           // Afficher les détails d'un lieu
-          return <LieuView id={activeTab.params?.lieuId} />;
+          return <LieuView id={tab.params?.lieuId} />;
         case 'StructuresPage':
           // Afficher la liste unifiée des contacts (structures + personnes)
           return <ContactsList />;
         case 'StructureDetailsPage':
           // Afficher les détails d'une structure (maintenant c'est un contact de type structure)
           return <ContactViewTabs 
-            key={activeTab.id}
-            id={activeTab.params?.structureId} 
+            key={tab.id}
+            id={tab.params?.structureId} 
           />;
         // Note: ContactDetailsPage est déjà géré plus haut dans le switch
         case 'ArtistesPage':
@@ -242,35 +233,35 @@ const TabManagerProduction = () => {
         case 'ContratsPage':
           return <ContratsPage />;
         case 'ContratDetailsPage':
-          console.log('[TabManager] Rendu ContratDetailsPage avec activeTab:', activeTab);
-          console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
+          console.log('[TabManager] Rendu ContratDetailsPage avec tab:', tab);
+          console.log('[TabManager] contratId passé:', tab.params?.contratId);
           return <ContratDetailsPage />;
         case 'FacturesPage':
           return <FacturesPage />;
         case 'FactureGeneratorPage':
-          console.log('[TabManager] Rendu FactureGeneratorPage avec activeTab:', activeTab);
-          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
-          console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
+          console.log('[TabManager] Rendu FactureGeneratorPage avec tab:', tab);
+          console.log('[TabManager] dateId passé:', tab.params?.dateId);
+          console.log('[TabManager] contratId passé:', tab.params?.contratId);
           return <FactureGeneratorPage />;
         case 'FactureDetailsPage':
-          console.log('[TabManager] Rendu FactureGeneratorPage (remplace FactureDetailsPage) avec activeTab:', activeTab);
-          console.log('[TabManager] factureId passé:', activeTab.params?.factureId);
-          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
-          console.log('[TabManager] contratId passé:', activeTab.params?.contratId);
+          console.log('[TabManager] Rendu FactureGeneratorPage (remplace FactureDetailsPage) avec tab:', tab);
+          console.log('[TabManager] factureId passé:', tab.params?.factureId);
+          console.log('[TabManager] dateId passé:', tab.params?.dateId);
+          console.log('[TabManager] contratId passé:', tab.params?.contratId);
           return <FactureGeneratorPage 
-            factureId={activeTab.params?.factureId}
-            dateId={activeTab.params?.dateId}
-            contratId={activeTab.params?.contratId}
+            factureId={tab.params?.factureId}
+            dateId={tab.params?.dateId}
+            contratId={tab.params?.contratId}
           />;
         case 'DevisPage':
-          console.log('[TabManager] Rendu DevisPage avec activeTab:', activeTab);
-          console.log('[TabManager] devisId passé:', activeTab.params?.devisId);
-          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
-          console.log('[TabManager] structureId passé:', activeTab.params?.structureId);
+          console.log('[TabManager] Rendu DevisPage avec tab:', tab);
+          console.log('[TabManager] devisId passé:', tab.params?.devisId);
+          console.log('[TabManager] dateId passé:', tab.params?.dateId);
+          console.log('[TabManager] structureId passé:', tab.params?.structureId);
           return <DevisPage 
-            devisId={activeTab.params?.devisId}
-            dateId={activeTab.params?.dateId}
-            structureId={activeTab.params?.structureId}
+            devisId={tab.params?.devisId}
+            dateId={tab.params?.dateId}
+            structureId={tab.params?.structureId}
           />;
         case 'BookingParametragePage':
           return <BookingParametragePage />;
@@ -286,9 +277,9 @@ const TabManagerProduction = () => {
         case 'DateCreationPage':
           return <DateCreationPage />;
         case 'DateDetailsPage':
-          console.log('[TabManager] Rendu DateDetailsPage avec activeTab:', activeTab);
-          console.log('[TabManager] dateId passé:', activeTab.params?.id);
-          return <DateDetailsPage params={activeTab.params} />;
+          console.log('[TabManager] Rendu DateDetailsPage avec tab:', tab);
+          console.log('[TabManager] dateId passé:', tab.params?.id);
+          return <DateDetailsPage params={tab.params} />;
         case 'TachesPage':
           return <TachesPage />;
         case 'CollaborationParametragePage':
@@ -298,18 +289,18 @@ const TabManagerProduction = () => {
         case 'ContactParametragePage':
           return <ContactParametragePage />;
         case 'PreContratGenerationPage':
-          console.log('[TabManager] Rendu PreContratGenerationPage avec activeTab:', activeTab);
-          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
-          return <PreContratGenerationPage dateId={activeTab.params?.dateId} />;
+          console.log('[TabManager] Rendu PreContratGenerationPage avec tab:', tab);
+          console.log('[TabManager] dateId passé:', tab.params?.dateId);
+          return <PreContratGenerationPage dateId={tab.params?.dateId} />;
         case 'ConfirmationPage':
-          return <ConfirmationPage dateId={activeTab.params?.dateId} />;
+          return <ConfirmationPage dateId={tab.params?.dateId} />;
         case 'ContratGenerationNewPage':
-          console.log('[TabManager] Rendu ContratGenerationNewPage avec activeTab:', activeTab);
-          console.log('[TabManager] dateId passé:', activeTab.params?.dateId);
-          return <ContratGenerationNewPage dateId={activeTab.params?.dateId} />;
+          console.log('[TabManager] Rendu ContratGenerationNewPage avec tab:', tab);
+          console.log('[TabManager] dateId passé:', tab.params?.dateId);
+          return <ContratGenerationNewPage dateId={tab.params?.dateId} />;
         case 'ContratRedactionPage':
-          console.log('[TabManager] Rendu ContratRedactionPage avec activeTab:', activeTab);
-          console.log('[TabManager] contratId passé:', activeTab.params?.id);
+          console.log('[TabManager] Rendu ContratRedactionPage avec tab:', tab);
+          console.log('[TabManager] contratId passé:', tab.params?.id);
           return <ContratRedactionPage />;
         case 'MesRecherchesPage':
           return <MesRecherchesPage />;
@@ -323,15 +314,15 @@ const TabManagerProduction = () => {
           return (
             <div className={styles.tabContent}>
               <h2>Composant non trouvé</h2>
-              <p>Le composant "{activeTab.component}" n'est pas défini.</p>
-              <pre>{JSON.stringify(activeTab, null, 2)}</pre>
+              <p>Le composant "{tab.component}" n'est pas défini.</p>
+              <pre>{JSON.stringify(tab, null, 2)}</pre>
             </div>
           );
       }
     };
 
     return <ComponentToRender />;
-  };
+  }, []);
 
   const handleTabRightClick = (e, tab) => {
     e.preventDefault();
@@ -404,9 +395,17 @@ const TabManagerProduction = () => {
 
       </div>
 
-      {/* Contenu de l'onglet actif */}
+      {/* Contenu de tous les onglets (cachés sauf l'actif) */}
       <div className={styles.tabContainer}>
-        {renderTabContent()}
+        {tabs.map(tab => (
+          <div 
+            key={tab.id} 
+            style={{ display: tab.isActive ? 'block' : 'none' }}
+            className={styles.tabContent}
+          >
+            {renderTabContent(tab)}
+          </div>
+        ))}
       </div>
     </div>
   );

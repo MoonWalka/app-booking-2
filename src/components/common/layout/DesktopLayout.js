@@ -25,7 +25,8 @@ function DesktopLayout({ children }) {
     openLieuxListTab,
     openStructuresListTab,
     openDebugToolsTab,
-    openTab
+    openTab,
+    getActiveTab
   } = useTabs();
   
   const { 
@@ -34,23 +35,8 @@ function DesktopLayout({ children }) {
   } = useContactModals();
   
   
-  // État pour suivre si une transition est en cours
-  const [isTransitioning, setIsTransitioning] = useState(false);
   // État pour la sidebar mobile (hamburger menu)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  
-  // Effet pour gérer les transitions entre les routes
-  useEffect(() => {
-    // Marquer le début de la transition
-    setIsTransitioning(true);
-    
-    // Réinitialiser après la transition (court délai)
-    const timer = setTimeout(() => {
-      setIsTransitioning(false);
-    }, 300); // 300ms est généralement suffisant pour une transition fluide
-    
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
 
   // Effet pour fermer les panneaux lors du changement de taille d'écran
   useEffect(() => {
@@ -86,6 +72,13 @@ function DesktopLayout({ children }) {
   // Navigation adaptée pour le système d'onglets
   const handleNavigation = (item) => {
     console.log('[DesktopLayout] handleNavigation appelé avec:', item);
+    
+    // Vérifier si on est déjà sur cet onglet pour éviter un rechargement inutile
+    const activeTab = getActiveTab();
+    
+    // Pour les onglets, on ne change pas l'URL - on utilise seulement le système d'onglets
+    // Cela évite tout rechargement/clignotement
+    
     // Pour les éléments avec des actions spéciales
     switch (item.to) {
       case '/':
@@ -119,7 +112,7 @@ function DesktopLayout({ children }) {
         openDebugToolsTab();
         break;
       case '/inventaire-pages':
-        // Ouvrir dans une nouvelle page, hors système d'onglets
+        // Page spéciale hors système d'onglets - garde navigate()
         navigate('/inventaire-pages');
         break;
       case '/booking/parametrage':
@@ -272,7 +265,7 @@ function DesktopLayout({ children }) {
         });
         break;
       case '/tabs-test':
-        // Naviguer normalement pour cette page de test
+        // Page de test - garde navigate()
         navigate(item.to);
         break;
       case '/contacts/recherches':
@@ -321,8 +314,13 @@ function DesktopLayout({ children }) {
         });
         break;
       default:
-        // Navigation standard pour les autres pages
-        navigate(item.to);
+        // Ignorer les liens qui commencent par # (non implémentés)
+        if (item.to?.startsWith('#')) {
+          console.log('[DesktopLayout] Lien non implémenté:', item.to);
+          return;
+        }
+        // Pour tout le reste, on utilise le système d'onglets
+        console.log('[DesktopLayout] Route non gérée:', item.to);
     }
   };
 
@@ -438,24 +436,22 @@ function DesktopLayout({ children }) {
     }
   };
 
-  // Calculer le décalage du contenu principal
+  // Calculer le décalage du contenu principal (sans transition pour éviter le clignotement)
   const getContentOffset = () => {
-    if (isMobile) return 0; // Pas de décalage sur mobile
+    if (isMobile) return 0;
     
-    const sidebarWidth = 70; // var(--tc-sidebar-width-thin)
-    const panelWidth = 250; // var(--tc-submenu-width)
+    const sidebarWidth = 70;
+    const panelWidth = 250;
     
-    // Si le menu utilisateur est ouvert, la sidebar s'étend mais le panneau est en bas
     if (isUserMenuOpen) {
-      return panelWidth; // Seulement la sidebar étendue
+      return panelWidth;
     }
     
     if (expandedMenu) {
-      return 300; // Rapprocher le content du submenu
+      return 300;
     }
     return sidebarWidth;
   };
-
 
   // Fonction pour rendre un élément de navigation
   const renderNavItem = (item) => {
@@ -707,9 +703,7 @@ function DesktopLayout({ children }) {
         {/* Bottom Navigation Mobile - Supprimée pour utiliser les boutons flottants */}
 
         {/* Contenu principal mobile */}
-        <main className={`${layoutStyles.content} ${layoutStyles.mobileContent} ${
-          isTransitioning ? "router-transition-active" : ""
-        }`}>
+        <main className={`${layoutStyles.content} ${layoutStyles.mobileContent}`}>
           <TabManagerProduction />
         </main>
         
@@ -808,7 +802,7 @@ function DesktopLayout({ children }) {
       </header>
 
       <main 
-        className={`${layoutStyles.content} ${isTransitioning ? "router-transition-active" : ""}`}
+        className={layoutStyles.content}
         style={{ marginLeft: `${getContentOffset()}px` }}
       >
         <TabManagerProduction />

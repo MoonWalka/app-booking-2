@@ -19,15 +19,13 @@
 
 .content {
   flex: 1;
-  /* margin-left sera contrôlé dynamiquement via JavaScript */
   padding: var(--tc-space-6);
   padding-top: calc(70px + var(--tc-space-6)); /* Espace pour le header + padding normal */
   min-height: 100vh;
   background-color: var(--tc-bg-default);
-  transition: margin-left 0.2s ease-in-out, opacity var(--tc-transition-duration) ease-in-out;
+  /* Pas de transition pour éviter le clignotement */
   position: relative;
   width: 100%;
-  max-width: calc(100vw - 80px); /* Largeur max moins la sidebar */
   overflow-x: hidden;
   box-sizing: border-box;
 }

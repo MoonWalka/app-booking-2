@@ -56,7 +56,7 @@ const RelationCard = ({
           icon: 'bi-building'
         };
       
-      case 'concert':
+      case 'date':
         return {
           title: entity.titre || 'Date sans titre',
           subtitle: entity.date ? new Date(entity.date).toLocaleDateString('fr-FR') : '',

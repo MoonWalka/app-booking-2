@@ -172,7 +172,7 @@ const useFormSubmission = (options) => {
           entrepriseId: processedData.entrepriseId,
           structureId: processedData.structureId || '',
           lieuxIds: processedData.lieuxIds || [],
-          concertsAssocies: processedData.concertsAssocies || [],
+          datesAssociees: processedData.datesAssociees || [],
           notes: processedData.notes || '',
           tags: processedData.tags || [],
           statut: processedData.statut || 'actif',

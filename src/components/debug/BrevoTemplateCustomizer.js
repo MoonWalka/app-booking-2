@@ -108,7 +108,7 @@ const BrevoTemplateCustomizer = () => {
     setLoading(true);
     try {
       const parametresDoc = await getDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
       
       if (parametresDoc.exists()) {

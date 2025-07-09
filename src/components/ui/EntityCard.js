@@ -7,7 +7,7 @@ import styles from './EntityCard.module.css';
  * Basé sur le design des cartes de DateViewModern
  * 
  * @param {Object} props
- * @param {string} props.entityType - Type d'entité ('artiste', 'contact', 'structure', 'lieu', 'concert')
+ * @param {string} props.entityType - Type d'entité ('artiste', 'contact', 'structure', 'lieu', 'date')
  * @param {string} props.name - Nom principal de l'entité
  * @param {string} props.subtitle - Sous-titre/type affiché
  * @param {function} props.onClick - Fonction appelée au clic
@@ -145,7 +145,7 @@ const EntityCard = ({
 };
 
 EntityCard.propTypes = {
-  entityType: PropTypes.oneOf(['artiste', 'contact', 'structure', 'lieu', 'concert']).isRequired,
+  entityType: PropTypes.oneOf(['artiste', 'contact', 'structure', 'lieu', 'date']).isRequired,
   name: PropTypes.string.isRequired,
   subtitle: PropTypes.string,
   onClick: PropTypes.func,

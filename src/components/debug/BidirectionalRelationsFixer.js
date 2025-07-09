@@ -40,7 +40,7 @@ const BidirectionalRelationsFixer = () => {
         <p className={styles.description}>
           Cet outil répare les relations manquantes entre les concerts et les artistes.
           Il s'assure que chaque date référencé par un artiste existe bien dans 
-          la liste concertsIds de cet artiste.
+          la liste datesIds de cet artiste.
         </p>
         
         <p className={styles.warning}>

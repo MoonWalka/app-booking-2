@@ -182,9 +182,9 @@ const ContactView = ({ id: propId }) => {
         title="Dates"
         icon={<i className="bi bi-calendar-event"></i>}
       >
-        {contact.concertsAssocies && contact.concertsAssocies.length > 0 ? (
+        {contact.datesAssociees && contact.datesAssociees.length > 0 ? (
           <div className="list-group list-group-flush">
-            {contact.concertsAssocies.slice(0, 3).map(concert => (
+            {contact.datesAssociees.slice(0, 3).map(concert => (
               <div 
                 key={date.id} 
                 className="list-group-item list-group-item-action"
@@ -203,12 +203,12 @@ const ContactView = ({ id: propId }) => {
               </div>
             ))}
             
-            {contact.concertsAssocies.length > 3 && (
+            {contact.datesAssociees.length > 3 && (
               <button 
                 className="list-group-item list-group-item-action text-center text-primary"
                 onClick={() => navigate(`/concerts?contact=${contact.id}`)}
               >
-                Voir tous les concerts ({contact.concertsAssocies.length})
+                Voir tous les concerts ({contact.datesAssociees.length})
               </button>
             )}
           </div>
@@ -225,7 +225,7 @@ const ContactView = ({ id: propId }) => {
         title="Historique des échanges"
         icon={<i className="bi bi-chat-left-text"></i>}
       >
-        <HistoriqueEchanges contactId={id} concerts={contact.concertsAssocies || []} />
+        <HistoriqueEchanges contactId={id} concerts={contact.datesAssociees || []} />
       </Card>
       
       {/* Informations supplémentaires */}

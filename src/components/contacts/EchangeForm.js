@@ -8,7 +8,7 @@ import styles from './EchangeForm.module.css';
 /**
  * Formulaire pour ajouter ou éditer un échange
  */
-function EchangeForm({ echange, onSubmit, onCancel, concerts = [], isSubmitting = false }) {
+function EchangeForm({ echange, onSubmit, onCancel, dates = [], isSubmitting = false }) {
   const [formData, setFormData] = useState({
     type: TYPES_ECHANGES.EMAIL,
     statut: STATUTS_ECHANGES.PLANIFIE,
@@ -153,8 +153,8 @@ function EchangeForm({ echange, onSubmit, onCancel, concerts = [], isSubmitting 
           onChange={handleChange}
         >
           <option value="">Aucun concert</option>
-          {concerts && concerts.length > 0 ? (
-            concerts.map(concert => {
+          {dates && dates.length > 0 ? (
+            dates.map(concert => {
               const dateDate = concert.date?.toDate ? concert.date.toDate() : new Date(concert.date);
               return (
                 <option key={concert.id} value={concert.id}>

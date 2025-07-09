@@ -147,7 +147,7 @@ const useLieuxQuery = () => {
         let plateaux = 0;
         
         lieuxData.forEach(lieu => {
-          if (lieu.concertsAssocies && lieu.concertsAssocies.length > 0) {
+          if (lieu.datesAssociees && lieu.datesAssociees.length > 0) {
             avecDates++;
           } else {
             sansDates++;

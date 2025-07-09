@@ -183,12 +183,12 @@ function LieuView({ id: propId }) {
               {concertsArray.slice(0, 3).map((dateItem) => (
                 <EntityCard
                   key={dateItem.id}
-                  entityType="concert"
+                  entityType="date"
                   name={dateItem.titre || 'Date'}
                   subtitle={`Date (${concertsArray.length})`}
                   onClick={() => {
                     const dateId = dateItem.id || dateItem.dateId;
-                    navigateToEntity('concert', dateId);
+                    navigateToEntity('date', dateId);
                   }}
                 />
               ))}

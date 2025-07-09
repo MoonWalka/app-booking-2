@@ -66,7 +66,7 @@ export const useContactFactures = (entityId, entityType = 'contact') => {
           const dateData = { id: dateDoc.id, ...dateDoc.data() };
           
           const facturesQuery = query(
-            collection(db, 'organizations', entrepriseId, 'factures'),
+            collection(db, 'entreprises', entrepriseId, 'factures'),
             where('dateId', '==', dateDoc.id)
           );
           const facturesSnapshot = await getDocs(facturesQuery);

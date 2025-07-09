@@ -96,7 +96,7 @@ export function useFormTokenValidation(dateId, token) {
         let organizationData = null;
         if (validationResult.preContrat?.entrepriseId) {
           try {
-            const orgDoc = await getDoc(doc(db, 'organizations', validationResult.preContrat.entrepriseId));
+            const orgDoc = await getDoc(doc(db, 'entreprises', validationResult.preContrat.entrepriseId));
             if (orgDoc.exists()) {
               organizationData = { id: orgDoc.id, ...orgDoc.data() };
             }

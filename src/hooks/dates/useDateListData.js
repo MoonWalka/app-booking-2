@@ -411,7 +411,7 @@ export const useDateListData = () => {
           setDatesWithContracts(contractsMap);
           
           // 3. Récupération des factures UNIQUEMENT pour les dates actuels
-          const facturesRef = collection(db, 'organizations', currentEntreprise.id, 'factures');
+          const facturesRef = collection(db, 'entreprises', currentEntreprise.id, 'factures');
           const facturesQuery = query(
             facturesRef, 
             where('dateId', 'in', dateIds)

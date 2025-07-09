@@ -206,7 +206,7 @@ class FactureService {
         numeroBase.replace('XXXX', '');
 
       // Récupérer la dernière facture avec ce préfixe
-      const facturesRef = collection(db, 'organizations', entrepriseId, this.collectionName);
+      const facturesRef = collection(db, 'entreprises', entrepriseId, this.collectionName);
       const q = query(
         facturesRef,
         where('numeroFacture', '>=', searchPrefix),
@@ -262,7 +262,7 @@ class FactureService {
     }
 
     try {
-      const parametersRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
+      const parametersRef = doc(db, 'entreprises', entrepriseId, 'settings', 'factureParameters');
       const parametersDoc = await getDoc(parametersRef);
       
       if (parametersDoc.exists()) {
@@ -316,7 +316,7 @@ class FactureService {
     // Charger les informations d'entreprise depuis l'organisation
     let entreprise = factureData.entreprise;
     try {
-      const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
+      const entrepriseRef = doc(db, 'entreprises', entrepriseId, 'settings', 'entreprise');
       const entrepriseDoc = await getDoc(entrepriseRef);
       if (entrepriseDoc.exists()) {
         entreprise = entrepriseDoc.data();
@@ -638,7 +638,7 @@ class FactureService {
    */
   async createFacture(factureData, entrepriseId, userId) {
     try {
-      const facturesRef = collection(db, 'organizations', entrepriseId, this.collectionName);
+      const facturesRef = collection(db, 'entreprises', entrepriseId, this.collectionName);
       
       const newFacture = {
         ...factureData,
@@ -705,7 +705,7 @@ class FactureService {
    */
   async updateFacture(factureId, updates, entrepriseId, userId) {
     try {
-      const factureRef = doc(db, 'organizations', entrepriseId, this.collectionName, factureId);
+      const factureRef = doc(db, 'entreprises', entrepriseId, this.collectionName, factureId);
       
       await updateDoc(factureRef, {
         ...updates,
@@ -723,7 +723,7 @@ class FactureService {
    */
   async getFacture(factureId, entrepriseId) {
     try {
-      const factureRef = doc(db, 'organizations', entrepriseId, this.collectionName, factureId);
+      const factureRef = doc(db, 'entreprises', entrepriseId, this.collectionName, factureId);
       const factureDoc = await getDoc(factureRef);
       
       if (!factureDoc.exists()) {
@@ -745,7 +745,7 @@ class FactureService {
    */
   async getFactureTemplates(entrepriseId) {
     try {
-      const templatesRef = collection(db, 'organizations', entrepriseId, 'factureTemplates');
+      const templatesRef = collection(db, 'entreprises', entrepriseId, 'factureTemplates');
       const q = query(templatesRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       
@@ -770,7 +770,7 @@ class FactureService {
   async getDefaultTemplateOrSystem(entrepriseId) {
     try {
       // D'abord chercher un template utilisateur par défaut
-      const templatesRef = collection(db, 'organizations', entrepriseId, 'factureTemplates');
+      const templatesRef = collection(db, 'entreprises', entrepriseId, 'factureTemplates');
       const q = query(templatesRef, where('isDefault', '==', true), limit(1));
       const snapshot = await getDocs(q);
       
@@ -795,7 +795,7 @@ class FactureService {
    */
   async createTemplate(templateData, entrepriseId, userId) {
     try {
-      const templatesRef = collection(db, 'organizations', entrepriseId, 'factureTemplates');
+      const templatesRef = collection(db, 'entreprises', entrepriseId, 'factureTemplates');
       
       const newTemplate = {
         ...templateData,
@@ -819,7 +819,7 @@ class FactureService {
    */
   async deleteFacture(factureId, entrepriseId) {
     try {
-      const factureRef = doc(db, 'organizations', entrepriseId, this.collectionName, factureId);
+      const factureRef = doc(db, 'entreprises', entrepriseId, this.collectionName, factureId);
       await deleteDoc(factureRef);
       return true;
     } catch (error) {

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
+import { useTabs } from '@/context/TabsContext';
 import styles from './EntrepriseSelector.module.css';
 
 const EntrepriseSelector = ({ className = '', isMobile = false, onDropdownToggle }) => {
@@ -11,6 +12,7 @@ const EntrepriseSelector = ({ className = '', isMobile = false, onDropdownToggle
     switchEntreprise, 
     loading 
   } = useEntreprise();
+  const { openTab } = useTabs();
 
   const [showDropdown, setShowDropdown] = useState(false);
   
@@ -394,7 +396,17 @@ const EntrepriseSelector = ({ className = '', isMobile = false, onDropdownToggle
               className={styles.dropdownItem}
               onClick={() => {
                 setShowDropdown(false);
-                window.location.href = '/parametres/entreprises';
+                if (openTab) {
+                  openTab({
+                    id: 'collaboration-parametrage',
+                    title: 'Paramétrage Collaboration',
+                    path: '/collaboration/parametrage/entreprise',
+                    component: 'CollaborationParametragePage',
+                    icon: 'bi-gear'
+                  });
+                } else {
+                  window.location.href = '/collaboration/parametrage/entreprise';
+                }
               }}
               data-index={userEntreprises.length + 2}
               tabIndex={selectedIndex === userEntreprises.length + 2 ? 0 : -1}

@@ -176,15 +176,6 @@ function DesktopLayout({ children }) {
           icon: 'bi-file-earmark-plus'
         });
         break;
-      case '/parametres':
-        openTab({
-          id: 'parametres',
-          title: 'Paramètres',
-          path: '/parametres',
-          component: 'ParametresPage',
-          icon: 'bi-gear'
-        });
-        break;
       case '/mails':
         openTab({
           id: 'mails',
@@ -416,7 +407,6 @@ function DesktopLayout({ children }) {
         { to: "/tabs-test", icon: "bi-window-stack", label: "Test Onglets" }
       ]
     },
-    { to: "/parametres", icon: "bi-gear", label: "Paramètres" }
   ];
 
   // Gérer l'expansion/contraction des menus

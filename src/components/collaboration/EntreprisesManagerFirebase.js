@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Button, Form, Modal, Alert, Nav } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import './EntreprisesManager.css';
@@ -70,27 +70,37 @@ const EntreprisesManagerFirebase = () => {
             try {
                 let loadedEntreprises = [];
                 
-                // Charger depuis collaborationConfig
-                const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
+                // Charger depuis entreprises/{id}/collaborationEntreprises
+                const collaborationEntreprisesRef = collection(db, 'entreprises', currentEntreprise.id, 'collaborationEntreprises');
+                const collaborationSnapshot = await getDocs(collaborationEntreprisesRef);
                 
-                if (configDoc.exists()) {
-                    const data = configDoc.data();
-                    if (data.entreprises && Array.isArray(data.entreprises)) {
-                        loadedEntreprises = data.entreprises;
-                    }
-                }
+                collaborationSnapshot.forEach(doc => {
+                    loadedEntreprises.push({ id: doc.id, ...doc.data() });
+                });
                 
-                // Charger aussi l'entreprise principale depuis organizations/settings/entreprise
-                const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
-                const entrepriseDoc = await getDoc(entrepriseRef);
+                // Charger l'entreprise principale depuis la racine entreprises/{id}
+                const entrepriseDoc = await getDoc(doc(db, 'entreprises', currentEntreprise.id));
                 
                 if (entrepriseDoc.exists()) {
+                    const entrepriseData = entrepriseDoc.data();
+                    
+                    // Essayer aussi de charger les détails depuis settings/entreprise si disponible
+                    const settingsRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
+                    const settingsDoc = await getDoc(settingsRef);
+                    
+                    // Fusionner les données de base avec les détails si disponibles
                     const mainEntreprise = {
-                        ...entrepriseDoc.data(),
                         id: 'main',
                         principal: true,
-                        raisonSociale: entrepriseDoc.data().nom || entrepriseDoc.data().raisonSociale,
-                        ape: entrepriseDoc.data().codeAPE || entrepriseDoc.data().ape
+                        raisonSociale: entrepriseData.name || settingsDoc.data()?.nom || settingsDoc.data()?.raisonSociale || 'Entreprise principale',
+                        code: entrepriseData.slug || 'MAIN',
+                        type: entrepriseData.type,
+                        ...(settingsDoc.exists() ? settingsDoc.data() : {}),
+                        // Mapper les champs si nécessaire
+                        ape: settingsDoc.data()?.codeAPE || settingsDoc.data()?.ape || '',
+                        ville: settingsDoc.data()?.ville || '',
+                        email: settingsDoc.data()?.email || '',
+                        telephone: settingsDoc.data()?.telephone || ''
                     };
                     
                     // Vérifier si l'entreprise principale n'est pas déjà dans la liste chargée
@@ -198,7 +208,7 @@ const EntreprisesManagerFirebase = () => {
             
             // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
             if (entrepriseForm.principal || entrepriseForm.id === 'main') {
-                const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
+                const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
                 
                 // Préparer les données en nettoyant les undefined
                 const dataToSave = cleanUndefinedValues({
@@ -238,10 +248,13 @@ const EntreprisesManagerFirebase = () => {
             }
             
             try {
+                // Supprimer de Firebase
+                if (entreprise.id && entreprise.id !== 'main') {
+                    const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'collaborationEntreprises', entreprise.id);
+                    await deleteDoc(entrepriseRef);
+                }
+                
                 const updatedList = entreprisesList.filter(e => e.id !== entreprise.id);
-                
-                await saveEntreprisesToFirebase(updatedList);
-                
                 setEntreprisesList(updatedList);
                 if (selectedEntreprise?.id === entreprise.id) {
                     const remaining = updatedList;
@@ -270,20 +283,17 @@ const EntreprisesManagerFirebase = () => {
     const saveEntreprisesToFirebase = async (entreprises) => {
         if (!currentEntreprise?.id) return;
         
-        const configRef = doc(db, 'collaborationConfig', currentEntreprise.id);
-        const configDoc = await getDoc(configRef);
-        
-        const configData = configDoc.exists() ? configDoc.data() : {};
-        
-        // Nettoyer les entreprises avant de sauvegarder
-        const cleanedEntreprises = entreprises.map(e => cleanUndefinedValues(e));
-        
-        await setDoc(configRef, {
-            ...configData,
-            entreprises: cleanedEntreprises,
-            updatedAt: new Date(),
-            entrepriseId: currentEntreprise.id
-        }, { merge: true });
+        // Sauvegarder chaque entreprise dans la sous-collection
+        for (const entreprise of entreprises) {
+            if (entreprise.id && entreprise.id !== 'main') {
+                const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'collaborationEntreprises', entreprise.id);
+                const cleanedEntreprise = cleanUndefinedValues(entreprise);
+                await setDoc(entrepriseRef, {
+                    ...cleanedEntreprise,
+                    updatedAt: new Date()
+                });
+            }
+        }
     };
 
     const showMessage = (message, type = 'success') => {
@@ -323,7 +333,7 @@ const EntreprisesManagerFirebase = () => {
             
             // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
             if (selectedEntreprise.principal || selectedEntreprise.id === 'main') {
-                const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
+                const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
                 
                 // Préparer les données en nettoyant les undefined
                 const dataToSave = cleanUndefinedValues({
@@ -366,11 +376,11 @@ const EntreprisesManagerFirebase = () => {
                 <Button 
                     variant="success" 
                     onClick={() => handleShowModal()}
-                    className="w-100"
+                    className="w-100 d-flex align-items-center justify-content-center"
                     disabled={loading}
                 >
                     <FaPlus className="me-2" />
-                    Nouvelle entreprise
+                    <span className="text-nowrap">Nouvelle entreprise</span>
                 </Button>
             </div>
 

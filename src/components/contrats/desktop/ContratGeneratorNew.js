@@ -15,7 +15,7 @@ import styles from './ContratGeneratorNew.module.css';
  */
 const ContratGeneratorNew = ({ 
   dateId, 
-  concert, 
+  date, 
   contact, 
   artiste, 
   lieu, 
@@ -140,8 +140,8 @@ const ContratGeneratorNew = ({
       try {
         console.log('[ContratGeneratorNew] Chargement des données de l\'entreprise pour org:', currentEntreprise.id);
         
-        // Essayer d'abord le chemin principal: organizations/{id}/settings/entreprise
-        const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
+        // Essayer d'abord le chemin principal: entreprises/{id}/settings/entreprise
+        const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
         const entrepriseDoc = await getDoc(entrepriseRef);
         
         if (entrepriseDoc.exists()) {
@@ -151,8 +151,8 @@ const ContratGeneratorNew = ({
           return;
         }
         
-        // Fallback sur organizations/{id}/parametres/settings
-        const parametresRef = doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings');
+        // Fallback sur entreprises/{id}/parametres/settings
+        const parametresRef = doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings');
         const parametresDoc = await getDoc(parametresRef);
         
         if (parametresDoc.exists()) {
@@ -193,7 +193,7 @@ const ContratGeneratorNew = ({
         console.log('[ContratGeneratorNew] Chargement des paramètres de facturation');
         
         // Charger les paramètres de facturation
-        const factureParamsRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'factureParameters');
+        const factureParamsRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'factureParameters');
         const factureParamsDoc = await getDoc(factureParamsRef);
         
         if (factureParamsDoc.exists()) {

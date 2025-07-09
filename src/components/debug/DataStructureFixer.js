@@ -111,7 +111,7 @@ const DataStructureFixer = () => {
                 structureId: data.structureId || '',
                 structureNom: data.structureNom || data.structure?.raisonSociale || '',
                 entrepriseId: data.entrepriseId || currentEntreprise?.id,
-                concertsAssocies: data.concertsAssocies || [],
+                datesAssociees: data.datesAssociees || [],
                 createdAt: data.createdAt,
                 updatedAt: data.updatedAt || new Date()
               };

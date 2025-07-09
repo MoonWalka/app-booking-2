@@ -14,7 +14,7 @@ import styles from './HistoriqueEchanges.module.css';
 /**
  * Composant pour afficher et gérer l'historique des échanges avec un contact
  */
-function HistoriqueEchanges({ contactId, concerts = [] }) {
+function HistoriqueEchanges({ contactId, dates = [] }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingEchange, setEditingEchange] = useState(null);
   const [filterType, setFilterType] = useState('tous');

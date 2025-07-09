@@ -41,7 +41,7 @@ const InventairePagesPage = () => {
         { name: 'LoginPage', path: 'src/pages/LoginPage.js', route: '/login', category: 'Authentification', usedInNewVersion: false },
         { name: 'MesRecherchesPage', path: 'src/pages/MesRecherchesPage.js', route: '/mes-recherches', category: 'Gestion', usedInNewVersion: false },
         { name: 'MesSelectionsPage', path: 'src/pages/MesSelectionsPage.js', route: '/mes-selections', category: 'Gestion', usedInNewVersion: false },
-        { name: 'ParametresPage', path: 'src/pages/ParametresPage.js', route: '/preview/parametres', category: 'Paramétrage', usedInNewVersion: true },
+        // { name: 'ParametresPage', path: 'src/pages/ParametresPage.js', route: '/preview/parametres', category: 'Paramétrage', usedInNewVersion: true }, // Supprimé
         { name: 'ProjetsPage', path: 'src/pages/ProjetsPage.js', route: '/preview/projets', category: 'Gestion', usedInNewVersion: true },
         { name: 'SallesPage', path: 'src/pages/SallesPage.js', route: '/preview/salles', category: 'Gestion', usedInNewVersion: true },
         { name: 'StructuresPage', path: 'src/pages/StructuresPage.js', route: '/preview/structures', category: 'Gestion', usedInNewVersion: true },

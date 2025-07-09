@@ -1,0 +1,287 @@
+/*
+ * Bootstrap Overrides - Mapping Bootstrap classes to TourCraft design system
+ * This ensures consistency across the application
+ * Created: 2025-01-08
+ */
+
+/* =============================
+   BOOTSTRAP BUTTONS
+   ============================= */
+.btn-primary {
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-check:checked + .btn-primary {
+  background-color: var(--tc-color-primary-hover);
+  border-color: var(--tc-color-primary-hover);
+  color: var(--tc-color-white);
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
+  opacity: 0.65;
+}
+
+/* Bouton outline primary */
+.btn-outline-primary {
+  color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary.active {
+  background-color: var(--tc-color-primary);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-color-white);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background-color: var(--tc-color-secondary);
+  border-color: var(--tc-color-secondary);
+  color: var(--tc-color-white);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  background-color: var(--tc-color-secondary-dark);
+  border-color: var(--tc-color-secondary-dark);
+}
+
+/* Success button */
+.btn-success {
+  background-color: var(--tc-color-success);
+  border-color: var(--tc-color-success);
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+  background-color: var(--tc-color-success-dark);
+  border-color: var(--tc-color-success-dark);
+}
+
+/* Danger button */
+.btn-danger {
+  background-color: var(--tc-color-error);
+  border-color: var(--tc-color-error);
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+  background-color: var(--tc-color-error-dark);
+  border-color: var(--tc-color-error-dark);
+}
+
+/* Warning button */
+.btn-warning {
+  background-color: var(--tc-color-warning);
+  border-color: var(--tc-color-warning);
+  color: var(--tc-color-primary-800);
+}
+
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+  background-color: var(--tc-color-warning-dark);
+  border-color: var(--tc-color-warning-dark);
+  color: var(--tc-color-primary-800);
+}
+
+/* Info button */
+.btn-info {
+  background-color: var(--tc-color-info);
+  border-color: var(--tc-color-info);
+  color: var(--tc-color-white);
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active {
+  background-color: var(--tc-color-info-dark);
+  border-color: var(--tc-color-info-dark);
+}
+
+/* Link button */
+.btn-link {
+  color: var(--tc-color-primary);
+  text-decoration: none;
+}
+
+.btn-link:hover,
+.btn-link:focus {
+  color: var(--tc-color-primary-hover);
+  text-decoration: underline;
+}
+
+/* =============================
+   BOOTSTRAP FORMS
+   ============================= */
+.form-control,
+.form-select {
+  background-color: var(--tc-bg-default);
+  border: 1px solid var(--tc-border-default);
+  color: var(--tc-text-default);
+  border-radius: var(--tc-radius-base);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  font-size: var(--tc-font-size-base);
+  transition: var(--tc-transition-base);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--tc-bg-default);
+  border-color: var(--tc-color-primary);
+  color: var(--tc-text-default);
+  box-shadow: 0 0 0 0.25rem rgba(33, 53, 71, 0.1);
+}
+
+.form-control::placeholder {
+  color: var(--tc-text-muted);
+}
+
+.form-label {
+  color: var(--tc-text-default);
+  font-weight: var(--tc-font-weight-medium);
+  margin-bottom: var(--tc-space-1);
+}
+
+.form-text {
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+  margin-top: var(--tc-space-1);
+}
+
+/* =============================
+   BOOTSTRAP ALERTS
+   ============================= */
+.alert-primary {
+  background-color: var(--tc-color-primary-100);
+  border-color: var(--tc-color-primary-200);
+  color: var(--tc-color-primary-800);
+}
+
+.alert-success {
+  background-color: var(--tc-color-success-100);
+  border-color: var(--tc-color-success-200);
+  color: var(--tc-color-success-800);
+}
+
+.alert-danger {
+  background-color: var(--tc-color-error-100);
+  border-color: var(--tc-color-error-200);
+  color: var(--tc-color-error-800);
+}
+
+.alert-warning {
+  background-color: var(--tc-color-warning-100);
+  border-color: var(--tc-color-warning-200);
+  color: var(--tc-color-warning-800);
+}
+
+.alert-info {
+  background-color: var(--tc-color-info-100);
+  border-color: var(--tc-color-info-200);
+  color: var(--tc-color-info-800);
+}
+
+/* =============================
+   BOOTSTRAP TEXT COLORS
+   ============================= */
+.text-primary {
+  color: var(--tc-color-primary) !important;
+}
+
+.text-secondary {
+  color: var(--tc-color-secondary) !important;
+}
+
+.text-success {
+  color: var(--tc-color-success) !important;
+}
+
+.text-danger {
+  color: var(--tc-color-error) !important;
+}
+
+.text-warning {
+  color: var(--tc-color-warning) !important;
+}
+
+.text-info {
+  color: var(--tc-color-info) !important;
+}
+
+.text-muted {
+  color: var(--tc-text-muted) !important;
+}
+
+/* =============================
+   BOOTSTRAP BACKGROUNDS
+   ============================= */
+.bg-primary {
+  background-color: var(--tc-color-primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--tc-color-secondary) !important;
+}
+
+.bg-success {
+  background-color: var(--tc-color-success) !important;
+}
+
+.bg-danger {
+  background-color: var(--tc-color-error) !important;
+}
+
+.bg-warning {
+  background-color: var(--tc-color-warning) !important;
+}
+
+.bg-info {
+  background-color: var(--tc-color-info) !important;
+}
+
+/* =============================
+   BOOTSTRAP BORDERS
+   ============================= */
+.border {
+  border-color: var(--tc-border-default) !important;
+}
+
+.border-primary {
+  border-color: var(--tc-color-primary) !important;
+}
+
+.border-secondary {
+  border-color: var(--tc-color-secondary) !important;
+}
+
+.border-success {
+  border-color: var(--tc-color-success) !important;
+}
+
+.border-danger {
+  border-color: var(--tc-color-error) !important;
+}
+
+.border-warning {
+  border-color: var(--tc-color-warning) !important;
+}
+
+.border-info {
+  border-color: var(--tc-color-info) !important;
+}

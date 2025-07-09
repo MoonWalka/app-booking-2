@@ -13,7 +13,6 @@ import FacturesPage from '@/pages/FacturesPage';
 import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
 // FactureDetailsPage remplacé par FactureGeneratorPage
 import DevisPage from '@/pages/DevisPage';
-import ParametresPage from '@/pages/ParametresPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
 import ProjetsPage from '@/pages/ProjetsPage';
 import SallesPage from '@/pages/SallesPage';
@@ -273,8 +272,6 @@ const TabManagerProduction = () => {
             dateId={activeTab.params?.dateId}
             structureId={activeTab.params?.structureId}
           />;
-        case 'ParametresPage':
-          return <ParametresPage />;
         case 'BookingParametragePage':
           return <BookingParametragePage />;
         case 'ProjetsPage':

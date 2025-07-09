@@ -339,7 +339,7 @@ export const useEntitySearch = (options) => {
             structureType: '',
             structureNumeroIntracommunautaire: '',
             // Relations bidirectionnelles
-            concertsIds: [],
+            datesIds: [],
             lieuxIds: [],
             artistesIds: [],
             // Autres
@@ -395,7 +395,7 @@ export const useEntitySearch = (options) => {
             notes: '',
             // Relations
             contactsIds: [],
-            concertsIds: [],
+            datesIds: [],
             ...entityAdditionalData
           };
           break;

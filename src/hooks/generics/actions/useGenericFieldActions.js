@@ -38,7 +38,7 @@ import { useState, useCallback, useRef } from 'react';
  *   getPerformanceStats,
  *   fieldState 
  * } = useGenericFieldActions({
- *   entityType: 'concert',
+ *   entityType: 'date',
  *   validationRules: {
  *     'contact.nom': { required: true, minLength: 2 },
  *     'contact.email': { required: true, type: 'email' }

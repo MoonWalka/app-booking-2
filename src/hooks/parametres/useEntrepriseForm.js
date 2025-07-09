@@ -49,7 +49,7 @@ export const useEntrepriseForm = () => {
       if (!currentEntreprise?.id) return;
       
       try {
-        const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
+        const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
         const entrepriseDoc = await getDoc(entrepriseRef);
         
         if (entrepriseDoc.exists()) {
@@ -136,7 +136,7 @@ export const useEntrepriseForm = () => {
       }
 
       // Sauvegarder les informations d'entreprise dans l'organisation
-      const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
+      const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
       const entrepriseData = {
         ...formData,
         updatedAt: new Date().toISOString(),

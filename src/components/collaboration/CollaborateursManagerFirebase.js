@@ -65,8 +65,8 @@ const CollaborateursManagerFirebase = () => {
                 }
             }
             
-            // Charger aussi l'entreprise principale depuis organizations/settings/entreprise
-            const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
+            // Charger aussi l'entreprise principale depuis entreprises/settings/entreprise
+            const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
             const entrepriseDoc = await getDoc(entrepriseRef);
             
             if (entrepriseDoc.exists()) {

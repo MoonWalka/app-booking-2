@@ -119,7 +119,7 @@ const PrivateRoute = ({ children, adminOnly = false, fallback = null }) => {
   }
 
   // ✅ Utilisateur authentifié avec les bonnes permissions et une organisation
-  console.log('✅ PrivateRoute - Accès autorisé pour:', currentUser.email, 'vers:', location.pathname, 'Org:', currentEntreprise?.name);
+  console.log('✅ PrivateRoute - Accès autorisé pour:', currentUser.email, 'vers:', location.pathname, 'Entreprise:', currentEntreprise?.name);
   
   return children;
 };

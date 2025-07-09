@@ -84,7 +84,7 @@ function DateDetailsPage({ params = {} }) {
 
       // 3. Si pas de pré-contrat, chercher une facture
       const facturesQuery = query(
-        collection(db, 'organizations', currentEntreprise.id, 'factures'),
+        collection(db, 'entreprises', currentEntreprise.id, 'factures'),
         where('dateId', '==', dateId),
         orderBy('dateFacture', 'desc')
       );

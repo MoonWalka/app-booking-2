@@ -7,15 +7,15 @@ import { formatDateFr } from '@/utils/dateUtils';
  * Header component for contract details page with title and metadata
  * Harmonisé avec FormHeader pour un style cohérent avec les autres entités
  */
-const ContratHeader = ({ contrat, concert, artiste, lieu }) => {
+const ContratHeader = ({ contrat, date, artiste, lieu }) => {
   // Formater la date de création
   const creationDate = contrat?.dateGeneration 
-    ? formatDateFr(contrat.concertGeneration) 
+    ? formatDateFr(contrat.dateGeneration) 
     : 'Date inconnue';
 
   // Construire le titre du contrat
-  const contractTitle = concert?.titre 
-    ? `Contrat de Spectacle - ${concert.titre}`
+  const contractTitle = date?.titre 
+    ? `Contrat de Spectacle - ${date.titre}`
     : 'Contrat de Spectacle';
 
   // Construire le sous-titre avec les métadonnées

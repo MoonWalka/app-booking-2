@@ -22,7 +22,7 @@ function PreContratFormResponsePage() {
         
         if (validationResult.valid && validationResult.preContrat?.entrepriseId) {
           // Récupérer les données de l'organisation
-          const orgDoc = await getDoc(doc(db, 'organizations', validationResult.preContrat.entrepriseId));
+          const orgDoc = await getDoc(doc(db, 'entreprises', validationResult.preContrat.entrepriseId));
           if (orgDoc.exists()) {
             const orgData = orgDoc.data();
             setOrganizationName(orgData.name || 'TourCraft');

@@ -630,7 +630,7 @@ class BrevoTemplateService {
     const { decryptSensitiveFields } = await import('@/utils/cryptoUtils');
 
     const parametresDoc = await getDoc(
-      doc(db, 'organizations', entrepriseId, 'parametres', 'settings')
+      doc(db, 'entreprises', entrepriseId, 'parametres', 'settings')
     );
 
     if (!parametresDoc.exists()) {

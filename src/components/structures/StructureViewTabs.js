@@ -240,7 +240,7 @@ const StructureViewTabs = ({ id: propId }) => {
             data={[]}
             columns={[
               { key: 'numero', label: 'Numéro' },
-              { key: 'concert', label: 'Date' },
+              { key: 'date', label: 'Date' },
               { key: 'statut', label: 'Statut' },
               { key: 'dateCreation', label: 'Date création' }
             ]}
@@ -265,7 +265,7 @@ const StructureViewTabs = ({ id: propId }) => {
             data={[]}
             columns={[
               { key: 'numero', label: 'Numéro' },
-              { key: 'concert', label: 'Date' },
+              { key: 'date', label: 'Date' },
               { key: 'montant', label: 'Montant' },
               { key: 'statut', label: 'Statut' }
             ]}

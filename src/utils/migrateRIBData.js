@@ -11,7 +11,7 @@ export async function migrateRIBDataForOrganization(entrepriseId) {
   
   try {
     // Récupérer les paramètres de facturation
-    const factureParamsRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
+    const factureParamsRef = doc(db, 'entreprises', entrepriseId, 'settings', 'factureParameters');
     const factureParamsDoc = await getDoc(factureParamsRef);
     
     if (!factureParamsDoc.exists()) {
@@ -34,7 +34,7 @@ export async function migrateRIBDataForOrganization(entrepriseId) {
     console.log('   - Banque:', parameters.nomBanque || 'Non défini');
     
     // Récupérer les données d'entreprise existantes
-    const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
+    const entrepriseRef = doc(db, 'entreprises', entrepriseId, 'settings', 'entreprise');
     const entrepriseDoc = await getDoc(entrepriseRef);
     
     let entrepriseData = {};
@@ -79,7 +79,7 @@ export async function checkRIBData(entrepriseId) {
   
   try {
     // Vérifier dans les paramètres de facturation
-    const factureParamsRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
+    const factureParamsRef = doc(db, 'entreprises', entrepriseId, 'settings', 'factureParameters');
     const factureParamsDoc = await getDoc(factureParamsRef);
     
     let factureRIB = {};
@@ -93,7 +93,7 @@ export async function checkRIBData(entrepriseId) {
     }
     
     // Vérifier dans les données d'entreprise
-    const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
+    const entrepriseRef = doc(db, 'entreprises', entrepriseId, 'settings', 'entreprise');
     const entrepriseDoc = await getDoc(entrepriseRef);
     
     let entrepriseRIB = {};

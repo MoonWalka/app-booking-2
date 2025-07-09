@@ -6,7 +6,7 @@ import Card from '@/components/ui/Card';
 /**
  * Component to display date information in form pages
  */
-const DateInfoSection = ({ concert, lieu }) => {
+const DateInfoSection = ({ date, lieu }) => {
   // Fonction pour formater la date
   const formatDate = (dateValue) => {
     if (!dateValue) return 'Date non spécifiée';

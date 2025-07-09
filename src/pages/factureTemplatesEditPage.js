@@ -23,7 +23,7 @@ const FactureTemplatesEditPage = () => {
       
       try {
         setIsLoading(true);
-        const templateRef = doc(db, 'organizations', currentEntreprise.id, 'factureTemplates', id);
+        const templateRef = doc(db, 'entreprises', currentEntreprise.id, 'factureTemplates', id);
         const templateSnap = await getDoc(templateRef);
         
         if (templateSnap.exists()) {
@@ -50,7 +50,7 @@ const FactureTemplatesEditPage = () => {
     if (!currentEntreprise?.id || !id) return;
     
     try {
-      const templateRef = doc(db, 'organizations', currentEntreprise.id, 'factureTemplates', id);
+      const templateRef = doc(db, 'entreprises', currentEntreprise.id, 'factureTemplates', id);
       await updateDoc(templateRef, {
         ...templateData,
         updatedAt: serverTimestamp(),

@@ -42,7 +42,7 @@ import { useMemo, useCallback } from 'react';
  * 
  * const { getStatusDetails, isStatusChangeAllowed } = useGenericEntityStatus({
  *   statusMap: concertStatusConfig,
- *   entityType: 'concert'
+ *   entityType: 'date'
  * });
  * 
  * // Configuration pour les contrats

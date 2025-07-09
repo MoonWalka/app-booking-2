@@ -160,8 +160,8 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
           updatedAt: new Date(),
           
           // IMPORTANT : Préserver TOUTES les relations bidirectionnelles ✅
-          concertsIds: entityData.concertsIds || [],
-          concertsAssocies: entityData.concertsAssocies || [],
+          datesIds: entityData.datesIds || [],
+          datesAssociees: entityData.datesAssociees || [],
           lieuxIds: entityData.lieuxIds || [],
           artistesIds: entityData.artistesIds || [],
           
@@ -290,8 +290,8 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
           updatedAt: new Date(),
           
           // IMPORTANT : Préserver TOUTES les relations bidirectionnelles ✅
-          concertsIds: updateData.concertsIds || [],
-          concertsAssocies: updateData.concertsAssocies || [],
+          datesIds: updateData.datesIds || [],
+          datesAssociees: updateData.datesAssociees || [],
           lieuxIds: updateData.lieuxIds || [],
           artistesIds: updateData.artistesIds || [],
           

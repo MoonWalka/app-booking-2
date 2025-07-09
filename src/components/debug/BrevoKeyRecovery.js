@@ -49,7 +49,7 @@ const BrevoKeyRecovery = () => {
 
       // 2. Lire les paramètres de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
       let orgBrevoConfig = null;
       
@@ -104,7 +104,7 @@ const BrevoKeyRecovery = () => {
     try {
       // Lire la configuration complète de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
 
       if (!orgDoc.exists()) {
@@ -126,7 +126,7 @@ const BrevoKeyRecovery = () => {
       };
 
       await setDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'),
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings'),
         updatedConfig
       );
 
@@ -199,7 +199,7 @@ const BrevoKeyRecovery = () => {
     try {
       // Lire la configuration complète de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
 
       if (!orgDoc.exists()) {
@@ -221,7 +221,7 @@ const BrevoKeyRecovery = () => {
       };
 
       await setDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'),
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings'),
         updatedConfig
       );
 

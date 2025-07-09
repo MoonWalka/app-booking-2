@@ -34,7 +34,7 @@ const ParametresMigration = () => {
 
       // Vérifier les paramètres de l'organisation
       const orgDoc = await getDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
       const hasOrgParams = orgDoc.exists();
 
@@ -102,7 +102,7 @@ const ParametresMigration = () => {
 
       // Sauvegarder dans l'organisation
       await setDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'),
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings'),
         finalData
       );
 

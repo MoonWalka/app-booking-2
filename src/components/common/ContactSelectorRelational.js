@@ -18,7 +18,7 @@ import styles from './ContactSelectorRelational.module.css';
  * @param {Function} props.onChange - Callback appelé lors du changement (reçoit un ID ou un tableau d'IDs)
  * @param {boolean} props.isEditing - Si true, affiche en mode édition
  * @param {string} props.entityId - ID de l'entité parente (pour les relations bidirectionnelles)
- * @param {string} props.entityType - Type de l'entité parente ('concert', 'lieu', etc.)
+ * @param {string} props.entityType - Type de l'entité parente ('date', 'lieu', etc.)
  * @param {string} props.label - Label à afficher
  * @param {boolean} props.required - Si true, au moins un contact est requis
  */

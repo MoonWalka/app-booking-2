@@ -54,6 +54,7 @@ const createSafeData = (data) => {
     template,
     contrat,
     concert, 
+    date,  // Nouveau format
     contact,  // Nouveau format
     programmateur,  // Rétrocompatibilité
     artiste, 
@@ -78,7 +79,7 @@ const createSafeData = (data) => {
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
     template: effectiveTemplate,
-    concert: concert || dateData || {},
+    date: date || dateData || {},
     contact: contact || contactData || {},  // Nouveau format
     programmateur: programmateur || programmateurData || {},  // Rétrocompatibilité
     artiste: artiste || artisteData || {},

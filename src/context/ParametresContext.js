@@ -107,9 +107,9 @@ export const ParametresProvider = ({ children }) => {
       try {
         console.log('📋 Chargement paramètres pour organisation:', currentEntreprise.id);
         
-        // Charger depuis organizations/{id}/parametres/settings
+        // Charger depuis entreprises/{id}/parametres/settings
         const parametresDoc = await getDoc(
-          doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings')
+          doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
         );
         
         if (parametresDoc.exists()) {
@@ -247,9 +247,9 @@ export const ParametresProvider = ({ children }) => {
             }
       };
 
-      // Sauvegarder dans organizations/{id}/parametres/settings
+      // Sauvegarder dans entreprises/{id}/parametres/settings
       await setDoc(
-        doc(db, 'organizations', currentEntreprise.id, 'parametres', 'settings'), 
+        doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings'), 
         parametresMisAJour
       );
       

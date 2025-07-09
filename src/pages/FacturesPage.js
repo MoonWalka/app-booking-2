@@ -31,7 +31,7 @@ const FacturesPage = () => {
       try {
         // Récupérer les factures depuis la collection de l'organisation
         const facturesQuery = query(
-          collection(db, 'organizations', currentEntreprise.id, 'factures'), 
+          collection(db, 'entreprises', currentEntreprise.id, 'factures'), 
           orderBy('dateFacture', 'desc')
         );
         const facturesSnapshot = await getDocs(facturesQuery);

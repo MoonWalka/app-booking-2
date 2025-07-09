@@ -10,7 +10,7 @@ import { useEntreprise } from '@/context/EntrepriseContext';
  * Hook générique pour gérer la suppression d'entités
  * 
  * @param {Object} options - Options de configuration
- * @param {string} options.entityType - Type d'entité (ex: 'lieu', 'concert', etc.)
+ * @param {string} options.entityType - Type d'entité (ex: 'lieu', 'date', etc.)
  * @param {string} options.collectionName - Nom de la collection Firestore
  * @param {Function} options.onSuccess - Callback appelé après une suppression réussie
  * @param {Function} options.onError - Callback appelé en cas d'erreur

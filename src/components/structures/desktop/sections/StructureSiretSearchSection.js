@@ -1,6 +1,6 @@
 import React from 'react';
-import EntrepriseSearchOptions from '@/components/parametres/sections/EntrepriseSearchOptions';
-import EntrepriseSearchResults from '@/components/parametres/sections/EntrepriseSearchResults';
+// import EntrepriseSearchOptions from '@/components/parametres/sections/EntrepriseSearchOptions';
+// import EntrepriseSearchResults from '@/components/parametres/sections/EntrepriseSearchResults';
 import styles from './StructureSiretSearchSection.module.css';
 
 /**
@@ -19,22 +19,8 @@ const StructureSiretSearchSection = ({ companySearch }) => {
           <h3 className={styles.sectionTitle}>Rechercher une structure existante</h3>
         </div>
         <div className={styles.sectionBody}>
-          {/* Options de recherche */}
-          <EntrepriseSearchOptions 
-            searchType={companySearch.searchType} 
-            setSearchType={companySearch.setSearchType} 
-          />
-          
-          {/* Interface de recherche et résultats */}
-          <EntrepriseSearchResults 
-            searchType={companySearch.searchType}
-            searchTerm={companySearch.searchTerm}
-            setSearchTerm={companySearch.setSearchTerm}
-            searchResults={companySearch.searchResults}
-            isSearching={companySearch.isSearchingCompany}
-            handleSelectCompany={companySearch.handleSelectCompany}
-            searchResultsRef={companySearch.searchResultsRef}
-          />
+          {/* TODO: Réimplémenter la recherche SIRET après suppression de l'ancien système de paramètres */}
+          <p>Fonctionnalité temporairement désactivée - Migration en cours</p>
         </div>
       </div>
     </div>

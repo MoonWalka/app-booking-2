@@ -1,16 +1,16 @@
 /**
  * Migration automatique des données RIB
- * S'exécute une seule fois par organisation pour migrer les données RIB
+ * S'exécute une seule fois par entreprise pour migrer les données RIB
  */
 
 import { db, doc, getDoc, setDoc } from '@/services/firebase-service';
 
 /**
- * Vérifie si la migration a déjà été effectuée pour cette organisation
+ * Vérifie si la migration a déjà été effectuée pour cette entreprise
  */
 async function isMigrationCompleted(entrepriseId) {
   try {
-    const migrationRef = doc(db, 'organizations', entrepriseId, 'migrations', 'ribMigration');
+    const migrationRef = doc(db, 'entreprises', entrepriseId, 'migrations', 'ribMigration');
     const migrationDoc = await getDoc(migrationRef);
     return migrationDoc.exists() && migrationDoc.data().completed === true;
   } catch (error) {
@@ -24,7 +24,7 @@ async function isMigrationCompleted(entrepriseId) {
  */
 async function markMigrationCompleted(entrepriseId) {
   try {
-    const migrationRef = doc(db, 'organizations', entrepriseId, 'migrations', 'ribMigration');
+    const migrationRef = doc(db, 'entreprises', entrepriseId, 'migrations', 'ribMigration');
     await setDoc(migrationRef, {
       completed: true,
       completedAt: new Date().toISOString(),
@@ -45,14 +45,14 @@ export async function autoMigrateRIB(entrepriseId) {
     // Vérifier si la migration a déjà été effectuée
     const isCompleted = await isMigrationCompleted(entrepriseId);
     if (isCompleted) {
-      console.log('✅ Migration RIB déjà effectuée pour cette organisation');
+      console.log('✅ Migration RIB déjà effectuée pour cette entreprise');
       return;
     }
 
     console.log('🔄 Début de la migration automatique des données RIB...');
 
     // Récupérer les paramètres de facturation
-    const factureParamsRef = doc(db, 'organizations', entrepriseId, 'settings', 'factureParameters');
+    const factureParamsRef = doc(db, 'entreprises', entrepriseId, 'settings', 'factureParameters');
     const factureParamsDoc = await getDoc(factureParamsRef);
     
     if (!factureParamsDoc.exists()) {
@@ -74,7 +74,7 @@ export async function autoMigrateRIB(entrepriseId) {
     console.log('🔍 Données RIB trouvées dans les paramètres de facturation');
     
     // Récupérer les données d'entreprise existantes
-    const entrepriseRef = doc(db, 'organizations', entrepriseId, 'settings', 'entreprise');
+    const entrepriseRef = doc(db, 'entreprises', entrepriseId, 'settings', 'entreprise');
     const entrepriseDoc = await getDoc(entrepriseRef);
     
     let entrepriseData = {};
@@ -127,7 +127,7 @@ export async function resetMigrationFlag(entrepriseId) {
   if (!entrepriseId) return;
   
   try {
-    const migrationRef = doc(db, 'organizations', entrepriseId, 'migrations', 'ribMigration');
+    const migrationRef = doc(db, 'entreprises', entrepriseId, 'migrations', 'ribMigration');
     await setDoc(migrationRef, {
       completed: false,
       resetAt: new Date().toISOString()

@@ -507,7 +507,7 @@ const FactureGeneratorPage = () => {
           if (factureData.dateId) {
             try {
               // Chercher toutes les factures de la même date
-              const facturesRef = collection(db, 'organizations', currentEntreprise.id, 'factures');
+              const facturesRef = collection(db, 'entreprises', currentEntreprise.id, 'factures');
               const q = query(facturesRef, where('dateId', '==', factureData.dateId));
               const snapshot = await getDocs(q);
               
@@ -596,7 +596,7 @@ const FactureGeneratorPage = () => {
         // Charger les informations bancaires de l'entreprise
         let entrepriseInfo = null;
         try {
-          const entrepriseRef = doc(db, 'organizations', currentEntreprise.id, 'settings', 'entreprise');
+          const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
           const entrepriseSnap = await getDoc(entrepriseRef);
           if (entrepriseSnap.exists()) {
             entrepriseInfo = entrepriseSnap.data();

@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Suppression du background pour utiliser le fond par défaut */
 }
 
 .onboarding-step {
@@ -27,7 +28,7 @@
 /* Étape de choix */
 .choice-step .choice-card {
   background: white;
-  border: 2px solid var(--bs-gray-200);
+  border: 2px solid var(--tc-color-primary-200);
   border-radius: 1rem;
   padding: 2.5rem;
   text-align: center;
@@ -39,32 +40,46 @@
 }
 
 .choice-step .choice-card:hover {
-  border-color: var(--bs-primary);
+  border-color: var(--tc-color-primary);
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .choice-step .choice-icon {
   font-size: 4rem;
-  color: var(--bs-primary);
+  color: var(--tc-color-primary);
   margin-bottom: 1.5rem;
 }
 
 .choice-step .choice-card h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: var(--bs-dark);
+  color: var(--tc-color-primary-800);
 }
 
 .choice-step .choice-card p {
   flex-grow: 1;
   margin-bottom: 1.5rem;
+  color: var(--tc-color-primary-700);
 }
 
 .choice-step .choice-card .btn {
   width: 100%;
   padding: 0.75rem 1.5rem;
   font-weight: 500;
+}
+
+/* Textes d'aide et descriptions */
+.form-text {
+  color: var(--tc-color-primary-600);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Amélioration des select et options */
+.form-select option {
+  background-color: white;
+  color: var(--tc-color-primary-800);
 }
 
 /* Étapes de formulaire */
@@ -78,7 +93,7 @@
 
 .create-step h2,
 .join-step h2 {
-  color: var(--bs-dark);
+  color: var(--tc-color-primary-800);
   font-weight: 600;
   margin-bottom: 1.5rem;
 }
@@ -86,24 +101,26 @@
 .create-step .form-label,
 .join-step .form-label {
   font-weight: 500;
-  color: var(--bs-gray-700);
+  color: var(--tc-color-primary-700);
   margin-bottom: 0.5rem;
 }
 
 .create-step .form-control,
 .create-step .form-select,
 .join-step .form-control {
-  border: 2px solid var(--bs-gray-200);
+  border: 2px solid var(--tc-color-primary-200);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   transition: border-color 0.2s ease;
+  background-color: white;
+  color: var(--tc-color-primary-800);
 }
 
 .create-step .form-control:focus,
 .create-step .form-select:focus,
 .join-step .form-control:focus {
-  border-color: var(--bs-primary);
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+  border-color: var(--tc-color-primary);
+  box-shadow: 0 0 0 0.25rem rgba(33, 53, 71, 0.1);
 }
 
 .create-step .form-control-lg,
@@ -120,13 +137,13 @@
 /* Boutons */
 .btn-link {
   text-decoration: none;
-  color: var(--bs-gray-600);
+  color: var(--tc-color-primary-600);
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .btn-link:hover {
-  color: var(--bs-primary);
+  color: var(--tc-color-primary);
 }
 
 .btn-link:disabled {
@@ -140,52 +157,7 @@
   border: none;
 }
 
-.alert-danger {
-  background-color: rgba(220, 53, 69, 0.1);
-  color: var(--bs-danger);
-}
-
-.alert-info {
-  background-color: rgba(13, 202, 240, 0.1);
-  color: var(--bs-info);
-}
-
-/* Mode sombre */
-@media (prefers-color-scheme: dark) {
-  .choice-step .choice-card,
-  .create-step,
-  .join-step {
-    background: var(--bs-gray-800);
-    color: var(--bs-light);
-  }
-  
-  .choice-step .choice-card {
-    border-color: var(--bs-gray-700);
-  }
-  
-  .choice-step .choice-card:hover {
-    border-color: var(--bs-primary);
-  }
-  
-  .choice-step .choice-card h3,
-  .create-step h2,
-  .join-step h2 {
-    color: var(--bs-light);
-  }
-  
-  .create-step .form-control,
-  .create-step .form-select,
-  .join-step .form-control {
-    background-color: var(--bs-gray-700);
-    border-color: var(--bs-gray-600);
-    color: var(--bs-light);
-  }
-  
-  .create-step .form-label,
-  .join-step .form-label {
-    color: var(--bs-gray-300);
-  }
-}
+/* Mode sombre désactivé */
 
 /* Responsive */
 @media (max-width: 768px) {

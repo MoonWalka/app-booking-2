@@ -47,3 +47,6 @@
 
 /* Thème global - Appliqué en dernier pour ne pas écraser les styles spécifiques */
 @import '@styles/theme.css';
+
+/* Bootstrap overrides - Doit être chargé après le thème pour appliquer les couleurs TourCraft */
+@import '@styles/bootstrap-overrides.css';

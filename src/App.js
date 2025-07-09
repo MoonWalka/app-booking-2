@@ -21,7 +21,6 @@ import ContratsPage from '@/pages/ContratsPage';
 import ArtistesPage from '@/pages/ArtistesPage';
 import PublicationsPage from '@/pages/PublicationsPage';
 import DevisPage from '@/pages/DevisPage';
-import ParametresPage from '@/pages/ParametresPage';
 import FormResponsePage from '@/pages/FormResponsePage';
 import PreContratFormResponsePage from '@/pages/PreContratFormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
@@ -59,9 +58,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { installGlobalFixer } from '@/utils/fixOrganizationIds';
 import { installArtistesFixers } from '@/utils/fixArtistesOrganizationIds';
 import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
-import DebugController from '@/components/debug/DebugController';
+// import DebugController from '@/components/debug/DebugController'; // Supprimé
 import DebugToolsPage from '@/pages/DebugToolsPage';
-import DebugButton from '@/components/common/DebugButton';
+// import DebugButton from '@/components/common/DebugButton'; // Supprimé
 // import DateLieuDebug from '@/components/debug/DateLieuDebug';
 import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
 import TabsTestPage from '@/pages/TabsTestPage';
@@ -172,8 +171,7 @@ function App() {
                 <ModalProvider>
                   <ContactModalsProvider>
                   <RouterStabilizer />
-                  {/* Bouton de debug temporaire */}
-                  <DebugButton />
+                  {/* Bouton de debug temporaire - SUPPRIMÉ */}
                   <Routes>
                       <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                     
@@ -288,109 +286,6 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    <Route path="/preview/parametres" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <ParametresPage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/tableau-de-bord" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <TableauDeBordPage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/taches" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <TachesPage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/debug-tools" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <DebugToolsPage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/booking/parametrage" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <BookingParametragePage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/collaboration/parametrage" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <CollaborationParametragePage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/admin/parametrage" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <AdminParametragePage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/booking/nouvelle-date" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <DateCreationPage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    <Route path="/preview/festivals/dates" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <FestivalsDatesPage />
-                        </div>
-                      </PrivateRoute>
-                    } />
-                    
-                    {/* Route universelle pour preview de composants */}
-                    <Route path="/preview/component/:componentName" element={
-                      <PrivateRoute>
-                        <PreviewWrapper />
-                      </PrivateRoute>
-                    } />
-                    
-                    {/* Routes principales avec système d'onglets */}
-                    <Route element={
-                      <TabsProvider>
-                        <Layout />
-                      </TabsProvider>
-                    }>
-                      <Route path="/" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-                      
-                      <Route path="/dates/*" element={
-                        <PrivateRoute>
-                          <DatesPage />
-                        </PrivateRoute>
-                      } />
-                      
-                      {/* Redirection temporaire de /concerts vers /dates */}
-                      <Route path="/dates/*" element={<Navigate to="/dates" replace />} />
-                      
-                      <Route path="/contacts/*" element={
-                        <PrivateRoute>
-                          <ContactsPage />
-                        </PrivateRoute>
-                      }>
-                        {/* Routes gérées en interne par ContactsPage */}
-                      </Route>
                       
                       {/* Nouvelles routes pour les fonctionnalités contacts */}
                       <Route path="/contacts/recherches" element={
@@ -546,61 +441,21 @@ function App() {
                             </PrivateRoute>
                           } />
                           
-                          <Route path="/parametres/*" element={
+                          {/* Routes principales avec Layout et système d'onglets */}
+                          <Route path="/*" element={
                             <PrivateRoute>
-                              <ParametresPage />
+                              <TabsProvider>
+                                <Layout />
+                              </TabsProvider>
                             </PrivateRoute>
                           } />
                           
-                          <Route path="/debug-tools" element={
-                            <PrivateRoute>
-                              <DebugToolsPage />
-                            </PrivateRoute>
-                          } />
-                          
-                          <Route path="/tabs-test" element={
-                            <PrivateRoute>
-                              <TabsTestPage />
-                            </PrivateRoute>
-                          } />
-                          
-                          <Route path="/taches" element={
-                            <PrivateRoute>
-                              <TachesPage />
-                            </PrivateRoute>
-                          } />
-                          
-                          <Route path="/collaboration/parametrage/*" element={
-                            <PrivateRoute>
-                              <CollaborationParametragePage />
-                            </PrivateRoute>
-                          } />
-                          
-                          <Route path="/admin/parametrage/*" element={
-                            <PrivateRoute>
-                              <AdminParametragePage />
-                            </PrivateRoute>
-                          } />
-                          
-                          <Route path="/formulaire/validation/:id" element={<PrivateRoute><FormResponsePage /></PrivateRoute>} />
-                          
-                          
-                      <Route path="/admin/migration" element={
-                        <PrivateRoute adminOnly={true}>
-                          <MigrationPage />
-                        </PrivateRoute>
-                      } />
-                      
-                          
-                          <Route path="*" element={<Navigate to="/dates" replace />} />
-                        </Route>
                   </Routes>
                   </ContactModalsProvider>
                 </ModalProvider>
               </ParametresProvider>
                 
-                {/* 🔍 Panneau de debug flottant - UNIQUEMENT EN DÉVELOPPEMENT */}
-                {process.env.NODE_ENV === 'development' && <DebugController />}
+                {/* 🔍 Panneau de debug flottant - SUPPRIMÉ */}
               </EntrepriseProvider>
             </AuthProvider>
           </Router>

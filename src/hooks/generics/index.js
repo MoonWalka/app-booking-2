@@ -42,7 +42,7 @@ export { default as useGenericResponsive } from './utils/useGenericResponsive'; 
 export const GENERIC_HOOKS_CONFIG = {
   // Configuration des entités supportées
   SUPPORTED_ENTITIES: [
-    'artiste', 'concert', 'lieu', 'contact', 
+    'artiste', 'date', 'lieu', 'contact', 
     'contrat', 'structure', 'entreprise', 'form'
   ],
   

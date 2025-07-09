@@ -96,7 +96,7 @@ const StatutBadge = ({
 
 StatutBadge.propTypes = {
   status: PropTypes.string,
-  entityType: PropTypes.oneOf(['default', 'concert', 'contrat', 'facture', 'contact']),
+  entityType: PropTypes.oneOf(['default', 'date', 'contrat', 'facture', 'contact']),
   text: PropTypes.string,
   size: PropTypes.oneOf(['small', 'medium', 'large']),
   className: PropTypes.string

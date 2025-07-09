@@ -1,5 +1,5 @@
 // src/components/projets/modal/ProjetCreationModal.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
 import { collection, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -15,10 +15,13 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('informations');
   
-  // Récupérer la liste des artistes
-  const { items: artistes, loading: artistesLoading } = useGenericEntityList('artistes', {
+  // Configuration stable pour éviter les re-renders
+  const artistesConfig = useMemo(() => ({
     sort: { field: 'nom', direction: 'asc' }
-  });
+  }), []);
+  
+  // Récupérer la liste des artistes
+  const { items: artistes, loading: artistesLoading } = useGenericEntityList('artistes', artistesConfig);
   
   const [formData, setFormData] = useState({
     intitule: '',
@@ -36,6 +39,9 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
 
   // Charger les données du projet en mode édition
   useEffect(() => {
+    // Ne réinitialiser que quand le modal s'ouvre
+    if (!show) return;
+    
     if (editProjet) {
       setFormData({
         intitule: editProjet.intitule || '',

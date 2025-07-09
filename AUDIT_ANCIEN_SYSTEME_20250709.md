@@ -113,6 +113,147 @@ src/styles/base/colors.css (variables --tc-color-concert)
 1. **Fichiers de debug** : Peuvent être supprimés après validation
 2. **CSS orphelins** : À supprimer
 
+## 7. Liste exhaustive des fichiers à corriger
+
+### Fichiers JavaScript/JSX avec "concert" (73 fichiers)
+```
+src/components/artistes/sections/ArtisteSearchBar.js
+src/components/artistes/sections/ArtistesStatsCards.js
+src/components/artistes/sections/ArtistesTable.js
+src/components/common/RelationCard.js
+src/components/common/modals/SalleCreationModal.js
+src/components/contacts/ContactDatesTable.js
+src/components/contacts/ContactViewTabs.js
+src/components/contacts/EchangeForm.js
+src/components/contacts/mobile/ContactView.js
+src/components/contacts/sections/ContactBottomTabs.js
+src/components/contrats/ContratTemplateEditorSimple.js
+src/components/contrats/desktop/ContratGenerator.js
+src/components/contrats/desktop/ContratGeneratorNew.js
+src/components/contrats/desktop/sections/ContratDebugPanel.js
+src/components/contrats/desktop/sections/ContratGenerationActions.js
+src/components/contrats/sections/ContratActions.js
+src/components/contrats/sections/ContratPdfViewer.js
+src/components/contrats/sections/ContratsTableNew.js
+src/components/debug/ArtisteSearchLiveDebug.js
+src/components/debug/BidirectionalRelationsFixer.js
+src/components/debug/BrevoDiagnostic.js
+src/components/debug/BrevoTemplateCreator.js
+src/components/debug/BrevoTemplateCustomizer.js
+src/components/debug/DateLieuDebug.js
+src/components/debug/ListDebugger.js
+src/components/debug/MigrateContractTemplates.js
+src/components/debug/MigrateContractVariables.js
+src/components/devis/DevisEditor.js
+src/components/devis/DevisForm.js
+src/components/factures/FactureTemplateEditor.js
+src/components/factures/FacturesTableView.js
+src/components/forms/mobile/sections/FormHeader.js
+src/components/forms/mobile/sections/ValidationSection.js
+src/components/forms/public/AdminFormValidation.js
+src/components/forms/public/DateInfoSection.js
+src/components/forms/public/FormPageHeader.js
+src/components/forms/public/PublicFormContainer.js
+src/components/forms/validation/FormHeader.js
+src/components/forms/validation/ValidationSection.js
+src/components/lieux/LieuxList.js
+src/components/lieux/desktop/LieuView.js
+src/components/lieux/desktop/sections/LieuxListSearchFilter.js
+src/components/lieux/desktop/sections/LieuxResultsTable.js
+src/components/lieux/desktop/sections/LieuxStatsCards.js
+src/components/lieux/mobile/LieuMobileForm.js
+src/components/lieux/mobile/LieuView.js
+src/components/pdf/ContratPDFWrapper.js
+src/components/recherches/sections/InfosArtisteSection.js
+src/components/structures/StructureViewTabs.js
+src/components/structures/desktop/StructureForm.js
+src/components/structures/desktop/StructureView.js
+src/components/tabs/TabManager.js
+src/components/ui/EntityCard.js
+src/components/ui/StatutBadge.js
+src/hooks/artistes/useSearchAndFilter.js
+src/hooks/common/useEntitySearch.js
+src/hooks/contrats/useContratActions.js
+src/hooks/contrats/useContratGenerator.js
+src/hooks/contrats/usePdfPreview.js
+src/hooks/forms/useFormValidationData.js
+src/pages/ConfirmationPage.js
+src/pages/ContratGenerationNewPage.js
+src/pages/ContratGenerationPage.js
+src/pages/ContratRedactionPage.js
+src/pages/FactureDetailsPage.js
+src/pages/FacturesPage.js
+src/pages/InventairePagesPage.js
+src/pages/LoginPage.js
+src/pages/PreContratGenerationPage.js
+src/pages/admin/MigrationPage.js
+src/pages/contratTemplatesPage.js
+src/pages/factureTemplatesPage.js
+src/services/__tests__/brevoTemplateService.test.js
+```
+
+### Fichiers JavaScript/JSX avec "organization" (15 fichiers)
+```
+src/__tests__/integration/brevoEmailIntegration.test.js
+src/__tests__/integration/contactCreationFromForms.test.js
+src/components/common/layout/DesktopLayout.js
+src/components/debug/ArtisteFirestoreDiagnostic.js
+src/components/debug/BrevoDiagnostic.js
+src/components/debug/BrevoKeyRecovery.js
+src/components/debug/BrevoTemplateCustomizer.js
+src/components/debug/EntrepriseContextDiagnostic.js
+src/components/debug/TagsHierarchyDebug.js
+src/components/forms/public/PreContratFormContainer.js
+src/components/forms/public/PreContratFormPublic.js
+src/components/forms/public/PublicFormLayout.js
+src/components/ui/EntitySelector.js
+src/hooks/forms/useFormTokenValidation.js
+src/pages/PreContratFormResponsePage.js
+```
+
+### Fichiers CSS avec "concert" (35 fichiers)
+```
+src/components/artistes/desktop/ArtisteDetail.module.css
+src/components/artistes/mobile/ArtisteDetail.module.css
+src/components/artistes/mobile/ArtistesList.module.css
+src/components/artistes/sections/ArtistesTable.module.css
+src/components/common/GenericDetailView.module.css
+src/components/contacts/ContactDatesTable.module.css
+src/components/contacts/desktop/ContactForm.module.css
+src/components/contacts/mobile/ContactsList.module.css
+src/components/dates/DateForm.module.css
+src/components/dates/desktop/DateForm.module.css
+src/components/dates/desktop/DateView.module.css
+src/components/dates/desktop/DatesList.module.css
+src/components/dates/mobile/DateView.module.css
+src/components/dates/mobile/DatesList.module.css
+src/components/dates/mobile/sections/DateHeaderMobile.module.css
+src/components/dates/sections/DatesTable.module.css
+src/components/forms/Form.module.css
+src/components/forms/mobile/sections/ValidationSection.module.css
+src/components/forms/public/PreContratFormPublic.module.css
+src/components/forms/validation/ValidationSection.module.css
+src/components/lieux/desktop/LieuxList.module.css
+src/components/lieux/desktop/sections/LieuxResultsTable.module.css
+src/components/lieux/mobile/LieuView.module.css
+src/components/lieux/mobile/LieuxList.module.css
+src/components/structures/desktop/StructureForm.module.css
+src/pages/FormResponsePage.module.css
+src/pages/TableauDeBordPage.module.css
+src/styles/base/colors.css
+src/styles/components/concerts.css
+src/styles/index.css
+src/styles/pages/concerts.css
+src/styles/pages/contacts.css
+src/styles/pages/forms.css
+src/styles/pages/lieux.css
+```
+
+### Total : 123 fichiers à modifier
+- 73 fichiers JS/JSX avec "concert"
+- 15 fichiers JS/JSX avec "organization"
+- 35 fichiers CSS avec "concert"
+
 ## Conclusion
 
 La migration vers le nouveau système n'est pas complète. Il reste **380 références** à l'ancienne terminologie (319 "concert" + 61 "organization") qui doivent être mises à jour. Les fichiers de backup ne représentent qu'une infime partie du problème (moins de 1%). 

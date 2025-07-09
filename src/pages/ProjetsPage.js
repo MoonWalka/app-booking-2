@@ -28,11 +28,17 @@ const ProjetsPage = () => {
     
     setLoading(true);
     
+    // NOTE: Les orderBy sont temporairement désactivés car ils nécessitent des index Firestore
+    // Pour créer les index nécessaires :
+    // 1. Collection 'projets' : entrepriseId (ASC) + nom (ASC)
+    // 2. Collection 'artistes' : entrepriseId (ASC) + nom (ASC)
+    // Le tri est fait côté client en attendant
+    
     // Listener pour les projets
     const projetsQuery = query(
       collection(db, 'projets'),
-      where('entrepriseId', '==', currentEntreprise.id),
-      orderBy('nom', 'asc')
+      where('entrepriseId', '==', currentEntreprise.id)
+      // orderBy('nom', 'asc') // Temporairement désactivé - nécessite un index
     );
     
     const unsubscribeProjets = onSnapshot(projetsQuery, 
@@ -41,6 +47,8 @@ const ProjetsPage = () => {
         snapshot.forEach((doc) => {
           projetsData.push({ id: doc.id, ...doc.data() });
         });
+        // Tri côté client temporairement
+        projetsData.sort((a, b) => (a.nom || '').localeCompare(b.nom || ''));
         setProjets(projetsData);
         setLoading(false);
       },
@@ -54,8 +62,8 @@ const ProjetsPage = () => {
     // Listener pour les artistes
     const artistesQuery = query(
       collection(db, 'artistes'),
-      where('entrepriseId', '==', currentEntreprise.id),
-      orderBy('nom', 'asc')
+      where('entrepriseId', '==', currentEntreprise.id)
+      // orderBy('nom', 'asc') // Temporairement désactivé - nécessite un index
     );
     
     const unsubscribeArtistes = onSnapshot(artistesQuery, 
@@ -64,6 +72,8 @@ const ProjetsPage = () => {
         snapshot.forEach((doc) => {
           artistesData.push({ id: doc.id, ...doc.data() });
         });
+        // Tri côté client temporairement
+        artistesData.sort((a, b) => (a.nom || '').localeCompare(b.nom || ''));
         setArtistes(artistesData);
       }
     );

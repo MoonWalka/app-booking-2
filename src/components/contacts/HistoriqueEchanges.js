@@ -191,7 +191,6 @@ function HistoriqueEchanges({ contactId, dates = [] }) {
       <EchangeForm
         onSubmit={handleAddEchange}
         onCancel={() => setShowAddModal(false)}
-        concerts={concerts}
         isSubmitting={isAddingEchange}
       />
     </Modal>
@@ -207,7 +206,6 @@ function HistoriqueEchanges({ contactId, dates = [] }) {
           echange={editingEchange}
           onSubmit={handleEditEchange}
           onCancel={() => setEditingEchange(null)}
-          concerts={concerts}
         />
       )}
     </Modal>

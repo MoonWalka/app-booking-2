@@ -228,13 +228,15 @@ const ProjetsPage = () => {
         </Col>
       </Row>
       
-      {/* Modal de création/édition de projet */}
-      <ProjetCreationModal
-        show={showProjetModal}
-        onHide={handleCloseModal}
-        onCreated={handleProjetCreated}
-        editProjet={editProjetData}
-      />
+      {/* Modal de création/édition de projet - ne rendre que si nécessaire */}
+      {showProjetModal && (
+        <ProjetCreationModal
+          show={showProjetModal}
+          onHide={handleCloseModal}
+          onCreated={handleProjetCreated}
+          editProjet={editProjetData}
+        />
+      )}
     </Container>
   );
 };

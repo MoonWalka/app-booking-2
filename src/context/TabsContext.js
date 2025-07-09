@@ -43,6 +43,11 @@ export const TabsProvider = ({ children }) => {
       
       if (existingTab) {
         console.log('[TabsContext] Onglet existant trouvé, activation:', id);
+        // Si l'onglet est déjà actif, ne rien faire
+        if (existingTab.isActive) {
+          console.log('[TabsContext] Onglet déjà actif, pas de changement');
+          return prevTabs;
+        }
         // Activer l'onglet existant
         setActiveTabId(id);
         return prevTabs.map(tab => ({

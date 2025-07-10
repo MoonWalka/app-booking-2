@@ -96,7 +96,7 @@ const ContratGenerator = ({ date, contact, artiste, lieu }) => {
                 validateDataBeforeGeneration={validateDataBeforeGeneration}
                 selectedTemplate={selectedTemplate}
                 contratId={contratId}
-                concert={date}
+                date={date}
                 programmateur={programmateur}
                 artiste={artiste}
                 lieu={lieu}

@@ -250,13 +250,13 @@ const ContratGeneratorNew = ({
     loadExistingContrat();
   }, [dateId]);
 
-  // Charger le devis associé au concert
+  // Charger le devis associé à la date
   useEffect(() => {
     const loadDevisDuDate = async () => {
       if (!dateId) return;
 
       try {
-        console.log('[ContratGeneratorNew] Recherche devis pour concert:', dateId);
+        console.log('[ContratGeneratorNew] Recherche devis pour date:', dateId);
         
         // Chercher les devis pour cette date
         const devisList = await devisService.getDevisByDate(dateId);

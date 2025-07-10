@@ -301,12 +301,12 @@ const ContratTemplateEditorSimple = ({ template, onSave, onClose, isModalContext
     { category: 'Artiste', label: 'SIRET structure artiste', value: 'artiste_structure_siret' },
 
     // Variables Date
-    { category: 'Date', label: 'Titre du concert', value: 'concert_titre' },
-    { category: 'Date', label: 'Date du concert', value: 'concert_date' },
-    { category: 'Date', label: 'Heure du concert', value: 'concert_heure' },
-    { category: 'Date', label: 'Montant du concert', value: 'concert_montant' },
-    { category: 'Date', label: 'Montant en lettres', value: 'concert_montant_lettres' },
-    { category: 'Date', label: 'Type d\'événement', value: 'concert_type' },
+    { category: 'Date', label: 'Titre de la date', value: 'date_titre' },
+    { category: 'Date', label: 'Date de la date', value: 'date_date' },
+    { category: 'Date', label: 'Heure de la date', value: 'date_heure' },
+    { category: 'Date', label: 'Montant de la date', value: 'date_montant' },
+    { category: 'Date', label: 'Montant en lettres', value: 'date_montant_lettres' },
+    { category: 'Date', label: 'Type d\'événement', value: 'date_type' },
 
     // Variables Lieu
     { category: 'Lieu', label: 'Nom du lieu', value: 'lieu_nom' },

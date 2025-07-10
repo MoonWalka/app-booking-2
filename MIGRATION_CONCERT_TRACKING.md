@@ -20,9 +20,9 @@
 - [x] src/components/contacts/sections/ContactBottomTabs.js
 
 ### Section Contrats
-- [ ] src/components/contrats/ContratTemplateEditorSimple.js
-- [ ] src/components/contrats/desktop/ContratGenerator.js
-- [ ] src/components/contrats/desktop/ContratGeneratorNew.js
+- [x] src/components/contrats/ContratTemplateEditorSimple.js
+- [x] src/components/contrats/desktop/ContratGenerator.js
+- [x] src/components/contrats/desktop/ContratGeneratorNew.js
 - [ ] src/components/contrats/desktop/sections/ContratDebugPanel.js
 - [ ] src/components/contrats/desktop/sections/ContratGenerationActions.js
 - [ ] src/components/contrats/sections/ContratActions.js
@@ -119,4 +119,4 @@
 
 ## Statistiques
 - Total à migrer : 108 fichiers (73 JS + 35 CSS)
-- Migrés : 35/108 (32%)
+- Migrés : 39/108 (36%)

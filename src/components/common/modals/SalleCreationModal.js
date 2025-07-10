@@ -457,7 +457,7 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
                         onChange={handleChange}
                       >
                         <option value="">Sélectionner un type</option>
-                        <option value="Salle de concert">Salle de concert</option>
+                        <option value="Salle de date">Salle de date</option>
                         <option value="Théâtre">Théâtre</option>
                         <option value="Opéra">Opéra</option>
                         <option value="Auditorium">Auditorium</option>

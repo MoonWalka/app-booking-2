@@ -9,8 +9,8 @@
 - [ ] src/components/artistes/sections/ArtistesTable.js
 
 ### Section Common
-- [ ] src/components/common/RelationCard.js
-- [ ] src/components/common/modals/SalleCreationModal.js
+- [x] src/components/common/RelationCard.js
+- [x] src/components/common/modals/SalleCreationModal.js
 
 ### Section Contacts
 - [x] src/components/contacts/ContactDatesTable.js
@@ -74,7 +74,7 @@
 - [ ] src/components/recherches/sections/InfosArtisteSection.js
 
 ### Section Structures
-- [ ] src/components/structures/StructureViewTabs.js
+- [x] src/components/structures/StructureViewTabs.js
 - [ ] src/components/structures/desktop/StructureForm.js
 - [ ] src/components/structures/desktop/StructureView.js
 
@@ -86,12 +86,12 @@
 - [x] src/components/ui/StatutBadge.js
 
 ### Section Hooks
-- [ ] src/hooks/artistes/useSearchAndFilter.js
-- [ ] src/hooks/common/useEntitySearch.js
-- [ ] src/hooks/contrats/useContratActions.js
+- [x] src/hooks/artistes/useSearchAndFilter.js
+- [x] src/hooks/common/useEntitySearch.js
+- [x] src/hooks/contrats/useContratActions.js
 - [x] src/hooks/contrats/useContratGenerator.js
-- [ ] src/hooks/contrats/usePdfPreview.js
-- [ ] src/hooks/forms/useFormValidationData.js
+- [x] src/hooks/contrats/usePdfPreview.js
+- [x] src/hooks/forms/useFormValidationData.js
 
 ### Section Pages
 - [ ] src/pages/ConfirmationPage.js
@@ -102,7 +102,7 @@
 - [x] src/pages/FactureDetailsPage.js
 - [ ] src/pages/FacturesPage.js
 - [ ] src/pages/InventairePagesPage.js
-- [ ] src/pages/LoginPage.js
+- [x] src/pages/LoginPage.js
 - [x] src/pages/PreContratGenerationPage.js
 - [ ] src/pages/admin/MigrationPage.js
 - [ ] src/pages/contratTemplatesPage.js
@@ -119,4 +119,4 @@
 
 ## Statistiques
 - Total à migrer : 108 fichiers (73 JS + 35 CSS)
-- Migrés : 20/108 (19%)
+- Migrés : 29/108 (27%)

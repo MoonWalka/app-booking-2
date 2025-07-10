@@ -84,7 +84,7 @@ const RelationCard = ({
         lieu: '/lieux',
         contact: '/contacts',
         structure: '/structures',
-        concert: '/concerts'
+        date: '/dates'
       };
       
       const basePath = routes[type] || '';

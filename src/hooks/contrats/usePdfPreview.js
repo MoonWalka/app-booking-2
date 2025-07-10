@@ -37,9 +37,9 @@ export const usePdfPreview = () => {
       return;
     }
     
-    if (!data.concert) {
-      console.error('Date manquant dans les données:', { data, concert: data.concert });
-      alert('Les données du date sont manquantes.');
+    if (!data.date) {
+      console.error('Date manquant dans les données:', { data, date: data.date });
+      alert('Les données de la date sont manquantes.');
       return;
     }
 
@@ -77,9 +77,9 @@ export const usePdfPreview = () => {
         return;
       }
       
-      if (!data.concert) {
-        console.error('Date manquant pour le téléchargement:', { data, concert: data.concert });
-        alert('Les données du date sont manquantes.');
+      if (!data.date) {
+        console.error('Date manquant pour le téléchargement:', { data, date: data.date });
+        alert('Les données de la date sont manquantes.');
         return;
       }
 
@@ -87,8 +87,8 @@ export const usePdfPreview = () => {
       const generateFileName = () => {
         const parts = [];
         
-        // Date du date au format YYYYMMDD
-        if (data.concert?.date) {
+        // Date de la date au format YYYYMMDD
+        if (data.date?.date) {
           const date = data.date.date.seconds 
             ? new Date(data.date.date.seconds * 1000) 
             : new Date(data.date.date);

@@ -10,7 +10,7 @@ import { debugLog } from '@/utils/logUtils';
 /**
  * Hook to manage contract actions (mark as sent, signed, deletion)
  */
-export const useContratActions = (contratId, contrat, setContrat, concert, contact, refreshData) => {
+export const useContratActions = (contratId, contrat, setContrat, date, contact, refreshData) => {
   const [actionError, setActionError] = useState('');
   const [isActionLoading, setIsActionLoading] = useState(false);
   const navigate = useNavigate();
@@ -83,14 +83,14 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
       //   throw new Error('Email du contact manquant pour l\'envoi du contrat');
       // }
       // 
-      // if (!concert) {
-      //   throw new Error('Données du date manquantes pour l\'envoi du contrat');
+      // if (!date) {
+      //   throw new Error('Données de la date manquantes pour l\'envoi du contrat');
       // }
       
       debugLog('[useContratActions] Marquage manuel du contrat comme envoyé:', {
         contratId,
         contactEmail: contact?.email || 'N/A',
-        dateTitle: concert?.nom || concert?.titre || 'N/A',
+        dateTitle: date?.nom || date?.titre || 'N/A',
         contratType: contrat?.type || 'N/A'
       });
       
@@ -99,13 +99,13 @@ export const useContratActions = (contratId, contrat, setContrat, concert, conta
       /*
       try {
         debugLog('[useContratActions] === AUDIT COMPLET ENVOI CONTRAT ===');
-        debugLog('[useContratActions] 1. Données du concert:', concert);
+        debugLog('[useContratActions] 1. Données de la date:', date);
         debugLog('[useContratActions] 2. Données du contact:', contact);
         debugLog('[useContratActions] 3. Données du contrat:', contrat);
         debugLog('[useContratActions] 4. Avant appel brevoTemplateService.sendContratEmail');
         
         try {
-          const result = await brevoTemplateService.sendContratEmail(concert, contact, contrat);
+          const result = await brevoTemplateService.sendContratEmail(date, contact, contrat);
           debugLog('[useContratActions] 5. Résultat sendContratEmail:', result);
         } catch (sendError) {
           debugLog('[useContratActions] 6. ERREUR dans sendContratEmail:', {

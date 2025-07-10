@@ -32,7 +32,7 @@ const StructureViewTabs = ({ id: propId }) => {
     loading,
     error,
     contacts,
-    concerts,
+    dates,
     lieux
   } = useStructureDetails(id);
   
@@ -166,7 +166,7 @@ const StructureViewTabs = ({ id: propId }) => {
         return (
           <ContactEntityTable
             title="Dates"
-            data={concerts || []}
+            data={dates || []}
             columns={[
               { key: 'titre', label: 'Titre' },
               { key: 'date', label: 'Date' },
@@ -181,7 +181,7 @@ const StructureViewTabs = ({ id: propId }) => {
                 size: 'sm'
               }
             ]}
-            addButtonLabel="Nouveau concert"
+            addButtonLabel="Nouvelle date"
             onAddClick={() => navigate('/dates/nouveau')}
             {...commonTableProps}
           />
@@ -191,7 +191,7 @@ const StructureViewTabs = ({ id: propId }) => {
         return (
           <ContactEntityTable
             title="Dates"
-            data={concerts || []}
+            data={dates || []}
             columns={[
               { key: 'artiste', label: 'Artiste' },
               { key: 'propositionArtistique', label: 'Projet' },

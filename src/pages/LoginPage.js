@@ -179,7 +179,7 @@ const LoginPage = () => {
             <i className="bi bi-music-note-beamed"></i>
           </div>
           <h1 className={styles.loginTitle}>TourCraft</h1>
-          <p className={styles.loginSubtitle}>Plateforme de gestion de concerts</p>
+          <p className={styles.loginSubtitle}>Plateforme de gestion de dates</p>
           <div className={styles.modeSelector}>
             <button
               type="button"

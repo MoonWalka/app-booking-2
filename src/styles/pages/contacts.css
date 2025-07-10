@@ -9,7 +9,7 @@
    WRAPPER PRINCIPAL DE LA PAGE
    ============================= */
 .contacts-page {
-  /* Assure une cohérence avec les autres pages (lieux, concerts) */
+  /* Assure une cohérence avec les autres pages (lieux, dates) */
   min-height: 100vh;
   width: 100%;
 }
@@ -50,7 +50,7 @@
   margin-bottom: var(--tc-space-1);
 }
 
-.tc-contact-organization {
+.tc-contact-entreprise {
   color: var(--tc-text-muted);
   margin-bottom: var(--tc-space-2);
 }

@@ -50,7 +50,7 @@ const lieuFields = [
 ];
 
 /**
- * Hook de validation des données de formulaire pour un concert
+ * Hook de validation des données de formulaire pour une date
  * 
  * Ce hook gère la logique complexe de récupération et validation des données
  * de formulaire soumises par les contacts pour un date donné.
@@ -69,7 +69,7 @@ const lieuFields = [
  * @returns {Object} État et données du formulaire de validation
  * @returns {Object|null} returns.formData - Données de la soumission de formulaire
  * @returns {string|null} returns.formId - ID de la soumission de formulaire
- * @returns {Object|null} returns.concert - Données complètes du concert
+ * @returns {Object|null} returns.date - Données complètes de la date
  * @returns {boolean} returns.loading - État de chargement des données
  * @returns {string|null} returns.error - Message d'erreur éventuel
  * @returns {boolean} returns.validated - État de validation du formulaire
@@ -77,7 +77,7 @@ const lieuFields = [
  * @returns {Object} returns.validatedFields - Champs validés avec leurs valeurs
  * @returns {Function} returns.setValidatedFields - Fonction pour modifier les champs validés
  * @returns {Object|null} returns.contact - Données du contact existant (rétrocompatibilité avec programmateur)
- * @returns {Object|null} returns.lieu - Données du lieu de concert
+ * @returns {Object|null} returns.lieu - Données du lieu de la date
  * @returns {Array} returns.contactFields - Configuration des champs de contact
  * @returns {Array} returns.structureFields - Configuration des champs de structure
  * @returns {Array} returns.lieuFields - Configuration des champs de lieu
@@ -93,7 +93,7 @@ const lieuFields = [
  *   setValidatedFields,
  *   contact,
  *   lieu
- * } = useFormValidationData('concert-123');
+ * } = useFormValidationData('date-123');
  * 
  * if (loading) return <div>Chargement...</div>;
  * if (error) return <div>Erreur: {error}</div>;
@@ -132,7 +132,7 @@ const lieuFields = [
 const useFormValidationData = (dateId) => {
   const [formData, setFormData] = useState(null);
   const [formId, setFormId] = useState(null);
-  const [concert, setDate] = useState(null);
+  const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [validated, setValidated] = useState(false);

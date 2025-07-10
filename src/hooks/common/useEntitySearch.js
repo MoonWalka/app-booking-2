@@ -13,9 +13,9 @@ import {
 import { useEntreprise } from '@/context/EntrepriseContext';
 
 /**
- * Hook générique pour la recherche d'entités (lieux, contacts, artistes, concerts, etc.)
+ * Hook générique pour la recherche d'entités (lieux, contacts, artistes, dates, etc.)
  * @param {Object} options - Options de configuration du hook
- * @param {string} options.entityType - Type d'entité à rechercher ('lieux', 'contacts', 'artistes', 'concerts')
+ * @param {string} options.entityType - Type d'entité à rechercher ('lieux', 'contacts', 'artistes', 'dates')
  * @param {string} options.searchField - Champ sur lequel effectuer la recherche principale (par défaut: 'nom')
  * @param {string[]} options.additionalSearchFields - Champs supplémentaires pour la recherche (optionnel)
  * @param {number} options.maxResults - Nombre maximum de résultats à retourner (par défaut: 10)
@@ -76,10 +76,10 @@ export const useEntitySearch = (options) => {
       // Recherche par le champ principal
       let searchQuery;
       
-      // Vérifier si le terme de recherche est une date (pour les concerts)
+      // Vérifier si le terme de recherche est une date (pour les dates)
       const isDateFormat = /^\d{4}-\d{2}-\d{2}$/.test(String(searchTerm));
       
-      if (isDateFormat && entityType === 'concerts') {
+      if (isDateFormat && entityType === 'dates') {
         // Recherche exacte sur le champ date avec filtre organisation
         if (currentEntreprise?.id) {
           searchQuery = query(

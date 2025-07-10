@@ -1,10 +1,10 @@
 /*
- * Styles pour ConcertForm (édition) - aligné sur ConcertDetails (détails)
+ * Styles pour DateForm (édition) - aligné sur DateDetails (détails)
  * Dernière mise à jour: 16 May 2025
  */
 
 /* Container principal */
-.concertDetailsContainer {
+.dateDetailsContainer {
   max-width: 900px;
   margin: 0 auto;
   padding: var(--tc-space-4);
@@ -311,7 +311,7 @@
 
 /* Media queries */
 @media (max-width: var(--tc-breakpoint-lg)) {
-  .concertDetailsContainer {
+  .dateDetailsContainer {
     padding: var(--tc-space-2);
   }
 }

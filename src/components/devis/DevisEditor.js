@@ -182,15 +182,15 @@ function DevisEditor({ dateId, structureId, devisId }) {
         console.log('  - projetNom:', dateData.projetNom);
         console.log('  - projet:', dateData.projet);
         console.log('  - projetId:', dateData.projetId);
-        console.log('🎨 Artiste du concert:', dateData.artisteNom || 'Aucun artiste');
+        console.log('🎨 Artiste de la date:', dateData.artisteNom || 'Aucun artiste');
         
-        // Mettre à jour les données du devis avec les infos du concert
+        // Mettre à jour les données du devis avec les infos de la date
         const updatedDevisData = {
           dateId: finalDateId,
           artisteId: dateData.artisteId || '',
           artisteNom: dateData.artisteNom || '',
-          projetNom: dateData.projetNom || '', // Récupérer le projet depuis le concert
-          dateDebut: dateData.date || '', // Date de début = date du concert
+          projetNom: dateData.projetNom || '', // Récupérer le projet depuis la date
+          dateDebut: dateData.date || '', // Date de début = date de l'événement
           dateFin: dateData.dateFin || dateData.date || '', // Si pas de date de fin, utiliser la date de début
           titreEvenement: dateData.libelle || dateData.titre || '',
           lieuNom: dateData.lieuNom || '',
@@ -214,7 +214,7 @@ function DevisEditor({ dateId, structureId, devisId }) {
         console.log('=== Fin du chargement du date ===');
         
       } catch (err) {
-        console.error('Erreur lors du chargement du concert:', err);
+        console.error('Erreur lors du chargement de la date:', err);
       }
     };
 

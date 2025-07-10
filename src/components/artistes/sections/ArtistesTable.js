@@ -43,12 +43,12 @@ const ArtistesTable = ({ artistes, onDelete }) => {
     },
     {
       label: 'Dates',
-      key: 'concertsCount',
+      key: 'datesCount',
       sortable: false,
       render: (artiste) => (
-        <span className={styles.concertCount}>
+        <span className={styles.dateCount}>
           <i className="bi bi-music-note-beamed me-1"></i>
-          {artiste.concertsCount || 0} concerts
+          {artiste.datesCount || 0} dates
         </span>
       )
     }

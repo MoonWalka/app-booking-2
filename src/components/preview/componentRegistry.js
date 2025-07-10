@@ -90,25 +90,25 @@ export const componentRegistry = {
     defaultProps: {}
   },
   
-  // Lieux
-  'LieuForm': {
-    path: () => import('../lieux/desktop/LieuForm'),
-    category: 'Lieux',
-    description: 'Formulaire de création/édition de lieu',
-    defaultProps: { mode: 'create', onSubmit: () => console.log('Submit') }
-  },
-  'LieuView': {
-    path: () => import('../lieux/desktop/LieuView'),
-    category: 'Lieux',
-    description: 'Vue détaillée d\'un lieu',
-    defaultProps: { lieuId: 'demo-id' }
-  },
-  'LieuxList': {
-    path: () => import('../lieux/desktop/LieuxList'),
-    category: 'Lieux',
-    description: 'Liste des lieux',
-    defaultProps: { lieux: [], loading: false }
-  },
+  // Lieux - OBSOLÈTE - Remplacé par Salles et Festivals
+  // 'LieuForm': {
+  //   path: () => import('../lieux/desktop/LieuForm'),
+  //   category: 'Lieux',
+  //   description: 'Formulaire de création/édition de lieu',
+  //   defaultProps: { mode: 'create', onSubmit: () => console.log('Submit') }
+  // },
+  // 'LieuView': {
+  //   path: () => import('../lieux/desktop/LieuView'),
+  //   category: 'Lieux',
+  //   description: 'Vue détaillée d\'un lieu',
+  //   defaultProps: { lieuId: 'demo-id' }
+  // },
+  // 'LieuxList': {
+  //   path: () => import('../lieux/desktop/LieuxList'),
+  //   category: 'Lieux',
+  //   description: 'Liste des lieux',
+  //   defaultProps: { lieux: [], loading: false }
+  // },
   
   // Structures
   'StructureForm': {

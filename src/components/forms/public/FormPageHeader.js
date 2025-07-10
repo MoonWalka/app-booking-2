@@ -4,19 +4,19 @@ import styles from './FormPageHeader.module.css';
 /**
  * Header component for form pages
  */
-const FormPageHeader = ({ title, subtitle, concertInfo }) => {
+const FormPageHeader = ({ title, subtitle, dateInfo }) => {
   return (
     <div className={styles.header}>
       <h1>{title}</h1>
       {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
-      {concertInfo && (
-        <div className={styles.concertInfo}>
-          <p className={styles.concertName}>
-            {concertInfo.titre || concertInfo.nom || 'Date'}
+      {dateInfo && (
+        <div className={styles.dateInfo}>
+          <p className={styles.dateName}>
+            {dateInfo.titre || dateInfo.nom || 'Date'}
           </p>
-          {concertInfo.dateDebut && (
+          {dateInfo.dateDebut && (
             <p className={styles.dateDate}>
-              {new Date(concertInfo.dateDebut).toLocaleDateString('fr-FR', {
+              {new Date(dateInfo.dateDebut).toLocaleDateString('fr-FR', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',

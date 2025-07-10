@@ -26,7 +26,7 @@ const InventairePagesPage = () => {
         { name: 'ArtistesPage', path: 'src/pages/ArtistesPage.js', route: '/preview/artistes', category: 'Gestion', usedInNewVersion: true },
         { name: 'BookingParametragePage', path: 'src/pages/BookingParametragePage.js', route: '/preview/booking/parametrage', category: 'Paramétrage', usedInNewVersion: true },
         { name: 'CollaborationParametragePage', path: 'src/pages/CollaborationParametragePage.js', route: '/preview/collaboration/parametrage', category: 'Paramétrage', usedInNewVersion: true },
-        { name: 'DatesPage', path: 'src/pages/DatesPage.js', route: '/preview/concerts', category: 'Gestion', usedInNewVersion: true },
+        { name: 'DatesPage', path: 'src/pages/DatesPage.js', route: '/preview/dates', category: 'Gestion', usedInNewVersion: true },
         { name: 'ContactParametragePage', path: 'src/pages/ContactParametragePage.js', route: null, category: 'Paramétrage', usedInNewVersion: true },
         { name: 'ContactTagsPage', path: 'src/pages/ContactTagsPage.js', route: '/contacts/tags', category: 'Gestion', usedInNewVersion: false },
         { name: 'ContactsPage', path: 'src/pages/ContactsPage.js', route: '/preview/contacts', category: 'Gestion', usedInNewVersion: true },

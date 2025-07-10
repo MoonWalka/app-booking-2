@@ -16,7 +16,7 @@ const FormHeader = ({ dateId, isValidated, navigate }) => {
             onClick={() => navigate(`/dates/${dateId}`)}
           >
             <i className="bi bi-arrow-left"></i>
-            Retour au concert
+            Retour à la date
           </button>
         </div>
       </div>

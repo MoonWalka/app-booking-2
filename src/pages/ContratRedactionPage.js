@@ -419,9 +419,9 @@ const ContratRedactionPage = () => {
             console.log('[ContratRedactionPage] Date de la date formatée:', dateDate);
             
             processedContent = processedContent
-              .replace(/{concert_date}/g, dateDate)
-              .replace(/{concert_titre}/g, contratData.date.titre || '')
-              .replace(/{concert_heure}/g, contratData.date.heure || '');
+              .replace(/{date_date}/g, dateDate)
+              .replace(/{date_titre}/g, contratData.date.titre || '')
+              .replace(/{date_heure}/g, contratData.date.heure || '');
           }
         } else {
           console.log('[ContratRedactionPage] Pas de données de date disponibles');
@@ -500,8 +500,8 @@ const ContratRedactionPage = () => {
         if (contratData.montantTTC || contratData.totalTTC) {
           const montant = contratData.montantTTC || contratData.totalTTC || 0;
           processedContent = processedContent
-            .replace(/{concert_montant}/g, montant.toFixed(2).replace('.', ',') + ' €')
-            .replace(/{concert_montant_lettres}/g, montantEnLettres(montant));
+            .replace(/{date_montant}/g, montant.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{date_montant_lettres}/g, montantEnLettres(montant));
         }
         
         // Variables montant depuis règlement ou prestations
@@ -537,17 +537,17 @@ const ContratRedactionPage = () => {
           processedContent = processedContent
             .replace(/{total_ttc}/g, totalTTCTrouve.toFixed(2).replace('.', ',') + ' €')
             .replace(/{total_ttc_lettres}/g, montantEnLettres(totalTTCTrouve))
-            // Aussi remplacer concert_montant si présent
-            .replace(/{concert_montant}/g, totalTTCTrouve.toFixed(2).replace('.', ',') + ' €')
-            .replace(/{concert_montant_lettres}/g, montantEnLettres(totalTTCTrouve));
+            // Aussi remplacer date_montant si présent
+            .replace(/{date_montant}/g, totalTTCTrouve.toFixed(2).replace('.', ',') + ' €')
+            .replace(/{date_montant_lettres}/g, montantEnLettres(totalTTCTrouve));
         } else {
           console.log('[ContratRedactionPage] Aucun montant trouvé - Remplacer par 0');
           // Remplacer par 0 si aucun montant trouvé
           processedContent = processedContent
             .replace(/{total_ttc}/g, '0,00 €')
             .replace(/{total_ttc_lettres}/g, 'zéro euro')
-            .replace(/{concert_montant}/g, '0,00 €')
-            .replace(/{concert_montant_lettres}/g, 'zéro euro');
+            .replace(/{date_montant}/g, '0,00 €')
+            .replace(/{date_montant_lettres}/g, 'zéro euro');
         }
         
         // Gérer les sauts de page

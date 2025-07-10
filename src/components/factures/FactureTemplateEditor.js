@@ -168,9 +168,9 @@ const FactureTemplateEditor = ({ template, onSave, onClose, isModalContext }) =>
     { category: 'Facture', label: 'Référence bon de commande', value: '{reference_commande}' },
 
     // Variables Date/Prestation
-    { category: 'Prestation', label: 'Titre du concert', value: '{titre_date}' },
-    { category: 'Prestation', label: 'Date du concert', value: '{date_date}' },
-    { category: 'Prestation', label: 'Lieu du concert', value: '{lieu_nom}' },
+    { category: 'Prestation', label: 'Titre de la date', value: '{titre_date}' },
+    { category: 'Prestation', label: 'Date de l\'événement', value: '{date_date}' },
+    { category: 'Prestation', label: 'Lieu de la date', value: '{lieu_nom}' },
     { category: 'Prestation', label: 'Ville du lieu', value: '{lieu_ville}' },
     { category: 'Prestation', label: 'Artiste', value: '{artiste_nom}' },
     { category: 'Prestation', label: 'Description prestation', value: '{description_prestation}' },

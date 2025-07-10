@@ -147,7 +147,7 @@ const ContratTemplatesPage = () => {
       footerHeight: 15,
       footerTopMargin: 10,
       logoUrl: '',
-      titleTemplate: 'Contrat - {concert_titre}',
+      titleTemplate: 'Contrat - {date_titre}',
       signatureTemplate: `<div style="display: flex; justify-content: space-between; margin-top: 30px;">
         <div style="width: 45%;">
           <div style="margin-bottom: 50px;"><strong>Pour l'Organisateur:</strong></div>

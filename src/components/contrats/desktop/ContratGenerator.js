@@ -116,7 +116,7 @@ const ContratGenerator = ({ date, contact, artiste, lieu }) => {
           showDebugInfo={showDebugInfo}
           toggleDebugInfo={toggleDebugInfo}
           selectedTemplate={selectedTemplate}
-          concert={date}
+          date={date}
           programmateur={programmateur}
           artiste={artiste}
           lieu={lieu}

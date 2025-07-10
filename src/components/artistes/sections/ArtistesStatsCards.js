@@ -24,7 +24,7 @@ const ArtistesStatsCards = ({ stats }) => {
           <i className="bi bi-calendar-check"></i>
         </div>
         <div className={styles.statContent}>
-          <div className={styles.statLabel}>Avec concerts</div>
+          <div className={styles.statLabel}>Avec dates</div>
           <div className={styles.statValue}>{stats.avecDates}</div>
         </div>
       </div>
@@ -34,7 +34,7 @@ const ArtistesStatsCards = ({ stats }) => {
           <i className="bi bi-calendar-x"></i>
         </div>
         <div className={styles.statContent}>
-          <div className={styles.statLabel}>Sans concerts</div>
+          <div className={styles.statLabel}>Sans dates</div>
           <div className={styles.statValue}>{stats.sansDates}</div>
         </div>
       </div>

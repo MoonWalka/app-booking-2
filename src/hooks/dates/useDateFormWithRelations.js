@@ -31,7 +31,11 @@ export const useDateFormWithRelations = (dateId) => {
       setLoadingRelations(true);
       
       try {
-        // Charger le lieu
+        // Charger le lieu (système hybride lieu/libellé)
+        // Note: Le système a évolué pour permettre soit:
+        // - Une référence vers un lieu prédéfini (lieuId → collection 'lieux')
+        // - Un libellé libre (lieuNom) pour les lieux non répertoriés
+        // Cela offre plus de flexibilité pour les événements dans des lieux atypiques
         if (baseHook.formData.lieuId) {
           const lieuDoc = await getDoc(doc(db, 'lieux', baseHook.formData.lieuId));
           if (lieuDoc.exists()) {

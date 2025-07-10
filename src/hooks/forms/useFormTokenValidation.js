@@ -18,7 +18,7 @@ export function useFormTokenValidation(dateId, token) {
     dateData: null,
     formLinkData: null,
     existingSubmission: null,
-    organizationData: null,
+    entrepriseData: null,
     error: null
   });
 
@@ -92,16 +92,16 @@ export function useFormTokenValidation(dateId, token) {
           }
         }
 
-        // Récupérer les données de l'organisation
-        let organizationData = null;
+        // Récupérer les données de l'entreprise
+        let entrepriseData = null;
         if (validationResult.preContrat?.entrepriseId) {
           try {
             const orgDoc = await getDoc(doc(db, 'entreprises', validationResult.preContrat.entrepriseId));
             if (orgDoc.exists()) {
-              organizationData = { id: orgDoc.id, ...orgDoc.data() };
+              entrepriseData = { id: orgDoc.id, ...orgDoc.data() };
             }
           } catch (error) {
-            debugLog('[useFormTokenValidation] Erreur récupération organisation:', error, 'warn');
+            debugLog('[useFormTokenValidation] Erreur récupération entreprise:', error, 'warn');
           }
         }
 
@@ -123,7 +123,7 @@ export function useFormTokenValidation(dateId, token) {
           dateData,
           formLinkData: validationResult.preContrat,
           existingSubmission: validationResult.preContrat?.publicFormData ? validationResult.preContrat.publicFormData : null,
-          organizationData,
+          entrepriseData,
           error: null
         });
 

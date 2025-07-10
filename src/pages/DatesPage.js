@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import DatesList from '@/components/dates/DatesList.js';
+import DatesList from '@/components/dates/desktop/DatesList.js';
 
 function DatesPage() {
   console.log('[DatesPage] ========= COMPOSANT DATES PAGE MONTÉ =========');

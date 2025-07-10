@@ -6,10 +6,10 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 
 /**
- * Composant de diagnostic complet pour le contexte Organisation
+ * Composant de diagnostic complet pour le contexte Entreprise
  */
 const EntrepriseContextDiagnostic = () => {
-  const organizationContext = useEntreprise();
+  const entrepriseContext = useEntreprise();
   const authContext = useAuth();
   const [diagnosticResults, setDiagnosticResults] = useState({});
   const [searchTest, setSearchTest] = useState(null);
@@ -35,21 +35,21 @@ const EntrepriseContextDiagnostic = () => {
         } : null,
         isAuthenticated: !!authContext.currentUser
       },
-      organizationContext: {
-        rawContext: organizationContext,
-        currentEntreprise: organizationContext.currentEntreprise,
-        currentEntreprise: organizationContext.currentEntreprise,
-        hasCurrentOrg: !!organizationContext.currentEntreprise,
-        hasCurrentOrganization: !!organizationContext.currentEntreprise,
-        currentEntrepriseId: organizationContext.currentEntreprise?.id,
-        currentEntrepriseId: organizationContext.currentEntreprise?.id,
-        userEntreprises: organizationContext.userEntreprises?.map(org => ({
+      entrepriseContext: {
+        rawContext: entrepriseContext,
+        currentEntreprise: entrepriseContext.currentEntreprise,
+        currentEntreprise: entrepriseContext.currentEntreprise,
+        hasCurrentOrg: !!entrepriseContext.currentEntreprise,
+        hasCurrentEntreprise: !!entrepriseContext.currentEntreprise,
+        currentEntrepriseId: entrepriseContext.currentEntreprise?.id,
+        currentEntrepriseId: entrepriseContext.currentEntreprise?.id,
+        userEntreprises: entrepriseContext.userEntreprises?.map(org => ({
           id: org.id,
           name: org.name,
           role: org.userRole
         })),
-        loading: organizationContext.loading,
-        error: organizationContext.error
+        loading: entrepriseContext.loading,
+        error: entrepriseContext.error
       },
       localStorage: {
         currentEntrepriseId: localStorage.getItem('currentEntrepriseId'),
@@ -59,7 +59,7 @@ const EntrepriseContextDiagnostic = () => {
     
     setDiagnosticResults(results);
     console.log('🔍 DIAGNOSTIC COMPLET:', results);
-  }, [organizationContext, authContext]);
+  }, [entrepriseContext, authContext]);
 
   const testSearch = async () => {
     console.log('🔍 Test de recherche avec terme: "test"');
@@ -80,8 +80,8 @@ const EntrepriseContextDiagnostic = () => {
   };
 
   const refreshContext = () => {
-    if (organizationContext.refreshEntreprises) {
-      organizationContext.refreshEntreprises();
+    if (entrepriseContext.refreshEntreprises) {
+      entrepriseContext.refreshEntreprises();
     }
     window.location.reload();
   };
@@ -89,7 +89,7 @@ const EntrepriseContextDiagnostic = () => {
   return (
     <Card className="mb-4">
       <div className="card-header">
-        <h3>🔍 Diagnostic du Contexte Organisation</h3>
+        <h3>🔍 Diagnostic du Contexte Entreprise</h3>
       </div>
       <div className="card-body">
         {/* État de l'authentification */}
@@ -106,26 +106,26 @@ const EntrepriseContextDiagnostic = () => {
           </ul>
         </div>
 
-        {/* État du contexte Organisation */}
-        <div className={`alert ${diagnosticResults.organizationContext?.currentEntrepriseId ? 'alert-success' : 'alert-warning'} mb-3`}>
-          <h5>🏢 Contexte Organisation</h5>
+        {/* État du contexte Entreprise */}
+        <div className={`alert ${diagnosticResults.entrepriseContext?.currentEntrepriseId ? 'alert-success' : 'alert-warning'} mb-3`}>
+          <h5>🏢 Contexte Entreprise</h5>
           <ul className="mb-0">
-            <li>Loading : <strong>{diagnosticResults.organizationContext?.loading ? 'OUI' : 'NON'}</strong></li>
-            <li>Erreur : <strong>{diagnosticResults.organizationContext?.error || 'Aucune'}</strong></li>
-            <li>currentEntreprise présent : <strong>{diagnosticResults.organizationContext?.hasCurrentOrg ? 'OUI' : 'NON'}</strong></li>
-            <li>currentEntreprise présent : <strong>{diagnosticResults.organizationContext?.hasCurrentOrganization ? 'OUI' : 'NON'}</strong></li>
-            <li>ID via currentEntreprise : <code>{diagnosticResults.organizationContext?.currentEntrepriseId || 'UNDEFINED'}</code></li>
-            <li>ID via currentEntreprise : <code>{diagnosticResults.organizationContext?.currentEntrepriseId || 'UNDEFINED'}</code></li>
-            <li>Nombre d'organisations : <strong>{diagnosticResults.organizationContext?.userEntreprises?.length || 0}</strong></li>
+            <li>Loading : <strong>{diagnosticResults.entrepriseContext?.loading ? 'OUI' : 'NON'}</strong></li>
+            <li>Erreur : <strong>{diagnosticResults.entrepriseContext?.error || 'Aucune'}</strong></li>
+            <li>currentEntreprise présent : <strong>{diagnosticResults.entrepriseContext?.hasCurrentOrg ? 'OUI' : 'NON'}</strong></li>
+            <li>currentEntreprise présent : <strong>{diagnosticResults.entrepriseContext?.hasCurrentEntreprise ? 'OUI' : 'NON'}</strong></li>
+            <li>ID via currentEntreprise : <code>{diagnosticResults.entrepriseContext?.currentEntrepriseId || 'UNDEFINED'}</code></li>
+            <li>ID via currentEntreprise : <code>{diagnosticResults.entrepriseContext?.currentEntrepriseId || 'UNDEFINED'}</code></li>
+            <li>Nombre d'entreprises : <strong>{diagnosticResults.entrepriseContext?.userEntreprises?.length || 0}</strong></li>
           </ul>
         </div>
 
-        {/* Organisations disponibles */}
-        {diagnosticResults.organizationContext?.userEntreprises?.length > 0 && (
+        {/* Entreprises disponibles */}
+        {diagnosticResults.entrepriseContext?.userEntreprises?.length > 0 && (
           <div className="alert alert-secondary mb-3">
-            <h5>📋 Organisations disponibles</h5>
+            <h5>📋 Entreprises disponibles</h5>
             <ul className="mb-0">
-              {diagnosticResults.organizationContext.userEntreprises.map(org => (
+              {diagnosticResults.entrepriseContext.userEntreprises.map(org => (
                 <li key={org.id}>
                   <strong>{org.name}</strong> (ID: <code>{org.id}</code>, Rôle: {org.role})
                 </li>

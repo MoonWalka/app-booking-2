@@ -52,7 +52,7 @@ function ConfirmationPage({ dateId: propDateId }) {
     prixPlaces: '',
     
     // Représentations
-    type: 'concert',
+    type: 'date',
     nbRepresentations: 1,
     horaireDebut: '',
     horaireFin: '',
@@ -110,7 +110,7 @@ function ConfirmationPage({ dateId: propDateId }) {
       try {
         setLoading(true);
         
-        // Récupérer les pré-contrats du concert
+        // Récupérer les pré-contrats de la date
         const preContrats = await getPreContratsByDate(dateId);
         console.log('[ConfirmationPage] Pré-contrats trouvés:', preContrats);
         
@@ -1362,7 +1362,7 @@ function ConfirmationPage({ dateId: propDateId }) {
                         value={mesInfos.type}
                         onChange={(e) => setMesInfos(prev => ({ ...prev, type: e.target.value }))}
                       >
-                        <option value="concert">Date</option>
+                        <option value="date">Date</option>
                         <option value="showcase">Showcase</option>
                         <option value="festival">Festival</option>
                         <option value="representation">Représentation</option>
@@ -1383,7 +1383,7 @@ function ConfirmationPage({ dateId: propDateId }) {
                     <Form.Group>
                       <Form.Control
                         type="text"
-                        value={infosOrganisateur.type || 'concert'}
+                        value={infosOrganisateur.type || 'date'}
                         readOnly
                         className={styles.readOnlyField}
                       />

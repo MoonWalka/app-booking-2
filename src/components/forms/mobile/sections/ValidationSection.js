@@ -18,28 +18,28 @@ const ValidationSection = ({
   onCopyValue,
   isValidated,
   structureFieldsMapping,
-  concert
+  date
 }) => {
-  // Si c'est une section de concert
-  if (concert) {
+  // Si c'est une section de date
+  if (date) {
     return (
       <Card className={styles.sectionCard}>
         <Card.Header className={headerClass || styles.defaultHeader}>
           {title}
         </Card.Header>
         <Card.Body>
-          <div className={styles.concertDetails}>
-            <div className={styles.concertField}>
+          <div className={styles.dateDetails}>
+            <div className={styles.dateField}>
               <span className={styles.fieldLabel}>Date :</span>
               <span className={styles.fieldValue}>
                 {new Date(date.date?.seconds * 1000).toLocaleDateString('fr-FR')}
               </span>
             </div>
-            <div className={styles.concertField}>
+            <div className={styles.dateField}>
               <span className={styles.fieldLabel}>Artiste :</span>
               <span className={styles.fieldValue}>{date.artisteName}</span>
             </div>
-            <div className={styles.concertField}>
+            <div className={styles.dateField}>
               <span className={styles.fieldLabel}>Lieu :</span>
               <span className={styles.fieldValue}>{date.lieuName}</span>
             </div>

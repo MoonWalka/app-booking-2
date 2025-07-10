@@ -13,7 +13,7 @@ const AdminFormValidation = ({
   loading, 
   error, 
   formData, 
-  concert, 
+  date, 
   lieu, 
   onValidate 
 }) => {

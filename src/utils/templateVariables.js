@@ -149,7 +149,7 @@ export const formatContratVariables = (date, contact, contrat) => {
 };
 
 /**
- * Formate les variables pour le template confirmation concert
+ * Formate les variables pour le template confirmation date
  * @param {Object} date - Données de la date
  * @param {Object} contact - Données du contact
  * @param {Object} detailsTechniques - Détails techniques de la date

@@ -117,15 +117,15 @@ const FacturesTableView = ({
       label: 'Projet',
       key: 'projet',
       sortable: true,
-      render: (facture) => facture.projet || facture.concert?.projetNom || '—'
+      render: (facture) => facture.projet || facture.date?.projetNom || '—'
     },
     {
       label: 'Dates',
       key: 'dates',
       sortable: false,
       render: (facture) => {
-        const dateDebut = facture.dateDebut || facture.concert?.date;
-        const dateFin = facture.dateFin || facture.concert?.dateFin;
+        const dateDebut = facture.dateDebut || facture.date?.date;
+        const dateFin = facture.dateFin || facture.date?.dateFin;
         if (!dateDebut) return '—';
         
         const debut = formatDate(dateDebut);

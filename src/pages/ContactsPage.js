@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import ContactsList from '@/components/contacts/ContactsList';
+import ContactsList from '@/components/contacts/desktop/ContactsList';
 import ContactView from '@/components/contacts/desktop/ContactView';
 import ContactForm from '@/components/contacts/desktop/ContactForm';
 import ContactTypeSelector from '@/components/contacts/ContactTypeSelector';

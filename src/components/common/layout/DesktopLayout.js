@@ -104,9 +104,10 @@ function DesktopLayout({ children }) {
       case '/publications':
         openPublicationsListTab();
         break;
-      case '/lieux':
-        openLieuxListTab();
-        break;
+      // OBSOLÈTE - Remplacé par /salles et /festivals/dates
+      // case '/lieux':
+      //   openLieuxListTab();
+      //   break;
       case '/structures':
         openStructuresListTab();
         break;
@@ -696,7 +697,7 @@ function DesktopLayout({ children }) {
                   </div>
                   
                   {/* Sélecteur d'entreprise */}
-                  <div className={sidebarStyles.organizationSection}>
+                  <div className={sidebarStyles.entrepriseSection}>
                     <h5>Entreprise</h5>
                     <EntrepriseSelector />
                   </div>

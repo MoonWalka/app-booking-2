@@ -84,7 +84,7 @@ const FacturesPage = () => {
             <i className="bi bi-receipt fs-1 mb-3 text-muted"></i>
             <p className="fs-5">Aucune facture n'a été générée.</p>
             <p className="text-muted">
-              Les factures apparaîtront ici une fois créées depuis les concerts ou manuellement.
+              Les factures apparaîtront ici une fois créées depuis les dates ou manuellement.
             </p>
             <Button 
               variant="outline-primary" 

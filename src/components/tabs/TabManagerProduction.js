@@ -35,14 +35,12 @@ import FestivalsDatesPage from '@/pages/FestivalsDatesPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
 // import DatesList from '@/components/dates/DatesList'; // Plus utilisé
-import LieuxList from '@/components/lieux/LieuxList';
-import ContactsList from '@/components/contacts/ContactsList'; // Liste unifiée contacts + structures
+import ContactsList from '@/components/contacts/desktop/ContactsList'; // Liste unifiée contacts + structures
 import ContactsListFiltered from '@/components/contacts/ContactsListFiltered'; // Liste filtrée par tag
 import ArtistesList from '@/components/artistes/ArtistesList';
 
 // Import des composants de détails
 import ContactViewTabs from '@/components/contacts/ContactViewTabs';
-import LieuView from '@/components/lieux/desktop/LieuView';
 // import StructureViewTabs from '@/components/structures/StructureViewTabs'; // Plus utilisé - maintenant tout est des contacts
 // DateDetails retiré car DateDetailsPage est utilisé
 // ContratGeneratorNew retiré car non utilisé
@@ -211,12 +209,6 @@ const TabManagerProduction = () => {
         case 'PublicationsPage':
           // Afficher directement la liste des publications
           return <PublicationsPage />;
-        case 'LieuxPage':
-          // Afficher directement la liste des lieux
-          return <LieuxList />;
-        case 'LieuDetailsPage':
-          // Afficher les détails d'un lieu
-          return <LieuView id={tab.params?.lieuId} />;
         case 'StructuresPage':
           // Afficher la liste unifiée des contacts (structures + personnes)
           return <ContactsList />;

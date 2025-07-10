@@ -549,7 +549,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                   />
                   <Form.Text className="text-muted">
                     <i className="bi bi-info-circle me-1"></i>
-                    Projet hérité de la date/concert (ID: {devisData.dateId || 'N/A'})
+                    Projet hérité de la date (ID: {devisData.dateId || 'N/A'})
                   </Form.Text>
                   {console.log('🎯 Affichage du projet en lecture seule:', devisData.projetNom)}
                 </>

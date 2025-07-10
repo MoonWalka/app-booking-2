@@ -4,8 +4,8 @@
  */
 
 // Import des composants personnalisés
-import DateInfoSection from '../components/dates/DateInfoSection';
-import LieuMapSection from '../components/lieux/LieuMapSection';
+import DateInfoSection from '../components/dates/sections/DateInfoSection';
+// import LieuMapSection from '../components/lieux/LieuMapSection'; // OBSOLÈTE
 
 export const entityConfigurations = {
   // Configuration pour les Artistes
@@ -113,7 +113,7 @@ export const entityConfigurations = {
         title: 'Carte',
         icon: 'bi-map-fill',
         type: 'custom',
-        customRenderer: LieuMapSection
+        // customRenderer: LieuMapSection // OBSOLÈTE
       },
       {
         id: 'description',

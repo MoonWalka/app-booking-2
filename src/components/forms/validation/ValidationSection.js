@@ -17,7 +17,7 @@ const ValidationSection = ({
   structureFieldsMapping = false
 }) => {
   // Special case for date information
-  if (!fields && title === "Informations du concert" && existingData) {
+  if (!fields && title === "Informations de la date" && existingData) {
     const date = existingData;
     return (
       <div className={styles.section}>
@@ -25,7 +25,7 @@ const ValidationSection = ({
           <h3 className={styles.title}>{title}</h3>
         </div>
         <div className={styles.body}>
-          <div className={styles.concertInfoGrid}>
+          <div className={styles.dateInfoGrid}>
             <div className={styles.infoGroup}>
               <div className={styles.infoLabel}>Date</div>
               <div className={styles.infoValue}>

@@ -34,12 +34,12 @@ function StructureView({ id: propId }) {
 
   // Formater les entités liées pour l'affichage - CORRECTION: utiliser relatedData
   const contacts = relatedData?.contacts || [];
-  const concerts = relatedData?.concerts || [];
+  const dates = relatedData?.concerts || [];
   const lieux = relatedData?.lieux || [];
   const artistes = relatedData?.artistes || [];
   
   const contactsList = contacts || [];
-  const concertsList = concerts || [];
+  const datesList = dates || [];
   const lieuxList = lieux || [];
   const artistesList = artistes || [];
 
@@ -129,7 +129,7 @@ function StructureView({ id: propId }) {
     
     const routes = {
       contact: `/contacts/${entityId}`,
-      concert: `/dates/${entityId}`,
+      date: `/dates/${entityId}`,
       lieu: `/lieux/${entityId}`,
       artiste: `/artistes/${entityId}`
     };
@@ -266,7 +266,7 @@ function StructureView({ id: propId }) {
       </div>
 
       {/* Entités liées */}
-      {(contactsList.length > 0 || concertsList.length > 0 || lieuxList.length > 0 || artistesList.length > 0) && (
+      {(contactsList.length > 0 || datesList.length > 0 || lieuxList.length > 0 || artistesList.length > 0) && (
         <div className={styles.section}>
           <h2>Entités liées</h2>
           <div className={styles.entitiesGrid}>
@@ -286,12 +286,12 @@ function StructureView({ id: propId }) {
             ))}
 
             {/* Dates */}
-            {concertsList.slice(0, 3).map((dateItem) => (
+            {datesList.slice(0, 3).map((dateItem) => (
               <EntityCard
                 key={dateItem.id}
                 entityType="date"
                 name={dateItem.titre || 'Date'}
-                subtitle={`Date (${concertsList.length})`}
+                subtitle={`Date (${datesList.length})`}
                 onClick={() => {
                   const dateId = dateItem.id || dateItem.dateId;
                   navigateToEntity('date', dateId);
@@ -329,9 +329,9 @@ function StructureView({ id: propId }) {
           </div>
           
           {/* Message si plus d'entités */}
-          {(contactsList.length + concertsList.length + lieuxList.length + artistesList.length) > 3 && (
+          {(contactsList.length + datesList.length + lieuxList.length + artistesList.length) > 3 && (
             <p className={styles.moreEntities}>
-              Et {(contactsList.length + concertsList.length + lieuxList.length + artistesList.length) - 3} autres entités liées...
+              Et {(contactsList.length + datesList.length + lieuxList.length + artistesList.length) - 3} autres entités liées...
             </p>
           )}
         </div>
@@ -371,7 +371,7 @@ function StructureView({ id: propId }) {
           </div>
           <div className={styles.historyItem}>
             <span className={styles.historyLabel}>Dates organisés</span>
-            <span className={styles.historyValue}>{concertsList.length}</span>
+            <span className={styles.historyValue}>{datesList.length}</span>
           </div>
           <div className={styles.historyItem}>
             <span className={styles.historyLabel}>Lieux liés</span>

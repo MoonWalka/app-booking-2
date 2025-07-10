@@ -148,12 +148,12 @@ const StructureFormEnhanced = () => {
 
       // Charger les dates associés
       if (structure.datesIds?.length > 0) {
-        const concertPromises = structure.datesIds.map(async (id) => {
+        const datePromises = structure.datesIds.map(async (id) => {
           const docSnap = await getDoc(doc(db, 'dates', id));
           return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
         });
-        const concerts = (await Promise.all(concertPromises)).filter(c => c !== null);
-        setDatesAssociees(concerts);
+        const dates = (await Promise.all(datePromises)).filter(c => c !== null);
+        setDatesAssociees(dates);
       }
 
       // Charger les lieux associés
@@ -727,7 +727,7 @@ const StructureFormEnhanced = () => {
                 // Gérer la mise à jour des dates
                 const newDateIds = Array.isArray(dateIds) ? dateIds : [dateIds].filter(Boolean);
                 
-                // Si on a des nouveaux concerts à charger
+                // Si on a des nouvelles dates à charger
                 const loadNewDates = async () => {
                   const currentIds = datesAssociees.map(c => c.id);
                   const idsToLoad = newDateIds.filter(id => !currentIds.includes(id));

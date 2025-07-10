@@ -25,7 +25,7 @@ const BrevoKeyRecovery = () => {
   // Diagnostiquer le problème de clé API
   const diagnoseApiKey = async () => {
     if (!currentEntreprise?.id) {
-      setError('Aucune organisation sélectionnée');
+      setError('Aucune entreprise sélectionnée');
       return;
     }
 
@@ -47,7 +47,7 @@ const BrevoKeyRecovery = () => {
         }
       }
 
-      // 2. Lire les paramètres de l'organisation
+      // 2. Lire les paramètres de l'entreprise
       const orgDoc = await getDoc(
         doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
@@ -56,7 +56,7 @@ const BrevoKeyRecovery = () => {
       if (orgDoc.exists()) {
         const orgData = orgDoc.data();
         if (orgData.email?.brevo) {
-          // Déchiffrer la clé API de l'organisation
+          // Déchiffrer la clé API de l'entreprise
           const decryptedOrg = decryptSensitiveFields(orgData.email.brevo, ['apiKey']);
           orgBrevoConfig = decryptedOrg;
         }
@@ -64,7 +64,7 @@ const BrevoKeyRecovery = () => {
 
       setRecoveryData({
         global: globalBrevoConfig,
-        organization: orgBrevoConfig,
+        entreprise: orgBrevoConfig,
         globalExists: !!globalBrevoConfig,
         orgExists: !!orgBrevoConfig,
         globalApiKey: globalBrevoConfig?.apiKey || 'Non trouvée',
@@ -73,9 +73,9 @@ const BrevoKeyRecovery = () => {
       });
 
       if (globalBrevoConfig?.apiKey && !orgBrevoConfig?.apiKey) {
-        setMessage('🔧 Clé API trouvée dans les paramètres globaux mais corrompue dans l\'organisation');
+        setMessage('🔧 Clé API trouvée dans les paramètres globaux mais corrompue dans l\'entreprise');
       } else if (globalBrevoConfig?.apiKey && orgBrevoConfig?.apiKey && globalBrevoConfig.apiKey !== orgBrevoConfig.apiKey) {
-        setMessage('⚠️ Les clés API diffèrent entre global et organisation');
+        setMessage('⚠️ Les clés API diffèrent entre global et entreprise');
       } else if (!globalBrevoConfig?.apiKey && !orgBrevoConfig?.apiKey) {
         setMessage('❌ Aucune clé API valide trouvée');
       } else {
@@ -102,13 +102,13 @@ const BrevoKeyRecovery = () => {
     setMessage('Récupération en cours...');
 
     try {
-      // Lire la configuration complète de l'organisation
+      // Lire la configuration complète de l'entreprise
       const orgDoc = await getDoc(
         doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
 
       if (!orgDoc.exists()) {
-        throw new Error('Configuration organisation introuvable');
+        throw new Error('Configuration entreprise introuvable');
       }
 
       const orgData = orgDoc.data();
@@ -197,13 +197,13 @@ const BrevoKeyRecovery = () => {
     setMessage('Sauvegarde en cours...');
 
     try {
-      // Lire la configuration complète de l'organisation
+      // Lire la configuration complète de l'entreprise
       const orgDoc = await getDoc(
         doc(db, 'entreprises', currentEntreprise.id, 'parametres', 'settings')
       );
 
       if (!orgDoc.exists()) {
-        throw new Error('Configuration organisation introuvable');
+        throw new Error('Configuration entreprise introuvable');
       }
 
       const orgData = orgDoc.data();
@@ -258,7 +258,7 @@ const BrevoKeyRecovery = () => {
         
         <div className="mb-3">
           <p>
-            <strong>Organisation :</strong> {currentEntreprise?.name || 'Non sélectionnée'}
+            <strong>Entreprise :</strong> {currentEntreprise?.name || 'Non sélectionnée'}
           </p>
         </div>
 
@@ -285,7 +285,7 @@ const BrevoKeyRecovery = () => {
                 )}
               </li>
               <li>
-                <strong>Paramètres organisation :</strong> {recoveryData.orgExists ? '✅ Trouvés' : '❌ Absents'}
+                <strong>Paramètres entreprise :</strong> {recoveryData.orgExists ? '✅ Trouvés' : '❌ Absents'}
                 {recoveryData.orgExists && (
                   <div className="text-muted small">
                     Clé API : {recoveryData.orgApiKey.substring(0, 10)}...

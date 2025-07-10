@@ -7,6 +7,12 @@ import CardSection from '@/components/ui/CardSection';
 /**
  * LieuSearchSection - Section de recherche et sélection de lieu(x)
  * Permet d'ajouter plusieurs lieux sous forme de liste
+ * 
+ * Système hybride lieu/libellé :
+ * - Peut référencer un lieu existant (lieuId) depuis la collection 'lieux'
+ * - Ou utiliser un libellé libre (lieuNom) pour les lieux non répertoriés
+ * - Evolution du système : lieux → salles/festivals/libellé libre
+ * - Garde la compatibilité avec l'ancien système tout en offrant plus de flexibilité
  */
 const LieuSearchSection = React.memo(({ 
   lieuSearchTerm, 

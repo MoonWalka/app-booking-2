@@ -16,7 +16,7 @@ const PublicFormContainer = ({
   error,
   expired,
   completed,
-  concert,
+  date,
   lieu,
   onEditRequest,
   formContent,
@@ -81,9 +81,9 @@ const PublicFormContainer = ({
         title="Formulaire contact" 
       />
       
-      {concert && (
+      {date && (
         <DateInfoSection 
-          concert={concert} 
+          date={date} 
           lieu={lieu} 
         />
       )}
@@ -99,7 +99,7 @@ const PublicFormContainer = ({
         isSubmitting={isSubmitting}
         footer={
           <p className="text-muted text-center">
-            {legalFooter || "Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé à des fins de gestion des concerts. Conformément à la loi « informatique et libertés », vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier."}
+            {legalFooter || "Les informations recueillies sur ce formulaire sont enregistrées dans un fichier informatisé à des fins de gestion des dates. Conformément à la loi « informatique et libertés », vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier."}
           </p>
         }
       />

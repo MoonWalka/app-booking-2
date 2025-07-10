@@ -146,34 +146,34 @@
 }
 
 /* 
- * Sélecteur d'organisation
+ * Sélecteur d'entreprise
  * ----------------------
- * Zone pour sélectionner l'organisation courante
+ * Zone pour sélectionner l'entreprise courante
  */
-.organizationSelector {
+.entrepriseSelector {
   padding: var(--tc-space-4);
   border-bottom: var(--tc-border-sidebar);
   background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Styles spécifiques pour le sélecteur dans le contexte du sidebar */
-.organizationSelector :global(.organization-selector) {
+.entrepriseSelector :global(.entreprise-selector) {
   background-color: rgba(255, 255, 255, 0.1);
   border: none;
   padding: var(--tc-space-3);
 }
 
-.organizationSelector :global(.organization-selector:hover) {
+.entrepriseSelector :global(.entreprise-selector:hover) {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-.organizationSelector :global(.form-select) {
+.entrepriseSelector :global(.form-select) {
   background-color: rgba(255, 255, 255, 0.9);
   color: var(--tc-color-primary);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.organizationSelector :global(.bi-building) {
+.entrepriseSelector :global(.bi-building) {
   color: var(--tc-text-light);
 }
 
@@ -520,15 +520,15 @@
 }
 
 /* 
- * Section organisation
+ * Section entreprise
  * ------------------
- * Zone du sélecteur d'organisation
+ * Zone du sélecteur d'entreprise
  */
-.organizationSection {
+.entrepriseSection {
   margin-bottom: var(--tc-space-4);
 }
 
-.organizationSection h5 {
+.entrepriseSection h5 {
   color: var(--tc-text-light);
   margin-bottom: var(--tc-space-3);
   font-size: 1rem;
@@ -537,8 +537,8 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Styles pour OrganizationSelector dans le panneau utilisateur */
-.userMenuContent :global(.organization-selector) {
+/* Styles pour EntrepriseSelector dans le panneau utilisateur */
+.userMenuContent :global(.entreprise-selector) {
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--tc-radius-base);
@@ -546,7 +546,7 @@
   color: var(--tc-text-light);
 }
 
-.userMenuContent :global(.organization-selector:hover) {
+.userMenuContent :global(.entreprise-selector:hover) {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -790,8 +790,8 @@
   margin: 0;
 }
 
-/* Sélecteur d'organisation mobile */
-.mobileSidebar .organizationSelector {
+/* Sélecteur d'entreprise mobile */
+.mobileSidebar .entrepriseSelector {
   padding: var(--tc-space-3);
 }
 

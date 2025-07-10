@@ -3,8 +3,7 @@ import '@styles/index.css';
 import { 
   BrowserRouter as Router, 
   Routes, 
-  Route, 
-  Navigate
+  Route
 } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { EntrepriseProvider } from '@/context/EntrepriseContext';
@@ -16,13 +15,10 @@ import Layout from '@/components/common/Layout';
 import DashboardPage from '@/pages/DashboardPage';
 import DatesPage from '@/pages/DatesPage';
 import ContactsPage from '@/pages/ContactsPage';
-import LieuxPage from '@/pages/LieuxPage';
 import ContratsPage from '@/pages/ContratsPage';
 import ArtistesPage from '@/pages/ArtistesPage';
 import PublicationsPage from '@/pages/PublicationsPage';
 import DevisPage from '@/pages/DevisPage';
-import FormResponsePage from '@/pages/FormResponsePage';
-import PreContratFormResponsePage from '@/pages/PreContratFormResponsePage';
 import ContratGenerationPage from '@/pages/ContratGenerationPage';
 import ContratDetailsPage from '@/pages/ContratDetailsPage';
 import ContratRedactionPage from '@/pages/ContratRedactionPage';
@@ -37,7 +33,6 @@ import TachesPage from '@/pages/TachesPage';
 import CollaborationParametragePage from '@/pages/CollaborationParametragePage';
 import AdminParametragePage from '@/pages/AdminParametragePage';
 import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
-// import FactureDetailsPage from '@/pages/FactureDetailsPage'; // Remplacé par FactureGeneratorPage
 import FacturesPage from '@/pages/FacturesPage';
 import MesRecherchesPage from '@/pages/MesRecherchesPage';
 import NouveauDossierPage from '@/pages/NouveauDossierPage';
@@ -45,9 +40,6 @@ import DossiersEnregistresPage from '@/pages/DossiersEnregistresPage';
 import MesSelectionsPage from '@/pages/MesSelectionsPage';
 import ContactTagsPage from '@/pages/ContactTagsPage';
 import RouterStabilizer from '@/utils/RouterStabilizer';
-// import DateFormWrapper from '@/components/dates/DateForm';
-// import DatesList from '@/components/dates/DatesList';
-// import DateDetails from '@/components/dates/DateDetails';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
 import LoginPage from '@/pages/LoginPage';
@@ -56,12 +48,7 @@ import { OnboardingFlow } from '@/components/entreprise';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { installGlobalFixer } from '@/utils/fixOrganizationIds';
-import { installArtistesFixers } from '@/utils/fixArtistesOrganizationIds';
-import { initializeFirebaseInterceptor } from '@/utils/FirebaseInterceptor';
-// import DebugController from '@/components/debug/DebugController'; // Supprimé
 import DebugToolsPage from '@/pages/DebugToolsPage';
-// import DebugButton from '@/components/common/DebugButton'; // Supprimé
-// import DateLieuDebug from '@/components/debug/DateLieuDebug';
 import ContratDownloadDirect from '@/components/api/ContratDownloadDirect';
 import TabsTestPage from '@/pages/TabsTestPage';
 import InventairePagesPage from '@/pages/InventairePagesPage';
@@ -188,8 +175,6 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    <Route path="/formulaire/:dateId/:token" element={<FormResponsePage />} />
-                    <Route path="/pre-contrat/:dateId/:token" element={<PreContratFormResponsePage />} />
                     
                     {/* Route indépendante pour l'inventaire des pages (hors système d'onglets) */}
                     <Route path="/inventaire-pages" element={
@@ -246,13 +231,6 @@ function App() {
                       </PrivateRoute>
                     } />
                     
-                    <Route path="/preview/lieux" element={
-                      <PrivateRoute>
-                        <div style={{ padding: '1rem' }}>
-                          <LieuxPage />
-                        </div>
-                      </PrivateRoute>
-                    } />
                     
                     <Route path="/preview/artistes" element={
                       <PrivateRoute>
@@ -318,11 +296,6 @@ function App() {
                         </PrivateRoute>
                       } />
                       
-                      <Route path="/lieux/*" element={
-                        <PrivateRoute>
-                          <LieuxPage />
-                        </PrivateRoute>
-                      } />
                       
                       <Route path="/structures/*" element={
                         <PrivateRoute>

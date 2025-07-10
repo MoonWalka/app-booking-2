@@ -139,7 +139,7 @@ const FactureTemplatesPage = () => {
 
       <div style={{ marginTop: '2rem' }}>
         <p style={{ color: '#666', marginBottom: '2rem' }}>
-          Configurez les paramètres de vos factures. Ces paramètres seront appliqués au modèle standard lors de la génération de factures depuis la liste des concerts.
+          Configurez les paramètres de vos factures. Ces paramètres seront appliqués au modèle standard lors de la génération de factures depuis la liste des dates.
         </p>
 
         {isLoading ? (

@@ -97,7 +97,7 @@ const MigrationPage = () => {
           <p>Cette migration va :</p>
           <ul className="mb-0">
             <li>Créer une organisation par défaut pour vos données existantes</li>
-            <li>Migrer toutes vos collections (concerts, contacts, etc.) vers des collections organisationnelles</li>
+            <li>Migrer toutes vos collections (dates, contacts, etc.) vers des collections organisationnelles</li>
             <li>Configurer les permissions et accès pour le modèle multi-organisation</li>
           </ul>
         </div>

@@ -117,11 +117,11 @@ describe('BrevoTemplateService', () => {
     it('devrait préserver les objets imbriqués', () => {
       const rawData = {
         nomContact: 'Jean Dupont',
-        concert: {
+        date: {
           nom: 'Festival 2024',
           date: '2024-12-31',
           lieu: {
-            nom: 'Salle de concert',
+            nom: 'Salle de spectacle',
             adresse: '123 Rue de la Musique'
           }
         }
@@ -129,7 +129,7 @@ describe('BrevoTemplateService', () => {
 
       const formatted = brevoTemplateService.formatTemplateVariables(rawData);
 
-      expect(formatted.params.concert).toEqual(rawData.concert);
+      expect(formatted.params.date).toEqual(rawData.date);
     });
   });
 
@@ -236,7 +236,7 @@ describe('BrevoTemplateService', () => {
       
       expect(dateEcheance).toBeTruthy();
       expect(typeof dateEcheance).toBe('string');
-      // Vérifier que c'est une date future mais avant le concert
+      // Vérifier que c'est une date future mais avant la date
       const echeanceDate = new Date(dateEcheance);
       const dateDate = new Date('2024-12-31');
       expect(echeanceDate.getTime()).toBeLessThan(dateDate.getTime());
@@ -294,7 +294,7 @@ describe('BrevoTemplateService', () => {
       const dateSignature = callArgs.templateData.params.dateSignature;
       
       expect(dateSignature).toBeTruthy();
-      // La date de signature devrait être avant le concert
+      // La date de signature devrait être avant la date
       const signatureDate = new Date(dateSignature);
       const dateDate = new Date('2024-12-25');
       expect(signatureDate.getTime()).toBeLessThan(dateDate.getTime());
@@ -307,7 +307,7 @@ describe('BrevoTemplateService', () => {
       emailService.sendUnifiedEmail.mockResolvedValue(mockResponse);
 
       const contactData = { email: 'contact@example.com', nom: 'Contact Pro' };
-      const sujet = 'Documents manquants pour votre concert';
+      const sujet = 'Documents manquants pour votre date';
       const message = 'Nous attendons encore vos documents techniques.';
       const entrepriseId = 'org-101';
 
@@ -324,7 +324,7 @@ describe('BrevoTemplateService', () => {
         templateData: {
           params: {
             nomContact: 'Contact Pro',
-            sujet: 'Documents manquants pour votre concert',
+            sujet: 'Documents manquants pour votre date',
             message: 'Nous attendons encore vos documents techniques.'
           }
         },

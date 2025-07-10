@@ -26,7 +26,7 @@ const ContratGenerationNewPage = ({ dateId: propDateId }) => {
   
   const dateId = getDateId();
   const navigate = useNavigate();
-  const [concert, setDate] = useState(null);
+  const [date, setDate] = useState(null);
   const [contact, setContact] = useState(null);
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
@@ -40,7 +40,7 @@ const ContratGenerationNewPage = ({ dateId: propDateId }) => {
       console.log('[ContratGenerationNewPage] Chargement des données pour dateId:', dateId);
       
       try {
-        // Récupérer les données du concert
+        // Récupérer les données de la date
         const dateDoc = await getDoc(doc(db, 'dates', dateId));
         if (!dateDoc.exists()) {
           console.error('[ContratGenerationNewPage] Date non trouvé:', dateId);
@@ -75,7 +75,7 @@ const ContratGenerationNewPage = ({ dateId: propDateId }) => {
             setArtiste({ id: artisteDoc.id, ...artisteDoc.data() });
           }
         } else if (dateData.artisteNom) {
-          // Si pas d'artisteId, créer un objet artiste avec les données du concert
+          // Si pas d'artisteId, créer un objet artiste avec les données de la date
           setArtiste({
             nom: dateData.artisteNom,
             id: null
@@ -83,6 +83,8 @@ const ContratGenerationNewPage = ({ dateId: propDateId }) => {
         }
 
         // Récupérer les données du lieu si disponible
+        // Note: Utilise toujours la collection 'lieux' pour compatibilité
+        // Le système hybride permet aussi d'utiliser lieuNom comme libellé libre
         if (dateData.lieuId) {
           const lieuDoc = await getDoc(doc(db, 'lieux', dateData.lieuId));
           if (lieuDoc.exists()) {
@@ -156,7 +158,7 @@ const ContratGenerationNewPage = ({ dateId: propDateId }) => {
     <div className="container-fluid">
       <ContratGeneratorNew 
         dateId={dateId}
-        concert={concert}
+        date={date}
         contact={contact}
         artiste={artiste}
         lieu={lieu}

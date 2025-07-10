@@ -21,7 +21,7 @@ const InfosArtisteSection = ({ onCriteriaChange }) => {
     environnementDisque: { value: '', operator: 'contient' },
     supportAudio: { value: '', operator: 'contient' },
     discographie: { value: '', operator: 'contient' },
-    nombreConcerts: { value: '', operator: 'superieur' },
+    nombreDates: { value: '', operator: 'superieur' },
     
     // Scène
     environnementScene: { value: '', operator: 'contient' },
@@ -87,7 +87,7 @@ const InfosArtisteSection = ({ onCriteriaChange }) => {
       environnementDisque: 'Environnement disque',
       supportAudio: 'Support audio',
       discographie: 'Discographie',
-      nombreConcerts: 'Nombre de concerts (12 mois)',
+      nombreDates: 'Nombre de dates (12 mois)',
       environnementScene: 'Environnement scène',
       referencesScene: 'Références scène',
       tourneur: 'Tourneur/Booker',
@@ -202,13 +202,13 @@ const InfosArtisteSection = ({ onCriteriaChange }) => {
               {renderTextField('discographie', 'Discographie', 'Albums, EPs...')}
               
               <Col md={6} className="mb-3">
-                <Form.Label>Nombre de concerts depuis 12 mois</Form.Label>
+                <Form.Label>Nombre de dates depuis 12 mois</Form.Label>
                 <div className="d-flex gap-2">
                   <Form.Select 
                     size="sm"
                     style={{ maxWidth: '150px' }}
-                    value={formData.nombreConcerts.operator}
-                    onChange={(e) => handleFieldChange('nombreConcerts', formData.nombreConcerts.value, e.target.value)}
+                    value={formData.nombreDates.operator}
+                    onChange={(e) => handleFieldChange('nombreDates', formData.nombreDates.value, e.target.value)}
                   >
                     <option value="superieur">Supérieur à</option>
                     <option value="egal">Égal à</option>
@@ -216,8 +216,8 @@ const InfosArtisteSection = ({ onCriteriaChange }) => {
                   </Form.Select>
                   <Form.Control 
                     type="number"
-                    value={formData.nombreConcerts.value}
-                    onChange={(e) => handleFieldChange('nombreConcerts', e.target.value)}
+                    value={formData.nombreDates.value}
+                    onChange={(e) => handleFieldChange('nombreDates', e.target.value)}
                     placeholder="Ex: 50"
                     min="0"
                   />

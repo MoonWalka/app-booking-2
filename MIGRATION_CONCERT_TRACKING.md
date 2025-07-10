@@ -1,5 +1,6 @@
 # Suivi de Migration Concert → Date
 **Date de début : 9 juillet 2025**
+**Dernière mise à jour : 10 juillet 2025**
 
 ## Fichiers JavaScript/JSX à migrer (73 fichiers)
 

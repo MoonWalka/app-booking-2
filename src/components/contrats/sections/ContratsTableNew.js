@@ -53,8 +53,8 @@ const ContratsTableNew = ({
     if (dateValiditeMin) {
       const minDate = new Date(dateValiditeMin);
       filtered = filtered.filter(contrat => {
-        if (!contrat.concertValidite) return false;
-        const validiteDate = new Date(contrat.concertValidite);
+        if (!contrat.dateValidite) return false;
+        const validiteDate = new Date(contrat.dateValidite);
         return validiteDate >= minDate;
       });
     }
@@ -252,7 +252,7 @@ const ContratsTableNew = ({
       label: 'Date',
       key: 'dateEvenement',
       sortable: true,
-      render: (contrat) => <span>{formatDate(contrat.concertEvenement)}</span>
+      render: (contrat) => <span>{formatDate(contrat.dateEvenement)}</span>
     },
     
     // ===== COLONNE ENVOYÉ =====
@@ -325,7 +325,7 @@ const ContratsTableNew = ({
       label: 'Validité',
       key: 'dateValidite',
       sortable: true,
-      render: (contrat) => <span>{formatDate(contrat.concertValidite)}</span>
+      render: (contrat) => <span>{formatDate(contrat.dateValidite)}</span>
     },
     
     // ===== COLONNE SIGNATURE =====
@@ -336,7 +336,7 @@ const ContratsTableNew = ({
       label: 'Signature',
       key: 'dateSignature',
       sortable: true,
-      render: (contrat) => <span>{formatDate(contrat.concertSignature) || '—'}</span>
+      render: (contrat) => <span>{formatDate(contrat.dateSignature) || '—'}</span>
       // NOTE: Utilise contrat.dateSignature (type Date) pour afficher la date de signature
     },
     {
@@ -540,7 +540,7 @@ const ContratsTableNew = ({
           // Facture existante - déterminer la couleur selon le statut
           const factureInfo = contrat.factureInfo || {};
           const isPayee = factureInfo.montantPaye >= factureInfo.montantTotal;
-          const isEnRetard = factureInfo.dateEcheance && new Date(factureInfo.concertEcheance) < new Date() && !isPayee;
+          const isEnRetard = factureInfo.dateEcheance && new Date(factureInfo.dateEcheance) < new Date() && !isPayee;
 
           if (isPayee) {
             iconClass = "bi bi-receipt-cutoff text-success";

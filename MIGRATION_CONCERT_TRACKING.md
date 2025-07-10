@@ -26,8 +26,8 @@
 - [x] src/components/contrats/desktop/sections/ContratDebugPanel.js
 - [x] src/components/contrats/desktop/sections/ContratGenerationActions.js
 - [x] src/components/contrats/sections/ContratActions.js
-- [ ] src/components/contrats/sections/ContratPdfViewer.js
-- [ ] src/components/contrats/sections/ContratsTableNew.js
+- [x] src/components/contrats/sections/ContratPdfViewer.js
+- [x] src/components/contrats/sections/ContratsTableNew.js
 
 ### Section Debug
 - [ ] src/components/debug/ArtisteSearchLiveDebug.js
@@ -119,4 +119,4 @@
 
 ## Statistiques
 - Total à migrer : 108 fichiers (73 JS + 35 CSS)
-- Migrés : 43/108 (40%)
+- Migrés : 46/108 (43%)

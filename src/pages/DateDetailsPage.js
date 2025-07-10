@@ -421,7 +421,7 @@ function DateDetailsPage({ params = {} }) {
                 {formData.lieuNom || 'Lieu non défini'} / {formData.structureNom}
                 {formData.lieuVille && ` – ${formData.lieuVille}`}
               </p>
-              <p className={styles.dateType}>Concert (1)</p>
+              <p className={styles.dateType}>Date (1)</p>
               {(formData.heureDebut || formData.heureFin) && (
                 <p className={styles.dateTime}>
                   {formData.heureDebut || '00:00'} – {formData.heureFin || '00:00'}

@@ -25,7 +25,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
   
   const dateId = getDateId();
   const navigate = useNavigate();
-  const [concert, setDate] = useState(null);
+  const [date, setDate] = useState(null);
   const [contact, setContact] = useState(null);
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
@@ -39,7 +39,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
       console.log('[PreContratGenerationPage] Chargement des données pour dateId:', dateId);
       
       try {
-        // Récupérer les données du concert
+        // Récupérer les données de la date
         const dateDoc = await getDoc(doc(db, 'dates', dateId));
         if (!dateDoc.exists()) {
           console.error('[PreContratGenerationPage] Date non trouvé:', dateId);
@@ -82,13 +82,13 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
             console.log('[PreContratGenerationPage] Structure non trouvée avec ID:', dateData.structureId);
           }
         } else {
-          console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - pas de structureId dans le concert');
-          console.log('[PreContratGenerationPage] Pas de structureId dans le concert');
+          console.log('[WORKFLOW_TEST] 4. Chargement des données de structure - pas de structureId dans la date');
+          console.log('[PreContratGenerationPage] Pas de structureId dans la date');
         }
         
-        // Si pas de structure trouvée mais qu'on a des infos dans le concert
+        // Si pas de structure trouvée mais qu'on a des infos dans la date
         if (!structureFound && dateData.structureRaisonSociale) {
-          console.log('[PreContratGenerationPage] Utilisation des données structure du concert');
+          console.log('[PreContratGenerationPage] Utilisation des données structure de la date');
           
           // Essayer de charger depuis structures (nouveau système)
           try {
@@ -111,7 +111,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
             console.error('[PreContratGenerationPage] Erreur recherche dans structures:', error);
           }
           
-          // Si toujours pas trouvé, utiliser les données minimales du concert
+          // Si toujours pas trouvé, utiliser les données minimales de la date
           if (!structureFound) {
             setStructure({
               raisonSociale: dateData.structureRaisonSociale,
@@ -133,7 +133,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
             setArtiste({ id: artisteDoc.id, ...artisteDoc.data() });
           }
         } else if (dateData.artisteNom) {
-          // Si pas d'artisteId, créer un objet artiste avec les données du concert
+          // Si pas d'artisteId, créer un objet artiste avec les données de la date
           setArtiste({
             nom: dateData.artisteNom,
             id: null
@@ -192,7 +192,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
   }
 
   console.log('[WORKFLOW_TEST] 3. Génération du pré-contrat - passage des données au composant PreContratGenerator', {
-    concert: concert?.id,
+    date: date?.id,
     structure: structure?.id || 'aucune',
     structureData: structure
   });
@@ -200,7 +200,7 @@ const PreContratGenerationPage = ({ dateId: propDateId }) => {
   return (
     <div className="container-fluid">
       <PreContratGenerator 
-        concert={concert}
+        date={date}
         contact={contact}
         artiste={artiste}
         lieu={lieu}

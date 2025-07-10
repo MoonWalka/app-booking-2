@@ -19,14 +19,14 @@ const DateInfoSection = ({ date, lieu }) => {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(montant);
   };
 
-  if (!concert) {
+  if (!date) {
     return null;
   }
 
   return (
     <Card
-      title="Informations sur le concert"
-      className={`${styles.concertInfo} mb-4`}
+      title="Informations sur la date"
+      className={`${styles.dateInfo} mb-4`}
     >
       <div className="row">
         <div className="col-md-4">

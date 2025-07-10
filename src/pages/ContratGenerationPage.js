@@ -9,7 +9,7 @@ import '@styles/index.css';
 const ContratGenerationPage = () => {
   const { dateId } = useParams();
   const navigate = useNavigate();
-  const [concert, setDate] = useState(null);
+  const [date, setDate] = useState(null);
   const [contact, setContact] = useState(null);
   const [artiste, setArtiste] = useState(null);
   const [lieu, setLieu] = useState(null);
@@ -19,7 +19,7 @@ const ContratGenerationPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Récupérer les données du concert
+        // Récupérer les données de la date
         const dateDoc = await getDoc(doc(db, 'dates', dateId));
         if (!dateDoc.exists()) {
           setError('Date non trouvé');
@@ -45,7 +45,7 @@ const ContratGenerationPage = () => {
             setArtiste({ id: artisteDoc.id, ...artisteDoc.data() });
           }
         } else if (dateData.artisteNom) {
-          // Si pas d'artisteId, créer un objet artiste avec les données du concert
+          // Si pas d'artisteId, créer un objet artiste avec les données de la date
           setArtiste({
             nom: dateData.artisteNom,
             genre: dateData.artisteGenre || '',
@@ -60,7 +60,7 @@ const ContratGenerationPage = () => {
             setLieu({ id: lieuDoc.id, ...lieuDoc.data() });
           }
         } else if (dateData.lieuNom) {
-          // Si pas de lieuId, créer un objet lieu avec les données du concert
+          // Si pas de lieuId, créer un objet lieu avec les données de la date
           setLieu({
             nom: dateData.lieuNom,
             adresse: dateData.lieuAdresse || '',
@@ -99,9 +99,9 @@ const ContratGenerationPage = () => {
         <Alert variant="danger">{error}</Alert>
         <button 
           className="btn btn-secondary"
-          onClick={() => navigate('/concerts')}
+          onClick={() => navigate('/dates')}
         >
-          Retour aux concerts
+          Retour aux dates
         </button>
       </div>
     );
@@ -118,12 +118,12 @@ const ContratGenerationPage = () => {
               onClick={() => navigate(`/dates/${dateId}`)}
             >
               <i className="bi bi-arrow-left me-2"></i>
-              Retour au concert
+              Retour à la date
             </button>
           </div>
           
           <ContratGenerator 
-            concert={concert}
+            date={date}
             contact={contact}
             programmateur={contact} // Rétrocompatibilité
             artiste={artiste}

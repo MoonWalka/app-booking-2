@@ -197,8 +197,8 @@
     /* Palette métier cohérente avec #213547 */
     --tc-color-artiste: hsl(262, 36%, 45%);        /* #7562b1 - Violet harmonisé */
     --tc-color-artiste-light: hsl(262, 36%, 89%);  /* #ede6f2 - Violet très clair */
-    --tc-color-concert: hsl(222, 36%, 45%);        /* #6275b1 - Bleu concert harmonisé */
-    --tc-color-concert-light: hsl(222, 36%, 89%);  /* #e6eaf2 - Bleu très clair */
+    --tc-color-date: hsl(222, 36%, 45%);           /* #6275b1 - Bleu date harmonisé */
+    --tc-color-date-light: hsl(222, 36%, 89%);     /* #e6eaf2 - Bleu très clair */
     --tc-color-contact: hsl(282, 36%, 45%);  /* #9162b1 - Violet contact */
     --tc-color-contact-light: hsl(282, 36%, 89%); /* #f0e6f2 - Violet très clair */
     --tc-color-orange: hsl(15, 36%, 45%);          /* #b16f62 - Orange harmonisé */
@@ -422,8 +422,8 @@
     /* ===== COULEURS MÉTIER ADAPTÉES ===== */
     --tc-color-artiste: hsl(262, 36%, 65%);              /* Plus clair pour dark mode */
     --tc-color-artiste-light: hsl(262, 36%, 20%);        /* Variante sombre */
-    --tc-color-concert: hsl(222, 36%, 65%);              /* Plus clair pour dark mode */
-    --tc-color-concert-light: hsl(222, 36%, 20%);        /* Variante sombre */
+    --tc-color-date: hsl(222, 36%, 65%);                 /* Plus clair pour dark mode */
+    --tc-color-date-light: hsl(222, 36%, 20%);           /* Variante sombre */
     --tc-color-contact: hsl(282, 36%, 65%);        /* Plus clair pour dark mode */
     --tc-color-contact-light: hsl(282, 36%, 20%);  /* Variante sombre */
 }

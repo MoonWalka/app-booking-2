@@ -53,7 +53,6 @@ const createSafeData = (data) => {
     // Format 1 : Depuis ContratDetailsPage
     template,
     contrat,
-    concert, 
     date,  // Nouveau format
     contact,  // Nouveau format
     programmateur,  // Rétrocompatibilité
@@ -397,15 +396,15 @@ const prepareContractVariables = (safeData) => {
     'artiste_structure_nom': safeData.artiste?.structureNom || safeData.artiste?.structure || 'Non spécifiée',
     'artiste_structure_siret': safeData.artiste?.structureSiret || 'Non spécifié',
     
-    // Variables concert
-    'concert_titre': safeData.date?.titre || 'Non spécifié',
-    'concert_date': formatSafeDate(safeData.date?.date),
-    'concert_heure': safeData.date?.heure || 'Non spécifiée',
-    'concert_montant': safeData.date?.montant 
+    // Variables date
+    'date_titre': safeData.date?.titre || 'Non spécifié',
+    'date_date': formatSafeDate(safeData.date?.date),
+    'date_heure': safeData.date?.heure || 'Non spécifiée',
+    'date_montant': safeData.date?.montant 
       ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(safeData.date.montant) 
       : 'Non spécifié',
-    'concert_montant_lettres': montantEnLettres(safeData.date?.montant),
-    'concert_type': safeData.date?.type || 'Date',
+    'date_montant_lettres': montantEnLettres(safeData.date?.montant),
+    'date_type': safeData.date?.type || 'Date',
     
     // Variables lieu - Utiliser le libellé du date si pas de lieu référencé
     'lieu_nom': safeData.lieu?.nom || safeData.date?.libelle || 'Non spécifié',
@@ -1091,7 +1090,7 @@ const ContratPDFWrapper = ({
   
   // Sécuriser contre les valeurs nulles ou undefined
   const safeData = {
-    concert: dateData || {},
+    date: dateData || {},
     contact: contactData || {},
     programmateur: programmateurData || {},
     artiste: artisteData || {},

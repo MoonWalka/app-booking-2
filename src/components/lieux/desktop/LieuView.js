@@ -35,12 +35,12 @@ function LieuView({ id: propId }) {
   // Formater les entités liées pour l'affichage - CORRECTION: utiliser relatedData
   const contact = relatedData?.contact || null;
   const structure = relatedData?.structure || null;
-  const concerts = relatedData?.concerts || [];
+  const dates = relatedData?.dates || [];
   const artistes = relatedData?.artistes || [];
   
   const contactsList = contact ? [contact] : [];
   const structuresList = structure ? [structure] : [];
-  const concertsArray = concerts || [];
+  const datesArray = dates || [];
   const artistesArray = artistes || [];
 
 
@@ -80,7 +80,7 @@ function LieuView({ id: propId }) {
     const routes = {
       contact: `/contacts/${entityId}`,
       structure: `/structures/${entityId}`,
-      concert: `/dates/${entityId}`,
+      date: `/dates/${entityId}`,
       artiste: `/artistes/${entityId}`
     };
     
@@ -146,7 +146,7 @@ function LieuView({ id: propId }) {
         </div>
 
         {/* Entités liées */}
-        {(contactsList.length > 0 || structuresList.length > 0 || concertsArray.length > 0 || artistesArray.length > 0) && (
+        {(contactsList.length > 0 || structuresList.length > 0 || datesArray.length > 0 || artistesArray.length > 0) && (
           <div className={styles.entitiesSection}>
             <p className={styles.entitiesLabel}>Entités liées</p>
             <div className={styles.entitiesGrid}>
@@ -180,12 +180,12 @@ function LieuView({ id: propId }) {
               ))}
 
               {/* Dates */}
-              {concertsArray.slice(0, 3).map((dateItem) => (
+              {datesArray.slice(0, 3).map((dateItem) => (
                 <EntityCard
                   key={dateItem.id}
                   entityType="date"
                   name={dateItem.titre || 'Date'}
-                  subtitle={`Date (${concertsArray.length})`}
+                  subtitle={`Date (${datesArray.length})`}
                   onClick={() => {
                     const dateId = dateItem.id || dateItem.dateId;
                     navigateToEntity('date', dateId);
@@ -209,9 +209,9 @@ function LieuView({ id: propId }) {
             </div>
             
             {/* Message si plus d'entités */}
-            {(contactsList.length + structuresList.length + concertsArray.length + artistesArray.length) > 3 && (
+            {(contactsList.length + structuresList.length + datesArray.length + artistesArray.length) > 3 && (
               <p className={styles.moreEntities}>
-                Et {(contactsList.length + structuresList.length + concertsArray.length + artistesArray.length) - 3} autres entités liées...
+                Et {(contactsList.length + structuresList.length + datesArray.length + artistesArray.length) - 3} autres entités liées...
               </p>
             )}
           </div>

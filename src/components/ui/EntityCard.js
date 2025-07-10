@@ -52,7 +52,7 @@ const EntityCard = ({
       defaultIcon: '📍',
       defaultSubtitle: 'Lieu'
     },
-    concert: {
+    date: {
       colorClass: styles.entityDate,
       iconClass: styles.entityIconDate,
       defaultIcon: '🎵',

@@ -173,7 +173,7 @@ const FactureDetailsPage = ({
       
       // Préparer les variables
       const variables = await factureService.prepareFactureVariables({
-        concert,
+        date,
         structure,
         entreprise: parametres?.entreprise || {},
         montantHT: facture.montantHT,

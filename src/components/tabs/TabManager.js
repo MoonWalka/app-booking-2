@@ -91,7 +91,7 @@ const TabManager = ({ children }) => {
               <button 
                 className={styles.actionButton}
                 onClick={() => addTab({
-                  id: 'concert-' + Date.now(),
+                  id: 'date-' + Date.now(),
                   title: 'Date - Jazz Festival',
                   component: 'DateContent',
                   closable: true
@@ -133,7 +133,7 @@ const TabManager = ({ children }) => {
         return (
           <div className={styles.tabContent}>
             <h2>🎵 Jazz Festival</h2>
-            <p>Détails du concert</p>
+            <p>Détails de la date</p>
             <div className={styles.mockDetails}>
               <div><strong>Date:</strong> 15 Juillet 2025</div>
               <div><strong>Artiste:</strong> Miles Davis Tribute</div>

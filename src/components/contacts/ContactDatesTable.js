@@ -6,7 +6,7 @@ import { useDateListData } from '@/hooks/dates/useDateListData';
 import { useDateActions } from '@/hooks/dates/useDateActions';
 
 /**
- * Tableau des dates de concerts associées à un contact
+ * Tableau des dates associées à un contact
  * Utilise le même composant que le tableau de bord pour garantir la cohérence
  */
 const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteSuccess = null }) => {
@@ -14,7 +14,7 @@ const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteS
   
   console.log(`[ContactDatesTable] Rendu avec ${dates.length} dates pour contact ${contactId}`);
 
-  // Hooks pour les données et actions des concerts
+  // Hooks pour les données et actions des dates
   const {
     hasContract,
     getContractStatus,
@@ -29,7 +29,7 @@ const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteS
     handleGenerateFacture
   } = useDateActions();
 
-  // Hook pour la suppression des concerts
+  // Hook pour la suppression des dates
   const { handleDeleteDate: deleteDate } = useDateDelete(() => {
     console.log('[ContactDatesTable] Date supprimé avec succès');
     if (onDeleteSuccess) {
@@ -56,7 +56,7 @@ const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteS
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
         <h5>
           <i className="bi bi-calendar-event" style={{ color: '#dc3545', marginRight: '8px' }}></i>
-          Dates de concerts
+          Dates
         </h5>
         {onAddClick && (
           <button

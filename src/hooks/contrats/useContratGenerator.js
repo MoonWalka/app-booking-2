@@ -768,8 +768,8 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
       artiste_structure_siret: artiste?.structureSiret || 'Non spécifié',
       
       // Variables date (événement)
-      concert_titre: date?.titre || 'Non spécifié',
-      concert_date: (() => {
+      date_titre: date?.titre || 'Non spécifié',
+      date_date: (() => {
         if (!date?.date) return 'Non spécifiée';
         
         // Gérer différents formats de date possibles
@@ -801,12 +801,12 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
         
         return dateObj.toLocaleDateString('fr-FR');
       })(),
-      concert_heure: date?.heure || 'Non spécifiée',
-      concert_montant: date?.montant 
+      date_heure: date?.heure || 'Non spécifiée',
+      date_montant: date?.montant 
         ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(date.montant)
         : 'Non spécifié',
-      concert_montant_lettres: montantEnLettres(date?.montant),
-      concert_type: contratData?.representations?.type || date?.type || 'Date',
+      date_montant_lettres: montantEnLettres(date?.montant),
+      date_type: contratData?.representations?.type || date?.type || 'Date',
       
       // Variables lieu
       lieu_nom: lieu?.nom || 'Non spécifié',

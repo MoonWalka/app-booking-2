@@ -8,7 +8,7 @@ import styles from './StatutBadge.module.css';
  * 
  * @param {Object} props - Propriétés du composant
  * @param {string} props.status - Code du statut à afficher
- * @param {string} props.entityType - Type d'entité (concert, contrat, etc.) pour les statuts spécifiques
+ * @param {string} props.entityType - Type d'entité (date, contrat, etc.) pour les statuts spécifiques
  * @param {string} props.text - Texte à afficher (remplace le label du statut si défini)
  * @param {string} props.size - Taille du badge ('small', 'medium', 'large')
  * @param {string} props.className - Classes CSS additionnelles
@@ -33,7 +33,7 @@ const StatutBadge = ({
       draft: { color: 'info', icon: 'bi-pencil', label: 'Brouillon' }
     },
     // Statuts spécifiques aux dates
-    concert: {
+    date: {
       en_negociation: { color: 'info', icon: 'bi-chat-dots', label: 'En négociation' },
       option: { color: 'warning', icon: 'bi-calendar-check', label: 'Option' },
       confirme: { color: 'success', icon: 'bi-calendar-check-fill', label: 'Confirmé' },

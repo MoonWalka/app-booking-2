@@ -217,7 +217,7 @@ function ContactBottomTabs({
           <div className={styles.tabContent}>
             <ContactDatesTable 
               contactId={contactId}
-              concerts={datesData}
+              dates={datesData}
               onAddClick={() => {
                 if (extractedData?.structureRaisonSociale || extractedData?.id) {
                   openDateCreationTab({

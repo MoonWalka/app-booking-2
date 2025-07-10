@@ -152,13 +152,13 @@ function EchangeForm({ echange, onSubmit, onCancel, dates = [], isSubmitting = f
           value={formData.dateId}
           onChange={handleChange}
         >
-          <option value="">Aucun concert</option>
+          <option value="">Aucune date</option>
           {dates && dates.length > 0 ? (
-            dates.map(concert => {
-              const dateDate = concert.date?.toDate ? concert.date.toDate() : new Date(concert.date);
+            dates.map(date => {
+              const dateDate = date.date?.toDate ? date.date.toDate() : new Date(date.date);
               return (
-                <option key={concert.id} value={concert.id}>
-                  {concert.titre || 'Sans titre'} - {dateDate.toLocaleDateString('fr-FR')}
+                <option key={date.id} value={date.id}>
+                  {date.titre || 'Sans titre'} - {dateDate.toLocaleDateString('fr-FR')}
                 </option>
               );
             })
@@ -177,7 +177,7 @@ function EchangeForm({ echange, onSubmit, onCancel, dates = [], isSubmitting = f
         value={formData.sujet}
         onChange={handleChange}
         placeholder={`Ex: ${
-          formData.type === TYPES_ECHANGES.EMAIL ? 'Proposition de concert' :
+          formData.type === TYPES_ECHANGES.EMAIL ? 'Proposition de date' :
           formData.type === TYPES_ECHANGES.APPEL ? 'Discussion tarifs' :
           formData.type === TYPES_ECHANGES.REUNION ? 'Réunion de programmation' :
           'Échange avec le contact'

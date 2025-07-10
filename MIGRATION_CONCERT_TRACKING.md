@@ -14,10 +14,10 @@
 
 ### Section Contacts
 - [x] src/components/contacts/ContactDatesTable.js
-- [ ] src/components/contacts/ContactViewTabs.js
-- [ ] src/components/contacts/EchangeForm.js
-- [ ] src/components/contacts/mobile/ContactView.js
-- [ ] src/components/contacts/sections/ContactBottomTabs.js
+- [x] src/components/contacts/ContactViewTabs.js
+- [x] src/components/contacts/EchangeForm.js
+- [x] src/components/contacts/mobile/ContactView.js
+- [x] src/components/contacts/sections/ContactBottomTabs.js
 
 ### Section Contrats
 - [ ] src/components/contrats/ContratTemplateEditorSimple.js
@@ -119,4 +119,4 @@
 
 ## Statistiques
 - Total à migrer : 108 fichiers (73 JS + 35 CSS)
-- Migrés : 29/108 (27%)
+- Migrés : 35/108 (32%)

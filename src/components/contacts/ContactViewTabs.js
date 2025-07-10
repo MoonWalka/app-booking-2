@@ -275,7 +275,7 @@ function ContactViewTabs({ id, viewType = null }) {
       structure: `/structures/${entityId}`,
       contact: `/contacts/${entityId}`,
       lieu: `/lieux/${entityId}`,
-      concert: `/dates/${entityId}`,
+      date: `/dates/${entityId}`,
       artiste: `/artistes/${entityId}`
     };
     
@@ -538,7 +538,7 @@ function ContactViewTabs({ id, viewType = null }) {
                 return dateB - dateA;
               })[0];
               
-              // Ajouter les infos de pré-contrat au concert
+              // Ajouter les infos de pré-contrat à la date
               return {
                 ...date,
                 preContratId: latestPreContrat.id,

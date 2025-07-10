@@ -12,7 +12,7 @@ const ContratGenerationActions = ({
   validateDataBeforeGeneration,
   selectedTemplate,
   contratId,
-  concert,
+  date,
   programmateur,
   artiste,
   lieu,
@@ -118,11 +118,11 @@ const ContratGenerationActions = ({
   const generateFileName = () => {
     const parts = [];
     
-    // Date du date au format YYYYMMDD
-    if (concert.date) {
-      const dateObj = concert.date.seconds 
-        ? new Date(concert.date.seconds * 1000) 
-        : new Date(concert.date);
+    // Date de la date au format YYYYMMDD
+    if (date.date) {
+      const dateObj = date.date.seconds 
+        ? new Date(date.date.seconds * 1000) 
+        : new Date(date.date);
       const year = dateObj.getFullYear();
       const month = String(dateObj.getMonth() + 1).padStart(2, '0');
       const day = String(dateObj.getDate()).padStart(2, '0');
@@ -170,7 +170,7 @@ const ContratGenerationActions = ({
     <div className={styles.actionsContainer}>
       {contratId && (
         <Alert variant="info">
-          Un contrat a déjà été généré pour ce date. Vous pouvez le régénérer avec un nouveau modèle.
+          Un contrat a déjà été généré pour cette date. Vous pouvez le régénérer avec un nouveau modèle.
         </Alert>
       )}
       
@@ -264,7 +264,7 @@ const ContratGenerationActions = ({
               <ContratPDFWrapper 
                 template={selectedTemplate}
                 contratData={contratId ? { templateSnapshot: selectedTemplate } : null}
-                dateData={concert}
+                dateData={date}
                 programmateurData={programmateur}
                 artisteData={artiste}
                 lieuData={lieu}

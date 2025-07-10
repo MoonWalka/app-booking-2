@@ -9,7 +9,7 @@ import styles from '@/pages/ContratDetailsPage.module.css';
 const ContratActions = ({ 
   contrat, 
   template, 
-  concert, 
+  date, 
   isLoading,
   onPdfViewerToggle, 
   onSendContrat, 
@@ -79,7 +79,7 @@ const ContratActions = ({
           </Button>
         )}
         
-        {template && concert && (
+        {template && date && (
           <Button
             variant="secondary"
             onClick={onDownloadPdf}
@@ -115,7 +115,7 @@ const ContratActions = ({
             ) : (
               <Button 
                 variant="info" 
-                onClick={() => onGenerateFacture && onGenerateFacture(concert.id)}
+                onClick={() => onGenerateFacture && onGenerateFacture(date.id)}
                 disabled={isLoading}
                 title="Générer une facture depuis ce contrat"
               >

@@ -23,9 +23,9 @@
 - [x] src/components/contrats/ContratTemplateEditorSimple.js
 - [x] src/components/contrats/desktop/ContratGenerator.js
 - [x] src/components/contrats/desktop/ContratGeneratorNew.js
-- [ ] src/components/contrats/desktop/sections/ContratDebugPanel.js
-- [ ] src/components/contrats/desktop/sections/ContratGenerationActions.js
-- [ ] src/components/contrats/sections/ContratActions.js
+- [x] src/components/contrats/desktop/sections/ContratDebugPanel.js
+- [x] src/components/contrats/desktop/sections/ContratGenerationActions.js
+- [x] src/components/contrats/sections/ContratActions.js
 - [ ] src/components/contrats/sections/ContratPdfViewer.js
 - [ ] src/components/contrats/sections/ContratsTableNew.js
 
@@ -119,4 +119,4 @@
 
 ## Statistiques
 - Total à migrer : 108 fichiers (73 JS + 35 CSS)
-- Migrés : 39/108 (36%)
+- Migrés : 43/108 (40%)

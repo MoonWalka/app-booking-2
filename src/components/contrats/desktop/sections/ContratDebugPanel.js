@@ -9,7 +9,7 @@ const ContratDebugPanel = ({
   showDebugInfo,
   toggleDebugInfo,
   selectedTemplate,
-  concert,
+  date,
   programmateur,
   artiste,
   lieu,
@@ -50,9 +50,9 @@ const ContratDebugPanel = ({
             {JSON.stringify(selectedTemplate, null, 2)}
           </pre>
           
-          <h6>Données du concert</h6>
+          <h6>Données de la date</h6>
           <pre className={styles.debugPre}>
-            {JSON.stringify(concert, null, 2)}
+            {JSON.stringify(date, null, 2)}
           </pre>
           
           <h6>Données du programmateur</h6>

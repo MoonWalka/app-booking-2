@@ -58,18 +58,20 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
       });
     } else {
       // Réinitialiser en mode création
+      // Si on a des artistes pré-sélectionnés (passés via editProjet même en mode création),
+      // les conserver
       setFormData({
-        intitule: '',
-        codeAdmin: '',
-        codeAnalytique: '',
-        libelleAnalytique: '',
-        numeroObjet: '',
-        typeContrat: '',
-        montantHT: '',
-        devise: 'EUR',
-        prixPlaces: '',
-        commentaires: '',
-        artistesSelectionnes: []
+        intitule: editProjet?.intitule || '',
+        codeAdmin: editProjet?.codeAdmin || '',
+        codeAnalytique: editProjet?.codeAnalytique || '',
+        libelleAnalytique: editProjet?.libelleAnalytique || '',
+        numeroObjet: editProjet?.numeroObjet || '',
+        typeContrat: editProjet?.typeContrat || '',
+        montantHT: editProjet?.montantHT || '',
+        devise: editProjet?.devise || 'EUR',
+        prixPlaces: editProjet?.prixPlaces || '',
+        commentaires: editProjet?.commentaires || '',
+        artistesSelectionnes: editProjet?.artistesSelectionnes || []
       });
     }
   }, [editProjet, show]);
@@ -112,8 +114,16 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
     setLoading(true);
 
     try {
+      // Nettoyer les données pour éviter les valeurs undefined
+      const cleanedFormData = Object.entries(formData).reduce((acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+
       const projetData = {
-        ...formData,
+        ...cleanedFormData,
         entrepriseId: currentEntreprise.id,
         updatedAt: serverTimestamp(),
         // Convertir les montants en nombres si renseignés
@@ -121,8 +131,8 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
         prixPlaces: formData.prixPlaces ? parseFloat(formData.prixPlaces) : null
       };
 
-      if (editProjet) {
-        // Mode édition - mettre à jour le projet existant
+      if (editProjet && editProjet.id) {
+        // Mode édition - mettre à jour le projet existant (vérifier que l'ID existe)
         const projetRef = doc(db, 'projets', editProjet.id);
         await updateDoc(projetRef, projetData);
         

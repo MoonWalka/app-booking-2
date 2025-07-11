@@ -9,6 +9,8 @@ import styles from './DatesTable.module.css';
 // Utilisation du mémoïsation pour éviter des rendus inutiles
 const DatesTable = memo(({ 
   dates = [],
+  selectedIds = new Set(),
+  onSelectionChange,
   getStatusDetails,
   hasForm,
   hasUnvalidatedForm,
@@ -60,6 +62,28 @@ const DatesTable = memo(({
 
   // Colonnes du tableau
   const columns = [
+    {
+      label: '',
+      key: 'selection',
+      sortable: false,
+      width: '50px',
+      render: (row) => onSelectionChange ? (
+        <input
+          type="checkbox"
+          checked={selectedIds.has(row.id)}
+          onChange={(e) => {
+            const newSelected = new Set(selectedIds);
+            if (e.target.checked) {
+              newSelected.add(row.id);
+            } else {
+              newSelected.delete(row.id);
+            }
+            onSelectionChange(newSelected);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ) : null
+    },
     {
       label: 'Entreprise',
       key: 'entreprise',

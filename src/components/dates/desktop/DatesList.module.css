@@ -70,3 +70,17 @@
     left: var(--tc-space-4);
   }
 }
+
+/* Informations de pagination */
+.paginationInfo {
+  padding: 1rem 1.5rem;
+  text-align: center;
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--tc-border-default, #e5e7eb);
+  background-color: var(--tc-bg-color-light, #f8f9fa);
+}
+
+.paginationInfo p {
+  margin: 0;
+}

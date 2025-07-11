@@ -88,9 +88,16 @@ const BookingParametragePage = () => {
   }, [refetchProjets]);
   
   const handleCreateProjet = useCallback(() => {
-    setEditProjetData(null);
+    // Si on crée un projet depuis la page d'un artiste, le pré-sélectionner
+    if (effectiveSelectedArtisteId) {
+      setEditProjetData({
+        artistesSelectionnes: [effectiveSelectedArtisteId]
+      });
+    } else {
+      setEditProjetData(null);
+    }
     setShowProjetModal(true);
-  }, []);
+  }, [effectiveSelectedArtisteId]);
   
   const handleCloseProjetModal = useCallback(() => {
     setShowProjetModal(false);

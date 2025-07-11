@@ -16,8 +16,11 @@ const DatesTableTotals = ({ selectedDates = [] }) => {
     }
 
     const montant = selectedDates.reduce((sum, date) => {
-      const amount = date.montant || date.montantTotal || 0;
-      return sum + amount;
+      // S'assurer que le montant est bien un nombre
+      const rawAmount = date.montant || date.montantTotal || 0;
+      console.log('Montant brut pour date', date.id, ':', rawAmount, 'Type:', typeof rawAmount);
+      const amount = parseFloat(rawAmount);
+      return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
 
     // Pour le montant HT, on pourrait appliquer un calcul de TVA
@@ -54,20 +57,24 @@ const DatesTableTotals = ({ selectedDates = [] }) => {
         <div className={styles.totalItem}>
           <span className={styles.totalLabel}>Montant:</span>
           <span className={`${styles.totalValue} ${styles.highlight}`}>
-            {totals.montant.toLocaleString('fr-FR', { 
+            {new Intl.NumberFormat('fr-FR', { 
+              style: 'currency',
+              currency: 'EUR',
               minimumFractionDigits: 2, 
               maximumFractionDigits: 2 
-            })}
+            }).format(totals.montant)}
           </span>
         </div>
 
         <div className={styles.totalItem}>
           <span className={styles.totalLabel}>Montant consolidé HT:</span>
           <span className={styles.totalValue}>
-            {totals.montantHT.toLocaleString('fr-FR', { 
+            {new Intl.NumberFormat('fr-FR', { 
+              style: 'currency',
+              currency: 'EUR',
               minimumFractionDigits: 2, 
               maximumFractionDigits: 2 
-            })}
+            }).format(totals.montantHT)}
           </span>
         </div>
       </div>

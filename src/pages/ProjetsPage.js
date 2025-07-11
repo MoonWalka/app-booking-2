@@ -93,7 +93,12 @@ const ProjetsPage = () => {
     
     return artisteIds.map(id => {
       const artiste = artistes.find(a => a.id === id);
-      return artiste ? artiste.nom : id;
+      if (artiste) {
+        // Afficher le nom complet (prénom + nom)
+        const nomComplet = [artiste.prenom, artiste.nom].filter(Boolean).join(' ');
+        return nomComplet || artiste.nom || id;
+      }
+      return id;
     }).filter(Boolean).join(', ');
   }, [artistes]);
 

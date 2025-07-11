@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useNavigate, useLocation } from 'react-router-dom';
 import TabNavigation from '../components/common/TabNavigation';
 import ArtisteCreationModal from '../components/artistes/modal/ArtisteCreationModal';
 import ProjetCreationModal from '../components/projets/modal/ProjetCreationModal';
@@ -18,8 +17,6 @@ const BookingParametragePage = () => {
   const [showProjetModal, setShowProjetModal] = useState(false);
   const [editProjetData, setEditProjetData] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  const navigate = useNavigate();
-  const location = useLocation();
   
   // Récupérer la liste des artistes pour le menu
   const { items: artistes, loading: artistesLoading } = useGenericEntityList('artistes', {
@@ -41,51 +38,22 @@ const BookingParametragePage = () => {
     );
   }, [projets]);
 
-  // Déterminer l'onglet actif et l'artiste sélectionné en fonction de l'URL
-  useEffect(() => {
-    const path = location.pathname;
-    let newActiveTab = 'artistes';
-    let newSelectedArtisteId = null;
-    
-    if (path.includes('/booking/parametrage/types-evenement')) {
-      newActiveTab = 'types-evenement';
-    } else if (path.includes('/booking/parametrage/types-salle')) {
-      newActiveTab = 'types-salle';
-    } else if (path.includes('/booking/parametrage/artistes') || path === '/booking/parametrage') {
-      newActiveTab = 'artistes';
-    } else if (path.includes('/booking/parametrage/projets')) {
-      newActiveTab = 'projets';
-    } else if (path.match(/\/booking\/parametrage\/artiste\/(.+)/)) {
-      const artisteMatch = path.match(/\/booking\/parametrage\/artiste\/(.+)/);
-      if (artisteMatch) {
-        newSelectedArtisteId = artisteMatch[1];
-        newActiveTab = 'artistes';
-      }
-    }
-    
-    if (newActiveTab !== activeTab) {
-      setActiveTab(newActiveTab);
-    }
-    if (newSelectedArtisteId !== selectedArtisteId) {
-      setSelectedArtisteId(newSelectedArtisteId);
-    }
-  }, [location.pathname, activeTab, selectedArtisteId]);
   
   // Effet séparé pour sélectionner automatiquement le premier artiste
   useEffect(() => {
     if (activeTab === 'artistes' && !selectedArtisteId && artistes.length > 0 && !artistesLoading) {
       const firstArtisteId = artistes[0].id;
       setSelectedArtisteId(firstArtisteId);
-      navigate(`/booking/parametrage/artiste/${firstArtisteId}`, { replace: true });
+      // Ne pas changer l'URL pour rester dans le système d'onglets
     }
-  }, [activeTab, selectedArtisteId, artistes, artistesLoading, navigate]);
+  }, [activeTab, selectedArtisteId, artistes, artistesLoading]);
 
   
   // Gestionnaire pour la sélection d'un artiste
   const handleArtisteSelect = useCallback((artisteId) => {
     setSelectedArtisteId(artisteId);
-    navigate(`/booking/parametrage/artiste/${artisteId}`);
-  }, [navigate]);
+    // Ne pas changer l'URL pour rester dans le système d'onglets
+  }, []);
   
   
   // Gestionnaire pour la création/modification d'un artiste
@@ -148,7 +116,7 @@ const BookingParametragePage = () => {
         onTabChange={(index) => {
           const selectedTab = tabs[index];
           setActiveTab(selectedTab.value);
-          navigate(`/booking/parametrage/${selectedTab.value}`);
+          // Ne pas changer l'URL pour rester dans le système d'onglets
         }}
         vertical={true}
       />
@@ -438,12 +406,14 @@ const BookingParametragePage = () => {
       />
       
       {/* Modal de création/édition de projet */}
+      {/* Temporairement désactivé pour debug
       <ProjetCreationModal
         show={showProjetModal}
         onHide={handleCloseProjetModal}
         onCreated={handleProjetCreated}
         editProjet={editProjetData}
       />
+      */}
     </Container>
   );
 };

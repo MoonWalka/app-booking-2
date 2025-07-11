@@ -320,7 +320,7 @@ const CollaborationParametragePage = () => {
   };
 
   return (
-    <Container fluid className="p-4">
+    <Container fluid className="p-4" style={{ position: 'relative', zIndex: 1 }}>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="mb-0">
           <i className="bi bi-gear me-2"></i>

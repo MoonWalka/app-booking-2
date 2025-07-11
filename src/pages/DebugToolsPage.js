@@ -1,55 +1,66 @@
 import React, { useState } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
-import DataStructureFixer from '@/components/debug/DataStructureFixer';
+// import DataStructureFixer from '@/components/debug/DataStructureFixer';
 // import OrganizationIdDebug from '@/components/debug/OrganizationIdDebug'; // Supprimé
-import ListDebugger from '@/components/debug/ListDebugger';
+// import ListDebugger from '@/components/debug/ListDebugger';
 // import ContactCreationTester from '@/components/debug/ContactCreationTester'; // Supprimé
 // import EntityCreationTester from '@/components/debug/EntityCreationTester'; // Supprimé
 // import LieuMapDebug from '@/components/debug/LieuMapDebug'; // Supprimé
-import RIBDebugger from '@/components/debug/RIBDebugger';
+// import RIBDebugger from '@/components/debug/RIBDebugger';
 // import ContactEmailDebug from '@/components/debug/ContactEmailDebug'; // Supprimé
 // import ArtisteSearchDebug from '@/components/debug/ArtisteSearchDebug'; // Supprimé
-import ArtisteSearchLiveDebug from '@/components/debug/ArtisteSearchLiveDebug';
+// import ArtisteSearchLiveDebug from '@/components/debug/ArtisteSearchLiveDebug';
 // import ArtisteOrganizationMatcher from '@/components/debug/ArtisteOrganizationMatcher'; // Supprimé
 // import OrphanArtistesDebug from '@/components/debug/OrphanArtistesDebug'; // Supprimé
-import EntrepriseContextDiagnostic from '@/components/debug/EntrepriseContextDiagnostic';
-import ArtisteFirestoreDiagnostic from '@/components/debug/ArtisteFirestoreDiagnostic';
+// import EntrepriseContextDiagnostic from '@/components/debug/EntrepriseContextDiagnostic';
+// import ArtisteFirestoreDiagnostic from '@/components/debug/ArtisteFirestoreDiagnostic';
 // import SystemAuditTool from '@/components/debug/SystemAuditTool'; // Supprimé
 // import EntityRelationsDebugger from '@/components/debug/EntityRelationsDebugger'; // Supprimé
-import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelationsFixer';
+// import BidirectionalRelationsFixer from '@/components/debug/BidirectionalRelationsFixer';
 // import DateContactsDebug from '@/components/debug/DateContactsDebug'; // Supprimé
 // import ContactsMigrationDiagnostic from '@/components/debug/ContactsMigrationDiagnostic'; // Supprimé
 // import GenericDetailViewTest from '@/components/debug/GenericDetailViewTest'; // Supprimé
-import BrevoDiagnostic from '@/components/debug/BrevoDiagnostic';
-import ParametresMigration from '@/components/debug/ParametresMigration';
-import BrevoKeyRecovery from '@/components/debug/BrevoKeyRecovery';
-import BrevoKeyDiagnostic from '@/components/debug/BrevoKeyDiagnostic';
-import BrevoTemplateCreator from '@/components/debug/BrevoTemplateCreator';
-import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer';
+// import BrevoDiagnostic from '@/components/debug/BrevoDiagnostic';
+// import ParametresMigration from '@/components/debug/ParametresMigration';
+// import BrevoKeyRecovery from '@/components/debug/BrevoKeyRecovery';
+// import BrevoKeyDiagnostic from '@/components/debug/BrevoKeyDiagnostic';
+// import BrevoTemplateCreator from '@/components/debug/BrevoTemplateCreator';
+// import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer';
 // import StructuresClickDebug from '@/components/debug/StructuresClickDebug'; // Supprimé
 // import FestitestContactFinder from '@/components/debug/FestitestContactFinder'; // Supprimé
 // import ContactMigrationTool from '@/components/debug/ContactMigrationTool'; // Supprimé
 // import SophieMadetMigration from '@/components/debug/SophieMadetMigration'; // Supprimé
-import TagsHierarchyDebug from '@/components/debug/TagsHierarchyDebug';
-import HybridFormatNormalizer from '@/components/debug/HybridFormatNormalizer';
-import RelationalMigrationFixer from '@/components/debug/RelationalMigrationFixer';
+// import TagsHierarchyDebug from '@/components/debug/TagsHierarchyDebug';
+// import HybridFormatNormalizer from '@/components/debug/HybridFormatNormalizer';
+// import RelationalMigrationFixer from '@/components/debug/RelationalMigrationFixer';
 // import CheckStructureMigration from '@/components/debug/CheckStructureMigration'; // Supprimé
 // import TestDeleteContactDebug from '@/components/debug/TestDeleteContactDebug'; // Supprimé
 // import StructureAddressMigration from '@/components/debug/StructureAddressMigration'; // Supprimé
 // import FestivalsDebugger from '@/components/debug/FestivalsDebugger'; // Supprimé
-import MigrateContractTemplates from '@/components/debug/MigrateContractTemplates';
-import MigrateContractVariables from '@/components/debug/MigrateContractVariables';
-import CleanOldContractContent from '@/components/debug/CleanOldContractContent';
-import ContactsAuditTool from '@/components/debug/ContactsAuditTool';
+// import MigrateContractTemplates from '@/components/debug/MigrateContractTemplates';
+// import MigrateContractVariables from '@/components/debug/MigrateContractVariables';
+// import CleanOldContractContent from '@/components/debug/CleanOldContractContent';
+// import ContactsAuditTool from '@/components/debug/ContactsAuditTool';
 // import ContactsFixTool from '@/components/debug/ContactsFixTool'; // Supprimé
 // import UnusedFilesAnalyzer from '@/components/debug/UnusedFilesAnalyzer'; // Supprimé
 // import ContactsMigrationFinal from '@/components/debug/ContactsMigrationFinal'; // Supprimé
-import QuickContactCreator from '@/components/debug/QuickContactCreator';
+// import QuickContactCreator from '@/components/debug/QuickContactCreator';
 // import MigrationConcertToDate from '@/components/debug/MigrationConcertToDate'; // Supprimé
 import styles from './DebugToolsPage.module.css';
 
+// Composant de remplacement pour les outils debug supprimés
+const DebugToolRemoved = ({ title }) => (
+  <div style={{ padding: '2rem', textAlign: 'center' }}>
+    <i className="bi bi-exclamation-triangle" style={{ fontSize: '3rem', color: '#ffc107' }}></i>
+    <h3 style={{ marginTop: '1rem' }}>Outil debug supprimé</h3>
+    <p style={{ color: '#6c757d' }}>
+      L'outil "{title}" a été supprimé du système.
+    </p>
+  </div>
+);
+
 const DebugToolsPage = () => {
-  const [activeTab, setActiveTab] = useState('migration-concert-date');
+  const [activeTab, setActiveTab] = useState('message');
 
   // Temporairement accessible en production pour corriger les problèmes
   // À retirer une fois les corrections appliquées
@@ -83,190 +94,114 @@ const DebugToolsPage = () => {
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k)}
         className={styles.tabs}
-      >        {/*  */}
-        {/* <Tab eventKey="migration-concert-date" title="🔄 Migration Concerts→Dates"> */}
-        {/* <MigrationConcertToDate /> */}
-        {/* </Tab> */}        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="migration-finale" title="🚨 MIGRATION FINALE CONTACTS"> */}
-        {/* <ContactsMigrationFinal /> */}
-        {/* </Tab> */}
-        
-        <Tab eventKey="quick-contact" title="👤 Création Rapide Contact">
-          <QuickContactCreator />
+      >
+        <Tab eventKey="message" title="ℹ️ Information">
+          <div style={{ padding: '2rem' }}>
+            <div style={{ 
+              backgroundColor: '#f8f9fa', 
+              border: '1px solid #dee2e6', 
+              borderRadius: '0.375rem', 
+              padding: '2rem',
+              textAlign: 'center' 
+            }}>
+              <i className="bi bi-info-circle" style={{ fontSize: '3rem', color: '#0dcaf0' }}></i>
+              <h2 style={{ marginTop: '1rem', marginBottom: '1rem' }}>Outils de debug supprimés</h2>
+              <p style={{ fontSize: '1.1rem', color: '#6c757d', marginBottom: '0' }}>
+                Les outils de debug ont été retirés du système pour améliorer les performances et la sécurité.
+              </p>
+              <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '1rem' }}>
+                Cette page reste accessible pour référence historique.
+              </p>
+            </div>
+          </div>
         </Tab>
         
-        {/* <Tab eventKey="system-audit" title="🔬 Audit Système">
-          <SystemAuditTool />
-        </Tab> */}
+        {/* Tous les composants debug ont été supprimés */}
+        {/* Les tabs suivants sont conservés pour référence mais utilisent le composant de remplacement */}
         
-        {/* <Tab eventKey="entity-relations" title="🔗 Relations d'Entité">
-          <EntityRelationsDebugger />
-        </Tab> */}
+        <Tab eventKey="quick-contact" title="👤 Création Rapide Contact">
+          <DebugToolRemoved title="Création Rapide Contact" />
+        </Tab>
         
         <Tab eventKey="relations-fixer" title="🔧 Réparation Relations">
-          <BidirectionalRelationsFixer />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="concert-contacts" title="👥 Contacts Dates"> */}
-        {/* <DateContactsDebug /> */}
-        {/* </Tab> */}
+          <DebugToolRemoved title="Réparation Relations" />
+        </Tab>
         
         <Tab eventKey="contacts-audit" title="🔍 Audit Contacts Manquants">
-          <ContactsAuditTool />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="contacts-fix" title="🔧 Corriger Contacts Manquants"> */}
-        {/* <ContactsFixTool /> */}
-        {/* </Tab> */}
-        
-        {/* <Tab eventKey="test-delete" title="🗑️ Test Suppression">
-          <TestDeleteContactDebug />
-        </Tab> */}
+          <DebugToolRemoved title="Audit Contacts Manquants" />
+        </Tab>
         
         <Tab eventKey="lists" title="Diagnostic des listes">
-          <ListDebugger />
+          <DebugToolRemoved title="Diagnostic des listes" />
         </Tab>
         
         <Tab eventKey="structure" title="Structure des données">
-          <DataStructureFixer />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="organization" title="Organisation ID"> */}
-        {/* <OrganizationIdDebug /> */}
-        {/* </Tab> */}
-        
-        {/* <Tab eventKey="contacts" title="Test Contacts">
-          <ContactCreationTester />
-        </Tab> */}
-        
-        {/* <Tab eventKey="entities" title="Test Entités Complètes">
-          <EntityCreationTester />
-        </Tab> */}
-        
-        {/* <Tab eventKey="lieu-map" title="Debug Cartes Lieux">
-          <LieuMapDebug />
-        </Tab> */}
+          <DebugToolRemoved title="Structure des données" />
+        </Tab>
         
         <Tab eventKey="rib" title="Debug RIB">
-          <RIBDebugger />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="contact-email" title="Debug Email Contact"> */}
-        {/* <ContactEmailDebug /> */}
-        {/* </Tab> */}
+          <DebugToolRemoved title="Debug RIB" />
+        </Tab>
         
         <Tab eventKey="org-context" title="Diagnostic Organisation">
-          <EntrepriseContextDiagnostic />
+          <DebugToolRemoved title="Diagnostic Organisation" />
         </Tab>
         
         <Tab eventKey="firestore-diag" title="Diagnostic Firestore">
-          <ArtisteFirestoreDiagnostic />
+          <DebugToolRemoved title="Diagnostic Firestore" />
         </Tab>
         
-        {/* <Tab eventKey="artiste-search" title="Debug Recherche Artistes">
-          <ArtisteSearchDebug />
-        </Tab> */}
-        
         <Tab eventKey="artiste-live" title="Test Recherche Live">
-          <ArtisteSearchLiveDebug />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="artiste-org" title="Organisation d'Artiste"> */}
-        {/* <ArtisteOrganizationMatcher /> */}
-        {/* </Tab> */}        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="orphan-artistes" title="Artistes Orphelins"> */}
-        {/* <OrphanArtistesDebug /> */}
-        {/* </Tab> */}        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="contacts-migration" title="🔄 Migration Contacts"> */}
-        {/* <ContactsMigrationDiagnostic /> */}
-        {/* </Tab> */}
-        
-        {/* <Tab eventKey="generic-detail-view-test" title="🎨 Test GenericDetailView">
-          <GenericDetailViewTest />
-        </Tab> */}
+          <DebugToolRemoved title="Test Recherche Live" />
+        </Tab>
         
         <Tab eventKey="brevo-diagnostic" title="📧 Diagnostic Brevo">
-          <BrevoDiagnostic />
+          <DebugToolRemoved title="Diagnostic Brevo" />
         </Tab>
         
         <Tab eventKey="parametres-migration" title="🔄 Migration Paramètres">
-          <ParametresMigration />
+          <DebugToolRemoved title="Migration Paramètres" />
         </Tab>
         
         <Tab eventKey="brevo-recovery" title="🔧 Récupération Brevo">
-          <BrevoKeyRecovery />
+          <DebugToolRemoved title="Récupération Brevo" />
         </Tab>
         
         <Tab eventKey="brevo-key-diagnostic" title="🔍 Diagnostic Clé Brevo">
-          <BrevoKeyDiagnostic />
+          <DebugToolRemoved title="Diagnostic Clé Brevo" />
         </Tab>
         
         <Tab eventKey="brevo-template-creator" title="🎨 Créateur Templates Brevo">
-          <BrevoTemplateCreator />
+          <DebugToolRemoved title="Créateur Templates Brevo" />
         </Tab>
         
         <Tab eventKey="brevo-template-customizer" title="🖌️ Configurateur Templates Brevo">
-          <BrevoTemplateCustomizer />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="structures-click-debug" title="🏢 Debug Clics Structures"> */}
-        {/* <StructuresClickDebug /> */}
-        {/* </Tab> */}        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="festitest-contact-finder" title="🔍 Recherche Contact Festitest"> */}
-        {/* <FestitestContactFinder /> */}
-        {/* </Tab> */}        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="contact-migration-tool" title="🔄 Migration Automatique Contacts"> */}
-        {/* <ContactMigrationTool /> */}
-        {/* </Tab> */}        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="sophie-madet-migration" title="👤 Migration Sophie Madet"> */}
-        {/* <SophieMadetMigration /> */}
-        {/* </Tab> */}
+          <DebugToolRemoved title="Configurateur Templates Brevo" />
+        </Tab>
         
         <Tab eventKey="tags-hierarchy-debug" title="🏷️ Debug Tags Hiérarchie">
-          <TagsHierarchyDebug />
+          <DebugToolRemoved title="Debug Tags Hiérarchie" />
         </Tab>
         
         <Tab eventKey="hybrid-format-normalizer" title="🔧 Normalisation Formats Hybrides">
-          <HybridFormatNormalizer />
+          <DebugToolRemoved title="Normalisation Formats Hybrides" />
         </Tab>
         
         <Tab eventKey="relational-migration-fixer" title="🔗 Correction Migration Relationnelle">
-          <RelationalMigrationFixer />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="check-structure-migration" title="🔍 Vérifier Migration Structure"> */}
-        {/* <CheckStructureMigration /> */}
-        {/* </Tab> */}        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="structure-address-migration" title="🏠 Migration Adresses Structures"> */}
-        {/* <StructureAddressMigration /> */}
-        {/* </Tab> */}
-        
-        {/* <Tab eventKey="festivals-debug" title="🎪 Debug Festivals">
-          <FestivalsDebugger />
-        </Tab> */}
+          <DebugToolRemoved title="Correction Migration Relationnelle" />
+        </Tab>
         
         <Tab eventKey="contract-templates" title="📄 Migration Modèles Contrat">
-          <MigrateContractTemplates />
+          <DebugToolRemoved title="Migration Modèles Contrat" />
         </Tab>
         
         <Tab eventKey="contract-variables" title="🔄 Migration Variables Contrat">
-          <MigrateContractVariables />
+          <DebugToolRemoved title="Migration Variables Contrat" />
         </Tab>
         
         <Tab eventKey="clean-contracts" title="🧹 Nettoyage Contrats">
-          <CleanOldContractContent />
-        </Tab>        {/*  */}
-        {/*  */}
-        {/* <Tab eventKey="unused-files" title="🔍 Fichiers Non Utilisés"> */}
-        {/* <UnusedFilesAnalyzer /> */}
-        {/* </Tab> */}
+          <DebugToolRemoved title="Nettoyage Contrats" />
+        </Tab>
       </Tabs>
     </div>
   );

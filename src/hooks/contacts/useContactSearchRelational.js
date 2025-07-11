@@ -285,7 +285,7 @@ export const useContactSearchRelational = ({
     setSortDirection(direction);
   }, []);
 
-  // Reset search when organization changes
+  // Reset search when entreprise changes
   useEffect(() => {
     setSearchTerm('');
     setSearchFilters({});

@@ -136,10 +136,10 @@ const EntitySelector = ({
         });
         const collectionRef = collection(db, currentConfig.collection || entityType);
         
-        // Construction de la requête avec filtre organisation
+        // Construction de la requête avec filtre entreprise
         const queryConditions = [];
         
-        // Ajouter le filtre organisation si disponible
+        // Ajouter le filtre entreprise si disponible
         if (currentEntreprise?.id) {
           queryConditions.push(where('entrepriseId', '==', currentEntreprise.id));
         }
@@ -166,7 +166,7 @@ const EntitySelector = ({
         console.log('[EntitySelector] Query results:', {
           size: querySnapshot.size,
           collection: currentConfig.collection || entityType,
-          organizationFilter: currentEntreprise?.id,
+          entrepriseFilter: currentEntreprise?.id,
           queryConditions: queryConditions.length
         });
         

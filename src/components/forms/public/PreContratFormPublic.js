@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styles from './PreContratFormPublic.module.css';
 
-const PreContratFormPublic = ({ dateData, organizationData, onSubmit, existingData = {} }) => {
+const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData = {} }) => {
   console.log('[WORKFLOW_TEST] 5. Passage des données au formulaire public - PreContratFormPublic reçoit:', {
     existingData,
     hasData: !!existingData && Object.keys(existingData).length > 0
@@ -257,9 +257,9 @@ const PreContratFormPublic = ({ dateData, organizationData, onSubmit, existingDa
             day: 'numeric'
           }) : 'Date à définir'}
         </p>
-        {organizationData?.name && (
-          <p className={styles.organizationName}>
-            Formulaire de pré-contrat • {organizationData.name}
+        {entrepriseData?.name && (
+          <p className={styles.entrepriseName}>
+            Formulaire de pré-contrat • {entrepriseData.name}
           </p>
         )}
       </div>

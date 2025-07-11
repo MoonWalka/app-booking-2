@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 import { useParametres } from '@/context/ParametresContext';
 import { debugLog } from '@/utils/logUtils';
 import { decryptSensitiveFields } from '@/utils/cryptoUtils';
-import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer';
+// import BrevoTemplateCustomizer from '@/components/debug/BrevoTemplateCustomizer'; // Composant debug supprimé
 import { FaEye, FaEyeSlash, FaSync, FaPlus } from 'react-icons/fa';
 import './BrevoManager.css';
 
@@ -346,7 +346,11 @@ const BrevoManager = () => {
           <Modal.Title>Personnaliser les templates Brevo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <BrevoTemplateCustomizer />
+          {/* <BrevoTemplateCustomizer /> - Composant debug supprimé */}
+          <Alert variant="info">
+            <Alert.Heading>Outil de personnalisation supprimé</Alert.Heading>
+            <p>L'outil de personnalisation des templates Brevo a été supprimé dans le cadre du nettoyage du code.</p>
+          </Alert>
         </Modal.Body>
       </Modal>
     </div>

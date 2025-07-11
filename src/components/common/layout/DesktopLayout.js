@@ -786,7 +786,7 @@ function DesktopLayout({ children }) {
                 </div>
                 
                 {/* Sélecteur d'entreprise */}
-                <div className={sidebarStyles.organizationSection}>
+                <div className={sidebarStyles.entrepriseSection}>
                   <h5>Entreprise</h5>
                   <EntrepriseSelector onDropdownToggle={setIsOrgDropdownOpen} />
                 </div>

@@ -5,7 +5,7 @@ import { useResponsive } from '@/hooks/common';
 
 // Imports directs des composants
 import ArtistesDesktopView from './desktop/ArtisteView';
-import ArtistesMobileView from './mobile/ArtisteView';
+// import ArtistesMobileView from './mobile/ArtisteView'; // Composant mobile supprimé
 
 /**
  * Composant conteneur pour les détails d'un artiste
@@ -16,11 +16,15 @@ const ArtisteDetail = () => {
   const { isMobile } = useResponsive();
   
   // Rendu conditionnel simple avec passage de l'ID
+  // Mobile désactivé temporairement - utilisation du desktop uniquement
+  return <ArtistesDesktopView id={id} />;
+  /*
   return isMobile ? (
     <ArtistesMobileView id={id} />
   ) : (
     <ArtistesDesktopView id={id} />
   );
+  */
 };
 
 export default ArtisteDetail;

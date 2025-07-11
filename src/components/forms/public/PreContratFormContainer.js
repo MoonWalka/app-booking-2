@@ -19,7 +19,7 @@ function PreContratFormContainer({ dateId, token }) {
     dateData,
     formLinkData,
     existingSubmission,
-    organizationData,
+    entrepriseData,
     error
   } = useFormTokenValidation(dateId, token);
 
@@ -141,7 +141,7 @@ function PreContratFormContainer({ dateId, token }) {
     <div className={styles.container}>
       <PreContratFormPublic
         dateData={dateData}
-        organizationData={organizationData}
+        entrepriseData={entrepriseData}
         existingData={existingSubmission || formLinkData}
         onSubmit={async (formData, action) => {
           try {

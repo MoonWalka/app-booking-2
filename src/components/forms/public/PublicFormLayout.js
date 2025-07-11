@@ -5,12 +5,12 @@ import styles from './PublicFormLayout.module.css';
  * Layout component for public forms
  * Provides a standardized container with header and footer
  */
-const PublicFormLayout = ({ children, organizationName }) => {
+const PublicFormLayout = ({ children, entrepriseName }) => {
   return (
     <div className={styles.formIsolatedContainer}>
       <header className={styles.formHeader}>
         <div className={styles.formLogo}>
-          <h2>{organizationName || 'TourCraft'}</h2>
+          <h2>{entrepriseName || 'TourCraft'}</h2>
         </div>
       </header>
       
@@ -19,7 +19,7 @@ const PublicFormLayout = ({ children, organizationName }) => {
       </main>
       
       <footer className={styles.formFooter}>
-        <p>© {new Date().getFullYear()} {organizationName || 'TourCraft'} - Formulaire sécurisé</p>
+        <p>© {new Date().getFullYear()} {entrepriseName || 'TourCraft'} - Formulaire sécurisé</p>
       </footer>
     </div>
   );

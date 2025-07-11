@@ -90,8 +90,8 @@ const ArtisteSearchSectionWithFallback = ({
   const handleSelectWithFix = async (artiste) => {
     if (!artiste.entrepriseId && currentEntreprise?.id) {
       const confirmFix = window.confirm(
-        `L'artiste "${artiste.nom}" n'appartient à aucune organisation.\n\n` +
-        `Voulez-vous l'associer à votre organisation "${currentEntreprise.name}" ?`
+        `L'artiste "${artiste.nom}" n'appartient à aucune entreprise.\n\n` +
+        `Voulez-vous l'associer à votre entreprise "${currentEntreprise.name}" ?`
       );
       
       if (confirmFix) {
@@ -105,7 +105,7 @@ const ArtisteSearchSectionWithFallback = ({
           
           // Mettre à jour l'objet local
           artiste.entrepriseId = currentEntreprise.id;
-          console.log(`✅ Artiste ${artiste.nom} associé à l'organisation`);
+          console.log(`✅ Artiste ${artiste.nom} associé à l'entreprise`);
         } catch (error) {
           console.error('Erreur lors de la mise à jour de l\'artiste:', error);
         }
@@ -142,7 +142,7 @@ const ArtisteSearchSectionWithFallback = ({
         <div className="alert alert-warning mt-2">
           <small>
             <i className="bi bi-exclamation-triangle me-2"></i>
-            {allArtistesResults.length} artiste(s) trouvé(s) dans d'autres organisations.
+            {allArtistesResults.length} artiste(s) trouvé(s) dans d'autres entreprises.
             {!showAllArtistes && (
               <Button
                 variant="link"
@@ -157,13 +157,13 @@ const ArtisteSearchSectionWithFallback = ({
         </div>
       )}
       
-      {/* Avertissement pour les artistes sans organization */}
+      {/* Avertissement pour les artistes sans entreprise */}
       {showAllArtistes && allArtistesResults.some(a => !a.entrepriseId) && (
         <div className="alert alert-info mt-2">
           <small>
             <i className="bi bi-info-circle me-2"></i>
-            Certains artistes n'appartiennent à aucune organisation. 
-            Ils seront automatiquement associés à votre organisation lors de la sélection.
+            Certains artistes n'appartiennent à aucune entreprise. 
+            Ils seront automatiquement associés à votre entreprise lors de la sélection.
           </small>
         </div>
       )}

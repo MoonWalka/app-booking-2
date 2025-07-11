@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { useTabs } from '@/context/TabsContext';
 import { useContactsRelational } from './useContactsRelational';
-import debug from '@/utils/debugTagsComments';
+// import debug from '@/utils/debugTagsComments';
 
 /**
  * Hook pour gérer les actions sur les contacts avec le nouveau modèle relationnel
@@ -32,10 +32,10 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       const currentTags = contactType === 'structure' 
         ? getStructureWithPersonnes(contactId)?.tags || []
         : getPersonneWithStructures(contactId)?.tags || [];
-      debug.tags.start(currentTags, newTags);
+      // debug.tags.start(currentTags, newTags);
       
       // DEBUG: Appel au service
-      debug.tags.serviceCall(contactId, contactType, newTags);
+      // debug.tags.serviceCall(contactId, contactType, newTags);
       
       if (contactType === 'structure') {
         await updateStructure(contactId, { tags: newTags });
@@ -44,12 +44,12 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       }
       
       // DEBUG: Succès
-      debug.tags.serviceResponse({ success: true });
+      // debug.tags.serviceResponse({ success: true });
       
       return true;
     } catch (error) {
       console.error('Erreur lors de la mise à jour des tags:', error);
-      debug.tags.serviceResponse({ success: false, error: error.message });
+      // debug.tags.serviceResponse({ success: false, error: error.message });
       throw error;
     }
   }, [contactId, contactType, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);
@@ -298,13 +298,13 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       }
       
       // DEBUG: Début du flux
-      debug.comments.start(existingComments, newComment);
+      // debug.comments.start(existingComments, newComment);
       
       // Ajouter le nouveau commentaire
       const updatedComments = [...existingComments, newComment];
       
       // DEBUG: Appel au service
-      debug.comments.serviceCall(contactId, contactType, updatedComments);
+      // debug.comments.serviceCall(contactId, contactType, updatedComments);
       
       // Debug spécifique pour vérifier la date
       console.log('[DEBUG] Nouveau commentaire avant envoi:', {
@@ -322,12 +322,12 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       }
       
       // DEBUG: Succès
-      debug.comments.serviceResponse({ success: true });
+      // debug.comments.serviceResponse({ success: true });
       
       return true;
     } catch (error) {
       console.error('Erreur lors de l\'ajout du commentaire:', error);
-      debug.comments.serviceResponse({ success: false, error: error.message });
+      // debug.comments.serviceResponse({ success: false, error: error.message });
       throw error;
     }
   }, [contactId, contactType, currentUser, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);
@@ -354,13 +354,13 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       }
       
       // DEBUG: Début du flux de suppression
-      debug.comments.start(existingComments, { action: 'delete', id: commentaire.id });
+      // debug.comments.start(existingComments, { action: 'delete', id: commentaire.id });
       
       // Supprimer le commentaire
       const updatedComments = existingComments.filter(c => c.id !== commentaire.id);
       
       // DEBUG: Appel au service
-      debug.comments.serviceCall(contactId, contactType, updatedComments);
+      // debug.comments.serviceCall(contactId, contactType, updatedComments);
       
       // Sauvegarder dans Firebase
       if (contactType === 'structure') {
@@ -370,12 +370,12 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       }
       
       // DEBUG: Succès
-      debug.comments.serviceResponse({ success: true });
+      // debug.comments.serviceResponse({ success: true });
       
       return true;
     } catch (error) {
       console.error('Erreur lors de la suppression du commentaire:', error);
-      debug.comments.serviceResponse({ success: false, error: error.message });
+      // debug.comments.serviceResponse({ success: false, error: error.message });
       throw error;
     }
   }, [contactId, contactType, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);

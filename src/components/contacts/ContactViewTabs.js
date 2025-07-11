@@ -16,7 +16,7 @@ import CommentListModal from '@/components/common/modals/CommentListModal';
 import { getTagColor, getTagCssClass } from '@/config/tagsConfig';
 import { formatActivityTags, getPersonDisplayType } from '@/utils/contactUtils';
 import { useNavigate } from 'react-router-dom';
-import debug from '@/utils/debugTagsComments';
+// import debug from '@/utils/debugTagsComments'; // Fichier supprimé
 
 // Import des nouvelles sections
 import ContactInfoSection from './sections/ContactInfoSection';
@@ -797,7 +797,7 @@ function ContactViewTabs({ id, viewType = null }) {
         ],
         render: () => {
           const tags = extractedData?.tags || contact?.tags || [];
-          debug.tags.componentRender(tags);
+          // debug.tags.componentRender(tags); // Debug supprimé
           return (
             <ContactTagsSection 
               tags={tags}
@@ -880,7 +880,7 @@ function ContactViewTabs({ id, viewType = null }) {
           }
         ],
         render: () => {
-          debug.comments.componentRender(commentaires);
+          // debug.comments.componentRender(commentaires); // Debug supprimé
           return (
             <ContactCommentsSection 
               commentaires={commentaires}

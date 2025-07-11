@@ -6,7 +6,7 @@ import { useEntreprise } from '@/context/EntrepriseContext';
 import structuresService from '@/services/contacts/structuresService';
 import personnesService from '@/services/contacts/personnesService';
 import liaisonsService from '@/services/contacts/liaisonsService';
-import debug from '@/utils/debugTagsComments';
+// import debug from '@/utils/debugTagsComments';
 
 // Cache global pour les contacts
 const contactCache = new Map();
@@ -76,8 +76,8 @@ export function useContactsRelational() {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'modified') {
             const data = change.doc.data();
-            debug.tags.firebaseListener(change.doc.id, data);
-            debug.comments.firebaseListener(change.doc.id, data);
+            // debug.tags.firebaseListener(change.doc.id, data);
+            // debug.comments.firebaseListener(change.doc.id, data);
             
             // Invalider le cache pour cette structure
             const cacheKey = `structure_${change.doc.id}_${currentEntreprise.id}`;
@@ -113,8 +113,8 @@ export function useContactsRelational() {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'modified') {
             const data = change.doc.data();
-            debug.tags.firebaseListener(change.doc.id, data);
-            debug.comments.firebaseListener(change.doc.id, data);
+            // debug.tags.firebaseListener(change.doc.id, data);
+            // debug.comments.firebaseListener(change.doc.id, data);
             
             // Invalider le cache pour cette personne
             const cacheKey = `personne_${change.doc.id}_${currentEntreprise.id}`;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContactSearch, useDeleteContactRelational } from '@/hooks/contacts';
+import { useTabs } from '@/context/TabsContext';
 import Spinner from '@/components/common/Spinner';
 import Alert from '@/components/ui/Alert';
 import styles from './ContactsList.module.css';
@@ -12,6 +13,7 @@ import ContactsListEmptyState from './sections/ContactsListEmptyState';
 
 const ContactsList = () => {
   const navigate = useNavigate();
+  const { openContactTab } = useTabs();
   const {
     contacts,
     loading,
@@ -138,7 +140,7 @@ const ContactsList = () => {
         className={styles.actionButton}
         onClick={(e) => {
           e.stopPropagation();
-          navigate(`/contacts/${row.id}`);
+          openContactTab(row.id, row.displayName || row.nom || 'Contact');
         }}
         title="Voir les détails"
       >
@@ -332,7 +334,7 @@ const ContactsList = () => {
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={handleSortClick}
-            onRowClick={(id) => navigate(`/contacts/${id}`)}
+            onRowClick={(row) => openContactTab(row.id, row.displayName || row.nom || 'Contact')}
           />
         </div>
       ) : (

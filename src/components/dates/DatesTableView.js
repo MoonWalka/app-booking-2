@@ -43,26 +43,6 @@ const DatesTableView = ({
   // Configuration des colonnes du tableau
   const columns = [
     {
-      label: 'Entreprise',
-      key: 'entreprise',
-      sortable: true,
-      render: (item) => (
-        <span className={styles.entrepriseCell}>
-          {item.entrepriseNom || item.entreprise?.nom || '—'}
-        </span>
-      )
-    },
-    {
-      label: 'Collaborateur',
-      key: 'collaborateur',
-      sortable: true,
-      render: (item) => (
-        <span className={styles.collaborateurCell}>
-          {item.collaborateurNom || item.collaborateur?.nom || '—'}
-        </span>
-      )
-    },
-    {
       label: 'Niveau',
       key: 'niveau',
       sortable: true,
@@ -89,13 +69,27 @@ const DatesTableView = ({
       )
     },
     {
-      label: 'Lieu',
+      label: 'Lieu/Libellé',
       key: 'lieuNom',
       sortable: true,
       render: (item) => (
         <div className={styles.lieuCell}>
           <div className={styles.lieuNom}>
-            {item.libelle || item.titre || item.lieuNom || item.lieu?.nom || 'Non spécifié'}
+            {(() => {
+              const lieu = item.lieuNom || item.lieu?.nom;
+              const libelle = item.libelle || item.titre;
+              
+              // Afficher "lieu/libellé" si les deux existent, sinon l'un ou l'autre
+              if (lieu && libelle) {
+                return `${lieu} / ${libelle}`;
+              } else if (lieu) {
+                return lieu;
+              } else if (libelle) {
+                return libelle;
+              } else {
+                return 'Non spécifié';
+              }
+            })()}
           </div>
           {(item.lieuVille || item.lieu?.ville) && (
             <div className={styles.lieuVille}>
@@ -103,26 +97,6 @@ const DatesTableView = ({
             </div>
           )}
         </div>
-      )
-    },
-    {
-      label: 'Organisateur',
-      key: 'organisateur',
-      sortable: true,
-      render: (item) => (
-        <span className={styles.organisateurCell}>
-          {item.organisateurNom || item.organisateur?.nom || item.structureNom || item.structure?.nom || '—'}
-        </span>
-      )
-    },
-    {
-      label: 'Dossier',
-      key: 'dossier',
-      sortable: true,
-      render: (item) => (
-        <span className={styles.dossierCell}>
-          {item.dossier || item.numeroDossier || '—'}
-        </span>
       )
     },
     {
@@ -140,7 +114,7 @@ const DatesTableView = ({
       }
     },
     {
-      label: 'Contrat proposé',
+      label: 'Contrat',
       key: 'contrat',
       sortable: true,
       render: (item) => {
@@ -226,6 +200,301 @@ const DatesTableView = ({
           {item.nbDates || item.nombreDates || 1}
         </span>
       )
+    },
+    {
+      label: 'Devis',
+      key: 'devis',
+      sortable: false,
+      render: (item) => {
+        const hasDevis = item.hasDevis || item.devisId;
+        const devisStatut = item.devisStatut || 'brouillon';
+        
+        let iconClass = 'bi-file-earmark-text';
+        let iconColor = datesTableStyles.iconDefault;
+        let title = 'Créer un devis';
+        let onClick;
+        
+        if (hasDevis) {
+          // Le devis existe
+          title = `Voir le devis ${item.devisNumero || ''}`;
+          
+          // Changer l'icône selon le statut
+          switch (devisStatut) {
+            case 'envoye':
+              iconClass = 'bi-file-earmark-text-fill';
+              iconColor = datesTableStyles.iconInfo;
+              break;
+            case 'accepte':
+              iconClass = 'bi-file-earmark-check-fill';
+              iconColor = datesTableStyles.iconSuccess;
+              break;
+            case 'refuse':
+              iconClass = 'bi-file-earmark-x-fill';
+              iconColor = datesTableStyles.iconDanger;
+              break;
+            case 'annule':
+              iconClass = 'bi-file-earmark-x';
+              iconColor = datesTableStyles.iconMuted;
+              break;
+            default: // brouillon
+              iconClass = 'bi-file-earmark-text-fill';
+              iconColor = datesTableStyles.iconDefault;
+          }
+          
+          onClick = (e) => {
+            e.stopPropagation();
+            if (openDevisTab) {
+              const devisTitle = `${item.devisNumero || 'Devis'} - ${item.artisteNom || 'Date'}`;
+              openDevisTab(item.devisId, devisTitle);
+            }
+          };
+        } else {
+          // Pas de devis, créer un nouveau
+          onClick = (e) => {
+            e.stopPropagation();
+            if (openNewDevisTab) {
+              const title = `Nouveau Devis - ${item.artisteNom || 'Date'}`;
+              openNewDevisTab(item.id, item.structureId || item.organisateurId, title);
+            }
+          };
+        }
+        
+        return (
+          <button
+            className={datesTableStyles.iconButton}
+            onClick={onClick}
+            title={title}
+          >
+            <i className={`bi ${iconClass} ${iconColor}`}></i>
+          </button>
+        );
+      }
+    },
+    {
+      label: 'Pré contrat',
+      key: 'preContrat',
+      sortable: false,
+      render: (item) => {
+        const hasPreContrat = item.preContratId || item.hasPreContrat;
+        const isValidated = item.preContratValidated || item.publicFormCompleted;
+        
+        let iconClass = 'bi-file-earmark';
+        let iconColor = datesTableStyles.iconDefault;
+        let title = 'Créer un pré-contrat';
+        
+        if (hasPreContrat) {
+          if (isValidated) {
+            iconClass = 'bi-file-earmark-check-fill';
+            iconColor = datesTableStyles.iconSuccess;
+            title = 'Pré-contrat validé';
+          } else {
+            iconClass = 'bi-file-earmark-fill';
+            iconColor = datesTableStyles.iconWarning;
+            title = 'Pré-contrat en cours';
+          }
+        }
+        
+        return (
+          <button
+            className={datesTableStyles.iconButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (openPreContratTab) {
+                openPreContratTab(item.id);
+              }
+            }}
+            title={title}
+          >
+            <i className={`bi ${iconClass} ${iconColor}`}></i>
+          </button>
+        );
+      }
+    },
+    {
+      label: 'Confirmation',
+      key: 'confirmation',
+      sortable: false,
+      render: (item) => {
+        const hasValidation = item.confirmationValidee || item.publicFormData?.confirmationValidee;
+        
+        return (
+          <button
+            className={datesTableStyles.iconButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (openTab) {
+                openTab({
+                  id: `confirmation-${item.id}`,
+                  title: `Confirmation - ${item.artisteNom || item.titre || 'Date'}`,
+                  path: `/confirmation?dateId=${item.id}`,
+                  component: 'ConfirmationPage',
+                  params: { dateId: item.id },
+                  icon: 'bi-check-circle'
+                });
+              }
+            }}
+            title={hasValidation ? 'Confirmation validée' : 'Valider la confirmation'}
+          >
+            <i className={`bi ${hasValidation ? 'bi-check-circle-fill' : 'bi-check-circle'} ${hasValidation ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
+          </button>
+        );
+      }
+    },
+    {
+      label: 'Contrat',
+      key: 'contratFinal',
+      sortable: false,
+      render: (item) => {
+        // Simplification : utiliser la fonction fournie ou vérifier l'ID du contrat
+        const hasContrat = hasContractFunc ? hasContractFunc(item.id) : (item.contratId ? true : false);
+        // Le contrat est rédigé s'il a un statut (depuis la collection contrats)
+        const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
+        const isRedige = contractStatus && contractStatus !== 'draft';
+        
+        return (
+          <button
+            className={datesTableStyles.iconButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log('[DatesTableView] Clic sur icône contrat pour date:', item.id);
+              console.log('[DatesTableView] État du contrat - hasContrat:', hasContrat, 'isRedige:', isRedige, 'status:', contractStatus);
+              console.log('[DatesTableView] Détails:', {
+                contratId: item.contratId,
+                status: contractStatus
+              });
+              if (openContratTab) {
+                const dateTitle = item.artisteNom || item.titre || 'Date';
+                openContratTab(item.id, dateTitle, isRedige);
+              }
+            }}
+            title={isRedige ? 'Contrat rédigé - Voir l\'aperçu' : hasContrat ? 'Modifier le contrat' : 'Créer le contrat'}
+          >
+            <i className={`bi ${hasContrat ? 'bi-file-text-fill' : 'bi-file-text'} ${hasContrat ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
+          </button>
+        );
+      }
+    },
+    {
+      label: 'Facture',
+      key: 'facture',
+      sortable: false,
+      render: (item) => {
+        console.log(`[DatesTableView] === DÉBUT RENDU BOUTON FACTURE pour date ${item.id} ===`);
+        
+        // Importer les données de contrat et facture si les fonctions sont disponibles
+        const contractData = getContractData ? getContractData(item.id) : null;
+        const factureData = getFactureData ? getFactureData(item.id) : null;
+        
+        console.log('[DatesTableView] Données contrat:', contractData);
+        console.log('[DatesTableView] Données facture:', factureData);
+        
+        // Vérifier d'abord si le contrat a une facture
+        const hasFactureFromContract = contractData && contractData.factureId;
+        const hasDirectFacture = item.factureId || item.hasFacture || factureData;
+        const hasFacture = hasFactureFromContract || hasDirectFacture;
+        
+        console.log('[DatesTableView] Facture depuis contrat:', hasFactureFromContract);
+        console.log('[DatesTableView] Facture directe:', hasDirectFacture);
+        console.log('[DatesTableView] A une facture:', hasFacture);
+        
+        // Déterminer l'ID de la facture
+        const factureId = hasFactureFromContract ? contractData.factureId : (factureData?.id || item.factureId);
+        console.log('[DatesTableView] ID facture déterminé:', factureId);
+        
+        // Déterminer si on peut générer une facture
+        const hasContract = hasContractFunc ? hasContractFunc(item.id) : false;
+        const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
+        // Un contrat peut être facturé s'il est finalisé, signé, envoyé ou en draft (rédigé)
+        const canGenerateFacture = hasContract && (contractStatus === 'signed' || contractStatus === 'finalized' || contractStatus === 'sent' || contractStatus === 'draft');
+        
+        console.log('[DatesTableView] A un contrat:', hasContract);
+        console.log('[DatesTableView] Statut contrat:', contractStatus);
+        console.log('[DatesTableView] Peut générer facture:', canGenerateFacture);
+        
+        let iconClass = 'bi-receipt';
+        let iconColor = datesTableStyles.iconDefault;
+        let title = 'Facture non disponible';
+        let disabled = true;
+        let buttonStatus = 'non_disponible';
+        
+        if (hasFacture) {
+          iconClass = 'bi-receipt-cutoff';
+          iconColor = datesTableStyles.iconSuccess;
+          title = 'Voir la facture';
+          disabled = false;
+          buttonStatus = 'voir_facture';
+        } else if (canGenerateFacture) {
+          iconClass = 'bi-receipt';
+          iconColor = datesTableStyles.iconWarning;
+          title = 'Générer une facture';
+          disabled = false;
+          buttonStatus = 'generer_facture';
+        } else if (!hasContract) {
+          title = 'Contrat requis pour facturer';
+          buttonStatus = 'pas_de_contrat';
+        } else if (!canGenerateFacture) {
+          // Le contrat existe mais n'est pas dans un état facturable
+          title = 'Contrat en cours';
+          buttonStatus = 'contrat_en_cours';
+        }
+        
+        console.log('[DatesTableView] État final bouton:', {
+          buttonStatus,
+          iconClass,
+          iconColor,
+          title,
+          disabled
+        });
+        console.log(`[DatesTableView] === FIN RENDU BOUTON FACTURE pour date ${item.id} ===`);
+        
+        return (
+          <button
+            className={datesTableStyles.iconButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log(`[DatesTableView] === DÉBUT CLIC BOUTON FACTURE pour date ${item.id} ===`);
+              console.log('[DatesTableView] État au moment du clic:', {
+                disabled,
+                hasFacture,
+                factureId,
+                canGenerateFacture,
+                buttonStatus,
+                handleViewFacture: !!handleViewFacture,
+                handleGenerateFacture: !!handleGenerateFacture
+              });
+              
+              if (!disabled) {
+                if (hasFacture && factureId && handleViewFacture) {
+                  console.log(`[DatesTableView] Action: VOIR FACTURE ${factureId}`);
+                  console.log('[DatesTableView] Appel de handleViewFacture avec ID:', factureId);
+                  // Ouvrir la facture existante
+                  handleViewFacture(factureId);
+                  console.log('[DatesTableView] handleViewFacture appelé');
+                } else if (canGenerateFacture && handleGenerateFacture) {
+                  console.log(`[DatesTableView] Action: GÉNÉRER FACTURE pour date ${item.id}`);
+                  console.log('[DatesTableView] Appel de handleGenerateFacture avec dateId:', item.id);
+                  // Générer une nouvelle facture
+                  // Récupérer le contratId s'il existe
+                  const contractData = getContractData && getContractData(item.id);
+                  const contratId = contractData?.id || null;
+                  console.log('[DatesTableView] ContratId trouvé:', contratId);
+                  handleGenerateFacture(item.id, contratId);
+                  console.log('[DatesTableView] handleGenerateFacture appelé');
+                } else {
+                  console.log('[DatesTableView] Aucune action possible - conditions non remplies');
+                }
+              } else {
+                console.log('[DatesTableView] Bouton désactivé - pas d\'action');
+              }
+              console.log(`[DatesTableView] === FIN CLIC BOUTON FACTURE pour date ${item.id} ===`);
+            }}
+            title={title}
+            disabled={disabled}
+          >
+            <i className={`bi ${iconClass} ${iconColor}`}></i>
+          </button>
+        );
+      }
     }
   ];
 
@@ -289,129 +558,14 @@ const DatesTableView = ({
     }
   };
 
-  // Actions sur les lignes - maintenant avec toutes les icônes d'actions
+  // Actions sur les lignes
   const renderActions = (item) => (
-    <div className="d-flex gap-1 align-items-center">
-      {/* Bouton Devis */}
-      <button
-        className={datesTableStyles.iconButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          const hasDevis = item.hasDevis || item.devisId;
-          if (hasDevis && openDevisTab) {
-            const devisTitle = `${item.devisNumero || 'Devis'} - ${item.artisteNom || 'Date'}`;
-            openDevisTab(item.devisId, devisTitle);
-          } else if (openNewDevisTab) {
-            const title = `Nouveau Devis - ${item.artisteNom || 'Date'}`;
-            openNewDevisTab(item.id, item.structureId || item.organisateurId, title);
-          }
-        }}
-        title={item.hasDevis || item.devisId ? 'Voir le devis' : 'Créer un devis'}
-      >
-        <i className={`bi ${item.hasDevis || item.devisId ? 'bi-file-earmark-text-fill' : 'bi-file-earmark-text'} ${item.hasDevis || item.devisId ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
-      </button>
-
-      {/* Bouton Pré-contrat */}
-      <button
-        className={datesTableStyles.iconButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (openPreContratTab) {
-            openPreContratTab(item.id);
-          }
-        }}
-        title={item.preContratValidated ? 'Pré-contrat validé' : 'Gérer le pré-contrat'}
-      >
-        <i className={`bi ${item.preContratValidated ? 'bi-file-earmark-check-fill' : 'bi-file-earmark'} ${item.preContratValidated ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
-      </button>
-
-      {/* Bouton Confirmation */}
-      <button
-        className={datesTableStyles.iconButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (openTab) {
-            openTab({
-              id: `confirmation-${item.id}`,
-              title: `Confirmation - ${item.artisteNom || item.titre || 'Date'}`,
-              path: `/confirmation?dateId=${item.id}`,
-              component: 'ConfirmationPage',
-              params: { dateId: item.id },
-              icon: 'bi-check-circle'
-            });
-          }
-        }}
-        title={item.confirmationValidee ? 'Confirmation validée' : 'Valider la confirmation'}
-      >
-        <i className={`bi ${item.confirmationValidee ? 'bi-check-circle-fill' : 'bi-check-circle'} ${item.confirmationValidee ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
-      </button>
-
-      {/* Bouton Contrat */}
-      <button
-        className={datesTableStyles.iconButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (openContratTab) {
-            const hasContrat = hasContractFunc ? hasContractFunc(item.id) : false;
-            const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
-            const isRedige = contractStatus && contractStatus !== 'draft';
-            const dateTitle = item.artisteNom || item.titre || 'Date';
-            openContratTab(item.id, dateTitle, isRedige);
-          }
-        }}
-        title="Gérer le contrat"
-      >
-        <i className={`bi bi-file-text ${hasContractFunc && hasContractFunc(item.id) ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
-      </button>
-
-      {/* Bouton Facture */}
-      <button
-        className={datesTableStyles.iconButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          const contractData = getContractData ? getContractData(item.id) : null;
-          const factureData = getFactureData ? getFactureData(item.id) : null;
-          const hasFactureFromContract = contractData && contractData.factureId;
-          const hasDirectFacture = item.factureId || item.hasFacture || factureData;
-          const hasFacture = hasFactureFromContract || hasDirectFacture;
-          const factureId = hasFactureFromContract ? contractData.factureId : (factureData?.id || item.factureId);
-          
-          if (hasFacture && factureId && handleViewFacture) {
-            handleViewFacture(factureId);
-          } else if (handleGenerateFacture) {
-            const contratId = contractData?.id || null;
-            handleGenerateFacture(item.id, contratId);
-          }
-        }}
-        title={item.factureId ? 'Voir la facture' : 'Générer une facture'}
-        disabled={!hasContractFunc || !hasContractFunc(item.id)}
-      >
-        <i className={`bi ${item.factureId ? 'bi-receipt-cutoff' : 'bi-receipt'} ${item.factureId ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
-      </button>
-
-      {/* Séparateur */}
-      <div className="vr mx-1" style={{ height: '20px' }}></div>
-
-      {/* Boutons Modifier/Supprimer */}
-      <ActionButtons
-        onEdit={() => onEdit && onEdit(item)}
-        onDelete={() => onDelete && onDelete(item)}
-        editTitle="Modifier la date"
-        deleteTitle="Supprimer la date"
-      />
-
-      {/* Bouton Ouvrir */}
-      <button
-        className="btn btn-sm btn-outline-primary"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleRowClick(item);
-        }}
-        title="Ouvrir les détails"
-      >
-        <i className="bi bi-box-arrow-up-right"></i>
-      </button>
-    </div>
+    <ActionButtons
+      onEdit={() => onEdit && onEdit(item)}
+      onDelete={() => onDelete && onDelete(item)}
+      editTitle="Modifier le date"
+      deleteTitle="Supprimer le date"
+    />
   );
 
   if (loading) {
@@ -437,8 +591,8 @@ const DatesTableView = ({
     return (
       <EntityEmptyState
         icon="bi-calendar-x"
-        title="Aucune date"
-        message="Il n'y a pas encore de dates enregistrées."
+        title="Aucun date"
+        message="Il n'y a pas encore de dates enregistrés."
       />
     );
   }
@@ -474,7 +628,7 @@ const DatesTableView = ({
         <EntityEmptyState
           icon="bi-search"
           title="Aucun résultat"
-          message={`Aucune date ne correspond à "${searchTerm}"`}
+          message={`Aucun date ne correspond à "${searchTerm}"`}
         />
       )}
     </div>

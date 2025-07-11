@@ -55,6 +55,7 @@ import InventairePagesPage from '@/pages/InventairePagesPage';
 import ComponentPreviewPage from '@/pages/ComponentPreviewPage';
 import PreviewWrapper from '@/components/preview/PreviewWrapper';
 import FestivalsDatesPage from '@/pages/FestivalsDatesPage';
+import PreContratFormResponsePage from '@/pages/PreContratFormResponsePage';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -163,6 +164,8 @@ function App() {
                       <Route path="/create-default-template" element={<CreateDefaultTemplate />} />
                     
                     <Route path="/login" element={<LoginPage />} />
+                    
+                    <Route path="/pre-contrat/:dateId/:token" element={<PreContratFormResponsePage />} />
                     
                     <Route path="/onboarding" element={
                       <PrivateRoute>

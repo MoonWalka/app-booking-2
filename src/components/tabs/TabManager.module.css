@@ -173,7 +173,7 @@
 .tabContent {
   padding: 0;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;

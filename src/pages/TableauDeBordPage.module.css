@@ -350,6 +350,28 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Informations de pagination */
+.paginationInfo {
+  padding: 1rem 1.5rem;
+  text-align: center;
+  color: var(--tc-text-secondary, #6c757d);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--tc-border-default, #e5e7eb);
+  background-color: var(--tc-bg-color-light, #f8f9fa);
+}
+
+.paginationInfo p {
+  margin: 0;
+}
+
+/* Section du tableau */
+.tableSection {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .container {

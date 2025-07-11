@@ -27,13 +27,13 @@ const TableauDeBordPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Charger les données du tableau de bord
-  useEffect(() => {
-    const loadDashboardData = async () => {
-      if (!currentEntreprise?.id) return;
-      
-      try {
-        setLoading(true);
+  // Fonction pour charger les données du tableau de bord
+  const loadDashboardData = async () => {
+    if (!currentEntreprise?.id) return;
+    
+    try {
+      setLoading(true);
+      setError(null);
         
         // Charger les dates récentes avec leurs informations
         // TEMPORAIRE: Requête simplifiée sans orderBy pour éviter l'index
@@ -167,14 +167,16 @@ const TableauDeBordPage = () => {
 
         setDates(sortedDates);
         
-      } catch (err) {
-        console.error('Erreur lors du chargement des données:', err);
-        setError('Erreur lors du chargement des données du tableau de bord');
-      } finally {
-        setLoading(false);
-      }
-    };
+    } catch (err) {
+      console.error('Erreur lors du chargement des données:', err);
+      setError('Erreur lors du chargement des données du tableau de bord');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Charger les données au montage et quand l'entreprise change
+  useEffect(() => {
     loadDashboardData();
   }, [currentEntreprise?.id]);
 
@@ -822,6 +824,7 @@ const TableauDeBordPage = () => {
                 error={error}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
+                onRefresh={loadDashboardData}
                 showSearch={true}
                 // Props pour gérer les contrats et factures
                 hasContractFunc={(dateId) => {

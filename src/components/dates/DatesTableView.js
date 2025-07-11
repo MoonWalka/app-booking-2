@@ -5,6 +5,7 @@ import ActionButtons from '@/components/ui/ActionButtons';
 import EntityEmptyState from '@/components/ui/EntityEmptyState';
 import Alert from '@/components/ui/Alert';
 import NiveauDisplay from './NiveauDisplay';
+import DatesTableControls from './DatesTableControls';
 import styles from '@/pages/TableauDeBordPage.module.css';
 import datesTableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
 
@@ -24,6 +25,7 @@ const DatesTableView = ({
   error = null,
   onDelete,
   onEdit,
+  onRefresh, // Nouvelle prop pour recharger les données
   showSearch = true,
   // Nouvelles props pour gérer les contrats et factures
   hasContractFunc,
@@ -39,6 +41,9 @@ const DatesTableView = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
+  const [dateFilter, setDateFilter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(20);
 
   // Configuration des colonnes du tableau
   const columns = [
@@ -500,18 +505,34 @@ const DatesTableView = ({
 
   // Filtrage des dates
   const filteredDates = useMemo(() => {
-    if (!searchTerm) return dates;
+    let filtered = [...dates];
     
-    const searchLower = searchTerm.toLowerCase();
-    return dates.filter(date => {
-      return (
-        (date.titre && date.titre.toLowerCase().includes(searchLower)) ||
-        (date.artisteNom && date.artisteNom.toLowerCase().includes(searchLower)) ||
-        (date.lieuNom && date.lieuNom.toLowerCase().includes(searchLower)) ||
-        (date.contactNom && date.contactNom.toLowerCase().includes(searchLower))
-      );
-    });
-  }, [dates, searchTerm]);
+    // Filtre par recherche
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(date => {
+        return (
+          (date.titre && date.titre.toLowerCase().includes(searchLower)) ||
+          (date.artisteNom && date.artisteNom.toLowerCase().includes(searchLower)) ||
+          (date.lieuNom && date.lieuNom.toLowerCase().includes(searchLower)) ||
+          (date.contactNom && date.contactNom.toLowerCase().includes(searchLower)) ||
+          (date.projet && date.projet.toLowerCase().includes(searchLower)) ||
+          (date.lieuVille && date.lieuVille.toLowerCase().includes(searchLower))
+        );
+      });
+    }
+    
+    // Filtre par date
+    if (dateFilter) {
+      const filterDate = new Date(dateFilter);
+      filtered = filtered.filter(date => {
+        const dateValue = date.date?.toDate ? date.date.toDate() : date.date ? new Date(date.date) : null;
+        return dateValue && dateValue >= filterDate;
+      });
+    }
+    
+    return filtered;
+  }, [dates, searchTerm, dateFilter]);
 
   // Tri des dates
   const sortedDates = useMemo(() => {
@@ -537,6 +558,15 @@ const DatesTableView = ({
     });
     return sorted;
   }, [filteredDates, sortField, sortDirection]);
+
+  // Pagination
+  const paginatedDates = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedDates.slice(startIndex, endIndex);
+  }, [sortedDates, currentPage, itemsPerPage]);
+
+  const totalPages = Math.ceil(sortedDates.length / itemsPerPage);
 
   // Gestion du tri
   const handleSort = (field) => {
@@ -567,6 +597,112 @@ const DatesTableView = ({
       deleteTitle="Supprimer le date"
     />
   );
+
+  // Handlers pour le bandeau de contrôle
+  const handleRefresh = () => {
+    if (onRefresh) {
+      // Si une fonction de rechargement est fournie, l'utiliser
+      onRefresh();
+    } else {
+      // Sinon, fallback sur le rechargement de page
+      console.warn('Aucune fonction de rechargement fournie, rechargement de la page entière');
+      window.location.reload();
+    }
+  };
+
+  const handleCalculate = () => {
+    console.log('Calcul des données...');
+    // Logique de calcul à implémenter
+  };
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  const handleFilter = () => {
+    console.log('Application des filtres...');
+    setCurrentPage(1);
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setDateFilter('');
+    setCurrentPage(1);
+  };
+
+  const handleAdd = () => {
+    if (openTab) {
+      openTab({
+        id: 'date-creation',
+        title: 'Nouvelle Date',
+        path: '/booking/nouvelle-date',
+        component: 'DateCreationPage',
+        icon: 'bi-calendar-plus'
+      });
+    }
+  };
+
+  const handleExportExcel = () => {
+    console.log('Export Excel des dates...');
+    
+    // Préparer les données pour l'export
+    const exportData = sortedDates.map(date => ({
+      'Niveau': date.niveau || '',
+      'Artiste': date.artisteNom || '',
+      'Projet': date.formule || date.projet || date.projetNom || '',
+      'Lieu': date.lieuNom || date.lieu?.nom || '',
+      'Ville': date.lieuVille || date.lieu?.ville || '',
+      'Prise d\'option': date.priseOption ? new Date(date.priseOption).toLocaleDateString('fr-FR') : '',
+      'Type contrat': date.typeContrat || date.contratType || '',
+      'Date début': date.date ? new Date(date.date).toLocaleDateString('fr-FR') : '',
+      'Date fin': date.dateFin ? new Date(date.dateFin).toLocaleDateString('fr-FR') : '',
+      'Montant': date.montant || date.montantTotal || '',
+      'Nombre de dates': date.nbDates || date.nombreDates || 1,
+      'Statut devis': date.devisStatut || '',
+      'Pré-contrat': date.preContratId ? 'Oui' : 'Non',
+      'Confirmation': date.confirmationValidee ? 'Validée' : 'En attente',
+      'Contrat': date.contratId ? 'Oui' : 'Non',
+      'Facture': date.factureId ? 'Oui' : 'Non'
+    }));
+
+    // Créer le CSV
+    const headers = Object.keys(exportData[0] || {});
+    const csvContent = [
+      headers.join(';'),
+      ...exportData.map(row => 
+        headers.map(header => {
+          const value = row[header];
+          // Échapper les guillemets et entourer de guillemets si nécessaire
+          if (typeof value === 'string' && (value.includes(';') || value.includes('"') || value.includes('\n'))) {
+            return `"${value.replace(/"/g, '""')}"`;
+          }
+          return value;
+        }).join(';')
+      )
+    ].join('\n');
+
+    // Créer un blob et télécharger
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `dates_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleChangeView = () => {
+    console.log('Changement de vue...');
+    // Logique de changement de vue à implémenter
+  };
+
+  const handleShowMap = () => {
+    console.log('Affichage sur la carte...');
+    // Logique d'affichage carte à implémenter
+  };
 
   if (loading) {
     return (
@@ -599,22 +735,29 @@ const DatesTableView = ({
 
   return (
     <div className={styles.tableSection}>
-      {showSearch && (
-        <div className={styles.searchSection}>
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Rechercher par artiste, lieu, contact..."
-            />
-          </div>
-        </div>
-      )}
+      {/* Bandeau de contrôle */}
+      <DatesTableControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        onRefresh={handleRefresh}
+        onCalculate={handleCalculate}
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        onSearch={handleSearch}
+        dateFilter={dateFilter}
+        onDateFilterChange={setDateFilter}
+        onFilter={handleFilter}
+        onClearFilters={handleClearFilters}
+        onAdd={handleAdd}
+        onExportExcel={handleExportExcel}
+        onChangeView={handleChangeView}
+        onShowMap={handleShowMap}
+        loading={loading}
+      />
       
       <Table
-        data={sortedDates}
+        data={paginatedDates}
         columns={columns}
         onRowClick={handleRowClick}
         renderActions={renderActions}
@@ -624,12 +767,23 @@ const DatesTableView = ({
         className={styles.datesTable}
       />
       
-      {filteredDates.length === 0 && searchTerm && (
+      {filteredDates.length === 0 && (searchTerm || dateFilter) && (
         <EntityEmptyState
           icon="bi-search"
           title="Aucun résultat"
-          message={`Aucun date ne correspond à "${searchTerm}"`}
+          message={`Aucun date ne correspond aux critères de recherche`}
         />
+      )}
+      
+      {/* Informations de pagination */}
+      {sortedDates.length > 0 && (
+        <div className={styles.paginationInfo}>
+          <p>
+            Affichage de {((currentPage - 1) * itemsPerPage) + 1} à{' '}
+            {Math.min(currentPage * itemsPerPage, sortedDates.length)} sur{' '}
+            {sortedDates.length} résultats
+          </p>
+        </div>
       )}
     </div>
   );

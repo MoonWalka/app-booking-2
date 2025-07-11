@@ -6,6 +6,7 @@ import EntityEmptyState from '@/components/ui/EntityEmptyState';
 import Alert from '@/components/ui/Alert';
 import NiveauDisplay from './NiveauDisplay';
 import DatesTableControls from './DatesTableControls';
+import DatesTableTotals from './DatesTableTotals';
 import styles from '@/pages/TableauDeBordPage.module.css';
 import datesTableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
 
@@ -44,9 +45,32 @@ const DatesTableView = ({
   const [dateFilter, setDateFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
+  const [selectedIds, setSelectedIds] = useState(new Set());
 
   // Configuration des colonnes du tableau
   const columns = [
+    {
+      label: '',
+      key: 'selection',
+      sortable: false,
+      width: '50px',
+      render: (item) => (
+        <input
+          type="checkbox"
+          checked={selectedIds.has(item.id)}
+          onChange={(e) => {
+            const newSelected = new Set(selectedIds);
+            if (e.target.checked) {
+              newSelected.add(item.id);
+            } else {
+              newSelected.delete(item.id);
+            }
+            setSelectedIds(newSelected);
+          }}
+          onClick={(e) => e.stopPropagation()}
+        />
+      )
+    },
     {
       label: 'Niveau',
       key: 'niveau',
@@ -568,6 +592,11 @@ const DatesTableView = ({
 
   const totalPages = Math.ceil(sortedDates.length / itemsPerPage);
 
+  // Dates sélectionnées pour le calcul des totaux
+  const selectedDates = useMemo(() => {
+    return dates.filter(date => selectedIds.has(date.id));
+  }, [dates, selectedIds]);
+
   // Gestion du tri
   const handleSort = (field) => {
     if (sortField === field) {
@@ -611,8 +640,13 @@ const DatesTableView = ({
   };
 
   const handleCalculate = () => {
-    console.log('Calcul des données...');
-    // Logique de calcul à implémenter
+    console.log('Calcul des montants sélectionnés...');
+    const total = selectedDates.reduce((sum, date) => {
+      const amount = date.montant || date.montantTotal || 0;
+      return sum + amount;
+    }, 0);
+    console.log(`Total sélectionné: ${total.toLocaleString('fr-FR')} €`);
+    // Le calcul est automatique avec le composant DatesTableTotals
   };
 
   const handleSearch = (value) => {
@@ -785,6 +819,9 @@ const DatesTableView = ({
           </p>
         </div>
       )}
+      
+      {/* Bandeau des totaux */}
+      <DatesTableTotals selectedDates={selectedDates} />
     </div>
   );
 };

@@ -370,6 +370,9 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  min-height: 400px;
+  padding-bottom: 80px; /* Espace pour le bandeau des totaux */
 }
 
 /* Responsive */

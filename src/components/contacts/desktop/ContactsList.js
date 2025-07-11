@@ -10,7 +10,7 @@ import ContactsStatsCards from './sections/ContactsStatsCards';
 import ContactsListSearchFilter from './sections/ContactsListSearchFilter';
 import ContactsListEmptyState from './sections/ContactsListEmptyState';
 
-const ContactsList = ({ onNavigateToDetails }) => {
+const ContactsList = () => {
   const navigate = useNavigate();
   const {
     contacts,
@@ -138,7 +138,7 @@ const ContactsList = ({ onNavigateToDetails }) => {
         className={styles.actionButton}
         onClick={(e) => {
           e.stopPropagation();
-          onNavigateToDetails(row.id);
+          navigate(`/contacts/${row.id}`);
         }}
         title="Voir les détails"
       >
@@ -332,7 +332,7 @@ const ContactsList = ({ onNavigateToDetails }) => {
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={handleSortClick}
-            onRowClick={onNavigateToDetails}
+            onRowClick={(id) => navigate(`/contacts/${id}`)
           />
         </div>
       ) : (

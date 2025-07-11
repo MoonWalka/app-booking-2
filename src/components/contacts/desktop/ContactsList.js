@@ -332,7 +332,7 @@ const ContactsList = () => {
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={handleSortClick}
-            onRowClick={(id) => navigate(`/contacts/${id}`)
+            onRowClick={(id) => navigate(`/contacts/${id}`)}
           />
         </div>
       ) : (

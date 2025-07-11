@@ -39,14 +39,9 @@ const BookingParametragePage = () => {
   }, [projets]);
 
   
-  // Effet séparé pour sélectionner automatiquement le premier artiste
-  useEffect(() => {
-    if (activeTab === 'artistes' && !selectedArtisteId && artistes.length > 0 && !artistesLoading) {
-      const firstArtisteId = artistes[0].id;
-      setSelectedArtisteId(firstArtisteId);
-      // Ne pas changer l'URL pour rester dans le système d'onglets
-    }
-  }, [activeTab, artistes, artistesLoading]); // Retiré selectedArtisteId des dépendances pour éviter la boucle
+  // Sélectionner le premier artiste si aucun n'est sélectionné
+  // Mais sans useEffect pour éviter les boucles infinies
+  const effectiveSelectedArtisteId = selectedArtisteId || (artistes.length > 0 ? artistes[0].id : null);
 
   
   // Gestionnaire pour la sélection d'un artiste
@@ -153,7 +148,7 @@ const BookingParametragePage = () => {
               <button
                 key={artiste.id}
                 className={`list-group-item list-group-item-action border-0 ${
-                  selectedArtisteId === artiste.id ? 'active' : ''
+                  effectiveSelectedArtisteId === artiste.id ? 'active' : ''
                 }`}
                 onClick={() => handleArtisteSelect(artiste.id)}
               >
@@ -169,9 +164,9 @@ const BookingParametragePage = () => {
   };
 
   const renderMainContent = () => {
-    if (selectedArtisteId) {
+    if (effectiveSelectedArtisteId) {
       // Vue détail d'un artiste spécifique
-      const artiste = artistes.find(a => a.id === selectedArtisteId);
+      const artiste = artistes.find(a => a.id === effectiveSelectedArtisteId);
       return (
         <div>
           {artiste ? (
@@ -245,7 +240,7 @@ const BookingParametragePage = () => {
                   </div>
                   
                   {(() => {
-                    const projetsArtiste = getProjetsForArtiste(selectedArtisteId);
+                    const projetsArtiste = getProjetsForArtiste(effectiveSelectedArtisteId);
                     
                     if (projetsArtiste.length === 0 && !artiste.projet?.nom) {
                       return (
@@ -334,7 +329,7 @@ const BookingParametragePage = () => {
     
     // Vue des artistes uniquement
     // Si aucun artiste n'est sélectionné et qu'il y en a dans la liste, afficher un message
-    if (!selectedArtisteId && artistes.length > 0) {
+    if (!effectiveSelectedArtisteId && artistes.length > 0) {
       return (
         <div className="text-center p-5">
           <i className="bi bi-music-note-beamed" style={{ fontSize: '4rem', color: '#6c757d' }}></i>

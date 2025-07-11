@@ -45,9 +45,9 @@ function DevisPreview({ devisData }) {
             <h3>ÉMETTEUR</h3>
             <div className={styles.details}>
               <div>{devisData.emetteur || 'Nom de l\'émetteur'}</div>
-              <div>Entreprise TourCraft</div>
-              <div>Adresse émetteur</div>
-              <div>Email • Téléphone</div>
+              <div>{devisData.entrepriseNom || devisData.entreprise || 'Entreprise'}</div>
+              <div>{devisData.entrepriseAdresse || 'Adresse émetteur'}</div>
+              <div>{devisData.entrepriseEmail || 'Email'} • {devisData.entrepriseTelephone || 'Téléphone'}</div>
             </div>
           </div>
 

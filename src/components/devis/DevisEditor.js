@@ -53,7 +53,11 @@ function DevisEditor({ dateId, structureId, devisId }) {
     numero: '',
     statut: 'brouillon',
     emetteur: currentUser?.displayName || currentUser?.email || '',
-    entreprise: '',
+    entreprise: currentEntreprise?.nom || '',
+    entrepriseNom: currentEntreprise?.nom || '',
+    entrepriseAdresse: currentEntreprise?.adresse || '',
+    entrepriseEmail: currentEntreprise?.email || '',
+    entrepriseTelephone: currentEntreprise?.telephone || '',
     collaborateurId: '',
     collaborateurNom: '',
     
@@ -104,6 +108,21 @@ function DevisEditor({ dateId, structureId, devisId }) {
     updatedAt: new Date()
   });
   const [originalDevisData, setOriginalDevisData] = useState(null);
+
+  // Mettre à jour les données de l'entreprise quand elle change
+  useEffect(() => {
+    if (currentEntreprise) {
+      setDevisData(prev => ({
+        ...prev,
+        entreprise: currentEntreprise.nom || '',
+        entrepriseNom: currentEntreprise.nom || '',
+        entrepriseAdresse: currentEntreprise.adresse || '',
+        entrepriseEmail: currentEntreprise.email || '',
+        entrepriseTelephone: currentEntreprise.telephone || '',
+        entrepriseId: currentEntreprise.id
+      }));
+    }
+  }, [currentEntreprise]);
 
   // Charger le devis existant si ID fourni
   useEffect(() => {

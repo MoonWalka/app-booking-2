@@ -16,18 +16,22 @@ const BookingParametragePage = () => {
   const [editArtisteData, setEditArtisteData] = useState(null);
   const [showProjetModal, setShowProjetModal] = useState(false);
   const [editProjetData, setEditProjetData] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Configuration stable pour éviter les re-renders
+  const artistesConfig = React.useMemo(() => ({
+    sort: { field: 'nom', direction: 'asc' }
+    // Retirer refreshKey de la config pour éviter la boucle
+  }), []); // Dépendances vides = stable
+  
+  const projetsConfig = React.useMemo(() => ({
+    sort: { field: 'intitule', direction: 'asc' }
+  }), []);
   
   // Récupérer la liste des artistes pour le menu
-  const { items: artistes, loading: artistesLoading } = useGenericEntityList('artistes', {
-    sort: { field: 'nom', direction: 'asc' },
-    refreshKey
-  });
+  const { items: artistes, loading: artistesLoading, refetch: refetchArtistes } = useGenericEntityList('artistes', artistesConfig);
   
   // Récupérer la liste des projets pour trouver ceux associés à l'artiste
-  const { items: projets } = useGenericEntityList('projets', {
-    sort: { field: 'intitule', direction: 'asc' }
-  });
+  const { items: projets, refetch: refetchProjets } = useGenericEntityList('projets', projetsConfig);
   
   // Fonction pour trouver les projets associés à un artiste
   const getProjetsForArtiste = useCallback((artisteId) => {
@@ -54,9 +58,9 @@ const BookingParametragePage = () => {
   // Gestionnaire pour la création/modification d'un artiste
   const handleArtisteCreated = useCallback((artisteData) => {
     console.log('Artiste créé/modifié:', artisteData);
-    setRefreshKey(prev => prev + 1); // Rafraîchir la liste
+    refetchArtistes(); // Rafraîchir la liste directement
     setEditArtisteData(null); // Réinitialiser le mode édition
-  }, []);
+  }, [refetchArtistes]);
   
   // Gestionnaire pour ouvrir la modal en mode édition
   const handleEditArtiste = useCallback((artiste) => {
@@ -79,9 +83,9 @@ const BookingParametragePage = () => {
   // Gestionnaires pour les projets
   const handleProjetCreated = useCallback((projetData) => {
     console.log('Projet créé/modifié:', projetData);
-    setRefreshKey(prev => prev + 1); // Rafraîchir la liste
+    refetchProjets(); // Rafraîchir la liste directement
     setEditProjetData(null); // Réinitialiser le mode édition
-  }, []);
+  }, [refetchProjets]);
   
   const handleCreateProjet = useCallback(() => {
     setEditProjetData(null);

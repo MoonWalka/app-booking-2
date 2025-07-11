@@ -46,7 +46,7 @@ const BookingParametragePage = () => {
       setSelectedArtisteId(firstArtisteId);
       // Ne pas changer l'URL pour rester dans le système d'onglets
     }
-  }, [activeTab, selectedArtisteId, artistes, artistesLoading]);
+  }, [activeTab, artistes, artistesLoading]); // Retiré selectedArtisteId des dépendances pour éviter la boucle
 
   
   // Gestionnaire pour la sélection d'un artiste
@@ -406,14 +406,12 @@ const BookingParametragePage = () => {
       />
       
       {/* Modal de création/édition de projet */}
-      {/* Temporairement désactivé pour debug
       <ProjetCreationModal
         show={showProjetModal}
         onHide={handleCloseProjetModal}
         onCreated={handleProjetCreated}
         editProjet={editProjetData}
       />
-      */}
     </Container>
   );
 };

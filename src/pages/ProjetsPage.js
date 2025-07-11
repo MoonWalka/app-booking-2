@@ -1,10 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
 import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useTabs } from '@/context/TabsContext';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import ProjetCreationModal from '../components/projets/modal/ProjetCreationModal';
+import ProjetsTableControls from '@/components/projets/ProjetsTableControls';
 import '@styles/index.css';
 
 const ProjetsPage = () => {
@@ -15,6 +16,11 @@ const ProjetsPage = () => {
   const [artistes, setArtistes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  // États pour les filtres
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedArtiste, setSelectedArtiste] = useState('');
   
   const { openDateCreationTab } = useTabs();
   const { currentEntreprise } = useEntreprise();
@@ -84,6 +90,44 @@ const ProjetsPage = () => {
       unsubscribeArtistes();
     };
   }, [currentEntreprise?.id]);
+  
+  // Fonction pour recharger les données
+  const loadProjets = useCallback(async () => {
+    if (!currentEntreprise?.id) return;
+    
+    setIsRefreshing(true);
+    
+    // Simuler un délai minimum pour voir l'animation
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 500);
+  }, [currentEntreprise?.id]);
+  
+  // Filtrage des projets
+  const filteredProjets = useMemo(() => {
+    let filtered = [...projets];
+    
+    // Filtre par recherche
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(projet => 
+        projet.intitule?.toLowerCase().includes(searchLower) ||
+        projet.codeAdmin?.toLowerCase().includes(searchLower) ||
+        projet.codeAnalytique?.toLowerCase().includes(searchLower) ||
+        projet.libelleAnalytique?.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    // Filtre par artiste
+    if (selectedArtiste) {
+      filtered = filtered.filter(projet => 
+        projet.artistesSelectionnes && 
+        projet.artistesSelectionnes.includes(selectedArtiste)
+      );
+    }
+    
+    return filtered;
+  }, [projets, searchTerm, selectedArtiste]);
   
   // Fonction pour obtenir les noms des artistes à partir de leurs IDs
   const getArtistesNames = useCallback((artisteIds) => {
@@ -190,21 +234,44 @@ const ProjetsPage = () => {
       
       <Row>
         <Col>
-          {projets.length === 0 ? (
-            <div className="text-center p-5">
+          {/* Bandeau de contrôle */}
+          <ProjetsTableControls
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+            selectedArtiste={selectedArtiste}
+            onArtisteChange={setSelectedArtiste}
+            artistes={artistes}
+            onRefresh={loadProjets}
+            onClearFilters={() => {
+              setSearchTerm('');
+              setSelectedArtiste('');
+            }}
+            loading={isRefreshing}
+          />
+          
+          {filteredProjets.length === 0 ? (
+            <div className="text-center p-5 bg-white rounded shadow-sm">
               <i className="bi bi-folder" style={{ fontSize: '4rem', color: '#6c757d' }}></i>
-              <h4 className="mt-3">Aucun projet</h4>
-              <p className="text-muted">Commencez par créer votre premier projet.</p>
-              <Button 
-                variant="primary"
-                onClick={handleCreateProjet}
-              >
-                <i className="bi bi-plus me-1"></i>
-                Créer un projet
-              </Button>
+              <h4 className="mt-3">
+                {searchTerm || selectedArtiste ? 'Aucun projet trouvé' : 'Aucun projet'}
+              </h4>
+              <p className="text-muted">
+                {searchTerm || selectedArtiste 
+                  ? 'Aucun projet ne correspond aux critères de recherche.' 
+                  : 'Commencez par créer votre premier projet.'}
+              </p>
+              {!searchTerm && !selectedArtiste && (
+                <Button 
+                  variant="primary"
+                  onClick={handleCreateProjet}
+                >
+                  <i className="bi bi-plus me-1"></i>
+                  Créer un projet
+                </Button>
+              )}
             </div>
           ) : (
-            <div className="bg-white rounded shadow-sm">
+            <div className="bg-white rounded shadow-sm" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
               <Table responsive hover className="mb-0">
                 <thead className="bg-light">
                   <tr>
@@ -216,7 +283,7 @@ const ProjetsPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {projets.map((projet) => (
+                  {filteredProjets.map((projet) => (
                     <tr key={projet.id}>
                       <td>
                         <div>

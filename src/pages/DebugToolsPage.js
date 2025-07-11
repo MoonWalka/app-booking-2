@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Tabs, Tab } from 'react-bootstrap';
+import React from 'react';
 // import DataStructureFixer from '@/components/debug/DataStructureFixer';
 // import OrganizationIdDebug from '@/components/debug/OrganizationIdDebug'; // Supprimé
 // import ListDebugger from '@/components/debug/ListDebugger';
@@ -48,19 +47,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 // import MigrationConcertToDate from '@/components/debug/MigrationConcertToDate'; // Supprimé
 import styles from './DebugToolsPage.module.css';
 
-// Composant de remplacement pour les outils debug supprimés
-const DebugToolRemoved = ({ title }) => (
-  <div style={{ padding: '2rem', textAlign: 'center' }}>
-    <i className="bi bi-exclamation-triangle" style={{ fontSize: '3rem', color: '#ffc107' }}></i>
-    <h3 style={{ marginTop: '1rem' }}>Outil debug supprimé</h3>
-    <p style={{ color: '#6c757d' }}>
-      L'outil "{title}" a été supprimé du système.
-    </p>
-  </div>
-);
-
 const DebugToolsPage = () => {
-  const [activeTab, setActiveTab] = useState('message');
 
   // Temporairement accessible en production pour corriger les problèmes
   // À retirer une fois les corrections appliquées
@@ -86,123 +73,30 @@ const DebugToolsPage = () => {
           Outils de debug
         </h1>
         <p className={styles.description}>
-          Outils de diagnostic et de correction des données
+          Page de référence
         </p>
       </div>
 
-      <Tabs
-        activeKey={activeTab}
-        onSelect={(k) => setActiveTab(k)}
-        className={styles.tabs}
-      >
-        <Tab eventKey="message" title="ℹ️ Information">
-          <div style={{ padding: '2rem' }}>
-            <div style={{ 
-              backgroundColor: '#f8f9fa', 
-              border: '1px solid #dee2e6', 
-              borderRadius: '0.375rem', 
-              padding: '2rem',
-              textAlign: 'center' 
-            }}>
-              <i className="bi bi-info-circle" style={{ fontSize: '3rem', color: '#0dcaf0' }}></i>
-              <h2 style={{ marginTop: '1rem', marginBottom: '1rem' }}>Outils de debug supprimés</h2>
-              <p style={{ fontSize: '1.1rem', color: '#6c757d', marginBottom: '0' }}>
-                Les outils de debug ont été retirés du système pour améliorer les performances et la sécurité.
-              </p>
-              <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '1rem' }}>
-                Cette page reste accessible pour référence historique.
-              </p>
-            </div>
-          </div>
-        </Tab>
-        
-        {/* Tous les composants debug ont été supprimés */}
-        {/* Les tabs suivants sont conservés pour référence mais utilisent le composant de remplacement */}
-        
-        <Tab eventKey="quick-contact" title="👤 Création Rapide Contact">
-          <DebugToolRemoved title="Création Rapide Contact" />
-        </Tab>
-        
-        <Tab eventKey="relations-fixer" title="🔧 Réparation Relations">
-          <DebugToolRemoved title="Réparation Relations" />
-        </Tab>
-        
-        <Tab eventKey="contacts-audit" title="🔍 Audit Contacts Manquants">
-          <DebugToolRemoved title="Audit Contacts Manquants" />
-        </Tab>
-        
-        <Tab eventKey="lists" title="Diagnostic des listes">
-          <DebugToolRemoved title="Diagnostic des listes" />
-        </Tab>
-        
-        <Tab eventKey="structure" title="Structure des données">
-          <DebugToolRemoved title="Structure des données" />
-        </Tab>
-        
-        <Tab eventKey="rib" title="Debug RIB">
-          <DebugToolRemoved title="Debug RIB" />
-        </Tab>
-        
-        <Tab eventKey="org-context" title="Diagnostic Organisation">
-          <DebugToolRemoved title="Diagnostic Organisation" />
-        </Tab>
-        
-        <Tab eventKey="firestore-diag" title="Diagnostic Firestore">
-          <DebugToolRemoved title="Diagnostic Firestore" />
-        </Tab>
-        
-        <Tab eventKey="artiste-live" title="Test Recherche Live">
-          <DebugToolRemoved title="Test Recherche Live" />
-        </Tab>
-        
-        <Tab eventKey="brevo-diagnostic" title="📧 Diagnostic Brevo">
-          <DebugToolRemoved title="Diagnostic Brevo" />
-        </Tab>
-        
-        <Tab eventKey="parametres-migration" title="🔄 Migration Paramètres">
-          <DebugToolRemoved title="Migration Paramètres" />
-        </Tab>
-        
-        <Tab eventKey="brevo-recovery" title="🔧 Récupération Brevo">
-          <DebugToolRemoved title="Récupération Brevo" />
-        </Tab>
-        
-        <Tab eventKey="brevo-key-diagnostic" title="🔍 Diagnostic Clé Brevo">
-          <DebugToolRemoved title="Diagnostic Clé Brevo" />
-        </Tab>
-        
-        <Tab eventKey="brevo-template-creator" title="🎨 Créateur Templates Brevo">
-          <DebugToolRemoved title="Créateur Templates Brevo" />
-        </Tab>
-        
-        <Tab eventKey="brevo-template-customizer" title="🖌️ Configurateur Templates Brevo">
-          <DebugToolRemoved title="Configurateur Templates Brevo" />
-        </Tab>
-        
-        <Tab eventKey="tags-hierarchy-debug" title="🏷️ Debug Tags Hiérarchie">
-          <DebugToolRemoved title="Debug Tags Hiérarchie" />
-        </Tab>
-        
-        <Tab eventKey="hybrid-format-normalizer" title="🔧 Normalisation Formats Hybrides">
-          <DebugToolRemoved title="Normalisation Formats Hybrides" />
-        </Tab>
-        
-        <Tab eventKey="relational-migration-fixer" title="🔗 Correction Migration Relationnelle">
-          <DebugToolRemoved title="Correction Migration Relationnelle" />
-        </Tab>
-        
-        <Tab eventKey="contract-templates" title="📄 Migration Modèles Contrat">
-          <DebugToolRemoved title="Migration Modèles Contrat" />
-        </Tab>
-        
-        <Tab eventKey="contract-variables" title="🔄 Migration Variables Contrat">
-          <DebugToolRemoved title="Migration Variables Contrat" />
-        </Tab>
-        
-        <Tab eventKey="clean-contracts" title="🧹 Nettoyage Contrats">
-          <DebugToolRemoved title="Nettoyage Contrats" />
-        </Tab>
-      </Tabs>
+      <div style={{ padding: '2rem' }}>
+        <div style={{ 
+          backgroundColor: '#f8f9fa', 
+          border: '1px solid #dee2e6', 
+          borderRadius: '0.375rem', 
+          padding: '3rem',
+          textAlign: 'center',
+          maxWidth: '600px',
+          margin: '0 auto'
+        }}>
+          <i className="bi bi-info-circle" style={{ fontSize: '4rem', color: '#0dcaf0' }}></i>
+          <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>Outils de debug supprimés</h2>
+          <p style={{ fontSize: '1.1rem', color: '#6c757d', marginBottom: '0' }}>
+            Les outils de debug ont été retirés du système pour améliorer les performances et la sécurité.
+          </p>
+          <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '1rem' }}>
+            Cette page reste accessible pour référence historique.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

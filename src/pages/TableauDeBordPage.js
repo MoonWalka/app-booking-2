@@ -105,6 +105,12 @@ const TableauDeBordPage = () => {
                 }
                 // Ajouter les infos de facture liée au contrat
                 if (contrat.factureId) {
+                  console.log('[TableauDeBordPage] ⚠️ FACTURE TROUVÉE dans contrat:', {
+                    dateId: doc.id,
+                    contratId: contrat.id,
+                    factureId: contrat.factureId,
+                    factureStatus: contrat.factureStatus
+                  });
                   dateData.factureId = contrat.factureId;
                   dateData.factureStatus = contrat.factureStatus || 'generated';
                   dateData.hasFacture = true;
@@ -839,12 +845,19 @@ const TableauDeBordPage = () => {
                 getContractData={(dateId) => {
                   const date = dates.find(c => c.id === dateId);
                   if (!date) return null;
-                  return {
+                  const contractData = {
                     id: date.contratId,
                     status: date.contratStatus,
                     factureId: date.factureId,
                     factureStatus: date.factureStatus
                   };
+                  if (date.factureId) {
+                    console.log('[TableauDeBordPage] getContractData retourne une facture:', {
+                      dateId,
+                      contractData
+                    });
+                  }
+                  return contractData;
                 }}
                 hasFacture={(dateId) => {
                   const date = dates.find(c => c.id === dateId);
@@ -856,7 +869,7 @@ const TableauDeBordPage = () => {
                 }}
                 getFactureData={(dateId) => {
                   const date = dates.find(c => c.id === dateId);
-                  if (!date) return null;
+                  if (!date || !date.factureId) return null;
                   return {
                     id: date.factureId,
                     status: date.factureStatus

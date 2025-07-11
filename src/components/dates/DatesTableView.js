@@ -390,7 +390,7 @@ const DatesTableView = ({
         
         // Vérifier d'abord si le contrat a une facture
         const hasFactureFromContract = contractData && contractData.factureId;
-        const hasDirectFacture = item.factureId || item.hasFacture || factureData;
+        const hasDirectFacture = item.factureId || item.hasFacture || (factureData && factureData.id);
         const hasFacture = hasFactureFromContract || hasDirectFacture;
         
         console.log('[DatesTableView] Facture depuis contrat:', hasFactureFromContract);

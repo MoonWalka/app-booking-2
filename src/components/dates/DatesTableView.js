@@ -768,61 +768,63 @@ const DatesTableView = ({
   }
 
   return (
-    <div className={styles.tableSection}>
-      {/* Bandeau de contrôle */}
-      <DatesTableControls
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        onRefresh={handleRefresh}
-        onCalculate={handleCalculate}
-        searchValue={searchTerm}
-        onSearchChange={setSearchTerm}
-        onSearch={handleSearch}
-        dateFilter={dateFilter}
-        onDateFilterChange={setDateFilter}
-        onFilter={handleFilter}
-        onClearFilters={handleClearFilters}
-        onAdd={handleAdd}
-        onExportExcel={handleExportExcel}
-        onChangeView={handleChangeView}
-        onShowMap={handleShowMap}
-        loading={loading}
-      />
-      
-      <Table
-        data={paginatedDates}
-        columns={columns}
-        onRowClick={handleRowClick}
-        renderActions={renderActions}
-        sortField={sortField}
-        sortDirection={sortDirection}
-        onSort={handleSort}
-        className={styles.datesTable}
-      />
-      
-      {filteredDates.length === 0 && (searchTerm || dateFilter) && (
-        <EntityEmptyState
-          icon="bi-search"
-          title="Aucun résultat"
-          message={`Aucun date ne correspond aux critères de recherche`}
+    <>
+      <div className={styles.tableSection}>
+        {/* Bandeau de contrôle */}
+        <DatesTableControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          onRefresh={handleRefresh}
+          onCalculate={handleCalculate}
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          onSearch={handleSearch}
+          dateFilter={dateFilter}
+          onDateFilterChange={setDateFilter}
+          onFilter={handleFilter}
+          onClearFilters={handleClearFilters}
+          onAdd={handleAdd}
+          onExportExcel={handleExportExcel}
+          onChangeView={handleChangeView}
+          onShowMap={handleShowMap}
+          loading={loading}
         />
-      )}
+        
+        <Table
+          data={paginatedDates}
+          columns={columns}
+          onRowClick={handleRowClick}
+          renderActions={renderActions}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onSort={handleSort}
+          className={styles.datesTable}
+        />
+        
+        {filteredDates.length === 0 && (searchTerm || dateFilter) && (
+          <EntityEmptyState
+            icon="bi-search"
+            title="Aucun résultat"
+            message={`Aucun date ne correspond aux critères de recherche`}
+          />
+        )}
+        
+        {/* Informations de pagination */}
+        {sortedDates.length > 0 && (
+          <div className={styles.paginationInfo}>
+            <p>
+              Affichage de {((currentPage - 1) * itemsPerPage) + 1} à{' '}
+              {Math.min(currentPage * itemsPerPage, sortedDates.length)} sur{' '}
+              {sortedDates.length} résultats
+            </p>
+          </div>
+        )}
+      </div>
       
-      {/* Informations de pagination */}
-      {sortedDates.length > 0 && (
-        <div className={styles.paginationInfo}>
-          <p>
-            Affichage de {((currentPage - 1) * itemsPerPage) + 1} à{' '}
-            {Math.min(currentPage * itemsPerPage, sortedDates.length)} sur{' '}
-            {sortedDates.length} résultats
-          </p>
-        </div>
-      )}
-      
-      {/* Bandeau des totaux */}
+      {/* Bandeau des totaux - En dehors du tableSection pour qu'il soit vraiment fixé */}
       <DatesTableTotals selectedDates={selectedDates} />
-    </div>
+    </>
   );
 };
 

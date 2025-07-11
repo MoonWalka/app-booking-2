@@ -177,6 +177,8 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  /* Espace pour le bandeau de totaux si présent */
+  padding-bottom: 80px;
 }
 
 .tabContent h2 {

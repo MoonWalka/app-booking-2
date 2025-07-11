@@ -6,6 +6,7 @@
 /* Conteneur principal */
 .container {
   padding: 1.5rem;
+  padding-bottom: 100px; /* Espace pour le bandeau de totaux fixe */
   min-height: 100vh;
   background-color: var(--tc-bg-color-light, #f8f9fa);
 }
@@ -372,13 +373,13 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: relative;
   min-height: 400px;
-  padding-bottom: 80px; /* Espace pour le bandeau des totaux */
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
+    padding-bottom: 120px; /* Plus d'espace sur mobile pour le bandeau */
   }
 
   .headerContent {

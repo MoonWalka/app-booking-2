@@ -25,8 +25,22 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
     }
   });
 
+  // État pour suivre si le modal était fermé avant
+  const [wasClosedBefore, setWasClosedBefore] = useState(true);
+
   // Charger les données de l'artiste en mode édition
   useEffect(() => {
+    // Ne réinitialiser que quand le modal s'ouvre (transition de fermé à ouvert)
+    if (!show) {
+      setWasClosedBefore(true);
+      return;
+    }
+    
+    // Si le modal était déjà ouvert, ne pas réinitialiser
+    if (!wasClosedBefore) return;
+    
+    setWasClosedBefore(false);
+
     if (editArtiste) {
       // Gérer les deux formats : projets (array) et projet (objet)
       let projetData = { nom: '', code: '' };
@@ -69,7 +83,7 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
         }
       });
     }
-  }, [editArtiste, show]);
+  }, [editArtiste, show, wasClosedBefore]);
 
   const handleInputChange = (field, value) => {
     if (field.startsWith('projet.')) {

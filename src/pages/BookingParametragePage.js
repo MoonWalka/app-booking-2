@@ -58,7 +58,10 @@ const BookingParametragePage = () => {
   // Gestionnaire pour la création/modification d'un artiste
   const handleArtisteCreated = useCallback((artisteData) => {
     console.log('Artiste créé/modifié:', artisteData);
-    refetchArtistes(); // Rafraîchir la liste directement
+    // Utiliser setTimeout pour éviter la boucle infinie
+    setTimeout(() => {
+      refetchArtistes(); // Rafraîchir la liste après un court délai
+    }, 100);
     setEditArtisteData(null); // Réinitialiser le mode édition
   }, [refetchArtistes]);
   
@@ -83,21 +86,28 @@ const BookingParametragePage = () => {
   // Gestionnaires pour les projets
   const handleProjetCreated = useCallback((projetData) => {
     console.log('Projet créé/modifié:', projetData);
-    refetchProjets(); // Rafraîchir la liste directement
+    // Utiliser setTimeout pour éviter la boucle infinie
+    setTimeout(() => {
+      refetchProjets(); // Rafraîchir la liste après un court délai
+    }, 100);
     setEditProjetData(null); // Réinitialiser le mode édition
   }, [refetchProjets]);
   
-  const handleCreateProjet = useCallback(() => {
-    // Si on crée un projet depuis la page d'un artiste, le pré-sélectionner
+  // Mémoriser les données initiales pour éviter les re-créations d'objet
+  const initialProjetData = React.useMemo(() => {
     if (effectiveSelectedArtisteId) {
-      setEditProjetData({
+      return {
         artistesSelectionnes: [effectiveSelectedArtisteId]
-      });
-    } else {
-      setEditProjetData(null);
+      };
     }
-    setShowProjetModal(true);
+    return null;
   }, [effectiveSelectedArtisteId]);
+
+  const handleCreateProjet = useCallback(() => {
+    // Utiliser les données mémorisées
+    setEditProjetData(initialProjetData);
+    setShowProjetModal(true);
+  }, [initialProjetData]);
   
   const handleCloseProjetModal = useCallback(() => {
     setShowProjetModal(false);

@@ -20,8 +20,13 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
     sort: { field: 'nom', direction: 'asc' }
   }), []);
   
-  // Récupérer la liste des artistes
-  const { items: artistes, loading: artistesLoading } = useGenericEntityList('artistes', artistesConfig);
+  // Récupérer la liste des artistes seulement quand le modal est ouvert
+  const shouldFetchArtistes = show && activeTab === 'artistes';
+  const { items: artistes, loading: artistesLoading } = useGenericEntityList(
+    shouldFetchArtistes ? 'artistes' : null, 
+    shouldFetchArtistes ? artistesConfig : {},
+    { autoFetch: shouldFetchArtistes }
+  );
   
   const [formData, setFormData] = useState({
     intitule: '',
@@ -37,12 +42,24 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
     artistesSelectionnes: [] // Array des IDs des artistes sélectionnés
   });
 
+  // État pour suivre si le modal était fermé avant
+  const [wasClosedBefore, setWasClosedBefore] = useState(true);
+
   // Charger les données du projet en mode édition
   useEffect(() => {
-    // Ne réinitialiser que quand le modal s'ouvre
-    if (!show) return;
+    // Ne réinitialiser que quand le modal s'ouvre (transition de fermé à ouvert)
+    if (!show) {
+      setWasClosedBefore(true);
+      return;
+    }
     
-    if (editProjet) {
+    // Si le modal était déjà ouvert, ne pas réinitialiser
+    if (!wasClosedBefore) return;
+    
+    setWasClosedBefore(false);
+    
+    if (editProjet && editProjet.id) {
+      // Mode édition - charger les données existantes
       setFormData({
         intitule: editProjet.intitule || '',
         codeAdmin: editProjet.codeAdmin || '',
@@ -56,25 +73,38 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
         commentaires: editProjet.commentaires || '',
         artistesSelectionnes: editProjet.artistesSelectionnes || []
       });
-    } else {
-      // Réinitialiser en mode création
-      // Si on a des artistes pré-sélectionnés (passés via editProjet même en mode création),
-      // les conserver
+    } else if (editProjet && !editProjet.id && editProjet.artistesSelectionnes) {
+      // Mode création avec artistes pré-sélectionnés
       setFormData({
-        intitule: editProjet?.intitule || '',
-        codeAdmin: editProjet?.codeAdmin || '',
-        codeAnalytique: editProjet?.codeAnalytique || '',
-        libelleAnalytique: editProjet?.libelleAnalytique || '',
-        numeroObjet: editProjet?.numeroObjet || '',
-        typeContrat: editProjet?.typeContrat || '',
-        montantHT: editProjet?.montantHT || '',
-        devise: editProjet?.devise || 'EUR',
-        prixPlaces: editProjet?.prixPlaces || '',
-        commentaires: editProjet?.commentaires || '',
-        artistesSelectionnes: editProjet?.artistesSelectionnes || []
+        intitule: '',
+        codeAdmin: '',
+        codeAnalytique: '',
+        libelleAnalytique: '',
+        numeroObjet: '',
+        typeContrat: '',
+        montantHT: '',
+        devise: 'EUR',
+        prixPlaces: '',
+        commentaires: '',
+        artistesSelectionnes: editProjet.artistesSelectionnes || []
+      });
+    } else {
+      // Mode création sans pré-sélection
+      setFormData({
+        intitule: '',
+        codeAdmin: '',
+        codeAnalytique: '',
+        libelleAnalytique: '',
+        numeroObjet: '',
+        typeContrat: '',
+        montantHT: '',
+        devise: 'EUR',
+        prixPlaces: '',
+        commentaires: '',
+        artistesSelectionnes: []
       });
     }
-  }, [editProjet, show]);
+  }, [editProjet, show, wasClosedBefore]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({

@@ -183,32 +183,13 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
         direction: sorting.direction
       } : null,
       limit: stableListConfig.pageSize,
-      // ✅ CORRECTION 7: Callback onData stable
-      onData: (newData) => {
-      if (newData) {
-        const processedItems = newData.map(transformItemStable);
-        
-        if (stableOptions.paginationType === 'infinite') {
-          setAllItems(prev => [...prev, ...processedItems]);
-        } else {
-          setAllItems(processedItems);
-        }
-        
-        setTotalCount(newData.length);
-        setHasMore(newData.length === stableListConfig.pageSize);
-        
-        const onItemsChange = callbacksRef.current.onItemsChange;
-        if (onItemsChange) {
-          onItemsChange(processedItems);
-        }
-      }
-    }
+      // ✅ CORRECTION 7: Callback onData stable - NE PAS passer directement pour éviter les boucles
+      // Le traitement des données sera fait dans l'effet useEffect
   }), [
     stableListConfig.defaultFilters,
     stableListConfig.pageSize,
     stableOptions.paginationType,
-    sorting,
-    transformItemStable
+    sorting
   ]);
   
   // Hook de récupération de données
@@ -236,16 +217,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
       searchFields: stableListConfig.searchFields,
       enableFirestore: true,
       collectionName: entityType,
-      onResults: (results) => {
-        const processedItems = results.map(transformItemStable);
-        setAllItems(processedItems);
-        setTotalCount(results.length);
-        
-        const onItemsChange = callbacksRef.current.onItemsChange;
-        if (onItemsChange) {
-          onItemsChange(processedItems);
-        }
-      }
+      // NE PAS passer onResults directement pour éviter les boucles
     };
   }, [
     stableListConfig.enableFilters,
@@ -253,8 +225,7 @@ const useGenericEntityList = (entityType, listConfig = {}, options = {}) => {
     stableListConfig.filters,
     stableListConfig.defaultFilters,
     stableListConfig.searchFields,
-    entityType,
-    transformItemStable
+    entityType
   ]);
 
   const searchOptions = useMemo(() => ({

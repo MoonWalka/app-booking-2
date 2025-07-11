@@ -4,7 +4,7 @@ import styles from './ContactDatesTable.module.css';
 
 /**
  * Composant tableau générique pour afficher les entités associées à un contact
- * (concerts, contrats, factures, etc.)
+ * (dates, contrats, factures, etc.)
  */
 const ContactEntityTable = ({
   title,

@@ -92,7 +92,7 @@ export const CONTRACT_VARIABLES = {
   'date_heure': { label: 'Heure', category: 'date', source: 'date.heure' },
   'date_montant': { label: 'Montant (en chiffres)', category: 'date', source: 'date.montant', format: 'currency' },
   'date_montant_lettres': { label: 'Montant (en lettres)', category: 'date', source: 'date.montant', format: 'currency_letters' },
-  // Variables de compatibilité (ancien système concert → nouveau système date)
+  // Variables de compatibilité (ancien système date → nouveau système date)
   'date_titre': { label: 'Titre de la date', category: 'date', source: 'date.titre', deprecated: true },
   'date_date': { label: 'Date de l\'événement', category: 'date', source: 'date.date', format: 'date', deprecated: true },
   'date_heure': { label: 'Heure de l\'événement', category: 'date', source: 'date.heure', deprecated: true },
@@ -360,7 +360,7 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/{date_date}/g, '15/05/2025')
     .replace(/{date_montant}/g, '800')
     .replace(/{date_montant_lettres}/g, 'Huit cents euros')
-    // Variables concert conservées pour rétrocompatibilité
+    // Variables date conservées pour rétrocompatibilité
     .replace(/{date_titre}/g, 'Date de printemps')
     .replace(/{date_date}/g, '15/05/2025')
     .replace(/{date_montant}/g, '800')
@@ -436,7 +436,7 @@ export const replaceVariablesWithMockData = (content) => {
     .replace(/\[date_date\]/g, '15/05/2025')
     .replace(/\[date_montant\]/g, '800')
     .replace(/\[date_montant_lettres\]/g, 'Huit cents euros')
-    // Variables concert conservées pour rétrocompatibilité avec crochets
+    // Variables date conservées pour rétrocompatibilité avec crochets
     .replace(/\[date_titre\]/g, 'Date de printemps')
     .replace(/\[date_date\]/g, '15/05/2025')
     .replace(/\[date_montant\]/g, '800')

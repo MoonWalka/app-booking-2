@@ -34,7 +34,7 @@ function StructureView({ id: propId }) {
 
   // Formater les entités liées pour l'affichage - CORRECTION: utiliser relatedData
   const contacts = relatedData?.contacts || [];
-  const dates = relatedData?.concerts || [];
+  const dates = relatedData?.dates || [];
   const lieux = relatedData?.lieux || [];
   const artistes = relatedData?.artistes || [];
   

@@ -539,7 +539,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
             <Form.Group className="mb-3">
               <Form.Label>Projet</Form.Label>
               {devisData.projetNom && devisData.projetNom !== 'Aucun projet' ? (
-                // Si le projet vient du concert, l'afficher en lecture seule
+                // Si le projet vient de la date, l'afficher en lecture seule
                 <>
                   <Form.Control
                     type="text"

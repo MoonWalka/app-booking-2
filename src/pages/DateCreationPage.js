@@ -15,7 +15,7 @@ import styles from './DateCreationPage.module.css';
 // }
 
 /**
- * Page de création d'une nouvelle date de concert
+ * Page de création d'une nouvelle date
  */
 function DateCreationPage({ params = {} }) {
   // Mode debug (à activer temporairement)
@@ -337,7 +337,7 @@ function DateCreationPage({ params = {} }) {
           <div>
             <h1 className={styles.pageTitle}>
               <i className="bi bi-calendar-plus me-3"></i>
-              Nouvelle Date de Date
+              Nouvelle Date
             </h1>
             <p className={styles.pageSubtitle}>
               Créez une nouvelle date en associant un artiste/projet avec un organisateur

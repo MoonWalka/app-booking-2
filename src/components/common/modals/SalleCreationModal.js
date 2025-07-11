@@ -463,7 +463,7 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
                         <option value="Auditorium">Auditorium</option>
                         <option value="Centre culturel">Centre culturel</option>
                         <option value="MJC">MJC</option>
-                        <option value="Café-concert">Café-concert</option>
+                        <option value="Café-date">Café-date</option>
                         <option value="Club">Club</option>
                         <option value="Plein air">Plein air</option>
                         <option value="Autre">Autre</option>

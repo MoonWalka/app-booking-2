@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import Table from '@/components/ui/Table';
 import DateStatusBadge from './DateStatusBadge';
 import DateActions from './DateActions';
+import NiveauDisplay from '../NiveauDisplay';
 import { formatDateFr } from '@/utils/dateUtils';
 import styles from './DatesTable.module.css';
 
@@ -60,38 +61,65 @@ const DatesTable = memo(({
   // Colonnes du tableau
   const columns = [
     {
-      label: 'Date',
-      key: 'date',
+      label: 'Entreprise',
+      key: 'entreprise',
       sortable: true,
       render: (row) => {
-        if (!row.date) return '-';
-        const date = new Date(row.date);
-        const shortDate = formatDateFr(row.date);
-        const fullDate = date.toLocaleDateString('fr-FR', { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        });
-        return (
-          <span title={fullDate}>
-            {shortDate}
-          </span>
-        );
+        // L'entreprise qui a booké est maintenant enrichie dans les données
+        if (row.entreprise?.diminutif) {
+          return row.entreprise.diminutif;
+        } else if (row.entreprise?.code) {
+          return row.entreprise.code;
+        } else if (row.entreprise?.nom) {
+          return row.entreprise.nom;
+        }
+        
+        // Fallback sur les anciennes propriétés au cas où
+        return row.entrepriseNom || '—';
       }
     },
     {
-      label: 'Date',
-      key: 'titre',
+      label: 'Collaborateur',
+      key: 'collaborateur',
       sortable: true,
-      render: (row) => (
-        <div>
-          <span className={styles.title}>{row.titre || 'Sans titre'}</span>
-          {row.artisteNom && (
-            <span className={styles.artistName}>{row.artisteNom}</span>
-          )}
-        </div>
-      )
+      render: (row) => {
+        console.log('DEBUG DatesTable - row complète:', row);
+        console.log('DEBUG DatesTable - row.collaborateur:', row.collaborateur);
+        console.log('DEBUG DatesTable - row.collaborateurId:', row.collaborateurId);
+        console.log('DEBUG DatesTable - row.createdByName:', row.createdByName);
+        console.log('DEBUG DatesTable - row.createdByEmail:', row.createdByEmail);
+        console.log('DEBUG DatesTable - row.collaborateurNom:', row.collaborateurNom);
+        
+        // Le collaborateur est l'utilisateur qui a créé la date
+        // Pour l'instant, on affiche les données si elles existent
+        if (row.createdByName) return row.createdByName;
+        if (row.createdByEmail) return row.createdByEmail;
+        if (row.collaborateurNom) return row.collaborateurNom;
+        if (row.collaborateur?.nom) return row.collaborateur.nom;
+        
+        // Si on a un ID créateur mais pas le nom
+        if (row.createdBy) return `User ${row.createdBy.substring(0, 6)}...`;
+        
+        return '—';
+      }
+    },
+    {
+      label: 'Niveau',
+      key: 'niveau',
+      sortable: true,
+      render: (row) => <NiveauDisplay niveau={row.niveau || 'incomplete'} />
+    },
+    {
+      label: 'Artiste',
+      key: 'artisteNom',
+      sortable: true,
+      render: (row) => row.artisteNom || 'Non spécifié'
+    },
+    {
+      label: 'Projet',
+      key: 'projet',
+      sortable: true,
+      render: (row) => row.formule || row.projet || row.projetNom || '—'
     },
     {
       label: 'Lieu',
@@ -99,32 +127,78 @@ const DatesTable = memo(({
       sortable: true,
       render: (row) => (
         <div>
-          <span className={styles.locationName}>{row.lieu?.nom || row.lieuNom || 'Lieu non spécifié'}</span>
+          <span className={styles.locationName}>{row.libelle || row.titre || row.lieu?.nom || row.lieuNom || 'Non spécifié'}</span>
           {(row.lieu?.ville || row.lieuVille) && (
             <span className={styles.locationCity}>
               {row.lieu?.ville || row.lieuVille}
-              {(row.lieu?.codePostal || row.lieuCodePostal) && (row.lieu?.codePostal || row.lieuCodePostal).length >= 2 && ` (${(row.lieu?.codePostal || row.lieuCodePostal).substring(0, 2)})`}
             </span>
           )}
         </div>
       )
     },
     {
-      label: 'Contact',
-      key: 'contactNom',
+      label: 'Organisateur',
+      key: 'organisateur',
       sortable: true,
-      render: (row) => row.contact?.nom || row.contactNom || 'Non spécifié'
+      render: (row) => row.organisateurNom || row.organisateur?.nom || row.structureNom || row.structure?.nom || '—'
     },
     {
-      label: 'Statut',
-      key: 'statut',
+      label: 'Dossier',
+      key: 'dossier',
       sortable: true,
-      render: (row) => (
-        <DateStatusBadge 
-          date={row}
-          statusDetails={getStatusDetails(row.statut)}
-        />
-      )
+      render: (row) => row.dossier || row.numeroDossier || '—'
+    },
+    {
+      label: "Prise d'option",
+      key: 'priseOption',
+      sortable: true,
+      render: (row) => {
+        if (!row.priseOption) return '—';
+        const date = row.priseOption.toDate ? row.priseOption.toDate() : new Date(row.priseOption);
+        return formatDateFr(date);
+      }
+    },
+    {
+      label: 'Contrat proposé',
+      key: 'contrat',
+      sortable: true,
+      render: (row) => {
+        const typeContrat = row.typeContrat || row.contratType || 'Aucun';
+        return typeContrat;
+      }
+    },
+    {
+      label: 'Début',
+      key: 'date',
+      sortable: true,
+      render: (row) => {
+        if (!row.date) return '—';
+        return formatDateFr(row.date);
+      }
+    },
+    {
+      label: 'Fin',
+      key: 'dateFin',
+      sortable: true,
+      render: (row) => {
+        if (!row.dateFin) return '—';
+        return formatDateFr(row.dateFin);
+      }
+    },
+    {
+      label: 'Montant',
+      key: 'montant',
+      sortable: true,
+      render: (row) => {
+        const montant = row.montant || row.montantTotal || 0;
+        return montant > 0 ? `${montant.toLocaleString('fr-FR')} €` : '—';
+      }
+    },
+    {
+      label: 'Nb. de dates',
+      key: 'nbDates',
+      sortable: true,
+      render: (row) => row.nbDates || row.nombreDates || 1
     }
   ];
 
@@ -166,7 +240,7 @@ const DatesTable = memo(({
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}
-        onRowClick={handleViewDate}
+        onRowClick={(row) => handleViewDate(row.id)}
       />
     </div>
   );

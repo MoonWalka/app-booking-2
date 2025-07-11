@@ -215,20 +215,22 @@ function DateDetailsPage({ params = {} }) {
     if (!currentEntreprise?.id) return;
     
     try {
-      const q = query(
-        collection(db, 'collaborateurs'),
-        where('entrepriseId', '==', currentEntreprise.id)
-      );
-      const querySnapshot = await getDocs(q);
-      const collaborateursData = [];
+      // Charger depuis collaborationConfig comme dans CollaborateursManagerFirebase
+      const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
       
-      querySnapshot.forEach((doc) => {
-        collaborateursData.push({ id: doc.id, ...doc.data() });
-      });
-      
-      setCollaborateurs(collaborateursData);
+      if (configDoc.exists()) {
+        const data = configDoc.data();
+        if (data.collaborateurs && Array.isArray(data.collaborateurs)) {
+          setCollaborateurs(data.collaborateurs);
+        } else {
+          setCollaborateurs([]);
+        }
+      } else {
+        setCollaborateurs([]);
+      }
     } catch (error) {
       console.error('Erreur lors du chargement des collaborateurs:', error);
+      setCollaborateurs([]);
     }
   }, [currentEntreprise?.id]);
 

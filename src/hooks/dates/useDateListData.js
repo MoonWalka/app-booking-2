@@ -318,15 +318,46 @@ export const useDateListData = () => {
 
       const datesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
-      // Collecter les IDs uniques pour les lieux et contacts
+      // Collecter les IDs uniques pour les lieux, contacts et collaborateurs
       const lieuxIds = [...new Set(datesData.filter(c => c.lieuId).map(c => c.lieuId))];
       const contactIds = [...new Set(datesData.filter(c => c.contactId).map(c => c.contactId))];
+      const collaborateurIds = [...new Set(datesData.filter(c => c.collaborateurId).map(c => c.collaborateurId))];
       
-      // Charger les lieux et contacts en batch (en parallèle)
+      // DEBUG: Afficher les collaborateurIds collectés
+      console.log('DEBUG useDateListData - collaborateurIds collectés:', collaborateurIds);
+      console.log('DEBUG useDateListData - nombre de dates avec collaborateurId:', datesData.filter(c => c.collaborateurId).length);
+      
+      // Charger les lieux et contacts en batch
       const [lieuxData, contactsData] = await Promise.all([
         fetchEntitiesBatch('lieux', lieuxIds),
         fetchEntitiesBatch('contacts', contactIds)
       ]);
+      
+      // Charger les collaborateurs depuis collaborationConfig
+      let collaborateursData = [];
+      if (collaborateurIds.length > 0 && currentEntreprise?.id) {
+        console.log('DEBUG useDateListData - Chargement des collaborateurs depuis collaborationConfig pour entreprise:', currentEntreprise.id);
+        try {
+          const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
+          if (configDoc.exists()) {
+            const data = configDoc.data();
+            console.log('DEBUG useDateListData - collaborationConfig data:', data);
+            if (data.collaborateurs && Array.isArray(data.collaborateurs)) {
+              console.log('DEBUG useDateListData - Tous les collaborateurs dans config:', data.collaborateurs);
+              // Filtrer seulement les collaborateurs dont l'ID est dans collaborateurIds
+              collaborateursData = data.collaborateurs.filter(c => collaborateurIds.includes(c.id));
+              console.log('DEBUG useDateListData - Collaborateurs filtrés:', collaborateursData);
+            }
+          } else {
+            console.log('DEBUG useDateListData - Aucun document collaborationConfig trouvé');
+          }
+        } catch (error) {
+          logger.error('Erreur lors du chargement des collaborateurs:', error);
+          console.error('DEBUG useDateListData - Erreur:', error);
+        }
+      } else {
+        console.log('DEBUG useDateListData - Pas de collaborateurIds ou pas d\'entreprise courante');
+      }
       
       // Enrichir chaque date avec les données de lieu et contact
       const enrichedDates = datesData.map(date => {
@@ -342,6 +373,33 @@ export const useDateListData = () => {
         if (date.contactId) {
           const prog = contactsData.find(p => p.id === date.contactId);
           if (prog) enriched.contact = prog;
+        }
+        
+        // Ajouter les données du collaborateur s'il existe
+        if (date.collaborateurId) {
+          console.log('DEBUG useDateListData - Recherche collaborateur pour ID:', date.collaborateurId);
+          const collab = collaborateursData.find(c => c.id === date.collaborateurId);
+          if (collab) {
+            console.log('DEBUG useDateListData - Collaborateur trouvé:', collab);
+            enriched.collaborateur = {
+              id: collab.id,
+              nom: `${collab.prenom} ${collab.nom}`.trim() || collab.email || 'Collaborateur'
+            };
+            console.log('DEBUG useDateListData - Collaborateur enrichi:', enriched.collaborateur);
+          } else {
+            console.log('DEBUG useDateListData - Aucun collaborateur trouvé pour ID:', date.collaborateurId);
+          }
+        }
+        
+        // Ajouter les données de l'entreprise courante
+        // Puisque toutes les dates sont filtrées par entrepriseId, on utilise currentEntreprise
+        if (date.entrepriseId && currentEntreprise) {
+          enriched.entreprise = {
+            id: currentEntreprise.id,
+            nom: currentEntreprise.name || currentEntreprise.nom, // Utiliser 'name' d'abord
+            code: currentEntreprise.code,
+            diminutif: currentEntreprise.diminutif
+          };
         }
         
         return enriched;

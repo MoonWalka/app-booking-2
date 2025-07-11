@@ -386,12 +386,18 @@ const BookingParametragePage = () => {
         )}
         {activeTab === 'types-evenement' && (
           <Col md={10}>
-            <TypesEvenementContent />
+            <div className="alert alert-warning">
+              Types d'événement - Temporairement désactivé (boucle infinie)
+            </div>
+            {/* <TypesEvenementContent /> */}
           </Col>
         )}
         {activeTab === 'types-salle' && (
           <Col md={10}>
-            <TypesSalleContent />
+            <div className="alert alert-warning">
+              Types de salle - Temporairement désactivé (boucle infinie)
+            </div>
+            {/* <TypesSalleContent /> */}
           </Col>
         )}
       </Row>

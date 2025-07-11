@@ -16,7 +16,8 @@ const DateActions = ({
   handleGenerateContract,
   handleViewContract,
   handleGenerateFacture,
-  handleViewFacture
+  handleViewFacture,
+  handleViewDate
 }) => {
   
   // Fonction pour déterminer le statut du formulaire
@@ -220,6 +221,20 @@ const DateActions = ({
   
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
+      {/* View Button - Pour ouvrir/visualiser la date */}
+      <button 
+        className={`${styles.actionButton} ${styles.viewButton}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (handleViewDate) {
+            handleViewDate(date.id);
+          }
+        }}
+        title="Ouvrir la date"
+      >
+        <i className="bi bi-eye"></i>
+      </button>
+      
       {/* Form Button - Toujours affiché avec statut différent */}
       <button 
         className={`${styles.actionButton} ${styles.formButton} ${styles[formStatus.class]}`}

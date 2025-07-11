@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
+import { useAuth } from '@/context/AuthContext';
 import { useTabs } from '@/context/TabsContext';
 import { toast } from 'react-toastify';
 import styles from './DateCreationPage.module.css';
@@ -22,6 +23,7 @@ function DateCreationPage({ params = {} }) {
   const DEBUG_MODE = false;
   
   const { currentEntreprise } = useEntreprise();
+  const { currentUser } = useAuth();
   const { openDatesListTab, openDateDetailsTab, getActiveTab, closeTab } = useTabs();
   
   // Récupérer les données pré-remplies depuis les paramètres de l'onglet
@@ -284,6 +286,8 @@ function DateCreationPage({ params = {} }) {
         organisateurNom: formData.structureNom,
         libelle: formData.libelle,
         entrepriseId: currentEntreprise.id,
+        createdBy: currentUser?.uid || null,
+        createdByName: currentUser?.displayName || currentUser?.email || null,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         statut: 'En cours' // Statut par défaut

@@ -6,11 +6,24 @@ import { useTabs } from '@/context/TabsContext';
  */
 export const useDateActions = () => {
   const navigate = useNavigate();
-  const { openTab } = useTabs();
+  const { openTab, openDateDetailsTab } = useTabs();
   
   // Navigation function to view date details
   const handleViewDate = (dateId) => {
-    navigate(`/dates/${dateId}`);
+    // Utiliser le système d'onglets au lieu de navigate
+    if (openDateDetailsTab) {
+      openDateDetailsTab(dateId, 'Détails de la date');
+    } else {
+      // Fallback avec openTab générique
+      openTab({
+        id: `date-${dateId}`,
+        title: `Date`,
+        path: `/dates/${dateId}`,
+        component: 'DateDetailsPage',
+        params: { dateId },
+        icon: 'bi-calendar-event'
+      });
+    }
   };
   
   // Function to navigate to form page

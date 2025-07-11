@@ -9,11 +9,8 @@ const TypesSalleContent = () => {
   const { currentEntreprise } = useAuth();
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ nom: '' });
-  const [refreshKey, setRefreshKey] = useState(0);
-  
-  const { items: typesSalle, loading } = useGenericEntityList('typesSalle', {
-    sort: { field: 'nom', direction: 'asc' },
-    refreshKey
+  const { items: typesSalle, loading, refetch } = useGenericEntityList('typesSalle', {
+    sort: { field: 'nom', direction: 'asc' }
   });
 
   const handleSubmit = useCallback(async (e) => {
@@ -45,12 +42,12 @@ const TypesSalleContent = () => {
       
       setFormData({ nom: '' });
       setEditingId(null);
-      setRefreshKey(prev => prev + 1);
+      refetch();
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       toast.error('Erreur lors de la sauvegarde');
     }
-  }, [formData, editingId, currentEntreprise]);
+  }, [formData, editingId, currentEntreprise, refetch]);
 
   const handleEdit = useCallback((type) => {
     setEditingId(type.id);
@@ -67,12 +64,12 @@ const TypesSalleContent = () => {
     try {
       await FirebaseService.deleteDoc(FirebaseService.doc(FirebaseService.db, 'typesSalle', id));
       toast.success('Type de salle supprimé avec succès');
-      setRefreshKey(prev => prev + 1);
+      refetch();
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
       toast.error('Erreur lors de la suppression');
     }
-  }, []);
+  }, [refetch]);
 
   const handleCancel = useCallback(() => {
     setEditingId(null);

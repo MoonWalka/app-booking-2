@@ -9,11 +9,9 @@ const TypesEvenementContent = () => {
   const { currentEntreprise } = useAuth();
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ nom: '', categorie: 'spectacle' });
-  const [refreshKey, setRefreshKey] = useState(0);
   
-  const { items: typesEvenement, loading } = useGenericEntityList('typesEvenement', {
-    sort: { field: 'nom', direction: 'asc' },
-    refreshKey
+  const { items: typesEvenement, loading, refetch } = useGenericEntityList('typesEvenement', {
+    sort: { field: 'nom', direction: 'asc' }
   });
 
   const handleSubmit = useCallback(async (e) => {
@@ -47,12 +45,12 @@ const TypesEvenementContent = () => {
       
       setFormData({ nom: '', categorie: 'spectacle' });
       setEditingId(null);
-      setRefreshKey(prev => prev + 1);
+      refetch();
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       toast.error('Erreur lors de la sauvegarde');
     }
-  }, [formData, editingId, currentEntreprise]);
+  }, [formData, editingId, currentEntreprise, refetch]);
 
   const handleEdit = useCallback((type) => {
     setEditingId(type.id);
@@ -70,12 +68,12 @@ const TypesEvenementContent = () => {
     try {
       await FirebaseService.deleteDoc(FirebaseService.doc(FirebaseService.db, 'typesEvenement', id));
       toast.success('Type d\'événement supprimé avec succès');
-      setRefreshKey(prev => prev + 1);
+      refetch();
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
       toast.error('Erreur lors de la suppression');
     }
-  }, []);
+  }, [refetch]);
 
   const handleCancel = useCallback(() => {
     setEditingId(null);

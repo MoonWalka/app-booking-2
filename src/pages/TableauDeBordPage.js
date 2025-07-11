@@ -36,10 +36,10 @@ const TableauDeBordPage = () => {
         setLoading(true);
         
         // Charger les dates récentes avec leurs informations
+        // TEMPORAIRE: Requête simplifiée sans orderBy pour éviter l'index
         const datesQuery = query(
           collection(db, 'dates'),
-          where('entrepriseId', '==', currentEntreprise.id),
-          orderBy('date', 'desc')
+          where('entrepriseId', '==', currentEntreprise.id)
         );
         
         const datesSnapshot = await getDocs(datesQuery);
@@ -152,7 +152,14 @@ const TableauDeBordPage = () => {
           })
         );
 
-        setDates(datesData);
+        // Trier les dates côté client par date décroissante
+        const sortedDates = datesData.sort((a, b) => {
+          const dateA = a.date?.toDate ? a.date.toDate() : new Date(a.date || 0);
+          const dateB = b.date?.toDate ? b.date.toDate() : new Date(b.date || 0);
+          return dateB - dateA; // Ordre décroissant
+        });
+
+        setDates(sortedDates);
         
       } catch (err) {
         console.error('Erreur lors du chargement des données:', err);
@@ -188,10 +195,10 @@ const TableauDeBordPage = () => {
             setLoading(true);
             
             // Charger les dates récents avec leurs informations
+            // TEMPORAIRE: Requête simplifiée sans orderBy pour éviter l'index
             const datesQuery = query(
               collection(db, 'dates'),
-              where('entrepriseId', '==', currentEntreprise.id),
-              orderBy('date', 'desc')
+              where('entrepriseId', '==', currentEntreprise.id)
             );
             
             const datesSnapshot = await getDocs(datesQuery);
@@ -304,7 +311,14 @@ const TableauDeBordPage = () => {
               })
             );
 
-            setDates(datesData);
+            // Trier les dates côté client par date décroissante
+            const sortedDates = datesData.sort((a, b) => {
+              const dateA = a.date?.toDate ? a.date.toDate() : new Date(a.date || 0);
+              const dateB = b.date?.toDate ? b.date.toDate() : new Date(b.date || 0);
+              return dateB - dateA; // Ordre décroissant
+            });
+
+            setDates(sortedDates);
             
           } catch (err) {
             console.error('Erreur lors du chargement des données:', err);

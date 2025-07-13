@@ -107,6 +107,7 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
   const [responsablesAdmin, setResponsablesAdmin] = useState([]);
   const [loadingResponsables, setLoadingResponsables] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [preContratId, setPreContratId] = useState(null);
   const [preContratToken, setPreContratToken] = useState(null);
@@ -485,7 +486,12 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
   };
 
   const handleSave = async () => {
+    // Protection contre double-clic
+    if (isSaving) return;
+    
     try {
+      setIsSaving(true);
+      
       if (!currentEntreprise?.id) {
         throw new Error('Organisation non définie');
       }
@@ -517,6 +523,8 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
       setAlertMessage('Erreur lors de l\'enregistrement: ' + error.message);
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 5000);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -1342,9 +1350,16 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
           variant="primary" 
           size="lg"
           onClick={handleSave}
-          disabled={isSending}
+          disabled={isSending || isSaving}
         >
-          {preContratId ? 'Mettre à jour' : 'Enregistrer'} le pré-contrat
+          {isSaving ? (
+            <>
+              <Spinner animation="border" size="sm" className="me-2" />
+              Enregistrement...
+            </>
+          ) : (
+            `${preContratId ? 'Mettre à jour' : 'Enregistrer'} le pré-contrat`
+          )}
         </Button>
       </div>
 

@@ -52,30 +52,14 @@ const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteS
 
   // Utiliser le composant commun DatesTableView
   return (
-    <div style={{ marginTop: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-        <h5>
-          <i className="bi bi-calendar-event" style={{ color: '#dc3545', marginRight: '8px' }}></i>
-          Dates
-        </h5>
-        {onAddClick && (
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={onAddClick}
-            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-          >
-            <i className="bi bi-plus-circle"></i>
-            Nouvelle date
-          </button>
-        )}
-      </div>
-      
-      <DatesTableView
+    <DatesTableView
         dates={dates}
         loading={false}
         error={null}
         onDelete={handleDeleteDate}
         onEdit={handleEditDate}
+        onRefresh={onDeleteSuccess}
+        onAddClick={onAddClick}
         showSearch={false}
         // Props pour gérer les contrats et factures
         hasContractFunc={hasContract}
@@ -86,8 +70,7 @@ const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteS
         getFactureData={getFactureData}
         handleViewFacture={handleViewFacture}
         handleGenerateFacture={handleGenerateFacture}
-      />
-    </div>
+    />
   );
 };
 

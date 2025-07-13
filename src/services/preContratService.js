@@ -42,6 +42,26 @@ class PreContratService {
       const user = auth.currentUser;
       if (!user) throw new Error('Utilisateur non authentifié');
 
+      // Vérifier s'il existe déjà un pré-contrat non validé pour cette date
+      const existingPreContrats = await this.getPreContratsByDate(dateId);
+      const activePreContrat = existingPreContrats.find(pc => 
+        !pc.confirmationValidee && 
+        pc.status !== 'cancelled' && 
+        pc.status !== 'expired'
+      );
+      
+      if (activePreContrat) {
+        console.log('[PreContratService] Pré-contrat existant trouvé, mise à jour au lieu de création');
+        // Mettre à jour l'existant au lieu d'en créer un nouveau
+        await this.updatePreContrat(activePreContrat.id, preContratData);
+        return {
+          ...activePreContrat,
+          ...preContratData,
+          id: activePreContrat.id,
+          token: activePreContrat.token
+        };
+      }
+
       const token = this.generateToken();
       const expirationDate = new Date();
       expirationDate.setDate(expirationDate.getDate() + 30); // Expire dans 30 jours

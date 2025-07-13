@@ -437,16 +437,6 @@ const FacturesTableView = ({
     return <Alert variant="danger">{error}</Alert>;
   }
 
-  if (factures.length === 0 && !searchTerm && !dateFilter && !statusFilter) {
-    return (
-      <EntityEmptyState
-        icon="bi-receipt"
-        message={emptyMessage}
-        actionLabel="Paramètres de facturation"
-        onAction={() => navigate('/parametres/factures')}
-      />
-    );
-  }
 
   return (
     <div className={styles.tableContainer}>

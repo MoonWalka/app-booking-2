@@ -83,6 +83,12 @@ import { useEntreprise } from '@/context/EntrepriseContext';
  * @replaces useDataFetcher, useEntityLoader, useCollectionLoader
  */
 const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
+  // Validation de entityType
+  if (!entityType) {
+    console.error('[useGenericDataFetcher] ERREUR: entityType est requis mais n\'est pas fourni');
+    console.trace(); // Afficher la stack trace pour identifier l'origine
+  }
+  
   // Organisation context
   const { currentEntreprise } = useEntreprise();
   
@@ -223,6 +229,12 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
     }
     
     // Mode collection
+    // Protection contre entityType vide
+    if (!entityType) {
+      console.error('[useGenericDataFetcher] buildQuery: entityType est vide, impossible de créer la collection');
+      return null;
+    }
+    
     let q = collection(db, entityType);
     const constraints = [];
     

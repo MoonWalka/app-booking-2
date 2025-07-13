@@ -189,6 +189,10 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
         // Création avec ID auto-généré
         console.log('💾 SAUVEGARDE FINALE dans Firebase:', entityType);
         console.log('💾 Structure à sauvegarder:', JSON.stringify(entityData, null, 2));
+        // Protection contre entityType vide
+        if (!entityType) {
+          throw new Error('[useGenericAction] entityType est requis pour créer un document');
+        }
         const docRef = await addDoc(collection(db, entityType), entityData);
         result = { id: docRef.id, ...entityData };
         console.log('✅ Document créé avec ID:', docRef.id);
@@ -478,6 +482,10 @@ const useGenericAction = (entityType, actionConfig = {}, options = {}) => {
       }
       
       // Construction de la requête
+      // Protection contre entityType vide
+      if (!entityType) {
+        throw new Error('[useGenericAction] entityType est requis pour batchDelete');
+      }
       let q = collection(db, entityType);
       const constraints = [];
       

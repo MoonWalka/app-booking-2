@@ -134,15 +134,6 @@ const FestivalsTableView = ({
     );
   }
 
-  if (!festivals.length) {
-    return (
-      <div className={styles.emptyMessage}>
-        <i className="bi bi-calendar2-week" style={{ fontSize: '2rem', color: '#6c757d' }}></i>
-        <p>Aucun festival enregistré</p>
-      </div>
-    );
-  }
-
   return (
     <div className={styles.tableWrapper}>
       <Table responsive hover className={styles.festivalsTable}>
@@ -223,6 +214,12 @@ const FestivalsTableView = ({
           ))}
         </tbody>
       </Table>
+      {!festivals.length && (
+        <div className={styles.emptyMessage} style={{ padding: '40px', textAlign: 'center', color: '#6c757d' }}>
+          <i className="bi bi-calendar2-week" style={{ fontSize: '2rem' }}></i>
+          <p style={{ marginTop: '10px' }}>Aucun festival enregistré</p>
+        </div>
+      )}
     </div>
   );
 };

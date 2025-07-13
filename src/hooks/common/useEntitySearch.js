@@ -40,24 +40,38 @@ export const useEntitySearch = (options) => {
   } = options;
   
   const { currentEntreprise } = useEntreprise();
-
-  // console.log('Parsed options:', { entityType, searchField, onSelect: !!onSelect });
-
-  // États de base pour la recherche
+  
+  // États de base pour la recherche - DOIVENT être déclarés AVANT toute condition
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState(null);
   
-  // console.log('Hook states initialized - setSearchTerm type:', typeof setSearchTerm);
-  
   // Références pour la gestion du debounce et du dropdown
   const searchTimeoutRef = useRef(null);
   const dropdownRef = useRef(null);
+  
+  // Flag pour indiquer si le hook est valide
+  const isValid = !!entityType;
+  
+  // Validation pour éviter l'erreur Firestore
+  useEffect(() => {
+    if (!isValid) {
+      console.error('[useEntitySearch] ERREUR: entityType est requis mais n\'est pas fourni');
+      console.trace(); // Afficher la stack trace pour identifier l'origine
+    }
+  }, [isValid]);
 
   // NOUVEAU: Fonction de recherche stabilisée avec useCallback - Finalisation intelligente
   const performSearch = useCallback(async () => {
+    // Si le hook n'est pas valide, ne pas effectuer de recherche
+    if (!isValid) {
+      setResults([]);
+      setIsSearching(false);
+      return;
+    }
+    
     try {
       // Si une fonction de recherche personnalisée est fournie, l'utiliser
       if (customSearchFunction) {
@@ -176,7 +190,7 @@ export const useEntitySearch = (options) => {
     } finally {
       setIsSearching(false);
     }
-  }, [searchTerm, entityType, customSearchFunction, maxResults, additionalSearchFields, filterResults, currentEntreprise?.id]);
+  }, [searchTerm, entityType, customSearchFunction, maxResults, additionalSearchFields, filterResults, currentEntreprise?.id, isValid]);
 
   // Référence stable pour performSearch
   const performSearchRef = useRef();
@@ -250,6 +264,12 @@ export const useEntitySearch = (options) => {
 
   // Fonction pour créer une nouvelle entité
   const handleCreate = async (callbackOrAdditionalData = {}, additionalData = {}) => {
+    // Si le hook n'est pas valide, ne pas permettre la création
+    if (!isValid) {
+      console.error('[useEntitySearch] Impossible de créer une entité sans entityType');
+      return null;
+    }
+    
     // Gérer les paramètres - si le premier paramètre est une fonction, c'est le callback
     let callback = null;
     let entityAdditionalData = {};

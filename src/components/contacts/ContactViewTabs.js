@@ -531,8 +531,20 @@ function ContactViewTabs({ id, viewType = null }) {
           try {
             const preContrats = await getPreContratsByDate(date.id);
             if (preContrats && preContrats.length > 0) {
-              // Prendre le plus récent
+              // Prendre le pré-contrat confirmé en priorité, sinon le plus récent
               const latestPreContrat = preContrats.sort((a, b) => {
+                // Priorité 1: Si l'un est confirmé et pas l'autre
+                if (a.confirmationValidee && !b.confirmationValidee) return -1;
+                if (!a.confirmationValidee && b.confirmationValidee) return 1;
+                
+                // Priorité 2: Par date de confirmation si les deux sont confirmés
+                if (a.confirmationValidee && b.confirmationValidee) {
+                  const dateA = a.confirmationDate?.toDate() || a.createdAt?.toDate() || new Date(0);
+                  const dateB = b.confirmationDate?.toDate() || b.createdAt?.toDate() || new Date(0);
+                  return dateB - dateA;
+                }
+                
+                // Priorité 3: Par date de création pour les non-confirmés
                 const dateA = a.createdAt?.toDate() || new Date(0);
                 const dateB = b.createdAt?.toDate() || new Date(0);
                 return dateB - dateA;
@@ -544,7 +556,12 @@ function ContactViewTabs({ id, viewType = null }) {
                 preContratId: latestPreContrat.id,
                 publicFormData: latestPreContrat.publicFormData,
                 publicFormCompleted: latestPreContrat.publicFormCompleted,
-                confirmationValidee: latestPreContrat.confirmationValidee
+                confirmationValidee: latestPreContrat.confirmationValidee,
+                // Debug: log pour vérifier les valeurs
+                ...(console.log('[ContactViewTabs] PreContrat pour date', date.id, ':', {
+                  confirmationValidee: latestPreContrat.confirmationValidee,
+                  publicFormDataConfirmation: latestPreContrat.publicFormData?.confirmationValidee
+                }), {})
               };
             }
           } catch (error) {

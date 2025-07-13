@@ -31,17 +31,6 @@ const ContactFestivalsTable = ({ contactId, contactName }) => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h3><i className="bi bi-calendar2-week"></i> Festivals</h3>
-        <button 
-          className="btn btn-primary btn-sm"
-          onClick={() => setShowCreateModal(true)}
-        >
-          <i className="bi bi-plus-circle me-2"></i>
-          Nouveau festival
-        </button>
-      </div>
-      
       <FestivalsTableView 
         festivals={festivals}
         loading={loading}

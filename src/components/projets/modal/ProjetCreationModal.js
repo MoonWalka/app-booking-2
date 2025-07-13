@@ -20,12 +20,11 @@ function ProjetCreationModal({ show, onHide, onCreated, editProjet = null }) {
     sort: { field: 'nom', direction: 'asc' }
   }), []);
   
-  // Récupérer la liste des artistes seulement quand le modal est ouvert
-  const shouldFetchArtistes = show && activeTab === 'artistes';
+  // Récupérer la liste des artistes - toujours utiliser le hook mais contrôler le fetch
   const { items: artistes, loading: artistesLoading } = useGenericEntityList(
-    shouldFetchArtistes ? 'artistes' : null, 
-    shouldFetchArtistes ? artistesConfig : {},
-    { autoFetch: shouldFetchArtistes }
+    'artistes', 
+    artistesConfig,
+    { autoFetch: show && activeTab === 'artistes' }
   );
   
   const [formData, setFormData] = useState({

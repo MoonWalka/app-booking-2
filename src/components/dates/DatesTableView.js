@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useTabs } from '@/context/TabsContext';
 import Table from '@/components/ui/Table';
 import ActionButtons from '@/components/ui/ActionButtons';
@@ -27,6 +27,7 @@ const DatesTableView = ({
   onDelete,
   onEdit,
   onRefresh, // Nouvelle prop pour recharger les données
+  onAddClick, // Nouvelle prop pour gérer le clic sur "Nouvelle date"
   showSearch = true,
   // Nouvelles props pour gérer les contrats et factures
   hasContractFunc,
@@ -46,6 +47,116 @@ const DatesTableView = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
   const [selectedIds, setSelectedIds] = useState(new Set());
+  const [openingPreContrats, setOpeningPreContrats] = useState(new Set());
+  const [openingDevis, setOpeningDevis] = useState(new Set());
+  const [openingContrats, setOpeningContrats] = useState(new Set());
+  const [openingConfirmations, setOpeningConfirmations] = useState(new Set());
+  const [openingFactures, setOpeningFactures] = useState(new Set());
+
+  // Fonction pour gérer l'ouverture du pré-contrat avec protection
+  const handleOpenPreContrat = useCallback((dateId, dateTitle) => {
+    // Protection contre double-clic
+    if (openingPreContrats.has(dateId)) return;
+    
+    setOpeningPreContrats(prev => new Set(prev).add(dateId));
+    if (openPreContratTab) {
+      openPreContratTab(dateId, dateTitle);
+    }
+    // Réactiver après 1 seconde
+    setTimeout(() => {
+      setOpeningPreContrats(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(dateId);
+        return newSet;
+      });
+    }, 1000);
+  }, [openPreContratTab, openingPreContrats]);
+
+  // Fonction pour gérer l'ouverture du devis avec protection
+  const handleOpenDevis = useCallback((devisId, devisTitle, isNew = false, dateId = null, structureId = null) => {
+    const trackingId = isNew ? dateId : devisId;
+    if (openingDevis.has(trackingId)) return;
+    
+    setOpeningDevis(prev => new Set(prev).add(trackingId));
+    if (isNew && openNewDevisTab) {
+      openNewDevisTab(dateId, structureId, devisTitle);
+    } else if (!isNew && openDevisTab) {
+      openDevisTab(devisId, devisTitle);
+    }
+    
+    setTimeout(() => {
+      setOpeningDevis(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(trackingId);
+        return newSet;
+      });
+    }, 1000);
+  }, [openDevisTab, openNewDevisTab, openingDevis]);
+
+  // Fonction pour gérer l'ouverture du contrat avec protection
+  const handleOpenContrat = useCallback((dateId, dateTitle, isRedige) => {
+    if (openingContrats.has(dateId)) return;
+    
+    setOpeningContrats(prev => new Set(prev).add(dateId));
+    if (openContratTab) {
+      openContratTab(dateId, dateTitle, isRedige);
+    }
+    
+    setTimeout(() => {
+      setOpeningContrats(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(dateId);
+        return newSet;
+      });
+    }, 1000);
+  }, [openContratTab, openingContrats]);
+
+  // Fonction pour gérer l'ouverture de la confirmation avec protection
+  const handleOpenConfirmation = useCallback((dateId, dateTitle) => {
+    if (openingConfirmations.has(dateId)) return;
+    
+    setOpeningConfirmations(prev => new Set(prev).add(dateId));
+    if (openTab) {
+      openTab({
+        id: `confirmation-${dateId}`,
+        title: `Confirmation - ${dateTitle}`,
+        path: `/confirmation?dateId=${dateId}`,
+        component: 'ConfirmationPage',
+        params: { dateId },
+        icon: 'bi-check-circle'
+      });
+    }
+    
+    setTimeout(() => {
+      setOpeningConfirmations(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(dateId);
+        return newSet;
+      });
+    }, 1000);
+  }, [openTab, openingConfirmations]);
+
+  // Fonction pour gérer les actions facture avec protection
+  const handleFactureAction = useCallback((dateId, factureId, action, contratId = null) => {
+    const trackingId = action === 'generate' ? dateId : factureId;
+    if (openingFactures.has(trackingId)) return;
+    
+    setOpeningFactures(prev => new Set(prev).add(trackingId));
+    
+    if (action === 'view' && handleViewFacture) {
+      handleViewFacture(factureId);
+    } else if (action === 'generate' && handleGenerateFacture) {
+      handleGenerateFacture(dateId, contratId);
+    }
+    
+    setTimeout(() => {
+      setOpeningFactures(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(trackingId);
+        return newSet;
+      });
+    }, 1000);
+  }, [handleViewFacture, handleGenerateFacture, openingFactures]);
 
   // Configuration des colonnes du tableau
   const columns = [
@@ -237,11 +348,11 @@ const DatesTableView = ({
       render: (item) => {
         const hasDevis = item.hasDevis || item.devisId;
         const devisStatut = item.devisStatut || 'brouillon';
+        const isOpening = hasDevis ? openingDevis.has(item.devisId) : openingDevis.has(item.id);
         
         let iconClass = 'bi-file-earmark-text';
         let iconColor = datesTableStyles.iconDefault;
         let title = 'Créer un devis';
-        let onClick;
         
         if (hasDevis) {
           // Le devis existe
@@ -269,30 +380,24 @@ const DatesTableView = ({
               iconClass = 'bi-file-earmark-text-fill';
               iconColor = datesTableStyles.iconDefault;
           }
-          
-          onClick = (e) => {
-            e.stopPropagation();
-            if (openDevisTab) {
-              const devisTitle = `${item.devisNumero || 'Devis'} - ${item.artisteNom || 'Date'}`;
-              openDevisTab(item.devisId, devisTitle);
-            }
-          };
-        } else {
-          // Pas de devis, créer un nouveau
-          onClick = (e) => {
-            e.stopPropagation();
-            if (openNewDevisTab) {
-              const title = `Nouveau Devis - ${item.artisteNom || 'Date'}`;
-              openNewDevisTab(item.id, item.structureId || item.organisateurId, title);
-            }
-          };
         }
         
         return (
           <button
             className={datesTableStyles.iconButton}
-            onClick={onClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (hasDevis) {
+                const devisTitle = `${item.devisNumero || 'Devis'} - ${item.artisteNom || 'Date'}`;
+                handleOpenDevis(item.devisId, devisTitle, false);
+              } else {
+                const title = `Nouveau Devis - ${item.artisteNom || 'Date'}`;
+                handleOpenDevis(null, title, true, item.id, item.structureId || item.organisateurId);
+              }
+            }}
             title={title}
+            disabled={isOpening}
+            style={{ opacity: isOpening ? 0.5 : 1 }}
           >
             <i className={`bi ${iconClass} ${iconColor}`}></i>
           </button>
@@ -306,6 +411,7 @@ const DatesTableView = ({
       render: (item) => {
         const hasPreContrat = item.preContratId || item.hasPreContrat;
         const isValidated = item.preContratValidated || item.publicFormCompleted;
+        const isOpening = openingPreContrats.has(item.id);
         
         let iconClass = 'bi-file-earmark';
         let iconColor = datesTableStyles.iconDefault;
@@ -328,11 +434,14 @@ const DatesTableView = ({
             className={datesTableStyles.iconButton}
             onClick={(e) => {
               e.stopPropagation();
-              if (openPreContratTab) {
-                openPreContratTab(item.id);
-              }
+              const dateTitle = item.artisteNom 
+                ? `${item.artisteNom} - ${item.date ? new Date(item.date).toLocaleDateString('fr-FR') : 'Date'}`
+                : 'Pré-contrat';
+              handleOpenPreContrat(item.id, dateTitle);
             }}
             title={title}
+            disabled={isOpening}
+            style={{ opacity: isOpening ? 0.5 : 1 }}
           >
             <i className={`bi ${iconClass} ${iconColor}`}></i>
           </button>
@@ -345,24 +454,26 @@ const DatesTableView = ({
       sortable: false,
       render: (item) => {
         const hasValidation = item.confirmationValidee || item.publicFormData?.confirmationValidee;
+        const isOpening = openingConfirmations.has(item.id);
+        
+        // Debug: log pour voir les valeurs
+        console.log('[DatesTableView] Confirmation pour date', item.id, ':', {
+          confirmationValidee: item.confirmationValidee,
+          publicFormDataConfirmation: item.publicFormData?.confirmationValidee,
+          hasValidation
+        });
         
         return (
           <button
             className={datesTableStyles.iconButton}
             onClick={(e) => {
               e.stopPropagation();
-              if (openTab) {
-                openTab({
-                  id: `confirmation-${item.id}`,
-                  title: `Confirmation - ${item.artisteNom || item.titre || 'Date'}`,
-                  path: `/confirmation?dateId=${item.id}`,
-                  component: 'ConfirmationPage',
-                  params: { dateId: item.id },
-                  icon: 'bi-check-circle'
-                });
-              }
+              const dateTitle = item.artisteNom || item.titre || 'Date';
+              handleOpenConfirmation(item.id, dateTitle);
             }}
             title={hasValidation ? 'Confirmation validée' : 'Valider la confirmation'}
+            disabled={isOpening}
+            style={{ opacity: isOpening ? 0.5 : 1 }}
           >
             <i className={`bi ${hasValidation ? 'bi-check-circle-fill' : 'bi-check-circle'} ${hasValidation ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
           </button>
@@ -376,6 +487,7 @@ const DatesTableView = ({
       render: (item) => {
         // Simplification : utiliser la fonction fournie ou vérifier l'ID du contrat
         const hasContrat = hasContractFunc ? hasContractFunc(item.id) : (item.contratId ? true : false);
+        const isOpening = openingContrats.has(item.id);
         // Le contrat est rédigé s'il a un statut (depuis la collection contrats)
         const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
         const isRedige = contractStatus && contractStatus !== 'draft';
@@ -391,12 +503,12 @@ const DatesTableView = ({
                 contratId: item.contratId,
                 status: contractStatus
               });
-              if (openContratTab) {
-                const dateTitle = item.artisteNom || item.titre || 'Date';
-                openContratTab(item.id, dateTitle, isRedige);
-              }
+              const dateTitle = item.artisteNom || item.titre || 'Date';
+              handleOpenContrat(item.id, dateTitle, isRedige);
             }}
             title={isRedige ? 'Contrat rédigé - Voir l\'aperçu' : hasContrat ? 'Modifier le contrat' : 'Créer le contrat'}
+            disabled={isOpening}
+            style={{ opacity: isOpening ? 0.5 : 1 }}
           >
             <i className={`bi ${hasContrat ? 'bi-file-text-fill' : 'bi-file-text'} ${hasContrat ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
           </button>
@@ -476,6 +588,8 @@ const DatesTableView = ({
         });
         console.log(`[DatesTableView] === FIN RENDU BOUTON FACTURE pour date ${item.id} ===`);
         
+        const isOpening = hasFacture ? openingFactures.has(factureId) : openingFactures.has(item.id);
+        
         return (
           <button
             className={datesTableStyles.iconButton}
@@ -492,33 +606,28 @@ const DatesTableView = ({
                 handleGenerateFacture: !!handleGenerateFacture
               });
               
-              if (!disabled) {
-                if (hasFacture && factureId && handleViewFacture) {
+              if (!disabled && !isOpening) {
+                if (hasFacture && factureId) {
                   console.log(`[DatesTableView] Action: VOIR FACTURE ${factureId}`);
-                  console.log('[DatesTableView] Appel de handleViewFacture avec ID:', factureId);
-                  // Ouvrir la facture existante
-                  handleViewFacture(factureId);
-                  console.log('[DatesTableView] handleViewFacture appelé');
-                } else if (canGenerateFacture && handleGenerateFacture) {
+                  handleFactureAction(item.id, factureId, 'view');
+                } else if (canGenerateFacture) {
                   console.log(`[DatesTableView] Action: GÉNÉRER FACTURE pour date ${item.id}`);
-                  console.log('[DatesTableView] Appel de handleGenerateFacture avec dateId:', item.id);
-                  // Générer une nouvelle facture
                   // Récupérer le contratId s'il existe
                   const contractData = getContractData && getContractData(item.id);
                   const contratId = contractData?.id || null;
                   console.log('[DatesTableView] ContratId trouvé:', contratId);
-                  handleGenerateFacture(item.id, contratId);
-                  console.log('[DatesTableView] handleGenerateFacture appelé');
+                  handleFactureAction(item.id, null, 'generate', contratId);
                 } else {
                   console.log('[DatesTableView] Aucune action possible - conditions non remplies');
                 }
               } else {
-                console.log('[DatesTableView] Bouton désactivé - pas d\'action');
+                console.log('[DatesTableView] Bouton désactivé ou en cours d\'ouverture - pas d\'action');
               }
               console.log(`[DatesTableView] === FIN CLIC BOUTON FACTURE pour date ${item.id} ===`);
             }}
             title={title}
-            disabled={disabled}
+            disabled={disabled || isOpening}
+            style={{ opacity: disabled || isOpening ? 0.5 : 1 }}
           >
             <i className={`bi ${iconClass} ${iconColor}`}></i>
           </button>
@@ -666,14 +775,20 @@ const DatesTableView = ({
   };
 
   const handleAdd = () => {
-    if (openTab) {
-      openTab({
-        id: 'date-creation',
-        title: 'Nouvelle Date',
-        path: '/booking/nouvelle-date',
-        component: 'DateCreationPage',
-        icon: 'bi-calendar-plus'
-      });
+    // Si une fonction onAddClick personnalisée est fournie, l'utiliser
+    if (onAddClick) {
+      onAddClick();
+    } else {
+      // Sinon, utiliser le comportement par défaut
+      if (openTab) {
+        openTab({
+          id: 'date-creation',
+          title: 'Nouvelle Date',
+          path: '/booking/nouvelle-date',
+          component: 'DateCreationPage',
+          icon: 'bi-calendar-plus'
+        });
+      }
     }
   };
 
@@ -757,16 +872,6 @@ const DatesTableView = ({
     );
   }
 
-  if (dates.length === 0) {
-    return (
-      <EntityEmptyState
-        icon="bi-calendar-x"
-        title="Aucun date"
-        message="Il n'y a pas encore de dates enregistrés."
-      />
-    );
-  }
-
   return (
     <>
       <div className={styles.tableSection}>
@@ -802,12 +907,19 @@ const DatesTableView = ({
           className={styles.datesTable}
         />
         
-        {filteredDates.length === 0 && (searchTerm || dateFilter) && (
-          <EntityEmptyState
-            icon="bi-search"
-            title="Aucun résultat"
-            message={`Aucun date ne correspond aux critères de recherche`}
-          />
+        {filteredDates.length === 0 && (
+          (searchTerm || dateFilter) ? (
+            <EntityEmptyState
+              icon="bi-search"
+              title="Aucun résultat"
+              message={`Aucun date ne correspond aux critères de recherche`}
+            />
+          ) : (
+            <div style={{ padding: '40px', textAlign: 'center', color: '#6c757d' }}>
+              <i className="bi bi-calendar-x" style={{ fontSize: '2rem' }}></i>
+              <p style={{ marginTop: '10px' }}>Aucune date enregistrée</p>
+            </div>
+          )
         )}
         
         {/* Informations de pagination */}

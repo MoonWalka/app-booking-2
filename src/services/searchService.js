@@ -380,6 +380,35 @@ class SearchService {
   }
 
   /**
+   * Sauvegarde une recherche avec ses résultats
+   */
+  async saveSearchWithResults({ entrepriseId, userId, name, criteria, results, description }) {
+    console.log('💾 searchService.saveSearchWithResults - Sauvegarde de la recherche avec résultats:', {
+      entrepriseId,
+      userId,
+      name,
+      criteriaCount: criteria?.length,
+      resultsCount: (results?.structures?.length || 0) + (results?.personnes?.length || 0)
+    });
+    
+    const searchData = {
+      entrepriseId,
+      userId,
+      name,
+      criteria,
+      results, // Sauvegarder les résultats
+      description,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      type: 'saved_search_with_results'
+    };
+
+    const docRef = await addDoc(collection(db, 'selections'), searchData);
+    console.log('💾 searchService.saveSearchWithResults - Recherche sauvegardée avec ID:', docRef.id);
+    return { id: docRef.id, ...searchData };
+  }
+
+  /**
    * Charge les recherches sauvegardées
    */
   async loadSavedSearches({ entrepriseId, userId }) {
@@ -388,16 +417,35 @@ class SearchService {
       userId
     });
     
-    const q = query(
+    // On doit faire deux requêtes car Firebase ne permet pas 'in' avec 'orderBy'
+    const q1 = query(
       collection(db, 'selections'),
       where('entrepriseId', '==', entrepriseId),
       where('userId', '==', userId),
       where('type', '==', 'saved_search'),
       orderBy('updatedAt', 'desc')
     );
+    
+    const q2 = query(
+      collection(db, 'selections'),
+      where('entrepriseId', '==', entrepriseId),
+      where('userId', '==', userId),
+      where('type', '==', 'saved_search_with_results'),
+      orderBy('updatedAt', 'desc')
+    );
 
-    const snapshot = await getDocs(q);
-    const searches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const [snapshot1, snapshot2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+    
+    const searches = [
+      ...snapshot1.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+      ...snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    ].sort((a, b) => {
+      // Gérer les timestamps Firestore
+      const aDate = a.updatedAt?.toDate ? a.updatedAt.toDate() : new Date(a.updatedAt);
+      const bDate = b.updatedAt?.toDate ? b.updatedAt.toDate() : new Date(b.updatedAt);
+      return bDate - aDate;
+    });
+    
     console.log('🔍 searchService.loadSavedSearches - Recherches trouvées:', searches.length);
     return searches;
   }

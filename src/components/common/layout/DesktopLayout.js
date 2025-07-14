@@ -131,14 +131,27 @@ function DesktopLayout({ children }) {
     
     // Si c'est une recherche sauvegardée
     if (item.isSearch && item.searchData) {
-      openTab({
-        id: 'contacts-recherches',
-        title: 'Mes recherches',
-        path: '/contacts/recherches',
-        component: 'MesRecherchesPage',
-        icon: 'bi-search',
-        params: { savedSearch: item.searchData } // Passer les données de recherche
-      });
+      // Si la recherche contient des résultats, ouvrir directement la page des résultats
+      if (item.searchData.type === 'saved_search_with_results' && item.searchData.results) {
+        openTab({
+          id: `saved-search-results-${item.searchData.id}`,
+          title: item.searchData.name,
+          path: `/contacts/recherche-sauvegardee/${item.searchData.id}`,
+          component: 'SavedSearchResultsPage',
+          icon: 'bi-search',
+          params: { savedSearch: item.searchData }
+        });
+      } else {
+        // Sinon, ouvrir la page de recherche avec les critères pré-remplis
+        openTab({
+          id: 'contacts-recherches',
+          title: 'Mes recherches',
+          path: '/contacts/recherches',
+          component: 'MesRecherchesPage',
+          icon: 'bi-search',
+          params: { savedSearch: item.searchData }
+        });
+      }
       return;
     }
     
@@ -408,7 +421,7 @@ function DesktopLayout({ children }) {
       console.log('🔍 DesktopLayout - Ajout recherche au menu:', search.name);
       return {
         id: `saved-search-${search.id}`,
-        icon: "bi-search", // Icône loupe pour les recherches
+        icon: "", // Pas d'icône mais on garde l'espace
         label: `🔍 ${search.name}`,
         searchData: search, // On stocke les données de recherche pour les utiliser lors du clic
         isSearch: true
@@ -626,10 +639,10 @@ function DesktopLayout({ children }) {
                       );
                     }
                     
-                    // Sous-item simple (seulement s'il a une propriété 'to')
-                    if (subItem.to) {
+                    // Sous-item simple (avec 'to' ou recherche sauvegardée)
+                    if (subItem.to || subItem.isSearch) {
                       return (
-                        <li key={subItem.to}>
+                        <li key={subItem.id || subItem.to}>
                           <button 
                             className={sidebarStyles.navButton}
                             onClick={(e) => {
@@ -640,14 +653,14 @@ function DesktopLayout({ children }) {
                               }
                             }}
                           >
-                            <i className={`bi ${subItem.icon}`}></i>
+                            <i className={`bi ${subItem.icon}`} style={subItem.isSearch && !subItem.icon ? {width: '1rem', display: 'inline-block'} : {}}></i>
                             <span>{subItem.label}</span>
                           </button>
                         </li>
                       );
                     }
                     
-                    // Si pas de 'to' et pas de 'subItems', ne rien rendre
+                    // Si pas de 'to', pas de 'isSearch' et pas de 'subItems', ne rien rendre
                     return null;
                   })}
                 </ul>

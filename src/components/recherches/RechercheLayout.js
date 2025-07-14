@@ -296,12 +296,49 @@ const RechercheLayout = ({ children, savedSearch }) => {
     });
 
     try {
-      await searchService.saveSearch({
+      // D'abord, exécuter la recherche pour obtenir les résultats
+      setIsLoading(true);
+      const [structuresResults, personnesResults] = await Promise.all([
+        searchService.executeSearch({
+          entrepriseId: currentEntreprise.id,
+          criteria: selectedCriteria,
+          collection: 'structures',
+          pagination: { limit: 500 } // Augmenter la limite pour sauvegarder plus de résultats
+        }),
+        searchService.executeSearch({
+          entrepriseId: currentEntreprise.id,
+          criteria: selectedCriteria,
+          collection: 'personnes',
+          pagination: { limit: 500 }
+        })
+      ]);
+      
+      // Sauvegarder avec les résultats
+      await searchService.saveSearchWithResults({
         entrepriseId: currentEntreprise.id,
         userId: currentUser.uid,
         name: searchName,
         criteria: selectedCriteria,
-        description: `${selectedCriteria.length} critère(s)`
+        results: {
+          structures: structuresResults.data.map(s => ({
+            id: s.id,
+            raisonSociale: s.raisonSociale,
+            nom: s.nom,
+            email: s.email,
+            telephone: s.telephone,
+            ville: s.ville
+          })),
+          personnes: personnesResults.data.map(p => ({
+            id: p.id,
+            nom: p.nom,
+            prenom: p.prenom,
+            fonction: p.fonction,
+            email: p.email || p.mailDirect,
+            telephone: p.telephone || p.telDirect || p.mobile,
+            ville: p.ville
+          }))
+        },
+        description: `${selectedCriteria.length} critère(s) - ${structuresResults.data.length + personnesResults.data.length} résultat(s)`
       });
       
       setSaveModalOpen(false);
@@ -314,6 +351,8 @@ const RechercheLayout = ({ children, savedSearch }) => {
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       alert('Erreur lors de la sauvegarde');
+    } finally {
+      setIsLoading(false);
     }
   };
 

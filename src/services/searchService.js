@@ -7,7 +7,9 @@ import {
   limit, 
   startAfter, 
   getDocs, 
-  addDoc 
+  addDoc,
+  doc,
+  deleteDoc
 } from './firebase-service';
 import { searchFieldsMapping } from '../config/searchFieldsMapping';
 
@@ -448,6 +450,23 @@ class SearchService {
     
     console.log('🔍 searchService.loadSavedSearches - Recherches trouvées:', searches.length);
     return searches;
+  }
+
+  /**
+   * Supprime une recherche sauvegardée
+   */
+  async deleteSearch(searchId) {
+    console.log('🗑️ searchService.deleteSearch - Suppression de la recherche:', searchId);
+    
+    try {
+      const searchRef = doc(db, 'selections', searchId);
+      await deleteDoc(searchRef);
+      console.log('🗑️ searchService.deleteSearch - Recherche supprimée avec succès');
+      return true;
+    } catch (error) {
+      console.error('🗑️ searchService.deleteSearch - Erreur:', error);
+      throw error;
+    }
   }
 }
 

@@ -40,9 +40,21 @@ function DesktopLayout({ children }) {
   // État pour stocker les recherches sauvegardées
   const [savedSearches, setSavedSearches] = useState([]);
   
-  
   // État pour la sidebar mobile (hamburger menu)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  
+  // État pour gérer l'expansion des menus
+  const [expandedMenu, setExpandedMenu] = useState(null);
+  // État pour gérer l'expansion des sous-sous-menus
+  const [expandedSubMenu, setExpandedSubMenu] = useState(null);
+  // État pour le menu utilisateur
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  // État pour savoir si le dropdown organisation est ouvert
+  const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
+  // État pour stocker l'historique du menu précédent
+  const [previousMenu, setPreviousMenu] = useState(null);
+  // État pour le menu contextuel
+  const [contextMenu, setContextMenu] = useState(null);
 
   // Effet pour fermer les panneaux lors du changement de taille d'écran
   useEffect(() => {
@@ -105,6 +117,48 @@ function DesktopLayout({ children }) {
     };
   }, [currentUser, currentEntreprise]);
 
+  // Fermer le menu contextuel au clic ailleurs
+  useEffect(() => {
+    const handleClick = () => setContextMenu(null);
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') setContextMenu(null);
+    };
+    
+    if (contextMenu) {
+      document.addEventListener('click', handleClick);
+      document.addEventListener('keydown', handleEscape);
+      return () => {
+        document.removeEventListener('click', handleClick);
+        document.removeEventListener('keydown', handleEscape);
+      };
+    }
+  }, [contextMenu]);
+
+  // Fonction pour supprimer une recherche sauvegardée
+  const handleDeleteSearch = async (searchId, searchName) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer la recherche "${searchName}" ?`)) {
+      try {
+        await searchService.deleteSearch(searchId);
+        console.log('🗑️ Recherche supprimée:', searchId);
+        
+        // Rafraîchir la liste des recherches
+        if (currentUser?.uid && currentEntreprise?.id) {
+          const searches = await searchService.loadSavedSearches({
+            entrepriseId: currentEntreprise.id,
+            userId: currentUser.uid
+          });
+          setSavedSearches(searches);
+        }
+        
+        alert('Recherche supprimée avec succès');
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        alert('Erreur lors de la suppression de la recherche');
+      }
+    }
+    setContextMenu(null);
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -113,17 +167,6 @@ function DesktopLayout({ children }) {
       console.error('Erreur lors de la déconnexion:', error);
     }
   };
-
-  // État pour gérer l'expansion des menus
-  const [expandedMenu, setExpandedMenu] = useState(null);
-  // État pour gérer l'expansion des sous-sous-menus
-  const [expandedSubMenu, setExpandedSubMenu] = useState(null);
-  // État pour le menu utilisateur
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  // État pour savoir si le dropdown organisation est ouvert
-  const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
-  // État pour stocker l'historique du menu précédent
-  const [previousMenu, setPreviousMenu] = useState(null);
 
   // Navigation adaptée pour le système d'onglets
   const handleNavigation = (item) => {
@@ -652,6 +695,21 @@ function DesktopLayout({ children }) {
                                 handleMobileNavClick();
                               }
                             }}
+                            onContextMenu={(e) => {
+                              // Gestion du clic droit pour les recherches sauvegardées
+                              console.log('🖱️ Clic droit détecté sur:', subItem);
+                              if (subItem.isSearch && subItem.searchData) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('🖱️ Menu contextuel pour:', subItem.searchData.name);
+                                setContextMenu({
+                                  x: e.clientX,
+                                  y: e.clientY,
+                                  searchId: subItem.searchData.id,
+                                  searchName: subItem.searchData.name
+                                });
+                              }
+                            }}
                           >
                             <i className={`bi ${subItem.icon}`} style={subItem.isSearch && !subItem.icon ? {width: '1rem', display: 'inline-block'} : {}}></i>
                             <span>{subItem.label}</span>
@@ -920,6 +978,37 @@ function DesktopLayout({ children }) {
       
       {/* Conteneur des modals de contact */}
       <ContactModalsContainer />
+      
+      {/* Menu contextuel pour les recherches sauvegardées */}
+      {contextMenu && (
+        <div
+          style={{
+            position: 'fixed',
+            top: contextMenu.y,
+            left: contextMenu.x,
+            backgroundColor: 'white',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            zIndex: 9999,
+            minWidth: '150px'
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            className="btn btn-sm btn-link text-danger w-100 text-start"
+            onClick={() => handleDeleteSearch(contextMenu.searchId, contextMenu.searchName)}
+            style={{ 
+              padding: '8px 12px',
+              textDecoration: 'none',
+              borderRadius: '4px'
+            }}
+          >
+            <i className="bi bi-trash me-2"></i>
+            Supprimer
+          </button>
+        </div>
+      )}
     </div>
   );
 }

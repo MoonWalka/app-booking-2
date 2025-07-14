@@ -67,10 +67,21 @@ export function useContactsRelational() {
       );
       
       const unsubStructures = onSnapshot(structuresQuery, (snapshot) => {
-        const structuresData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const structuresData = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            // Convertir les timestamps Firestore en dates JavaScript
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+            // Convertir aussi les dates des commentaires si présents
+            commentaires: data.commentaires?.map(c => ({
+              ...c,
+              date: c.date?.toDate ? c.date.toDate() : (c.date?.seconds ? new Date(c.date.seconds * 1000) : c.date)
+            })) || []
+          };
+        });
         
         // DEBUG: Tracer les mises à jour Firebase pour les structures
         snapshot.docChanges().forEach(change => {
@@ -104,10 +115,21 @@ export function useContactsRelational() {
       );
       
       const unsubPersonnes = onSnapshot(personnesQuery, (snapshot) => {
-        const personnesData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const personnesData = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            // Convertir les timestamps Firestore en dates JavaScript
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+            // Convertir aussi les dates des commentaires si présents
+            commentaires: data.commentaires?.map(c => ({
+              ...c,
+              date: c.date?.toDate ? c.date.toDate() : (c.date?.seconds ? new Date(c.date.seconds * 1000) : c.date)
+            })) || []
+          };
+        });
         
         // DEBUG: Tracer les mises à jour Firebase pour les personnes
         snapshot.docChanges().forEach(change => {
@@ -405,6 +427,13 @@ export function useContactsRelational() {
       console.warn('⚠️ [getPersonneWithStructures] Personne non trouvée dans le cache');
       return null;
     }
+    
+    // DEBUG: Vérifier les commentaires de la personne
+    console.log('📝 [getPersonneWithStructures] Commentaires de la personne:', {
+      personneId,
+      commentaires: personne.commentaires,
+      nombreCommentaires: personne.commentaires?.length || 0
+    });
 
     // Trouver les liaisons de cette personne
     const personneLiaisons = liaisons.filter(l => 

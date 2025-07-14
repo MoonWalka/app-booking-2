@@ -97,8 +97,15 @@ class PersonnesService {
       const currentData = docSnap.data();
       const updatedData = { ...currentData, ...updates };
 
+      // Pour la validation, exclure createdAt et updatedAt qui sont gérés par Firebase
+      const dataToValidate = { ...updatedData };
+      delete dataToValidate.createdAt;
+      delete dataToValidate.updatedAt;
+      delete dataToValidate.createdBy;
+      delete dataToValidate.updatedBy;
+
       // Validation
-      const validation = await validatePersonne(updatedData);
+      const validation = await validatePersonne(dataToValidate);
       if (!validation.valid) {
         throw new Error(`Validation échouée: ${JSON.stringify(validation.errors)}`);
       }

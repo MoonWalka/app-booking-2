@@ -324,6 +324,13 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       });
       
       // Sauvegarder dans Firebase
+      console.log('[DEBUG handleAddComment] Sauvegarde du commentaire:', {
+        contactId,
+        contactType,
+        updatedCommentsCount: updatedComments.length,
+        updatedComments
+      });
+      
       if (contactType === 'structure') {
         await updateStructure(contactId, { commentaires: updatedComments });
       } else {
@@ -335,6 +342,7 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       
       // DEBUG: Succès
       // debug.comments.serviceResponse({ success: true });
+      console.log('[DEBUG handleAddComment] Commentaire ajouté avec succès');
       
       return true;
     } catch (error) {

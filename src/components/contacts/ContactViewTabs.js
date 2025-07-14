@@ -62,7 +62,7 @@ function ContactViewTabs({ id, viewType = null }) {
   const [datesData, setDatesData] = useState([]);
   
   // Hooks
-  const { openDateCreationTab } = useTabs();
+  const { openDateCreationTab, openContactTab, openStructureTab } = useTabs();
   const { openCommentModal, openPersonneModal } = useContactModals();
   const { currentUser } = useAuth();
   const { currentEntreprise } = useEntreprise();
@@ -310,15 +310,22 @@ function ContactViewTabs({ id, viewType = null }) {
 
   const handleOpenStructureFiche = useCallback((structureData) => {
     console.log('[ContactViewTabs] Ouverture de la fiche structure:', structureData);
+    let structureId = null;
+    let structureName = '';
+    
     if (structureData?.structureId) {
-      navigateToEntity('structure', structureData.structureId, structureData.structureRaisonSociale);
+      structureId = structureData.structureId;
+      structureName = structureData.structureRaisonSociale || structureData.structureNom || 'Structure';
     } else if (structureData.id) {
-      const originalId = structureData.id?.replace('unified_structure_', '');
-      if (originalId) {
-        navigateToEntity('structure', originalId, structureData.structureRaisonSociale);
-      }
+      structureId = structureData.id?.replace('unified_structure_', '');
+      structureName = structureData.raisonSociale || structureData.nom || 'Structure';
     }
-  }, [navigateToEntity]);
+    
+    if (structureId) {
+      // Utiliser openStructureTab au lieu de navigateToEntity pour rester dans le contexte des tabs
+      openStructureTab(structureId, structureName);
+    }
+  }, [openStructureTab]);
 
   const handleAddCommentToStructure = useCallback((structureData) => {
     console.log('[ContactViewTabs] Ajout commentaire à la structure:', structureData);
@@ -603,6 +610,9 @@ function ContactViewTabs({ id, viewType = null }) {
     
     console.log('[DEBUG ContactViewTabs] Commentaires bruts:', rawCommentaires);
     console.log('[DEBUG ContactViewTabs] extractedData complet:', extractedData);
+    console.log('[DEBUG ContactViewTabs] contact complet:', contact);
+    console.log('[DEBUG ContactViewTabs] entityType:', entityType);
+    console.log('[DEBUG ContactViewTabs] cleanId:', cleanId);
     
     // Normaliser le format des commentaires pour gérer les anciens et nouveaux formats
     const normalized = rawCommentaires.map(comment => {
@@ -625,7 +635,7 @@ function ContactViewTabs({ id, viewType = null }) {
     
     console.log('[DEBUG ContactViewTabs] Commentaires normalisés:', normalized);
     return normalized;
-  }, [extractedData?.commentaires]);
+  }, [extractedData?.commentaires, contact, entityType, cleanId]);
 
   const isStructure = extractedData && (!extractedData.prenom || extractedData.entityType === 'structure');
 
@@ -862,23 +872,33 @@ function ContactViewTabs({ id, viewType = null }) {
             return [];
           }
         },
-        render: () => (
-          <ContactPersonsSection 
-            isStructure={forcedViewType ? (forcedViewType === 'structure') : (entityType === 'structure' || extractedData?.structureRaisonSociale)}
-            personnes={contact?.personnes || []}
-            structureData={extractedData}
-            onEditPerson={handleEditPerson}
-            onDissociatePerson={handleDissociatePerson}
-            onOpenPersonFiche={handleOpenPersonFiche}
-            onAddCommentToPerson={handleAddCommentToPersonWithModal}
-            navigateToEntity={navigateToEntity}
-            onEditStructure={handleEditStructure}
-            onOpenStructureFiche={handleOpenStructureFiche}
-            onAddCommentToStructure={handleAddCommentToStructure}
-            onTogglePrioritaire={handleSetPrioritaire}
-            onToggleActif={handleToggleActif}
-          />
-        )
+        render: () => {
+          console.log('[DEBUG ContactPersonsSection] Données passées:', {
+            isStructure: forcedViewType ? (forcedViewType === 'structure') : (entityType === 'structure' || extractedData?.structureRaisonSociale),
+            personnes: contact?.personnes || [],
+            contactData: contact,
+            entityType,
+            forcedViewType
+          });
+          
+          return (
+            <ContactPersonsSection 
+              isStructure={forcedViewType ? (forcedViewType === 'structure') : (entityType === 'structure' || extractedData?.structureRaisonSociale)}
+              personnes={contact?.personnes || []}
+              structureData={extractedData}
+              onEditPerson={handleEditPerson}
+              onDissociatePerson={handleDissociatePerson}
+              onOpenPersonFiche={handleOpenPersonFiche}
+              onAddCommentToPerson={handleAddCommentToPersonWithModal}
+              navigateToEntity={navigateToEntity}
+              onEditStructure={handleEditStructure}
+              onOpenStructureFiche={handleOpenStructureFiche}
+              onAddCommentToStructure={handleAddCommentToStructure}
+              onTogglePrioritaire={handleSetPrioritaire}
+              onToggleActif={handleToggleActif}
+            />
+          );
+        }
       },
       {
         className: 'middleRight',

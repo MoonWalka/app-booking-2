@@ -152,8 +152,8 @@ function ContactPersonsSection({
                   return parts.join(' • ') || 'Structure';
                 })()}
                 onClick={() => {
-                  if (structure.id) {
-                    navigateToEntity('structure', structure.id, structure.raisonSociale);
+                  if (onOpenStructureFiche && structure.id) {
+                    onOpenStructureFiche(structure);
                   }
                 }}
                 icon={<i className="bi bi-building" style={{ fontSize: '1.2rem' }}></i>}
@@ -181,7 +181,7 @@ function ContactPersonsSection({
                     label: 'Ouvrir',
                     tooltip: 'Ouvrir la fiche structure',
                     variant: 'Primary',
-                    onClick: () => navigateToEntity('structure', structure.id, structure.raisonSociale)
+                    onClick: () => onOpenStructureFiche && onOpenStructureFiche(structure)
                   }
                 ]}
               />

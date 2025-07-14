@@ -322,20 +322,20 @@ const RechercheLayout = ({ children, savedSearch }) => {
         results: {
           structures: structuresResults.data.map(s => ({
             id: s.id,
-            raisonSociale: s.raisonSociale,
-            nom: s.nom,
-            email: s.email,
-            telephone: s.telephone,
-            ville: s.ville
+            raisonSociale: s.raisonSociale || null,
+            nom: s.nom || null,
+            email: s.email || null,
+            telephone: s.telephone || null,
+            ville: s.ville || null
           })),
           personnes: personnesResults.data.map(p => ({
             id: p.id,
-            nom: p.nom,
-            prenom: p.prenom,
-            fonction: p.fonction,
-            email: p.email || p.mailDirect,
-            telephone: p.telephone || p.telDirect || p.mobile,
-            ville: p.ville
+            nom: p.nom || null,
+            prenom: p.prenom || null,
+            fonction: p.fonction || null,
+            email: p.email || p.mailDirect || null,
+            telephone: p.telephone || p.telDirect || p.mobile || null,
+            ville: p.ville || null
           }))
         },
         description: `${selectedCriteria.length} critère(s) - ${structuresResults.data.length + personnesResults.data.length} résultat(s)`

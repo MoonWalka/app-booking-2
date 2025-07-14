@@ -258,21 +258,19 @@ const DatesTableView = ({
       key: 'contrat',
       sortable: true,
       render: (item) => {
-        const typeContrat = item.typeContrat || item.contratType || 'Aucun';
+        const typeContrat = item.typeContrat || item.contratType || 'Non défini';
         const getContratBadge = (type) => {
           switch (type.toLowerCase()) {
-            case 'standard':
-              return { color: '#007bff', label: 'Standard' };
-            case 'premium':
-              return { color: '#28a745', label: 'Premium' };
-            case 'basic':
-              return { color: '#ffc107', label: 'Basic' };
-            case 'custom':
-            case 'personnalisé':
-              return { color: '#6f42c1', label: 'Personnalisé' };
-            case 'aucun':
+            case 'cession':
+              return { color: '#007bff', label: 'Cession' };
+            case 'coréalisation':
+            case 'corealisation':
+              return { color: '#28a745', label: 'Coréalisation' };
+            case 'location':
+              return { color: '#17a2b8', label: 'Location' };
+            case 'non défini':
             default:
-              return { color: '#6c757d', label: 'Aucun' };
+              return { color: '#6c757d', label: 'Non défini' };
           }
         };
         

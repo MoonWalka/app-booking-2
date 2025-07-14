@@ -90,6 +90,7 @@
   border-bottom: 1px solid #f8f9fa;
   transition: background-color 0.2s ease;
   font-size: 0.95rem;
+  color: #212529; /* Ajout de la couleur du texte */
 }
 
 .dropdownItem:hover {

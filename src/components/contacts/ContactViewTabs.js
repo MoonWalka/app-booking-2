@@ -180,6 +180,7 @@ function ContactViewTabs({ id, viewType = null }) {
     handleOpenPersonFiche,
     handleAddComment,
     handleDeleteComment,
+    handleEditComment,
     handleSetPrioritaire,
     handleToggleActif
   } = useContactActionsRelational(cleanId, contactType);
@@ -902,6 +903,15 @@ function ContactViewTabs({ id, viewType = null }) {
             <ContactCommentsSection 
               commentaires={commentaires}
               onDeleteComment={handleDeleteComment}
+              onEditComment={(commentaire) => {
+                openCommentModal({
+                  title: 'Modifier le commentaire',
+                  comment: commentaire,
+                  onSave: async (newContent) => {
+                    await handleEditComment(commentaire.id, newContent);
+                  }
+                });
+              }}
             />
           );
         }

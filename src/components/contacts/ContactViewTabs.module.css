@@ -1190,6 +1190,7 @@
   font-size: var(--tc-font-size-xs);
 }
 
+.editCommentButton,
 .deleteCommentButton {
   background: none;
   border: none;
@@ -1206,12 +1207,19 @@
   height: 24px;
 }
 
+.editCommentButton:hover {
+  background: var(--tc-color-primary-50);
+  color: var(--tc-color-primary-600);
+  transform: scale(1.05);
+}
+
 .deleteCommentButton:hover {
   background: var(--tc-color-danger-50);
   color: var(--tc-color-danger-600);
   transform: scale(1.05);
 }
 
+.editCommentButton i,
 .deleteCommentButton i {
   font-size: var(--tc-font-size-sm);
 }
@@ -1221,6 +1229,35 @@
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-normal);
   word-break: break-word;
+}
+
+.commentContentCollapsed {
+  white-space: pre-wrap;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+.commentContentExpanded {
+  white-space: pre-wrap;
+}
+
+.toggleCommentButton {
+  background: none;
+  border: none;
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-size-sm);
+  padding: 0.25rem 0;
+  margin-top: 0.25rem;
+  cursor: pointer;
+  transition: var(--tc-transition-fast);
+}
+
+.toggleCommentButton:hover {
+  color: var(--tc-color-primary-dark);
+  text-decoration: underline;
 }
 
 .emptyComments {

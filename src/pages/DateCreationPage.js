@@ -167,14 +167,35 @@ function DateCreationPage({ params = {} }) {
       
       querySnapshot.forEach((doc) => {
         const structureData = { id: doc.id, ...doc.data() };
+        
+        // Debug : afficher les champs disponibles pour chaque structure
+        console.log('[DateCreationPage] Structure chargée:', {
+          id: doc.id,
+          data: structureData,
+          nomFinal: structureData.raisonSociale || structureData.nom || structureData.structureRaisonSociale || 'Structure sans nom'
+        });
+        
+        // Chercher le nom dans différents champs possibles
+        // raisonSociale est le champ principal dans Firebase
+        const nomStructure = structureData.raisonSociale || 
+                           structureData.nom || 
+                           structureData.structureRaisonSociale || 
+                           'Structure sans nom';
+        
         structures.push({
           id: doc.id,
-          nom: structureData.structureRaisonSociale || structureData.nom,
-          searchText: (structureData.structureRaisonSociale || structureData.nom || '').toLowerCase()
+          nom: nomStructure,
+          searchText: nomStructure.toLowerCase()
         });
       });
       
       setStructuresData(structures);
+      console.log(`[DateCreationPage] ${structures.length} structures chargées`);
+      if (structures.length > 0) {
+        console.log('[DateCreationPage] Échantillon des structures chargées:', 
+          structures.slice(0, 3).map(s => ({ id: s.id, nom: s.nom }))
+        );
+      }
     } catch (error) {
       console.error('Erreur lors du chargement des structures:', error);
     }
@@ -285,6 +306,8 @@ function DateCreationPage({ params = {} }) {
         organisateurId: formData.structureId,
         organisateurNom: formData.structureNom,
         libelle: formData.libelle,
+        // Ajouter automatiquement la date du jour comme prise d'option
+        priseOption: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
         entrepriseId: currentEntreprise.id,
         createdBy: currentUser?.uid || null,
         createdByName: currentUser?.displayName || currentUser?.email || null,
@@ -522,17 +545,24 @@ function DateCreationPage({ params = {} }) {
                     onFocus={() => setShowStructureDropdown(true)}
                     className={styles.input}
                   />
-                  {showStructureDropdown && filteredStructures.length > 0 && (
+                  {showStructureDropdown && (
                     <div className={styles.dropdown}>
-                      {filteredStructures.slice(0, 10).map((structure) => (
-                        <div
-                          key={structure.id}
-                          className={styles.dropdownItem}
-                          onClick={() => handleStructureSelect(structure)}
-                        >
-                          {structure.nom}
+                      {console.log('[DateCreationPage] Affichage dropdown structures:', filteredStructures.length)}
+                      {filteredStructures.length > 0 ? (
+                        filteredStructures.slice(0, 10).map((structure) => (
+                          <div
+                            key={structure.id}
+                            className={styles.dropdownItem}
+                            onClick={() => handleStructureSelect(structure)}
+                          >
+                            {structure.nom || 'Structure sans nom'}
+                          </div>
+                        ))
+                      ) : (
+                        <div className={styles.dropdownItem} style={{ color: '#6c757d', fontStyle: 'italic' }}>
+                          Aucune structure trouvée
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
                 </Form.Group>
@@ -591,8 +621,9 @@ function DateCreationPage({ params = {} }) {
                   
                   <div className={styles.submitButtons}>
                     <Button
-                      type="submit"
+                      type="button"
                       variant="outline-primary"
+                      onClick={(e) => handleSubmit(e, true)}
                       disabled={loading}
                       className="me-2"
                     >
@@ -610,9 +641,8 @@ function DateCreationPage({ params = {} }) {
                     </Button>
                     
                     <Button
-                      type="button"
+                      type="submit"
                       variant="primary"
-                      onClick={(e) => handleSubmit(e, true)}
                       disabled={loading}
                     >
                       {loading ? (

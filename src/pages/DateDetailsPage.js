@@ -124,6 +124,38 @@ function DateDetailsPage({ params = {} }) {
     }
   }, [currentEntreprise?.id]);
 
+  // Charger les données du projet associé
+  const loadProjectData = useCallback(async (artisteId, projetNom) => {
+    if (!artisteId || !projetNom || !currentEntreprise?.id) return null;
+    
+    try {
+      // Rechercher le projet par son nom et l'artiste associé
+      const projetsQuery = query(
+        collection(db, 'projets'),
+        where('entrepriseId', '==', currentEntreprise.id),
+        where('intitule', '==', projetNom),
+        where('artistesSelectionnes', 'array-contains', artisteId)
+      );
+      
+      const projetsSnapshot = await getDocs(projetsQuery);
+      
+      if (!projetsSnapshot.empty) {
+        const projetData = projetsSnapshot.docs[0].data();
+        console.log('[DateDetailsPage] Projet trouvé:', projetData);
+        return {
+          montantHT: projetData.montantHT,
+          devise: projetData.devise || 'EUR'
+        };
+      }
+      
+      console.log('[DateDetailsPage] Aucun projet trouvé pour:', { artisteId, projetNom });
+      return null;
+    } catch (error) {
+      console.error('[DateDetailsPage] Erreur lors du chargement du projet:', error);
+      return null;
+    }
+  }, [currentEntreprise?.id]);
+
   // Charger les données de la date
   const loadDateData = useCallback(async () => {
     if (!dateId) return;
@@ -156,6 +188,9 @@ function DateDetailsPage({ params = {} }) {
         // Charger les données financières depuis les documents liés
         const financialData = await loadFinancialData(docSnap.id);
         
+        // Charger les données du projet si disponible
+        const projectData = await loadProjectData(data.artisteId, data.projetNom);
+        
         // Initialiser le formulaire avec les données existantes
         setFormData({
           date: data.date || '',
@@ -170,9 +205,11 @@ function DateDetailsPage({ params = {} }) {
           typeContrat: financialData?.typeContrat || data.typeContrat || 'Cession',
           collaborateurId: data.collaborateurId || '',
           // Mapping intelligent des champs financiers - Priorité aux documents liés
-          montantPropose: financialData?.montant || data.montantPropose || data.montant || data.prix || data.cachet || '',
-          devise: financialData?.devise || data.devise || 'EUR',
-          priseOption: data.priseOption || data.dateOption || '',
+          // Le montant du projet est utilisé uniquement comme valeur par défaut
+          montantPropose: financialData?.montant || data.montantPropose || data.montant || data.prix || data.cachet || projectData?.montantHT || '',
+          devise: financialData?.devise || data.devise || projectData?.devise || 'EUR',
+          // Si pas de prise d'option, utiliser la date du jour par défaut (modifiable par l'utilisateur)
+          priseOption: data.priseOption || data.dateOption || new Date().toISOString().split('T')[0],
           frais: financialData?.frais || data.frais || '',
           dossierSuivi: data.dossierSuivi || '',
           notes: data.notes || ''
@@ -183,7 +220,7 @@ function DateDetailsPage({ params = {} }) {
     } finally {
       setLoading(false);
     }
-  }, [dateId, loadFinancialData]);
+  }, [dateId, loadFinancialData, loadProjectData]);
 
   // Charger les festivals
   const loadFestivals = useCallback(async () => {

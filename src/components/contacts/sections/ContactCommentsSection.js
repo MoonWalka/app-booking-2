@@ -1,17 +1,56 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from '../ContactViewTabs.module.css';
 
 /**
  * Section de gestion des commentaires d'un contact
- * Affiche la liste des commentaires avec possibilité de suppression
+ * Affiche la liste des commentaires avec possibilité de suppression et modification
  */
-const ContactCommentsSection = React.memo(({ commentaires = [], onDeleteComment }) => {
+const ContactCommentsSection = React.memo(({ commentaires = [], onDeleteComment, onEditComment }) => {
+  const [expandedComments, setExpandedComments] = useState(new Set());
+  const [shouldShowToggleMap, setShouldShowToggleMap] = useState(new Map());
+  const commentRefs = useRef(new Map());
+
+  const toggleExpanded = (commentId) => {
+    setExpandedComments(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(commentId)) {
+        newSet.delete(commentId);
+      } else {
+        newSet.add(commentId);
+      }
+      return newSet;
+    });
+  };
+
+  // Vérifier si un commentaire dépasse 2 lignes après le rendu
+  useEffect(() => {
+    const newMap = new Map();
+    commentRefs.current.forEach((ref, commentId) => {
+      if (ref) {
+        const lineHeight = parseInt(window.getComputedStyle(ref).lineHeight);
+        const height = ref.scrollHeight;
+        const lines = Math.ceil(height / lineHeight);
+        const shouldShow = lines > 2;
+        newMap.set(commentId, shouldShow);
+        console.log('[ContactCommentsSection] Mesure:', { 
+          commentId, 
+          height, 
+          lineHeight, 
+          lines, 
+          shouldShow,
+          text: ref.textContent?.substring(0, 30) + '...'
+        });
+      }
+    });
+    setShouldShowToggleMap(newMap);
+  }, [commentaires]);
+
   return (
     <div className={styles.commentsContent}>
       {commentaires.length > 0 ? (
         <div className={styles.commentsList}>
-          {commentaires.map((commentaire) => (
-            <div key={commentaire.id} className={styles.commentItem}>
+          {commentaires.map((commentaire, index) => (
+            <div key={commentaire.id || `${commentaire.auteur}-${index}`} className={styles.commentItem}>
               <div className={styles.commentHeader}>
                 <div className={styles.commentAuthor}>
                   <i className="bi bi-person-circle"></i>
@@ -37,6 +76,13 @@ const ContactCommentsSection = React.memo(({ commentaires = [], onDeleteComment 
                     <i className="bi bi-pencil-fill" title="Modifié"></i>
                   )}
                   <button 
+                    className={styles.editCommentButton}
+                    onClick={() => onEditComment && onEditComment(commentaire)}
+                    title="Modifier ce commentaire"
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </button>
+                  <button 
                     className={styles.deleteCommentButton}
                     onClick={() => onDeleteComment(commentaire)}
                     title="Supprimer ce commentaire"
@@ -46,7 +92,27 @@ const ContactCommentsSection = React.memo(({ commentaires = [], onDeleteComment 
                 </div>
               </div>
               <div className={styles.commentContent}>
-                {commentaire.contenu}
+                <div 
+                  ref={(el) => {
+                    const commentId = commentaire.id || `${commentaire.auteur}-${index}`;
+                    if (el) {
+                      commentRefs.current.set(commentId, el);
+                    } else {
+                      commentRefs.current.delete(commentId);
+                    }
+                  }}
+                  className={expandedComments.has(commentaire.id || `${commentaire.auteur}-${index}`) ? styles.commentContentExpanded : styles.commentContentCollapsed}
+                >
+                  {commentaire.contenu}
+                </div>
+                {shouldShowToggleMap.get(commentaire.id || `${commentaire.auteur}-${index}`) && (
+                  <button 
+                    className={styles.toggleCommentButton}
+                    onClick={() => toggleExpanded(commentaire.id || `${commentaire.auteur}-${index}`)}
+                  >
+                    {expandedComments.has(commentaire.id || `${commentaire.auteur}-${index}`) ? 'Voir moins' : 'Voir plus'}
+                  </button>
+                )}
               </div>
             </div>
           ))}

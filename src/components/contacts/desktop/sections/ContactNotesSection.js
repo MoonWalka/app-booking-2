@@ -31,7 +31,7 @@ const ContactNotesSection = ({
         />
       ) : (
         notes ? (
-          <div className="notes-content">
+          <div className="notes-content" style={{ whiteSpace: 'pre-wrap' }}>
             {notes}
           </div>
         ) : (

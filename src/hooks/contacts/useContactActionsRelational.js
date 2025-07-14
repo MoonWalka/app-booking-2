@@ -21,7 +21,8 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
     updateLiaison,
     setPrioritaire,
     getStructureWithPersonnes,
-    getPersonneWithStructures
+    getPersonneWithStructures,
+    invalidateContactCache
   } = useContactsRelational();
 
   // ==================== GESTION DES TAGS ====================
@@ -300,8 +301,16 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       // DEBUG: Début du flux
       // debug.comments.start(existingComments, newComment);
       
-      // Ajouter le nouveau commentaire
-      const updatedComments = [...existingComments, newComment];
+      // Ajouter le nouveau commentaire et convertir toutes les dates Firestore
+      const updatedComments = [...existingComments, newComment].map(c => ({
+        ...c,
+        // Convertir la date Firestore en Date JavaScript si nécessaire
+        date: c.date?.toDate 
+          ? c.date.toDate() 
+          : (c.date?.seconds 
+            ? new Date(c.date.seconds * 1000) 
+            : c.date)
+      }));
       
       // DEBUG: Appel au service
       // debug.comments.serviceCall(contactId, contactType, updatedComments);
@@ -321,6 +330,9 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         await updatePersonne(contactId, { commentaires: updatedComments });
       }
       
+      // Invalider le cache pour forcer le rafraîchissement
+      invalidateContactCache(contactId, contactType);
+      
       // DEBUG: Succès
       // debug.comments.serviceResponse({ success: true });
       
@@ -330,7 +342,7 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       // debug.comments.serviceResponse({ success: false, error: error.message });
       throw error;
     }
-  }, [contactId, contactType, currentUser, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);
+  }, [contactId, contactType, currentUser, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures, invalidateContactCache]);
 
   const handleDeleteComment = useCallback(async (commentaire) => {
     try {
@@ -356,8 +368,18 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       // DEBUG: Début du flux de suppression
       // debug.comments.start(existingComments, { action: 'delete', id: commentaire.id });
       
-      // Supprimer le commentaire
-      const updatedComments = existingComments.filter(c => c.id !== commentaire.id);
+      // Supprimer le commentaire et convertir les dates Firestore en Date JS
+      const updatedComments = existingComments
+        .filter(c => c.id !== commentaire.id)
+        .map(c => ({
+          ...c,
+          // Convertir la date Firestore en Date JavaScript
+          date: c.date?.toDate 
+            ? c.date.toDate() 
+            : (c.date?.seconds 
+              ? new Date(c.date.seconds * 1000) 
+              : c.date)
+        }));
       
       // DEBUG: Appel au service
       // debug.comments.serviceCall(contactId, contactType, updatedComments);
@@ -369,6 +391,9 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         await updatePersonne(contactId, { commentaires: updatedComments });
       }
       
+      // Invalider le cache pour forcer le rafraîchissement
+      invalidateContactCache(contactId, contactType);
+      
       // DEBUG: Succès
       // debug.comments.serviceResponse({ success: true });
       
@@ -378,7 +403,62 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       // debug.comments.serviceResponse({ success: false, error: error.message });
       throw error;
     }
-  }, [contactId, contactType, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures]);
+  }, [contactId, contactType, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures, invalidateContactCache]);
+
+  const handleEditComment = useCallback(async (commentaireId, newContent) => {
+    try {
+      // Récupérer les commentaires existants
+      let existingComments = [];
+      if (contactType === 'structure') {
+        const structure = getStructureWithPersonnes(contactId);
+        existingComments = structure?.commentaires || [];
+      } else {
+        const personne = getPersonneWithStructures(contactId);
+        existingComments = personne?.commentaires || [];
+      }
+      
+      // Mettre à jour le commentaire et convertir les dates
+      const updatedComments = existingComments.map(c => {
+        if (c.id === commentaireId) {
+          return {
+            ...c,
+            contenu: newContent,
+            modifie: true,
+            // Convertir la date Firestore en Date JavaScript si nécessaire
+            date: c.date?.toDate 
+              ? c.date.toDate() 
+              : (c.date?.seconds 
+                ? new Date(c.date.seconds * 1000) 
+                : c.date)
+          };
+        }
+        return {
+          ...c,
+          // Convertir toutes les dates pour éviter l'erreur de validation
+          date: c.date?.toDate 
+            ? c.date.toDate() 
+            : (c.date?.seconds 
+              ? new Date(c.date.seconds * 1000) 
+              : c.date)
+        };
+      });
+      
+      // Sauvegarder dans Firebase
+      if (contactType === 'structure') {
+        await updateStructure(contactId, { commentaires: updatedComments });
+      } else {
+        await updatePersonne(contactId, { commentaires: updatedComments });
+      }
+      
+      // Invalider le cache pour forcer le rafraîchissement
+      invalidateContactCache(contactId, contactType);
+      
+      return true;
+    } catch (error) {
+      console.error('Erreur lors de la modification du commentaire:', error);
+      throw error;
+    }
+  }, [contactId, contactType, updateStructure, updatePersonne, getStructureWithPersonnes, getPersonneWithStructures, invalidateContactCache]);
 
   const handleAddCommentToPerson = useCallback(async (personne) => {
     const personneNom = `${personne.prenom || ''} ${personne.nom || ''}`.trim() || 'Personne';
@@ -412,6 +492,7 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
     
     // Actions sur les commentaires
     handleAddComment,
-    handleDeleteComment
+    handleDeleteComment,
+    handleEditComment
   };
 }

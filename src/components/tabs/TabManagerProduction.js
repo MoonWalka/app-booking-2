@@ -295,7 +295,7 @@ const TabManagerProduction = () => {
           console.log('[TabManager] contratId passé:', tab.params?.id);
           return <ContratRedactionPage />;
         case 'MesRecherchesPage':
-          return <MesRecherchesPage />;
+          return <MesRecherchesPage savedSearch={tab.params?.savedSearch} />;
         case 'MesSelectionsPage':
           return <MesSelectionsPage />;
         case 'ContactTagsPage':

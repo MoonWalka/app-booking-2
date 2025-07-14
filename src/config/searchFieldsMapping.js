@@ -4,7 +4,91 @@
  */
 
 export const searchFieldsMapping = {
-  // Mapping pour la collection contacts
+  // Mapping pour la collection structures (nouveau modèle)
+  structures: {
+    // Identification
+    raisonSociale: { path: 'raisonSociale', type: 'string' },
+    nom: { path: 'nom', type: 'string' },
+    nom_ou_raisonSociale: { path: 'nom_ou_raisonSociale', type: 'string', isVirtual: true }, // Champ virtuel pour recherche combinée
+    email: { path: 'email', type: 'string' },
+    telephone: { path: 'telephone', type: 'string' },
+    telephone1: { path: 'telephone1', type: 'string' },
+    telephone2: { path: 'telephone2', type: 'string' },
+    mobile: { path: 'mobile', type: 'string' },
+    fax: { path: 'fax', type: 'string' },
+    siteWeb: { path: 'siteWeb', type: 'string' },
+    
+    // Informations légales
+    type: { path: 'type', type: 'string' },
+    siret: { path: 'siret', type: 'string' },
+    tva: { path: 'tva', type: 'string' },
+    numeroIntracommunautaire: { path: 'numeroIntracommunautaire', type: 'string' },
+    
+    // Géolocalisation
+    adresse: { path: 'adresse', type: 'string' },
+    suiteAdresse: { path: 'suiteAdresse', type: 'string' },
+    codePostal: { path: 'codePostal', type: 'string' },
+    ville: { path: 'ville', type: 'string' },
+    departement: { path: 'departement', type: 'string' },
+    region: { path: 'region', type: 'string' },
+    pays: { path: 'pays', type: 'string' },
+    
+    // Qualification
+    tags: { path: 'tags', type: 'array' },
+    isClient: { path: 'isClient', type: 'boolean' },
+    isActive: { path: 'isActive', type: 'boolean' },
+    source: { path: 'source', type: 'string' },
+    
+    // Commentaires (tableau d'objets)
+    commentaires: { path: 'commentaires', type: 'array' },
+    
+    // Métadonnées
+    createdAt: { path: 'createdAt', type: 'date' },
+    updatedAt: { path: 'updatedAt', type: 'date' },
+    createdBy: { path: 'createdBy', type: 'string' },
+    updatedBy: { path: 'updatedBy', type: 'string' }
+  },
+
+  // Mapping pour la collection personnes (nouveau modèle)
+  personnes: {
+    // Identification
+    nom: { path: 'nom', type: 'string' },
+    prenom: { path: 'prenom', type: 'string' },
+    nom_ou_raisonSociale: { path: 'nom', type: 'string' }, // Pour les personnes, on mappe vers 'nom' uniquement
+    civilite: { path: 'civilite', type: 'string' },
+    email: { path: 'email', type: 'string' },
+    telephone: { path: 'telephone', type: 'string' },
+    telDirect: { path: 'telDirect', type: 'string' },
+    telPerso: { path: 'telPerso', type: 'string' },
+    mobile: { path: 'mobile', type: 'string' },
+    mailDirect: { path: 'mailDirect', type: 'string' },
+    mailPerso: { path: 'mailPerso', type: 'string' },
+    fax: { path: 'fax', type: 'string' },
+    
+    // Géolocalisation
+    adresse: { path: 'adresse', type: 'string' },
+    suiteAdresse: { path: 'suiteAdresse', type: 'string' },
+    codePostal: { path: 'codePostal', type: 'string' },
+    ville: { path: 'ville', type: 'string' },
+    departement: { path: 'departement', type: 'string' },
+    region: { path: 'region', type: 'string' },
+    pays: { path: 'pays', type: 'string' },
+    
+    // Qualification
+    tags: { path: 'tags', type: 'array' },
+    isActive: { path: 'isActive', type: 'boolean' },
+    
+    // Commentaires (tableau d'objets)
+    commentaires: { path: 'commentaires', type: 'array' },
+    
+    // Métadonnées
+    createdAt: { path: 'createdAt', type: 'date' },
+    updatedAt: { path: 'updatedAt', type: 'date' },
+    createdBy: { path: 'createdBy', type: 'string' },
+    updatedBy: { path: 'updatedBy', type: 'string' }
+  },
+
+  // Mapping pour l'ancienne collection contacts (à garder pour compatibilité)
   contacts: {
     // Identification
     nom: { path: 'nom', type: 'string' },
@@ -108,49 +192,6 @@ export const searchFieldsMapping = {
     lieuNom: { path: 'lieu.nom', type: 'string', join: true },
     lieuVille: { path: 'lieu.ville', type: 'string', join: true },
     artisteNom: { path: 'artiste.nom', type: 'string', join: true }
-  },
-
-  // Mapping pour la collection structures
-  structures: {
-    nom: { path: 'nom', type: 'string' },
-    raisonSociale: { path: 'raisonSociale', type: 'string' },
-    type: { path: 'type', type: 'string' },
-    siret: { path: 'siret', type: 'string' },
-    tva: { path: 'tva', type: 'string' },
-    numeroIntracommunautaire: { path: 'numeroIntracommunautaire', type: 'string' },
-    telephone: { path: 'telephone', type: 'string' },
-    email: { path: 'email', type: 'string' },
-    siteWeb: { path: 'siteWeb', type: 'string' },
-    
-    // Adresse
-    adresse: { path: 'adresse', type: 'string' },
-    codePostal: { path: 'codePostal', type: 'string' },
-    ville: { path: 'ville', type: 'string' },
-    pays: { path: 'pays', type: 'string' },
-    
-    // Adresse facturation
-    adresseFacturation: { path: 'adresseFacturation', type: 'string' },
-    codePostalFacturation: { path: 'codePostalFacturation', type: 'string' },
-    villeFacturation: { path: 'villeFacturation', type: 'string' },
-    paysFacturation: { path: 'paysFacturation', type: 'string' },
-    
-    // Signataire
-    signatairePrenom: { path: 'signataire.prenom', type: 'string' },
-    signataireNom: { path: 'signataire.nom', type: 'string' },
-    signataireFonction: { path: 'signataire.fonction', type: 'string' },
-    signataireEmail: { path: 'signataire.email', type: 'string' },
-    signataireTelephone: { path: 'signataire.telephone', type: 'string' },
-    
-    // Qualification
-    tags: { path: 'tags', type: 'array' },
-    source: { path: 'source', type: 'string' },
-    nomFestival: { path: 'nomFestival', type: 'string' },
-    periodeFestivalMois: { path: 'periodeFestivalMois', type: 'string' },
-    
-    // Métadonnées
-    notes: { path: 'notes', type: 'string' },
-    createdAt: { path: 'createdAt', type: 'date' },
-    updatedAt: { path: 'updatedAt', type: 'date' }
   },
 
   // Mapping pour la collection artistes

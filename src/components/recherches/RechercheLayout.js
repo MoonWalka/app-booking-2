@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useEntreprise } from '../../context/EntrepriseContext';
 import { searchService } from '../../services/searchService';
 import MesSelectionsSection from './sections/MesSelectionsSection';
 import styles from './RechercheLayout.module.css';
@@ -9,10 +10,11 @@ import styles from './RechercheLayout.module.css';
  * Layout principal pour les pages de recherche
  * Inclut un menu latéral permanent et un container principal
  */
-const RechercheLayout = ({ children }) => {
+const RechercheLayout = ({ children, savedSearch }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const { currentEntreprise } = useEntreprise();
   const [activeSection, setActiveSection] = useState('identification');
   const [selectedCriteria, setSelectedCriteria] = useState([]);
   const [searchResults, setSearchResults] = useState(null);
@@ -21,6 +23,18 @@ const RechercheLayout = ({ children }) => {
   const [showResults, setShowResults] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [searchName, setSearchName] = useState('');
+
+  // Charger les critères de la recherche sauvegardée si elle existe
+  useEffect(() => {
+    if (savedSearch && savedSearch.criteria) {
+      console.log('Chargement de la recherche sauvegardée:', savedSearch);
+      setSelectedCriteria(savedSearch.criteria);
+      // Réinitialiser les compteurs quand on charge une nouvelle recherche
+      setResultsCount(null);
+      setSearchResults(null);
+      setShowResults(false);
+    }
+  }, [savedSearch]);
 
   // Configuration du menu de recherche
   const menuItems = [
@@ -184,19 +198,30 @@ const RechercheLayout = ({ children }) => {
 
   // Fonction pour calculer (compter les résultats)
   const handleCalculate = async () => {
-    if (!currentUser?.entrepriseId || selectedCriteria.length === 0) return;
+    if (!currentEntreprise?.id || selectedCriteria.length === 0) return;
 
     setIsLoading(true);
     try {
-      // Pour l'instant on fait une recherche sur les contacts par défaut
-      const results = await searchService.executeSearch({
-        entrepriseId: currentUser.entrepriseId,
-        criteria: selectedCriteria,
-        collection: 'contacts',
-        pagination: { limit: 1 } // On veut juste le compte
-      });
+      // Rechercher dans les structures ET les personnes
+      const [structuresResults, personnesResults] = await Promise.all([
+        searchService.executeSearch({
+          entrepriseId: currentEntreprise.id,
+          criteria: selectedCriteria,
+          collection: 'structures',
+          pagination: { limit: 1 }
+        }),
+        searchService.executeSearch({
+          entrepriseId: currentEntreprise.id,
+          criteria: selectedCriteria,
+          collection: 'personnes',
+          pagination: { limit: 1 }
+        })
+      ]);
       
-      setResultsCount(results.pagination.total || results.data.length);
+      const totalCount = (structuresResults.pagination.total || structuresResults.data.length) +
+                        (personnesResults.pagination.total || personnesResults.data.length);
+      
+      setResultsCount(totalCount);
     } catch (error) {
       console.error('Erreur lors du calcul:', error);
       alert('Erreur lors du calcul des résultats');
@@ -207,18 +232,39 @@ const RechercheLayout = ({ children }) => {
 
   // Fonction pour afficher les résultats
   const handleDisplay = async () => {
-    if (!currentUser?.entrepriseId || selectedCriteria.length === 0) return;
+    if (!currentEntreprise?.id || selectedCriteria.length === 0) return;
 
     setIsLoading(true);
     try {
-      const results = await searchService.executeSearch({
-        entrepriseId: currentUser.entrepriseId,
-        criteria: selectedCriteria,
-        collection: 'contacts', // TODO: permettre de choisir la collection
-        pagination: { limit: 50 }
-      });
+      // Rechercher dans les structures ET les personnes
+      const [structuresResults, personnesResults] = await Promise.all([
+        searchService.executeSearch({
+          entrepriseId: currentEntreprise.id,
+          criteria: selectedCriteria,
+          collection: 'structures',
+          pagination: { limit: 50 }
+        }),
+        searchService.executeSearch({
+          entrepriseId: currentEntreprise.id,
+          criteria: selectedCriteria,
+          collection: 'personnes',
+          pagination: { limit: 50 }
+        })
+      ]);
       
-      setSearchResults(results);
+      // Combiner les résultats avec un type pour les distinguer
+      const combinedResults = [
+        ...structuresResults.data.map(s => ({ ...s, _type: 'structure' })),
+        ...personnesResults.data.map(p => ({ ...p, _type: 'personne' }))
+      ];
+      
+      setSearchResults({
+        data: combinedResults,
+        pagination: {
+          hasMore: structuresResults.pagination.hasMore || personnesResults.pagination.hasMore,
+          total: combinedResults.length
+        }
+      });
       setShowResults(true);
     } catch (error) {
       console.error('Erreur lors de la recherche:', error);
@@ -230,14 +276,28 @@ const RechercheLayout = ({ children }) => {
 
   // Fonction pour sauvegarder la recherche
   const handleSave = async () => {
+    console.log('💾 RechercheLayout - Début de la sauvegarde de la recherche');
+    
     if (!searchName.trim()) {
       alert('Veuillez donner un nom à votre recherche');
       return;
     }
 
+    if (!currentEntreprise?.id) {
+      alert('Aucune entreprise sélectionnée');
+      return;
+    }
+
+    console.log('💾 RechercheLayout - Données à sauvegarder:', {
+      entrepriseId: currentEntreprise.id,
+      userId: currentUser.uid,
+      name: searchName,
+      criteriaCount: selectedCriteria.length
+    });
+
     try {
       await searchService.saveSearch({
-        entrepriseId: currentUser.entrepriseId,
+        entrepriseId: currentEntreprise.id,
         userId: currentUser.uid,
         name: searchName,
         criteria: selectedCriteria,
@@ -247,6 +307,10 @@ const RechercheLayout = ({ children }) => {
       setSaveModalOpen(false);
       setSearchName('');
       alert('Recherche sauvegardée avec succès');
+      
+      // Déclencher un événement pour rafraîchir le menu
+      console.log('🔄 RechercheLayout - Déclenchement du rafraîchissement du menu');
+      window.dispatchEvent(new Event('refresh-saved-searches'));
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       alert('Erreur lors de la sauvegarde');
@@ -329,29 +393,48 @@ const RechercheLayout = ({ children }) => {
                       <table className="table table-hover">
                         <thead>
                           <tr>
+                            <th>Type</th>
                             <th>Nom</th>
                             <th>Email</th>
                             <th>Téléphone</th>
                             <th>Ville</th>
-                            <th>Structure</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {searchResults?.data?.map((contact) => (
-                            <tr key={contact.id}>
+                          {searchResults?.data?.map((result) => (
+                            <tr key={`${result._type}-${result.id}`}>
                               <td>
-                                <strong>{contact.prenomNom || `${contact.prenom || ''} ${contact.nom || ''}`}</strong>
-                                {contact.fonction && <small className="d-block text-muted">{contact.fonction}</small>}
+                                <span className={`badge ${result._type === 'structure' ? 'bg-primary' : 'bg-info'}`}>
+                                  <i className={`bi ${result._type === 'structure' ? 'bi-building' : 'bi-person'} me-1`}></i>
+                                  {result._type === 'structure' ? 'Structure' : 'Personne'}
+                                </span>
                               </td>
-                              <td>{contact.email || '-'}</td>
-                              <td>{contact.telephone || contact.mobile || '-'}</td>
-                              <td>{contact.ville || '-'}</td>
-                              <td>{contact.structureRaisonSociale || '-'}</td>
+                              <td>
+                                <strong>
+                                  {result._type === 'structure' 
+                                    ? (result.raisonSociale || result.nom || 'Structure sans nom')
+                                    : `${result.prenom || ''} ${result.nom || ''}`.trim() || 'Personne sans nom'
+                                  }
+                                </strong>
+                                {result._type === 'personne' && result.fonction && (
+                                  <small className="d-block text-muted">{result.fonction}</small>
+                                )}
+                              </td>
+                              <td>{result.email || result.mailDirect || '-'}</td>
+                              <td>{result.telephone || result.telDirect || result.mobile || '-'}</td>
+                              <td>{result.ville || '-'}</td>
                               <td>
                                 <button 
                                   className="btn btn-sm btn-outline-primary"
-                                  onClick={() => navigate(`/contacts/${contact.id}`)}
+                                  onClick={() => {
+                                    if (result._type === 'structure') {
+                                      navigate(`/structures/${result.id}`);
+                                    } else {
+                                      navigate(`/contacts/${result.id}`);
+                                    }
+                                  }}
+                                  title="Voir la fiche"
                                 >
                                   <i className="bi bi-eye"></i>
                                 </button>

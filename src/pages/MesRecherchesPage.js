@@ -16,7 +16,7 @@ import DatesSection from '@/components/recherches/sections/DatesSection';
 /**
  * Page Mes recherches - Interface de recherche avancée multi-critères
  */
-const MesRecherchesPage = ({ activeSection, onCriteriaChange, selectedCriteria }) => {
+const MesRecherchesPage = ({ activeSection, onCriteriaChange, selectedCriteria, savedSearch }) => {
   // Fonction pour rendre la section appropriée selon la sélection
   const renderSection = () => {
     switch (activeSection) {
@@ -111,10 +111,10 @@ const MesRecherchesPage = ({ activeSection, onCriteriaChange, selectedCriteria }
 };
 
 // Wrapper pour utiliser avec le layout
-const MesRecherchesPageWithLayout = () => {
+const MesRecherchesPageWithLayout = ({ savedSearch }) => {
   return (
-    <RechercheLayout>
-      <MesRecherchesPage />
+    <RechercheLayout savedSearch={savedSearch}>
+      <MesRecherchesPage savedSearch={savedSearch} />
     </RechercheLayout>
   );
 };

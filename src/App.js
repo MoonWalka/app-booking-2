@@ -275,18 +275,6 @@ function App() {
                         </PrivateRoute>
                       } />
                       
-                      <Route path="/contacts/recherches/nouveau-dossier" element={
-                        <PrivateRoute>
-                          <NouveauDossierPage />
-                        </PrivateRoute>
-                      } />
-                      
-                      <Route path="/contacts/recherches/dossiers" element={
-                        <PrivateRoute>
-                          <DossiersEnregistresPage />
-                        </PrivateRoute>
-                      } />
-                      
                       <Route path="/contacts/selections" element={
                         <PrivateRoute>
                           <MesSelectionsPage />

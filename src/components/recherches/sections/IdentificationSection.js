@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Card } from 'react-bootstrap';
+import { useAuth } from '@/context/AuthContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
 import styles from './Sections.module.css';
 
 /**
  * Section Identification pour la recherche multi-critères
  */
 const IdentificationSection = ({ onCriteriaChange }) => {
+  const { currentUser } = useAuth();
+  const { currentEntreprise } = useEntreprise();
   const [formData, setFormData] = useState({
     // Bloc Contact
     nom: { value: '', operator: 'contient' },
@@ -38,21 +44,51 @@ const IdentificationSection = ({ onCriteriaChange }) => {
     { value: 'different', label: 'Différent de' }
   ];
 
-  const collaborateurs = [
-    { id: 'all', label: 'Tous' },
-    { id: 'thierry', label: 'Thierry Lenc' },
-    { id: 'marie', label: 'Marie Dupont' },
-    { id: 'jean', label: 'Jean Martin' }
-  ];
+  // État pour stocker les collaborateurs réels
+  const [collaborateurs, setCollaborateurs] = useState([]);
+  
+  // Charger les collaborateurs réels depuis Firebase
+  useEffect(() => {
+    const loadCollaborateurs = async () => {
+      if (!currentEntreprise?.id) return;
+      
+      try {
+        // Récupérer tous les utilisateurs de l'entreprise
+        const usersQuery = query(
+          collection(db, 'users'),
+          where('entrepriseId', '==', currentEntreprise.id)
+        );
+        
+        const snapshot = await getDocs(usersQuery);
+        const users = snapshot.docs.map(doc => ({
+          id: doc.id,
+          label: doc.data().displayName || doc.data().email || 'Utilisateur'
+        }));
+        
+        // Ajouter l'option "Tous" au début
+        setCollaborateurs([
+          { id: 'all', label: 'Tous' },
+          ...users
+        ]);
+      } catch (error) {
+        console.error('Erreur lors du chargement des collaborateurs:', error);
+        // En cas d'erreur, utiliser une liste par défaut
+        setCollaborateurs([{ id: 'all', label: 'Tous' }]);
+      }
+    };
+    
+    loadCollaborateurs();
+  }, [currentEntreprise?.id]);
 
-  // Mapping des champs UI vers les champs Firebase
+  // Mapping des champs UI vers les champs Firebase pour les structures et personnes
   const fieldMapping = {
-    nom: 'nom',
-    codeClient: 'codeClient', // À vérifier si ce champ existe dans Firebase
+    // Champs communs structures et personnes
+    nom: 'nom', // Pour personne : nom, pour structure : raisonSociale
+    codeClient: 'codeClient', 
     email: 'email',
     telephone: 'telephone',
-    estActive: 'active',
-    estClient: 'client',
+    estActive: 'isActive', // Nouveau modèle
+    estClient: 'isClient', // Nouveau modèle pour les structures
     source: 'source',
     dateModificationDebut: 'updatedAt',
     dateModificationFin: 'updatedAt',
@@ -60,10 +96,10 @@ const IdentificationSection = ({ onCriteriaChange }) => {
     dateCreationFin: 'createdAt',
     creePar: 'createdBy',
     modifiePar: 'updatedBy',
-    commentaireContenu: 'notes',
-    commentaireDateDebut: 'commentDate',
-    commentaireDateFin: 'commentDate',
-    commentaireCollaborateurs: 'commentAuthor',
+    commentaireContenu: 'commentaires.contenu', // Nouveau format des commentaires
+    commentaireDateDebut: 'commentaires.date',
+    commentaireDateFin: 'commentaires.date',
+    commentaireCollaborateurs: 'commentaires.auteur',
     fanzineBarreaux: 'fanzineBarreaux'
   };
 
@@ -84,6 +120,24 @@ const IdentificationSection = ({ onCriteriaChange }) => {
     const hasValue = value && value !== '' && value !== 'indifferent';
     
     if (hasValue || (typeof value === 'boolean')) {
+      // Cas spécial pour le champ "nom" : on va utiliser un champ virtuel qui sera traité spécialement
+      if (field === 'nom') {
+        const criteriaValue = typeof newData[field] === 'object' ? newData[field].value : value;
+        const criteriaOperator = operator || newData[field]?.operator || 'contient';
+        
+        // Envoyer un critère spécial qui sera traité dans searchService
+        onCriteriaChange({
+          id: `identification_${field}`,
+          field: 'nom_ou_raisonSociale', // Champ virtuel qui indique une recherche combinée
+          operator: criteriaOperator,
+          value: criteriaValue,
+          section: 'identification',
+          label: 'Nom / Raison sociale'
+        });
+        
+        return; // Sortir de la fonction après avoir géré le cas spécial
+      }
+      
       const mappedField = fieldMapping[field] || field;
       let criteriaValue = typeof newData[field] === 'object' ? newData[field].value : value;
       let criteriaOperator = operator || newData[field]?.operator || 'egal';

@@ -196,7 +196,7 @@ const ActivitesSection = ({ onCriteriaChange }) => {
                         id={`select-all-${category.id}`}
                         label={<strong>Tout sélectionner</strong>}
                         checked={allSelected}
-                        indeterminate={someSelected}
+                        indeterminate={someSelected ? true : undefined}
                         onChange={() => handleCategorySelectAll(category)}
                       />
                     </div>

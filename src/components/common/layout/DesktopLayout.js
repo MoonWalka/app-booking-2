@@ -12,12 +12,15 @@ import ContactModalsContainer from '@/components/contacts/modal/ContactModalsCon
 import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
 import sidebarStyles from '@/components/layout/Sidebar.module.css';
+import { searchService } from '@/services/searchService';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 function DesktopLayout({ children }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { isMobile } = useResponsive();
+  const { currentEntreprise } = useEntreprise();
   const { 
     openContactsListTab,
     openDatesListTab,
@@ -33,6 +36,9 @@ function DesktopLayout({ children }) {
     openStructureModal,
     openPersonneModal
   } = useContactModals();
+  
+  // État pour stocker les recherches sauvegardées
+  const [savedSearches, setSavedSearches] = useState([]);
   
   
   // État pour la sidebar mobile (hamburger menu)
@@ -50,6 +56,54 @@ function DesktopLayout({ children }) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Effet pour charger les recherches sauvegardées
+  useEffect(() => {
+    const loadSavedSearches = async () => {
+      if (!currentUser?.uid || !currentEntreprise?.id) {
+        console.log('🔍 DesktopLayout - Pas de user/entreprise pour charger les recherches');
+        return;
+      }
+      
+      console.log('🔍 DesktopLayout - Chargement des recherches sauvegardées...');
+      try {
+        const searches = await searchService.loadSavedSearches({
+          entrepriseId: currentEntreprise.id,
+          userId: currentUser.uid
+        });
+        console.log('🔍 DesktopLayout - Recherches reçues:', searches);
+        setSavedSearches(searches);
+      } catch (error) {
+        console.error('🔍 DesktopLayout - Erreur lors du chargement des recherches:', error);
+      }
+    };
+
+    loadSavedSearches();
+  }, [currentUser, currentEntreprise]);
+
+  // Effet pour écouter les événements de rafraîchissement
+  useEffect(() => {
+    const handleRefreshSearches = () => {
+      console.log('🔄 DesktopLayout - Événement de rafraîchissement reçu');
+      if (currentUser?.uid && currentEntreprise?.id) {
+        searchService.loadSavedSearches({
+          entrepriseId: currentEntreprise.id,
+          userId: currentUser.uid
+        }).then(searches => {
+          console.log('🔄 DesktopLayout - Recherches rafraîchies:', searches.length);
+          setSavedSearches(searches);
+        }).catch(error => {
+          console.error('🔄 DesktopLayout - Erreur lors du rafraîchissement:', error);
+        });
+      }
+    };
+
+    window.addEventListener('refresh-saved-searches', handleRefreshSearches);
+    
+    return () => {
+      window.removeEventListener('refresh-saved-searches', handleRefreshSearches);
+    };
+  }, [currentUser, currentEntreprise]);
 
   const handleLogout = async () => {
     try {
@@ -74,6 +128,19 @@ function DesktopLayout({ children }) {
   // Navigation adaptée pour le système d'onglets
   const handleNavigation = (item) => {
     console.log('[DesktopLayout] handleNavigation appelé avec:', item);
+    
+    // Si c'est une recherche sauvegardée
+    if (item.isSearch && item.searchData) {
+      openTab({
+        id: 'contacts-recherches',
+        title: 'Mes recherches',
+        path: '/contacts/recherches',
+        component: 'MesRecherchesPage',
+        icon: 'bi-search',
+        params: { savedSearch: item.searchData } // Passer les données de recherche
+      });
+      return;
+    }
     
     // Vérifier si on est déjà sur cet onglet pour éviter un rechargement inutile
     const activeTab = getActiveTab();
@@ -327,6 +394,33 @@ function DesktopLayout({ children }) {
     }
   };
 
+  // Fonction pour construire les éléments du menu "Mes recherches" dynamiquement
+  const buildMesRecherchesSubItems = () => {
+    console.log('🔍 DesktopLayout - Construction du menu avec', savedSearches.length, 'recherches');
+    
+    const baseItems = [
+      { to: "/contacts/recherches", icon: "bi-search-plus", label: "Nouvelle recherche" },
+      { to: "/contacts/recherches/nouveau-dossier", icon: "bi-folder-plus", label: "Nouveau dossier" }
+    ];
+    
+    // Ajouter les recherches sauvegardées après "Nouveau dossier"
+    const savedSearchItems = savedSearches.map(search => {
+      console.log('🔍 DesktopLayout - Ajout recherche au menu:', search.name);
+      return {
+        id: `saved-search-${search.id}`,
+        icon: "bi-search", // Icône loupe pour les recherches
+        label: `🔍 ${search.name}`,
+        searchData: search, // On stocke les données de recherche pour les utiliser lors du clic
+        isSearch: true
+      };
+    });
+    
+    // Ajouter "Dossiers enregistrés" à la fin
+    const dossiersItem = { to: "/contacts/recherches/dossiers", icon: "bi-folder2-open", label: "Dossiers enregistrés" };
+    
+    return [...baseItems, ...savedSearchItems, dossiersItem];
+  };
+
   // Nouvelle structure de navigation groupée
   const navigationGroups = [
     { to: "/", icon: "bi-speedometer2", label: "Dashboard", end: true },
@@ -335,7 +429,6 @@ function DesktopLayout({ children }) {
       icon: "bi-person-badge",
       label: "Contact",
       subItems: [
-        { to: "/contacts", icon: "bi-people", label: "Tous les contacts" },
         { 
           id: "add-contact",
           icon: "bi-person-plus", 
@@ -345,15 +438,12 @@ function DesktopLayout({ children }) {
             { to: "/contacts/nouveau/personne", icon: "bi-person-circle", label: "Ajouter une personne" }
           ]
         },
+        { to: "/contacts", icon: "bi-people", label: "Tous les contacts" },
         { 
           id: "mes-recherches",
           icon: "bi-search", 
           label: "Mes recherches",
-          subItems: [
-            { to: "/contacts/recherches", icon: "bi-search-plus", label: "Nouvelle recherche" },
-            { to: "/contacts/recherches/nouveau-dossier", icon: "bi-folder-plus", label: "Nouveau dossier" },
-            { to: "/contacts/recherches/dossiers", icon: "bi-folder2-open", label: "Dossiers enregistrés" }
-          ]
+          subItems: buildMesRecherchesSubItems()
         },
         { to: "/contacts/selections", icon: "bi-check2-square", label: "Mes sélections" },
         { to: "/contacts/tags", icon: "bi-tags", label: "Tags" },

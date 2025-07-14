@@ -110,14 +110,17 @@ class SearchService {
         return { ...criterion, type: 'unknown', valid: false };
       }
 
-      const canUseFirestore = this.canUseFirestoreOperator(criterion.operator, fieldMapping.type);
+      // Les champs virtuels sont toujours traités localement
+      const isVirtual = fieldMapping.isVirtual || false;
+      const canUseFirestore = !isVirtual && this.canUseFirestoreOperator(criterion.operator, fieldMapping.type);
       
       return {
         ...criterion,
         fieldPath: fieldMapping.path || criterion.field,
         fieldType: fieldMapping.type,
         type: canUseFirestore ? 'firestore' : 'local',
-        valid: true
+        valid: true,
+        isVirtual
       };
     });
   }
@@ -189,6 +192,18 @@ class SearchService {
   applyLocalFilters(results, criteria) {
     return results.filter(item => {
       return criteria.every(criterion => {
+        // Traitement spécial pour le champ virtuel nom_ou_raisonSociale
+        if (criterion.field === 'nom_ou_raisonSociale') {
+          const nomValue = this.getNestedValue(item, 'nom');
+          const raisonSocialeValue = this.getNestedValue(item, 'raisonSociale');
+          
+          // Vérifier si l'une des deux valeurs correspond
+          const nomMatch = nomValue ? this.evaluateLocalCriterion(nomValue, criterion) : false;
+          const raisonSocialeMatch = raisonSocialeValue ? this.evaluateLocalCriterion(raisonSocialeValue, criterion) : false;
+          
+          return nomMatch || raisonSocialeMatch;
+        }
+        
         const value = this.getNestedValue(item, criterion.fieldPath);
         return this.evaluateLocalCriterion(value, criterion);
       });
@@ -341,6 +356,13 @@ class SearchService {
    * Sauvegarde une recherche
    */
   async saveSearch({ entrepriseId, userId, name, criteria, description }) {
+    console.log('💾 searchService.saveSearch - Sauvegarde de la recherche:', {
+      entrepriseId,
+      userId,
+      name,
+      criteriaCount: criteria?.length
+    });
+    
     const searchData = {
       entrepriseId,
       userId,
@@ -353,6 +375,7 @@ class SearchService {
     };
 
     const docRef = await addDoc(collection(db, 'selections'), searchData);
+    console.log('💾 searchService.saveSearch - Recherche sauvegardée avec ID:', docRef.id);
     return { id: docRef.id, ...searchData };
   }
 
@@ -360,6 +383,11 @@ class SearchService {
    * Charge les recherches sauvegardées
    */
   async loadSavedSearches({ entrepriseId, userId }) {
+    console.log('🔍 searchService.loadSavedSearches - Chargement des recherches:', {
+      entrepriseId,
+      userId
+    });
+    
     const q = query(
       collection(db, 'selections'),
       where('entrepriseId', '==', entrepriseId),
@@ -369,7 +397,9 @@ class SearchService {
     );
 
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const searches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    console.log('🔍 searchService.loadSavedSearches - Recherches trouvées:', searches.length);
+    return searches;
   }
 }
 

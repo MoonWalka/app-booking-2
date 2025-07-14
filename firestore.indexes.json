@@ -57,6 +57,20 @@
       ]
     },
     {
+      "collectionGroup": "structures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "entrepriseId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "personnes",
       "queryScope": "COLLECTION",
       "fields": [
@@ -99,6 +113,34 @@
         {
           "fieldPath": "tags",
           "arrayConfig": "CONTAINS"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "personnes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "entrepriseId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "personnes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "entrepriseId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
+          "order": "DESCENDING"
         }
       ]
     },
@@ -234,6 +276,28 @@
         },
         {
           "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "selections",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "entrepriseId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
           "order": "DESCENDING"
         }
       ]

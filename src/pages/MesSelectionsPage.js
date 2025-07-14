@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import styles from './CollaborationParametragePage.module.css';
 
@@ -7,8 +6,6 @@ import styles from './CollaborationParametragePage.module.css';
  * Page Mes sélections - Système de navigation à plusieurs niveaux
  */
 const MesSelectionsPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const [selectedConfig, setSelectedConfig] = useState('nouvelle-selection');
   const [selectedSubOption, setSelectedSubOption] = useState('');
 
@@ -47,26 +44,17 @@ const MesSelectionsPage = () => {
     ]
   };
 
-  // Synchronisation avec l'URL
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const config = searchParams.get('section') || 'nouvelle-selection';
-    const subOption = searchParams.get('sub') || '';
-    
-    setSelectedConfig(config);
-    setSelectedSubOption(subOption);
-  }, [location]);
 
-  // Gestion de la navigation
+  // Gestion de la navigation interne (sans changer l'URL)
   const handleSectionChange = (sectionId) => {
     setSelectedConfig(sectionId);
     setSelectedSubOption('');
-    navigate(`/contacts/selections?section=${sectionId}`);
+    // Ne pas utiliser navigate() pour rester dans le système d'onglets
   };
 
   const handleSubOptionChange = (subOptionId) => {
     setSelectedSubOption(subOptionId);
-    navigate(`/contacts/selections?section=${selectedConfig}&sub=${subOptionId}`);
+    // Ne pas utiliser navigate() pour rester dans le système d'onglets
   };
 
   // Rendu du menu principal

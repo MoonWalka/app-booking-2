@@ -1,7 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import styles from './ContactsMap.module.css';
 
+// Correction pour les icônes Leaflet avec React
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
 const ContactsMap = ({ contacts, onContactClick }) => {
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
+
   // Préparer les adresses pour la carte
   const contactsWithAddresses = useMemo(() => {
     return contacts.filter(contact => {
@@ -27,29 +41,111 @@ const ContactsMap = ({ contacts, onContactClick }) => {
     );
   }
 
-  // Construire la requête pour afficher plusieurs points
-  // Créer une URL avec plusieurs marqueurs en utilisant les adresses complètes
-  const markers = contactsWithAddresses.slice(0, 20).map(contact => {
-    const parts = [];
-    if (contact.adresse) parts.push(contact.adresse);
-    if (contact.codePostal || contact.cp) parts.push(contact.codePostal || contact.cp);
-    if (contact.ville) parts.push(contact.ville);
-    if (contact.pays) parts.push(contact.pays);
-    return parts.join(', ');
-  }).filter(addr => addr.length > 0);
+  // Fonction pour géocoder une adresse (simple approximation basée sur la ville)
+  const geocodeAddress = async (contact) => {
+    const address = [
+      contact.adresse,
+      contact.codePostal || contact.cp,
+      contact.ville,
+      contact.pays || 'France'
+    ].filter(Boolean).join(', ');
 
-  // Si on a des adresses, créer une URL avec les marqueurs
-  let mapUrl;
-  if (markers.length > 0) {
-    // Utiliser la première adresse comme centre
-    const centerAddress = markers[0];
-    // Créer l'URL avec tous les marqueurs
-    const markersParam = markers.map(addr => encodeURIComponent(addr)).join('|');
-    mapUrl = `https://maps.google.com/maps?q=${markersParam}&z=6&output=embed`;
-  } else {
-    // Fallback sur une vue de la France
-    mapUrl = `https://maps.google.com/maps?q=France&z=6&output=embed`;
-  }
+    try {
+      // Utiliser l'API Nominatim d'OpenStreetMap pour le géocodage gratuit
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`
+      );
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        return {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon),
+          address: address,
+          contact: contact
+        };
+      }
+    } catch (error) {
+      console.error('Erreur de géocodage:', error);
+    }
+    return null;
+  };
+
+  // Initialiser la carte
+  useEffect(() => {
+    if (!mapRef.current || contactsWithAddresses.length === 0) return;
+
+    // Si la carte existe déjà, la détruire
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+    }
+
+    // Créer une nouvelle carte
+    const map = L.map(mapRef.current).setView([46.603354, 1.888334], 6); // Centre de la France
+
+    // Ajouter la couche OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    mapInstanceRef.current = map;
+
+    // Géocoder et ajouter les marqueurs
+    const addMarkers = async () => {
+      // Nettoyer les anciens marqueurs
+      markersRef.current.forEach(marker => marker.remove());
+      markersRef.current = [];
+
+      const bounds = L.latLngBounds();
+      let hasValidBounds = false;
+
+      // Géocoder les adresses et ajouter les marqueurs
+      for (const contact of contactsWithAddresses.slice(0, 20)) { // Limiter à 20 pour ne pas surcharger l'API
+        const geocoded = await geocodeAddress(contact);
+        if (geocoded) {
+          const marker = L.marker([geocoded.lat, geocoded.lng])
+            .addTo(map)
+            .bindPopup(`
+              <div style="padding: 10px;">
+                <strong>${contact.displayName || contact.nom}</strong><br/>
+                ${geocoded.address}<br/>
+                <small>${(contact.type === 'structure' || contact.entityType === 'structure') ? 'Structure' : 'Personne'}</small>
+              </div>
+            `);
+          
+          // Ajouter un événement de clic
+          marker.on('click', () => {
+            if (onContactClick) {
+              onContactClick(contact);
+            }
+          });
+
+          markersRef.current.push(marker);
+          bounds.extend([geocoded.lat, geocoded.lng]);
+          hasValidBounds = true;
+        }
+        
+        // Petit délai pour ne pas surcharger l'API Nominatim
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+
+      // Ajuster la vue pour inclure tous les marqueurs
+      if (hasValidBounds) {
+        map.fitBounds(bounds, { padding: [50, 50] });
+      }
+    };
+
+    addMarkers();
+
+    // Cleanup
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [contactsWithAddresses, onContactClick]);
 
   return (
     <div className={styles.mapContainer}>
@@ -64,17 +160,15 @@ const ContactsMap = ({ contacts, onContactClick }) => {
       </div>
       
       <div className={styles.mapWrapper}>
-        <iframe
-          src={mapUrl}
-          width="100%"
-          height="600"
-          style={{ border: 0 }}
-          allowFullScreen={true}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Carte des contacts"
-          allow="fullscreen"
-        ></iframe>
+        <div 
+          ref={mapRef} 
+          style={{ 
+            width: '100%', 
+            height: '600px',
+            position: 'relative',
+            zIndex: 1
+          }}
+        />
       </div>
 
       {/* Liste des contacts avec adresse */}
@@ -88,8 +182,8 @@ const ContactsMap = ({ contacts, onContactClick }) => {
               onClick={() => onContactClick && onContactClick(contact)}
             >
               <div className={styles.contactType}>
-                <i className={`bi ${contact.type === 'structure' ? 'bi-building' : 'bi-person'} me-1`}></i>
-                {contact.type === 'structure' ? 'Structure' : 'Personne'}
+                <i className={`bi ${(contact.type === 'structure' || contact.entityType === 'structure') ? 'bi-building' : 'bi-person'} me-1`}></i>
+                {(contact.type === 'structure' || contact.entityType === 'structure') ? 'Structure' : 'Personne'}
               </div>
               <h6 className={styles.contactName}>{contact.displayName || contact.nom}</h6>
               <p className={styles.contactAddress}>

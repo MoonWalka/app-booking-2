@@ -17,6 +17,7 @@ function ContactModalsContainer() {
     showCommentModal,
     commentModalData,
     personneModalData,
+    structureModalData,
     closeStructureModal,
     closePersonneModal,
     closeCommentModal
@@ -58,19 +59,23 @@ function ContactModalsContainer() {
 
   return (
     <>
-      {/* Modal de création de structure */}
+      {/* Modal de création/édition de structure */}
       <StructureCreationModal
         show={showStructureModal}
         onHide={closeStructureModal}
         onCreated={handleStructureCreated}
+        editMode={structureModalData?.editMode || false}
+        initialData={structureModalData?.initialData || null}
       />
       
-      {/* Modal de création de personne */}
+      {/* Modal de création/édition de personne */}
       <PersonneCreationModal
         show={showPersonneModal}
         onHide={closePersonneModal}
         onCreated={handlePersonneCreated}
         structureId={personneModalData?.structureId}
+        editMode={personneModalData?.editMode || false}
+        initialData={personneModalData?.initialData || null}
       />
 
       {/* Modal de création/édition de commentaire */}

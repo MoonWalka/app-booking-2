@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContactSearch, useDeleteContactRelational } from '@/hooks/contacts';
 import { useTabs } from '@/context/TabsContext';
+import { useContactModals } from '@/context/ContactModalsContext';
 import Spinner from '@/components/common/Spinner';
 import Alert from '@/components/ui/Alert';
 import styles from './ContactsList.module.css';
@@ -15,7 +16,8 @@ import ContactsMap from './ContactsMap';
 
 const ContactsList = () => {
   const navigate = useNavigate();
-  const { openContactTab, openContactEditTab } = useTabs();
+  const { openContactTab } = useTabs();
+  const { openPersonneModal, openStructureModal } = useContactModals();
   const {
     contacts,
     loading,
@@ -87,6 +89,21 @@ const ContactsList = () => {
   // Fonction de rafraîchissement
   const handleRefresh = () => {
     handleSearch(searchTerm, searchFilters);
+  };
+
+  // Fonction pour ouvrir la modal d'édition
+  const handleEditContact = (contact) => {
+    if (contact.type === 'structure') {
+      openStructureModal({
+        editMode: true,
+        initialData: contact
+      });
+    } else {
+      openPersonneModal({
+        editMode: true,
+        initialData: contact
+      });
+    }
   };
 
   useEffect(() => {
@@ -231,7 +248,7 @@ const ContactsList = () => {
         className={styles.actionButton}
         onClick={(e) => {
           e.stopPropagation();
-          openContactEditTab(row.id, row.displayName || row.nom || 'Contact');
+          handleEditContact(row);
         }}
         title="Modifier"
       >

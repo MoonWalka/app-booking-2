@@ -171,16 +171,6 @@ export const TabsProvider = ({ children }) => {
     });
   }, [openTab]);
 
-  const openContactEditTab = useCallback((contactId, contactName) => {
-    openTab({
-      id: `contact-edit-${contactId}`,
-      title: `Éditer - ${contactName}`,
-      path: `/contacts/${contactId}/edit`,
-      component: 'ContactsPage',
-      params: { contactId },
-      icon: 'bi-pencil'
-    });
-  }, [openTab]);
 
   const openLieuTab = useCallback((lieuId, lieuName) => {
     openTab({
@@ -411,7 +401,6 @@ export const TabsProvider = ({ children }) => {
     getBottomTabForEntity,
     // Helpers spécialisés
     openContactTab,
-    openContactEditTab,
     openLieuTab,
     openDateTab,
     openStructureTab,
@@ -440,7 +429,6 @@ export const TabsProvider = ({ children }) => {
     setBottomTabForEntity,
     getBottomTabForEntity,
     openContactTab,
-    openContactEditTab,
     openLieuTab,
     openDateTab,
     openStructureTab,

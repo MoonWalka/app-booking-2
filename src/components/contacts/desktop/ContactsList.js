@@ -94,14 +94,22 @@ const ContactsList = () => {
   // Fonction pour ouvrir la modal d'édition
   const handleEditContact = (contact) => {
     if (contact.type === 'structure') {
+      // Pour les structures, on doit récupérer l'objet structure complet
+      const structureComplete = structures.find(s => s.id === contact.id);
+      console.log('🔍 [ContactsList] Structure complète pour édition:', structureComplete);
+      
       openStructureModal({
         editMode: true,
-        initialData: contact
+        initialData: structureComplete || contact
       });
     } else {
+      // Pour les personnes, on doit récupérer l'objet personne complet
+      const personneComplete = personnes.find(p => p.id === contact.id);
+      console.log('🔍 [ContactsList] Personne complète pour édition:', personneComplete);
+      
       openPersonneModal({
         editMode: true,
-        initialData: contact
+        initialData: personneComplete || contact
       });
     }
   };

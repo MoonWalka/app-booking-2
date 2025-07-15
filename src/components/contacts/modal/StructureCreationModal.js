@@ -130,29 +130,34 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
   // Mettre à jour le formulaire quand les données initiales changent
   useEffect(() => {
     if (editMode && initialData) {
+      console.log('🔍 [StructureCreationModal] Mode édition - initialData:', initialData);
+      
       // Les données peuvent être dans initialData.structure (nouveau format) ou directement dans initialData (ancien format)
       const structureData = initialData.structure || initialData;
+      console.log('🔍 [StructureCreationModal] structureData:', structureData);
       
       setFormData({
-        // Champs principaux
-        structureRaisonSociale: structureData.raisonSociale || '',
-        structureSource: structureData.source || '',
+        // Champs principaux (sans préfixe)
+        raisonSociale: structureData.raisonSociale || '',
+        type: structureData.type || '',
+        source: structureData.source || '',
         
-        // Onglet Adresse
-        structureAdresse: structureData.adresse || '',
-        structureSuiteAdresse1: structureData.suiteAdresse || '',
-        structureCodePostal: structureData.codePostal || '',
-        structureVille: structureData.ville || '',
-        structureDepartement: structureData.departement || '',
-        structureRegion: structureData.region || '',
-        structurePays: structureData.pays || 'France',
+        // Onglet Adresse (sans préfixe)
+        adresse: structureData.adresse || '',
+        suiteAdresse: structureData.suiteAdresse || '',
+        codePostal: structureData.codePostal || '',
+        ville: structureData.ville || '',
+        departement: structureData.departement || '',
+        region: structureData.region || '',
+        pays: structureData.pays || 'France',
         
-        // Onglet Email/Téléphone
-        structureEmail: structureData.email || '',
-        structureEmail2: structureData.email2 || '',
-        structureTelephone1: structureData.telephone1 || '',
-        structureTelephone2: structureData.telephone2 || '',
-        structureFax: structureData.fax || '',
+        // Onglet Email/Téléphone (sans préfixe)
+        email: structureData.email || '',
+        telephone1: structureData.telephone1 || structureData.telephone || '',
+        telephone2: structureData.telephone2 || '',
+        fax: structureData.fax || '',
+        siteWeb: structureData.siteWeb || '',
+        notes: structureData.notes || '',
         
         // Onglet Administratif
         structureCodeClient: structureData.codeClient || '',
@@ -244,7 +249,32 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           departement: formData.departement || null,
           region: formData.region || null,
           pays: formData.pays || 'France',
-          notes: formData.notes || null
+          notes: formData.notes || null,
+          // Champs administratifs
+          codeClient: formData.structureCodeClient || null,
+          raisonSocialeAdmin: formData.structureRaisonSocialeAdmin || null,
+          adresseAdmin: formData.structureAdresseAdmin || null,
+          suiteAdresseAdmin: formData.structureSuiteAdresseAdmin || null,
+          codePostalAdmin: formData.structureCodePostalAdmin || null,
+          villeAdmin: formData.structureVilleAdmin || null,
+          paysAdmin: formData.structurePaysAdmin || null,
+          regionAdmin: formData.structureRegionAdmin || null,
+          departementAdmin: formData.structureDepartementAdmin || null,
+          telAdmin: formData.structureTelAdmin || null,
+          faxAdmin: formData.structureFaxAdmin || null,
+          emailAdmin: formData.structureEmailAdmin || null,
+          signataire: formData.structureSignataire || null,
+          qualite: formData.structureQualite || null,
+          siret: formData.structureSiret || null,
+          codeApe: formData.structureCodeApe || null,
+          licence: formData.structureLicence || null,
+          tvaIntracom: formData.structureTvaIntracom || null,
+          // Réseaux sociaux
+          facebook: formData.structureFacebook || null,
+          instagram: formData.structureInstagram || null,
+          twitter: formData.structureTwitter || null,
+          linkedin: formData.structureLinkedin || null,
+          youtube: formData.structureYoutube || null
         };
         
         // Mettre à jour via le service relationnel
@@ -283,7 +313,32 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
           pays: formData.pays || 'France',
           tags: [],
           notes: formData.notes || null,
-          isClient: false // Par défaut, pas client
+          isClient: false, // Par défaut, pas client
+          // Champs administratifs
+          codeClient: formData.structureCodeClient || null,
+          raisonSocialeAdmin: formData.structureRaisonSocialeAdmin || null,
+          adresseAdmin: formData.structureAdresseAdmin || null,
+          suiteAdresseAdmin: formData.structureSuiteAdresseAdmin || null,
+          codePostalAdmin: formData.structureCodePostalAdmin || null,
+          villeAdmin: formData.structureVilleAdmin || null,
+          paysAdmin: formData.structurePaysAdmin || null,
+          regionAdmin: formData.structureRegionAdmin || null,
+          departementAdmin: formData.structureDepartementAdmin || null,
+          telAdmin: formData.structureTelAdmin || null,
+          faxAdmin: formData.structureFaxAdmin || null,
+          emailAdmin: formData.structureEmailAdmin || null,
+          signataire: formData.structureSignataire || null,
+          qualite: formData.structureQualite || null,
+          siret: formData.structureSiret || null,
+          codeApe: formData.structureCodeApe || null,
+          licence: formData.structureLicence || null,
+          tvaIntracom: formData.structureTvaIntracom || null,
+          // Réseaux sociaux
+          facebook: formData.structureFacebook || null,
+          instagram: formData.structureInstagram || null,
+          twitter: formData.structureTwitter || null,
+          linkedin: formData.structureLinkedin || null,
+          youtube: formData.structureYoutube || null
         };
 
         console.log('🆕 [StructureCreationModal] Création nouvelle structure:', structureData);

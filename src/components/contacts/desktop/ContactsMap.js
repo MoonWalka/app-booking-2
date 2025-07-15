@@ -3,12 +3,24 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import styles from './ContactsMap.module.css';
 
-// Correction pour les icônes Leaflet avec React
+// Fix pour les icônes Leaflet dans React/Webpack
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Supprimer l'icône par défaut
 delete L.Icon.Default.prototype._getIconUrl;
+
+// Définir les nouvelles URLs
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
 });
 
 const ContactsMap = ({ contacts, onContactClick }) => {
@@ -60,74 +72,118 @@ const ContactsMap = ({ contacts, onContactClick }) => {
   useEffect(() => {
     if (!mapRef.current || contactsWithAddresses.length === 0) return;
 
-    // Si la carte existe déjà, la détruire
+    // Nettoyer l'ancienne carte si elle existe
     if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
+      try {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      } catch (e) {
+        console.error('Erreur lors de la suppression de la carte:', e);
+      }
     }
 
-    // Créer une nouvelle carte
-    const map = L.map(mapRef.current).setView([46.603354, 1.888334], 6); // Centre de la France
+    // Petit délai pour s'assurer que le DOM est prêt
+    const initializeMap = () => {
+      if (!mapRef.current) return;
 
-    // Ajouter la couche OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      maxZoom: 19
-    }).addTo(map);
+      try {
+        // Créer une nouvelle carte
+        const map = L.map(mapRef.current, {
+          center: [46.603354, 1.888334], // Centre de la France
+          zoom: 6,
+          preferCanvas: true // Utiliser canvas pour de meilleures performances
+        });
 
-    mapInstanceRef.current = map;
+        // Ajouter la couche OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 19
+        }).addTo(map);
 
-    // Géocoder et ajouter les marqueurs
-    const addMarkers = async () => {
-      // Nettoyer les anciens marqueurs
-      markersRef.current.forEach(marker => marker.remove());
-      markersRef.current = [];
+        mapInstanceRef.current = map;
 
-      const bounds = L.latLngBounds();
-      let hasValidBounds = false;
-
-      // Géocoder les adresses et ajouter les marqueurs
-      for (const contact of contactsWithAddresses.slice(0, 20)) { // Limiter à 20 pour ne pas surcharger l'API
-        const geocoded = await geocodeAddress(contact);
-        if (geocoded) {
-          const marker = L.marker([geocoded.lat, geocoded.lng])
-            .addTo(map)
-            .bindPopup(`
-              <div style="padding: 10px;">
-                <strong>${contact.displayName || contact.nom}</strong><br/>
-                ${geocoded.address}<br/>
-                <small>${(contact.type === 'structure' || contact.entityType === 'structure') ? 'Structure' : 'Personne'}</small>
-              </div>
-            `);
-          
-          // Ajouter un événement de clic
-          marker.on('click', () => {
-            if (onContactClick) {
-              onContactClick(contact);
+        // Géocoder et ajouter les marqueurs
+        const addMarkers = async () => {
+          // Nettoyer les anciens marqueurs
+          markersRef.current.forEach(marker => {
+            try {
+              marker.remove();
+            } catch (e) {
+              console.error('Erreur lors de la suppression du marqueur:', e);
             }
           });
+          markersRef.current = [];
 
-          markersRef.current.push(marker);
-          bounds.extend([geocoded.lat, geocoded.lng]);
-          hasValidBounds = true;
-        }
-        
-        // Petit délai pour ne pas surcharger l'API Nominatim
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
+          const bounds = L.latLngBounds();
+          let hasValidBounds = false;
 
-      // Ajuster la vue pour inclure tous les marqueurs
-      if (hasValidBounds) {
-        map.fitBounds(bounds, { padding: [50, 50] });
+          // Géocoder les adresses et ajouter les marqueurs
+          for (const contact of contactsWithAddresses.slice(0, 20)) { // Limiter à 20 pour ne pas surcharger l'API
+            const geocoded = await geocodeAddress(contact);
+            if (geocoded) {
+              try {
+                const marker = L.marker([geocoded.lat, geocoded.lng])
+                  .addTo(map)
+                  .bindPopup(`
+                    <div style="padding: 10px;">
+                      <strong>${contact.displayName || contact.nom}</strong><br/>
+                      ${geocoded.address}<br/>
+                      <small>${(contact.type === 'structure' || contact.entityType === 'structure') ? 'Structure' : 'Personne'}</small>
+                    </div>
+                  `);
+                
+                // Ajouter un événement de clic
+                marker.on('click', () => {
+                  if (onContactClick) {
+                    onContactClick(contact);
+                  }
+                });
+
+                markersRef.current.push(marker);
+                bounds.extend([geocoded.lat, geocoded.lng]);
+                hasValidBounds = true;
+              } catch (e) {
+                console.error('Erreur lors de l\'ajout du marqueur:', e);
+              }
+            }
+            
+            // Petit délai pour ne pas surcharger l'API Nominatim
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+
+          // Ajuster la vue pour inclure tous les marqueurs
+          if (hasValidBounds) {
+            try {
+              map.fitBounds(bounds, { padding: [50, 50] });
+            } catch (e) {
+              console.error('Erreur lors de l\'ajustement de la vue:', e);
+            }
+          }
+        };
+
+        // Attendre que la carte soit complètement initialisée
+        map.whenReady(() => {
+          addMarkers();
+        });
+
+      } catch (e) {
+        console.error('Erreur lors de l\'initialisation de la carte:', e);
       }
     };
 
-    addMarkers();
+    // Utiliser un timeout pour s'assurer que le DOM est prêt
+    const timeoutId = setTimeout(initializeMap, 100);
 
     // Cleanup
     return () => {
+      clearTimeout(timeoutId);
       if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
+        try {
+          mapInstanceRef.current.remove();
+          mapInstanceRef.current = null;
+        } catch (e) {
+          console.error('Erreur lors du cleanup de la carte:', e);
+        }
       }
     };
   }, [contactsWithAddresses, onContactClick]);

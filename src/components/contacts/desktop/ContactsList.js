@@ -15,7 +15,7 @@ import ContactsMap from './ContactsMap';
 
 const ContactsList = () => {
   const navigate = useNavigate();
-  const { openContactTab } = useTabs();
+  const { openContactTab, openContactEditTab } = useTabs();
   const {
     contacts,
     loading,
@@ -231,7 +231,7 @@ const ContactsList = () => {
         className={styles.actionButton}
         onClick={(e) => {
           e.stopPropagation();
-          navigate(`/contacts/${row.id}/edit`);
+          openContactEditTab(row.id, row.displayName || row.nom || 'Contact');
         }}
         title="Modifier"
       >

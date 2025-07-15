@@ -10,6 +10,8 @@ import ContactsListHeader from './sections/ContactsListHeader';
 import ContactsStatsCards from './sections/ContactsStatsCards';
 import ContactsListSearchFilter from './sections/ContactsListSearchFilter';
 import ContactsListEmptyState from './sections/ContactsListEmptyState';
+import ContactsToolbar from './ContactsToolbar';
+import ContactsMap from './ContactsMap';
 
 const ContactsList = () => {
   const navigate = useNavigate();
@@ -32,6 +34,12 @@ const ContactsList = () => {
     personnes,
     liaisons
   } = useContactSearch();
+
+  // États pour la toolbar
+  const [viewMode, setViewMode] = useState('list'); // 'list' ou 'map'
+  const [showPersonnesOnly, setShowPersonnesOnly] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   
   const { 
     handleDelete: handleDeleteContact,
@@ -74,6 +82,11 @@ const ContactsList = () => {
   // Calculer le nombre de filtres avancés actifs
   const activeFiltersCount = () => {
     return Object.keys(searchFilters).filter(key => searchFilters[key] && searchFilters[key] !== '' && searchFilters[key] !== 'all').length;
+  };
+
+  // Fonction de rafraîchissement
+  const handleRefresh = () => {
+    handleSearch(searchTerm, searchFilters);
   };
 
   useEffect(() => {
@@ -271,6 +284,9 @@ const ContactsList = () => {
       // Vérifier que l'objet contact est valide
       if (!p || typeof p !== 'object') return false;
       
+      // Filtrer par type si le mode "personnes seulement" est activé
+      if (showPersonnesOnly && p.type !== 'personne') return false;
+      
       // Filtrage par terme de recherche
       if (!searchTerm) return true;
       
@@ -294,6 +310,12 @@ const ContactsList = () => {
       
       return 0;
     });
+
+  // Pagination
+  const totalPages = Math.ceil(filteredContacts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedContacts = filteredContacts.slice(startIndex, endIndex);
 
   if (loading) {
     return <Spinner message="Chargement des contacts..." contentOnly={true} />;
@@ -412,19 +434,41 @@ const ContactsList = () => {
         </div>
       )}
 
-      {/* Table or empty state */}
+      {/* Toolbar */}
+      <ContactsToolbar
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        showPersonnesOnly={showPersonnesOnly}
+        setShowPersonnesOnly={setShowPersonnesOnly}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
+        itemsPerPage={itemsPerPage}
+        setItemsPerPage={setItemsPerPage}
+        totalItems={filteredContacts.length}
+        onRefresh={handleRefresh}
+      />
+
+      {/* Table or map view */}
       {filteredContacts.length > 0 ? (
-        <div className={styles.tableContainer}>
-          <Table
-            columns={columns}
-            data={filteredContacts}
-            renderActions={renderActions}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            onSort={handleSortClick}
-            onRowClick={(row) => openContactTab(row.id, row.displayName || row.nom || 'Contact')}
+        viewMode === 'map' ? (
+          <ContactsMap 
+            contacts={filteredContacts}
+            onContactClick={(contact) => openContactTab(contact.id, contact.displayName || contact.nom || 'Contact')}
           />
-        </div>
+        ) : (
+          <div className={styles.tableContainer}>
+            <Table
+              columns={columns}
+              data={paginatedContacts}
+              renderActions={renderActions}
+              sortField={sortField}
+              sortDirection={sortDirection}
+              onSort={handleSortClick}
+              onRowClick={(row) => openContactTab(row.id, row.displayName || row.nom || 'Contact')}
+            />
+          </div>
+        )
       ) : (
         <ContactsListEmptyState 
           hasSearchQuery={searchTerm && typeof searchTerm === 'string' ? searchTerm.trim().length > 0 : false}

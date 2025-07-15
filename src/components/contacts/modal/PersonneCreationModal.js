@@ -46,26 +46,32 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
 
   // Effet pour initialiser les données en mode édition
   useEffect(() => {
+    console.log('👤 [PersonneCreationModal] Props reçues:', { show, editMode, initialData });
+    
     if (editMode && initialData) {
+      // Les données peuvent être dans initialData.personne (nouveau format) ou directement dans initialData (ancien format)
+      const personneData = initialData.personne || initialData;
+      console.log('👤 [PersonneCreationModal] Données pour édition:', personneData);
+      
       setFormData({
-        prenom: initialData.prenom || '',
-        nom: initialData.nom || '',
-        source: initialData.source || '',
-        adresse: initialData.adresse || '',
-        suiteAdresse: initialData.suiteAdresse || '',
-        codePostal: initialData.codePostal || '',
-        ville: initialData.ville || '',
-        departement: initialData.departement || '',
-        region: initialData.region || '',
-        pays: initialData.pays || 'France',
-        email: initialData.email || initialData.mailDirect || '',
-        mailPerso: initialData.mailPerso || '',
-        telephone: initialData.telephone || initialData.telDirect || '',
-        telephone2: initialData.telephone2 || initialData.telPerso || '',
-        mobile: initialData.mobile || '',
-        fonction: initialData.fonction || '',
-        notes: initialData.notes || '',
-        actif: initialData.actif !== undefined ? initialData.actif : true
+        prenom: personneData.prenom || '',
+        nom: personneData.nom || '',
+        source: personneData.source || '',
+        adresse: personneData.adresse || '',
+        suiteAdresse: personneData.suiteAdresse || '',
+        codePostal: personneData.codePostal || '',
+        ville: personneData.ville || '',
+        departement: personneData.departement || '',
+        region: personneData.region || '',
+        pays: personneData.pays || 'France',
+        email: personneData.email || personneData.mailDirect || '',
+        mailPerso: personneData.mailPerso || '',
+        telephone: personneData.telephone || personneData.telDirect || '',
+        telephone2: personneData.telephone2 || personneData.telPerso || '',
+        mobile: personneData.mobile || '',
+        fonction: personneData.fonction || '',
+        notes: personneData.notes || '',
+        actif: personneData.actif !== undefined ? personneData.actif : true
       });
     } else if (!editMode) {
       // Réinitialiser en mode création

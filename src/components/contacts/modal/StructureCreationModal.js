@@ -25,56 +25,59 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
   const [formData, setFormData] = useState(() => {
     // En mode édition, pré-remplir avec les données initiales
     if (editMode && initialData) {
+      // Les données peuvent être dans initialData.structure (nouveau format) ou directement dans initialData (ancien format)
+      const structureData = initialData.structure || initialData;
+      
       return {
         // Champs principaux
-        raisonSociale: initialData.raisonSociale || '',
-        type: initialData.type || '',
-        source: initialData.source || '',
+        raisonSociale: structureData.raisonSociale || '',
+        type: structureData.type || '',
+        source: structureData.source || '',
         
         // Onglet Adresse
-        adresse: initialData.adresse || '',
-        suiteAdresse: initialData.suiteAdresse || '',
-        codePostal: initialData.codePostal || '',
-        ville: initialData.ville || '',
-        departement: initialData.departement || '',
-        region: initialData.region || '',
-        pays: initialData.pays || 'France',
+        adresse: structureData.adresse || '',
+        suiteAdresse: structureData.suiteAdresse || '',
+        codePostal: structureData.codePostal || '',
+        ville: structureData.ville || '',
+        departement: structureData.departement || '',
+        region: structureData.region || '',
+        pays: structureData.pays || 'France',
         
         // Onglet Email/Téléphone
-        email: initialData.email || '',
-        telephone1: initialData.telephone1 || '',
-        telephone2: initialData.telephone2 || '',
-        fax: initialData.fax || '',
-        siteWeb: initialData.siteWeb || '',
-        notes: initialData.notes || '',
+        email: structureData.email || '',
+        telephone1: structureData.telephone1 || structureData.telephone || structureData.telDirect || '',
+        telephone2: structureData.telephone2 || structureData.telPerso || '',
+        fax: structureData.fax || '',
+        siteWeb: structureData.siteWeb || '',
+        notes: structureData.notes || '',
         
         // Onglet Administratif
-        structureCodeClient: initialData.codeClient || '',
-        structureRaisonSocialeAdmin: initialData.raisonSocialeAdmin || '',
-        structureAdresseAdmin: initialData.adresseAdmin || '',
-        structureSuiteAdresseAdmin: initialData.suiteAdresseAdmin || '',
-        structureCodePostalAdmin: initialData.codePostalAdmin || '',
-        structureVilleAdmin: initialData.villeAdmin || '',
-        structurePaysAdmin: initialData.paysAdmin || '',
-        structureRegionAdmin: initialData.regionAdmin || '',
-        structureDepartementAdmin: initialData.departementAdmin || '',
-        structureTelAdmin: initialData.telAdmin || '',
-        structureFaxAdmin: initialData.faxAdmin || '',
-        structureEmailAdmin: initialData.emailAdmin || '',
-        structureSignataire: initialData.signataire || '',
-        structureQualite: initialData.qualite || '',
-        structureSiret: initialData.siret || '',
-        structureCodeApe: initialData.codeApe || '',
-        structureLicence: initialData.licence || '',
-        structureTvaIntracom: initialData.tvaIntracom || '',
+        structureCodeClient: structureData.codeClient || '',
+        structureRaisonSocialeAdmin: structureData.raisonSocialeAdmin || '',
+        structureAdresseAdmin: structureData.adresseAdmin || '',
+        structureSuiteAdresseAdmin: structureData.suiteAdresseAdmin || '',
+        structureCodePostalAdmin: structureData.codePostalAdmin || '',
+        structureVilleAdmin: structureData.villeAdmin || '',
+        structurePaysAdmin: structureData.paysAdmin || '',
+        structureRegionAdmin: structureData.regionAdmin || '',
+        structureDepartementAdmin: structureData.departementAdmin || '',
+        structureTelAdmin: structureData.telAdmin || '',
+        structureFaxAdmin: structureData.faxAdmin || '',
+        structureEmailAdmin: structureData.emailAdmin || '',
+        structureSignataire: structureData.signataire || '',
+        structureQualite: structureData.qualite || '',
+        structureSiret: structureData.siret || '',
+        structureCodeApe: structureData.codeApe || '',
+        structureLicence: structureData.licence || '',
+        structureTvaIntracom: structureData.tvaIntracom || '',
         
         // Onglet Réseaux sociaux
-        structureSiteWeb: initialData.siteWeb || '',
-        structureFacebook: initialData.facebook || '',
-        structureInstagram: initialData.instagram || '',
-        structureTwitter: initialData.twitter || '',
-        structureLinkedin: initialData.linkedin || '',
-        structureYoutube: initialData.youtube || ''
+        structureSiteWeb: structureData.siteWeb || '',
+        structureFacebook: structureData.facebook || '',
+        structureInstagram: structureData.instagram || '',
+        structureTwitter: structureData.twitter || '',
+        structureLinkedin: structureData.linkedin || '',
+        structureYoutube: structureData.youtube || ''
       };
     }
     
@@ -140,6 +143,9 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
       // Les données peuvent être dans initialData.structure (nouveau format) ou directement dans initialData (ancien format)
       const structureData = initialData.structure || initialData;
       console.log('🔍 [StructureCreationModal] structureData:', structureData);
+      console.log('🔍 [StructureCreationModal] structureData.raisonSociale:', structureData.raisonSociale);
+      console.log('🔍 [StructureCreationModal] structureData.email:', structureData.email);
+      console.log('🔍 [StructureCreationModal] structureData.telephone1:', structureData.telephone1);
       
       setFormData({
         // Champs principaux (sans préfixe)
@@ -158,8 +164,8 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
         
         // Onglet Email/Téléphone (sans préfixe)
         email: structureData.email || '',
-        telephone1: structureData.telephone1 || structureData.telephone || '',
-        telephone2: structureData.telephone2 || '',
+        telephone1: structureData.telephone1 || structureData.telephone || structureData.telDirect || '',
+        telephone2: structureData.telephone2 || structureData.telPerso || '',
         fax: structureData.fax || '',
         siteWeb: structureData.siteWeb || '',
         notes: structureData.notes || '',

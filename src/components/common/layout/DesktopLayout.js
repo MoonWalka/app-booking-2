@@ -565,10 +565,16 @@ function DesktopLayout({ children }) {
   const buildMesSelectionsSubItems = () => {
     console.log('📌 DesktopLayout - Construction du menu avec', savedSelections.length, 'sélections');
     
-    // Items de base pour les sélections
-    const baseItems = [
-      { to: "/contacts/selections", icon: "bi-check2-square", label: "Gérer les sélections" }
-    ];
+    // Si pas de sélections, afficher un message
+    if (savedSelections.length === 0) {
+      return [{
+        id: 'no-selections',
+        icon: "bi-info-circle",
+        label: "Aucune sélection",
+        disabled: true,
+        onClick: () => {} // Ne rien faire au clic
+      }];
+    }
     
     // Ajouter les sélections sauvegardées
     const savedSelectionItems = savedSelections.map(selection => {
@@ -582,7 +588,7 @@ function DesktopLayout({ children }) {
       };
     });
     
-    return [...baseItems, ...savedSelectionItems];
+    return savedSelectionItems;
   };
 
   // Nouvelle structure de navigation groupée
@@ -795,13 +801,15 @@ function DesktopLayout({ children }) {
                       );
                     }
                     
-                    // Sous-item simple (avec 'to' ou recherche sauvegardée)
-                    if (subItem.to || subItem.isSearch) {
+                    // Sous-item simple (avec 'to' ou recherche/sélection sauvegardée)
+                    if (subItem.to || subItem.isSearch || subItem.isSelection || subItem.disabled) {
                       return (
                         <li key={subItem.id || subItem.to}>
                           <button 
-                            className={sidebarStyles.navButton}
+                            className={`${sidebarStyles.navButton} ${subItem.disabled ? sidebarStyles.disabled : ''}`}
+                            disabled={subItem.disabled}
                             onClick={(e) => {
+                              if (subItem.disabled) return;
                               e.stopPropagation();
                               handleNavigation(subItem);
                               if (isMobile) {
@@ -835,6 +843,7 @@ function DesktopLayout({ children }) {
                                 });
                               }
                             }}
+                            style={subItem.disabled ? { opacity: 0.5, cursor: 'default' } : {}}
                           >
                             <i className={`bi ${subItem.icon}`} style={(subItem.isSearch || subItem.isSelection) && !subItem.icon ? {width: '1rem', display: 'inline-block'} : {}}></i>
                             <span>{subItem.label}</span>

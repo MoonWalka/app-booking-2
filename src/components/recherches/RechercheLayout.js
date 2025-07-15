@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useEntreprise } from '../../context/EntrepriseContext';
 import { searchService } from '../../services/searchService';
+import { selectionsService } from '../../services/selectionsService';
 import MesSelectionsSection from './sections/MesSelectionsSection';
+import { Modal, Form, Button } from 'react-bootstrap';
 import styles from './RechercheLayout.module.css';
 
 /**
@@ -23,6 +25,9 @@ const RechercheLayout = ({ children, savedSearch }) => {
   const [showResults, setShowResults] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [searchName, setSearchName] = useState('');
+  const [selectedContacts, setSelectedContacts] = useState([]);
+  const [saveSelectionModalOpen, setSaveSelectionModalOpen] = useState(false);
+  const [selectionName, setSelectionName] = useState('');
 
   // Charger les critères de la recherche sauvegardée si elle existe
   useEffect(() => {
@@ -366,6 +371,61 @@ const RechercheLayout = ({ children, savedSearch }) => {
     setActiveSection('identification');
   };
 
+  // Fonction pour gérer la sélection/désélection d'un contact
+  const handleContactSelection = (contact) => {
+    const contactKey = `${contact._type}-${contact.id}`;
+    setSelectedContacts(prev => {
+      const isSelected = prev.some(c => `${c._type}-${c.id}` === contactKey);
+      if (isSelected) {
+        return prev.filter(c => `${c._type}-${c.id}` !== contactKey);
+      } else {
+        return [...prev, contact];
+      }
+    });
+  };
+
+  // Fonction pour sélectionner/désélectionner tous les contacts
+  const handleSelectAll = () => {
+    if (selectedContacts.length === searchResults?.data?.length) {
+      setSelectedContacts([]);
+    } else {
+      setSelectedContacts(searchResults?.data || []);
+    }
+  };
+
+  // Fonction pour sauvegarder la sélection
+  const handleSaveSelection = async () => {
+    if (!selectionName.trim() || selectedContacts.length === 0) {
+      alert('Veuillez donner un nom à votre sélection et sélectionner au moins un contact');
+      return;
+    }
+
+    try {
+      const result = await selectionsService.createContactSelection({
+        nom: selectionName,
+        contacts: selectedContacts,
+        description: `${selectedContacts.length} contact(s) sélectionné(s)`,
+        userId: currentUser.uid,
+        entrepriseId: currentEntreprise.id
+      });
+
+      if (result.success) {
+        setSaveSelectionModalOpen(false);
+        setSelectionName('');
+        setSelectedContacts([]);
+        alert('Sélection sauvegardée avec succès');
+        
+        // Déclencher un événement pour rafraîchir le menu
+        window.dispatchEvent(new Event('refresh-saved-selections'));
+      } else {
+        alert('Erreur lors de la sauvegarde de la sélection');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde de la sélection:', error);
+      alert('Erreur lors de la sauvegarde de la sélection');
+    }
+  };
+
   return (
     <div className={styles.rechercheLayout}>
       {/* Menu latéral permanent */}
@@ -412,13 +472,29 @@ const RechercheLayout = ({ children, savedSearch }) => {
                     <i className="bi bi-list-check me-2"></i>
                     Résultats de la recherche ({searchResults?.data?.length || 0})
                   </h4>
-                  <button 
-                    className="btn btn-outline-secondary btn-sm"
-                    onClick={() => setShowResults(false)}
-                  >
-                    <i className="bi bi-arrow-left me-2"></i>
-                    Retour aux critères
-                  </button>
+                  <div className="d-flex gap-2">
+                    {selectedContacts.length > 0 && (
+                      <>
+                        <span className="text-muted align-self-center">
+                          {selectedContacts.length} sélectionné(s)
+                        </span>
+                        <button 
+                          className="btn btn-primary btn-sm"
+                          onClick={() => setSaveSelectionModalOpen(true)}
+                        >
+                          <i className="bi bi-bookmark-plus me-2"></i>
+                          Sauvegarder la sélection
+                        </button>
+                      </>
+                    )}
+                    <button 
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => setShowResults(false)}
+                    >
+                      <i className="bi bi-arrow-left me-2"></i>
+                      Retour aux critères
+                    </button>
+                  </div>
                 </div>
                 
                 <div className={styles.resultsList}>
@@ -432,6 +508,14 @@ const RechercheLayout = ({ children, savedSearch }) => {
                       <table className="table table-hover">
                         <thead>
                           <tr>
+                            <th>
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                checked={selectedContacts.length === searchResults?.data?.length && searchResults?.data?.length > 0}
+                                onChange={handleSelectAll}
+                              />
+                            </th>
                             <th>Type</th>
                             <th>Nom</th>
                             <th>Email</th>
@@ -441,8 +525,18 @@ const RechercheLayout = ({ children, savedSearch }) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {searchResults?.data?.map((result) => (
+                          {searchResults?.data?.map((result) => {
+                            const isSelected = selectedContacts.some(c => `${c._type}-${c.id}` === `${result._type}-${result.id}`);
+                            return (
                             <tr key={`${result._type}-${result.id}`}>
+                              <td>
+                                <input
+                                  type="checkbox"
+                                  className="form-check-input"
+                                  checked={isSelected}
+                                  onChange={() => handleContactSelection(result)}
+                                />
+                              </td>
                               <td>
                                 <span className={`badge ${result._type === 'structure' ? 'bg-primary' : 'bg-info'}`}>
                                   <i className={`bi ${result._type === 'structure' ? 'bi-building' : 'bi-person'} me-1`}></i>
@@ -479,7 +573,8 @@ const RechercheLayout = ({ children, savedSearch }) => {
                                 </button>
                               </td>
                             </tr>
-                          ))}
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -659,6 +754,47 @@ const RechercheLayout = ({ children, savedSearch }) => {
           </div>
         </div>
       )}
+
+      {/* Modal de sauvegarde de sélection */}
+      <Modal show={saveSelectionModalOpen} onHide={() => setSaveSelectionModalOpen(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <i className="bi bi-bookmark-plus me-2"></i>
+            Sauvegarder la sélection
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Nom de la sélection</Form.Label>
+              <Form.Control
+                type="text"
+                value={selectionName}
+                onChange={(e) => setSelectionName(e.target.value)}
+                placeholder="Ex: Mairies région parisienne"
+                autoFocus
+              />
+            </Form.Group>
+            <div className="text-muted small">
+              <i className="bi bi-info-circle me-1"></i>
+              Cette sélection contient {selectedContacts.length} contact{selectedContacts.length > 1 ? 's' : ''}
+            </div>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setSaveSelectionModalOpen(false)}>
+            Annuler
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleSaveSelection}
+            disabled={!selectionName.trim() || selectedContacts.length === 0}
+          >
+            <i className="bi bi-save me-2"></i>
+            Enregistrer
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

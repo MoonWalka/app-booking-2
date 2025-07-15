@@ -13,6 +13,7 @@ import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
 import sidebarStyles from '@/components/layout/Sidebar.module.css';
 import { searchService } from '@/services/searchService';
+import { selectionsService } from '@/services/selectionsService';
 import { useEntreprise } from '@/context/EntrepriseContext';
 
 function DesktopLayout({ children }) {
@@ -39,6 +40,8 @@ function DesktopLayout({ children }) {
   
   // État pour stocker les recherches sauvegardées
   const [savedSearches, setSavedSearches] = useState([]);
+  // État pour stocker les sélections sauvegardées
+  const [savedSelections, setSavedSelections] = useState([]);
   
   // État pour la sidebar mobile (hamburger menu)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -69,6 +72,20 @@ function DesktopLayout({ children }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Effet pour fermer le menu contextuel lors d'un clic à l'extérieur
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (contextMenu) {
+        setContextMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [contextMenu]);
+
   // Effet pour charger les recherches sauvegardées
   useEffect(() => {
     const loadSavedSearches = async () => {
@@ -93,6 +110,29 @@ function DesktopLayout({ children }) {
     loadSavedSearches();
   }, [currentUser, currentEntreprise]);
 
+  // Effet pour charger les sélections sauvegardées
+  useEffect(() => {
+    const loadSavedSelections = async () => {
+      if (!currentUser?.uid || !currentEntreprise?.id) {
+        console.log('📌 DesktopLayout - Pas de user/entreprise pour charger les sélections');
+        return;
+      }
+      
+      console.log('📌 DesktopLayout - Chargement des sélections sauvegardées...');
+      try {
+        const result = await selectionsService.getSelectionsByType('contacts', currentUser.uid, currentEntreprise.id);
+        if (result.success) {
+          console.log('📌 DesktopLayout - Sélections chargées:', result.data.length);
+          setSavedSelections(result.data);
+        }
+      } catch (error) {
+        console.error('📌 DesktopLayout - Erreur lors du chargement des sélections:', error);
+      }
+    };
+
+    loadSavedSelections();
+  }, [currentUser, currentEntreprise]);
+
   // Effet pour écouter les événements de rafraîchissement
   useEffect(() => {
     const handleRefreshSearches = () => {
@@ -110,10 +150,26 @@ function DesktopLayout({ children }) {
       }
     };
 
+    const handleRefreshSelections = () => {
+      console.log('🔄 DesktopLayout - Événement de rafraîchissement des sélections reçu');
+      if (currentUser?.uid && currentEntreprise?.id) {
+        selectionsService.getSelectionsByType('contacts', currentUser.uid, currentEntreprise.id).then(result => {
+          if (result.success) {
+            console.log('🔄 DesktopLayout - Sélections rafraîchies:', result.data.length);
+            setSavedSelections(result.data);
+          }
+        }).catch(error => {
+          console.error('🔄 DesktopLayout - Erreur lors du rafraîchissement des sélections:', error);
+        });
+      }
+    };
+
     window.addEventListener('refresh-saved-searches', handleRefreshSearches);
+    window.addEventListener('refresh-saved-selections', handleRefreshSelections);
     
     return () => {
       window.removeEventListener('refresh-saved-searches', handleRefreshSearches);
+      window.removeEventListener('refresh-saved-selections', handleRefreshSelections);
     };
   }, [currentUser, currentEntreprise]);
 
@@ -159,6 +215,33 @@ function DesktopLayout({ children }) {
     setContextMenu(null);
   };
 
+  const handleDeleteSelection = async (selectionId, selectionName) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer la sélection "${selectionName}" ?`)) {
+      try {
+        const result = await selectionsService.deleteSelection(selectionId);
+        if (result.success) {
+          console.log('🗑️ Sélection supprimée:', selectionId);
+          
+          // Rafraîchir la liste des sélections
+          if (currentUser?.uid && currentEntreprise?.id) {
+            const selectionsResult = await selectionsService.getSelectionsByType('contacts', currentUser.uid, currentEntreprise.id);
+            if (selectionsResult.success) {
+              setSavedSelections(selectionsResult.data);
+            }
+          }
+          
+          alert('Sélection supprimée avec succès');
+        } else {
+          alert('Erreur lors de la suppression de la sélection');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        alert('Erreur lors de la suppression de la sélection');
+      }
+    }
+    setContextMenu(null);
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -182,6 +265,19 @@ function DesktopLayout({ children }) {
         component: 'SavedSearchResultsPage',
         icon: 'bi-search',
         params: { savedSearch: item.searchData }
+      });
+      return;
+    }
+    
+    // Si c'est une sélection sauvegardée
+    if (item.isSelection && item.selectionData) {
+      openTab({
+        id: `saved-selection-results-${item.selectionData.id}`,
+        title: item.selectionData.nom,
+        path: `/contacts/selection-sauvegardee/${item.selectionData.id}`,
+        component: 'SavedSelectionResultsPage',
+        icon: 'bi-check2-square',
+        params: { savedSelection: item.selectionData }
       });
       return;
     }
@@ -465,6 +561,30 @@ function DesktopLayout({ children }) {
     return [...baseItems, ...savedSearchItems, dossiersItem];
   };
 
+  // Fonction pour construire les items du sous-menu "Mes sélections"
+  const buildMesSelectionsSubItems = () => {
+    console.log('📌 DesktopLayout - Construction du menu avec', savedSelections.length, 'sélections');
+    
+    // Items de base pour les sélections
+    const baseItems = [
+      { to: "/contacts/selections", icon: "bi-check2-square", label: "Gérer les sélections" }
+    ];
+    
+    // Ajouter les sélections sauvegardées
+    const savedSelectionItems = savedSelections.map(selection => {
+      console.log('📌 DesktopLayout - Ajout sélection au menu:', selection.nom);
+      return {
+        id: `saved-selection-${selection.id}`,
+        icon: "", // Pas d'icône mais on garde l'espace
+        label: `📌 ${selection.nom}`,
+        selectionData: selection, // On stocke les données de sélection pour les utiliser lors du clic
+        isSelection: true
+      };
+    });
+    
+    return [...baseItems, ...savedSelectionItems];
+  };
+
   // Nouvelle structure de navigation groupée
   const navigationGroups = [
     { to: "/", icon: "bi-speedometer2", label: "Dashboard", end: true },
@@ -489,7 +609,12 @@ function DesktopLayout({ children }) {
           label: "Mes recherches",
           subItems: buildMesRecherchesSubItems()
         },
-        { to: "/contacts/selections", icon: "bi-check2-square", label: "Mes sélections" },
+        {
+          id: "mes-selections",
+          icon: "bi-check2-square", 
+          label: "Mes sélections",
+          subItems: buildMesSelectionsSubItems()
+        },
         { to: "/contacts/tags", icon: "bi-tags", label: "Tags" },
         { to: "/contact/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
@@ -684,22 +809,34 @@ function DesktopLayout({ children }) {
                               }
                             }}
                             onContextMenu={(e) => {
-                              // Gestion du clic droit pour les recherches sauvegardées
+                              // Gestion du clic droit pour les recherches et sélections sauvegardées
                               console.log('🖱️ Clic droit détecté sur:', subItem);
                               if (subItem.isSearch && subItem.searchData) {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                console.log('🖱️ Menu contextuel pour:', subItem.searchData.name);
+                                console.log('🖱️ Menu contextuel pour recherche:', subItem.searchData.name);
                                 setContextMenu({
                                   x: e.clientX,
                                   y: e.clientY,
+                                  type: 'search',
                                   searchId: subItem.searchData.id,
                                   searchName: subItem.searchData.name
+                                });
+                              } else if (subItem.isSelection && subItem.selectionData) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('🖱️ Menu contextuel pour sélection:', subItem.selectionData.nom);
+                                setContextMenu({
+                                  x: e.clientX,
+                                  y: e.clientY,
+                                  type: 'selection',
+                                  selectionId: subItem.selectionData.id,
+                                  selectionName: subItem.selectionData.nom
                                 });
                               }
                             }}
                           >
-                            <i className={`bi ${subItem.icon}`} style={subItem.isSearch && !subItem.icon ? {width: '1rem', display: 'inline-block'} : {}}></i>
+                            <i className={`bi ${subItem.icon}`} style={(subItem.isSearch || subItem.isSelection) && !subItem.icon ? {width: '1rem', display: 'inline-block'} : {}}></i>
                             <span>{subItem.label}</span>
                           </button>
                         </li>
@@ -967,7 +1104,7 @@ function DesktopLayout({ children }) {
       {/* Conteneur des modals de contact */}
       <ContactModalsContainer />
       
-      {/* Menu contextuel pour les recherches sauvegardées */}
+      {/* Menu contextuel pour les recherches et sélections sauvegardées */}
       {contextMenu && (
         <div
           style={{
@@ -985,7 +1122,13 @@ function DesktopLayout({ children }) {
         >
           <button
             className="btn btn-sm btn-link text-danger w-100 text-start"
-            onClick={() => handleDeleteSearch(contextMenu.searchId, contextMenu.searchName)}
+            onClick={() => {
+              if (contextMenu.type === 'search') {
+                handleDeleteSearch(contextMenu.searchId, contextMenu.searchName);
+              } else if (contextMenu.type === 'selection') {
+                handleDeleteSelection(contextMenu.selectionId, contextMenu.selectionName);
+              }
+            }}
             style={{ 
               padding: '8px 12px',
               textDecoration: 'none',

@@ -25,8 +25,9 @@ class SelectionsService {
    * Créer une nouvelle sélection
    * @param {Object} selectionData - Données de la sélection
    * @param {string} selectionData.nom - Nom de la sélection
-   * @param {string} selectionData.type - Type de recherche (contacts, dates, lieux, etc.)
-   * @param {Array} selectionData.criteres - Critères de recherche
+   * @param {string} selectionData.type - Type de sélection (contacts, dates, lieux, etc.)
+   * @param {Array} selectionData.contacts - Liste des contacts sélectionnés
+   * @param {string} selectionData.description - Description de la sélection
    * @param {boolean} selectionData.shared - Si la sélection est partagée
    * @param {string} userId - ID de l'utilisateur
    * @param {string} entrepriseId - ID de l'organisation
@@ -241,6 +242,42 @@ class SelectionsService {
         data: []
       };
     }
+  }
+
+  /**
+   * Créer une sélection de contacts
+   * @param {Object} params - Paramètres de la sélection
+   * @param {string} params.nom - Nom de la sélection
+   * @param {Array} params.contacts - Liste des contacts {id, type, ...data}
+   * @param {string} params.description - Description optionnelle
+   * @param {string} params.userId - ID de l'utilisateur
+   * @param {string} params.entrepriseId - ID de l'organisation
+   * @returns {Promise<Object>} - Résultat de la création
+   */
+  async createContactSelection({ nom, contacts, description, userId, entrepriseId }) {
+    console.log('📌 [SelectionsService] Création sélection de contacts:', {
+      nom,
+      contactsCount: contacts?.length || 0,
+      userId,
+      entrepriseId
+    });
+
+    return this.createSelection({
+      nom,
+      type: 'contacts',
+      contacts: contacts.map(c => ({
+        id: c.id,
+        type: c._type || c.type, // structure ou personne
+        nom: c.nom || c.displayName || c.raisonSociale,
+        prenom: c.prenom,
+        email: c.email,
+        telephone: c.telephone,
+        ville: c.ville,
+        fonction: c.fonction
+      })),
+      description: description || `${contacts.length} contact(s) sélectionné(s)`,
+      shared: false
+    }, userId, entrepriseId);
   }
 }
 

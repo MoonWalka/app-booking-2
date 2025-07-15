@@ -33,6 +33,7 @@ import MesSelectionsPage from '@/pages/MesSelectionsPage';
 import ContactTagsPage from '@/pages/ContactTagsPage';
 import FestivalsDatesPage from '@/pages/FestivalsDatesPage';
 import SavedSearchResultsPage from '@/pages/SavedSearchResultsPage';
+import SavedSelectionResultsPage from '@/pages/SavedSelectionResultsPage';
 
 // Import des composants de liste pour affichage direct dans les onglets
 // import DatesList from '@/components/dates/DatesList'; // Plus utilisé
@@ -305,6 +306,8 @@ const TabManagerProduction = () => {
           return <FestivalsDatesPage />;
         case 'SavedSearchResultsPage':
           return <SavedSearchResultsPage savedSearch={tab.params?.savedSearch} />;
+        case 'SavedSelectionResultsPage':
+          return <SavedSelectionResultsPage savedSelection={tab.params?.savedSelection} />;
         default:
           return (
             <div className={styles.tabContent}>

@@ -174,27 +174,15 @@ function DesktopLayout({ children }) {
     
     // Si c'est une recherche sauvegardée
     if (item.isSearch && item.searchData) {
-      // Si la recherche contient des résultats, ouvrir directement la page des résultats
-      if (item.searchData.type === 'saved_search_with_results' && item.searchData.results) {
-        openTab({
-          id: `saved-search-results-${item.searchData.id}`,
-          title: item.searchData.name,
-          path: `/contacts/recherche-sauvegardee/${item.searchData.id}`,
-          component: 'SavedSearchResultsPage',
-          icon: 'bi-search',
-          params: { savedSearch: item.searchData }
-        });
-      } else {
-        // Sinon, ouvrir la page de recherche avec les critères pré-remplis
-        openTab({
-          id: 'contacts-recherches',
-          title: 'Mes recherches',
-          path: '/contacts/recherches',
-          component: 'MesRecherchesPage',
-          icon: 'bi-search',
-          params: { savedSearch: item.searchData }
-        });
-      }
+      // Les recherches sauvegardées contiennent toujours des résultats maintenant
+      openTab({
+        id: `saved-search-results-${item.searchData.id}`,
+        title: item.searchData.name,
+        path: `/contacts/recherche-sauvegardee/${item.searchData.id}`,
+        component: 'SavedSearchResultsPage',
+        icon: 'bi-search',
+        params: { savedSearch: item.searchData }
+      });
       return;
     }
     

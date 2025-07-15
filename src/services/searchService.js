@@ -45,6 +45,12 @@ class SearchService {
    */
   async executeSearch({ entrepriseId, criteria = [], collection: collectionName = 'contacts', pagination = {} }) {
     try {
+      console.log(`🔍 searchService.executeSearch - Recherche dans ${collectionName}:`, {
+        entrepriseId,
+        criteriaCount: criteria.length,
+        criteria: criteria
+      });
+      
       // Validation des paramètres
       if (!entrepriseId) {
         throw new Error('entrepriseId requis pour la recherche');
@@ -84,6 +90,12 @@ class SearchService {
       const hasMore = results.length === this.pageSize;
       const lastDoc = snapshot.docs[snapshot.docs.length - 1];
 
+      console.log(`✅ searchService.executeSearch - Résultats ${collectionName}:`, {
+        totalFound: snapshot.docs.length,
+        afterLocalFilters: results.length,
+        hasMore
+      });
+
       return {
         data: results,
         pagination: {
@@ -105,10 +117,13 @@ class SearchService {
    * Traite les critères pour déterminer s'ils peuvent être appliqués côté Firestore ou localement
    */
   processCriteria(criteria, collectionName) {
+    console.log(`🔧 searchService.processCriteria - Traitement des critères pour ${collectionName}`);
+    
     return criteria.map(criterion => {
       const fieldMapping = searchFieldsMapping[collectionName]?.[criterion.field];
       
       if (!fieldMapping) {
+        console.warn(`⚠️ Champ non trouvé dans ${collectionName}:`, criterion.field);
         return { ...criterion, type: 'unknown', valid: false };
       }
 
@@ -192,23 +207,60 @@ class SearchService {
    * Applique les filtres locaux sur les résultats
    */
   applyLocalFilters(results, criteria) {
+    if (criteria.length === 0) return results;
+    
+    console.log(`🔍 applyLocalFilters - Application de ${criteria.length} critères locaux sur ${results.length} résultats`);
+    
     return results.filter(item => {
-      return criteria.every(criterion => {
+      const passesAllCriteria = criteria.every(criterion => {
         // Traitement spécial pour le champ virtuel nom_ou_raisonSociale
         if (criterion.field === 'nom_ou_raisonSociale') {
           const nomValue = this.getNestedValue(item, 'nom');
+          const prenomValue = this.getNestedValue(item, 'prenom');
           const raisonSocialeValue = this.getNestedValue(item, 'raisonSociale');
           
-          // Vérifier si l'une des deux valeurs correspond
+          console.log(`🔍 Test nom_ou_raisonSociale:`, {
+            criterionValue: criterion.value,
+            operator: criterion.operator,
+            nomValue,
+            prenomValue,
+            raisonSocialeValue
+          });
+          
+          // Vérifier si l'une des valeurs correspond
           const nomMatch = nomValue ? this.evaluateLocalCriterion(nomValue, criterion) : false;
+          const prenomMatch = prenomValue ? this.evaluateLocalCriterion(prenomValue, criterion) : false;
           const raisonSocialeMatch = raisonSocialeValue ? this.evaluateLocalCriterion(raisonSocialeValue, criterion) : false;
           
-          return nomMatch || raisonSocialeMatch;
+          const result = nomMatch || prenomMatch || raisonSocialeMatch;
+          if (!result) {
+            console.log(`❌ Échec du filtre ${criterion.field} pour l'item:`, {
+              id: item.id,
+              nom: nomValue,
+              prenom: prenomValue,
+              raisonSociale: raisonSocialeValue,
+              criterion: criterion
+            });
+          }
+          return result;
         }
         
         const value = this.getNestedValue(item, criterion.fieldPath);
-        return this.evaluateLocalCriterion(value, criterion);
+        const result = this.evaluateLocalCriterion(value, criterion);
+        
+        if (!result) {
+          console.log(`❌ Échec du filtre ${criterion.field} pour l'item:`, {
+            id: item.id,
+            fieldPath: criterion.fieldPath,
+            value: value,
+            criterion: criterion
+          });
+        }
+        
+        return result;
       });
+      
+      return passesAllCriteria;
     });
   }
 
@@ -354,38 +406,12 @@ class SearchService {
     return { results, errors };
   }
 
-  /**
-   * Sauvegarde une recherche
-   */
-  async saveSearch({ entrepriseId, userId, name, criteria, description }) {
-    console.log('💾 searchService.saveSearch - Sauvegarde de la recherche:', {
-      entrepriseId,
-      userId,
-      name,
-      criteriaCount: criteria?.length
-    });
-    
-    const searchData = {
-      entrepriseId,
-      userId,
-      name,
-      criteria,
-      description,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      type: 'saved_search'
-    };
-
-    const docRef = await addDoc(collection(db, 'selections'), searchData);
-    console.log('💾 searchService.saveSearch - Recherche sauvegardée avec ID:', docRef.id);
-    return { id: docRef.id, ...searchData };
-  }
 
   /**
    * Sauvegarde une recherche avec ses résultats
    */
-  async saveSearchWithResults({ entrepriseId, userId, name, criteria, results, description }) {
-    console.log('💾 searchService.saveSearchWithResults - Sauvegarde de la recherche avec résultats:', {
+  async saveSearch({ entrepriseId, userId, name, criteria, results, description }) {
+    console.log('💾 searchService.saveSearch - Sauvegarde de la recherche:', {
       entrepriseId,
       userId,
       name,
@@ -398,15 +424,14 @@ class SearchService {
       userId,
       name,
       criteria,
-      results, // Sauvegarder les résultats
+      results,
       description,
       createdAt: new Date(),
-      updatedAt: new Date(),
-      type: 'saved_search_with_results'
+      updatedAt: new Date()
     };
 
-    const docRef = await addDoc(collection(db, 'selections'), searchData);
-    console.log('💾 searchService.saveSearchWithResults - Recherche sauvegardée avec ID:', docRef.id);
+    const docRef = await addDoc(collection(db, 'recherches'), searchData);
+    console.log('💾 searchService.saveSearch - Recherche sauvegardée avec ID:', docRef.id);
     return { id: docRef.id, ...searchData };
   }
 
@@ -419,34 +444,16 @@ class SearchService {
       userId
     });
     
-    // On doit faire deux requêtes car Firebase ne permet pas 'in' avec 'orderBy'
-    const q1 = query(
-      collection(db, 'selections'),
+    const q = query(
+      collection(db, 'recherches'),
       where('entrepriseId', '==', entrepriseId),
       where('userId', '==', userId),
-      where('type', '==', 'saved_search'),
-      orderBy('updatedAt', 'desc')
-    );
-    
-    const q2 = query(
-      collection(db, 'selections'),
-      where('entrepriseId', '==', entrepriseId),
-      where('userId', '==', userId),
-      where('type', '==', 'saved_search_with_results'),
       orderBy('updatedAt', 'desc')
     );
 
-    const [snapshot1, snapshot2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+    const snapshot = await getDocs(q);
     
-    const searches = [
-      ...snapshot1.docs.map(doc => ({ id: doc.id, ...doc.data() })),
-      ...snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-    ].sort((a, b) => {
-      // Gérer les timestamps Firestore
-      const aDate = a.updatedAt?.toDate ? a.updatedAt.toDate() : new Date(a.updatedAt);
-      const bDate = b.updatedAt?.toDate ? b.updatedAt.toDate() : new Date(b.updatedAt);
-      return bDate - aDate;
-    });
+    const searches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     
     console.log('🔍 searchService.loadSavedSearches - Recherches trouvées:', searches.length);
     return searches;
@@ -459,7 +466,7 @@ class SearchService {
     console.log('🗑️ searchService.deleteSearch - Suppression de la recherche:', searchId);
     
     try {
-      const searchRef = doc(db, 'selections', searchId);
+      const searchRef = doc(db, 'recherches', searchId);
       await deleteDoc(searchRef);
       console.log('🗑️ searchService.deleteSearch - Recherche supprimée avec succès');
       return true;

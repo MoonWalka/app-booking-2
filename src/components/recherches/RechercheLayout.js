@@ -314,7 +314,7 @@ const RechercheLayout = ({ children, savedSearch }) => {
       ]);
       
       // Sauvegarder avec les résultats
-      await searchService.saveSearchWithResults({
+      await searchService.saveSearch({
         entrepriseId: currentEntreprise.id,
         userId: currentUser.uid,
         name: searchName,

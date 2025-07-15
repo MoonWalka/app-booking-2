@@ -17,13 +17,16 @@ export const ContactModalsProvider = ({ children }) => {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [commentModalData, setCommentModalData] = useState(null);
   const [personneModalData, setPersonneModalData] = useState(null);
+  const [structureModalData, setStructureModalData] = useState(null);
 
-  const openStructureModal = () => {
+  const openStructureModal = (data = null) => {
+    setStructureModalData(data);
     setShowStructureModal(true);
   };
 
   const closeStructureModal = () => {
     setShowStructureModal(false);
+    setStructureModalData(null);
   };
 
   const openPersonneModal = (data = null) => {
@@ -52,6 +55,7 @@ export const ContactModalsProvider = ({ children }) => {
     showCommentModal,
     commentModalData,
     personneModalData,
+    structureModalData,
     openStructureModal,
     closeStructureModal,
     openPersonneModal,

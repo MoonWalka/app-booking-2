@@ -66,6 +66,9 @@ export const useContactSearchRelational = ({
           email: structure.email || '',
           telephone: structure.telephone1 || '',
           ville: structure.ville || '',
+          codePostal: structure.codePostal || '',
+          pays: structure.pays || 'France',
+          siteWeb: structure.siteWeb || '',
           tags: structure.tags || [],
           isClient: structure.isClient || false,
           displayName: structure.raisonSociale || 'Structure sans nom',
@@ -75,6 +78,8 @@ export const useContactSearchRelational = ({
             structure.email,
             structure.telephone1,
             structure.ville,
+            structure.codePostal,
+            structure.pays,
             ...(structure.tags || [])
           ].filter(Boolean).join(' ').toLowerCase(),
           structure: {
@@ -82,6 +87,9 @@ export const useContactSearchRelational = ({
             type: structure.type,
             email: structure.email,
             ville: structure.ville,
+            codePostal: structure.codePostal,
+            pays: structure.pays,
+            siteWeb: structure.siteWeb,
             isClient: structure.isClient
           },
           createdAt: structure.createdAt,
@@ -111,6 +119,9 @@ export const useContactSearchRelational = ({
             email: personne.email || '',
             telephone: personne.telephone || '',
             ville: personne.ville || '',
+            codePostal: personne.codePostal || '',
+            pays: personne.pays || 'France',
+            siteWeb: '',
             tags: personne.tags?.includes('indépendant') 
               ? personne.tags 
               : [...(personne.tags || []), 'indépendant'],
@@ -124,6 +135,8 @@ export const useContactSearchRelational = ({
               personne.email,
               personne.telephone,
               personne.ville,
+              personne.codePostal,
+              personne.pays,
               ...(personne.tags || [])
             ].filter(Boolean).join(' ').toLowerCase(),
             personne: {
@@ -131,7 +144,9 @@ export const useContactSearchRelational = ({
               nom: personne.nom,
               email: personne.email,
               telephone: personne.telephone,
-              ville: personne.ville
+              ville: personne.ville,
+              codePostal: personne.codePostal,
+              pays: personne.pays
             },
             createdAt: personne.createdAt,
             updatedAt: personne.updatedAt
@@ -173,6 +188,9 @@ export const useContactSearchRelational = ({
             email: personne.email || '',
             telephone: personne.telephone || '',
             ville: personne.ville || '',
+            codePostal: personne.codePostal || '',
+            pays: personne.pays || 'France',
+            siteWeb: '',
             tags: personne.tags || [],
             displayName: personne.nom ? 
               `${personne.prenom || ''} ${personne.nom}`.trim() : 
@@ -184,6 +202,8 @@ export const useContactSearchRelational = ({
               personne.email,
               personne.telephone,
               personne.ville,
+              personne.codePostal,
+              personne.pays,
               ...personneStructures.map(s => s.raisonSociale),
               ...personneStructures.map(s => s.fonction),
               ...(personne.tags || [])
@@ -193,7 +213,9 @@ export const useContactSearchRelational = ({
               nom: personne.nom,
               email: personne.email,
               telephone: personne.telephone,
-              ville: personne.ville
+              ville: personne.ville,
+              codePostal: personne.codePostal,
+              pays: personne.pays
             },
             structures: personneStructures,
             createdAt: personne.createdAt,
@@ -300,8 +322,13 @@ export const useContactSearchRelational = ({
     allContacts,
     selectedContact,
     searchTerm,
-    isLoading: relationalLoading,
+    loading: relationalLoading,
     error,
+    
+    // Données relationnelles (pour afficher les contacts liés)
+    structures,
+    personnes,
+    liaisons,
     
     // Statistiques
     totalContacts: allContacts.length,
@@ -318,6 +345,18 @@ export const useContactSearchRelational = ({
     updateFilters,
     clearFilters,
     updateSort,
+    setSortField,
+    setSortDirection,
+    setSearchFilters,
+    handleSearch: useCallback((term, filters = {}) => {
+      setSearchTerm(term || '');
+      setSearchFilters(filters);
+    }, []),
+    setContacts: useCallback(() => {
+      // Cette méthode n'est plus nécessaire avec le modèle relationnel
+      // car les contacts sont gérés automatiquement via les listeners Firebase
+      console.warn('setContacts est déprécié dans le modèle relationnel');
+    }, []),
     
     // Actions de sélection
     handleSelect,

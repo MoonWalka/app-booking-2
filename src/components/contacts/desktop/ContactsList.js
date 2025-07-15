@@ -27,7 +27,10 @@ const ContactsList = () => {
     setSortField,
     sortDirection,
     setSortDirection,
-    setContacts
+    setContacts,
+    structures,
+    personnes,
+    liaisons
   } = useContactSearch();
   
   const { 
@@ -105,47 +108,112 @@ const ContactsList = () => {
       key: 'nom',
       sortable: true,
       render: (row) => (
-        <>
-          <span className={styles.contactName}>
-            {row.nom}{row.prenom && ` ${row.prenom}`}
+        <div className={styles.contactNameWrapper}>
+          <span className={styles.typeIcon} title={row.entityType === 'structure' ? 'Structure' : 'Personne'}>
+            <i className={`bi ${row.entityType === 'structure' ? 'bi-building' : 'bi-person'}`}></i>
           </span>
-          {row.fonction && <div className={styles.fonction}>{row.fonction}</div>}
-        </>
+          <div>
+            <span className={styles.contactName}>
+              {row.nom}{row.prenom && ` ${row.prenom}`}
+            </span>
+            {row.fonction && <div className={styles.fonction}>{row.fonction}</div>}
+          </div>
+        </div>
       )
     },
     {
-      label: 'Structure',
-      key: 'structure',
-      sortable: true,
-      render: (row) => row.structure?.nom || <span className="text-muted">Non spécifiée</span>
+      label: 'Contacts liés',
+      key: 'contactsLies',
+      sortable: false,
+      render: (row) => {
+        // Pour les structures, on affiche les personnes liées
+        if (row.entityType === 'structure') {
+          const personnesLiees = personnes.filter(p => 
+            liaisons.some(l => l.structureId === row.id && l.personneId === p.id && l.actif !== false)
+          );
+          if (personnesLiees.length > 0) {
+            return (
+              <div className={styles.contactsLies}>
+                {personnesLiees.slice(0, 2).map(p => (
+                  <div key={p.id} className={styles.contactLie}>
+                    {p.prenom} {p.nom}
+                  </div>
+                ))}
+                {personnesLiees.length > 2 && (
+                  <span className={styles.moreContacts}>+{personnesLiees.length - 2} autres</span>
+                )}
+              </div>
+            );
+          }
+        }
+        // Pour les personnes, on affiche les structures liées
+        else if (row.structures && row.structures.length > 0) {
+          return (
+            <div className={styles.contactsLies}>
+              {row.structures.slice(0, 2).map(s => (
+                <div key={s.id} className={styles.contactLie}>
+                  {s.raisonSociale}
+                  {s.fonction && <span className={styles.fonctionLie}> ({s.fonction})</span>}
+                </div>
+              ))}
+              {row.structures.length > 2 && (
+                <span className={styles.moreContacts}>+{row.structures.length - 2} autres</span>
+              )}
+            </div>
+          );
+        }
+        return <span className="text-muted">-</span>;
+      }
     },
     {
       label: 'Email',
       key: 'email',
       sortable: true,
-      render: (row) => row.email ? <a href={`mailto:${row.email}`}>{row.email}</a> : <span className="text-muted">Non spécifié</span>
+      render: (row) => row.email ? <a href={`mailto:${row.email}`}>{row.email}</a> : <span className="text-muted">-</span>
     },
     {
       label: 'Téléphone',
       key: 'telephone',
       sortable: true,
-      render: (row) => row.telephone ? <a href={`tel:${row.telephone}`}>{row.telephone}</a> : <span className="text-muted">Non spécifié</span>
+      render: (row) => row.telephone ? <a href={`tel:${row.telephone}`}>{row.telephone}</a> : <span className="text-muted">-</span>
+    },
+    {
+      label: 'Site internet',
+      key: 'siteWeb',
+      sortable: false,
+      render: (row) => {
+        // Pour les structures, on peut avoir le siteWeb
+        const siteWeb = row.structure?.siteWeb || row.siteWeb;
+        return siteWeb ? (
+          <a href={siteWeb.startsWith('http') ? siteWeb : `https://${siteWeb}`} target="_blank" rel="noopener noreferrer">
+            <i className="bi bi-globe"></i>
+          </a>
+        ) : <span className="text-muted">-</span>;
+      }
+    },
+    {
+      label: 'CP',
+      key: 'codePostal',
+      sortable: true,
+      render: (row) => row.codePostal || row.structure?.codePostal || <span className="text-muted">-</span>
+    },
+    {
+      label: 'Ville',
+      key: 'ville',
+      sortable: true,
+      render: (row) => row.ville || <span className="text-muted">-</span>
+    },
+    {
+      label: 'Pays',
+      key: 'pays',
+      sortable: true,
+      render: (row) => row.pays || row.structure?.pays || <span className="text-muted">-</span>
     }
   ];
 
   // Actions par ligne
   const renderActions = (row) => (
     <div className={styles.actionButtons}>
-      <button 
-        className={styles.actionButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          openContactTab(row.id, row.displayName || row.nom || 'Contact');
-        }}
-        title="Voir les détails"
-      >
-        <i className="bi bi-eye"></i>
-      </button>
       <button 
         className={styles.actionButton}
         onClick={(e) => {
@@ -166,6 +234,26 @@ const ContactsList = () => {
         title="Supprimer"
       >
         <i className="bi bi-trash"></i>
+      </button>
+      <button 
+        className={styles.actionButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          openContactTab(row.id, row.displayName || row.nom || 'Contact');
+        }}
+        title="Visualiser"
+      >
+        <i className="bi bi-eye"></i>
+      </button>
+      <button 
+        className={styles.actionButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/contacts/${row.id}/qualify`);
+        }}
+        title="Qualifier"
+      >
+        <i className="bi bi-tags"></i>
       </button>
     </div>
   );

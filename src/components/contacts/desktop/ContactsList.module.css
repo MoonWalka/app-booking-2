@@ -273,6 +273,54 @@
     color: var(--tc-text-muted);
   }
   
+  /* =============================
+     AFFICHAGE NOM AVEC ICÔNE
+     ============================= */
+  .contactNameWrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--tc-space-2);
+  }
+  
+  .typeIcon {
+    color: var(--tc-text-muted);
+    font-size: 1rem;
+    opacity: 0.6;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .contactName {
+    font-weight: var(--tc-font-weight-medium);
+    color: var(--tc-text-primary);
+  }
+  
+  /* =============================
+     CONTACTS LIÉS
+     ============================= */
+  .contactsLies {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tc-space-1);
+    font-size: var(--tc-font-size-sm);
+  }
+  
+  .contactLie {
+    color: var(--tc-text-secondary);
+    line-height: 1.3;
+  }
+  
+  .fonctionLie {
+    color: var(--tc-text-muted);
+    font-size: 0.9em;
+  }
+  
+  .moreContacts {
+    color: var(--tc-text-muted);
+    font-style: italic;
+    font-size: 0.9em;
+  }
+  
   .contactLink {
     color: var(--tc-color-secondary);
     text-decoration: none;
@@ -307,34 +355,44 @@
     font-size: 0.875rem;
   }
   
-  /* Bouton Voir (bleu) */
-  .actionButton:nth-child(1) {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-  }
-  
-  .actionButton:nth-child(1):hover {
-    background-color: rgba(59, 130, 246, 0.2);
-  }
-  
   /* Bouton Éditer (vert) */
-  .actionButton:nth-child(2) {
+  .actionButton:nth-child(1) {
     background-color: rgba(34, 197, 94, 0.1);
     color: #22c55e;
   }
   
-  .actionButton:nth-child(2):hover {
+  .actionButton:nth-child(1):hover {
     background-color: rgba(34, 197, 94, 0.2);
   }
   
   /* Bouton Supprimer (rouge) */
-  .actionButton:nth-child(3) {
+  .actionButton:nth-child(2) {
     background-color: rgba(239, 68, 68, 0.1);
     color: #ef4444;
   }
   
-  .actionButton:nth-child(3):hover {
+  .actionButton:nth-child(2):hover {
     background-color: rgba(239, 68, 68, 0.2);
+  }
+  
+  /* Bouton Visualiser (bleu) */
+  .actionButton:nth-child(3) {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+  
+  .actionButton:nth-child(3):hover {
+    background-color: rgba(59, 130, 246, 0.2);
+  }
+  
+  /* Bouton Qualifier (violet) */
+  .actionButton:nth-child(4) {
+    background-color: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+  }
+  
+  .actionButton:nth-child(4):hover {
+    background-color: rgba(168, 85, 247, 0.2);
   }
   
   .actionButton:disabled {

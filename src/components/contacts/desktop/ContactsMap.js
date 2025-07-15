@@ -26,21 +26,6 @@ const ContactsMap = ({ contacts, onContactClick }) => {
     }).slice(0, 100); // Limiter à 100 contacts pour la performance
   }, [contacts]);
 
-  // Si aucun contact n'a d'adresse
-  if (contactsWithAddresses.length === 0) {
-    return (
-      <div className={styles.mapPlaceholder}>
-        <div className={styles.mapContent}>
-          <i className="bi bi-geo-alt fs-1 text-muted mb-3"></i>
-          <h4>Aucune adresse disponible</h4>
-          <p className="text-muted">
-            Les contacts n'ont pas d'adresses renseignées pour afficher la carte
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   // Fonction pour géocoder une adresse (simple approximation basée sur la ville)
   const geocodeAddress = async (contact) => {
     const address = [
@@ -146,6 +131,21 @@ const ContactsMap = ({ contacts, onContactClick }) => {
       }
     };
   }, [contactsWithAddresses, onContactClick]);
+
+  // Si aucun contact n'a d'adresse, afficher un placeholder
+  if (contactsWithAddresses.length === 0) {
+    return (
+      <div className={styles.mapPlaceholder}>
+        <div className={styles.mapContent}>
+          <i className="bi bi-geo-alt fs-1 text-muted mb-3"></i>
+          <h4>Aucune adresse disponible</h4>
+          <p className="text-muted">
+            Les contacts n'ont pas d'adresses renseignées pour afficher la carte
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.mapContainer}>

@@ -93,16 +93,29 @@ const ContactsList = () => {
 
   // Fonction pour ouvrir la modal d'édition
   const handleEditContact = (contact) => {
-    if (contact.type === 'structure') {
+    console.log('🔍 [ContactsList] handleEditContact - contact reçu:', contact);
+    console.log('🔍 [ContactsList] Type de contact:', contact.type || contact.entityType);
+    console.log('🔍 [ContactsList] Clés du contact:', Object.keys(contact));
+    console.log('🔍 [ContactsList] Nombre de structures disponibles:', structures?.length);
+    console.log('🔍 [ContactsList] Nombre de personnes disponibles:', personnes?.length);
+    
+    // Utiliser entityType si type n'est pas défini (données transformées)
+    const contactType = contact.type || contact.entityType;
+    
+    if (contactType === 'structure') {
       // Pour les structures, on doit récupérer l'objet structure complet
       const structureComplete = structures.find(s => s.id === contact.id);
       console.log('🔍 [ContactsList] Structure complète pour édition:', structureComplete);
+      console.log('🔍 [ContactsList] Données passées à la modal:', {
+        editMode: true,
+        initialData: structureComplete || contact
+      });
       
       openStructureModal({
         editMode: true,
         initialData: structureComplete || contact
       });
-    } else {
+    } else if (contactType === 'personne') {
       // Pour les personnes, on doit récupérer l'objet personne complet
       const personneComplete = personnes.find(p => p.id === contact.id);
       console.log('🔍 [ContactsList] Personne complète pour édition:', personneComplete);

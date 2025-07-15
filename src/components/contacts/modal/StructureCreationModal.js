@@ -17,6 +17,11 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
+  
+  console.log('🏢 [StructureCreationModal] Props reçues:', { show, editMode, initialData });
+  console.log('🏢 [StructureCreationModal] Type de initialData:', typeof initialData);
+  console.log('🏢 [StructureCreationModal] Clés de initialData:', initialData ? Object.keys(initialData) : 'null');
+  
   const [formData, setFormData] = useState(() => {
     // En mode édition, pré-remplir avec les données initiales
     if (editMode && initialData) {

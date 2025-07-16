@@ -157,6 +157,26 @@ function ContactViewTabs({ id, viewType = null }) {
     // Sinon, on est toujours en loading
   }, [cleanId, currentEntreprise?.id, contact, structures.length, personnes.length]);
   
+  // Effet pour écouter les événements de rafraîchissement de structure
+  React.useEffect(() => {
+    const handleRefreshStructure = (event) => {
+      const { structureId } = event.detail;
+      console.log('📨 [ContactViewTabs] Événement refresh-structure reçu pour:', structureId);
+      
+      // Si c'est notre structure, invalider le cache pour forcer le rechargement
+      if (structureId === cleanId && entityType === 'structure') {
+        console.log('🔄 [ContactViewTabs] Rafraîchissement de la structure:', cleanId);
+        invalidateContactCache();
+      }
+    };
+    
+    window.addEventListener('refresh-structure', handleRefreshStructure);
+    
+    return () => {
+      window.removeEventListener('refresh-structure', handleRefreshStructure);
+    };
+  }, [cleanId, entityType, invalidateContactCache]);
+  
   
   // Déterminer le type de contact
   const contactType = entityType === 'structure' ? 'structure' : 'personne';

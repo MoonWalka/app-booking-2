@@ -4,6 +4,7 @@ import { Card, Container, Row, Col, Form, Button, Accordion, Alert, Spinner } fr
 import { getPreContratsByDate, updatePreContrat } from '@/services/preContratService';
 import tachesService from '@/services/tachesService';
 import { auth } from '@/services/firebase-service';
+import { useTabs } from '@/context/TabsContext';
 import styles from './ConfirmationPage.module.css';
 
 /**
@@ -13,6 +14,7 @@ import styles from './ConfirmationPage.module.css';
 function ConfirmationPage({ dateId: propDateId }) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { openTab, closeTab, getActiveTab } = useTabs();
   const dateId = propDateId || searchParams.get('dateId');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -246,7 +248,24 @@ function ConfirmationPage({ dateId: propDateId }) {
       }
       
       alert('Confirmation validée avec succès !');
-      navigate(-1); // Retour à la page précédente
+      
+      // Fermer l'onglet actuel si on est dans un onglet
+      const activeTab = getActiveTab && getActiveTab();
+      if (activeTab && closeTab) {
+        closeTab(activeTab.id);
+      }
+      
+      // Ouvrir la fiche date dans un nouvel onglet ou naviguer directement
+      if (openTab && dateId) {
+        openTab({
+          type: 'date',
+          params: { dateId },
+          title: 'Date'
+        });
+      } else {
+        // Fallback : naviguer vers la fiche date
+        navigate(`/dates/${dateId}`);
+      }
     } catch (error) {
       console.error('Erreur lors de la validation:', error);
       alert('Erreur lors de la validation');

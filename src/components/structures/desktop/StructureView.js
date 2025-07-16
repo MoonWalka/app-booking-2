@@ -1,5 +1,5 @@
 // src/components/structures/desktop/StructureView.js
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStructureDetails } from '@/hooks/structures';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -29,7 +29,8 @@ function StructureView({ id: propId }) {
     error,
     relatedData,
     // handleDelete, // TODO: Utiliser pour modal de suppression
-    formatValue
+    formatValue,
+    refresh
   } = detailsHook || {};
 
   // Formater les entités liées pour l'affichage - CORRECTION: utiliser relatedData

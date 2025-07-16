@@ -38,6 +38,18 @@ function ContactModalsContainer() {
   // Callback pour la création de personne
   const handlePersonneCreated = (newPersonne) => {
     console.log('Personne créée depuis modal globale:', newPersonne);
+    
+    // Si la personne a été créée avec une liaison vers une structure, déclencher un événement de rafraîchissement
+    if (newPersonne.structureId || personneModalData?.structureId) {
+      const structureId = newPersonne.structureId || personneModalData?.structureId;
+      console.log('🔄 Déclenchement du rafraîchissement de la structure:', structureId);
+      
+      // Déclencher un événement personnalisé pour rafraîchir la structure
+      window.dispatchEvent(new CustomEvent('refresh-structure', { 
+        detail: { structureId } 
+      }));
+    }
+    
     // Ouvrir l'onglet de la nouvelle personne avec le viewType approprié
     const displayName = `${newPersonne.prenom || ''} ${newPersonne.nom || ''}`.trim() || 'Nouvelle personne';
     const viewType = 'personne';

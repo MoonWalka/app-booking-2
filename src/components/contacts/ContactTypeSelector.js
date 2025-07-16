@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import styles from './ContactTypeSelector.module.css';
 
@@ -9,13 +9,26 @@ import styles from './ContactTypeSelector.module.css';
  */
 const ContactTypeSelector = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const handleSelectType = (type) => {
+    // Récupérer les paramètres de l'URL pour les transmettre
+    const fromEntityId = searchParams.get('fromEntityId');
+    const fromEntityType = searchParams.get('fromEntityType');
+    
+    // Construire les paramètres pour la redirection
+    const params = new URLSearchParams();
+    if (fromEntityId && fromEntityType) {
+      params.append('fromEntityId', fromEntityId);
+      params.append('fromEntityType', fromEntityType);
+    }
+    const queryString = params.toString();
+    
     // Rediriger vers les nouvelles pages de création
     if (type === 'structure') {
-      navigate('/structures/nouveau');
+      navigate(`/structures/nouveau${queryString ? `?${queryString}` : ''}`);
     } else if (type === 'personne') {
-      navigate('/personnes/nouveau');
+      navigate(`/personnes/nouveau${queryString ? `?${queryString}` : ''}`);
     }
   };
 

@@ -181,9 +181,18 @@ const ContactSelectorRelational = ({
 
   // Gérer la création d'un nouveau contact
   const handleCreateContact = useCallback(() => {
+    // Passer l'ID de l'entité source et son type dans l'URL pour pouvoir revenir
+    const params = new URLSearchParams();
+    if (entityId && entityType) {
+      params.append('fromEntityId', entityId);
+      params.append('fromEntityType', entityType);
+    }
+    const queryString = params.toString();
+    const url = `/contacts/nouveau${queryString ? `?${queryString}` : ''}`;
+    
     // Rediriger vers la page de création de structure ou personne
-    navigate('/contacts/nouveau');
-  }, [navigate]);
+    navigate(url);
+  }, [navigate, entityId, entityType]);
 
   // Gérer le clic en dehors
   useEffect(() => {

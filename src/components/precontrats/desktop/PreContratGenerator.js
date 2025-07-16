@@ -74,7 +74,7 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
     devise: 'EUR',
     precisionsNegoc: '',
     acompte: '',
-    contratPropose: '',
+    contratPropose: 'cession',
     moyenPaiement: '',
     
     // Régie
@@ -398,7 +398,8 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
         debut: prev.debut || date.date || date.dateDebut || '',
         fin: prev.fin || date.dateFin || date.date || '',
         montantHT: prev.montantHT || date.montant || '',
-        salle: prev.salle || lieu?.nom || date.lieuNom || ''
+        salle: prev.salle || lieu?.nom || date.lieuNom || '',
+        contratPropose: prev.contratPropose || date.typeContrat || date.contratType || ''
       }));
     }
   }, [structure, artiste, date, lieu, existingPreContrat]);
@@ -1029,9 +1030,9 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
                     onChange={(e) => handleInputChange('contratPropose', e.target.value)}
                   >
                     <option value="">Sélectionner...</option>
-                    <option value="Standard">Standard</option>
-                    <option value="Premium">Premium</option>
-                    <option value="Personnalisé">Personnalisé</option>
+                    <option value="cession">Cession</option>
+                    <option value="corealisation">Coréalisation</option>
+                    <option value="location">Location</option>
                   </Form.Select>
                   <Form.Select
                     value={formData.moyenPaiement}

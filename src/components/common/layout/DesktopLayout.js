@@ -704,7 +704,6 @@ function DesktopLayout({ children }) {
 
   // Nouvelle structure de navigation groupée
   const navigationGroups = [
-    { to: "/", icon: "bi-speedometer2", label: "Dashboard", end: true },
     {
       id: "contact",
       icon: "bi-person-badge",
@@ -774,7 +773,8 @@ function DesktopLayout({ children }) {
         { to: "/admin/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
       ]
     },
-    {
+    // Menu Outils visible uniquement en mode développement
+    ...(process.env.NODE_ENV === 'development' ? [{
       id: "tools",
       icon: "bi-tools",
       label: "Outils",
@@ -783,7 +783,7 @@ function DesktopLayout({ children }) {
         { to: "/inventaire-pages", icon: "bi-file-earmark-code", label: "Inventaire des pages" },
         { to: "/tabs-test", icon: "bi-window-stack", label: "Test Onglets" }
       ]
-    },
+    }] : []),
   ];
 
   // Gérer l'expansion/contraction des menus

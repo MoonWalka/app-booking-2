@@ -86,6 +86,106 @@ function DesktopLayout({ children }) {
     };
   }, [contextMenu]);
 
+  // Effet pour tracer les changements de contextMenu
+  useEffect(() => {
+    console.log('🖱️ contextMenu a changé:', contextMenu);
+  }, [contextMenu]);
+
+  // Effet pour capturer les clics droits globalement (pour debug)
+  useEffect(() => {
+    const handleGlobalContextMenu = (e) => {
+      console.log('🖱️ GLOBAL: Événement contextmenu capturé!', e.target);
+      console.log('🖱️ GLOBAL: Hiérarchie:', {
+        target: e.target,
+        tagName: e.target.tagName,
+        className: e.target.className,
+        textContent: e.target.textContent
+      });
+      
+      const target = e.target;
+      // Essayer plusieurs sélecteurs pour trouver le bouton
+      let button = target.closest('button[data-item-type]');
+      if (!button) {
+        button = target.closest('button');
+        console.log('🖱️ GLOBAL: Bouton trouvé sans data-item-type:', button);
+      }
+      
+      // Vérifier si on est dans un sous-menu de recherches/sélections
+      const subMenu = target.closest('.subMenu, [class*="subMenu"]');
+      const menuPanel = target.closest('[data-menu-id="mes-recherches"], [data-menu-id="mes-selections"]');
+      
+      console.log('🖱️ GLOBAL: Debug DOM:', {
+        button: button,
+        subMenu: subMenu,
+        menuPanel: menuPanel,
+        buttonClassName: button?.className,
+        buttonAttributes: button ? Array.from(button.attributes).map(a => `${a.name}="${a.value}"`) : null
+      });
+      
+      if (button) {
+        const itemType = button.getAttribute('data-item-type');
+        const buttonText = button.textContent;
+        const isSearchByText = buttonText.includes('🔍');
+        const isSelectionByText = buttonText.includes('📌');
+        
+        console.log('🖱️ GLOBAL: Analyse du bouton:', {
+          itemType: itemType,
+          buttonText: buttonText,
+          isSearchByText: isSearchByText,
+          isSelectionByText: isSelectionByText
+        });
+        
+        if (itemType === 'search' || itemType === 'selection' || isSearchByText || isSelectionByText) {
+          console.log('🖱️ GLOBAL: C\'est une recherche/sélection!');
+          // Forcer le preventDefault dans tous les cas
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('🖱️ GLOBAL: preventDefault appelé dans le handler global');
+          
+          // Créer et afficher le menu contextuel manuellement si nécessaire
+          if (isSearchByText || itemType === 'search') {
+            const searchName = buttonText.replace('🔍 ', '');
+            console.log('🖱️ GLOBAL: Affichage du menu pour recherche:', searchName);
+            
+            // Essayer de récupérer l'ID depuis les données ou depuis le texte du bouton
+            let searchId = button.getAttribute('data-search-id');
+            
+            // Si pas d'ID dans l'attribut, chercher dans les recherches sauvegardées
+            if (!searchId || searchId === 'unknown') {
+              const savedSearch = savedSearches.find(s => s.name === searchName);
+              searchId = savedSearch?.id || 'unknown';
+              console.log('🖱️ GLOBAL: ID trouvé dans savedSearches:', searchId);
+            }
+            
+            setContextMenu({
+              x: e.clientX,
+              y: e.clientY,
+              type: 'search',
+              searchId: searchId,
+              searchName: searchName
+            });
+          }
+        }
+      } else {
+        console.log('🖱️ GLOBAL: Aucun bouton trouvé dans la hiérarchie');
+      }
+    };
+    
+    // Ajout d'un test immédiat
+    console.log('🖱️ GLOBAL: Ajout du listener contextmenu global');
+    document.addEventListener('contextmenu', handleGlobalContextMenu, true);
+    
+    // Test pour vérifier que le listener est bien ajouté
+    setTimeout(() => {
+      console.log('🖱️ GLOBAL: Le listener contextmenu devrait être actif maintenant');
+    }, 1000);
+    
+    return () => {
+      console.log('🖱️ GLOBAL: Suppression du listener contextmenu global');
+      document.removeEventListener('contextmenu', handleGlobalContextMenu, true);
+    };
+  }, [savedSearches]);
+
   // Effet pour charger les recherches sauvegardées
   useEffect(() => {
     const loadSavedSearches = async () => {
@@ -204,9 +304,20 @@ function DesktopLayout({ children }) {
             userId: currentUser.uid
           });
           setSavedSearches(searches);
+          
+          // Forcer la fermeture et réouverture du menu pour le rafraîchir visuellement
+          if (expandedMenu === 'contact') {
+            setExpandedMenu(null);
+            setTimeout(() => {
+              setExpandedMenu('contact');
+            }, 50);
+          }
         }
         
         alert('Recherche supprimée avec succès');
+        
+        // Déclencher l'événement pour rafraîchir les autres composants
+        window.dispatchEvent(new Event('refresh-saved-searches'));
       } catch (error) {
         console.error('Erreur lors de la suppression:', error);
         alert('Erreur lors de la suppression de la recherche');
@@ -804,7 +915,15 @@ function DesktopLayout({ children }) {
                     // Sous-item simple (avec 'to' ou recherche/sélection sauvegardée)
                     if (subItem.to || subItem.isSearch || subItem.isSelection || subItem.disabled) {
                       return (
-                        <li key={subItem.id || subItem.to}>
+                        <li key={subItem.id || subItem.to}
+                            onContextMenu={(e) => {
+                              console.log('🖱️ CONTEXTMENU sur LI capturé!');
+                              if ((subItem.isSearch && subItem.searchData) || (subItem.isSelection && subItem.selectionData)) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            }}
+                        >
                           <button 
                             className={`${sidebarStyles.navButton} ${subItem.disabled ? sidebarStyles.disabled : ''}`}
                             disabled={subItem.disabled}
@@ -817,35 +936,70 @@ function DesktopLayout({ children }) {
                               }
                             }}
                             onContextMenu={(e) => {
+                              // FORCER l'interception pour tous les cas
+                              e.preventDefault();
+                              e.stopPropagation();
+                              
                               // Gestion du clic droit pour les recherches et sélections sauvegardées
+                              console.log('🖱️ === DEBUT CONTEXTMENU ===');
                               console.log('🖱️ Clic droit détecté sur:', subItem);
+                              console.log('🖱️ Event:', e);
+                              console.log('🖱️ subItem.isSearch:', subItem.isSearch);
+                              console.log('🖱️ subItem.searchData:', subItem.searchData);
+                              console.log('🖱️ subItem.isSelection:', subItem.isSelection);
+                              console.log('🖱️ subItem.selectionData:', subItem.selectionData);
+                              
                               if (subItem.isSearch && subItem.searchData) {
+                                console.log('🖱️ => C\'est une recherche sauvegardée');
                                 e.preventDefault();
                                 e.stopPropagation();
+                                console.log('🖱️ preventDefault et stopPropagation appelés');
                                 console.log('🖱️ Menu contextuel pour recherche:', subItem.searchData.name);
-                                setContextMenu({
+                                const menuData = {
                                   x: e.clientX,
                                   y: e.clientY,
                                   type: 'search',
                                   searchId: subItem.searchData.id,
                                   searchName: subItem.searchData.name
-                                });
+                                };
+                                console.log('🖱️ Données du menu:', menuData);
+                                setContextMenu(menuData);
+                                console.log('🖱️ setContextMenu appelé');
                               } else if (subItem.isSelection && subItem.selectionData) {
+                                console.log('🖱️ => C\'est une sélection sauvegardée');
                                 e.preventDefault();
                                 e.stopPropagation();
+                                console.log('🖱️ preventDefault et stopPropagation appelés');
                                 console.log('🖱️ Menu contextuel pour sélection:', subItem.selectionData.nom);
-                                setContextMenu({
+                                const menuData = {
                                   x: e.clientX,
                                   y: e.clientY,
                                   type: 'selection',
                                   selectionId: subItem.selectionData.id,
                                   selectionName: subItem.selectionData.nom
-                                });
+                                };
+                                console.log('🖱️ Données du menu:', menuData);
+                                setContextMenu(menuData);
+                                console.log('🖱️ setContextMenu appelé');
+                              } else {
+                                console.log('🖱️ => Pas une recherche/sélection sauvegardée, menu natif autorisé');
                               }
+                              console.log('🖱️ === FIN CONTEXTMENU ===');
                             }}
-                            style={subItem.disabled ? { opacity: 0.5, cursor: 'default' } : {}}
+                            style={subItem.disabled ? { opacity: 0.5, cursor: 'default' } : {
+                              // Style de debug pour les recherches/sélections
+                              ...(subItem.isSearch || subItem.isSelection ? {
+                                backgroundColor: 'rgba(255, 0, 0, 0.05)',
+                                border: '1px solid red'
+                              } : {})
+                            }}
+                            data-search-id={subItem.isSearch ? subItem.searchData?.id : undefined}
+                            data-selection-id={subItem.isSelection ? subItem.selectionData?.id : undefined}
+                            data-item-type={subItem.isSearch ? 'search' : subItem.isSelection ? 'selection' : 'normal'}
                           >
-                            <i className={`bi ${subItem.icon}`} style={(subItem.isSearch || subItem.isSelection) && !subItem.icon ? {width: '1rem', display: 'inline-block'} : {}}></i>
+                            <i className={`bi ${subItem.icon}`} 
+                               style={(subItem.isSearch || subItem.isSelection) && !subItem.icon ? {width: '1rem', display: 'inline-block'} : {}}
+                            ></i>
                             <span>{subItem.label}</span>
                           </button>
                         </li>
@@ -1114,6 +1268,7 @@ function DesktopLayout({ children }) {
       <ContactModalsContainer />
       
       {/* Menu contextuel pour les recherches et sélections sauvegardées */}
+      {console.log('🖱️ Rendu du composant, contextMenu:', contextMenu)}
       {contextMenu && (
         <div
           style={{

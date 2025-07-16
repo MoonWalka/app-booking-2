@@ -273,6 +273,23 @@ const ContratRedactionPage = () => {
           }
         }
         
+        // Charger les données de la structure/organisateur si nécessaire
+        if (!dataForReplacement.organisateur) {
+          // Chercher le structureId dans le contrat ou dans la date
+          const structureId = contratData.structureId || 
+                            (dataForReplacement.date && dataForReplacement.date.structureId) ||
+                            contratData.organisateurId;
+          
+          if (structureId) {
+            console.log('[ContratRedactionPage] Chargement de la structure/organisateur...', structureId);
+            const structureDoc = await getDoc(doc(db, 'structures', structureId));
+            if (structureDoc.exists()) {
+              dataForReplacement.organisateur = { id: structureDoc.id, ...structureDoc.data() };
+              console.log('[ContratRedactionPage] Données structure/organisateur chargées:', dataForReplacement.organisateur);
+            }
+          }
+        }
+        
         console.log('[ContratRedactionPage] Données du contrat disponibles pour remplacement:', {
           hasOrganisateur: !!dataForReplacement.organisateur,
           hasProducteur: !!dataForReplacement.producteur,
@@ -299,20 +316,23 @@ const ContratRedactionPage = () => {
         
         // Variables Organisateur (partie A)
         if (dataForReplacement.organisateur) {
+          console.log('[ContratRedactionPage] Données organisateur pour remplacement:', dataForReplacement.organisateur);
           processedContent = processedContent
-            .replace(/{organisateur_raison_sociale}/g, dataForReplacement.organisateur.raisonSociale || '')
+            .replace(/{organisateur_raison_sociale}/g, dataForReplacement.organisateur.raisonSociale || dataForReplacement.organisateur.nom || '')
             .replace(/{organisateur_adresse}/g, dataForReplacement.organisateur.adresse || '')
             .replace(/{organisateur_code_postal}/g, dataForReplacement.organisateur.codePostal || '')
             .replace(/{organisateur_ville}/g, dataForReplacement.organisateur.ville || '')
             .replace(/{organisateur_siret}/g, dataForReplacement.organisateur.siret || '')
-            .replace(/{organisateur_numero_tva}/g, dataForReplacement.organisateur.numeroTva || '')
+            .replace(/{organisateur_numero_tva}/g, dataForReplacement.organisateur.numeroTva || dataForReplacement.organisateur.tva || '')
             .replace(/{organisateur_code_ape}/g, dataForReplacement.organisateur.codeApe || '')
             .replace(/{organisateur_numero_licence}/g, dataForReplacement.organisateur.numeroLicence || '')
             .replace(/{organisateur_telephone}/g, dataForReplacement.organisateur.telephone || '')
             .replace(/{organisateur_email}/g, dataForReplacement.organisateur.email || '')
-            .replace(/{organisateur_site}/g, dataForReplacement.organisateur.site || '')
-            .replace(/{organisateur_signataire}/g, dataForReplacement.organisateur.signataire || '')
-            .replace(/{organisateur_qualite}/g, dataForReplacement.organisateur.qualite || '');
+            .replace(/{organisateur_site}/g, dataForReplacement.organisateur.site || dataForReplacement.organisateur.siteWeb || '')
+            .replace(/{organisateur_signataire}/g, dataForReplacement.organisateur.signataire ? 
+              `${dataForReplacement.organisateur.signataire.prenom || ''} ${dataForReplacement.organisateur.signataire.nom || ''}`.trim() : 
+              '')
+            .replace(/{organisateur_qualite}/g, dataForReplacement.organisateur.signataire?.fonction || dataForReplacement.organisateur.qualite || '');
         }
         
         // Variables Producteur (partie B)
@@ -393,14 +413,16 @@ const ContratRedactionPage = () => {
         // Variables structure (depuis organisateur si disponible)
         if (dataForReplacement.organisateur) {
           processedContent = processedContent
-            .replace(/{structure_nom}/g, contratData.organisateur.raisonSociale || '')
-            .replace(/{structure_siret}/g, contratData.organisateur.siret || '')
-            .replace(/{structure_adresse}/g, contratData.organisateur.adresse || '')
-            .replace(/{structure_code_postal}/g, contratData.organisateur.codePostal || '')
-            .replace(/{structure_ville}/g, contratData.organisateur.ville || '')
-            .replace(/{programmateur_numero_intracommunautaire}/g, contratData.organisateur.numeroTva || '')
-            .replace(/{programmateur_representant}/g, contratData.organisateur.signataire || '')
-            .replace(/{programmateur_qualite_representant}/g, contratData.organisateur.qualite || '');
+            .replace(/{structure_nom}/g, dataForReplacement.organisateur.raisonSociale || dataForReplacement.organisateur.nom || '')
+            .replace(/{structure_siret}/g, dataForReplacement.organisateur.siret || '')
+            .replace(/{structure_adresse}/g, dataForReplacement.organisateur.adresse || '')
+            .replace(/{structure_code_postal}/g, dataForReplacement.organisateur.codePostal || '')
+            .replace(/{structure_ville}/g, dataForReplacement.organisateur.ville || '')
+            .replace(/{programmateur_numero_intracommunautaire}/g, dataForReplacement.organisateur.numeroTva || dataForReplacement.organisateur.tva || '')
+            .replace(/{programmateur_representant}/g, dataForReplacement.organisateur.signataire ? 
+              `${dataForReplacement.organisateur.signataire.prenom || ''} ${dataForReplacement.organisateur.signataire.nom || ''}`.trim() : 
+              '')
+            .replace(/{programmateur_qualite_representant}/g, dataForReplacement.organisateur.signataire?.fonction || dataForReplacement.organisateur.qualite || '');
         }
         
         // Variables date
@@ -420,6 +442,7 @@ const ContratRedactionPage = () => {
             
             processedContent = processedContent
               .replace(/{date_date}/g, dateDate)
+              .replace(/{concert_date}/g, dateDate) // Alias pour date_date
               .replace(/{date_titre}/g, contratData.date.titre || '')
               .replace(/{date_heure}/g, contratData.date.heure || '');
           }
@@ -498,7 +521,7 @@ const ContratRedactionPage = () => {
         
         // Variables montant (depuis date ou contrat)
         if (contratData.montantTTC || contratData.totalTTC) {
-          const montant = contratData.montantTTC || contratData.totalTTC || 0;
+          const montant = parseFloat(contratData.montantTTC || contratData.totalTTC || 0);
           processedContent = processedContent
             .replace(/{date_montant}/g, montant.toFixed(2).replace('.', ',') + ' €')
             .replace(/{date_montant_lettres}/g, montantEnLettres(montant));

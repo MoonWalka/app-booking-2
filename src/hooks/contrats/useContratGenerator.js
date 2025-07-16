@@ -300,32 +300,53 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
           console.warn("Informations d'entreprise non trouvées");
         }
         
-        // Charger les données de structure du contact si disponible
-        if (contact?.structureId) {
-          console.log("Chargement de la structure du contact:", contact.structureId);
-          try {
-            const structureDoc = await getDoc(doc(db, 'structures', contact.structureId));
-            if (structureDoc.exists()) {
-              const data = structureDoc.data();
-              console.log("Structure trouvée, données complètes:", data);
-              console.log("🏢 Structure - Champs disponibles:", {
-                nom: data.nom,
-                raisonSociale: data.raisonSociale,
-                adresse: data.adresse,
-                codePostal: data.codePostal,
-                ville: data.ville,
-                pays: data.pays,
-                siret: data.siret,
-                email: data.email,
-                telephone: data.telephone,
-                type: data.type
-              });
-              setStructureData(data);
-            } else {
-              console.warn("Structure non trouvée avec l'ID:", contact.structureId);
+        // Charger les données de structure selon le type de contact
+        if (contact) {
+          console.log("Analyse du contact pour charger la structure:", {
+            type: contact._type,
+            structureId: contact.structureId,
+            hasStructureData: !!contact.structure
+          });
+          
+          // Nouveau système : le contact EST déjà une structure
+          if (contact._type === 'structure') {
+            console.log("Le contact est déjà une structure, utilisation directe des données");
+            setStructureData(contact);
+          }
+          // Nouveau système : le contact est une personne, charger sa structure si liée
+          else if (contact._type === 'personne') {
+            console.log("Le contact est une personne, recherche d'une structure liée");
+            // TODO: Implémenter la recherche de liaison personne-structure
+            // Pour l'instant, on utilise les données de la personne
+            setStructureData(null);
+          }
+          // Ancien système : contact avec structureId
+          else if (contact.structureId) {
+            console.log("Ancien système - Chargement de la structure via structureId:", contact.structureId);
+            try {
+              const structureDoc = await getDoc(doc(db, 'structures', contact.structureId));
+              if (structureDoc.exists()) {
+                const data = structureDoc.data();
+                console.log("Structure trouvée, données complètes:", data);
+                console.log("🏢 Structure - Champs disponibles:", {
+                  nom: data.nom,
+                  raisonSociale: data.raisonSociale,
+                  adresse: data.adresse,
+                  codePostal: data.codePostal,
+                  ville: data.ville,
+                  pays: data.pays,
+                  siret: data.siret,
+                  email: data.email,
+                  telephone: data.telephone,
+                  type: data.type
+                });
+                setStructureData(data);
+              } else {
+                console.warn("Structure non trouvée avec l'ID:", contact.structureId);
+              }
+            } catch (structureError) {
+              console.error("Erreur lors du chargement de la structure:", structureError);
             }
-          } catch (structureError) {
-            console.error("Erreur lors du chargement de la structure:", structureError);
           }
         }
         
@@ -386,7 +407,7 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
     };
 
     fetchData();
-  }, [date?.id, contact?.structureId, currentEntreprise?.id]);
+  }, [date?.id, contact?.structureId, contact?._type, currentEntreprise?.id]);
   
   // Mettre à jour le modèle sélectionné quand l'ID change
   useEffect(() => {
@@ -630,27 +651,39 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
       // Variables contact (nouvelle nomenclature)
       // Support du système relationnel (structures/personnes) ET de l'ancien système
       contact_nom: (() => {
-        // Nouveau système relationnel
-        if (contact?.type === 'personne' && contact?.nom) {
-          return contact.nom;
+        // Nouveau système : structure
+        if (contact?._type === 'structure') {
+          return contact.nom || contact.raisonSociale || 'Non spécifié';
         }
-        // Ancien système ou structure
+        // Nouveau système : personne
+        if (contact?._type === 'personne') {
+          return contact.nom || 'Non spécifié';
+        }
+        // Ancien système
         return contact?.nom || 'Non spécifié';
       })(),
       contact_prenom: (() => {
-        // Nouveau système relationnel
-        if (contact?.type === 'personne' && contact?.prenom) {
-          return contact.prenom;
+        // Nouveau système : structure (pas de prénom)
+        if (contact?._type === 'structure') {
+          return '';
+        }
+        // Nouveau système : personne
+        if (contact?._type === 'personne') {
+          return contact.prenom || '';
         }
         // Ancien système
         return contact?.prenom || '';
       })(),
       contact_structure: (() => {
-        // Nouveau système relationnel avec structures liées
-        if (contact?.structures && contact.structures.length > 0) {
-          return contact.structures[0].nom || contact.structures[0].raisonSociale || 'Non spécifiée';
+        // Nouveau système : le contact EST la structure
+        if (contact?._type === 'structure') {
+          return contact.nom || contact.raisonSociale || 'Non spécifiée';
         }
-        // Utilisation de structureData chargée séparément
+        // Nouveau système : personne avec structure liée
+        if (contact?._type === 'personne' && structureData) {
+          return structureData.nom || structureData.raisonSociale || 'Non spécifiée';
+        }
+        // Ancien système avec structure chargée
         if (structureData?.nom) {
           return structureData.nom;
         }
@@ -660,9 +693,9 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
       contact_email: contact?.email || 'Non spécifié',
       contact_telephone: contact?.telephone || 'Non spécifié',
       contact_siret: (() => {
-        // Nouveau système relationnel
-        if (contact?.structures && contact.structures.length > 0 && contact.structures[0].siret) {
-          return contact.structures[0].siret;
+        // Nouveau système : structure
+        if (contact?._type === 'structure') {
+          return contact.siret || 'Non spécifié';
         }
         // Structure chargée séparément
         if (structureData?.siret) {
@@ -675,21 +708,30 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
       // Variables contact (compatibilité rétrograde - ancienne nomenclature programmateur)
       programmateur_nom: (() => {
         // Même logique que contact_nom pour la compatibilité
-        if (contact?.type === 'personne' && contact?.nom) {
-          return contact.nom;
+        if (contact?._type === 'structure') {
+          return contact.nom || contact.raisonSociale || 'Non spécifié';
+        }
+        if (contact?._type === 'personne') {
+          return contact.nom || 'Non spécifié';
         }
         return contact?.nom || 'Non spécifié';
       })(),
       programmateur_prenom: (() => {
-        if (contact?.type === 'personne' && contact?.prenom) {
-          return contact.prenom;
+        if (contact?._type === 'structure') {
+          return '';
+        }
+        if (contact?._type === 'personne') {
+          return contact.prenom || '';
         }
         return contact?.prenom || '';
       })(),
       programmateur_structure: (() => {
         // Même logique que contact_structure
-        if (contact?.structures && contact.structures.length > 0) {
-          return contact.structures[0].nom || contact.structures[0].raisonSociale || 'Non spécifiée';
+        if (contact?._type === 'structure') {
+          return contact.nom || contact.raisonSociale || 'Non spécifiée';
+        }
+        if (contact?._type === 'personne' && structureData) {
+          return structureData.nom || structureData.raisonSociale || 'Non spécifiée';
         }
         if (structureData?.nom) {
           return structureData.nom;
@@ -700,8 +742,8 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
       programmateur_telephone: contact?.telephone || 'Non spécifié',
       programmateur_siret: (() => {
         // Même logique que contact_siret
-        if (contact?.structures && contact.structures.length > 0 && contact.structures[0].siret) {
-          return contact.structures[0].siret;
+        if (contact?._type === 'structure') {
+          return contact.siret || 'Non spécifié';
         }
         if (structureData?.siret) {
           return structureData.siret;
@@ -709,26 +751,32 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
         return contact?.siret || 'Non spécifié';
       })(),
       contact_adresse: (() => {
-        // Nouveau système relationnel - adresse depuis la structure liée
-        if (contact?.structures && contact.structures.length > 0) {
-          const structure = contact.structures[0];
-          if (structure.adresse) {
-            return structure.adresse;
-          }
+        // Nouveau système : si le contact EST une structure
+        if (contact?._type === 'structure') {
+          // Construire l'adresse complète à partir des champs plats
+          const parts = [
+            contact.adresse,
+            contact.codePostal,
+            contact.ville
+          ].filter(Boolean);
+          return parts.length > 0 ? parts.join(' ') : 'Non spécifiée';
         }
-        // Si on a une structure avec des données d'adresse
-        if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
-          const addr = structureData.adresseLieu;
-          return `${addr.adresse || ''} ${addr.codePostal || ''} ${addr.ville || ''}`.trim() || 'Non spécifiée';
+        
+        // Si on a chargé une structure séparément
+        if (structureData) {
+          const parts = [
+            structureData.adresse,
+            structureData.codePostal,
+            structureData.ville
+          ].filter(Boolean);
+          return parts.length > 0 ? parts.join(' ') : 'Non spécifiée';
         }
-        // Si l'adresse est directement une chaîne dans structureData
-        else if (structureData?.adresse && typeof structureData.adresse === 'string') {
-          return structureData.adresse;
-        }
-        // Système relationnel - personne peut avoir une adresse personnelle
-        if (contact?.type === 'personne' && contact?.adresse) {
+        
+        // Nouveau système : personne peut avoir une adresse personnelle
+        if (contact?._type === 'personne' && contact?.adresse) {
           return contact.adresse;
         }
+        
         // Ancien système - utiliser l'adresse du contact
         return contact?.adresse || 'Non spécifiée';
       })(),
@@ -737,22 +785,28 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
       contact_qualite_representant: contact?.qualiteRepresentant || contact?.qualite_representant || contact?.fonction || 'Non spécifiée',
       programmateur_adresse: (() => {
         // Même logique que contact_adresse pour la compatibilité
-        if (contact?.structures && contact.structures.length > 0) {
-          const structure = contact.structures[0];
-          if (structure.adresse) {
-            return structure.adresse;
-          }
+        if (contact?._type === 'structure') {
+          const parts = [
+            contact.adresse,
+            contact.codePostal,
+            contact.ville
+          ].filter(Boolean);
+          return parts.length > 0 ? parts.join(' ') : 'Non spécifiée';
         }
-        if (structureData?.adresseLieu && typeof structureData.adresseLieu === 'object') {
-          const addr = structureData.adresseLieu;
-          return `${addr.adresse || ''} ${addr.codePostal || ''} ${addr.ville || ''}`.trim() || 'Non spécifiée';
+        
+        if (structureData) {
+          const parts = [
+            structureData.adresse,
+            structureData.codePostal,
+            structureData.ville
+          ].filter(Boolean);
+          return parts.length > 0 ? parts.join(' ') : 'Non spécifiée';
         }
-        else if (structureData?.adresse && typeof structureData.adresse === 'string') {
-          return structureData.adresse;
-        }
-        if (contact?.type === 'personne' && contact?.adresse) {
+        
+        if (contact?._type === 'personne' && contact?.adresse) {
           return contact.adresse;
         }
+        
         return contact?.adresse || 'Non spécifiée';
       })(),
       programmateur_numero_intracommunautaire: structureData?.numeroIntracommunautaire || contact?.numeroIntracommunautaire || contact?.numero_intracommunautaire || 'Non spécifié',
@@ -819,28 +873,16 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
       structure_nom: safeStringValue(structureData?.nom || structureData?.raisonSociale || contact?.structure, 'Non spécifiée'),
       structure_siret: safeStringValue(structureData?.siret, 'Non spécifié'),
       structure_adresse: (() => {
-        // L'adresse est un objet avec {adresse, codePostal, ville, pays}
-        if (structureData?.adresse && typeof structureData.adresse === 'object') {
-          return safeStringValue(structureData.adresse.adresse, 'Non spécifiée');
-        }
+        // Dans le nouveau système, l'adresse est stockée en champs plats
         return safeStringValue(structureData?.adresse, 'Non spécifiée');
       })(),
       structure_code_postal: (() => {
-        if (structureData?.adresse && typeof structureData.adresse === 'object') {
-          return safeStringValue(structureData.adresse.codePostal, 'Non spécifié');
-        }
         return safeStringValue(structureData?.codePostal, 'Non spécifié');
       })(),
       structure_ville: (() => {
-        if (structureData?.adresse && typeof structureData.adresse === 'object') {
-          return safeStringValue(structureData.adresse.ville, 'Non spécifiée');
-        }
         return safeStringValue(structureData?.ville, 'Non spécifiée');
       })(),
       structure_pays: (() => {
-        if (structureData?.adresse && typeof structureData.adresse === 'object') {
-          return safeStringValue(structureData.adresse.pays, 'France');
-        }
         return safeStringValue(structureData?.pays, 'France');
       })(),
       structure_email: safeStringValue(structureData?.email, 'Non spécifié'),

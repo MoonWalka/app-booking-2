@@ -31,10 +31,35 @@ const ContratGenerationPage = () => {
         setDate(dateData);
 
         // Récupérer les données du contact si disponible
-        if (dateData.contactId) {
-          const contactDoc = await getDoc(doc(db, 'contacts', dateData.contactId));
+        // Support des deux formats : contactId (string) et contactIds (array)
+        const contactId = dateData.contactId || (dateData.contactIds && dateData.contactIds[0]);
+        
+        if (contactId) {
+          // D'abord essayer l'ancienne collection contacts
+          const contactDoc = await getDoc(doc(db, 'contacts', contactId));
           if (contactDoc.exists()) {
-            setContact({ id: contactDoc.id, ...contactDoc.data() });
+            const contactData = { id: contactDoc.id, ...contactDoc.data() };
+            console.log('[ContratGenerationPage] Contact trouvé dans l\'ancienne collection:', contactData);
+            setContact(contactData);
+          } else {
+            // Si pas trouvé, essayer le nouveau système (structures ou personnes)
+            console.log('[ContratGenerationPage] Contact non trouvé dans l\'ancienne collection, essai du nouveau système');
+            
+            // Essayer d'abord dans structures
+            const structureDoc = await getDoc(doc(db, 'structures', contactId));
+            if (structureDoc.exists()) {
+              const structureData = { id: structureDoc.id, ...structureDoc.data(), _type: 'structure' };
+              console.log('[ContratGenerationPage] Structure trouvée:', structureData);
+              setContact(structureData);
+            } else {
+              // Sinon essayer dans personnes
+              const personneDoc = await getDoc(doc(db, 'personnes', contactId));
+              if (personneDoc.exists()) {
+                const personneData = { id: personneDoc.id, ...personneDoc.data(), _type: 'personne' };
+                console.log('[ContratGenerationPage] Personne trouvée:', personneData);
+                setContact(personneData);
+              }
+            }
           }
         }
 

@@ -12,7 +12,7 @@ import {
   serverTimestamp,
   Timestamp
 } from 'firebase/firestore';
-import { db } from './firebase-service';
+import { db, auth } from './firebase-service';
 import tachesService from '@/services/tachesService';
 
 /**
@@ -30,6 +30,40 @@ const contratService = {
     try {
       console.log('[ContratService] Sauvegarde du contrat pour date:', dateId);
       
+      // Récupérer l'utilisateur actuel
+      const currentUser = auth.currentUser;
+      let collaborateurCode = '--';
+      
+      // Si on a un utilisateur connecté, récupérer ses informations
+      if (currentUser && entrepriseId) {
+        try {
+          // D'abord chercher dans collaborationConfig où les initiales sont définies
+          const configDoc = await getDoc(doc(db, 'collaborationConfig', entrepriseId));
+          if (configDoc.exists()) {
+            const configData = configDoc.data();
+            if (configData.collaborateurs && Array.isArray(configData.collaborateurs)) {
+              const collaborateur = configData.collaborateurs.find(c => c.id === currentUser.uid);
+              if (collaborateur && collaborateur.initiales) {
+                collaborateurCode = collaborateur.initiales;
+              }
+            }
+          }
+          
+          // Si pas trouvé dans collaborationConfig, chercher dans users
+          if (collaborateurCode === '--') {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              // Générer les initiales à partir du nom d'affichage
+              collaborateurCode = userData.displayName ? 
+                userData.displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '--';
+            }
+          }
+        } catch (error) {
+          console.error('[ContratService] Erreur récupération collaborateur:', error);
+        }
+      }
+      
       // Préparer les données du contrat
       const contratToSave = {
         ...contratData,
@@ -44,7 +78,12 @@ const contratService = {
         montantHT: contratData.negociation?.montantNet || contratData.montantHT || 0,
         montantTTC: contratData.negociation?.montantTTC || contratData.montantTTC || 0,
         // S'assurer que l'entrepriseCode est défini
-        entrepriseCode: contratData.entrepriseCode || 'MR' // Utiliser 'MR' pour Meltin Recordz par défaut
+        entrepriseCode: contratData.entrepriseCode || 'MR', // Utiliser 'MR' pour Meltin Recordz par défaut
+        // Préserver le type de contrat
+        type: contratData.type || contratData.templateSnapshot?.type || 'Standard',
+        // Ajouter les informations du collaborateur
+        userId: currentUser?.uid || contratData.userId || null,
+        collaborateurCode: contratData.collaborateurCode || collaborateurCode
       };
 
       // Utiliser l'ID du date comme ID du contrat pour maintenir la relation 1:1
@@ -130,6 +169,48 @@ const contratService = {
   async updateContrat(contratId, updates) {
     try {
       console.log('[ContratService] Mise à jour du contrat:', contratId, updates);
+      
+      // Si on met à jour mais qu'il n'y a pas de collaborateurCode, essayer de le récupérer
+      if (!updates.collaborateurCode && !updates.envoye && !updates.signe) {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          try {
+            // Récupérer l'entrepriseId depuis le contrat existant
+            const contratDoc = await getDoc(doc(db, 'contrats', contratId));
+            if (contratDoc.exists()) {
+              const entrepriseId = contratDoc.data().entrepriseId;
+              
+              if (entrepriseId) {
+                // D'abord chercher dans collaborationConfig
+                const configDoc = await getDoc(doc(db, 'collaborationConfig', entrepriseId));
+                if (configDoc.exists()) {
+                  const configData = configDoc.data();
+                  if (configData.collaborateurs && Array.isArray(configData.collaborateurs)) {
+                    const collaborateur = configData.collaborateurs.find(c => c.id === currentUser.uid);
+                    if (collaborateur && collaborateur.initiales) {
+                      updates.collaborateurCode = collaborateur.initiales;
+                      updates.userId = currentUser.uid;
+                    }
+                  }
+                }
+                
+                // Si pas trouvé, chercher dans users
+                if (!updates.collaborateurCode) {
+                  const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                  if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    updates.collaborateurCode = userData.displayName ? 
+                      userData.displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '--';
+                    updates.userId = currentUser.uid;
+                  }
+                }
+              }
+            }
+          } catch (error) {
+            console.error('[ContratService] Erreur récupération collaborateur:', error);
+          }
+        }
+      }
       
       const contratRef = doc(db, 'contrats', contratId);
       await updateDoc(contratRef, {

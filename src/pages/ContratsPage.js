@@ -10,6 +10,7 @@ import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import Badge from '@/components/ui/Badge';
 import { useResponsive } from '@/hooks/common';
 import { useTabs } from '@/context/TabsContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import contratService from '@/services/contratService';
 import '@styles/index.css';
 
@@ -19,13 +20,23 @@ const ContratsPage = () => {
   const navigate = useNavigate();
   const { isMobile } = useResponsive();
   const { openTab, openDevisTab, openNewDevisTab, openContratTab } = useTabs();
+  const { currentEntreprise } = useEntreprise();
 
   const fetchContrats = async () => {
+    // Vérifier qu'on a bien une entreprise
+    if (!currentEntreprise?.id) {
+      console.warn('[ContratsPage] Pas d\'entreprise courante');
+      setContrats([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
-      // Utiliser updatedAt pour le tri car dateGeneration n'existe pas toujours
+      // IMPORTANT: Filtrer par entrepriseId pour la sécurité
       const contratsQuery = query(
         collection(db, 'contrats'), 
+        where('entrepriseId', '==', currentEntreprise.id),
         orderBy('updatedAt', 'desc')
       );
       const contratsSnapshot = await getDocs(contratsQuery);
@@ -46,9 +57,16 @@ const ContratsPage = () => {
             ));
             
             if (!dateDoc.empty) {
+              const dateDocData = dateDoc.docs[0].data();
+              // Vérifier que le date appartient bien à l'entreprise courante
+              if (dateDocData.entrepriseId !== currentEntreprise.id) {
+                console.warn('[ContratsPage] Date n\'appartient pas à l\'entreprise courante');
+                return null; // Ignorer ce contrat
+              }
+              
               dateData = {
                 id: dateDoc.docs[0].id,
-                ...dateDoc.docs[0].data()
+                ...dateDocData
               };
               
               // 🔧 CORRECTION: Charger les noms des entités liées si manquants
@@ -211,7 +229,9 @@ const ContratsPage = () => {
       });
       
       const contratsWithData = await Promise.all(contratsPromises);
-      setContrats(contratsWithData);
+      // Filtrer les contrats null (ceux qui n'appartiennent pas à l'entreprise)
+      const validContrats = contratsWithData.filter(contrat => contrat !== null);
+      setContrats(validContrats);
     } catch (error) {
       console.error('Erreur lors de la récupération des contrats:', error);
     } finally {

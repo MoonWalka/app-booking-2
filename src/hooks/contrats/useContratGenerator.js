@@ -1006,7 +1006,7 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
         headerBottomMargin: selectedTemplate.headerBottomMargin,
         footerTopMargin: selectedTemplate.footerTopMargin,
         logoUrl: selectedTemplate.logoUrl,
-        type: selectedTemplate.type
+        type: selectedTemplate.templateType || selectedTemplate.type || 'Standard'
       };
 
       // Nettoyer les valeurs undefined pour Firestore
@@ -1022,6 +1022,7 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
           pdfUrl: url,
           templateId: selectedTemplateId,
           templateSnapshot,
+          type: selectedTemplate.templateType || selectedTemplate.type || 'Standard',
           dateGeneration: serverTimestamp(),
           variables
         });
@@ -1035,6 +1036,7 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
           dateId: date.id,
           templateId: selectedTemplateId,
           templateSnapshot,
+          type: selectedTemplate.templateType || selectedTemplate.type || 'Standard',
           dateGeneration: serverTimestamp(),
           dateEnvoi: null,
           status: 'generated',

@@ -84,15 +84,31 @@ const ContratsTableNew = ({
   };
 
   const getTypeBadge = (type) => {
-    switch (type) {
-      case 'Cession':
+    // Normaliser le type en minuscules pour la comparaison
+    const normalizedType = (type || '').toLowerCase();
+    
+    switch (normalizedType) {
+      case 'cession':
         return <Badge variant="blue">Cession</Badge>;
-      case 'Coréo':
-        return <Badge variant="green">Coréo</Badge>;
-      case 'Promo':
-        return <Badge variant="yellow">Promo</Badge>;
+      case 'corealisation':
+      case 'coréalisation':
+      case 'coréo':
+        return <Badge variant="green">Coréalisation</Badge>;
+      case 'coproduction':
+        return <Badge variant="purple">Coproduction</Badge>;
+      case 'residence':
+      case 'résidence':
+        return <Badge variant="orange">Résidence</Badge>;
+      case 'travail':
+        return <Badge variant="red">CDD Usage</Badge>;
+      case 'promo':
+      case 'promotion':
+        return <Badge variant="yellow">Promotion</Badge>;
+      case 'autre':
+        return <Badge variant="gray">Autre</Badge>;
       default:
-        return <Badge variant="gray">{type || '—'}</Badge>;
+        // Si le type est présent mais non reconnu, l'afficher avec une majuscule
+        return <Badge variant="gray">{type ? type.charAt(0).toUpperCase() + type.slice(1) : '—'}</Badge>;
     }
   };
   
@@ -117,7 +133,7 @@ const ContratsTableNew = ({
   const handleToggleEnvoye = (contratId) => {
     const updatedContrats = localContrats.map(contrat => 
       contrat.id === contratId 
-        ? { ...contrat, envoye: true }
+        ? { ...contrat, envoye: !contrat.envoye }
         : contrat
     );
     setLocalContrats(updatedContrats);
@@ -131,7 +147,11 @@ const ContratsTableNew = ({
   const handleToggleSigne = (contratId) => {
     const updatedContrats = localContrats.map(contrat => 
       contrat.id === contratId 
-        ? { ...contrat, signe: true, dateSignature: new Date() }
+        ? { 
+            ...contrat, 
+            signe: !contrat.signe, 
+            dateSignature: !contrat.signe ? new Date() : null 
+          }
         : contrat
     );
     setLocalContrats(updatedContrats);
@@ -262,28 +282,37 @@ const ContratsTableNew = ({
       key: 'envoye',
       sortable: true,
       render: (contrat) => (
-        contrat.envoye ? (
-          <span className={styles.checkmark}>✓</span>
-        ) : (
-          <Dropdown>
-            <Dropdown.Toggle 
-              variant="link" 
-              id={`dropdown-envoye-${contrat.id}`}
-              className={styles.dropdownToggle}
-            >
+        <Dropdown>
+          <Dropdown.Toggle 
+            variant="link" 
+            id={`dropdown-envoye-${contrat.id}`}
+            className={styles.dropdownToggle}
+          >
+            {contrat.envoye ? (
+              <span className={styles.checkmark}>✓</span>
+            ) : (
               <span className={styles.crossClickable}>X</span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item 
-                onClick={() => handleToggleEnvoye(contrat.id)}
-                className={styles.dropdownItem}
-              >
-                <i className="bi bi-check-circle text-success me-2"></i>
-                Marquer comme envoyé
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        )
+            )}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item 
+              onClick={() => handleToggleEnvoye(contrat.id)}
+              className={styles.dropdownItem}
+            >
+              {contrat.envoye ? (
+                <>
+                  <i className="bi bi-x-circle text-danger me-2"></i>
+                  Marquer comme non envoyé
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-check-circle text-success me-2"></i>
+                  Marquer comme envoyé
+                </>
+              )}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       )
     },
     
@@ -294,28 +323,37 @@ const ContratsTableNew = ({
       key: 'signe',
       sortable: true,
       render: (contrat) => (
-        contrat.signe ? (
-          <span className={styles.checkmark}>✓</span>
-        ) : (
-          <Dropdown>
-            <Dropdown.Toggle 
-              variant="link" 
-              id={`dropdown-signe-${contrat.id}`}
-              className={styles.dropdownToggle}
-            >
+        <Dropdown>
+          <Dropdown.Toggle 
+            variant="link" 
+            id={`dropdown-signe-${contrat.id}`}
+            className={styles.dropdownToggle}
+          >
+            {contrat.signe ? (
+              <span className={styles.checkmark}>✓</span>
+            ) : (
               <span className={styles.crossClickable}>X</span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item 
-                onClick={() => handleToggleSigne(contrat.id)}
-                className={styles.dropdownItem}
-              >
-                <i className="bi bi-check-circle text-success me-2"></i>
-                Marquer comme signé
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        )
+            )}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item 
+              onClick={() => handleToggleSigne(contrat.id)}
+              className={styles.dropdownItem}
+            >
+              {contrat.signe ? (
+                <>
+                  <i className="bi bi-x-circle text-danger me-2"></i>
+                  Marquer comme non signé
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-check-circle text-success me-2"></i>
+                  Marquer comme signé
+                </>
+              )}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       )
     },
     

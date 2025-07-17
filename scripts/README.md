@@ -1,35 +1,34 @@
 # Scripts TourCraft
 
-Ce dossier contient les scripts utilitaires actifs du projet. Suite au nettoyage du 16 juillet 2025, nous sommes passés de ~150 scripts à 38 scripts actifs.
+Ce dossier contient les scripts utilitaires actifs du projet. Suite au nettoyage complet du 16 juillet 2025, nous sommes passés de ~150 scripts à seulement 16 scripts actifs.
 
 ## 📂 Structure après nettoyage
 
-### Scripts d'analyse (à la racine)
-- `analyze-unused-files.js` / `analyze-unused-files-enhanced.js` - Analyse des fichiers non utilisés
-- `analyze-data-flow.js` - Analyse du flux de données
-- `analyze-contract-content-problem.js` - Analyse des problèmes de contrats
+### Scripts essentiels conservés (16 scripts)
+
+#### Analyse de fichiers non utilisés
+- `analyze-unused-files.js` - Analyse basique des fichiers non utilisés
+- `analyze-unused-files-enhanced.js` - Analyse avancée avec plus de détails
+- `detect_unused_files.js` - Détection des fichiers non utilisés
+- `verify-unused-files.js` - Vérification des fichiers non utilisés
+- `verify-all-unused-files.js` - Vérification complète
+- `verify-single-file.js` - Vérification d'un fichier spécifique
+- `delete-confirmed-unused-files.js` - Suppression des fichiers confirmés non utilisés
+
+#### Analyse générale
+- `analyze-data-flow.js` - Analyse du flux de données dans l'application
 - `analyzeRelations.js` - Analyse des relations entre entités
 
-### Scripts de vérification
-- `check-css-vars.js` - Vérification des variables CSS (utilisé par `npm run css:fix`)
-- `check-contact-email.js` - Vérification des emails de contacts
-- `check-contract-statuses.js` - Vérification des statuts de contrats
-- `check-nested-structures.js` - Vérification des structures imbriquées
+#### Scripts NPM
+- `check-css-vars.js` - Vérification des variables CSS (**utilisé par `npm run css:fix`**)
+- `audit_card_usage.js` - Audit des composants Card (**utilisé par `npm run audit:card`**)
+
+#### Utilitaires
 - `check-realtime-updates.js` - Vérification des mises à jour temps réel
-- `check-recent-contact-changes.js` - Vérification des changements récents
-- `check-structure-migration-status.js` - Statut de migration des structures
-
-### Scripts d'audit
-- `audit_card_usage.js` - Audit de l'utilisation des composants Card (utilisé par `npm run audit:card`)
-- `audit-boutons-ajout.js` - Audit des boutons d'ajout
-- `audit-consolidation.js` - Audit de consolidation
-- `generate-audit-report.js` - Génération de rapports d'audit
-- `run-full-audit.js` - Exécution d'un audit complet
-
-### Scripts de détection
-- `detect_unused_files.js` - Détection des fichiers non utilisés
-- `detect-duplicates.sh` - Détection des doublons
+- `detect-duplicates.sh` - Détection des doublons dans le code
 - `improved_card_detection.js` - Détection améliorée des composants Card
+- `generate-audit-report.js` - Génération de rapports d'audit
+- `run-full-audit.js` - Exécution d'un audit complet du projet
 
 ### 📁 analyses/
 Scripts d'analyse spécifiques
@@ -66,11 +65,13 @@ Scripts de configuration initiale
 Scripts de maintenance
 
 ### 📁 _archive_2025-07-16/
-Archive contenant ~120 scripts obsolètes :
-- Scripts de migrations terminées (CSS, Concert→Date, Programmateur→Contact, etc.)
+Archive contenant ~144 scripts obsolètes (après 2 phases de nettoyage) :
+- Scripts de migrations terminées (CSS, Concert→Date, Programmateur→Contact, Organisation→Entreprise, etc.)
 - Scripts d'audit déjà exécutés
 - Scripts de fix déjà appliqués
 - Scripts de test temporaires
+- Scripts de vérification ponctuels
+- Scripts de problèmes résolus
 
 ## 📝 Utilisation
 

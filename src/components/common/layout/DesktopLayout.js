@@ -15,6 +15,7 @@ import sidebarStyles from '@/components/layout/Sidebar.module.css';
 import { searchService } from '@/services/searchService';
 import { selectionsService } from '@/services/selectionsService';
 import { useEntreprise } from '@/context/EntrepriseContext';
+import useInvitationNotifications from '@/hooks/useInvitationNotifications';
 
 function DesktopLayout({ children }) {
   const { currentUser, logout } = useAuth();
@@ -48,6 +49,9 @@ function DesktopLayout({ children }) {
   
   // État pour gérer l'expansion des menus
   const [expandedMenu, setExpandedMenu] = useState(null);
+  
+  // Hook pour vérifier les invitations en attente
+  const { pendingInvitations } = useInvitationNotifications();
   // État pour gérer l'expansion des sous-sous-menus
   const [expandedSubMenu, setExpandedSubMenu] = useState(null);
   // État pour le menu utilisateur

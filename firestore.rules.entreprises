@@ -1,0 +1,183 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 🏢 RÈGLES POUR LE SYSTÈME D'ENTREPRISES
+    // Ce fichier complète firestore.rules avec les règles spécifiques aux entreprises
+    
+    // Fonction pour vérifier si l'utilisateur est membre d'une entreprise
+    function isEntrepriseMember(entrepriseId) {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/entreprises/$(entrepriseId)) &&
+        request.auth.uid in get(/databases/$(database)/documents/entreprises/$(entrepriseId)).data.members;
+    }
+    
+    // Fonction pour vérifier si l'utilisateur est dans collaborationConfig
+    function isCollaborateur(entrepriseId) {
+      let config = get(/databases/$(database)/documents/collaborationConfig/$(entrepriseId));
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/collaborationConfig/$(entrepriseId)) &&
+        config.data.collaborateurs != null &&
+        request.auth.uid in config.data.collaborateurs.map(c => c.id);
+    }
+    
+    // Fonction pour vérifier l'accès à une entreprise
+    function hasEntrepriseAccess(entrepriseId) {
+      return isEntrepriseMember(entrepriseId) || 
+             isCollaborateur(entrepriseId) ||
+             hasEntrepriseInUserIndex(entrepriseId);
+    }
+    
+    // Fonction pour vérifier via user_entreprises
+    function hasEntrepriseInUserIndex(entrepriseId) {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/user_entreprises/$(request.auth.uid)) &&
+        entrepriseId in get(/databases/$(database)/documents/user_entreprises/$(request.auth.uid)).data.entreprises;
+    }
+    
+    // Règles pour les entreprises
+    match /entreprises/{entrepriseId} {
+      allow read: if hasEntrepriseAccess(entrepriseId);
+      allow write: if hasEntrepriseAccess(entrepriseId);
+      
+      // Sous-collections des entreprises
+      match /{subcollection}/{document=**} {
+        allow read: if hasEntrepriseAccess(entrepriseId);
+        allow write: if hasEntrepriseAccess(entrepriseId);
+      }
+    }
+    
+    // Règles pour collaborationConfig
+    match /collaborationConfig/{entrepriseId} {
+      allow read: if hasEntrepriseAccess(entrepriseId);
+      allow write: if hasEntrepriseAccess(entrepriseId);
+    }
+    
+    // Règles pour user_entreprises
+    match /user_entreprises/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Règles pour les invitations d'entreprise
+    match /entreprise_invitations/{invitationId} {
+      // Lecture : accessible si c'est votre email ou si vous avez accès à l'entreprise
+      allow read: if request.auth != null && (
+        (resource.data.email != null && resource.data.email == request.auth.token.email) ||
+        hasEntrepriseAccess(resource.data.entrepriseId) ||
+        resource.data.status == 'active'
+      );
+      
+      // Création : par les membres de l'entreprise
+      allow create: if request.auth != null && 
+        hasEntrepriseAccess(request.resource.data.entrepriseId);
+      
+      // Mise à jour : par les membres de l'entreprise ou l'utilisateur qui accepte
+      allow update: if request.auth != null && (
+        hasEntrepriseAccess(resource.data.entrepriseId) ||
+        (resource.data.email == request.auth.token.email && 
+         request.resource.data.usedBy == resource.data.usedBy.concat([request.auth.uid]))
+      );
+      
+      // Suppression : par les membres de l'entreprise
+      allow delete: if request.auth != null && 
+        hasEntrepriseAccess(resource.data.entrepriseId);
+    }
+    
+    // Règles pour les contrats
+    match /contrats/{contratId} {
+      allow read: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow create: if request.auth != null && 
+        request.resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(request.resource.data.entrepriseId);
+      allow update: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow delete: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+    }
+    
+    // Règles pour les dates
+    match /dates/{dateId} {
+      allow read: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow create: if request.auth != null && 
+        request.resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(request.resource.data.entrepriseId);
+      allow update: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow delete: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+    }
+    
+    // Règles pour les structures
+    match /structures/{structureId} {
+      allow read: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow create: if request.auth != null && 
+        request.resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(request.resource.data.entrepriseId);
+      allow update: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow delete: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+    }
+    
+    // Règles pour les personnes
+    match /personnes/{personneId} {
+      allow read: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow create: if request.auth != null && 
+        request.resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(request.resource.data.entrepriseId);
+      allow update: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow delete: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+    }
+    
+    // Règles pour les selections
+    match /selections/{selectionId} {
+      allow read: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow create: if request.auth != null && 
+        request.resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(request.resource.data.entrepriseId);
+      allow update: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow delete: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+    }
+    
+    // Règles pour les recherches
+    match /recherches/{rechercheId} {
+      allow read: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow create: if request.auth != null && 
+        request.resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(request.resource.data.entrepriseId);
+      allow update: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+      allow delete: if request.auth != null && 
+        resource.data.entrepriseId != null &&
+        hasEntrepriseAccess(resource.data.entrepriseId);
+    }
+  }
+}

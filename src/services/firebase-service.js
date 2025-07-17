@@ -547,14 +547,71 @@ export const joinEntreprise = async (invitationCode, userId) => {
     
     // Ajouter l'entreprise à l'index utilisateur
     const userEntRef = doc(db, 'user_entreprises', userId);
-    await setDoc(userEntRef, {
+    const userEntDocData = await getDoc(userEntRef);
+    const currentUserData = userEntDocData.exists() ? userEntDocData.data() : {};
+    
+    // Si l'utilisateur n'a pas d'entreprise par défaut, définir celle-ci
+    const updateData = {
       entreprises: {
         [entId]: {
           role: role,
           joinedAt: serverTimestamp()
         }
       }
-    }, { merge: true });
+    };
+    
+    if (!currentUserData.defaultEntreprise) {
+      updateData.defaultEntreprise = entId;
+    }
+    
+    await setDoc(userEntRef, updateData, { merge: true });
+    
+    // Si l'invitation vient d'un collaborateur, ajouter à collaborationConfig
+    if (invitation.isFromCollaborateur && invitation.collaborateurData) {
+      const configRef = doc(db, 'collaborationConfig', entId);
+      const configDoc = await getDoc(configRef);
+      const configData = configDoc.exists() ? configDoc.data() : { collaborateurs: [] };
+      
+      // Chercher le collaborateur en attente avec cette invitation
+      const existingCollaborateurs = configData.collaborateurs || [];
+      const collaborateurIndex = existingCollaborateurs.findIndex(
+        c => c.invitationId === invitationDoc.id || c.invitationCode === invitation.code
+      );
+      
+      if (collaborateurIndex >= 0) {
+        // Mettre à jour le collaborateur existant
+        existingCollaborateurs[collaborateurIndex] = {
+          ...existingCollaborateurs[collaborateurIndex],
+          id: userId,
+          status: 'active',
+          acceptedAt: new Date()
+        };
+      } else {
+        // Créer un nouveau collaborateur
+        const newCollaborateur = {
+          id: userId,
+          nom: invitation.nom || '',
+          prenom: invitation.prenom || '',
+          email: invitation.email || '',
+          initiales: invitation.collaborateurData.initiales || '',
+          identifiant: invitation.collaborateurData.identifiant || invitation.email,
+          actif: invitation.collaborateurData.actif !== false,
+          groupes: invitation.groupes || [],
+          entreprises: invitation.entreprises || [],
+          status: 'active',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          acceptedAt: new Date()
+        };
+        existingCollaborateurs.push(newCollaborateur);
+      }
+      
+      await setDoc(configRef, {
+        ...configData,
+        collaborateurs: existingCollaborateurs,
+        updatedAt: new Date()
+      });
+    }
     
     // Marquer l'invitation comme utilisée
     await updateDoc(invitationDoc.ref, {

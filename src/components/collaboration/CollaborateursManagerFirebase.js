@@ -370,13 +370,13 @@ const CollaborateursManagerFirebase = () => {
                 const invitationData = {
                     ...invitation,
                     email: currentCollaborateur.email,
-                    nom: currentCollaborateur.nom || null,
-                    prenom: currentCollaborateur.prenom || null,
-                    groupes: currentCollaborateur.groupes || [],
-                    entreprises: currentCollaborateur.entreprises || [],
+                    nom: currentCollaborateur.nom || '',
+                    prenom: currentCollaborateur.prenom || '',
+                    groupes: Array.isArray(currentCollaborateur.groupes) ? currentCollaborateur.groupes : [],
+                    entreprises: Array.isArray(currentCollaborateur.entreprises) ? currentCollaborateur.entreprises : [],
                     createdBy: currentUser.uid,
                     createdByName: currentUser.displayName || currentUser.email,
-                    entrepriseName: currentEntreprise.raisonSociale || currentEntreprise.nom,
+                    entrepriseName: currentEntreprise.raisonSociale || currentEntreprise.nom || 'Entreprise',
                     isFromCollaborateur: true,
                     collaborateurData: {
                         initiales: currentCollaborateur.initiales || '',

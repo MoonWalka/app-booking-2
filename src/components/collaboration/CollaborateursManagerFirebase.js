@@ -55,36 +55,61 @@ const CollaborateursManagerFirebase = () => {
         try {
             let loadedEntreprises = [];
             
-            // Charger depuis collaborationConfig
-            const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
+            // Charger depuis entreprises/{id}/collaborationEntreprises (même source que EntreprisesManagerFirebase)
+            const collaborationEntreprisesRef = collection(db, 'entreprises', currentEntreprise.id, 'collaborationEntreprises');
+            const collaborationSnapshot = await getDocs(collaborationEntreprisesRef);
             
-            if (configDoc.exists()) {
-                const data = configDoc.data();
-                if (data.entreprises && Array.isArray(data.entreprises)) {
-                    loadedEntreprises = data.entreprises;
-                }
-            }
+            collaborationSnapshot.forEach(doc => {
+                loadedEntreprises.push({ id: doc.id, ...doc.data() });
+            });
             
-            // Charger aussi l'entreprise principale depuis entreprises/settings/entreprise
-            const entrepriseRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
-            const entrepriseDoc = await getDoc(entrepriseRef);
+            // Charger l'entreprise principale depuis la racine entreprises/{id}
+            const entrepriseDoc = await getDoc(doc(db, 'entreprises', currentEntreprise.id));
             
             if (entrepriseDoc.exists()) {
+                const entrepriseData = entrepriseDoc.data();
+                console.log('Données entreprise principale (collaborateurs):', entrepriseData);
+                
+                // Essayer aussi de charger les détails depuis settings/entreprise si disponible
+                const settingsRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
+                const settingsDoc = await getDoc(settingsRef);
+                const settingsData = settingsDoc.exists() ? settingsDoc.data() : null;
+                
+                // Fusionner les données de base avec les détails si disponibles
                 const mainEntreprise = {
-                    ...entrepriseDoc.data(),
                     id: 'main',
                     principal: true,
-                    raisonSociale: entrepriseDoc.data().nom || entrepriseDoc.data().raisonSociale,
-                    ape: entrepriseDoc.data().codeAPE || entrepriseDoc.data().ape
+                    raisonSociale: entrepriseData.name || settingsData?.nom || settingsData?.raisonSociale || currentEntreprise.name || 'Entreprise principale',
+                    code: entrepriseData.slug || currentEntreprise.slug || 'MAIN',
+                    type: entrepriseData.type,
+                    ville: settingsData?.ville || '',
+                    email: settingsData?.email || '',
+                    telephone: settingsData?.telephone || ''
                 };
+                
+                console.log('Entreprise principale construite (collaborateurs):', mainEntreprise);
                 
                 // Vérifier si l'entreprise principale n'est pas déjà dans la liste chargée
                 const existingMain = loadedEntreprises.find(e => e.id === 'main');
                 if (!existingMain) {
                     loadedEntreprises = [mainEntreprise, ...loadedEntreprises];
                 }
+            } else {
+                console.log('Document entreprise non trouvé, utilisation des données du contexte');
+                // Si le document n'existe pas, créer une entreprise principale à partir du contexte
+                const mainEntreprise = {
+                    id: 'main',
+                    principal: true,
+                    raisonSociale: currentEntreprise.name || 'Mon entreprise',
+                    code: currentEntreprise.slug || 'MAIN',
+                    ville: '',
+                    email: '',
+                    telephone: ''
+                };
+                loadedEntreprises = [mainEntreprise, ...loadedEntreprises];
             }
             
+            console.log('Entreprises chargées pour les collaborateurs:', loadedEntreprises);
             setEntreprisesList(loadedEntreprises);
         } catch (error) {
             console.error('Erreur lors du chargement des entreprises:', error);
@@ -160,6 +185,7 @@ const CollaborateursManagerFirebase = () => {
         if (!currentEntreprise?.id) return;
         
         try {
+            // Sauvegarder dans collaborationConfig
             const configRef = doc(db, 'collaborationConfig', currentEntreprise.id);
             const configDoc = await getDoc(configRef);
             
@@ -171,6 +197,12 @@ const CollaborateursManagerFirebase = () => {
                 updatedAt: new Date(),
                 entrepriseId: currentEntreprise.id
             }, { merge: true });
+            
+            // Sauvegarder aussi dans la collection collaborateurs pour être compatible avec le reste du système
+            for (const collaborateur of collaborateurs) {
+                const collaborateurRef = doc(db, 'entreprises', currentEntreprise.id, 'collaborateurs', collaborateur.id);
+                await setDoc(collaborateurRef, collaborateur, { merge: true });
+            }
         } catch (error) {
             console.error('Erreur lors de la sauvegarde des collaborateurs:', error);
             throw error;

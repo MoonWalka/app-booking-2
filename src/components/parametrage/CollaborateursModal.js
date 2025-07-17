@@ -141,76 +141,78 @@ const CollaborateursModal = ({ show, onHide, groupe, onSaveCollaborateurs }) => 
                         <p className="mt-3">Chargement des collaborateurs...</p>
                     </div>
                 ) : (
-                <Row>
-                    <Col md={6}>
-                        <Card>
-                            <Card.Header className="bg-light">
-                                <h6 className="mb-0">
-                                    Collaborateurs disponibles ({filterCollaborateurs(collaborateursDisponibles, searchDisponibles).length})
-                                </h6>
-                            </Card.Header>
-                            <Card.Body className="p-2">
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Rechercher..."
-                                    value={searchDisponibles}
-                                    onChange={(e) => setSearchDisponibles(e.target.value)}
-                                    className="mb-3"
-                                />
-                                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                                    <ListGroup variant="flush">
-                                        {filterCollaborateurs(collaborateursDisponibles, searchDisponibles).map(collab => 
-                                            renderCollaborateurItem(collab, false)
-                                        )}
-                                        {filterCollaborateurs(collaborateursDisponibles, searchDisponibles).length === 0 && (
-                                            <ListGroup.Item className="text-center text-muted py-4">
-                                                Aucun collaborateur disponible
-                                            </ListGroup.Item>
-                                        )}
-                                    </ListGroup>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                <>
+                    <Row>
+                        <Col md={6}>
+                            <Card>
+                                <Card.Header className="bg-light">
+                                    <h6 className="mb-0">
+                                        Collaborateurs disponibles ({filterCollaborateurs(collaborateursDisponibles, searchDisponibles).length})
+                                    </h6>
+                                </Card.Header>
+                                <Card.Body className="p-2">
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Rechercher..."
+                                        value={searchDisponibles}
+                                        onChange={(e) => setSearchDisponibles(e.target.value)}
+                                        className="mb-3"
+                                    />
+                                    <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                        <ListGroup variant="flush">
+                                            {filterCollaborateurs(collaborateursDisponibles, searchDisponibles).map(collab => 
+                                                renderCollaborateurItem(collab, false)
+                                            )}
+                                            {filterCollaborateurs(collaborateursDisponibles, searchDisponibles).length === 0 && (
+                                                <ListGroup.Item className="text-center text-muted py-4">
+                                                    Aucun collaborateur disponible
+                                                </ListGroup.Item>
+                                            )}
+                                        </ListGroup>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </Col>
 
-                    <Col md={6}>
-                        <Card>
-                            <Card.Header className="bg-primary text-white">
-                                <h6 className="mb-0">
-                                    Collaborateurs sélectionnés ({filterCollaborateurs(collaborateursSelectionnes, searchSelectionnes).length})
-                                </h6>
-                            </Card.Header>
-                            <Card.Body className="p-2">
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Rechercher..."
-                                    value={searchSelectionnes}
-                                    onChange={(e) => setSearchSelectionnes(e.target.value)}
-                                    className="mb-3"
-                                />
-                                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                                    <ListGroup variant="flush">
-                                        {filterCollaborateurs(collaborateursSelectionnes, searchSelectionnes).map(collab => 
-                                            renderCollaborateurItem(collab, true)
-                                        )}
-                                        {filterCollaborateurs(collaborateursSelectionnes, searchSelectionnes).length === 0 && (
-                                            <ListGroup.Item className="text-center text-muted py-4">
-                                                Aucun collaborateur sélectionné
-                                            </ListGroup.Item>
-                                        )}
-                                    </ListGroup>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
+                        <Col md={6}>
+                            <Card>
+                                <Card.Header className="bg-primary text-white">
+                                    <h6 className="mb-0">
+                                        Collaborateurs sélectionnés ({filterCollaborateurs(collaborateursSelectionnes, searchSelectionnes).length})
+                                    </h6>
+                                </Card.Header>
+                                <Card.Body className="p-2">
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Rechercher..."
+                                        value={searchSelectionnes}
+                                        onChange={(e) => setSearchSelectionnes(e.target.value)}
+                                        className="mb-3"
+                                    />
+                                    <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                        <ListGroup variant="flush">
+                                            {filterCollaborateurs(collaborateursSelectionnes, searchSelectionnes).map(collab => 
+                                                renderCollaborateurItem(collab, true)
+                                            )}
+                                            {filterCollaborateurs(collaborateursSelectionnes, searchSelectionnes).length === 0 && (
+                                                <ListGroup.Item className="text-center text-muted py-4">
+                                                    Aucun collaborateur sélectionné
+                                                </ListGroup.Item>
+                                            )}
+                                        </ListGroup>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
 
-                <div className="mt-3 p-3 bg-light rounded">
-                    <small className="text-muted">
-                        <strong>Instructions :</strong> Cliquez sur un collaborateur ou utilisez les flèches pour le déplacer entre les listes.
-                        Les collaborateurs sélectionnés auront accès aux permissions définies pour ce groupe.
-                    </small>
-                </div>
+                    <div className="mt-3 p-3 bg-light rounded">
+                        <small className="text-muted">
+                            <strong>Instructions :</strong> Cliquez sur un collaborateur ou utilisez les flèches pour le déplacer entre les listes.
+                            Les collaborateurs sélectionnés auront accès aux permissions définies pour ce groupe.
+                        </small>
+                    </div>
+                </>
                 )}
             </Modal.Body>
             <Modal.Footer>

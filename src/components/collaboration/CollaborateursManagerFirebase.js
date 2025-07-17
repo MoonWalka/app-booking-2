@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Button, Form, Table, Modal, Alert, Nav, InputGroup, Badge } from 'react-bootstrap';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaCopy, FaEnvelope } from 'react-icons/fa';
+import { doc, getDoc, setDoc, collection, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useAuth } from '@/context/AuthContext';
 import { useEntreprise } from '@/context/EntrepriseContext';
@@ -305,52 +305,82 @@ const CollaborateursManagerFirebase = () => {
     };
 
     const handleSave = async () => {
-        if (!currentCollaborateur.nom.trim() || !currentCollaborateur.prenom.trim() || !currentCollaborateur.email.trim()) {
-            showMessage('Veuillez remplir tous les champs obligatoires', 'danger');
-            return;
-        }
-
-        // Validation du mot de passe : en création OU en édition avec case cochée
-        if ((!isEditing || currentCollaborateur.changerIdentifiants) && 
-            (!currentCollaborateur.motDePasse?.trim() || currentCollaborateur.motDePasse !== currentCollaborateur.confirmationMotDePasse)) {
-            showMessage('Les mots de passe ne correspondent pas ou sont vides', 'danger');
+        if (!currentCollaborateur.email.trim()) {
+            showMessage('Veuillez entrer une adresse email', 'danger');
             return;
         }
 
         try {
             setLoading(true);
-            let updatedCollaborateurs = [];
-
+            
             if (isEditing) {
-                updatedCollaborateurs = collaborateursList.map(collab => 
+                // Mode édition : mettre à jour normalement
+                const updatedCollaborateurs = collaborateursList.map(collab => 
                     collab.id === currentCollaborateur.id 
                         ? { ...currentCollaborateur, updatedAt: new Date() }
                         : collab
                 );
-            } else {
-                const newCollaborateur = {
-                    ...currentCollaborateur,
-                    id: `collab_${Date.now()}`,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                };
-                updatedCollaborateurs = [...collaborateursList, newCollaborateur];
-            }
-
-            await saveCollaborateursToFirebase(updatedCollaborateurs);
-            setCollaborateursList(updatedCollaborateurs);
-            
-            if (isEditing) {
+                
+                await saveCollaborateursToFirebase(updatedCollaborateurs);
+                setCollaborateursList(updatedCollaborateurs);
+                
                 if (selectedCollaborateur?.id === currentCollaborateur.id) {
                     setSelectedCollaborateur({ ...currentCollaborateur, updatedAt: new Date() });
                 }
                 showMessage('Collaborateur modifié avec succès');
             } else {
-                const newCollaborateur = updatedCollaborateurs[updatedCollaborateurs.length - 1];
-                if (!selectedCollaborateur) {
-                    setSelectedCollaborateur(newCollaborateur);
-                }
-                showMessage('Collaborateur ajouté avec succès');
+                // Mode création : créer une invitation automatiquement
+                const { generateInvitationCode } = await import('@/services/firebase-service');
+                
+                // Générer l'invitation
+                const invitation = await generateInvitationCode(
+                    currentEntreprise.id,
+                    'member', // Rôle par défaut
+                    30, // 30 jours de validité
+                    1   // Usage unique
+                );
+                
+                // Ajouter les métadonnées du collaborateur
+                const invitationData = {
+                    ...invitation,
+                    email: currentCollaborateur.email,
+                    nom: currentCollaborateur.nom || null,
+                    prenom: currentCollaborateur.prenom || null,
+                    groupes: currentCollaborateur.groupes || [],
+                    entreprises: currentCollaborateur.entreprises || [],
+                    createdBy: currentUser.uid,
+                    createdByName: currentUser.displayName || currentUser.email,
+                    entrepriseName: currentEntreprise.raisonSociale || currentEntreprise.nom,
+                    isFromCollaborateur: true,
+                    collaborateurData: {
+                        initiales: currentCollaborateur.initiales || '',
+                        identifiant: currentCollaborateur.identifiant || currentCollaborateur.email,
+                        actif: currentCollaborateur.actif !== false // Par défaut actif
+                    }
+                };
+                
+                // Mettre à jour l'invitation avec les métadonnées
+                await updateDoc(doc(db, 'entreprise_invitations', invitation.id), invitationData);
+                
+                // Créer aussi une entrée dans collaborateurs pour le tracking
+                const newCollaborateur = {
+                    ...currentCollaborateur,
+                    id: `collab_${Date.now()}`,
+                    invitationId: invitation.id,
+                    invitationCode: invitation.code,
+                    status: 'pending', // En attente d'acceptation
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                
+                const updatedCollaborateurs = [...collaborateursList, newCollaborateur];
+                await saveCollaborateursToFirebase(updatedCollaborateurs);
+                setCollaborateursList(updatedCollaborateurs);
+                
+                showMessage(`Invitation créée avec succès. Code : ${invitation.code}`, 'success');
+                
+                // TODO: Envoyer un email d'invitation
+                console.log('📧 Email d\'invitation à envoyer à:', currentCollaborateur.email);
             }
             
             setShowModal(false);
@@ -483,12 +513,21 @@ const CollaborateursManagerFirebase = () => {
                                 <div className="d-flex justify-content-between align-items-start">
                                     <div className="flex-grow-1">
                                         <h6 className="mb-1">
-                                            {collaborateur.prenom} {collaborateur.nom}
+                                            {collaborateur.prenom || collaborateur.nom ? 
+                                                `${collaborateur.prenom || ''} ${collaborateur.nom || ''}`.trim() : 
+                                                collaborateur.email
+                                            }
                                             {!collaborateur.actif && <span className="badge bg-secondary ms-2 small">Inactif</span>}
+                                            {collaborateur.status === 'pending' && <span className="badge bg-warning ms-2 small">En attente</span>}
                                             {collaborateur.id === currentUser?.uid && <span className="badge bg-primary ms-2 small">Vous</span>}
                                         </h6>
                                         <small className="text-muted">
                                             {collaborateur.email}
+                                            {collaborateur.invitationCode && (
+                                                <span className="ms-2">
+                                                    • Code: <code className="bg-light px-1">{collaborateur.invitationCode}</code>
+                                                </span>
+                                            )}
                                         </small>
                                         {collaborateur.groupes && collaborateur.groupes.length > 0 && (
                                             <div className="mt-1">
@@ -782,6 +821,40 @@ const CollaborateursManagerFirebase = () => {
                         </Form.Group>
                     </Col>
                 </Row>
+            )}
+
+            {selectedCollaborateur.status === 'pending' && selectedCollaborateur.invitationCode && (
+                <div className="mt-3 p-3 bg-warning bg-opacity-10 border border-warning rounded">
+                    <h6 className="mb-2">Invitation en attente</h6>
+                    <p className="mb-2">Ce collaborateur n'a pas encore accepté l'invitation.</p>
+                    <div className="d-flex gap-2">
+                        <Button
+                            size="sm"
+                            variant="warning"
+                            onClick={() => {
+                                const link = `${window.location.origin}/onboarding?action=join&code=${selectedCollaborateur.invitationCode}`;
+                                navigator.clipboard.writeText(link);
+                                showMessage('Lien d\'invitation copié !');
+                            }}
+                        >
+                            <FaCopy className="me-2" />
+                            Copier le lien
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline-warning"
+                            onClick={() => {
+                                const link = `${window.location.origin}/onboarding?action=join&code=${selectedCollaborateur.invitationCode}`;
+                                const subject = `Invitation à rejoindre ${currentEntreprise.raisonSociale || currentEntreprise.nom}`;
+                                const body = `Bonjour ${selectedCollaborateur.prenom},\n\nVous êtes invité(e) à rejoindre notre équipe sur TourCraft.\n\nCliquez sur le lien suivant ou utilisez le code d'invitation : ${selectedCollaborateur.invitationCode}\n\n${link}\n\nCordialement`;
+                                window.location.href = `mailto:${selectedCollaborateur.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                            }}
+                        >
+                            <FaEnvelope className="me-2" />
+                            Renvoyer par email
+                        </Button>
+                    </div>
+                </div>
             )}
 
             {selectedCollaborateur.createdAt && (
@@ -1383,25 +1456,25 @@ const CollaborateursManagerFirebase = () => {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Nom *</Form.Label>
+                                <Form.Label>Nom</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="nom"
                                     value={currentCollaborateur.nom}
                                     onChange={handleInputChange}
-                                    required
+                                    placeholder="Optionnel"
                                 />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Prénom *</Form.Label>
+                                <Form.Label>Prénom</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="prenom"
                                     value={currentCollaborateur.prenom}
                                     onChange={handleInputChange}
-                                    required
+                                    placeholder="Optionnel"
                                 />
                             </Form.Group>
                         </Col>
@@ -1446,57 +1519,11 @@ const CollaborateursManagerFirebase = () => {
                         </Col>
                     </Row>
 
-                    {isEditing && (
-                        <Form.Group className="mb-3">
-                            <Form.Check
-                                type="checkbox"
-                                name="changerIdentifiants"
-                                label="Changer l'identifiant et le mot de passe ?"
-                                checked={currentCollaborateur.changerIdentifiants || false}
-                                onChange={handleInputChange}
-                            />
-                        </Form.Group>
-                    )}
-
-                    {(!isEditing || currentCollaborateur.changerIdentifiants) && (
-                        <>
-                            <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Mot de passe *</Form.Label>
-                                        <InputGroup>
-                                            <Form.Control
-                                                type={showPassword ? "text" : "password"}
-                                                name="motDePasse"
-                                                value={currentCollaborateur.motDePasse}
-                                                onChange={handleInputChange}
-                                                placeholder="Mot de passe"
-                                                required
-                                            />
-                                            <Button
-                                                variant="outline-secondary"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                            >
-                                                {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                            </Button>
-                                        </InputGroup>
-                                    </Form.Group>
-                                </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Confirmation mot de passe *</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            name="confirmationMotDePasse"
-                                            value={currentCollaborateur.confirmationMotDePasse}
-                                            onChange={handleInputChange}
-                                            placeholder="Confirmer le mot de passe"
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        </>
+                    {!isEditing && (
+                        <div className="alert alert-info">
+                            <i className="bi bi-info-circle me-2"></i>
+                            Une invitation sera automatiquement créée et envoyée à cette adresse email.
+                        </div>
                     )}
                 </Form>
                 )}

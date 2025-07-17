@@ -520,6 +520,7 @@ function DesktopLayout({ children }) {
       case '/collaboration/parametrage':
       case '/collaboration/parametrage/entreprise':
       case '/collaboration/parametrage/collaborateurs':
+      case '/collaboration/parametrage/invitations':
       case '/collaboration/parametrage/taches':
       case '/collaboration/parametrage/permissions':
         openTab({

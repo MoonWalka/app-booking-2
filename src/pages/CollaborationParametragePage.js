@@ -7,9 +7,13 @@ import { useEntreprise } from '@/context/EntrepriseContext';
 import GroupesPermissionsManager from '../components/parametrage/GroupesPermissionsManager';
 import EntreprisesManager from '../components/collaboration/EntreprisesManagerFirebase';
 import CollaborateursManagerFirebase from '../components/collaboration/CollaborateursManagerFirebase';
+import InvitationsManager from '../components/collaboration/InvitationsManager';
 import styles from './CollaborationParametragePage.module.css';
 
 const CollaborationParametragePage = () => {
+  console.log('📧 CollaborationParametragePage - Composant chargé');
+  console.log('📧 InvitationsManager importé:', InvitationsManager);
+  
   const [activeTab, setActiveTab] = useState('entreprise');
   const [selectedConfig, setSelectedConfig] = useState('entreprise');
   const [loading, setLoading] = useState(false);
@@ -76,6 +80,8 @@ const CollaborationParametragePage = () => {
       newActiveTab = 'entreprise';
     } else if (path.includes('/collaboration/parametrage/collaborateurs')) {
       newActiveTab = 'collaborateurs';
+    } else if (path.includes('/collaboration/parametrage/invitations')) {
+      newActiveTab = 'invitations';
     } else if (path.includes('/collaboration/parametrage/taches')) {
       newActiveTab = 'taches';
     } else if (path.includes('/collaboration/parametrage/permissions')) {
@@ -154,9 +160,12 @@ const CollaborationParametragePage = () => {
     const tabs = [
       { key: 'entreprise', label: 'Entreprise', icon: 'bi-building' },
       { key: 'collaborateurs', label: 'Collaborateurs', icon: 'bi-people' },
+      { key: 'invitations', label: 'Invitations', icon: 'bi-envelope' },
       { key: 'taches', label: 'Tâches', icon: 'bi-check2-square' },
       { key: 'permissions', label: 'Permissions', icon: 'bi-shield-check' }
     ];
+    
+    console.log('📧 CollaborationParametragePage - Menu construit avec tabs:', tabs);
 
     return (
       <div className={styles.sidebar}>
@@ -188,6 +197,12 @@ const CollaborationParametragePage = () => {
   const renderCollaborateursConfig = () => (
     <CollaborateursManagerFirebase />
   );
+
+  // Rendu de la gestion des invitations
+  const renderInvitationsConfig = () => {
+    console.log('📧 CollaborationParametragePage - Rendu du module Invitations');
+    return <InvitationsManager />;
+  };
 
   // Rendu de la configuration des tâches
   const renderTachesConfig = () => (
@@ -304,6 +319,8 @@ const CollaborationParametragePage = () => {
         return renderEntrepriseConfig();
       case 'collaborateurs':
         return renderCollaborateursConfig();
+      case 'invitations':
+        return renderInvitationsConfig();
       case 'taches':
         return renderTachesConfig();
       case 'permissions':
@@ -326,7 +343,7 @@ const CollaborationParametragePage = () => {
           <i className="bi bi-gear me-2"></i>
           Paramétrage Collaboration
         </h2>
-        {!['entreprise', 'collaborateurs'].includes(selectedConfig) && (
+        {!['entreprise', 'collaborateurs', 'invitations'].includes(selectedConfig) && (
           <Button 
             variant="primary"
             onClick={saveConfiguration}

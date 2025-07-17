@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Table, Alert, Badge, Dropdown } from 'react-bootstrap';
 import { FaPlus, FaSync, FaEdit, FaTrash, FaUsers, FaKey, FaEllipsisV } from 'react-icons/fa';
+import { doc, getDoc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import GroupeFormModal from './GroupeFormModal';
 import CollaborateursModal from './CollaborateursModal';
 import './GroupesPermissionsManager.css';
 
 const GroupesPermissionsManager = () => {
+    const { currentEntreprise } = useEntreprise();
     const [groupesList, setGroupesList] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertVariant, setAlertVariant] = useState('success');
+    const [loading, setLoading] = useState(true);
     
     // États pour les modales
     const [showGroupeModal, setShowGroupeModal] = useState(false);
@@ -19,75 +24,106 @@ const GroupesPermissionsManager = () => {
 
     // Chargement initial des données
     useEffect(() => {
-        loadGroupesList();
-    }, []);
+        if (currentEntreprise?.id) {
+            loadGroupesList();
+        }
+    }, [currentEntreprise?.id]);
 
-    const loadGroupesList = () => {
-        // Simulation de données pour l'exemple
-        const mockData = [
-            {
-                id: 1,
-                nom: 'Administrateurs',
-                commentaires: 'Accès complet à toutes les fonctionnalités',
-                permissions: {
-                    artistes: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
-                    contacts: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
-                    dates: { creer: true, modifier: true, voir: true, supprimer: true, historique: true }
-                },
-                collaborateurs: [
-                    { id: 1, nom: 'Martin', prenom: 'Jean', email: 'jean.martin@example.com', role: 'Admin' }
-                ],
-                dateCreation: '2024-01-01',
-                derniereModification: '2024-02-15'
-            },
-            {
-                id: 2,
-                nom: 'Utilisateurs standard',
-                commentaires: 'Droits de consultation et modification limitée',
-                permissions: {
-                    artistes: { creer: true, modifier: true, voir: true, historique: true },
-                    contacts: { creer: true, modifier: true, voir: true, historique: true },
-                    dates: { creer: true, modifier: true, voir: true, historique: true }
-                },
-                collaborateurs: [
-                    { id: 2, nom: 'Dupont', prenom: 'Marie', email: 'marie.dupont@example.com', role: 'Utilisateur' },
-                    { id: 5, nom: 'Petit', prenom: 'Lucas', email: 'lucas.petit@example.com', role: 'Utilisateur' }
-                ],
-                dateCreation: '2024-01-15',
-                derniereModification: '2024-02-10'
-            },
-            {
-                id: 3,
-                nom: 'Invités',
-                commentaires: 'Accès en lecture seule',
-                permissions: {
-                    artistes: { voir: true },
-                    contacts: { voir: true },
-                    dates: { voir: true }
-                },
-                collaborateurs: [
-                    { id: 3, nom: 'Bernard', prenom: 'Paul', email: 'paul.bernard@example.com', role: 'Invité' }
-                ],
-                dateCreation: '2024-02-01',
-                derniereModification: '2024-02-01'
-            },
-            {
-                id: 4,
-                nom: 'Stagiaires',
-                commentaires: 'Accès limité pour les stagiaires',
-                permissions: {
-                    artistes: { voir: true, modifier: true },
-                    contacts: { voir: true, modifier: true },
-                    dates: { voir: true }
-                },
-                collaborateurs: [
-                    { id: 4, nom: 'Moreau', prenom: 'Sophie', email: 'sophie.moreau@example.com', role: 'Stagiaire' }
-                ],
-                dateCreation: '2024-02-05',
-                derniereModification: '2024-02-20'
+    const loadGroupesList = async () => {
+        if (!currentEntreprise?.id) return;
+        
+        setLoading(true);
+        try {
+            // Charger les groupes depuis Firebase
+            const groupesRef = collection(db, 'entreprises', currentEntreprise.id, 'groupesPermissions');
+            const groupesSnapshot = await getDocs(groupesRef);
+            
+            const groupes = [];
+            groupesSnapshot.forEach(doc => {
+                groupes.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // Si aucun groupe n'existe, créer les groupes par défaut
+            if (groupes.length === 0) {
+                const defaultGroups = [
+                    {
+                        id: 'admin',
+                        nom: 'Administrateurs',
+                        commentaires: 'Accès complet à toutes les fonctionnalités',
+                        permissions: {
+                            artistes: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+                            contacts: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+                            dates: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+                            entreprises: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+                            collaborateurs: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+                            contrats: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+                            factures: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+                            parametrage: { modifier: true }
+                        },
+                        collaborateurs: [],
+                        dateCreation: new Date().toISOString(),
+                        derniereModification: new Date().toISOString()
+                    },
+                    {
+                        id: 'utilisateur',
+                        nom: 'Utilisateurs standard',
+                        commentaires: 'Droits de consultation et modification limitée',
+                        permissions: {
+                            artistes: { creer: true, modifier: true, voir: true, historique: true },
+                            contacts: { creer: true, modifier: true, voir: true, historique: true },
+                            dates: { creer: true, modifier: true, voir: true, historique: true },
+                            entreprises: { voir: true },
+                            collaborateurs: { voir: true },
+                            contrats: { creer: true, modifier: true, voir: true },
+                            factures: { voir: true }
+                        },
+                        collaborateurs: [],
+                        dateCreation: new Date().toISOString(),
+                        derniereModification: new Date().toISOString()
+                    },
+                    {
+                        id: 'invite',
+                        nom: 'Invités',
+                        commentaires: 'Accès en lecture seule',
+                        permissions: {
+                            artistes: { voir: true },
+                            contacts: { voir: true },
+                            dates: { voir: true }
+                        },
+                        collaborateurs: [],
+                        dateCreation: new Date().toISOString(),
+                        derniereModification: new Date().toISOString()
+                    },
+                    {
+                        id: 'stagiaire',
+                        nom: 'Stagiaires',
+                        commentaires: 'Accès limité pour les stagiaires',
+                        permissions: {
+                            artistes: { voir: true, modifier: true },
+                            contacts: { voir: true, modifier: true },
+                            dates: { voir: true }
+                        },
+                        collaborateurs: [],
+                        dateCreation: new Date().toISOString(),
+                        derniereModification: new Date().toISOString()
+                    }
+                ];
+                
+                // Sauvegarder les groupes par défaut
+                for (const groupe of defaultGroups) {
+                    const groupeRef = doc(db, 'entreprises', currentEntreprise.id, 'groupesPermissions', groupe.id);
+                    await setDoc(groupeRef, groupe);
+                    groupes.push(groupe);
+                }
             }
-        ];
-        setGroupesList(mockData);
+            
+            setGroupesList(groupes);
+        } catch (error) {
+            console.error('Erreur lors du chargement des groupes:', error);
+            showErrorMessage('Erreur lors du chargement des groupes');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleNewGroupe = () => {
@@ -102,22 +138,65 @@ const GroupesPermissionsManager = () => {
         setShowGroupeModal(true);
     };
 
-    const handleDeleteGroupe = (groupe) => {
+    const handleDeleteGroupe = async (groupe) => {
         if (window.confirm(`Êtes-vous sûr de vouloir supprimer le groupe "${groupe.nom}" ?`)) {
-            setGroupesList(groupesList.filter(item => item.id !== groupe.id));
-            showSuccessMessage('Groupe supprimé avec succès');
+            try {
+                setLoading(true);
+                // Supprimer de Firebase
+                const groupeRef = doc(db, 'entreprises', currentEntreprise.id, 'groupesPermissions', groupe.id);
+                await deleteDoc(groupeRef);
+                
+                // Mettre à jour l'état local
+                setGroupesList(groupesList.filter(item => item.id !== groupe.id));
+                showSuccessMessage('Groupe supprimé avec succès');
+            } catch (error) {
+                console.error('Erreur lors de la suppression:', error);
+                showErrorMessage('Erreur lors de la suppression du groupe');
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
-    const handleSaveGroupe = (groupeData) => {
-        if (isEditing) {
-            setGroupesList(groupesList.map(item => 
-                item.id === groupeData.id ? groupeData : item
-            ));
-            showSuccessMessage('Groupe modifié avec succès');
-        } else {
-            setGroupesList([...groupesList, groupeData]);
-            showSuccessMessage('Groupe créé avec succès');
+    const handleSaveGroupe = async (groupeData) => {
+        try {
+            setLoading(true);
+            
+            let groupeToSave = {
+                ...groupeData,
+                derniereModification: new Date().toISOString()
+            };
+            
+            if (isEditing) {
+                // Modifier le groupe existant
+                const groupeRef = doc(db, 'entreprises', currentEntreprise.id, 'groupesPermissions', groupeData.id);
+                await setDoc(groupeRef, groupeToSave, { merge: true });
+                
+                setGroupesList(groupesList.map(item => 
+                    item.id === groupeData.id ? groupeToSave : item
+                ));
+                showSuccessMessage('Groupe modifié avec succès');
+            } else {
+                // Créer un nouveau groupe
+                const newId = `groupe_${Date.now()}`;
+                groupeToSave = {
+                    ...groupeToSave,
+                    id: newId,
+                    dateCreation: new Date().toISOString(),
+                    collaborateurs: []
+                };
+                
+                const groupeRef = doc(db, 'entreprises', currentEntreprise.id, 'groupesPermissions', newId);
+                await setDoc(groupeRef, groupeToSave);
+                
+                setGroupesList([...groupesList, groupeToSave]);
+                showSuccessMessage('Groupe créé avec succès');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la sauvegarde:', error);
+            showErrorMessage('Erreur lors de la sauvegarde du groupe');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -126,13 +205,30 @@ const GroupesPermissionsManager = () => {
         setShowCollaborateursModal(true);
     };
 
-    const handleSaveCollaborateurs = (groupeId, collaborateurs) => {
-        setGroupesList(groupesList.map(groupe => 
-            groupe.id === groupeId 
-                ? { ...groupe, collaborateurs, derniereModification: new Date().toISOString() }
-                : groupe
-        ));
-        showSuccessMessage('Collaborateurs mis à jour avec succès');
+    const handleSaveCollaborateurs = async (groupeId, collaborateurs) => {
+        try {
+            setLoading(true);
+            
+            // Mettre à jour dans Firebase
+            const groupeRef = doc(db, 'entreprises', currentEntreprise.id, 'groupesPermissions', groupeId);
+            await setDoc(groupeRef, {
+                collaborateurs,
+                derniereModification: new Date().toISOString()
+            }, { merge: true });
+            
+            // Mettre à jour l'état local
+            setGroupesList(groupesList.map(groupe => 
+                groupe.id === groupeId 
+                    ? { ...groupe, collaborateurs, derniereModification: new Date().toISOString() }
+                    : groupe
+            ));
+            showSuccessMessage('Collaborateurs mis à jour avec succès');
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des collaborateurs:', error);
+            showErrorMessage('Erreur lors de la mise à jour des collaborateurs');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const showSuccessMessage = (message) => {
@@ -213,6 +309,14 @@ const GroupesPermissionsManager = () => {
                     </div>
                 </Card.Header>
                 <Card.Body>
+                    {loading ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border" role="status">
+                                <span className="visually-hidden">Chargement...</span>
+                            </div>
+                            <p className="mt-3">Chargement des groupes...</p>
+                        </div>
+                    ) : (
                     <Table responsive hover>
                         <thead>
                             <tr>
@@ -298,6 +402,7 @@ const GroupesPermissionsManager = () => {
                                 Créer un groupe
                             </Button>
                         </div>
+                    )}
                     )}
                 </Card.Body>
             </Card>

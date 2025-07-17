@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Button, Form, Table, Modal, Alert, Nav, InputGroup } from 'react-bootstrap';
+import { Row, Col, Card, Button, Form, Table, Modal, Alert, Nav, InputGroup, Badge } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
@@ -24,6 +24,10 @@ const CollaborateursManagerFirebase = () => {
     // État pour les entreprises et comptes de messagerie
     const [entreprisesList, setEntreprisesList] = useState([]);
     const [comptesMessagerieList, setComptesMessagerieList] = useState([]);
+    const [groupesList, setGroupesList] = useState([]);
+    
+    // État pour l'onglet actif dans la modale
+    const [modalActiveTab, setModalActiveTab] = useState('informations-generales');
     
     // État pour le formulaire de collaborateur
     const [currentCollaborateur, setCurrentCollaborateur] = useState({
@@ -116,6 +120,44 @@ const CollaborateursManagerFirebase = () => {
         }
     };
 
+    // Charger les comptes de messagerie depuis Firebase
+    const loadComptesMessagerie = async () => {
+        if (!currentEntreprise?.id) return;
+        
+        try {
+            // Charger depuis entreprises/{id}/comptesMessagerie
+            const comptesRef = collection(db, 'entreprises', currentEntreprise.id, 'comptesMessagerie');
+            const comptesSnapshot = await getDocs(comptesRef);
+            
+            const loadedComptes = [];
+            comptesSnapshot.forEach(doc => {
+                loadedComptes.push({ id: doc.id, ...doc.data() });
+            });
+            
+            console.log('Comptes de messagerie chargés:', loadedComptes);
+            setComptesMessagerieList(loadedComptes);
+        } catch (error) {
+            console.error('Erreur lors du chargement des comptes de messagerie:', error);
+        }
+    };
+
+    // Fonction pour charger les groupes de permissions depuis Firebase
+    const loadGroupes = async () => {
+        if (!currentEntreprise?.id) return;
+        
+        try {
+            const groupesSnapshot = await getDocs(collection(db, 'entreprises', currentEntreprise.id, 'groupesPermissions'));
+            const groupes = groupesSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            
+            setGroupesList(groupes);
+        } catch (error) {
+            console.error('Erreur lors du chargement des groupes:', error);
+        }
+    };
+
     // Charger les collaborateurs depuis Firebase
     useEffect(() => {
         const loadCollaborateurs = async () => {
@@ -170,6 +212,12 @@ const CollaborateursManagerFirebase = () => {
                 // Charger les entreprises
                 await loadEntreprises();
                 
+                // Charger les comptes de messagerie
+                await loadComptesMessagerie();
+                
+                // Charger les groupes de permissions
+                await loadGroupes();
+                
             } catch (error) {
                 console.error('Erreur lors du chargement des collaborateurs:', error);
                 showMessage('Erreur lors du chargement des collaborateurs', 'danger');
@@ -217,6 +265,9 @@ const CollaborateursManagerFirebase = () => {
     };
 
     const handleShowModal = (collaborateur = null) => {
+        // Réinitialiser l'onglet actif de la modale
+        setModalActiveTab('informations-generales');
+        
         if (collaborateur) {
             setCurrentCollaborateur({ 
                 ...collaborateur, 
@@ -259,7 +310,9 @@ const CollaborateursManagerFirebase = () => {
             return;
         }
 
-        if (!isEditing && (!currentCollaborateur.motDePasse.trim() || currentCollaborateur.motDePasse !== currentCollaborateur.confirmationMotDePasse)) {
+        // Validation du mot de passe : en création OU en édition avec case cochée
+        if ((!isEditing || currentCollaborateur.changerIdentifiants) && 
+            (!currentCollaborateur.motDePasse?.trim() || currentCollaborateur.motDePasse !== currentCollaborateur.confirmationMotDePasse)) {
             showMessage('Les mots de passe ne correspondent pas ou sont vides', 'danger');
             return;
         }
@@ -338,15 +391,50 @@ const CollaborateursManagerFirebase = () => {
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setCurrentCollaborateur(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+        
+        // Si on change l'email et que l'identifiant n'est pas modifiable, mettre à jour l'identifiant
+        if (name === 'email' && !currentCollaborateur.changerIdentifiants) {
+            setCurrentCollaborateur(prev => ({
+                ...prev,
+                email: value,
+                identifiant: value
+            }));
+        } 
+        // Si on change le nom ou le prénom et que les initiales sont vides, générer automatiquement
+        else if ((name === 'nom' || name === 'prenom') && !currentCollaborateur.initiales) {
+            const updatedCollab = {
+                ...currentCollaborateur,
+                [name]: value
+            };
+            const initiales = (updatedCollab.prenom[0] || '') + (updatedCollab.nom[0] || '');
+            setCurrentCollaborateur({
+                ...updatedCollab,
+                initiales: initiales.toUpperCase()
+            });
+        } else {
+            setCurrentCollaborateur(prev => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            }));
+        }
     };
 
     const updateSelectedCollaborateur = (field, value) => {
         if (selectedCollaborateur) {
-            const updated = { ...selectedCollaborateur, [field]: value, updatedAt: new Date() };
+            let updated = { ...selectedCollaborateur, [field]: value, updatedAt: new Date() };
+            
+            // Si on change l'email et que l'identifiant n'est pas modifiable, mettre à jour l'identifiant
+            if (field === 'email' && !selectedCollaborateur.changerIdentifiants) {
+                updated.identifiant = value;
+            }
+            
+            // Si on désactive le changement d'identifiants, réinitialiser l'identifiant et les mots de passe
+            if (field === 'changerIdentifiants' && !value) {
+                updated.identifiant = updated.email;
+                updated.motDePasse = '';
+                updated.confirmationMotDePasse = '';
+            }
+            
             setSelectedCollaborateur(updated);
             
             const updatedList = collaborateursList.map(c => 
@@ -368,7 +456,7 @@ const CollaborateursManagerFirebase = () => {
                 <Button 
                     variant="success" 
                     onClick={() => handleShowModal()}
-                    className="w-100"
+                    className="w-100 text-nowrap d-flex align-items-center justify-content-center"
                     disabled={loading}
                 >
                     <FaPlus className="me-2" />
@@ -633,15 +721,68 @@ const CollaborateursManagerFirebase = () => {
                 </Col>
                 <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Identifiant</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={selectedCollaborateur.identifiant || ''}
-                            onChange={(e) => updateSelectedCollaborateur('identifiant', e.target.value)}
+                        <Form.Check
+                            type="checkbox"
+                            label="Changer l'identifiant et le mot de passe ?"
+                            checked={selectedCollaborateur.changerIdentifiants || false}
+                            onChange={(e) => updateSelectedCollaborateur('changerIdentifiants', e.target.checked)}
                         />
                     </Form.Group>
                 </Col>
             </Row>
+
+            <Row>
+                <Col md={6}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Identifiant</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={selectedCollaborateur.identifiant || selectedCollaborateur.email || ''}
+                            onChange={(e) => updateSelectedCollaborateur('identifiant', e.target.value)}
+                            disabled={!selectedCollaborateur.changerIdentifiants}
+                            className={!selectedCollaborateur.changerIdentifiants ? "bg-light" : ""}
+                        />
+                        <Form.Text className="text-muted">
+                            {!selectedCollaborateur.changerIdentifiants && "Par défaut, l'email est utilisé comme identifiant"}
+                        </Form.Text>
+                    </Form.Group>
+                </Col>
+            </Row>
+
+            {selectedCollaborateur.changerIdentifiants && (
+                <Row>
+                    <Col md={6}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Mot de passe</Form.Label>
+                            <InputGroup>
+                                <Form.Control
+                                    type={showPassword ? "text" : "password"}
+                                    value={selectedCollaborateur.motDePasse || ''}
+                                    onChange={(e) => updateSelectedCollaborateur('motDePasse', e.target.value)}
+                                    placeholder="Nouveau mot de passe"
+                                />
+                                <Button
+                                    variant="outline-secondary"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </Button>
+                            </InputGroup>
+                        </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Confirmation</Form.Label>
+                            <Form.Control
+                                type="password"
+                                value={selectedCollaborateur.confirmationMotDePasse || ''}
+                                onChange={(e) => updateSelectedCollaborateur('confirmationMotDePasse', e.target.value)}
+                                placeholder="Confirmer le mot de passe"
+                            />
+                        </Form.Group>
+                    </Col>
+                </Row>
+            )}
 
             {selectedCollaborateur.createdAt && (
                 <div className="mt-3 p-2 bg-light rounded">
@@ -660,12 +801,6 @@ const CollaborateursManagerFirebase = () => {
 
     // Onglet Groupes/permissions
     const renderGroupesPermissions = () => {
-        const groupes = [
-            { id: 'admin', nom: 'admin', description: 'Administrateur système' },
-            { id: 'Invité', nom: 'Invité', description: 'Accès limité' },
-            { id: 'Stagiaire', nom: 'Stagiaire', description: 'Stagiaire' },
-            { id: 'Utilisateur', nom: 'Utilisateur', description: 'Utilisateur standard' }
-        ];
         const selectedGroupes = selectedCollaborateur.groupes || [];
 
         return (
@@ -681,12 +816,12 @@ const CollaborateursManagerFirebase = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {groupes.map(groupe => (
+                                {groupesList.length > 0 ? groupesList.map(groupe => (
                                     <tr key={groupe.id}>
                                         <td>
                                             <div>
                                                 <strong>{groupe.nom}</strong>
-                                                {groupe.description && <div className="small text-muted">{groupe.description}</div>}
+                                                {groupe.commentaires && <div className="small text-muted">{groupe.commentaires}</div>}
                                             </div>
                                         </td>
                                         <td className="text-center">
@@ -704,7 +839,13 @@ const CollaborateursManagerFirebase = () => {
                                             </Button>
                                         </td>
                                     </tr>
-                                ))}
+                                )) : (
+                                    <tr>
+                                        <td colSpan="2" className="text-center text-muted">
+                                            Aucun groupe de permissions configuré
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </Table>
                     </Col>
@@ -719,13 +860,13 @@ const CollaborateursManagerFirebase = () => {
                             </thead>
                             <tbody>
                                 {selectedGroupes.map(groupeId => {
-                                    const groupe = groupes.find(g => g.id === groupeId);
+                                    const groupe = groupesList.find(g => g.id === groupeId);
                                     return groupe ? (
                                         <tr key={groupeId}>
                                             <td>
                                                 <div>
                                                     <strong>{groupe.nom}</strong>
-                                                    {groupe.description && <div className="small text-muted">{groupe.description}</div>}
+                                                    {groupe.commentaires && <div className="small text-muted">{groupe.commentaires}</div>}
                                                 </div>
                                             </td>
                                             <td className="text-center">
@@ -1192,7 +1333,53 @@ const CollaborateursManagerFirebase = () => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form>
+                <Nav variant="tabs" className="mb-3">
+                    <Nav.Item>
+                        <Nav.Link 
+                            active={modalActiveTab === 'informations-generales'}
+                            onClick={() => setModalActiveTab('informations-generales')}
+                        >
+                            Informations générales
+                        </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link 
+                            active={modalActiveTab === 'groupes-permissions'}
+                            onClick={() => setModalActiveTab('groupes-permissions')}
+                        >
+                            Groupes / permissions
+                        </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link 
+                            active={modalActiveTab === 'entreprises'}
+                            onClick={() => setModalActiveTab('entreprises')}
+                        >
+                            Entreprises
+                        </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link 
+                            active={modalActiveTab === 'comptes-messagerie'}
+                            onClick={() => setModalActiveTab('comptes-messagerie')}
+                        >
+                            Comptes de messagerie
+                        </Nav.Link>
+                    </Nav.Item>
+                </Nav>
+                
+                {modalActiveTab === 'informations-generales' && (
+                    <Form>
+                    <Form.Group className="mb-3">
+                        <Form.Check
+                            type="checkbox"
+                            name="actif"
+                            label="Collaborateur actif ?"
+                            checked={currentCollaborateur.actif}
+                            onChange={handleInputChange}
+                        />
+                    </Form.Group>
+                    
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
@@ -1250,14 +1437,28 @@ const CollaborateursManagerFirebase = () => {
                                 <Form.Control
                                     type="text"
                                     name="identifiant"
-                                    value={currentCollaborateur.identifiant}
+                                    value={currentCollaborateur.identifiant || currentCollaborateur.email}
                                     onChange={handleInputChange}
+                                    disabled={!currentCollaborateur.changerIdentifiants}
+                                    className={!currentCollaborateur.changerIdentifiants ? "bg-light" : ""}
                                 />
                             </Form.Group>
                         </Col>
                     </Row>
 
-                    {!isEditing && (
+                    {isEditing && (
+                        <Form.Group className="mb-3">
+                            <Form.Check
+                                type="checkbox"
+                                name="changerIdentifiants"
+                                label="Changer l'identifiant et le mot de passe ?"
+                                checked={currentCollaborateur.changerIdentifiants || false}
+                                onChange={handleInputChange}
+                            />
+                        </Form.Group>
+                    )}
+
+                    {(!isEditing || currentCollaborateur.changerIdentifiants) && (
                         <>
                             <Row>
                                 <Col md={6}>
@@ -1297,17 +1498,138 @@ const CollaborateursManagerFirebase = () => {
                             </Row>
                         </>
                     )}
-
-                    <Form.Group className="mb-3">
-                        <Form.Check
-                            type="checkbox"
-                            name="actif"
-                            label="Collaborateur actif"
-                            checked={currentCollaborateur.actif}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
                 </Form>
+                )}
+                
+                {modalActiveTab === 'groupes-permissions' && (
+                    <div>
+                        <Row>
+                            <Col md={6}>
+                                <h6>Groupes disponibles</h6>
+                                <div className="border rounded p-2" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                                    {groupesList.length > 0 ? groupesList.map(groupe => (
+                                        <Form.Check
+                                            key={groupe.id}
+                                            type="checkbox"
+                                            label={groupe.nom}
+                                            checked={currentCollaborateur.groupes?.includes(groupe.id) || false}
+                                            onChange={(e) => {
+                                                const updatedGroupes = e.target.checked
+                                                    ? [...(currentCollaborateur.groupes || []), groupe.id]
+                                                    : (currentCollaborateur.groupes || []).filter(g => g !== groupe.id);
+                                                setCurrentCollaborateur({
+                                                    ...currentCollaborateur,
+                                                    groupes: updatedGroupes
+                                                });
+                                            }}
+                                        />
+                                    )) : (
+                                        <div className="text-center text-muted py-3">
+                                            Aucun groupe de permissions configuré
+                                        </div>
+                                    )}
+                                </div>
+                            </Col>
+                            <Col md={6}>
+                                <h6>Groupes sélectionnés</h6>
+                                <div className="border rounded p-2" style={{ minHeight: '100px' }}>
+                                    {currentCollaborateur.groupes?.map(groupeId => {
+                                        const groupe = groupesList.find(g => g.id === groupeId);
+                                        return groupe ? (
+                                            <Badge key={groupeId} bg="primary" className="me-2 mb-2">
+                                                {groupe.nom}
+                                            </Badge>
+                                        ) : null;
+                                    })}
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+                )}
+                
+                {modalActiveTab === 'entreprises' && (
+                    <div>
+                        <Row>
+                            <Col md={6}>
+                                <h6>Entreprises disponibles</h6>
+                                <div className="border rounded p-2" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                                    {entreprisesList.map(entreprise => (
+                                        <Form.Check
+                                            key={entreprise.id}
+                                            type="checkbox"
+                                            label={entreprise.raisonSociale || entreprise.nom}
+                                            checked={currentCollaborateur.entreprises?.includes(entreprise.id) || false}
+                                            onChange={(e) => {
+                                                const updatedEntreprises = e.target.checked
+                                                    ? [...(currentCollaborateur.entreprises || []), entreprise.id]
+                                                    : (currentCollaborateur.entreprises || []).filter(id => id !== entreprise.id);
+                                                setCurrentCollaborateur({
+                                                    ...currentCollaborateur,
+                                                    entreprises: updatedEntreprises
+                                                });
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </Col>
+                            <Col md={6}>
+                                <h6>Raison sociale</h6>
+                                <div className="border rounded p-2" style={{ minHeight: '100px' }}>
+                                    {currentCollaborateur.entreprises?.map(entrepriseId => {
+                                        const entreprise = entreprisesList.find(e => e.id === entrepriseId);
+                                        return entreprise ? (
+                                            <Badge key={entrepriseId} bg="info" className="me-2 mb-2">
+                                                {entreprise.raisonSociale || entreprise.nom}
+                                            </Badge>
+                                        ) : null;
+                                    })}
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+                )}
+                
+                {modalActiveTab === 'comptes-messagerie' && (
+                    <div>
+                        <Row>
+                            <Col md={6}>
+                                <h6>Comptes disponibles</h6>
+                                <div className="border rounded p-2" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                                    {comptesMessagerieList.map(compte => (
+                                        <Form.Check
+                                            key={compte.id}
+                                            type="checkbox"
+                                            label={`${compte.compte} - ${compte.adresse}`}
+                                            checked={currentCollaborateur.comptesMessagerie?.includes(compte.id) || false}
+                                            onChange={(e) => {
+                                                const updatedComptes = e.target.checked
+                                                    ? [...(currentCollaborateur.comptesMessagerie || []), compte.id]
+                                                    : (currentCollaborateur.comptesMessagerie || []).filter(id => id !== compte.id);
+                                                setCurrentCollaborateur({
+                                                    ...currentCollaborateur,
+                                                    comptesMessagerie: updatedComptes
+                                                });
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </Col>
+                            <Col md={6}>
+                                <h6>Comptes sélectionnés</h6>
+                                <div className="border rounded p-2" style={{ minHeight: '100px' }}>
+                                    {currentCollaborateur.comptesMessagerie?.map(compteId => {
+                                        const compte = comptesMessagerieList.find(c => c.id === compteId);
+                                        return compte ? (
+                                            <Badge key={compteId} bg="success" className="me-2 mb-2">
+                                                {compte.compte}
+                                            </Badge>
+                                        ) : null;
+                                    })}
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+                )}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={() => setShowModal(false)}>

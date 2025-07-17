@@ -219,7 +219,7 @@ const CollaborateursManager = () => {
                 <Button 
                     variant="success" 
                     onClick={() => handleShowModal()}
-                    className="w-100"
+                    className="w-100 text-nowrap d-flex align-items-center justify-content-center"
                 >
                     <FaPlus className="me-2" />
                     Nouveau collaborateur

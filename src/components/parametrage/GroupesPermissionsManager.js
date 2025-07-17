@@ -317,92 +317,94 @@ const GroupesPermissionsManager = () => {
                             <p className="mt-3">Chargement des groupes...</p>
                         </div>
                     ) : (
-                    <Table responsive hover>
-                        <thead>
-                            <tr>
-                                <th>Nom du groupe</th>
-                                <th>Collaborateurs</th>
-                                <th>Permissions</th>
-                                <th>Dernière modification</th>
-                                <th className="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {groupesList.map(groupe => (
-                                <tr key={groupe.id}>
-                                    <td>
-                                        <div>
-                                            <Badge bg={getGroupeVariant(groupe.nom)} className="me-2">
-                                                <FaKey className="me-1" />
-                                                {groupe.nom}
-                                            </Badge>
-                                            {groupe.commentaires && (
+                        <>
+                            <Table responsive hover>
+                                <thead>
+                                    <tr>
+                                        <th>Nom du groupe</th>
+                                        <th>Collaborateurs</th>
+                                        <th>Permissions</th>
+                                        <th>Dernière modification</th>
+                                        <th className="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {groupesList.map(groupe => (
+                                        <tr key={groupe.id}>
+                                            <td>
                                                 <div>
-                                                    <small className="text-muted">{groupe.commentaires}</small>
+                                                    <Badge bg={getGroupeVariant(groupe.nom)} className="me-2">
+                                                        <FaKey className="me-1" />
+                                                        {groupe.nom}
+                                                    </Badge>
+                                                    {groupe.commentaires && (
+                                                        <div>
+                                                            <small className="text-muted">{groupe.commentaires}</small>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="d-flex align-items-center">
-                                            <FaUsers className="me-2 text-muted" />
-                                            <span className="me-2">{groupe.collaborateurs.length}</span>
-                                            <Button
-                                                variant="link"
-                                                size="sm"
-                                                onClick={() => handleGererCollaborateurs(groupe)}
-                                                className="p-0"
-                                            >
-                                                Gérer
-                                            </Button>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <Badge bg="info">
-                                            {getPermissionsCount(groupe.permissions)} permissions
-                                        </Badge>
-                                    </td>
-                                    <td>{formatDate(groupe.derniereModification)}</td>
-                                    <td className="text-center">
-                                        <Dropdown>
-                                            <Dropdown.Toggle variant="link" size="sm" className="text-muted">
-                                                <FaEllipsisV />
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item onClick={() => handleEditGroupe(groupe)}>
-                                                    <FaEdit className="me-2" />
-                                                    Modifier les droits
-                                                </Dropdown.Item>
-                                                <Dropdown.Item onClick={() => handleGererCollaborateurs(groupe)}>
-                                                    <FaUsers className="me-2" />
-                                                    Gérer les collaborateurs
-                                                </Dropdown.Item>
-                                                <Dropdown.Divider />
-                                                <Dropdown.Item 
-                                                    onClick={() => handleDeleteGroupe(groupe)}
-                                                    className="text-danger"
-                                                >
-                                                    <FaTrash className="me-2" />
-                                                    Supprimer le groupe
-                                                </Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                    {groupesList.length === 0 && (
-                        <div className="text-center py-5 text-muted">
-                            <FaKey size={48} className="mb-3 opacity-50" />
-                            <h5>Aucun groupe de permissions</h5>
-                            <p>Créez votre premier groupe pour commencer à gérer les permissions</p>
-                            <Button variant="primary" onClick={handleNewGroupe}>
-                                <FaPlus className="me-2" />
-                                Créer un groupe
-                            </Button>
-                        </div>
-                    )}
+                                            </td>
+                                            <td>
+                                                <div className="d-flex align-items-center">
+                                                    <FaUsers className="me-2 text-muted" />
+                                                    <span className="me-2">{groupe.collaborateurs.length}</span>
+                                                    <Button
+                                                        variant="link"
+                                                        size="sm"
+                                                        onClick={() => handleGererCollaborateurs(groupe)}
+                                                        className="p-0"
+                                                    >
+                                                        Gérer
+                                                    </Button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <Badge bg="info">
+                                                    {getPermissionsCount(groupe.permissions)} permissions
+                                                </Badge>
+                                            </td>
+                                            <td>{formatDate(groupe.derniereModification)}</td>
+                                            <td className="text-center">
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="link" size="sm" className="text-muted">
+                                                        <FaEllipsisV />
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item onClick={() => handleEditGroupe(groupe)}>
+                                                            <FaEdit className="me-2" />
+                                                            Modifier les droits
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item onClick={() => handleGererCollaborateurs(groupe)}>
+                                                            <FaUsers className="me-2" />
+                                                            Gérer les collaborateurs
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Divider />
+                                                        <Dropdown.Item 
+                                                            onClick={() => handleDeleteGroupe(groupe)}
+                                                            className="text-danger"
+                                                        >
+                                                            <FaTrash className="me-2" />
+                                                            Supprimer le groupe
+                                                        </Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                            {groupesList.length === 0 && (
+                                <div className="text-center py-5 text-muted">
+                                    <FaKey size={48} className="mb-3 opacity-50" />
+                                    <h5>Aucun groupe de permissions</h5>
+                                    <p>Créez votre premier groupe pour commencer à gérer les permissions</p>
+                                    <Button variant="primary" onClick={handleNewGroupe}>
+                                        <FaPlus className="me-2" />
+                                        Créer un groupe
+                                    </Button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </Card.Body>
             </Card>

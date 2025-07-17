@@ -22,6 +22,11 @@ const EntreprisesManagerFirebase = () => {
     const [activeTab, setActiveTab] = useState('informations-generales');
     const [loading, setLoading] = useState(false);
     
+    // États pour l'onglet collaborateurs
+    const [allCollaborateurs, setAllCollaborateurs] = useState([]);
+    const [selectedCollaborateurs, setSelectedCollaborateurs] = useState([]);
+    const [loadingCollaborateurs, setLoadingCollaborateurs] = useState(false);
+    
     // État pour le formulaire d'entreprise
     const [entrepriseForm, setEntrepriseForm] = useState({
         id: null,
@@ -64,7 +69,12 @@ const EntreprisesManagerFirebase = () => {
     // Charger les entreprises depuis Firebase
     useEffect(() => {
         const loadEntreprises = async () => {
-            if (!currentEntreprise?.id) return;
+            console.log('LoadEntreprises - currentEntreprise:', currentEntreprise);
+            if (!currentEntreprise?.id) {
+                console.log('Pas d\'entreprise courante, arrêt du chargement');
+                setLoading(false);
+                return;
+            }
             
             setLoading(true);
             try {
@@ -83,31 +93,53 @@ const EntreprisesManagerFirebase = () => {
                 
                 if (entrepriseDoc.exists()) {
                     const entrepriseData = entrepriseDoc.data();
+                    console.log('Données entreprise principale:', entrepriseData);
                     
                     // Essayer aussi de charger les détails depuis settings/entreprise si disponible
                     const settingsRef = doc(db, 'entreprises', currentEntreprise.id, 'settings', 'entreprise');
                     const settingsDoc = await getDoc(settingsRef);
+                    const settingsData = settingsDoc.exists() ? settingsDoc.data() : null;
+                    console.log('Données settings/entreprise:', settingsData);
                     
                     // Fusionner les données de base avec les détails si disponibles
                     const mainEntreprise = {
                         id: 'main',
                         principal: true,
-                        raisonSociale: entrepriseData.name || settingsDoc.data()?.nom || settingsDoc.data()?.raisonSociale || 'Entreprise principale',
-                        code: entrepriseData.slug || 'MAIN',
+                        raisonSociale: entrepriseData.name || settingsData?.nom || settingsData?.raisonSociale || currentEntreprise.name || 'Entreprise principale',
+                        code: entrepriseData.slug || currentEntreprise.slug || 'MAIN',
                         type: entrepriseData.type,
-                        ...(settingsDoc.exists() ? settingsDoc.data() : {}),
-                        // Mapper les champs si nécessaire
-                        ape: settingsDoc.data()?.codeAPE || settingsDoc.data()?.ape || '',
-                        ville: settingsDoc.data()?.ville || '',
-                        email: settingsDoc.data()?.email || '',
-                        telephone: settingsDoc.data()?.telephone || ''
+                        ville: settingsData?.ville || '',
+                        email: settingsData?.email || '',
+                        telephone: settingsData?.telephone || '',
+                        ape: settingsData?.codeAPE || settingsData?.ape || '',
+                        adresse: settingsData?.adresse || '',
+                        codePostal: settingsData?.codePostal || '',
+                        siret: settingsData?.siret || '',
+                        tva: settingsData?.numeroTVAIntracommunautaire || settingsData?.tva || '',
+                        // Si on a des données de settings, on les inclut
+                        ...(settingsData || {})
                     };
+                    
+                    console.log('Entreprise principale construite:', mainEntreprise);
                     
                     // Vérifier si l'entreprise principale n'est pas déjà dans la liste chargée
                     const existingMain = loadedEntreprises.find(e => e.id === 'main');
                     if (!existingMain) {
                         loadedEntreprises = [mainEntreprise, ...loadedEntreprises];
                     }
+                } else {
+                    console.log('Document entreprise non trouvé, utilisation des données du contexte');
+                    // Si le document n'existe pas, créer une entreprise principale à partir du contexte
+                    const mainEntreprise = {
+                        id: 'main',
+                        principal: true,
+                        raisonSociale: currentEntreprise.name || 'Mon entreprise',
+                        code: currentEntreprise.slug || 'MAIN',
+                        ville: '',
+                        email: '',
+                        telephone: ''
+                    };
+                    loadedEntreprises = [mainEntreprise, ...loadedEntreprises];
                 }
                 
                 // Mettre à jour l'état une seule fois
@@ -229,6 +261,7 @@ const EntreprisesManagerFirebase = () => {
                     iban: entrepriseForm.iban,
                     bic: entrepriseForm.bic,
                     banque: entrepriseForm.banque,
+                    collaborateurs: entrepriseForm.collaborateurs || [],
                     updatedAt: new Date().toISOString()
                 });
                 
@@ -354,6 +387,7 @@ const EntreprisesManagerFirebase = () => {
                     iban: selectedEntreprise.iban,
                     bic: selectedEntreprise.bic,
                     banque: selectedEntreprise.banque,
+                    collaborateurs: selectedEntreprise.collaborateurs || [],
                     updatedAt: new Date().toISOString()
                 });
                 
@@ -389,6 +423,12 @@ const EntreprisesManagerFirebase = () => {
                     <div className="spinner-border" role="status">
                         <span className="visually-hidden">Chargement...</span>
                     </div>
+                </div>
+            ) : entreprisesList.length === 0 ? (
+                <div className="text-center text-muted p-3">
+                    <i className="bi bi-building" style={{ fontSize: '2rem' }}></i>
+                    <p className="mt-2 mb-0">Aucune entreprise trouvée</p>
+                    <small>Cliquez sur "Nouvelle entreprise" pour ajouter une entreprise</small>
                 </div>
             ) : (
                 <div className="entreprises-list">
@@ -951,17 +991,170 @@ const EntreprisesManagerFirebase = () => {
         </Form>
     );
 
-    // Onglet Collaborateurs (vide pour l'instant)
-    const renderCollaborateurs = () => (
-        <div className="text-center p-5">
-            <i className="bi bi-people" style={{ fontSize: '3rem', color: '#6c757d' }}></i>
-            <h5 className="mt-3">Collaborateurs</h5>
-            <p className="text-muted">
-                Cette section sera implémentée prochainement.<br />
-                Elle affichera la liste des collaborateurs associés à cette entreprise.
-            </p>
-        </div>
-    );
+    // Charger les collaborateurs quand l'onglet est actif
+    useEffect(() => {
+        const loadCollaborateurs = async () => {
+            if (!currentEntreprise?.id || !selectedEntreprise || activeTab !== 'collaborateurs') return;
+            
+            setLoadingCollaborateurs(true);
+            try {
+                // Charger les collaborateurs depuis la collection
+                const collaborateursRef = collection(db, 'entreprises', currentEntreprise.id, 'collaborateurs');
+                const collaborateursSnapshot = await getDocs(collaborateursRef);
+                
+                const collaborateurs = [];
+                collaborateursSnapshot.forEach(doc => {
+                    collaborateurs.push({ id: doc.id, ...doc.data() });
+                });
+                
+                setAllCollaborateurs(collaborateurs);
+                
+                // Filtrer les collaborateurs déjà associés à cette entreprise
+                if (selectedEntreprise.collaborateurs && Array.isArray(selectedEntreprise.collaborateurs)) {
+                    setSelectedCollaborateurs(selectedEntreprise.collaborateurs);
+                } else {
+                    setSelectedCollaborateurs([]);
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des collaborateurs:', error);
+                showMessage('Erreur lors du chargement des collaborateurs', 'danger');
+            } finally {
+                setLoadingCollaborateurs(false);
+            }
+        };
+        
+        loadCollaborateurs();
+    }, [currentEntreprise?.id, selectedEntreprise, activeTab]);
+
+    // Gérer la sélection d'un collaborateur
+    const handleToggleCollaborateur = (collaborateurId) => {
+        const isSelected = selectedCollaborateurs.includes(collaborateurId);
+        let updatedSelection;
+        
+        if (isSelected) {
+            updatedSelection = selectedCollaborateurs.filter(id => id !== collaborateurId);
+        } else {
+            updatedSelection = [...selectedCollaborateurs, collaborateurId];
+        }
+        
+        setSelectedCollaborateurs(updatedSelection);
+        
+        // Mettre à jour l'entreprise sélectionnée
+        const updated = { ...selectedEntreprise, collaborateurs: updatedSelection };
+        setSelectedEntreprise(updated);
+        
+        // Mettre à jour la liste des entreprises
+        const updatedList = entreprisesList.map(e => 
+            e.id === selectedEntreprise.id ? updated : e
+        );
+        setEntreprisesList(updatedList);
+    };
+
+    // Onglet Collaborateurs
+    const renderCollaborateurs = () => {
+
+        if (loadingCollaborateurs) {
+            return (
+                <div className="text-center p-5">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Chargement...</span>
+                    </div>
+                    <p className="mt-3">Chargement des collaborateurs...</p>
+                </div>
+            );
+        }
+
+        if (allCollaborateurs.length === 0) {
+            return (
+                <div className="text-center p-5">
+                    <i className="bi bi-people" style={{ fontSize: '3rem', color: '#6c757d' }}></i>
+                    <h5 className="mt-3">Aucun collaborateur</h5>
+                    <p className="text-muted">
+                        Aucun collaborateur n'a été ajouté.<br />
+                        Veuillez d'abord ajouter des collaborateurs depuis le menu Paramétrage &gt; Collaborateurs.
+                    </p>
+                </div>
+            );
+        }
+
+        return (
+            <Row>
+                <Col md={6}>
+                    <Card>
+                        <Card.Header>
+                            <h6 className="mb-0">Collaborateurs disponibles</h6>
+                        </Card.Header>
+                        <Card.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                            <div className="list-group list-group-flush">
+                                {allCollaborateurs.map(collaborateur => (
+                                    <div key={collaborateur.id} className="list-group-item">
+                                        <Form.Check
+                                            type="checkbox"
+                                            id={`collab-${collaborateur.id}`}
+                                            label={
+                                                <div>
+                                                    <strong>{collaborateur.prenom} {collaborateur.nom}</strong>
+                                                    <br />
+                                                    <small className="text-muted">{collaborateur.email}</small>
+                                                </div>
+                                            }
+                                            checked={selectedCollaborateurs.includes(collaborateur.id)}
+                                            onChange={() => handleToggleCollaborateur(collaborateur.id)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                
+                <Col md={6}>
+                    <Card>
+                        <Card.Header className="bg-primary text-white">
+                            <h6 className="mb-0">
+                                Collaborateurs sélectionnés ({selectedCollaborateurs.length})
+                            </h6>
+                        </Card.Header>
+                        <Card.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                            {selectedCollaborateurs.length === 0 ? (
+                                <div className="text-center text-muted p-4">
+                                    <i className="bi bi-person-x" style={{ fontSize: '2rem' }}></i>
+                                    <p className="mt-2">Aucun collaborateur sélectionné</p>
+                                </div>
+                            ) : (
+                                <div className="list-group list-group-flush">
+                                    {selectedCollaborateurs.map(collaborateurId => {
+                                        const collaborateur = allCollaborateurs.find(c => c.id === collaborateurId);
+                                        if (!collaborateur) return null;
+                                        
+                                        return (
+                                            <div key={collaborateur.id} className="list-group-item">
+                                                <div className="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <strong>{collaborateur.prenom} {collaborateur.nom}</strong>
+                                                        <br />
+                                                        <small className="text-muted">{collaborateur.email}</small>
+                                                    </div>
+                                                    <Button
+                                                        variant="link"
+                                                        size="sm"
+                                                        onClick={() => handleToggleCollaborateur(collaborateur.id)}
+                                                        className="text-danger"
+                                                    >
+                                                        <i className="bi bi-x-lg"></i>
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        );
+    };
 
     // Onglets Préférences (vides pour l'instant)
     const renderPreferencesVide = () => {

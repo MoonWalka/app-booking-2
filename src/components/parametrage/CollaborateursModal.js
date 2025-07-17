@@ -1,36 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Row, Col, Card, ListGroup, Form } from 'react-bootstrap';
+import { Modal, Button, Row, Col, Card, ListGroup, Form, Spinner } from 'react-bootstrap';
 import { FaArrowRight, FaArrowLeft, FaUser, FaUsers } from 'react-icons/fa';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
+import { useEntreprise } from '@/context/EntrepriseContext';
 
 const CollaborateursModal = ({ show, onHide, groupe, onSaveCollaborateurs }) => {
+    const { currentEntreprise } = useEntreprise();
     const [collaborateursDisponibles, setCollaborateursDisponibles] = useState([]);
     const [collaborateursSelectionnes, setCollaborateursSelectionnes] = useState([]);
     const [searchDisponibles, setSearchDisponibles] = useState('');
     const [searchSelectionnes, setSearchSelectionnes] = useState('');
-
-    // Simulation de données des collaborateurs
-    const mockCollaborateurs = [
-        { id: 1, nom: 'Martin', prenom: 'Jean', email: 'jean.martin@example.com', role: 'Admin' },
-        { id: 2, nom: 'Dupont', prenom: 'Marie', email: 'marie.dupont@example.com', role: 'Utilisateur' },
-        { id: 3, nom: 'Bernard', prenom: 'Paul', email: 'paul.bernard@example.com', role: 'Invité' },
-        { id: 4, nom: 'Moreau', prenom: 'Sophie', email: 'sophie.moreau@example.com', role: 'Stagiaire' },
-        { id: 5, nom: 'Petit', prenom: 'Lucas', email: 'lucas.petit@example.com', role: 'Utilisateur' },
-        { id: 6, nom: 'Durand', prenom: 'Emma', email: 'emma.durand@example.com', role: 'Test' }
-    ];
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (show && groupe) {
-            // Charger les collaborateurs déjà affectés au groupe
+        if (show && groupe && currentEntreprise?.id) {
+            loadCollaborateurs();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [show, groupe, currentEntreprise?.id]);
+
+    const loadCollaborateurs = async () => {
+        setLoading(true);
+        try {
+            // Charger les collaborateurs depuis collaborationConfig
+            const configDoc = await getDoc(doc(db, 'collaborationConfig', currentEntreprise.id));
+            let allCollaborateurs = [];
+            
+            if (configDoc.exists()) {
+                const data = configDoc.data();
+                if (data.collaborateurs && Array.isArray(data.collaborateurs)) {
+                    allCollaborateurs = data.collaborateurs.map(collab => ({
+                        ...collab,
+                        displayName: collab.prenom || collab.nom ? 
+                            `${collab.prenom || ''} ${collab.nom || ''}`.trim() : 
+                            collab.email
+                    }));
+                }
+            }
+            
+            // Séparer les collaborateurs déjà affectés au groupe
             const affectes = groupe.collaborateurs || [];
-            const disponibles = mockCollaborateurs.filter(
+            const disponibles = allCollaborateurs.filter(
                 collab => !affectes.some(aff => aff.id === collab.id)
             );
             
             setCollaborateursDisponibles(disponibles);
             setCollaborateursSelectionnes(affectes);
+        } catch (error) {
+            console.error('Erreur lors du chargement des collaborateurs:', error);
+        } finally {
+            setLoading(false);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [show, groupe]);
+    };
 
     const moveToSelected = (collaborateur) => {
         setCollaborateursDisponibles(prev => 
@@ -71,12 +93,19 @@ const CollaborateursModal = ({ show, onHide, groupe, onSaveCollaborateurs }) => 
                 <FaUser className="me-2 text-muted" />
                 <div>
                     <div className="fw-bold">
-                        {collaborateur.prenom} {collaborateur.nom}
+                        {collaborateur.displayName || collaborateur.email}
                     </div>
                     <small className="text-muted">{collaborateur.email}</small>
-                    <div>
-                        <small className="badge bg-secondary">{collaborateur.role}</small>
-                    </div>
+                    {collaborateur.groupes && collaborateur.groupes.length > 0 && (
+                        <div>
+                            {collaborateur.groupes.map(groupe => (
+                                <small key={groupe} className="badge bg-info me-1">{groupe}</small>
+                            ))}
+                        </div>
+                    )}
+                    {collaborateur.status === 'pending' && (
+                        <small className="badge bg-warning">En attente</small>
+                    )}
                 </div>
             </div>
             <Button
@@ -104,6 +133,14 @@ const CollaborateursModal = ({ show, onHide, groupe, onSaveCollaborateurs }) => 
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {loading ? (
+                    <div className="text-center py-5">
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Chargement...</span>
+                        </Spinner>
+                        <p className="mt-3">Chargement des collaborateurs...</p>
+                    </div>
+                ) : (
                 <Row>
                     <Col md={6}>
                         <Card>
@@ -174,6 +211,7 @@ const CollaborateursModal = ({ show, onHide, groupe, onSaveCollaborateurs }) => 
                         Les collaborateurs sélectionnés auront accès aux permissions définies pour ce groupe.
                     </small>
                 </div>
+                )}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>

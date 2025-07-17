@@ -25,6 +25,7 @@ const CollaborateursManagerFirebase = () => {
     const [entreprisesList, setEntreprisesList] = useState([]);
     const [comptesMessagerieList, setComptesMessagerieList] = useState([]);
     const [groupesList, setGroupesList] = useState([]);
+    const [artistesList, setArtistesList] = useState([]);
     
     // État pour l'onglet actif dans la modale
     const [modalActiveTab, setModalActiveTab] = useState('informations-generales');
@@ -158,6 +159,28 @@ const CollaborateursManagerFirebase = () => {
         }
     };
 
+    // Fonction pour charger les artistes depuis Firebase
+    const loadArtistes = async () => {
+        if (!currentEntreprise?.id) return;
+        
+        try {
+            const artistesSnapshot = await getDocs(collection(db, 'artistes'));
+            const artistes = artistesSnapshot.docs
+                .filter(doc => {
+                    const data = doc.data();
+                    return data.entrepriseId === currentEntreprise.id;
+                })
+                .map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+            
+            setArtistesList(artistes);
+        } catch (error) {
+            console.error('Erreur lors du chargement des artistes:', error);
+        }
+    };
+
     // Charger les collaborateurs depuis Firebase
     useEffect(() => {
         const loadCollaborateurs = async () => {
@@ -217,6 +240,9 @@ const CollaborateursManagerFirebase = () => {
                 
                 // Charger les groupes de permissions
                 await loadGroupes();
+                
+                // Charger les artistes
+                await loadArtistes();
                 
             } catch (error) {
                 console.error('Erreur lors du chargement des collaborateurs:', error);
@@ -1168,11 +1194,6 @@ const CollaborateursManagerFirebase = () => {
 
     // Onglet Artistes
     const renderArtistes = () => {
-        const artistes = [
-            { id: 1, nom: 'artiste test' },
-            { id: 2, nom: 'artsite 2' },
-            { id: 3, nom: 'Groupe Rock' }
-        ];
         const selectedArtistes = selectedCollaborateur.artistes || [];
 
         return (
@@ -1188,7 +1209,7 @@ const CollaborateursManagerFirebase = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {artistes.map(artiste => (
+                                {artistesList.length > 0 ? artistesList.map(artiste => (
                                     <tr key={artiste.id}>
                                         <td>{artiste.nom}</td>
                                         <td className="text-center">
@@ -1206,7 +1227,13 @@ const CollaborateursManagerFirebase = () => {
                                             </Button>
                                         </td>
                                     </tr>
-                                ))}
+                                )) : (
+                                    <tr>
+                                        <td colSpan="2" className="text-center text-muted">
+                                            Aucun artiste configuré
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </Table>
                     </Col>
@@ -1221,7 +1248,7 @@ const CollaborateursManagerFirebase = () => {
                             </thead>
                             <tbody>
                                 {selectedArtistes.map(artisteId => {
-                                    const artiste = artistes.find(a => a.id === artisteId);
+                                    const artiste = artistesList.find(a => a.id === artisteId);
                                     return artiste ? (
                                         <tr key={artisteId}>
                                             <td>{artiste.nom}</td>

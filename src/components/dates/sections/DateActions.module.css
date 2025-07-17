@@ -24,12 +24,46 @@
   cursor: pointer;
 }
 
+.editButton {
+  color: var(--tc-color-primary);
+}
+
+.editButton:hover {
+  background-color: rgba(var(--tc-color-primary-rgb), 0.1);
+}
+
 .deleteButton {
   color: var(--tc-color-error);
 }
 
 .deleteButton:hover {
   background-color: rgba(var(--tc-danger-color-rgb), 0.1);
+}
+
+.viewButton {
+  color: var(--tc-color-info);
+}
+
+.viewButton:hover {
+  background-color: rgba(var(--tc-info-color-rgb), 0.1);
+}
+
+.structureButton {
+  color: var(--tc-color-secondary);
+}
+
+.structureButton:hover {
+  background-color: rgba(var(--tc-color-secondary-rgb), 0.1);
+}
+
+.structureButton:disabled {
+  color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.structureButton:disabled:hover {
+  background-color: transparent;
 }
 
 .formButton {

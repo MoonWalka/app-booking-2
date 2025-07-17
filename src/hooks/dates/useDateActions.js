@@ -131,8 +131,52 @@ export const useDateActions = () => {
     console.log('[useDateActions] === FIN handleGenerateFacture ===');
   };
   
+  // Function to edit a date
+  const handleEditDate = (dateId) => {
+    console.log('[useDateActions] Ouverture édition date dans onglet:', dateId);
+    openTab({
+      id: `date-edit-${dateId}`,
+      title: `Modifier date`,
+      path: `/dates/${dateId}/edit`,
+      component: 'DateEditPage',
+      params: { 
+        dateId: dateId
+      },
+      icon: 'bi-pencil'
+    });
+  };
+  
+  // Function to delete a date
+  const handleDeleteDate = async (dateId) => {
+    console.log('[useDateActions] Suppression date:', dateId);
+    // TODO: Implémenter la suppression avec confirmation
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette date ?')) {
+      // TODO: Appeler l'API de suppression
+      console.log('Suppression confirmée pour date:', dateId);
+    }
+  };
+  
+  // Function to view structure
+  const handleViewStructure = (structureId) => {
+    console.log('[useDateActions] Ouverture fiche structure dans onglet:', structureId);
+    openTab({
+      id: `structure-${structureId}`,
+      title: `Structure`,
+      path: `/contacts/structure/${structureId}`,
+      component: 'ContactDetailsPage',
+      params: { 
+        contactId: structureId,
+        entityType: 'structure'
+      },
+      icon: 'bi-building'
+    });
+  };
+  
   return {
     handleViewDate,
+    handleEditDate,
+    handleDeleteDate,
+    handleViewStructure,
     handleViewForm,
     handleSendForm,
     handleViewContract,

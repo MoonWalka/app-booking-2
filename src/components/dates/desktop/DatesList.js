@@ -74,6 +74,9 @@ const DatesList = () => {
 
   const {
     handleViewDate,
+    handleEditDate,
+    handleDeleteDate,
+    handleViewStructure,
     handleSendForm,
     handleViewForm,
     handleGenerateContract,
@@ -211,6 +214,9 @@ const DatesList = () => {
               getContractTooltip={getContractTooltip}
               isDatePassed={isDatePassed}
               handleViewDate={handleViewDate}
+              handleEditDate={handleEditDate}
+              handleDeleteDate={handleDeleteDate}
+              handleViewStructure={handleViewStructure}
               handleSendForm={handleSendForm}
               handleViewForm={handleViewForm}
               handleGenerateContract={handleGenerateContract}

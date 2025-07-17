@@ -19,6 +19,9 @@ const DatesTable = memo(({
   datesWithContracts,
   isDatePassed,
   handleViewDate,
+  handleEditDate,
+  handleDeleteDate,
+  handleViewStructure,
   handleSendForm,
   handleViewForm,
   handleGenerateContract,
@@ -248,6 +251,9 @@ const DatesTable = memo(({
       getContractButtonVariant={getContractButtonVariant}
       getContractTooltip={getContractTooltip}
       handleViewDate={handleViewDate}
+      handleEditDate={handleEditDate}
+      handleDeleteDate={handleDeleteDate}
+      handleViewStructure={handleViewStructure}
       handleSendForm={handleSendForm}
       handleViewForm={handleViewForm}
       handleGenerateContract={handleGenerateContract}

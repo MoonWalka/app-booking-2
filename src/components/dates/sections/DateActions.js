@@ -17,7 +17,10 @@ const DateActions = ({
   handleViewContract,
   handleGenerateFacture,
   handleViewFacture,
-  handleViewDate
+  handleViewDate,
+  handleEditDate,
+  handleDeleteDate,
+  handleViewStructure
 }) => {
   
   // Fonction pour déterminer le statut du formulaire
@@ -221,53 +224,52 @@ const DateActions = ({
   
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
-      {/* View Button - Pour ouvrir/visualiser la date */}
+      {/* Modifier Button */}
       <button 
-        className={`${styles.actionButton} ${styles.viewButton}`}
+        className={`${styles.actionButton} ${styles.editButton}`}
         onClick={(e) => {
           e.stopPropagation();
-          if (handleViewDate) {
-            handleViewDate(date.id);
+          if (handleEditDate) {
+            handleEditDate(date.id);
+          } else {
+            // Fallback: navigation directe vers la page d'édition
+            window.location.href = `/dates/${date.id}/edit`;
           }
         }}
-        title="Ouvrir la date"
+        title="Modifier"
       >
-        <i className="bi bi-eye"></i>
+        <i className="bi bi-pencil"></i>
       </button>
       
-      {/* Form Button - Toujours affiché avec statut différent */}
+      {/* Supprimer Button */}
       <button 
-        className={`${styles.actionButton} ${styles.formButton} ${styles[formStatus.class]}`}
-        onClick={handleFormClick}
-        title={formStatus.tooltip}
-        disabled={formStatus.status === 'no_contact'}
+        className={`${styles.actionButton} ${styles.deleteButton}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (handleDeleteDate) {
+            handleDeleteDate(date.id);
+          }
+        }}
+        title="Supprimer"
       >
-        <i className={formStatus.icon}></i>
+        <i className="bi bi-trash"></i>
       </button>
       
-      {/* Contract Button - Toujours affiché avec statut différent */}
+      {/* Structure Button */}
       <button 
-        className={`${styles.actionButton} ${styles.contractButton} ${styles[contractStatusInfo.class]}`}
-        onClick={handleContractClick}
-        title={contractStatusInfo.tooltip}
-        disabled={contractStatusInfo.status === 'no_contact'}
+        className={`${styles.actionButton} ${styles.structureButton}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          // Vérifier si la date a une structure associée
+          const structureId = date.structureId || date.organisateurId;
+          if (structureId && handleViewStructure) {
+            handleViewStructure(structureId);
+          }
+        }}
+        title="Fiche structure"
+        disabled={!date.structureId && !date.organisateurId}
       >
-        <i className={contractStatusInfo.icon}></i>
-      </button>
-      
-      {/* Facture Button - Toujours affiché avec statut différent */}
-      <button 
-        className={`${styles.actionButton} ${styles.factureButton} ${styles[factureStatusInfo.class]}`}
-        onClick={handleFactureClick}
-        title={factureStatusInfo.tooltip}
-        disabled={
-          factureStatusInfo.status === 'no_contact' || 
-          factureStatusInfo.status === 'no_structure' || 
-          factureStatusInfo.status === 'no_contract' || 
-          factureStatusInfo.status === 'contract_not_signed'
-        }
-      >
-        <i className={factureStatusInfo.icon}></i>
+        <i className="bi bi-building"></i>
       </button>
     </div>
   );

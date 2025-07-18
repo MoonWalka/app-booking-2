@@ -920,13 +920,29 @@ const CollaborateursManagerFirebase = () => {
     // Onglet Groupes/permissions
     const renderGroupesPermissions = () => {
         const selectedGroupes = selectedCollaborateur.groupes || [];
+        
+        // Vérifier si l'utilisateur actuel est admin
+        const currentUserCollaborateur = collaborateursList.find(c => c.id === currentUser?.uid);
+        const isCurrentUserAdmin = currentUserCollaborateur?.groupes?.includes('admin');
+        
+        // Un utilisateur ne peut pas modifier ses propres permissions
+        const canEditPermissions = isCurrentUserAdmin && selectedCollaborateur.id !== currentUser?.uid;
 
         return (
             <div>
+                {!canEditPermissions && (
+                    <Alert variant="warning" className="mb-3">
+                        <i className="bi bi-lock me-2"></i>
+                        {selectedCollaborateur.id === currentUser?.uid 
+                            ? "Vous ne pouvez pas modifier vos propres permissions. Demandez à un administrateur."
+                            : "Seuls les administrateurs peuvent modifier les permissions."}
+                    </Alert>
+                )}
+                
                 <Row>
                     <Col md={6}>
                         <h6>Groupes disponibles</h6>
-                        <Table size="sm" hover>
+                        <Table size="sm" hover className={!canEditPermissions ? "opacity-50" : ""}>
                             <thead>
                                 <tr>
                                     <th>Nom du groupe / permissions</th>
@@ -947,11 +963,14 @@ const CollaborateursManagerFirebase = () => {
                                                 size="sm"
                                                 variant={selectedGroupes.includes(groupe.id) ? "success" : "outline-primary"}
                                                 onClick={() => {
-                                                    const newGroupes = selectedGroupes.includes(groupe.id)
-                                                        ? selectedGroupes.filter(g => g !== groupe.id)
-                                                        : [...selectedGroupes, groupe.id];
-                                                    updateSelectedCollaborateur('groupes', newGroupes);
+                                                    if (canEditPermissions) {
+                                                        const newGroupes = selectedGroupes.includes(groupe.id)
+                                                            ? selectedGroupes.filter(g => g !== groupe.id)
+                                                            : [...selectedGroupes, groupe.id];
+                                                        updateSelectedCollaborateur('groupes', newGroupes);
+                                                    }
                                                 }}
+                                                disabled={!canEditPermissions}
                                             >
                                                 {selectedGroupes.includes(groupe.id) ? '✓' : '+'}
                                             </Button>
@@ -969,7 +988,7 @@ const CollaborateursManagerFirebase = () => {
                     </Col>
                     <Col md={6}>
                         <h6>Groupes sélectionnés</h6>
-                        <Table size="sm" hover>
+                        <Table size="sm" hover className={!canEditPermissions ? "opacity-50" : ""}>
                             <thead>
                                 <tr>
                                     <th>Groupe</th>
@@ -992,9 +1011,12 @@ const CollaborateursManagerFirebase = () => {
                                                     size="sm"
                                                     variant="outline-danger"
                                                     onClick={() => {
-                                                        const newGroupes = selectedGroupes.filter(g => g !== groupeId);
-                                                        updateSelectedCollaborateur('groupes', newGroupes);
+                                                        if (canEditPermissions) {
+                                                            const newGroupes = selectedGroupes.filter(g => g !== groupeId);
+                                                            updateSelectedCollaborateur('groupes', newGroupes);
+                                                        }
                                                     }}
+                                                    disabled={!canEditPermissions}
                                                 >
                                                     ✕
                                                 </Button>
@@ -1576,6 +1598,14 @@ const CollaborateursManagerFirebase = () => {
                 
                 {modalActiveTab === 'groupes-permissions' && (
                     <div>
+                        {/* Vérifier les permissions pour la modification dans la modale */}
+                        {isEditing && currentCollaborateur.id === currentUser?.uid && (
+                            <Alert variant="warning" className="mb-3">
+                                <i className="bi bi-lock me-2"></i>
+                                Vous ne pouvez pas modifier vos propres permissions.
+                            </Alert>
+                        )}
+                        
                         <Row>
                             <Col md={6}>
                                 <h6>Groupes disponibles</h6>
@@ -1587,6 +1617,10 @@ const CollaborateursManagerFirebase = () => {
                                             label={groupe.nom}
                                             checked={currentCollaborateur.groupes?.includes(groupe.id) || false}
                                             onChange={(e) => {
+                                                // Empêcher la modification de ses propres permissions
+                                                if (isEditing && currentCollaborateur.id === currentUser?.uid) {
+                                                    return;
+                                                }
                                                 const updatedGroupes = e.target.checked
                                                     ? [...(currentCollaborateur.groupes || []), groupe.id]
                                                     : (currentCollaborateur.groupes || []).filter(g => g !== groupe.id);
@@ -1595,6 +1629,7 @@ const CollaborateursManagerFirebase = () => {
                                                     groupes: updatedGroupes
                                                 });
                                             }}
+                                            disabled={isEditing && currentCollaborateur.id === currentUser?.uid}
                                         />
                                     )) : (
                                         <div className="text-center text-muted py-3">

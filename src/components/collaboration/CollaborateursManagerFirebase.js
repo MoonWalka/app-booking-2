@@ -200,30 +200,49 @@ const CollaborateursManagerFirebase = () => {
                     }
                 }
                 
-                // Si aucun collaborateur, créer automatiquement l'utilisateur actuel
-                if (collaborateurs.length === 0 && currentUser) {
+                // Vérifier si l'utilisateur actuel est dans la liste des collaborateurs
+                if (currentUser && !collaborateurs.find(c => c.id === currentUser.uid)) {
+                    console.log('👤 Utilisateur actuel non trouvé dans les collaborateurs, ajout automatique...');
+                    
+                    // Récupérer le rôle de l'utilisateur dans l'entreprise
+                    let userRole = 'member'; // Rôle par défaut
+                    
+                    // Vérifier dans la structure members de l'entreprise
+                    const entrepriseDoc = await getDoc(doc(db, 'entreprises', currentEntreprise.id));
+                    if (entrepriseDoc.exists()) {
+                        const entrepriseData = entrepriseDoc.data();
+                        if (entrepriseData.members && entrepriseData.members[currentUser.uid]) {
+                            userRole = entrepriseData.members[currentUser.uid].role || 'member';
+                        }
+                    }
+                    
+                    // Déterminer les groupes en fonction du rôle
+                    const groupes = userRole === 'admin' || userRole === 'owner' ? ['admin'] : ['utilisateur'];
+                    
                     const currentUserCollaborateur = {
                         id: currentUser.uid,
                         actif: true,
                         nom: currentUser.displayName?.split(' ').slice(-1)[0] || '',
                         prenom: currentUser.displayName?.split(' ').slice(0, -1).join(' ') || currentUser.displayName || '',
                         email: currentUser.email,
-                        initiales: (currentUser.displayName || '').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
+                        initiales: (currentUser.displayName || currentUser.email || '').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U',
                         identifiant: currentUser.email?.split('@')[0] || '',
-                        groupes: ['admin'],
+                        groupes: groupes,
                         entreprises: [],
                         comptesMessagerie: [],
                         artistes: [],
                         partageEmails: {},
                         partageCommentaires: {},
                         partageNotes: {},
+                        status: 'active',
                         createdAt: new Date(),
                         updatedAt: new Date()
                     };
                     
-                    collaborateurs = [currentUserCollaborateur];
+                    // Ajouter à la liste existante
+                    collaborateurs.push(currentUserCollaborateur);
                     
-                    // Sauvegarder automatiquement
+                    // Sauvegarder avec tous les collaborateurs
                     await saveCollaborateursToFirebase(collaborateurs);
                 }
                 

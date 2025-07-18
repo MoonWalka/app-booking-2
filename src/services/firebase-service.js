@@ -566,8 +566,9 @@ export const joinEntreprise = async (invitationCode, userId) => {
     
     await setDoc(userEntRef, updateData, { merge: true });
     
-    // Si l'invitation vient d'un collaborateur, ajouter à collaborationConfig
-    if (invitation.isFromCollaborateur && invitation.collaborateurData) {
+    // Toujours ajouter l'utilisateur à collaborationConfig lors de l'acceptation d'une invitation
+    // Que ce soit une invitation de collaborateur ou une invitation générale
+    {
       const configRef = doc(db, 'collaborationConfig', entId);
       const configDoc = await getDoc(configRef);
       const configData = configDoc.exists() ? configDoc.data() : { collaborateurs: [] };
@@ -588,15 +589,25 @@ export const joinEntreprise = async (invitationCode, userId) => {
         };
       } else {
         // Créer un nouveau collaborateur
+        // Récupérer les infos de l'utilisateur qui accepte l'invitation
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        const userData = userDoc.exists() ? userDoc.data() : {};
+        
+        // Récupérer aussi les infos depuis l'auth si disponibles
+        const auth = getAuth();
+        const currentAuthUser = auth.currentUser;
+        
         const newCollaborateur = {
           id: userId,
-          nom: invitation.nom || '',
-          prenom: invitation.prenom || '',
-          email: invitation.email || '',
-          initiales: invitation.collaborateurData.initiales || '',
-          identifiant: invitation.collaborateurData.identifiant || invitation.email,
-          actif: invitation.collaborateurData.actif !== false,
-          groupes: invitation.groupes || [],
+          nom: invitation.nom || userData.displayName?.split(' ').slice(-1)[0] || currentAuthUser?.displayName?.split(' ').slice(-1)[0] || '',
+          prenom: invitation.prenom || userData.displayName?.split(' ').slice(0, -1).join(' ') || currentAuthUser?.displayName?.split(' ').slice(0, -1).join(' ') || '',
+          email: invitation.email || userData.email || currentAuthUser?.email || '',
+          initiales: (invitation.isFromCollaborateur && invitation.collaborateurData?.initiales) || 
+                     (userData.displayName || userData.email || currentAuthUser?.displayName || currentAuthUser?.email || '').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U',
+          identifiant: (invitation.isFromCollaborateur && invitation.collaborateurData?.identifiant) || 
+                       invitation.email || userData.email || currentAuthUser?.email || '',
+          actif: invitation.isFromCollaborateur ? (invitation.collaborateurData?.actif !== false) : true,
+          groupes: invitation.groupes && invitation.groupes.length > 0 ? invitation.groupes : ['utilisateur'],
           entreprises: invitation.entreprises || [],
           status: 'active',
           createdAt: new Date(),

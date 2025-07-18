@@ -6,6 +6,7 @@ import Badge from '@/components/ui/Badge';
 import EntityEmptyState from '@/components/ui/EntityEmptyState';
 import Alert from '@/components/ui/Alert';
 import { Form, InputGroup } from 'react-bootstrap';
+import usePermissions from '@/hooks/usePermissions';
 import styles from './FacturesTableView.module.css';
 import datesTableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
 
@@ -31,6 +32,7 @@ const FacturesTableView = ({
 }) => {
   const navigate = useNavigate();
   const { openTab } = useTabs();
+  const { canEdit, canDelete } = usePermissions();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('dateFacture');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -322,17 +324,19 @@ const FacturesTableView = ({
                 icon: 'bi-receipt'
               });
             }}
-            title="Voir/Modifier"
+            title={canEdit('factures') ? "Voir/Modifier" : "Voir"}
           >
             <i className="bi bi-eye"></i>
           </button>
-          <button
-            className="btn btn-sm btn-outline-danger"
-            onClick={() => onDelete && onDelete(facture)}
-            title="Supprimer"
-          >
-            <i className="bi bi-trash"></i>
-          </button>
+          {canDelete('factures') && (
+            <button
+              className="btn btn-sm btn-outline-danger"
+              onClick={() => onDelete && onDelete(facture)}
+              title="Supprimer"
+            >
+              <i className="bi bi-trash"></i>
+            </button>
+          )}
           <button
             className="btn btn-sm btn-outline-secondary"
             onClick={() => {

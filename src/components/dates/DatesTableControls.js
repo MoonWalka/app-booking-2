@@ -174,15 +174,17 @@ const DatesTableControls = ({
       {/* Groupe 5: Actions à droite */}
       <div className={styles.actionsGroup}>
         {/* Bouton Ajouter */}
-        <button
-          className={styles.actionButton}
-          onClick={onAdd}
-          title="Ajouter une nouvelle date"
-          disabled={loading}
-        >
-          <i className="bi bi-plus-lg"></i>
-          <span>Ajouter</span>
-        </button>
+        {onAdd && (
+          <button
+            className={styles.actionButton}
+            onClick={onAdd}
+            title="Ajouter une nouvelle date"
+            disabled={loading}
+          >
+            <i className="bi bi-plus-lg"></i>
+            <span>Ajouter</span>
+          </button>
+        )}
 
         {/* Export Excel */}
         <button

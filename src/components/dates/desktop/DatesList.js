@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Alert } from 'react-bootstrap';
 import Spinner from '@/components/common/Spinner';
+import usePermissions from '@/hooks/usePermissions';
 
 // Import custom hooks
 import { 
@@ -28,6 +29,9 @@ import styles from './DatesList.module.css';
  * with pagination support
  */
 const DatesList = () => {
+  // Hook pour les permissions
+  const { canCreate } = usePermissions();
+  
   // États pour la sélection et la pagination
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
@@ -190,7 +194,7 @@ const DatesList = () => {
           onDateFilterChange={setDateFilter}
           onFilter={handleFilter}
           onClearFilters={handleClearFilters}
-          onAdd={handleAdd}
+          onAdd={canCreate('dates') ? handleAdd : undefined}
           onExportExcel={handleExportExcel}
           onChangeView={handleChangeView}
           onShowMap={handleShowMap}

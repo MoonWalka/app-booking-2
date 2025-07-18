@@ -7,6 +7,7 @@ import Alert from '@/components/ui/Alert';
 import NiveauDisplay from './NiveauDisplay';
 import DatesTableControls from './DatesTableControls';
 import DatesTableTotals from './DatesTableTotals';
+import usePermissions from '@/hooks/usePermissions';
 import styles from '@/pages/TableauDeBordPage.module.css';
 import datesTableStyles from '@/shared/tableConfigs/datesTableStyles.module.css';
 
@@ -40,6 +41,7 @@ const DatesTableView = ({
   handleGenerateFacture
 }) => {
   const { openTab, openPreContratTab, openContratTab, openNewDevisTab, openDevisTab, openDateDetailsTab } = useTabs();
+  const { canCreate, canEdit, canDelete } = usePermissions();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -490,11 +492,17 @@ const DatesTableView = ({
         const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
         const isRedige = contractStatus && contractStatus !== 'draft';
         
+        // Vérifier les permissions
+        const canManageContract = hasContrat ? canEdit('contrats') : canCreate('contrats');
+        
         return (
           <button
             className={datesTableStyles.iconButton}
             onClick={(e) => {
               e.stopPropagation();
+              if (!canManageContract && !hasContrat) {
+                return;
+              }
               console.log('[DatesTableView] Clic sur icône contrat pour date:', item.id);
               console.log('[DatesTableView] État du contrat - hasContrat:', hasContrat, 'isRedige:', isRedige, 'status:', contractStatus);
               console.log('[DatesTableView] Détails:', {
@@ -505,8 +513,8 @@ const DatesTableView = ({
               handleOpenContrat(item.id, dateTitle, isRedige);
             }}
             title={isRedige ? 'Contrat rédigé - Voir l\'aperçu' : hasContrat ? 'Modifier le contrat' : 'Créer le contrat'}
-            disabled={isOpening}
-            style={{ opacity: isOpening ? 0.5 : 1 }}
+            disabled={isOpening || (!canManageContract && !hasContrat)}
+            style={{ opacity: (isOpening || (!canManageContract && !hasContrat)) ? 0.5 : 1 }}
           >
             <i className={`bi ${hasContrat ? 'bi-file-text-fill' : 'bi-file-text'} ${hasContrat ? datesTableStyles.iconSuccess : datesTableStyles.iconDefault}`}></i>
           </button>
@@ -588,6 +596,9 @@ const DatesTableView = ({
         
         const isOpening = hasFacture ? openingFactures.has(factureId) : openingFactures.has(item.id);
         
+        // Vérifier les permissions
+        const canManageFacture = hasFacture ? canEdit('factures') : canCreate('factures');
+        
         return (
           <button
             className={datesTableStyles.iconButton}
@@ -608,7 +619,7 @@ const DatesTableView = ({
                 if (hasFacture && factureId) {
                   console.log(`[DatesTableView] Action: VOIR FACTURE ${factureId}`);
                   handleFactureAction(item.id, factureId, 'view');
-                } else if (canGenerateFacture) {
+                } else if (canGenerateFacture && canManageFacture) {
                   console.log(`[DatesTableView] Action: GÉNÉRER FACTURE pour date ${item.id}`);
                   // Récupérer le contratId s'il existe
                   const contractData = getContractData && getContractData(item.id);
@@ -624,8 +635,8 @@ const DatesTableView = ({
               console.log(`[DatesTableView] === FIN CLIC BOUTON FACTURE pour date ${item.id} ===`);
             }}
             title={title}
-            disabled={disabled || isOpening}
-            style={{ opacity: disabled || isOpening ? 0.5 : 1 }}
+            disabled={disabled || isOpening || (canGenerateFacture && !hasFacture && !canManageFacture)}
+            style={{ opacity: (disabled || isOpening || (canGenerateFacture && !hasFacture && !canManageFacture)) ? 0.5 : 1 }}
           >
             <i className={`bi ${iconClass} ${iconColor}`}></i>
           </button>
@@ -727,8 +738,8 @@ const DatesTableView = ({
   // Actions sur les lignes
   const renderActions = (item) => (
     <ActionButtons
-      onEdit={() => onEdit && onEdit(item)}
-      onDelete={() => onDelete && onDelete(item)}
+      onEdit={canEdit('dates') && onEdit ? () => onEdit(item) : undefined}
+      onDelete={canDelete('dates') && onDelete ? () => onDelete(item) : undefined}
       editTitle="Modifier le date"
       deleteTitle="Supprimer le date"
     />
@@ -887,7 +898,7 @@ const DatesTableView = ({
           onDateFilterChange={setDateFilter}
           onFilter={handleFilter}
           onClearFilters={handleClearFilters}
-          onAdd={handleAdd}
+          onAdd={canCreate('dates') ? handleAdd : undefined}
           onExportExcel={handleExportExcel}
           onChangeView={handleChangeView}
           onShowMap={handleShowMap}

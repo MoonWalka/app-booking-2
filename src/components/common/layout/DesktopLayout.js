@@ -16,6 +16,7 @@ import { searchService } from '@/services/searchService';
 import { selectionsService } from '@/services/selectionsService';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import useInvitationNotifications from '@/hooks/useInvitationNotifications';
+import usePermissions from '@/hooks/usePermissions';
 
 function DesktopLayout({ children }) {
   const { currentUser, logout } = useAuth();
@@ -23,6 +24,7 @@ function DesktopLayout({ children }) {
   const location = useLocation();
   const { isMobile } = useResponsive();
   const { currentEntreprise } = useEntreprise();
+  const { canEditSettings } = usePermissions();
   const { 
     openContactsListTab,
     openDatesListTab,
@@ -737,7 +739,7 @@ function DesktopLayout({ children }) {
           subItems: buildMesSelectionsSubItems()
         },
         { to: "/contacts/tags", icon: "bi-tags", label: "Tags" },
-        { to: "/contact/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
+        ...(canEditSettings() ? [{ to: "/contact/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }] : [])
       ]
     },
     {
@@ -751,7 +753,7 @@ function DesktopLayout({ children }) {
         { to: "/projets", icon: "bi-folder", label: "Projets" },
         { to: "/salles", icon: "bi-building", label: "Salle" },
         { to: "/festivals/dates", icon: "bi-calendar-event", label: "Date des festivals" },
-        { to: "/booking/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
+        ...(canEditSettings() ? [{ to: "/booking/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }] : [])
       ]
     },
     {
@@ -762,7 +764,7 @@ function DesktopLayout({ children }) {
         { to: "/mails", icon: "bi-envelope", label: "Échanges de mails" },
         { to: "/taches", icon: "bi-check2-square", label: "Tâches" },
         { to: "/notes", icon: "bi-journal-text", label: "Notes & Commentaires" },
-        { to: "/collaboration/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
+        ...(canEditSettings() ? [{ to: "/collaboration/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }] : [])
       ]
     },
     {
@@ -775,7 +777,7 @@ function DesktopLayout({ children }) {
         { to: "/factures", icon: "bi-receipt", label: "Factures" },
         { to: "/devis", icon: "bi-file-earmark-plus", label: "Devis" },
         { to: "#equipe", icon: "bi-people-fill", label: "Équipe dispo" },
-        { to: "/admin/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }
+        ...(canEditSettings() ? [{ to: "/admin/parametrage", icon: "bi-gear-fill", label: "Paramétrage" }] : [])
       ]
     },
     // Menu Outils visible uniquement en mode développement

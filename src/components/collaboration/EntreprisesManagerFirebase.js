@@ -4,6 +4,7 @@ import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import { doc, getDoc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
+import usePermissions from '@/hooks/usePermissions';
 import './EntreprisesManager.css';
 
 /**
@@ -12,6 +13,7 @@ import './EntreprisesManager.css';
  */
 const EntreprisesManagerFirebase = () => {
     const { currentEntreprise } = useEntreprise();
+    const { canCreate, canEdit, canDelete } = usePermissions();
     const [entreprisesList, setEntreprisesList] = useState([]);
     const [selectedEntreprise, setSelectedEntreprise] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -407,15 +409,17 @@ const EntreprisesManagerFirebase = () => {
     const renderEntreprisesList = () => (
         <div>
             <div className="mb-3">
-                <Button 
-                    variant="success" 
-                    onClick={() => handleShowModal()}
-                    className="w-100 d-flex align-items-center justify-content-center"
-                    disabled={loading}
-                >
-                    <FaPlus className="me-2" />
-                    <span className="text-nowrap">Nouvelle entreprise</span>
-                </Button>
+                {canCreate('entreprises') && (
+                    <Button 
+                        variant="success" 
+                        onClick={() => handleShowModal()}
+                        className="w-100 d-flex align-items-center justify-content-center"
+                        disabled={loading}
+                    >
+                        <FaPlus className="me-2" />
+                        <span className="text-nowrap">Nouvelle entreprise</span>
+                    </Button>
+                )}
             </div>
 
             {loading ? (
@@ -452,18 +456,20 @@ const EntreprisesManagerFirebase = () => {
                                         </small>
                                     </div>
                                     <div className="ms-2">
-                                        <Button
-                                            variant="link"
-                                            size="sm"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleShowModal(entreprise);
-                                            }}
-                                            className="text-warning p-1"
-                                        >
-                                            <FaEdit />
-                                        </Button>
-                                        {!(entreprise.principal || entreprise.id === 'main') && (
+                                        {canEdit('entreprises') && (
+                                            <Button
+                                                variant="link"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleShowModal(entreprise);
+                                                }}
+                                                className="text-warning p-1"
+                                            >
+                                                <FaEdit />
+                                            </Button>
+                                        )}
+                                        {!(entreprise.principal || entreprise.id === 'main') && canDelete('entreprises') && (
                                             <Button
                                                 variant="link"
                                                 size="sm"

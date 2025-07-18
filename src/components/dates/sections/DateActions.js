@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './DateActions.module.css';
+import usePermissions from '@/hooks/usePermissions';
 
 const DateActions = ({ 
   date, 
@@ -22,6 +23,8 @@ const DateActions = ({
   handleDeleteDate,
   handleViewStructure
 }) => {
+  // Récupérer les permissions
+  const { canEdit, canDelete } = usePermissions();
   
   // Fonction pour déterminer le statut du formulaire
   const getFormStatus = () => {
@@ -224,36 +227,40 @@ const DateActions = ({
   
   return (
     <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
-      {/* Modifier Button */}
-      <button 
-        className={`${styles.actionButton} ${styles.editButton}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (handleEditDate) {
-            handleEditDate(date.id);
-          } else {
-            // Fallback: navigation directe vers la page d'édition
-            window.location.href = `/dates/${date.id}/edit`;
-          }
-        }}
-        title="Modifier"
-      >
-        <i className="bi bi-pencil"></i>
-      </button>
+      {/* Modifier Button - visible seulement si permission */}
+      {canEdit('dates') && (
+        <button 
+          className={`${styles.actionButton} ${styles.editButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (handleEditDate) {
+              handleEditDate(date.id);
+            } else {
+              // Fallback: navigation directe vers la page d'édition
+              window.location.href = `/dates/${date.id}/edit`;
+            }
+          }}
+          title="Modifier"
+        >
+          <i className="bi bi-pencil"></i>
+        </button>
+      )}
       
-      {/* Supprimer Button */}
-      <button 
-        className={`${styles.actionButton} ${styles.deleteButton}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (handleDeleteDate) {
-            handleDeleteDate(date.id);
-          }
-        }}
-        title="Supprimer"
-      >
-        <i className="bi bi-trash"></i>
-      </button>
+      {/* Supprimer Button - visible seulement si permission */}
+      {canDelete('dates') && (
+        <button 
+          className={`${styles.actionButton} ${styles.deleteButton}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (handleDeleteDate) {
+              handleDeleteDate(date.id);
+            }
+          }}
+          title="Supprimer"
+        >
+          <i className="bi bi-trash"></i>
+        </button>
+      )}
       
       {/* Structure Button */}
       <button 

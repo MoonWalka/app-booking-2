@@ -5,6 +5,7 @@ import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import Spinner from '@/components/common/Spinner';
 import Alert from '@/components/ui/Alert';
+import usePermissions from '@/hooks/usePermissions';
 import styles from './ContactsList.module.css';
 import Table from '@/components/ui/Table';
 import ContactsListHeader from './sections/ContactsListHeader';
@@ -18,6 +19,7 @@ const ContactsList = () => {
   const navigate = useNavigate();
   const { openContactTab } = useTabs();
   const { openPersonneModal, openStructureModal } = useContactModals();
+  const { canEdit, canDelete } = usePermissions();
   const {
     contacts,
     loading,
@@ -265,27 +267,31 @@ const ContactsList = () => {
   // Actions par ligne
   const renderActions = (row) => (
     <div className={styles.actionButtons}>
-      <button 
-        className={styles.actionButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleEditContact(row);
-        }}
-        title="Modifier"
-      >
-        <i className="bi bi-pencil"></i>
-      </button>
-      <button 
-        className={styles.actionButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleDeleteContact(row.id);
-        }} 
-        disabled={isDeleting}
-        title="Supprimer"
-      >
-        <i className="bi bi-trash"></i>
-      </button>
+      {canEdit('contacts') && (
+        <button 
+          className={styles.actionButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEditContact(row);
+          }}
+          title="Modifier"
+        >
+          <i className="bi bi-pencil"></i>
+        </button>
+      )}
+      {canDelete('contacts') && (
+        <button 
+          className={styles.actionButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteContact(row.id);
+          }} 
+          disabled={isDeleting}
+          title="Supprimer"
+        >
+          <i className="bi bi-trash"></i>
+        </button>
+      )}
       <button 
         className={styles.actionButton}
         onClick={(e) => {
@@ -296,16 +302,18 @@ const ContactsList = () => {
       >
         <i className="bi bi-eye"></i>
       </button>
-      <button 
-        className={styles.actionButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          navigate(`/contacts/${row.id}/qualify`);
-        }}
-        title="Qualifier"
-      >
-        <i className="bi bi-tags"></i>
-      </button>
+      {canEdit('contacts') && (
+        <button 
+          className={styles.actionButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/contacts/${row.id}/qualify`);
+          }}
+          title="Qualifier"
+        >
+          <i className="bi bi-tags"></i>
+        </button>
+      )}
     </div>
   );
 

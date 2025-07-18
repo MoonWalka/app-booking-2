@@ -1,5 +1,6 @@
 // src/components/artistes/sections/ArtistesListHeader.js
 import React from 'react';
+import usePermissions from '@/hooks/usePermissions';
 import styles from './ArtistesListHeader.module.css';
 
 /**
@@ -8,6 +9,7 @@ import styles from './ArtistesListHeader.module.css';
  * @param {Function} props.onAddClick - Function to handle add artist button click
  */
 const ArtistesListHeader = ({ onAddClick }) => {
+  const { canCreate } = usePermissions();
   return (
     <div className={`row mb-4 align-items-center ${styles.header}`}>
       <div className="col">
@@ -17,13 +19,15 @@ const ArtistesListHeader = ({ onAddClick }) => {
         </h1>
       </div>
       <div className="col-auto">
-        <button 
-          className={styles.addButton}
-          onClick={onAddClick}
-        >
-          <i className="bi bi-plus-lg"></i>
-          Ajouter un artiste
-        </button>
+        {canCreate('artistes') && (
+          <button 
+            className={styles.addButton}
+            onClick={onAddClick}
+          >
+            <i className="bi bi-plus-lg"></i>
+            Ajouter un artiste
+          </button>
+        )}
       </div>
     </div>
   );

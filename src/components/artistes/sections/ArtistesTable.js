@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Table from '@/components/ui/Table';
+import usePermissions from '@/hooks/usePermissions';
 import styles from './ArtistesTable.module.css';
 
 /**
@@ -10,6 +11,7 @@ import styles from './ArtistesTable.module.css';
  */
 const ArtistesTable = ({ artistes, onDelete }) => {
   const navigate = useNavigate();
+  const { canEdit, canDelete } = usePermissions();
 
   // Colonnes pour le composant Table commun
   const columns = [
@@ -64,20 +66,24 @@ const ArtistesTable = ({ artistes, onDelete }) => {
       >
         <i className="bi bi-eye"></i>
       </button>
-      <button 
-        className={styles.actionButton}
-        onClick={() => navigate(`/artistes/edit/${artiste.id}`)} 
-        title="Éditer"
-      >
-        <i className="bi bi-pencil"></i>
-      </button>
-      <button 
-        className={styles.actionButton}
-        onClick={() => onDelete(artiste.id)} 
-        title="Supprimer"
-      >
-        <i className="bi bi-trash"></i>
-      </button>
+      {canEdit('artistes') && (
+        <button 
+          className={styles.actionButton}
+          onClick={() => navigate(`/artistes/edit/${artiste.id}`)} 
+          title="Éditer"
+        >
+          <i className="bi bi-pencil"></i>
+        </button>
+      )}
+      {canDelete('artistes') && (
+        <button 
+          className={styles.actionButton}
+          onClick={() => onDelete(artiste.id)} 
+          title="Supprimer"
+        >
+          <i className="bi bi-trash"></i>
+        </button>
+      )}
     </div>
   );
 

@@ -88,6 +88,43 @@
   margin: 0 var(--tc-space-1);
 }
 
+/* Toolbar secondaire */
+.secondaryToolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-3);
+  background: var(--tc-bg-white);
+  border-bottom: 1px solid var(--tc-color-border);
+  flex-wrap: wrap;
+}
+
+.toolGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-1);
+}
+
+.toolLabel {
+  font-size: var(--tc-font-size-sm);
+  color: var(--tc-text-secondary);
+  margin: 0;
+}
+
+.toolSelect {
+  padding: 2px 8px;
+  font-size: var(--tc-font-size-sm);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-border-radius-sm);
+  background: var(--tc-bg-white);
+  cursor: pointer;
+}
+
+.toolSelect:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .contractRef {
   display: flex;
   align-items: center;
@@ -102,7 +139,7 @@
   overflow-y: auto;
   font-family: var(--tc-font-family-base);
   font-size: var(--tc-font-size-base);
-  line-height: 1.6;
+  line-height: 1.0;
 }
 
 .editorTextarea:focus {
@@ -263,7 +300,7 @@
   padding: 40px 60px;
   background: white;
   font-size: 12pt;
-  line-height: 1.6;
+  line-height: 1.0;
   color: #000;
   overflow: auto;
 }

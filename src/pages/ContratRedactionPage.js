@@ -111,6 +111,7 @@ const ContratRedactionPage = () => {
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isHtmlMode, setIsHtmlMode] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showMoreTools, setShowMoreTools] = useState(false);
   const [contractRef] = useState('1');
   const [contratData, setContratData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -1371,6 +1372,24 @@ const ContratRedactionPage = () => {
                                 <i className={`bi bi-${isFullscreen ? 'fullscreen-exit' : 'arrows-fullscreen'}`}></i>
                               </Button>
                             </OverlayTrigger>
+                            <div className={styles.separator}></div>
+                            <OverlayTrigger
+                              placement="bottom"
+                              overlay={
+                                <Tooltip id="tooltip-more-tools">
+                                  {showMoreTools ? "Masquer les options" : "Plus d'options"}
+                                </Tooltip>
+                              }
+                            >
+                              <Button
+                                variant={showMoreTools ? "primary" : "outline-secondary"}
+                                size="sm"
+                                disabled={isContractFinished || isHtmlMode}
+                                onClick={() => setShowMoreTools(!showMoreTools)}
+                              >
+                                <i className="bi bi-three-dots"></i>
+                              </Button>
+                            </OverlayTrigger>
                           </div>
                           
                           <div className={styles.contractRef}>
@@ -1384,6 +1403,114 @@ const ContratRedactionPage = () => {
                             />
                           </div>
                         </div>
+
+                        {/* Toolbar secondaire pour les options avancées */}
+                        {showMoreTools && !isHtmlMode && (
+                          <div className={styles.secondaryToolbar}>
+                            <div className={styles.toolGroup}>
+                              <label className={styles.toolLabel}>Police :</label>
+                              <select 
+                                className={styles.toolSelect}
+                                disabled={isContractFinished}
+                                onChange={(e) => {
+                                  editorRef.current?.execCommand('fontName', e.target.value);
+                                }}
+                              >
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Helvetica">Helvetica</option>
+                              </select>
+                            </div>
+                            
+                            <div className={styles.toolGroup}>
+                              <label className={styles.toolLabel}>Taille :</label>
+                              <select 
+                                className={styles.toolSelect}
+                                disabled={isContractFinished}
+                                onChange={(e) => {
+                                  editorRef.current?.execCommand('fontSize', e.target.value);
+                                }}
+                              >
+                                <option value="1">8pt</option>
+                                <option value="2">10pt</option>
+                                <option value="3">12pt</option>
+                                <option value="4">14pt</option>
+                                <option value="5">18pt</option>
+                                <option value="6">24pt</option>
+                                <option value="7">36pt</option>
+                              </select>
+                            </div>
+                            
+                            <div className={styles.separator}></div>
+                            
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished}
+                              onClick={() => {
+                                const color = prompt('Couleur hexadécimale (ex: #000000) :');
+                                if (color) {
+                                  editorRef.current?.execCommand('foreColor', color);
+                                }
+                              }}
+                              title="Couleur du texte"
+                            >
+                              <i className="bi bi-palette"></i>
+                            </Button>
+                            
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished}
+                              onClick={() => {
+                                const color = prompt('Couleur de fond (ex: #FFFF00) :');
+                                if (color) {
+                                  editorRef.current?.execCommand('backColor', color);
+                                }
+                              }}
+                              title="Couleur de fond"
+                            >
+                              <i className="bi bi-paint-bucket"></i>
+                            </Button>
+                            
+                            <div className={styles.separator}></div>
+                            
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished}
+                              onClick={() => editorRef.current?.execCommand('subscript')}
+                              title="Indice"
+                            >
+                              X<sub>2</sub>
+                            </Button>
+                            
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished}
+                              onClick={() => editorRef.current?.execCommand('superscript')}
+                              title="Exposant"
+                            >
+                              X<sup>2</sup>
+                            </Button>
+                            
+                            <div className={styles.separator}></div>
+                            
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished}
+                              onClick={() => editorRef.current?.execCommand('removeFormat')}
+                              title="Supprimer la mise en forme"
+                            >
+                              <i className="bi bi-eraser"></i>
+                            </Button>
+                          </div>
+                        )}
 
                         {isHtmlMode ? (
                           <textarea

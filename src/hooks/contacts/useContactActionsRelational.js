@@ -111,6 +111,12 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
       );
 
       const success = results.every(r => r.success);
+      
+      // Invalider le cache pour forcer le refresh immédiat
+      if (success) {
+        invalidateContactCache(contactId);
+      }
+      
       return success;
     } catch (error) {
       console.error('Erreur lors de l\'association des personnes:', error);
@@ -151,6 +157,9 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
         }
       }
 
+      // Invalider le cache pour forcer le refresh immédiat
+      invalidateContactCache(contactId);
+
       return true;
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la personne:', error);
@@ -184,6 +193,9 @@ export function useContactActionsRelational(contactId, contactType = 'structure'
 
       // Dissocier (soft delete)
       await dissociatePersonFromStructure(personneWithLiaison.liaison.id);
+
+      // Invalider le cache pour forcer le refresh immédiat
+      invalidateContactCache(contactId);
 
       // Plus besoin de marquer comme personne libre - le système détecte automatiquement
 

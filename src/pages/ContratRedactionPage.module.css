@@ -78,6 +78,7 @@
   display: flex;
   gap: var(--tc-space-1);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .separator {
@@ -128,6 +129,62 @@
   color: var(--tc-text-default);
 }
 
+/* Styles pour les sauts de page dans l'éditeur */
+.editorTextarea .page-break,
+.editorTextarea .saut-de-page {
+  display: block;
+  position: relative;
+  height: 30px;
+  margin: 20px 0;
+  border: 2px dashed #007bff;
+  background-color: #e3f2fd;
+  pointer-events: none;
+}
+
+.editorTextarea .page-break::before,
+.editorTextarea .saut-de-page::before {
+  content: "Saut de page";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #007bff;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Saut de page en mode plein écran A4 */
+.editorZone.fullscreen .editorTextarea .page-break,
+.editorZone.fullscreen .editorTextarea .saut-de-page {
+  margin: 40px -20mm;
+  height: 60px;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 10px,
+    #f5f5f5 10px,
+    #f5f5f5 20px
+  );
+  border-top: 2px dashed #999;
+  border-bottom: 2px dashed #999;
+  border-left: none;
+  border-right: none;
+}
+
+.editorZone.fullscreen .editorTextarea .page-break::after,
+.editorZone.fullscreen .editorTextarea .saut-de-page::after {
+  content: "Nouvelle page A4";
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #666;
+  font-style: italic;
+}
+
 /* Zone d'aperçu (50%) */
 .previewZone {
   flex: 0 0 50%;
@@ -135,14 +192,105 @@
   flex-direction: column;
   background: var(--tc-bg-light);
   min-height: 0;
-  align-items: center;
-  justify-content: flex-start;
+}
+
+/* Mode plein écran pour l'éditeur */
+.editorZone.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInFullscreen 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+@keyframes fadeInFullscreen {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.editorZone.fullscreen .modelSelector {
+  display: none; /* Masquer en plein écran pour plus d'espace */
+}
+
+.editorZone.fullscreen .editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* En mode plein écran, pas besoin de wrapper ni de a4Container séparés */
+.editorZone.fullscreen .editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: white;
+}
+
+/* Toolbar en plein écran */
+.editorZone.fullscreen .editorHeader {
+  width: 100%;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.editorZone.fullscreen .editorTextarea {
+  flex: 1;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 60px;
+  background: white;
+  font-size: 12pt;
+  line-height: 1.6;
+  color: #000;
+  overflow: auto;
+}
+
+/* Indicateur de zone imprimable */
+.editorZone.fullscreen .editorTextarea::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  right: 30px;
+  bottom: 30px;
+  border: 1px dashed #e0e0e0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Retirer le numéro de page en mode plein écran car il ne s'affiche pas bien avec le scale */
+.editorZone.fullscreen .editorTextarea::after {
+  display: none;
 }
 
 .previewHeader {
   padding: var(--tc-space-3);
   background: var(--tc-bg-white);
   border-bottom: 1px solid var(--tc-color-border);
+  width: 100%;
 }
 
 .previewHeader h6 {
@@ -155,9 +303,8 @@
   overflow-y: auto;
   background: var(--tc-bg-light);
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
   height: 100%;
+  width: 100%;
 }
 
 .previewEmpty {

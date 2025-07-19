@@ -1,12 +1,86 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Alert, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Alert, Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
 import { db } from '@/services/firebase-service';
 import { doc, updateDoc, serverTimestamp, getDoc } from '@/services/firebase-service';
 import contratService from '@/services/contratService';
 import ContratModelsModal from '@/components/contrats/modals/ContratModelsModal';
+import ContratPdfViewerWithControls from '@/components/contrats/ContratPdfViewerWithControls';
 import styles from './ContratRedactionPage.module.css';
+import { toast } from 'react-toastify';
+
+// Composant éditeur stable pour éviter les problèmes de curseur
+const EditorComponent = React.memo(React.forwardRef(({ content, onChange, disabled, className }, ref) => {
+  const contentRef = useRef(null);
+  const isUserTyping = useRef(false);
+
+  // Initialiser le contenu au montage
+  useEffect(() => {
+    if (contentRef.current && !contentRef.current.innerHTML && content) {
+      contentRef.current.innerHTML = content;
+    }
+  }, []);
+
+  // Gérer les changements de contenu externe (changement de modèle, etc.)
+  useEffect(() => {
+    if (contentRef.current && !isUserTyping.current && content !== contentRef.current.innerHTML) {
+      contentRef.current.innerHTML = content;
+    }
+  }, [content]);
+
+  const handleInput = (e) => {
+    isUserTyping.current = true;
+    const newContent = e.currentTarget.innerHTML;
+    onChange(newContent);
+    
+    // Réinitialiser le flag après un court délai
+    setTimeout(() => {
+      isUserTyping.current = false;
+    }, 100);
+  };
+
+  // Exposer une méthode pour insérer du HTML à la position du curseur
+  React.useImperativeHandle(ref, () => ({
+    insertHTML: (html) => {
+      if (contentRef.current) {
+        contentRef.current.focus();
+        document.execCommand('insertHTML', false, html);
+        const newContent = contentRef.current.innerHTML;
+        onChange(newContent);
+      }
+    },
+    execCommand: (command, value = null) => {
+      if (contentRef.current) {
+        contentRef.current.focus();
+        document.execCommand(command, false, value);
+        const newContent = contentRef.current.innerHTML;
+        onChange(newContent);
+      }
+    },
+    getContent: () => contentRef.current?.innerHTML || ''
+  }));
+
+  return (
+    <div
+      ref={contentRef}
+      className={className}
+      contentEditable={!disabled}
+      suppressContentEditableWarning={true}
+      onInput={handleInput}
+      style={{
+        minHeight: '400px',
+        outline: 'none'
+      }}
+    />
+  );
+}), (prevProps, nextProps) => {
+  // Ne re-render que si disabled change ou si c'est un changement de modèle
+  return prevProps.disabled === nextProps.disabled && 
+         prevProps.className === nextProps.className;
+});
+
+EditorComponent.displayName = 'EditorComponent';
 
 /**
  * Page de rédaction du contrat
@@ -33,9 +107,14 @@ const ContratRedactionPage = () => {
   const [editorContent, setEditorContent] = useState('');
   const [previewContent, setPreviewContent] = useState('');
   const [isContractFinished, setIsContractFinished] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isHtmlMode, setIsHtmlMode] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [contractRef] = useState('1');
   const [contratData, setContratData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const editorRef = useRef(null);
   
   // Vérifier si on est en mode lecture seule (activeTab déjà déclaré plus haut)
   const isReadOnly = activeTab?.params?.readOnly || false;
@@ -48,6 +127,38 @@ const ContratRedactionPage = () => {
       updateTabTitle(`Rédaction contrat ${id || 'nouveau'}`);
     }
   }, [id, updateTabTitle]);
+
+  // Nettoyer l'URL blob au démontage
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+    };
+  }, [pdfUrl]);
+
+  // Gérer la touche Échap pour quitter le plein écran
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+
+    // Plus besoin de calculateA4Scale en mode plein écran simplifié
+
+    if (isFullscreen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [isFullscreen]);
 
   // Charger les données du contrat depuis la collection contrats
   useEffect(() => {
@@ -220,13 +331,120 @@ const ContratRedactionPage = () => {
       `;
       setEditorContent(modelContent);
     }
+    
+    // Réinitialiser le PDF lors du changement de modèle
+    if (pdfUrl) {
+      URL.revokeObjectURL(pdfUrl);
+      setPdfUrl(null);
+    }
   };
 
   // Gestion de l'enregistrement et affichage
+  // Fonction pour générer le PDF
+  const handleGeneratePdf = async () => {
+    setIsGeneratingPdf(true);
+    try {
+      const htmlContent = previewContent || editorContent;
+      
+      // Ajouter les styles CSS pour les sauts de page et la mise en forme
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            @media print {
+              .page-break, .saut-de-page {
+                page-break-after: always;
+                break-after: always;
+              }
+            }
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #000;
+            }
+            .page-break, .saut-de-page {
+              page-break-after: always;
+              break-after: page;
+              display: block;
+              height: 0;
+            }
+            /* Styles Quill */
+            .ql-align-center { text-align: center; }
+            .ql-align-right { text-align: right; }
+            .ql-align-justify { text-align: justify; }
+            img { max-width: 100%; height: auto; }
+            h1, h2, h3, h4, h5, h6 { page-break-after: avoid; }
+            p { orphans: 3; widows: 3; }
+          </style>
+        </head>
+        <body>
+          ${htmlContent}
+        </body>
+        </html>
+      `;
+      
+      // Construire l'URL de la fonction Cloud
+      const functionsUrl = process.env.REACT_APP_FUNCTIONS_URL || 
+        `https://us-central1-${process.env.REACT_APP_FIREBASE_PROJECT_ID || 'tourcraft-833e8'}.cloudfunctions.net`;
+      
+      console.log('Appel de la fonction generatePdf à:', `${functionsUrl}/generatePdf`);
+      console.log('Taille du HTML à envoyer:', fullHtml.length, 'caractères');
+      
+      // Appeler la fonction Cloud pour générer le PDF
+      const response = await fetch(`${functionsUrl}/generatePdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          htmlContent: fullHtml,
+          title: `Contrat ${contractRef}`,
+          options: {
+            format: 'A4',
+            margin: {
+              top: '30px',
+              right: '30px',
+              bottom: '30px',
+              left: '30px'
+            }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Erreur serveur:', errorText);
+        throw new Error(`Erreur lors de la génération du PDF: ${errorText}`);
+      }
+
+      // La fonction retourne directement le PDF en binaire
+      const pdfBlob = await response.blob();
+      const pdfBlobUrl = URL.createObjectURL(pdfBlob);
+      
+      // Nettoyer l'ancienne URL si elle existe
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+      
+      setPdfUrl(pdfBlobUrl);
+    } catch (error) {
+      console.error('Erreur génération PDF:', error);
+      toast.error('Erreur lors de la génération du PDF');
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   const handleSaveAndPreview = async () => {
     console.log('[ContratRedactionPage] handleSaveAndPreview appelé');
-    console.log('[ContratRedactionPage] editorContent actuel:', editorContent);
-    console.log('[ContratRedactionPage] editorContent length:', editorContent?.length || 0);
+    
+    // Récupérer le contenu actuel depuis l'éditeur
+    const currentContent = isHtmlMode ? editorContent : (editorRef.current?.getContent() || editorContent);
+    
+    console.log('[ContratRedactionPage] contenu actuel:', currentContent);
+    console.log('[ContratRedactionPage] contenu length:', currentContent?.length || 0);
     console.log('[ContratRedactionPage] contratData:', contratData);
     
     // Récupérer les variables de contrat depuis le contratData sauvegardé
@@ -303,7 +521,7 @@ const ContratRedactionPage = () => {
         });
         
         // Remplacer les variables dans le contenu
-        let processedContent = editorContent;
+        let processedContent = currentContent;
         
         // Log pour voir quelles variables sont présentes dans le contenu
         const variablesInContent = [];
@@ -601,14 +819,18 @@ const ContratRedactionPage = () => {
         
         setPreviewContent(processedContent);
         console.log('[ContratRedactionPage] Variables remplacées et preview défini');
+        
+        // Générer automatiquement le PDF après la sauvegarde
+        handleGeneratePdf();
+        
       } catch (error) {
         console.error('[ContratRedactionPage] Erreur lors du remplacement des variables:', error);
         // En cas d'erreur, afficher quand même le contenu non traité
-        setPreviewContent(editorContent);
+        setPreviewContent(currentContent);
       }
     } else {
       // Si pas de contratData, afficher le contenu tel quel
-      setPreviewContent(editorContent);
+      setPreviewContent(currentContent);
     }
   };
   
@@ -692,7 +914,8 @@ const ContratRedactionPage = () => {
   const handleFinishContract = async () => {
     try {
       setIsContractFinished(true);
-      setPreviewContent(editorContent);
+      const finalContent = isHtmlMode ? editorContent : (editorRef.current?.getContent() || editorContent);
+      setPreviewContent(finalContent);
       
       // Marquer le contrat comme rédigé dans la base de données
       if (id) {
@@ -981,7 +1204,7 @@ const ContratRedactionPage = () => {
           {/* 2. Contenu principal avec colonnes */}
           <div className={styles.editorContent}>
             {/* Colonne gauche - Zone d'édition (70%) */}
-            <div className={styles.editorZone}>
+            <div className={`${styles.editorZone} ${isFullscreen ? styles.fullscreen : ''}`}>
               {/* Sélecteur de modèle */}
               <div className={styles.modelSelector}>
                 <Form.Label>Modèle de contrat</Form.Label>
@@ -1012,69 +1235,208 @@ const ContratRedactionPage = () => {
 
               {/* Éditeur WYSIWYG */}
               {currentModel && (
-                <div className={styles.editor}>
+                <div className={`${styles.editor} ${isFullscreen ? 'fullscreenEditor' : ''}`}>
                   <div className={styles.editorHeader}>
                     <div className={styles.editorToolbar}>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-type-bold"></i>
-                      </Button>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-type-italic"></i>
-                      </Button>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-type-underline"></i>
-                      </Button>
-                      <div className={styles.separator}></div>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-list-ul"></i>
-                      </Button>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-list-ol"></i>
-                      </Button>
-                      <div className={styles.separator}></div>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-text-left"></i>
-                      </Button>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-text-center"></i>
-                      </Button>
-                      <Button variant="outline-secondary" size="sm" disabled={isContractFinished}>
-                        <i className="bi bi-text-right"></i>
-                      </Button>
-                    </div>
-                    
-                    <div className={styles.contractRef}>
-                      <Form.Label className="small text-muted me-2">Réf.:</Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={contractRef}
-                        size="sm"
-                        style={{ width: '60px' }}
-                        readOnly
-                      />
-                    </div>
-                  </div>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('bold')}
+                              title="Gras"
+                            >
+                              <i className="bi bi-type-bold"></i>
+                            </Button>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('italic')}
+                              title="Italique"
+                            >
+                              <i className="bi bi-type-italic"></i>
+                            </Button>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('underline')}
+                              title="Souligné"
+                            >
+                              <i className="bi bi-type-underline"></i>
+                            </Button>
+                            <div className={styles.separator}></div>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('insertUnorderedList')}
+                              title="Liste à puces"
+                            >
+                              <i className="bi bi-list-ul"></i>
+                            </Button>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('insertOrderedList')}
+                              title="Liste numérotée"
+                            >
+                              <i className="bi bi-list-ol"></i>
+                            </Button>
+                            <div className={styles.separator}></div>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('justifyLeft')}
+                              title="Aligner à gauche"
+                            >
+                              <i className="bi bi-text-left"></i>
+                            </Button>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('justifyCenter')}
+                              title="Centrer"
+                            >
+                              <i className="bi bi-text-center"></i>
+                            </Button>
+                            <Button 
+                              variant="outline-secondary" 
+                              size="sm" 
+                              disabled={isContractFinished || isHtmlMode}
+                              onClick={() => editorRef.current?.execCommand('justifyRight')}
+                              title="Aligner à droite"
+                            >
+                              <i className="bi bi-text-right"></i>
+                            </Button>
+                            <div className={styles.separator}></div>
+                            <OverlayTrigger
+                              placement="bottom"
+                              overlay={
+                                <Tooltip id="tooltip-page-break">
+                                  Insérer un saut de page
+                                </Tooltip>
+                              }
+                            >
+                              <Button 
+                                variant="outline-primary" 
+                                size="sm" 
+                                disabled={isContractFinished || isHtmlMode}
+                                onClick={() => {
+                                  // Insérer un saut de page à la position du curseur
+                                  if (editorRef.current) {
+                                    editorRef.current.insertHTML('<div class="page-break">{SAUT_DE_PAGE}</div><p><br></p>');
+                                  }
+                                }}
+                              >
+                                <i className="bi bi-file-break"></i>
+                              </Button>
+                            </OverlayTrigger>
+                            <div className={styles.separator}></div>
+                            <OverlayTrigger
+                              placement="bottom"
+                              overlay={
+                                <Tooltip id="tooltip-html-mode">
+                                  {isHtmlMode ? "Basculer en mode visuel" : "Basculer en mode HTML"}
+                                </Tooltip>
+                              }
+                            >
+                              <Button
+                                variant={isHtmlMode ? "primary" : "outline-secondary"}
+                                size="sm"
+                                disabled={isContractFinished}
+                                onClick={() => setIsHtmlMode(!isHtmlMode)}
+                              >
+                                <i className={`bi bi-${isHtmlMode ? 'eye' : 'code-slash'}`}></i>
+                              </Button>
+                            </OverlayTrigger>
+                            <div className={styles.separator}></div>
+                            <OverlayTrigger
+                              placement="bottom"
+                              overlay={
+                                <Tooltip id="tooltip-fullscreen">
+                                  {isFullscreen ? "Quitter le plein écran" : "Plein écran"}
+                                </Tooltip>
+                              }
+                            >
+                              <Button
+                                variant="outline-secondary"
+                                size="sm"
+                                disabled={isContractFinished}
+                                onClick={() => setIsFullscreen(!isFullscreen)}
+                              >
+                                <i className={`bi bi-${isFullscreen ? 'fullscreen-exit' : 'arrows-fullscreen'}`}></i>
+                              </Button>
+                            </OverlayTrigger>
+                          </div>
+                          
+                          <div className={styles.contractRef}>
+                            <Form.Label className="small text-muted me-2">Réf.:</Form.Label>
+                            <Form.Control
+                              type="text"
+                              value={contractRef}
+                              size="sm"
+                              style={{ width: '60px' }}
+                              readOnly
+                            />
+                          </div>
+                        </div>
 
-                  <div 
-                    className={styles.editorTextarea}
-                    contentEditable={!isContractFinished}
-                    dangerouslySetInnerHTML={{ __html: editorContent }}
-                    onInput={(e) => setEditorContent(e.target.innerHTML)}
-                  />
-                </div>
-              )}
-            </div>
+                        {isHtmlMode ? (
+                          <textarea
+                            className={styles.editorTextarea}
+                            value={editorContent}
+                            onChange={(e) => setEditorContent(e.target.value)}
+                            disabled={isContractFinished}
+                            style={{
+                              fontFamily: 'monospace',
+                              fontSize: '14px',
+                              resize: 'none'
+                            }}
+                          />
+                        ) : (
+                          <EditorComponent
+                            ref={editorRef}
+                            content={editorContent}
+                            onChange={setEditorContent}
+                            disabled={isContractFinished}
+                            className={styles.editorTextarea}
+                          />
+                        )}
+                  </div>
+                )}
+              </div>
 
             {/* Colonne droite - Aperçu (30%) */}
             <div className={styles.previewZone}>
               <div className={styles.previewHeader}>
-                <h6 className="mb-0">
-                  <i className="bi bi-eye me-2"></i>
-                  Aperçu
+                <h6 className="mb-0 d-flex justify-content-between align-items-center">
+                  <span>
+                    <i className="bi bi-file-pdf me-2"></i>
+                    Aperçu PDF
+                  </span>
+                  {pdfUrl && (
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={handleGeneratePdf}
+                      disabled={isGeneratingPdf}
+                      title="Actualiser le PDF"
+                    >
+                      {isGeneratingPdf ? (
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      ) : (
+                        <i className="bi bi-arrow-clockwise"></i>
+                      )}
+                    </Button>
+                  )}
                 </h6>
               </div>
               
-              <div className={styles.previewContent}>
+              <div className={styles.previewContent} style={{ padding: 0, display: 'flex', flexDirection: 'column', width: '100%' }}>
                 {!currentModel ? (
                   <div className={styles.previewEmpty}>
                     <i className="bi bi-file-text fs-1 text-muted mb-3 d-block"></i>
@@ -1082,18 +1444,36 @@ const ContratRedactionPage = () => {
                       Choisissez le modèle de contrat pour afficher l'aperçu
                     </p>
                     <small className="text-muted">
-                      Cliquez sur "Enregistrer et afficher" pour mettre à jour l'aperçu
+                      Cliquez sur "Enregistrer et afficher" pour générer le PDF
                     </small>
                   </div>
-                ) : !previewContent ? (
+                ) : isGeneratingPdf ? (
                   <div className={styles.previewEmpty}>
-                    <i className="bi bi-arrow-up-circle fs-1 text-muted mb-3 d-block"></i>
+                    <div className="spinner-border text-primary mb-3" role="status">
+                      <span className="visually-hidden">Génération du PDF...</span>
+                    </div>
                     <p className="text-muted">
-                      Cliquez sur "Enregistrer et afficher" pour voir l'aperçu
+                      Génération du PDF en cours...
+                    </p>
+                  </div>
+                ) : !pdfUrl ? (
+                  <div className={styles.previewEmpty}>
+                    <i className="bi bi-file-pdf fs-1 text-muted mb-3 d-block"></i>
+                    <p className="text-muted">
+                      Cliquez sur "Enregistrer et afficher" pour générer l'aperçu PDF
                     </p>
                   </div>
                 ) : (
-                  <div className={`${styles.previewDocument} ${styles.a4Preview}`} dangerouslySetInnerHTML={{ __html: previewContent }} />
+                  <iframe
+                    src={pdfUrl}
+                    width="100%"
+                    height="100%"
+                    style={{
+                      border: 'none',
+                      backgroundColor: '#525659'
+                    }}
+                    title="Aperçu PDF du contrat"
+                  />
                 )}
               </div>
             </div>

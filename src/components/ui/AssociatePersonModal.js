@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { personnesService } from '@/services/contacts/personnesService';
+import { fonctionsService } from '@/services/fonctionsService';
 import { useTabs } from '@/context/TabsContext';
 import { useContactModals } from '@/context/ContactModalsContext';
 import { createPortal } from 'react-dom';
@@ -19,6 +20,18 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc' ou 'desc'
+  const [currentStep, setCurrentStep] = useState(1); // 1 = sélection, 2 = infos liaison
+  const [fonctions, setFonctions] = useState([]); // Liste des fonctions depuis Firebase
+  
+  // États pour les infos de liaison
+  const [liaisonInfo, setLiaisonInfo] = useState({
+    fonction: '',
+    actif: true,
+    prioritaire: false,
+    email: '',
+    telPro: '',
+    mobile: ''
+  });
   
   const { currentEntreprise } = useEntreprise();
   const { openTab } = useTabs();
@@ -113,6 +126,21 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
     setCurrentPage(1);
   }, [searchTerm]);
 
+  // Charger les fonctions depuis Firebase
+  useEffect(() => {
+    const loadFonctions = async () => {
+      if (currentEntreprise?.id) {
+        try {
+          const fonctionsList = await fonctionsService.getActiveFonctions(currentEntreprise.id);
+          setFonctions(fonctionsList);
+        } catch (error) {
+          console.error('Erreur lors du chargement des fonctions:', error);
+        }
+      }
+    };
+    loadFonctions();
+  }, [currentEntreprise?.id]);
+
   // Charger les données au montage du composant
   useEffect(() => {
     if (isOpen && currentEntreprise?.id) {
@@ -120,6 +148,18 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
       console.log('📋 Organisation courante:', currentEntreprise.id);
       console.log('📋 existingPersonIds à l\'ouverture:', existingPersonIds);
       loadPersonnes();
+    } else if (!isOpen) {
+      // Reset des états quand la modale se ferme
+      setCurrentStep(1);
+      setSelectedPersonnes([]);
+      setLiaisonInfo({
+        fonction: '',
+        actif: true,
+        prioritaire: false,
+        email: '',
+        telPro: '',
+        mobile: ''
+      });
     }
   }, [isOpen, currentEntreprise?.id, loadPersonnes]);
   
@@ -174,32 +214,42 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
     setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
   };
 
-  // Associer les personnes sélectionnées
-  const handleAssociate = () => {
-    const selectedPersonnesData = filteredPersonnes.filter(p => selectedPersonnes.includes(p.id));
-    
-    // 🔍 DEBUG: Tracer les données envoyées
-    console.log('🔍 [DEBUG AssociatePersonModal] - Envoi association');
-    console.log('📋 selectedPersonnes IDs:', selectedPersonnes);
-    console.log('📋 existingPersonIds reçus:', existingPersonIds);
-    console.log('📋 selectedPersonnesData à envoyer:', selectedPersonnesData.map(p => ({
-      id: p.id,
-      nom: p.nom,
-      entityType: p.entityType,
-      hasPersonneNested: !!p.personne,
-      keys: Object.keys(p).slice(0, 10)
-    })));
-    
-    // Vérifier si les personnes sélectionnées sont censées être exclues
-    selectedPersonnesData.forEach(p => {
-      const shouldBeExcluded = existingPersonIds.includes(p.id);
-      if (shouldBeExcluded) {
-        console.log(`⚠️  PROBLÈME - Personne ${p.id} devrait être exclue mais est sélectionnée!`);
-      }
-    });
-    
-    onAssociate(selectedPersonnesData);
-    onClose();
+  // Passer à l'étape suivante ou associer
+  const handleNext = () => {
+    if (currentStep === 1) {
+      // Passer à l'étape 2
+      setCurrentStep(2);
+    } else {
+      // Étape 2 : associer avec les infos de liaison
+      const selectedPersonnesData = filteredPersonnes.filter(p => selectedPersonnes.includes(p.id));
+      
+      // Ajouter les infos de liaison aux données
+      const personnesWithLiaison = selectedPersonnesData.map(personne => ({
+        ...personne,
+        liaisonInfo: { ...liaisonInfo }
+      }));
+      
+      console.log('🔍 [DEBUG AssociatePersonModal] - Envoi association avec infos de liaison');
+      console.log('📋 Personnes avec liaison:', personnesWithLiaison);
+      
+      onAssociate(personnesWithLiaison);
+      onClose();
+      // Reset pour la prochaine ouverture
+      setCurrentStep(1);
+      setLiaisonInfo({
+        fonction: '',
+        actif: true,
+        prioritaire: false,
+        email: '',
+        telPro: '',
+        mobile: ''
+      });
+    }
+  };
+  
+  // Retour à l'étape précédente
+  const handleBack = () => {
+    setCurrentStep(1);
   };
 
   // Pagination
@@ -215,11 +265,156 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
 
   if (!isOpen) return null;
 
+
+  // Rendu de l'étape 2 : Infos de liaison
+  const renderStep2 = () => {
+    const selectedPersonne = filteredPersonnes.find(p => selectedPersonnes.includes(p.id));
+    
+    return (
+      <>
+        {/* En-tête */}
+        <div className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>Associer une personne existante</h2>
+          <button className={styles.closeButton} onClick={onClose}>
+            <i className="bi bi-x"></i>
+          </button>
+        </div>
+
+        {/* Corps de l'étape 2 */}
+        <div className={styles.modalBody}>
+          <div className={styles.stepIndicator}>
+            <span className={styles.stepCompleted}>1. Sélection</span>
+            <i className="bi bi-chevron-right"></i>
+            <span className={styles.stepActive}>2. Informations de liaison</span>
+          </div>
+
+          {selectedPersonne && (
+            <div className={styles.selectedPersonneInfo}>
+              <i className="bi bi-person-fill"></i>
+              <strong>{selectedPersonne.nom}</strong>
+              {selectedPersonne.fonction && <span> - {selectedPersonne.fonction}</span>}
+            </div>
+          )}
+
+          <div className={styles.liaisonForm}>
+            <h3>Infos de la personne dans la structure</h3>
+            
+            <div className={styles.formGroup}>
+              <label>
+                Fonction <span className={styles.required}>*</span>
+              </label>
+              <div className={styles.inputWithButton}>
+                <select
+                  value={liaisonInfo.fonction}
+                  onChange={(e) => setLiaisonInfo({...liaisonInfo, fonction: e.target.value})}
+                  required
+                >
+                  <option value="">Sélectionner une fonction</option>
+                  {fonctions.map(fonction => (
+                    <option key={fonction.id} value={fonction.nom}>
+                      {fonction.nom}
+                    </option>
+                  ))}
+                  <option value="_autre">Autre...</option>
+                </select>
+                <button 
+                  type="button" 
+                  className={styles.addButton}
+                  title="Ajouter une nouvelle fonction"
+                  onClick={() => {
+                    const newFonction = prompt("Nouvelle fonction :");
+                    if (newFonction) {
+                      setLiaisonInfo({...liaisonInfo, fonction: newFonction});
+                    }
+                  }}
+                >
+                  <i className="bi bi-plus"></i>
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.checkboxGroup}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={liaisonInfo.actif}
+                  onChange={(e) => setLiaisonInfo({...liaisonInfo, actif: e.target.checked})}
+                />
+                Actif
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={liaisonInfo.prioritaire}
+                  onChange={(e) => setLiaisonInfo({...liaisonInfo, prioritaire: e.target.checked})}
+                />
+                Prioritaire
+              </label>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>E-mail</label>
+              <input
+                type="email"
+                value={liaisonInfo.email}
+                onChange={(e) => setLiaisonInfo({...liaisonInfo, email: e.target.value})}
+                placeholder="email@exemple.com"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Tél pro</label>
+              <input
+                type="tel"
+                value={liaisonInfo.telPro}
+                onChange={(e) => setLiaisonInfo({...liaisonInfo, telPro: e.target.value})}
+                placeholder="01 23 45 67 89"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Mobile</label>
+              <input
+                type="tel"
+                value={liaisonInfo.mobile}
+                onChange={(e) => setLiaisonInfo({...liaisonInfo, mobile: e.target.value})}
+                placeholder="06 12 34 56 78"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Pied de modal */}
+        <div className={styles.modalFooter}>
+          <div className={styles.actionButtons} style={{ width: '100%', justifyContent: 'space-between' }}>
+            <button className={styles.backButton} onClick={handleBack}>
+              &lt; Précédent
+            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button className={styles.cancelButton} onClick={onClose}>
+                Annuler
+              </button>
+              <button 
+                className={styles.associateButton}
+                disabled={!liaisonInfo.fonction}
+                onClick={handleNext}
+              >
+                Enregistrer
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   return createPortal(
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-        {/* En-tête */}
-        <div className={styles.modalHeader}>
+        {currentStep === 2 ? renderStep2() : (
+          <>
+            {/* En-tête */}
+            <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Associer une personne existante</h2>
           <button className={styles.closeButton} onClick={onClose}>
             <i className="bi bi-x"></i>
@@ -413,12 +608,14 @@ function AssociatePersonModal({ isOpen, onClose, onAssociate, structureId, allow
             <button 
               className={styles.associateButton}
               disabled={selectedPersonnes.length === 0}
-              onClick={handleAssociate}
+              onClick={handleNext}
             >
               Suivant &gt;
             </button>
           </div>
         </div>
+          </>
+        )}
       </div>
     </div>,
     document.body

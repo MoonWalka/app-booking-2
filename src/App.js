@@ -39,6 +39,7 @@ import NouveauDossierPage from '@/pages/NouveauDossierPage';
 import DossiersEnregistresPage from '@/pages/DossiersEnregistresPage';
 import MesSelectionsPage from '@/pages/MesSelectionsPage';
 import ContactTagsPage from '@/pages/ContactTagsPage';
+import ContratPdfViewerExample from '@/components/contrats/ContratPdfViewerExample';
 import RouterStabilizer from '@/utils/RouterStabilizer';
 import CreateDefaultTemplate from './pages/CreateDefaultTemplate';
 import PrivateRoute from '@/components/auth/PrivateRoute';
@@ -291,6 +292,12 @@ function App() {
                       <Route path="/structures/*" element={
                         <PrivateRoute>
                           <StructuresPage />
+                            </PrivateRoute>
+                          } />
+                          
+                          <Route path="/outils/pdf-viewer-demo" element={
+                            <PrivateRoute>
+                              <ContratPdfViewerExample />
                             </PrivateRoute>
                           } />
                           

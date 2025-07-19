@@ -1,0 +1,162 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #525659;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Barre d'outils */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #3a3a3a;
+  border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+
+.toolbarGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.label {
+  color: #e0e0e0;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+/* Select de zoom stylisé */
+.zoomSelect {
+  padding: 4px 8px;
+  border: 1px solid #555;
+  background-color: #404040;
+  color: #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 70px;
+  cursor: pointer;
+}
+
+.zoomSelect:hover {
+  background-color: #4a4a4a;
+}
+
+.zoomSelect:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: -2px;
+}
+
+/* Conteneur du viewer */
+.viewerContainer {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background-color: #525659;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  /* Pattern de fond pour ressembler aux viewers PDF */
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      #525659,
+      #525659 10px,
+      #4a4a4a 10px,
+      #4a4a4a 20px
+    );
+}
+
+.pdfViewer {
+  border: none;
+  background-color: white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  display: block;
+  margin: 0 auto;
+}
+
+/* Styles des boutons dans la toolbar */
+.toolbar button {
+  background-color: #404040;
+  color: #e0e0e0;
+  border: 1px solid #555;
+  transition: all 0.2s;
+}
+
+.toolbar button:hover {
+  background-color: #4a4a4a;
+  color: white;
+  border-color: #666;
+}
+
+.toolbar button:active {
+  background-color: #333;
+}
+
+/* Loading overlay */
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(82, 86, 89, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  color: #e0e0e0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #666;
+  border-top: 3px solid #0066cc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Fallback */
+.fallback {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.fallback a {
+  color: #4da6ff;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .toolbarGroup {
+    width: 100%;
+    justify-content: center;
+  }
+}

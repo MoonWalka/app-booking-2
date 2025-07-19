@@ -1,6 +1,7 @@
 // src/components/contrats/sections/ContratPdfViewer.js
 import React from 'react';
 import styles from '@/pages/ContratDetailsPage.module.css';
+import ContratPdfViewerWithControls from '../ContratPdfViewerWithControls';
 
 /**
  * Component for displaying different types of PDF previews
@@ -51,15 +52,10 @@ const ContratPdfViewer = ({
               <p className="text-muted">Cela peut prendre quelques secondes</p>
             </div>
           ) : pdfPreviewUrl ? (
-            <div style={{ height: '600px' }}>
-              <iframe 
-                src={pdfPreviewUrl} 
-                width="100%" 
-                height="100%" 
-                title="Aperçu PDF"
-                style={{ border: 'none' }}
-              />
-            </div>
+            <ContratPdfViewerWithControls
+              pdfUrl={pdfPreviewUrl}
+              height="750px"
+            />
           ) : (
             <div className={styles.pdfContent} style={{ textAlign: 'center', padding: 'var(--tc-space-10)' }}>
               <i className="bi bi-file-earmark-pdf" style={{ fontSize: '4rem', color: 'var(--tc-color-gray-300)', marginBottom: 'var(--tc-space-4)' }}></i>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Table, Modal, Form, Alert, Badge, InputGroup } from 'react-bootstrap';
 import { FaPlus, FaSync, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+import { useEntreprise } from '@/context/EntrepriseContext';
+import { fonctionsService } from '@/services/fonctionsService';
 import './QualificationsManager.css';
 
 const QualificationsManager = ({ type, title, buttonLabel }) => {
@@ -11,6 +13,8 @@ const QualificationsManager = ({ type, title, buttonLabel }) => {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(false);
+    const { currentEntreprise } = useEntreprise();
     const [currentItem, setCurrentItem] = useState({
         id: null,
         nom: '',
@@ -69,7 +73,30 @@ const QualificationsManager = ({ type, title, buttonLabel }) => {
     useEffect(() => {
         loadItemsList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [type]);
+    }, [type, currentEntreprise?.id]);
+
+    // Initialiser les fonctions par défaut si nécessaire
+    // Désactivé temporairement pour éviter la boucle infinie
+    /*
+    useEffect(() => {
+        const initFonctions = async () => {
+            if (type === 'fonctions' && currentEntreprise?.id && itemsList.length === 0 && !loading) {
+                try {
+                    // Vérifier d'abord s'il n'y a vraiment aucune fonction
+                    const existingFonctions = await fonctionsService.getAllFonctions(currentEntreprise.id);
+                    if (existingFonctions.length === 0) {
+                        await fonctionsService.initializeDefaultFonctions(currentEntreprise.id);
+                        await loadItemsList();
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de l\'initialisation des fonctions:', error);
+                }
+            }
+        };
+        initFonctions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [type, currentEntreprise?.id]);
+    */
 
     // Filtrage des éléments
     useEffect(() => {
@@ -83,9 +110,23 @@ const QualificationsManager = ({ type, title, buttonLabel }) => {
         }
     }, [itemsList, searchTerm]);
 
-    const loadItemsList = () => {
-        const mockData = getMockData();
-        setItemsList(mockData);
+    const loadItemsList = async () => {
+        if (type === 'fonctions' && currentEntreprise?.id) {
+            setLoading(true);
+            try {
+                const fonctions = await fonctionsService.getAllFonctions(currentEntreprise.id);
+                setItemsList(fonctions);
+            } catch (error) {
+                console.error('Erreur lors du chargement des fonctions:', error);
+                showSuccessMessage('Erreur lors du chargement des fonctions');
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            // Utiliser les données mockées pour les autres types
+            const mockData = getMockData();
+            setItemsList(mockData);
+        }
     };
 
     const handleShowModal = (item = null) => {
@@ -114,50 +155,108 @@ const QualificationsManager = ({ type, title, buttonLabel }) => {
         });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!currentItem.nom.trim() || !currentItem.code.trim()) {
             return;
         }
 
-        // Vérifier l'unicité du code
-        const codeExists = itemsList.some(item => 
-            item.code.toLowerCase() === currentItem.code.toLowerCase() && 
-            item.id !== currentItem.id
-        );
+        if (type === 'fonctions' && currentEntreprise?.id) {
+            try {
+                // Vérifier l'unicité du code
+                const codeExists = await fonctionsService.checkCodeExists(
+                    currentEntreprise.id, 
+                    currentItem.code, 
+                    isEditing ? currentItem.id : null
+                );
 
-        if (codeExists) {
-            alert('Ce code existe déjà. Veuillez choisir un code différent.');
-            return;
-        }
+                if (codeExists) {
+                    alert('Ce code existe déjà. Veuillez choisir un code différent.');
+                    return;
+                }
 
-        if (isEditing) {
-            setItemsList(itemsList.map(item => 
-                item.id === currentItem.id ? currentItem : item
-            ));
-            showSuccessMessage(`${title.slice(0, -1)} modifié${title.endsWith('s') ? 'e' : ''} avec succès`);
+                if (isEditing) {
+                    await fonctionsService.updateFonction(currentItem.id, {
+                        nom: currentItem.nom,
+                        code: currentItem.code,
+                        actif: currentItem.actif
+                    });
+                    showSuccessMessage(`Fonction modifiée avec succès`);
+                } else {
+                    await fonctionsService.createFonction({
+                        ...currentItem,
+                        entrepriseId: currentEntreprise.id
+                    });
+                    showSuccessMessage(`Fonction ajoutée avec succès`);
+                }
+                await loadItemsList();
+                handleCloseModal();
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde:', error);
+                alert('Erreur lors de la sauvegarde de la fonction');
+            }
         } else {
-            const newItem = {
-                ...currentItem,
-                id: Math.max(...itemsList.map(i => i.id), 0) + 1,
-                utilisations: 0
-            };
-            setItemsList([...itemsList, newItem]);
-            showSuccessMessage(`${title.slice(0, -1)} ajouté${title.endsWith('s') ? 'e' : ''} avec succès`);
+            // Logique mockée pour les autres types
+            const codeExists = itemsList.some(item => 
+                item.code.toLowerCase() === currentItem.code.toLowerCase() && 
+                item.id !== currentItem.id
+            );
+
+            if (codeExists) {
+                alert('Ce code existe déjà. Veuillez choisir un code différent.');
+                return;
+            }
+
+            if (isEditing) {
+                setItemsList(itemsList.map(item => 
+                    item.id === currentItem.id ? currentItem : item
+                ));
+                showSuccessMessage(`${title.slice(0, -1)} modifié${title.endsWith('s') ? 'e' : ''} avec succès`);
+            } else {
+                const newItem = {
+                    ...currentItem,
+                    id: Math.max(...itemsList.map(i => i.id), 0) + 1,
+                    utilisations: 0
+                };
+                setItemsList([...itemsList, newItem]);
+                showSuccessMessage(`${title.slice(0, -1)} ajouté${title.endsWith('s') ? 'e' : ''} avec succès`);
+            }
+            handleCloseModal();
         }
-        handleCloseModal();
     };
 
-    const handleDelete = (item) => {
+    const handleDelete = async (item) => {
         if (window.confirm(`Êtes-vous sûr de vouloir supprimer "${item.nom}" ?`)) {
-            setItemsList(itemsList.filter(i => i.id !== item.id));
-            showSuccessMessage(`${title.slice(0, -1)} supprimé${title.endsWith('s') ? 'e' : ''} avec succès`);
+            if (type === 'fonctions' && currentEntreprise?.id) {
+                try {
+                    await fonctionsService.deleteFonction(item.id);
+                    showSuccessMessage(`Fonction supprimée avec succès`);
+                    await loadItemsList();
+                } catch (error) {
+                    console.error('Erreur lors de la suppression:', error);
+                    alert(error.message || 'Erreur lors de la suppression de la fonction');
+                }
+            } else {
+                setItemsList(itemsList.filter(i => i.id !== item.id));
+                showSuccessMessage(`${title.slice(0, -1)} supprimé${title.endsWith('s') ? 'e' : ''} avec succès`);
+            }
         }
     };
 
-    const toggleActif = (item) => {
-        const updatedItem = { ...item, actif: !item.actif };
-        setItemsList(itemsList.map(i => i.id === item.id ? updatedItem : i));
-        showSuccessMessage(`${title.slice(0, -1)} ${updatedItem.actif ? 'activé' : 'désactivé'}${title.endsWith('s') ? 'e' : ''} avec succès`);
+    const toggleActif = async (item) => {
+        if (type === 'fonctions' && currentEntreprise?.id) {
+            try {
+                await fonctionsService.toggleFonctionStatus(item.id, !item.actif);
+                showSuccessMessage(`Fonction ${!item.actif ? 'activée' : 'désactivée'} avec succès`);
+                await loadItemsList();
+            } catch (error) {
+                console.error('Erreur lors du changement de statut:', error);
+                alert('Erreur lors du changement de statut de la fonction');
+            }
+        } else {
+            const updatedItem = { ...item, actif: !item.actif };
+            setItemsList(itemsList.map(i => i.id === item.id ? updatedItem : i));
+            showSuccessMessage(`${title.slice(0, -1)} ${updatedItem.actif ? 'activé' : 'désactivé'}${title.endsWith('s') ? 'e' : ''} avec succès`);
+        }
     };
 
     const showSuccessMessage = (message) => {
@@ -223,6 +322,13 @@ const QualificationsManager = ({ type, title, buttonLabel }) => {
                         </InputGroup>
                     </div>
 
+                    {loading ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Chargement...</span>
+                            </div>
+                        </div>
+                    ) : (
                     <Table responsive hover>
                         <thead>
                             <tr>
@@ -278,9 +384,35 @@ const QualificationsManager = ({ type, title, buttonLabel }) => {
                             ))}
                         </tbody>
                     </Table>
-                    {filteredItems.length === 0 && (
+                    )}
+                    {!loading && filteredItems.length === 0 && (
                         <div className="text-center py-5 text-muted">
-                            {searchTerm ? `Aucun résultat pour "${searchTerm}"` : `Aucun élément trouvé`}
+                            {searchTerm ? (
+                                `Aucun résultat pour "${searchTerm}"`
+                            ) : (
+                                <>
+                                    <p>Aucun élément trouvé</p>
+                                    {type === 'fonctions' && currentEntreprise?.id && (
+                                        <Button 
+                                            variant="primary" 
+                                            className="mt-3"
+                                            onClick={async () => {
+                                                try {
+                                                    await fonctionsService.initializeDefaultFonctions(currentEntreprise.id);
+                                                    await loadItemsList();
+                                                    showSuccessMessage('Fonctions par défaut initialisées avec succès');
+                                                } catch (error) {
+                                                    console.error('Erreur lors de l\'initialisation:', error);
+                                                    alert('Erreur lors de l\'initialisation des fonctions par défaut');
+                                                }
+                                            }}
+                                        >
+                                            <i className="bi bi-magic me-2"></i>
+                                            Initialiser les fonctions par défaut
+                                        </Button>
+                                    )}
+                                </>
+                            )}
                         </div>
                     )}
                 </Card.Body>

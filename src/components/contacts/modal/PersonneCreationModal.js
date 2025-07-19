@@ -5,6 +5,7 @@ import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { personnesService } from '@/services/contacts/personnesService';
 import liaisonsService from '@/services/contacts/liaisonsService';
+import { fonctionsService } from '@/services/fonctionsService';
 import AddressInput from '@/components/ui/AddressInput';
 import styles from './StructureCreationModal.module.css'; // Réutiliser les styles
 
@@ -18,6 +19,7 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('adresse');
   const [loading, setLoading] = useState(false);
+  const [fonctions, setFonctions] = useState([]);
   const [formData, setFormData] = useState({
     // Champs principaux
     prenom: '',
@@ -43,6 +45,21 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
     notes: '',
     actif: true // Ajout du champ actif avec valeur par défaut à true
   });
+
+  // Charger les fonctions au montage
+  useEffect(() => {
+    const loadFonctions = async () => {
+      if (currentEntreprise?.id) {
+        try {
+          const fonctionsList = await fonctionsService.getActiveFonctions(currentEntreprise.id);
+          setFonctions(fonctionsList);
+        } catch (error) {
+          console.error('Erreur lors du chargement des fonctions:', error);
+        }
+      }
+    };
+    loadFonctions();
+  }, [currentEntreprise?.id]);
 
   // Effet pour initialiser les données en mode édition
   useEffect(() => {
@@ -362,12 +379,29 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
       <div className="row">
         <div className="col-12 mb-3">
           <Form.Label>Fonction</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Fonction ou poste"
-            value={formData.fonction}
-            onChange={(e) => handleInputChange('fonction', e.target.value)}
-          />
+          <div className="d-flex gap-2">
+            <Form.Select
+              value={formData.fonction}
+              onChange={(e) => handleInputChange('fonction', e.target.value)}
+              className="flex-grow-1"
+            >
+              <option value="">Sélectionner une fonction</option>
+              {fonctions.filter(f => f.actif).map(fonction => (
+                <option key={fonction.id} value={fonction.nom}>
+                  {fonction.nom}
+                </option>
+              ))}
+              <option value="_autre">Autre...</option>
+            </Form.Select>
+            {formData.fonction === '_autre' && (
+              <Form.Control
+                type="text"
+                placeholder="Nouvelle fonction"
+                onChange={(e) => handleInputChange('fonction', e.target.value)}
+                autoFocus
+              />
+            )}
+          </div>
         </div>
         
         <div className="col-md-6 mb-3">

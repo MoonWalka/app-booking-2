@@ -442,6 +442,15 @@ function DesktopLayout({ children }) {
         // Page spéciale hors système d'onglets - garde navigate()
         navigate('/inventaire-pages');
         break;
+      case '/outils/pdf-viewer-demo':
+        openTab({
+          id: 'pdf-viewer-demo',
+          title: 'Demo PDF Viewer',
+          path: '/outils/pdf-viewer-demo',
+          component: 'ContratPdfViewerExample',
+          icon: 'bi-file-pdf'
+        });
+        break;
       case '/booking/parametrage':
         openTab({
           id: 'booking-parametrage',
@@ -788,7 +797,8 @@ function DesktopLayout({ children }) {
       subItems: [
         { to: "/debug-tools", icon: "bi-bug", label: "Debug Tools" },
         { to: "/inventaire-pages", icon: "bi-file-earmark-code", label: "Inventaire des pages" },
-        { to: "/tabs-test", icon: "bi-window-stack", label: "Test Onglets" }
+        { to: "/tabs-test", icon: "bi-window-stack", label: "Test Onglets" },
+        { to: "/outils/pdf-viewer-demo", icon: "bi-file-pdf", label: "Demo PDF Viewer" }
       ]
     }] : []),
   ];

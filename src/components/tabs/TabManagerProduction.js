@@ -43,6 +43,7 @@ import ArtistesList from '@/components/artistes/ArtistesList';
 
 // Import des composants de détails
 import ContactViewTabs from '@/components/contacts/ContactViewTabs';
+import ContratPdfViewerExample from '@/components/contrats/ContratPdfViewerExample';
 // import StructureViewTabs from '@/components/structures/StructureViewTabs'; // Plus utilisé - maintenant tout est des contacts
 // DateDetails retiré car DateDetailsPage est utilisé
 // ContratGeneratorNew retiré car non utilisé
@@ -268,6 +269,8 @@ const TabManagerProduction = () => {
           return <TableauDeBordPage />;
         case 'DebugToolsPage':
           return <DebugToolsPage />;
+        case 'ContratPdfViewerExample':
+          return <ContratPdfViewerExample />;
         case 'DateCreationPage':
           return <DateCreationPage />;
         case 'DateDetailsPage':

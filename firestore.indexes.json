@@ -425,6 +425,52 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "fonctions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "entrepriseId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nom",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fonctions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "entrepriseId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "actif",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nom",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fonctions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "entrepriseId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "code",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []

@@ -24,6 +24,13 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* Corps de la modale */
+.modalBody {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
 /* En-tête */
 .modalHeader {
   display: flex;
@@ -398,4 +405,144 @@
   .actionButtons button {
     flex: 1;
   }
+}
+
+/* Styles pour l'étape 2 */
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.stepCompleted {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.stepActive {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.selectedPersonneInfo {
+  background-color: #e3f2fd;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.selectedPersonneInfo i {
+  color: #007bff;
+  font-size: 1.2rem;
+}
+
+.liaisonForm {
+  padding: 1rem 0;
+}
+
+.liaisonForm h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.formGroup input,
+.formGroup select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.inputWithButton {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inputWithButton select {
+  flex: 1;
+}
+
+.addButton {
+  padding: 0.5rem 0.75rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.addButton:hover {
+  background-color: #218838;
+}
+
+.checkboxGroup {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.checkboxGroup label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+.checkboxGroup input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.backButton {
+  padding: 0.5rem 1.5rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #5a6268;
+}
+
+.required {
+  color: #dc3545;
+  margin-left: 0.25rem;
 }

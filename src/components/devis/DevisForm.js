@@ -8,6 +8,7 @@ import collaborateurService from '@/services/collaborateurService';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { useParametres } from '@/context/ParametresContext';
 import { useAuth } from '@/context/AuthContext';
+import devisConfig from '@/config/devisConfig';
 
 /**
  * Formulaire d'édition de devis
@@ -34,40 +35,25 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
     console.log('=================================');
   }, [devisData]);
 
-  // Récupérer les taux de TVA et unités depuis les paramètres
+  // Récupérer les taux de TVA et unités depuis les paramètres ou la config par défaut
   const tauxTvaDisponibles = (parametres?.tva && Array.isArray(parametres.tva)) 
     ? parametres.tva 
-    : [
-      { id: 1, libelle: 'Billetterie', taux: 2.1 },
-      { id: 2, libelle: 'Réduit', taux: 5.5 },
-      { id: 3, libelle: 'Normal', taux: 20 }
-    ];
+    : devisConfig.tauxTvaDefaut;
 
   const unitesDisponibles = (parametres?.unites && Array.isArray(parametres.unites)) 
     ? parametres.unites 
-    : [
-      { id: 1, nom: 'affiche', pluriel: 'affiches', categorie: 'quantite' },
-      { id: 2, nom: 'atelier', pluriel: 'ateliers', categorie: 'service' },
-      { id: 3, nom: 'heure', pluriel: 'heures', categorie: 'temps' },
-      { id: 4, nom: 'jour', pluriel: 'jours', categorie: 'temps' },
-      { id: 5, nom: 'km', pluriel: 'km', categorie: 'distance' },
-      { id: 6, nom: 'nuit', pluriel: 'nuits', categorie: 'temps' },
-      { id: 7, nom: 'personne', pluriel: 'personnes', categorie: 'quantite' },
-      { id: 8, nom: 'repas', pluriel: 'repas', categorie: 'service' },
-      { id: 9, nom: 'représentation', pluriel: 'représentations', categorie: 'service' },
-      { id: 10, nom: 'forfait', pluriel: 'forfaits', categorie: 'service' }
-    ];
+    : devisConfig.unitesDefaut;
 
   // Ajouter une ligne objet
   const addLigneObjet = () => {
     const newId = Math.max(...devisData.lignesObjet.map(l => l.id), 0) + 1;
     // Utiliser le premier taux TVA des paramètres ou 20 par défaut
-    const defaultTva = tauxTvaDisponibles.length > 0 ? tauxTvaDisponibles[0].taux : 20;
+    const defaultTva = tauxTvaDisponibles.length > 0 ? tauxTvaDisponibles[0].taux : devisConfig.nouvelleLigneDefaut.tauxTVA;
     const newLigne = {
       id: newId,
       objet: '',
       quantite: 1,
-      unite: 'forfait',
+      unite: devisConfig.nouvelleLigneDefaut.unite,
       prixUnitaire: 0,
       montantHT: 0,
       tauxTVA: defaultTva
@@ -112,11 +98,11 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
     const newId = Math.max(...devisData.lignesReglement.map(l => l.id), 0) + 1;
     const newLigne = {
       id: newId,
-      nature: 'acompte',
+      nature: devisConfig.reglement.natureDefaut,
       montantTTC: 0,
       dateFacturation: '',
       dateEcheance: '',
-      modePaiement: 'virement'
+      modePaiement: devisConfig.reglement.modePaiementDefaut
     };
     
     setDevisData(prev => ({
@@ -141,7 +127,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
       montantTTC: devisData.montantTTC,
       dateFacturation: new Date().toISOString().split('T')[0],
       dateEcheance: new Date().toISOString().split('T')[0],
-      modePaiement: 'virement'
+      modePaiement: devisConfig.reglement.modePaiementDefaut
     };
     
     setDevisData(prev => ({
@@ -466,7 +452,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                 <Form.Group className="mb-3">
                   <Form.Label>Structure</Form.Label>
                   <div className="fw-bold fs-5 p-2 bg-light border rounded">
-                    {devisData.structureNom || 'Structure X'}
+                    {devisData.structureNom || devisConfig.placeholders.structureNonSelectionnee}
                   </div>
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -604,7 +590,7 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
               <Form.Label>Titre</Form.Label>
               <Form.Control
                 type="text"
-                value={devisData.titre || `1 représentation(s) du spectacle ${devisData.projetNom && devisData.projetNom !== 'Aucun projet' ? devisData.projetNom : 'Projet Y'} le ${devisData.dateDebut ? new Date(devisData.dateDebut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'JJ Mois AAAA'}`}
+                value={devisData.titre || `1 représentation(s) du spectacle ${devisData.projetNom && devisData.projetNom !== 'Aucun projet' ? devisData.projetNom : devisConfig.placeholders.projetNonDefini} le ${devisData.dateDebut ? new Date(devisData.dateDebut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : devisConfig.placeholders.dateNonDefinie}`}
                 onChange={(e) => setDevisData(prev => ({ ...prev, titre: e.target.value, titreModifieManuellement: true }))}
                 disabled={readonly}
                 placeholder="Titre auto-généré, éditable"
@@ -630,9 +616,9 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                   onChange={(e) => setDevisData(prev => ({ ...prev, devise: e.target.value }))}
                   disabled={readonly}
                 >
-                  <option value="EUR">EUR, euro</option>
-                  <option value="USD">USD, dollar</option>
-                  <option value="GBP">GBP, livre sterling</option>
+                  {devisConfig.devises.map(devise => (
+                    <option key={devise.code} value={devise.code}>{devise.libelle}</option>
+                  ))}
                 </Form.Select>
               </div>
             </div>
@@ -829,9 +815,9 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                         onChange={(e) => updateLigneReglement(ligne.id, 'nature', e.target.value)}
                         disabled={readonly || devisData.statut !== 'brouillon'}
                       >
-                        <option value="solde">solde</option>
-                        <option value="acompte">acompte</option>
-                        <option value="remboursement">remboursement</option>
+                        {devisConfig.naturesReglement.map(nature => (
+                          <option key={nature.value} value={nature.value}>{nature.label}</option>
+                        ))}
                       </Form.Select>
                     </td>
                     <td>
@@ -878,10 +864,9 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                         onChange={(e) => updateLigneReglement(ligne.id, 'modePaiement', e.target.value)}
                         disabled={readonly || devisData.statut !== 'brouillon'}
                       >
-                        <option value="virement">Virement</option>
-                        <option value="cheque">Chèque</option>
-                        <option value="especes">Espèces</option>
-                        <option value="carte">Carte bancaire</option>
+                        {devisConfig.modesPaiement.map(mode => (
+                          <option key={mode.value} value={mode.value}>{mode.label}</option>
+                        ))}
                       </Form.Select>
                     </td>
                     {!readonly && (

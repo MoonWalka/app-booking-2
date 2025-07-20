@@ -11,6 +11,7 @@ import devisService from '@/services/devisService';
 import DevisForm from './DevisForm';
 import DevisPreview from './DevisPreview';
 import styles from './DevisEditor.module.css';
+import devisConfig from '@/config/devisConfig';
 
 /**
  * Éditeur de devis avec layout split
@@ -53,7 +54,6 @@ function DevisEditor({ dateId, structureId, devisId }) {
     numero: '',
     statut: 'brouillon',
     emetteur: currentUser?.displayName || currentUser?.email || '',
-    entreprise: currentEntreprise?.nom || '',
     entrepriseNom: currentEntreprise?.nom || '',
     entrepriseAdresse: currentEntreprise?.adresse || '',
     entrepriseEmail: currentEntreprise?.email || '',
@@ -114,7 +114,6 @@ function DevisEditor({ dateId, structureId, devisId }) {
     if (currentEntreprise) {
       setDevisData(prev => ({
         ...prev,
-        entreprise: currentEntreprise.nom || '',
         entrepriseNom: currentEntreprise.nom || '',
         entrepriseAdresse: currentEntreprise.adresse || '',
         entrepriseEmail: currentEntreprise.email || '',
@@ -394,12 +393,9 @@ function DevisEditor({ dateId, structureId, devisId }) {
                   value={devisData.statut}
                   onChange={(e) => handleStatusChange(e.target.value)}
                 >
-                  <option value="brouillon">Brouillon</option>
-                  <option value="envoye">Envoyé</option>
-                  <option value="accepte">Accepté</option>
-                  <option value="termine">Terminé</option>
-                  <option value="refuse">Refusé</option>
-                  <option value="annule">Annulé</option>
+                  {devisConfig.statuts.map(statut => (
+                    <option key={statut.value} value={statut.value}>{statut.label}</option>
+                  ))}
                 </select>
                 
                 {/* Boutons d'action */}

@@ -144,6 +144,14 @@ class StructuresService {
       });
 
       console.log('[StructuresService] Structure mise à jour:', structureId);
+      
+      // Émettre un événement pour signaler la modification
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('structureModified', { 
+          detail: { structureId, updates: cleanedUpdates } 
+        }));
+      }
+      
       return {
         success: true,
         id: structureId

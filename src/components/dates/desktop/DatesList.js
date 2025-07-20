@@ -49,7 +49,8 @@ const DatesList = () => {
     hasUnvalidatedForm, 
     hasContract,
     getContractStatus,
-    datesWithContracts
+    datesWithContracts,
+    forceRefresh
   } = useDateListData();
 
   // const {
@@ -119,7 +120,7 @@ const DatesList = () => {
 
   // Handlers
   const handleRefresh = () => {
-    window.location.reload();
+    forceRefresh();
   };
 
   const handleCalculate = () => {

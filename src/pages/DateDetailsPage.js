@@ -338,14 +338,21 @@ function DateDetailsPage({ params = {} }) {
       const dataToSave = {
         ...formDataWithoutStructureName,
         // Sauvegarder aussi dans les champs standards pour compatibilité
-        montant: formData.montantPropose || formData.montant,
-        dateOption: formData.priseOption || formData.dateOption,
+        montant: formData.montantPropose || formData.montant || 0,
+        dateOption: formData.priseOption || formData.dateOption || null,
         // Garder aussi les anciens noms pour rétrocompatibilité
-        montantPropose: formData.montantPropose,
-        priseOption: formData.priseOption,
+        montantPropose: formData.montantPropose || 0,
+        priseOption: formData.priseOption || null,
         updatedAt: serverTimestamp(),
         updatedBy: currentUser?.email || 'Utilisateur inconnu'
       };
+      
+      // Nettoyer les valeurs undefined
+      Object.keys(dataToSave).forEach(key => {
+        if (dataToSave[key] === undefined) {
+          delete dataToSave[key];
+        }
+      });
       
       await updateDoc(docRef, dataToSave);
       

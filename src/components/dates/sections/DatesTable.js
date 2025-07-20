@@ -4,6 +4,7 @@ import DateStatusBadge from './DateStatusBadge';
 import DateActions from './DateActions';
 import NiveauDisplay from '../NiveauDisplay';
 import { formatDateFr } from '@/utils/dateUtils';
+import { loadStructureNames } from '@/utils/structureNameLoader';
 import styles from './DatesTable.module.css';
 
 // Utilisation du mémoïsation pour éviter des rendus inutiles
@@ -32,6 +33,9 @@ const DatesTable = memo(({
   // Gestion du tri local (par défaut sur la date, décroissant)
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
+  
+  // État pour stocker les noms de structures chargés dynamiquement
+  const [structureNames, setStructureNames] = useState({});
 
   // Mesurer le temps de rendu du tableau
   useEffect(() => {
@@ -41,6 +45,22 @@ const DatesTable = memo(({
       console.timeEnd('⏱️ Rendu DatesTable');
     };
   }, []);
+  
+  // Charger les noms de structures dynamiquement
+  useEffect(() => {
+    const loadNames = async () => {
+      const structureIds = dates
+        .map(date => date.structureId)
+        .filter(id => id);
+      
+      if (structureIds.length > 0) {
+        const names = await loadStructureNames(structureIds);
+        setStructureNames(names);
+      }
+    };
+    
+    loadNames();
+  }, [dates]);
 
   // Fonction de tri
   const sortedDates = [...dates].sort((a, b) => {
@@ -51,11 +71,11 @@ const DatesTable = memo(({
       valA = new Date(a.date);
       valB = new Date(b.date);
     } else if (sortField === 'lieuNom') {
-      valA = a.lieu?.nom || a.lieuNom || '';
-      valB = b.lieu?.nom || b.lieuNom || '';
+      valA = a.lieuNom || '';
+      valB = b.lieuNom || '';
     } else if (sortField === 'contactNom') {
-      valA = a.contact?.nom || a.contactNom || '';
-      valB = b.contact?.nom || b.contactNom || '';
+      valA = a.contactNom || '';
+      valB = b.contactNom || '';
     }
     
     if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
@@ -98,7 +118,7 @@ const DatesTable = memo(({
         } else if (row.entreprise?.code) {
           return row.entreprise.code;
         } else if (row.entreprise?.nom) {
-          return row.entreprise.nom;
+          return row.entreprise.nom; // OK car c'est le nom de l'entreprise, pas d'une structure
         }
         
         // Fallback sur les anciennes propriétés au cas où
@@ -167,7 +187,15 @@ const DatesTable = memo(({
       label: 'Organisateur',
       key: 'organisateur',
       sortable: true,
-      render: (row) => row.organisateurNom || row.organisateur?.nom || row.structureNom || row.structure?.nom || '—'
+      render: (row) => {
+        // Utiliser le nom dynamique si disponible
+        const dynamicName = row.structureId && structureNames[row.structureId];
+        if (dynamicName) {
+          return dynamicName;
+        }
+        // Fallback sur les anciennes valeurs
+        return row.organisateurNom || row.organisateur?.raisonSociale || row.structureNom || row.structure?.raisonSociale || '—';
+      }
     },
     {
       label: 'Dossier',

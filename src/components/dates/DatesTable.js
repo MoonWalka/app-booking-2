@@ -1,5 +1,5 @@
 // src/components/dates/DatesTable.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { collection, getDocs, query, where, orderBy, doc, getDoc } from '@/services/firebase-service';
@@ -48,15 +48,14 @@ function DatesTable({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Charger les données Firebase
-  useEffect(() => {
-    const loadData = async () => {
-      if (!currentEntreprise?.id) {
-        setLoading(false);
-        return;
-      }
+  // Fonction pour charger les données
+  const loadData = useCallback(async () => {
+    if (!currentEntreprise?.id) {
+      setLoading(false);
+      return;
+    }
       
-      try {
+    try {
         setLoading(true);
         setError(null);
         
@@ -90,6 +89,14 @@ function DatesTable({
         
         const datesData = datesSnapshot.docs.map(doc => {
           const date = { id: doc.id, ...doc.data() };
+          
+          // Debug temporaire
+          console.log('[DatesTable] Date:', {
+            id: doc.id,
+            structureId: date.structureId,
+            structureNom: date.structureNom,
+            structureFromFirebase: structureNames[date.structureId]
+          });
           
           // Toujours utiliser le nom dynamique de la structure
           // Pour les anciennes dates, on a le fallback sur date.structureNom
@@ -134,10 +141,27 @@ function DatesTable({
       } finally {
         setLoading(false);
       }
-    };
-
-    loadData();
   }, [currentEntreprise?.id, config.sort, config.testData]);
+    
+  // Charger les données au montage et quand les dépendances changent
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+    
+    // Écouter les événements de modification de structure
+    useEffect(() => {
+      const handleStructureModified = (event) => {
+        console.log('[DatesTable] Structure modifiée, rechargement des données');
+        loadData(); // Recharger pour avoir les noms à jour
+      };
+      
+      // Écouter l'événement global
+      window.addEventListener('structureModified', handleStructureModified);
+      
+      return () => {
+        window.removeEventListener('structureModified', handleStructureModified);
+      };
+    }, [currentEntreprise?.id]);
   // Filtrer les colonnes selon le rôle utilisateur
   const getVisibleColumns = () => {
     if (!config.columns) return [];
@@ -263,6 +287,7 @@ function DatesTable({
         loading={loading}
         error={error}
         dataFilter={filterData}
+        onRefresh={loadData}
       />
     </div>
   );

@@ -91,10 +91,11 @@ function DatesTable({
         const datesData = datesSnapshot.docs.map(doc => {
           const date = { id: doc.id, ...doc.data() };
           
-          // Utiliser le nom dynamique de la structure si disponible
+          // Toujours utiliser le nom dynamique de la structure
+          // Pour les anciennes dates, on a le fallback sur date.structureNom
           const dynamicStructureName = date.structureId && structureNames[date.structureId] 
             ? structureNames[date.structureId] 
-            : date.structureNom;
+            : (date.structureNom || 'Structure inconnue'); // Fallback pour anciennes dates
           
           // Transformer les données Firebase pour correspondre aux configurations
           return {

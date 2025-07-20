@@ -333,8 +333,10 @@ function DateDetailsPage({ params = {} }) {
       const docRef = doc(db, 'dates', dateId);
       
       // Préparer les données avec mapping intelligent
+      // Ne pas sauvegarder structureNom car on le charge dynamiquement
+      const { structureNom, ...formDataWithoutStructureName } = formData;
       const dataToSave = {
-        ...formData,
+        ...formDataWithoutStructureName,
         // Sauvegarder aussi dans les champs standards pour compatibilité
         montant: formData.montantPropose || formData.montant,
         dateOption: formData.priseOption || formData.dateOption,

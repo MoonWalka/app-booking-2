@@ -298,15 +298,15 @@ function DateCreationPage({ params = {} }) {
 
     try {
       // Créer le document date dans la collection dates
-      // UTILISATION DES CONVENTIONS : on arrête de dupliquer !
+      // REFACTORISATION : on ne stocke plus structureNom, seulement structureId
       const dateData = {
         // Données principales
         date: formData.date,
         artisteId: formData.artisteId,
         artisteNom: formData.artisteNom,
         projetNom: formData.projetNom,
-        structureId: formData.structureId,      // Une seule fois !
-        structureNom: formData.structureNom,    // Une seule fois !
+        structureId: formData.structureId,      // On garde uniquement l'ID !
+        // structureNom supprimé - sera chargé dynamiquement
         libelle: formData.libelle,
         montant: 0, // À définir plus tard
         statut: 'En cours',

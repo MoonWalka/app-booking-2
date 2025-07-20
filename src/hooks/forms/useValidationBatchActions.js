@@ -61,7 +61,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
       if (Object.keys(structureFields).length === 0 && formData.structureData) {
         // Mapper structureData vers structureFields
         const structure = formData.structureData;
-        if (structure.nom) structureFields.nom = structure.nom;
+        if (structure.raisonSociale) structureFields.raisonSociale = structure.raisonSociale;
         if (structure.siret) structureFields.siret = structure.siret;
         if (structure.adresse) structureFields.adresse = structure.adresse;
         if (structure.codePostal) structureFields.codePostal = structure.codePostal;
@@ -270,7 +270,7 @@ const useValidationBatchActions = ({ formId, dateId, validatedFields, setValidat
         if (programmId && structureId) {
           await updateDoc(doc(db, 'contacts', programmId), {
             structureId: structureId,
-            structureNom: structureData.nom,
+            structureNom: structureData.raisonSociale,
             updatedAt: Timestamp.now()
           });
 

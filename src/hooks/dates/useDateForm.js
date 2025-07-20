@@ -348,7 +348,7 @@ export const useDateForm = (dateId) => {
       formHook.setFormData(prev => ({
         ...prev,
         artisteId: artiste.id,
-        artisteNom: artiste.nom
+        artisteNom: artiste.artisteNom
       }));
       
       // TODO: Charger les détails de l'artiste dans les données liées

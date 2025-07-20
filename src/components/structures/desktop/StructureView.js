@@ -86,7 +86,7 @@ function StructureView({ id: propId }) {
 
     return {
       id: structure.id,
-      nom: structure.nom || "Structure sans nom",
+      nom: structure.raisonSociale || "Structure sans nom",
       raisonSociale: structure.raisonSociale || "",
       type: getTypeLabel(structure.type),
       dateCreation: structure.createdAt ? formatValue('createdAt', structure.createdAt) : "Date inconnue",
@@ -156,7 +156,7 @@ function StructureView({ id: propId }) {
     <div className={styles.structureDetails}>
       {/* Header avec FormHeader */}
       <FormHeader
-        title={structureData.nom}
+        title={structureData.raisonSociale}
         subtitle={`${structureData.type} • Créé le ${structureData.dateCreation}`}
         icon={<i className="bi bi-building"></i>}
         roundedTop={true}

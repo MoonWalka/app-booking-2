@@ -8,6 +8,7 @@ import { doc, getDoc } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import contratService from '@/services/contratService';
 import devisService from '@/services/devisService';
+import { normaliserOrganisateur } from '@/utils/dataMapping/simpleDataMapper';
 import styles from './ContratGeneratorNew.module.css';
 
 /**
@@ -283,23 +284,30 @@ const ContratGeneratorNew = ({
     if (preContratData && preContratData.confirmationValidee) {
       console.log('[ContratGeneratorNew] Utilisation des données du pré-contrat confirmé');
       
+      // Utiliser le mapper pour normaliser les données de l'organisateur
+      const organisateurNormalise = normaliserOrganisateur({
+        ...structure,
+        ...preContratData,
+        // Le mapper gérera automatiquement toutes les variations
+      });
+      
       setContratData(prev => ({
         ...prev,
         organisateur: {
           ...prev.organisateur,
-          raisonSociale: preContratData.raisonSociale || structure?.nom || '',
+          raisonSociale: organisateurNormalise.nom || '',
           adresse: preContratData.adresse || structure?.adresse || '',
           suiteAdresse: preContratData.suiteAdresse || '',
-          ville: preContratData.ville || structure?.ville || '',
-          codePostal: preContratData.cp || structure?.codePostal || '',
+          ville: organisateurNormalise.ville || '',
+          codePostal: organisateurNormalise.codePostal || '',
           pays: preContratData.pays || structure?.pays || 'France',
           telephone: preContratData.tel || structure?.telephone || '',
           fax: preContratData.fax || '',
           email: preContratData.email || structure?.email || '',
-          siret: preContratData.siret || structure?.siret || '',
+          siret: organisateurNormalise.siret || '',
           site: preContratData.site || structure?.siteWeb || '',
-          signataire: preContratData.nomSignataire || '',
-          qualite: preContratData.qualiteSignataire || '',
+          signataire: organisateurNormalise.signataire || '',
+          qualite: organisateurNormalise.qualiteSignataire || '',
           numeroTva: preContratData.numeroTvaIntracommunautaire || '',
           codeApe: preContratData.codeActivite || '',
           numeroLicence: preContratData.numeroLicence || ''
@@ -324,7 +332,7 @@ const ContratGeneratorNew = ({
         ...prev,
         organisateur: {
           ...prev.organisateur,
-          raisonSociale: structure.nom || structure.structureRaisonSociale || '',
+          raisonSociale: structure.raisonSociale || structure.structureRaisonSociale || '',
           adresse: structure.adresse || '',
           ville: structure.ville || '',
           codePostal: structure.codePostal || '',
@@ -556,7 +564,13 @@ const ContratGeneratorNew = ({
         artisteId: artiste?.id || null,
         lieuId: lieu?.id || null,
         // Ajouter les métadonnées
-        entrepriseId: currentEntreprise?.id
+        entrepriseId: currentEntreprise?.id,
+        // Ajouter les objets complets pour le PDF
+        date: date || null,
+        artiste: artiste || null,
+        contact: contact || null,
+        structure: structure || null,
+        lieu: lieu || null
       };
 
       console.log('[ContratGeneratorNew] Données à sauvegarder:', dataToSave);
@@ -607,7 +621,13 @@ const ContratGeneratorNew = ({
         structureId: structure?.id || null,
         artisteId: artiste?.id || null,
         lieuId: lieu?.id || null,
-        entrepriseId: currentEntreprise?.id
+        entrepriseId: currentEntreprise?.id,
+        // Ajouter les objets complets pour le PDF
+        date: date || null,
+        artiste: artiste || null,
+        contact: contact || null,
+        structure: structure || null,
+        lieu: lieu || null
       };
 
       await contratService.saveContrat(dateId, dataToSave, currentEntreprise?.id);
@@ -664,7 +684,13 @@ const ContratGeneratorNew = ({
         structureId: structure?.id || null,
         artisteId: artiste?.id || null,
         lieuId: lieu?.id || null,
-        entrepriseId: currentEntreprise?.id
+        entrepriseId: currentEntreprise?.id,
+        // Ajouter les objets complets pour le PDF
+        date: date || null,
+        artiste: artiste || null,
+        contact: contact || null,
+        structure: structure || null,
+        lieu: lieu || null
       };
 
       // Sauvegarder le contrat

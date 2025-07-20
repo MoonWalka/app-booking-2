@@ -130,8 +130,8 @@ const ContratGenerationActions = ({
     }
     
     // Nom de l'artiste (nettoyé)
-    if (artiste?.nom) {
-      const artisteClean = artiste.nom
+    if (artiste?.artisteNom) {
+      const artisteClean = artiste.artisteNom
         .replace(/[^a-zA-Z0-9À-ÿ\s-]/g, '') // Garder lettres, chiffres, accents, espaces, tirets
         .replace(/\s+/g, '_') // Remplacer espaces par underscore
         .substring(0, 30); // Limiter la longueur

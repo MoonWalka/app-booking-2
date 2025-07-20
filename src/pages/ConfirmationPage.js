@@ -3,8 +3,10 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, Container, Row, Col, Form, Button, Accordion, Alert, Spinner } from 'react-bootstrap';
 import { getPreContratsByDate, updatePreContrat } from '@/services/preContratService';
 import tachesService from '@/services/tachesService';
-import { auth } from '@/services/firebase-service';
+import { auth, db } from '@/services/firebase-service';
+import { doc, getDoc } from 'firebase/firestore';
 import { useTabs } from '@/context/TabsContext';
+import { normaliserOrganisateur } from '@/utils/dataMapping/simpleDataMapper';
 import styles from './ConfirmationPage.module.css';
 
 /**
@@ -140,35 +142,284 @@ function ConfirmationPage({ dateId: propDateId }) {
 
         setPreContrat(preContratAvecDonnees);
         
-        // Charger les données dans les deux colonnes
-        if (preContratAvecDonnees.publicFormData) {
-          // Données de l'organisateur (colonne droite)
-          setInfosOrganisateur(preContratAvecDonnees.publicFormData);
+        // Récupérer les données de la date pour avoir l'artiste et le projet
+        let artisteNom = '';
+        let projetNom = '';
+        
+        try {
+          const dateDoc = await getDoc(doc(db, 'dates', dateId));
+          if (dateDoc.exists()) {
+            const dateData = dateDoc.data();
+            console.log('[ConfirmationPage] Données de la date:', dateData);
+            
+            // Récupérer l'artiste (peut être dans artiste ou artisteId)
+            if (dateData.artisteId) {
+              console.log('[ConfirmationPage] artisteId trouvé:', dateData.artisteId);
+              try {
+                const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
+                if (artisteDoc.exists()) {
+                  artisteNom = artisteDoc.data().artisteNom || '';
+                  console.log('[ConfirmationPage] Nom artiste récupéré:', artisteNom);
+                }
+              } catch (error) {
+                console.error('[ConfirmationPage] Erreur récupération artiste:', error);
+              }
+            } else if (dateData.artiste) {
+              if (typeof dateData.artiste === 'string') {
+                // C'est un ID, il faut récupérer l'artiste
+                const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artiste));
+                if (artisteDoc.exists()) {
+                  artisteNom = artisteDoc.data().artisteNom || '';
+                }
+              } else if (dateData.artiste.artisteNom) {
+                // C'est déjà un objet avec le nom
+                artisteNom = dateData.artiste.artisteNom;
+              }
+            }
+            
+            // Récupérer le projet - vérifier tous les champs possibles
+            console.log('[ConfirmationPage] Recherche du projet dans dateData:', {
+              'dateData.projetId': dateData.projetId,
+              'dateData.projet': dateData.projet,
+              'dateData.projectId': dateData.projectId,
+              'dateData.project': dateData.project,
+              'Toutes les clés': Object.keys(dateData).filter(k => k.toLowerCase().includes('proj'))
+            });
+            console.log('[ConfirmationPage] Toutes les clés de dateData:', Object.keys(dateData));
+            console.log('[ConfirmationPage] dateData complet:', dateData);
+            
+            if (dateData.projetNom) {
+              // Le projet est stocké directement dans projetNom
+              projetNom = dateData.projetNom;
+              console.log('[ConfirmationPage] Projet trouvé dans projetNom:', projetNom);
+            } else if (dateData.projetId) {
+              console.log('[ConfirmationPage] projetId trouvé:', dateData.projetId);
+              try {
+                const projetDoc = await getDoc(doc(db, 'projets', dateData.projetId));
+                if (projetDoc.exists()) {
+                  projetNom = projetDoc.data().nom || '';
+                  console.log('[ConfirmationPage] Nom projet récupéré:', projetNom);
+                } else {
+                  console.log('[ConfirmationPage] Document projet non trouvé pour ID:', dateData.projetId);
+                }
+              } catch (error) {
+                console.error('[ConfirmationPage] Erreur récupération projet:', error);
+              }
+            } else if (dateData.projet) {
+              // Le projet peut être stocké directement
+              projetNom = typeof dateData.projet === 'string' ? dateData.projet : dateData.projet.projetNom || '';
+              console.log('[ConfirmationPage] Projet direct:', projetNom);
+            } else if (dateData.projectId) {
+              // Essayer avec projectId (anglais)
+              console.log('[ConfirmationPage] projectId trouvé:', dateData.projectId);
+              try {
+                const projetDoc = await getDoc(doc(db, 'projets', dateData.projectId));
+                if (projetDoc.exists()) {
+                  projetNom = projetDoc.data().nom || '';
+                  console.log('[ConfirmationPage] Nom projet récupéré:', projetNom);
+                }
+              } catch (error) {
+                console.error('[ConfirmationPage] Erreur récupération projet avec projectId:', error);
+              }
+            }
+            
+            // Si toujours pas de projet, essayer de le récupérer depuis l'artiste
+            if (!projetNom && dateData.artisteId) {
+              console.log('[ConfirmationPage] Pas de projet trouvé, vérification dans l\'artiste');
+              try {
+                const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
+                if (artisteDoc.exists()) {
+                  const artisteData = artisteDoc.data();
+                  if (artisteData.projetId) {
+                    const projetDoc = await getDoc(doc(db, 'projets', artisteData.projetId));
+                    if (projetDoc.exists()) {
+                      projetNom = projetDoc.data().nom || '';
+                      console.log('[ConfirmationPage] Projet trouvé via l\'artiste:', projetNom);
+                    }
+                  }
+                }
+              } catch (error) {
+                console.error('[ConfirmationPage] Erreur récupération projet via artiste:', error);
+              }
+            }
+            
+            console.log('[ConfirmationPage] Résumé final - Artiste:', artisteNom, 'Projet:', projetNom);
+          }
+        } catch (error) {
+          console.error('[ConfirmationPage] Erreur lors de la récupération de la date:', error);
         }
         
-        // Données existantes (colonne gauche)
+        // Si toujours pas de projet, essayer depuis le preContrat
+        if (!projetNom && preContratAvecDonnees.projet) {
+          projetNom = preContratAvecDonnees.projet;
+          console.log('[ConfirmationPage] Projet récupéré depuis preContrat:', projetNom);
+        }
+        
+        // Charger les données dans les deux colonnes
+        if (preContratAvecDonnees.publicFormData) {
+          const publicData = preContratAvecDonnees.publicFormData;
+          
+          // Mapper les données du formulaire public vers le format attendu par ConfirmationPage
+          const mappedData = {
+            // Section Organisateur - nouveau système uniquement
+            raisonSociale: publicData.raisonSociale || '',
+            adresse: publicData.adresseOrga || '',
+            suiteAdresse: publicData.suiteAdresseOrga || '',
+            codePostal: publicData.codePostalOrga || '',
+            ville: publicData.villeOrga || '',
+            pays: publicData.paysOrga || '',
+            tel: publicData.telOrga || '',
+            fax: publicData.faxOrga || '',
+            email: publicData.emailOrga || '',
+            site: publicData.siteWebOrga || '',
+            siret: publicData.siret || '',
+            codeActivite: publicData.codeAPE || '',
+            numeroLicence: publicData.licences || '',
+            numeroTvaInternational: publicData.tvaIntracom || '',
+            codeTps: publicData.tps || '',
+            codeTvq: publicData.tvq || '',
+            nomSignataire: publicData.signataire || '',
+            qualiteSignataire: publicData.qualiteSignataire || '',
+            
+            // Section Responsable
+            nomResponsableAdmin: publicData.nomResponsable || '',
+            telPro: publicData.telResponsable || '',
+            emailResponsable: publicData.emailResponsable || '',
+            mobilePro: publicData.mobileResponsable || '',
+            
+            // Section Date
+            type: publicData.type || 'date',
+            horaireDebut: publicData.heureDebut || '',
+            horaireFin: publicData.heureFin || '',
+            invitationsPayant: publicData.payant === 'payant',
+            nbRepresentations: publicData.nombreRepresentations || '',
+            salle: publicData.salle || '',
+            adresseSalle: publicData.adresseSalle || '',
+            suiteAdresseSalle: publicData.suiteAdresseSalle || '',
+            codePostalSalle: publicData.codePostalSalle || '',
+            villeSalle: publicData.villeSalle || '',
+            paysSalle: publicData.paysSalle || '',
+            capacite: publicData.capacite || '',
+            nbAdmin: publicData.nombreAdmis || '',
+            invitations: publicData.invitationsExos || '',
+            festival: publicData.festivalEvenement || '',
+            
+            // Section Négociation
+            contratPropose: publicData.contratPropose || 'cession',
+            montantHT: publicData.cachetMinimum || '',
+            moyenPaiement: publicData.modePaiement || 'virement',
+            devise: publicData.devise || 'EUR',
+            acompte: publicData.acompte || '',
+            frais: publicData.frais || '',
+            precisionsNego: publicData.precisionNego || '',
+            
+            // Section Régie
+            nomResponsableRegie: publicData.nomRegie || '',
+            emailRegie: publicData.emailRegie || '',
+            telephoneRegie: publicData.telRegie || '',
+            mobileRegie: publicData.mobileRegie || '',
+            horairesRegie: publicData.horairesRegie || '',
+            autresArtistes: publicData.autresArtistes || '',
+            
+            // Section Promo
+            nomResponsablePromo: publicData.nomPromo || '',
+            emailPromo: publicData.emailPromo || '',
+            telephonePromo: publicData.telPromo || '',
+            mobilePromo: publicData.mobilePromo || '',
+            adresseEnvoiPromo: publicData.adresseEnvoiPromo || '',
+            demandePromo: publicData.demandePromo || '',
+            
+            // Autres infos
+            receptif: publicData.accueilHebergement || '',
+            prixPlaces: publicData.prixPlaces || '',
+            divers: publicData.divers || '',
+            
+            // Ajouter l'artiste et le projet s'ils ne sont pas déjà présents
+            artistes: publicData.artistes || artisteNom,
+            projet: publicData.projet || projetNom
+          };
+          
+          console.log('[ConfirmationPage] Données mappées:', mappedData);
+          console.log('[ConfirmationPage] Exemple de mapping adresse:', {
+            'publicData.adresseOrga': publicData.adresseOrga,
+            'mappedData.adresse': mappedData.adresse,
+            'publicData.codePostalOrga': publicData.codePostalOrga,
+            'mappedData.codePostal': mappedData.codePostal
+          });
+          
+          // Données de l'organisateur (colonne droite)
+          setInfosOrganisateur(mappedData);
+        }
+        
+        // Récupérer d'autres données importantes depuis publicFormData
+        const publicData = preContratAvecDonnees.publicFormData || {};
+        console.log('[ConfirmationPage] Données du formulaire public:', publicData);
+        console.log('[ConfirmationPage] Festival/Événement:', {
+          'preContrat.festival': preContratAvecDonnees.festival,
+          'publicData.festivalEvenement': publicData.festivalEvenement,
+          'publicData.festival': publicData.festival
+        });
+        console.log('[ConfirmationPage] Projet dans preContrat:', {
+          'preContrat.projet': preContratAvecDonnees.projet,
+          'preContrat.projetId': preContratAvecDonnees.projetId,
+          'publicData.projet': publicData.projet,
+          'projetNom calculé': projetNom
+        });
+        
+        // Données existantes (colonne gauche) - nouveau système uniquement
         setMesInfos(prev => ({
           ...prev,
+          // Projet
+          artistes: artisteNom,
+          projet: projetNom,
+          festival: preContratAvecDonnees.festivalEvenement || publicData.festivalEvenement || '',
+          prixPlaces: preContratAvecDonnees.prixPlaces || publicData.prixPlaces || '',
           // Structure
-          raisonSociale: preContratAvecDonnees.raisonSociale || '',
+          raisonSociale: preContratAvecDonnees.structureNom || '',
           adresse: preContratAvecDonnees.adresse || '',
           suiteAdresse: preContratAvecDonnees.suiteAdresse || '',
-          codePostal: preContratAvecDonnees.cp || '',
+          codePostal: preContratAvecDonnees.codePostal || '',
           ville: preContratAvecDonnees.ville || '',
           pays: preContratAvecDonnees.pays || 'France',
-          tel: preContratAvecDonnees.tel || '',
+          tel: preContratAvecDonnees.telephone || '',
           fax: preContratAvecDonnees.fax || '',
           email: preContratAvecDonnees.email || '',
-          site: preContratAvecDonnees.site || '',
+          site: preContratAvecDonnees.siteWeb || '',
           siret: preContratAvecDonnees.siret || '',
+          // Représentations
+          type: preContratAvecDonnees.type || publicData.type || 'date',
+          nbRepresentations: preContratAvecDonnees.nbRepresentations || publicData.nombreRepresentations || 1,
+          horaireDebut: preContratAvecDonnees.horaireDebut || publicData.heureDebut || '',
+          horaireFin: preContratAvecDonnees.horaireFin || publicData.heureFin || '',
+          capacite: preContratAvecDonnees.capacite || publicData.capacite || '',
+          nbAdmin: preContratAvecDonnees.nbAdmin || publicData.nombreAdmis || '',
+          invitationsPayant: preContratAvecDonnees.invitationsPayant || publicData.payant === 'payant' || false,
+          salle: preContratAvecDonnees.salle || publicData.salle || '',
+          
           // Négociation
-          montantHT: preContratAvecDonnees.montantHT || '',
-          acompte: preContratAvecDonnees.acompte || '',
-          frais: preContratAvecDonnees.frais || '',
-          contratPropose: preContratAvecDonnees.contratPropose || 'cession',
-          devise: preContratAvecDonnees.devise || 'EUR',
-          moyenPaiement: preContratAvecDonnees.moyenPaiement || 'virement',
-          // Ajouter les autres champs selon le mapping
+          montantHT: preContratAvecDonnees.montantHT || publicData.cachetMinimum || '',
+          acompte: preContratAvecDonnees.acompte || publicData.acompte || '',
+          frais: preContratAvecDonnees.frais || publicData.frais || '',
+          contratPropose: preContratAvecDonnees.contratPropose || publicData.contratPropose || 'cession',
+          devise: preContratAvecDonnees.devise || publicData.devise || 'EUR',
+          moyenPaiement: preContratAvecDonnees.moyenPaiement || publicData.modePaiement || 'virement',
+          precisionsNego: preContratAvecDonnees.precisionsNego || publicData.precisionNego || '',
+          
+          // Régie
+          nomResponsableRegie: preContratAvecDonnees.nomResponsableRegie || publicData.nomRegie || '',
+          telephoneRegie: preContratAvecDonnees.telephoneRegie || publicData.telRegie || '',
+          mobileRegie: preContratAvecDonnees.mobileRegie || publicData.mobileRegie || '',
+          emailRegie: preContratAvecDonnees.emailRegie || publicData.emailRegie || '',
+          
+          // Promo
+          nomResponsablePromo: preContratAvecDonnees.nomResponsablePromo || publicData.nomPromo || '',
+          telephonePromo: preContratAvecDonnees.telephonePromo || publicData.telPromo || '',
+          mobilePromo: preContratAvecDonnees.mobilePromo || publicData.mobilePromo || '',
+          emailPromo: preContratAvecDonnees.emailPromo || publicData.emailPromo || '',
+          demandePromo: preContratAvecDonnees.demandePromo || publicData.demandePromo || '',
+          
+          // Autres
+          divers: preContratAvecDonnees.divers || publicData.divers || ''
         }));
 
         setLoading(false);

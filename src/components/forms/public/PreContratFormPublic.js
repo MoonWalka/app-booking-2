@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import AddressInput from '@/components/ui/AddressInputUnified';
 import styles from './PreContratFormPublic.module.css';
 
 const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData = {} }) => {
@@ -40,56 +41,56 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
     }
     
     return {
-      // Date
-      heureDebut: data.horaireDebut || '',
-      heureFin: data.horaireFin || '',
+      // Date - nouveau système uniquement
+      heureDebut: data.heureDebut || '',
+      heureFin: data.heureFin || '',
       payant: data.payant ? 'payant' : 'gratuit',
-      nombreRepresentations: data.nbRepresentations || '1',
+      nombreRepresentations: data.nombreRepresentations || '1',
       salle: data.salle || '',
       capacite: data.capacite || '',
-      nombreAdmis: data.nbAdmins || '',
-      invitationsExos: data.invitations || '',
-      festivalEvenement: data.festival || '',
+      nombreAdmis: data.nombreAdmis || '',
+      invitationsExos: data.invitationsExos || '',
+      festivalEvenement: data.festivalEvenement || '',
       
       // Négociation
       contratPropose: data.contratPropose || '',
-      cachetMinimum: data.montantHT || '',
-      modePaiement: data.moyenPaiement || '',
+      cachetMinimum: data.montant || '',
+      modePaiement: data.modePaiement || '',
       devise: data.devise || 'EUR',
       acompte: data.acompte || '',
       frais: data.frais || '',
-      precisionNego: data.precisionsNegoc || '',
+      precisionNego: data.precisionNego || '',
       
       // Organisateur
-      raisonSociale: data.raisonSociale || '',
+      raisonSociale: data.structureNom || '',
       adresseOrga: data.adresse || '',
       suiteAdresseOrga: data.suiteAdresse || '',
-      codePostalOrga: data.cp || '',
+      codePostalOrga: data.codePostal || '',
       villeOrga: data.ville || '',
       paysOrga: data.pays || 'France',
-      telOrga: data.tel || '',
+      telOrga: data.telephone || '',
       faxOrga: data.fax || '',
       emailOrga: data.email || '',
-      siteWebOrga: data.site || '',
+      siteWebOrga: data.siteWeb || '',
       siret: data.siret || '',
-      codeAPE: data.codeActivite || '',
-      tvaIntracom: data.numeroTvaIntracommunautaire || '',
-      licences: data.numeroLicence || '',
-      signataire: data.nomSignataire || '',
+      codeAPE: data.codeAPE || '',
+      tvaIntracom: data.tvaIntracom || '',
+      licences: data.licence || '',
+      signataire: data.signataire || '',
       qualiteSignataire: data.qualiteSignataire || '',
       
       // Régie
-      nomRegie: data.responsableRegie || '',
-      emailRegie: data.emailProRegie || '',
-      telRegie: data.telProRegie || '',
-      mobileRegie: data.mobileProRegie || '',
-      horairesRegie: data.horaires || '',
+      nomRegie: data.nomRegie || '',
+      emailRegie: data.emailRegie || '',
+      telRegie: data.telRegie || '',
+      mobileRegie: data.mobileRegie || '',
+      horairesRegie: data.horairesRegie || '',
       
       // Promo
-      nomPromo: data.responsablePromo || '',
-      emailPromo: data.emailProPromo || '',
-      telPromo: data.telProPromo || '',
-      mobilePromo: data.mobileProPromo || '',
+      nomPromo: data.nomPromo || '',
+      emailPromo: data.emailPromo || '',
+      telPromo: data.telPromo || '',
+      mobilePromo: data.mobilePromo || '',
       demandePromo: data.demandePromo || '',
       
       // Autres
@@ -210,6 +211,34 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  // Handler pour l'autocomplétion d'adresse organisateur
+  const handleAddressSelected = (addressData) => {
+    console.log('[PreContratFormPublic] Adresse organisateur sélectionnée:', addressData);
+    
+    // Mettre à jour les champs d'adresse avec les données de l'autocomplétion
+    setFormData(prev => ({
+      ...prev,
+      adresseOrga: addressData.adresse || '',
+      codePostalOrga: addressData.codePostal || '',
+      villeOrga: addressData.ville || '',
+      paysOrga: addressData.pays || 'France'
+    }));
+  };
+
+  // Handler pour l'autocomplétion d'adresse de la salle
+  const handleSalleAddressSelected = (addressData) => {
+    console.log('[PreContratFormPublic] Adresse salle sélectionnée:', addressData);
+    
+    // Mettre à jour les champs d'adresse de la salle
+    setFormData(prev => ({
+      ...prev,
+      adresseSalle: addressData.adresse || '',
+      codePostalSalle: addressData.codePostal || '',
+      villeSalle: addressData.ville || '',
+      paysSalle: addressData.pays || 'France'
     }));
   };
 
@@ -339,13 +368,13 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
 
           <div className={styles.grid}>
             <div className={styles.fieldGroup}>
-              <label htmlFor="adresseSalle">Adresse</label>
-              <input
-                type="text"
-                id="adresseSalle"
-                name="adresseSalle"
+              <AddressInput
+                label="Adresse"
                 value={formData.adresseSalle}
-                onChange={handleChange}
+                onChange={(e) => handleChange({ target: { name: 'adresseSalle', value: e.target.value } })}
+                onAddressSelected={handleSalleAddressSelected}
+                placeholder="Commencez à taper pour rechercher une adresse..."
+                className={styles.addressInput}
               />
             </div>
             <div className={styles.fieldGroup}>
@@ -540,13 +569,13 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
 
           <div className={styles.grid}>
             <div className={styles.fieldGroup}>
-              <label htmlFor="adresseOrga">Adresse</label>
-              <input
-                type="text"
-                id="adresseOrga"
-                name="adresseOrga"
+              <AddressInput
+                label="Adresse"
                 value={formData.adresseOrga}
-                onChange={handleChange}
+                onChange={(e) => handleChange({ target: { name: 'adresseOrga', value: e.target.value } })}
+                onAddressSelected={handleAddressSelected}
+                placeholder="Commencez à taper pour rechercher une adresse..."
+                className={styles.addressInput}
               />
             </div>
             <div className={styles.fieldGroup}>

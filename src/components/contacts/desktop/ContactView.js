@@ -46,7 +46,7 @@ function ContactView({ id: propId }) {
     } : null,
     structure: structure ? { 
       id: structure.id, 
-      nom: structure.nom 
+      nom: structure.raisonSociale 
     } : null,
     lieuxCount: lieux?.length || 0,
     datesCount: dates?.length || 0
@@ -158,12 +158,12 @@ function ContactView({ id: propId }) {
         actions={[
           <Button 
             key="edit"
-            variant="primary" 
+            variant="outline-secondary" 
             onClick={handleEdit}
             icon={<i className="bi bi-pencil"></i>}
-          >
-            Modifier
-          </Button>
+            title="Modifier"
+            style={{ padding: '0.375rem 0.75rem' }}
+          />
         ]}
       />
 
@@ -201,7 +201,7 @@ function ContactView({ id: propId }) {
               {structure && (
                 <EntityCard
                   entityType="structure"
-                  name={structure.nom || 'Structure'}
+                  name={structure.raisonSociale || 'Structure'}
                   subtitle="Structure"
                   onClick={() => {
                     console.log('[ContactView] Clic sur structure:', structure);
@@ -237,7 +237,7 @@ function ContactView({ id: propId }) {
                 <EntityCard
                   key={artiste.id}
                   entityType="artiste"
-                  name={artiste.nom || 'Artiste'}
+                  name={artiste.artisteNom || 'Artiste'}
                   subtitle={`Artiste (${artistes.length})`}
                   onClick={() => navigateToEntity('artiste', artiste.id)}
                 />

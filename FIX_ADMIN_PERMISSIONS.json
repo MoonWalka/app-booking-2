@@ -1,0 +1,72 @@
+{
+  "nom": "Administrateur",
+  "description": "Accès complet à toutes les fonctionnalités",
+  "permissions": {
+    "dates": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "contrats": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "artistes": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "contacts": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "projets": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "taches": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "factures": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "devis": {
+      "creer": true,
+      "modifier": true,
+      "voir": true,
+      "supprimer": true,
+      "historique": true
+    },
+    "parametrage": {
+      "modifier": true,
+      "voir": true
+    },
+    "permissions": {
+      "modifier": true,
+      "voir": true
+    }
+  },
+  "createdAt": "2025-01-20T17:00:00Z",
+  "updatedAt": "2025-01-20T17:00:00Z"
+}

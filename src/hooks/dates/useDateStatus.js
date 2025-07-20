@@ -157,7 +157,7 @@ const useDateStatus = (options = {}) => {
       
       switch (status) {
         case 'contact':
-          contextualMessage = `Contact établi${entity.artiste ? ` avec ${entity.artiste.nom}` : ''}`;
+          contextualMessage = `Contact établi${entity.artiste ? ` avec ${entity.artiste.artisteNom}` : ''}`;
           recommendedAction = 'negotiate_preaccord';
           break;
         case 'preaccord':

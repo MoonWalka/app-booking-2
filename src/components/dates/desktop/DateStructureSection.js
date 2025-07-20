@@ -158,7 +158,7 @@ const DateStructureSection = ({
               <div className="col-md-6">
                 <div className="mb-3">
                   <div className="fw-bold">Nom:</div>
-                  <div>{structure.nom || structure.raisonSociale || 'Sans nom'}</div>
+                  <div>{structure.raisonSociale || 'Sans nom'}</div>
                 </div>
                 <div className="mb-3">
                   <div className="fw-bold">Type:</div>

@@ -133,7 +133,7 @@ const DateGeneralInfo = ({
                     {artiste ? (
                       <Link to={`/artistes/${artiste.id}`} className="artiste-link">
                         <i className="bi bi-music-note"></i>
-                        {artiste.nom}
+                        {artiste.artisteNom}
                       </Link>
                     ) : (
                       date?.artisteNom ? date.artisteNom : <span className="text-muted">Non spécifié</span>

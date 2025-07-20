@@ -1,4 +1,6 @@
 import React from 'react';
+import AddressAutocompleteTest from '@/components/debug/AddressAutocompleteTest';
+import TemplateMigrationTool from '@/components/contrats/TemplateMigrationTool';
 // import DataStructureFixer from '@/components/debug/DataStructureFixer';
 // import OrganizationIdDebug from '@/components/debug/OrganizationIdDebug'; // Supprimé
 // import ListDebugger from '@/components/debug/ListDebugger';
@@ -78,22 +80,24 @@ const DebugToolsPage = () => {
       </div>
 
       <div style={{ padding: '2rem' }}>
+        <AddressAutocompleteTest />
+        
+        <div style={{ marginTop: '3rem' }}>
+          <TemplateMigrationTool />
+        </div>
+        
         <div style={{ 
           backgroundColor: '#f8f9fa', 
           border: '1px solid #dee2e6', 
           borderRadius: '0.375rem', 
-          padding: '3rem',
+          padding: '2rem',
           textAlign: 'center',
           maxWidth: '600px',
-          margin: '0 auto'
+          margin: '2rem auto 0'
         }}>
-          <i className="bi bi-info-circle" style={{ fontSize: '4rem', color: '#0dcaf0' }}></i>
-          <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>Outils de debug supprimés</h2>
-          <p style={{ fontSize: '1.1rem', color: '#6c757d', marginBottom: '0' }}>
-            Les outils de debug ont été retirés du système pour améliorer les performances et la sécurité.
-          </p>
-          <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '1rem' }}>
-            Cette page reste accessible pour référence historique.
+          <i className="bi bi-info-circle" style={{ fontSize: '2rem', color: '#0dcaf0' }}></i>
+          <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '1rem', marginBottom: '0' }}>
+            Les autres outils de debug ont été retirés pour améliorer les performances.
           </p>
         </div>
       </div>

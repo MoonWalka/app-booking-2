@@ -135,8 +135,18 @@ const InvitationsManager = () => {
                 isGeneral: newInvitation.isGeneral
             };
             
-            // Sauvegarder l'invitation avec les métadonnées
-            await updateDoc(doc(db, 'entreprise_invitations', invitation.id), invitationData);
+            // L'invitation est déjà sauvegardée par generateInvitationCode
+            // On met juste à jour avec les métadonnées supplémentaires
+            if (invitation.id) {
+                await updateDoc(doc(db, 'entreprise_invitations', invitation.id), {
+                    email: newInvitation.isGeneral ? null : newInvitation.email,
+                    groupes: newInvitation.groupes,
+                    createdBy: currentUser.uid,
+                    createdByName: currentUser.displayName || currentUser.email,
+                    entrepriseName: currentEntreprise.name || currentEntreprise.nom || 'Entreprise',
+                    isGeneral: newInvitation.isGeneral
+                });
+            }
             
             showMessage(`Invitation créée avec succès. Code : ${invitation.code}`, 'success');
             setShowModal(false);

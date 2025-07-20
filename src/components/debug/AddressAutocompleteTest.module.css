@@ -1,0 +1,39 @@
+.testSection {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  height: 100%;
+}
+
+.resultBox {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+
+.dataGrid {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.dataGrid > div {
+  padding: 0.25rem 0;
+  border-bottom: 1px dotted #dee2e6;
+}
+
+.dataGrid > div:last-child {
+  border-bottom: none;
+}
+
+.jsonData {
+  font-size: 0.75rem;
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  overflow-x: auto;
+  max-height: 200px;
+  margin: 0;
+}

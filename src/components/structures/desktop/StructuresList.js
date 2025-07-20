@@ -48,7 +48,7 @@ const StructuresList = () => {
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       result = result.filter(structure => 
-        structure.nom?.toLowerCase().includes(term) ||
+        structure.raisonSociale?.toLowerCase().includes(term) ||
         structure.raisonSociale?.toLowerCase().includes(term) ||
         structure.ville?.toLowerCase().includes(term) ||
         structure.siret?.includes(term)
@@ -278,12 +278,12 @@ const StructuresList = () => {
                   onClick={() => {
                     console.log('🖱️ Desktop StructuresList row clicked:', structure);
                     console.log('🚀 Opening tab for structure:', structure.id);
-                    openStructureTab(structure.id, structure.nom || structure.raisonSociale || 'Structure');
+                    openStructureTab(structure.id, structure.raisonSociale || 'Structure');
                   }}
                   className={styles.clickableRow}
                 >
                   <td>
-                    <strong>{structure.nom || structure.raisonSociale || 'Sans nom'}</strong>
+                    <strong>{structure.raisonSociale || 'Sans nom'}</strong>
                   </td>
                   <td>
                     <span className={`${styles.badge} ${styles[`badge-${structure.type}`]}`}>

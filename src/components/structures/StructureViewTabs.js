@@ -338,10 +338,10 @@ const StructureViewTabs = ({ id: propId }) => {
           const getEssentialDetails = () => {
             const details = [];
             
-            if (structure.nom) {
+            if (structure.raisonSociale) {
               details.push({
                 icon: 'bi bi-building',
-                content: <strong>{structure.nom}</strong>,
+                content: <strong>{structure.raisonSociale}</strong>,
                 priority: 1
               });
             }

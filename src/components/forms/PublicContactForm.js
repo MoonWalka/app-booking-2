@@ -129,8 +129,8 @@ const PublicContactForm = ({
                 });
 
                 // Pré-remplir aussi le champ de recherche SIRET si disponible
-                if (submissionData.structureData?.nom) {
-                  setSiretSearch(submissionData.structureData.nom);
+                if (submissionData.structureData?.raisonSociale) {
+                  setSiretSearch(submissionData.structureData.raisonSociale);
                 }
               }
             }

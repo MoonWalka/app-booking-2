@@ -204,7 +204,7 @@ export const useContactContrats = (entityId, entityType = 'contact') => {
                 return {
                   ...contrat,
                   raisonSociale: structureData.raisonSociale || structureData.nom,
-                  structureNom: structureData.nom,
+                  structureNom: structureData.raisonSociale,
                   // Ajouter les champs requis pour le tableau
                   ref: contrat.numeroContrat || contrat.reference || `CONT-${contrat.id?.substring(0, 6)}`,
                   entrepriseCode: contrat.entrepriseCode || currentEntreprise?.nom || currentEntreprise?.code || 'TC',

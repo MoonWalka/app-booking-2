@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { personnesService } from '@/services/contacts/personnesService';
 import liaisonsService from '@/services/contacts/liaisonsService';
 import { fonctionsService } from '@/services/fonctionsService';
-import AddressInput from '@/components/ui/AddressInput';
+import AddressInput from '@/components/ui/AddressInputUnified';
 import styles from './StructureCreationModal.module.css'; // Réutiliser les styles
 
 /**

@@ -449,7 +449,7 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
     // Log de débogage pour vérifier ce qui est transmis
     if (structureData) {
       console.log("✅ Structure chargée:", {
-        nom: structureData.nom,
+        nom: structureData.raisonSociale,
         siret: structureData.siret,
         adresse: structureData.adresse,
         email: structureData.email,
@@ -681,11 +681,11 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
         }
         // Nouveau système : personne avec structure liée
         if (contact?._type === 'personne' && structureData) {
-          return structureData.nom || structureData.raisonSociale || 'Non spécifiée';
+          return structureData.raisonSociale || structureData.nom || 'Non spécifiée';
         }
         // Ancien système avec structure chargée
-        if (structureData?.nom) {
-          return structureData.nom;
+        if (structureData?.raisonSociale) {
+          return structureData.raisonSociale;
         }
         // Ancien système
         return contact?.structure || 'Non spécifiée';
@@ -731,10 +731,10 @@ export const useContratGenerator = (date, contact, artiste, lieu, contratData = 
           return contact.nom || contact.raisonSociale || 'Non spécifiée';
         }
         if (contact?._type === 'personne' && structureData) {
-          return structureData.nom || structureData.raisonSociale || 'Non spécifiée';
+          return structureData.raisonSociale || structureData.nom || 'Non spécifiée';
         }
-        if (structureData?.nom) {
-          return structureData.nom;
+        if (structureData?.raisonSociale) {
+          return structureData.raisonSociale;
         }
         return contact?.structure || 'Non spécifiée';
       })(),

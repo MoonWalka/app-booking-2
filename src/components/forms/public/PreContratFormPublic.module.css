@@ -130,6 +130,29 @@
   min-height: 100px;
 }
 
+/* Style pour l'autocomplétion d'adresse */
+.addressInput {
+  position: relative;
+}
+
+.addressInput input {
+  padding: 0.875rem 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+  width: 100%;
+}
+
+.addressInput input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background-color: white;
+  transform: translateY(-1px);
+}
+
 .prestaInfo {
   background: linear-gradient(135deg, #e7f3ff 0%, #e3f2fd 100%);
   padding: 1.5rem;

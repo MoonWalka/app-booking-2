@@ -105,7 +105,7 @@ const usePermissions = () => {
    */
   const hasPermission = useMemo(() => (entity, action) => {
     // Les admins ont toutes les permissions
-    if (isAdmin && entity !== 'parametrage') return true;
+    if (isAdmin) return true;
     
     // Vérifier la permission spécifique
     return permissions[entity]?.[action] === true;
@@ -117,7 +117,7 @@ const usePermissions = () => {
    * @returns {object}
    */
   const getEntityPermissions = useMemo(() => (entity) => {
-    if (isAdmin && entity !== 'parametrage') {
+    if (isAdmin) {
       return {
         creer: true,
         modifier: true,

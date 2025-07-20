@@ -191,7 +191,7 @@ export const searchFieldsMapping = {
     // Champs calculés ou joints
     lieuNom: { path: 'lieu.nom', type: 'string', join: true },
     lieuVille: { path: 'lieu.ville', type: 'string', join: true },
-    artisteNom: { path: 'artiste.nom', type: 'string', join: true }
+    artisteNom: { path: 'artiste.artisteNom', type: 'string', join: true }
   },
 
   // Mapping pour la collection artistes

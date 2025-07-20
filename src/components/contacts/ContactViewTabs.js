@@ -12,6 +12,7 @@ import EntityViewTabs from '@/components/common/EntityViewTabs';
 import TagsSelectionModal from '@/components/ui/TagsSelectionModal';
 import AssociatePersonModal from '@/components/ui/AssociatePersonModal';
 import PersonneCreationModal from '@/components/contacts/modal/PersonneCreationModal';
+import StructureCreationModal from '@/components/contacts/modal/StructureCreationModal';
 import CommentListModal from '@/components/common/modals/CommentListModal';
 import { getTagColor, getTagCssClass } from '@/config/tagsConfig';
 import { formatActivityTags, getPersonDisplayType } from '@/utils/contactUtils';
@@ -57,6 +58,8 @@ function ContactViewTabs({ id, viewType = null }) {
   const [showAssociatePersonModal, setShowAssociatePersonModal] = useState(false);
   const [showEditPersonModal, setShowEditPersonModal] = useState(false);
   const [editingPerson, setEditingPerson] = useState(null);
+  const [showEditStructureModal, setShowEditStructureModal] = useState(false);
+  const [editingStructure, setEditingStructure] = useState(null);
   const [showCommentListModal, setShowCommentListModal] = useState(false);
   const [selectedPersonForComments, setSelectedPersonForComments] = useState(null);
   const [datesData, setDatesData] = useState([]);
@@ -324,8 +327,8 @@ function ContactViewTabs({ id, viewType = null }) {
   // Gestionnaires pour les actions sur la structure
   const handleEditStructure = useCallback((structureData) => {
     console.log('[ContactViewTabs] Édition de la structure:', structureData);
-    // Logique pour ouvrir le modal d'édition de structure
-    // À implémenter selon vos besoins
+    setEditingStructure(structureData);
+    setShowEditStructureModal(true);
   }, []);
 
   const handleOpenStructureFiche = useCallback((structureData) => {
@@ -730,9 +733,11 @@ function ContactViewTabs({ id, viewType = null }) {
   // Props dynamiques pour EntityViewTabs - passées directement, pas dans la config
   const dynamicProps = {
     header: {
-      render: (contact) => {
-        const data = extractedData || contact;
+      render: (contactFromRender) => {
+        const data = extractedData || contactFromRender;
         if (!data) return null;
+        // Garder une référence au contact original pour l'édition
+        const originalContact = contact || contactFromRender;
         
         const hasStructureData = data.structureRaisonSociale?.trim();
         const isStructure = forcedViewType ? (forcedViewType === 'structure') : (entityType === 'structure' || hasStructureData);
@@ -811,6 +816,42 @@ function ContactViewTabs({ id, viewType = null }) {
                       'Date inconnue'}
                   </span>
                 )}
+                <button
+                  className={styles.editButton}
+                  onClick={() => {
+                    const isStructure = forcedViewType ? (forcedViewType === 'structure') : (entityType === 'structure' || data.raisonSociale);
+                    if (isStructure) {
+                      // Pour les structures, passer l'objet contact original complet
+                      console.log('[ContactViewTabs] Edit structure - originalContact:', originalContact);
+                      handleEditStructure(originalContact);
+                    } else {
+                      // Pour les personnes, passer l'objet contact original complet
+                      console.log('[ContactViewTabs] Edit person - originalContact:', originalContact);
+                      handleEditPerson(originalContact);
+                    }
+                  }}
+                  title="Modifier"
+                  style={{
+                    marginLeft: '1rem',
+                    padding: '0.375rem 0.75rem',
+                    border: '1px solid #dee2e6',
+                    borderRadius: '0.25rem',
+                    backgroundColor: 'transparent',
+                    color: '#6c757d',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#f8f9fa';
+                    e.target.style.color = '#495057';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = '#6c757d';
+                  }}
+                >
+                  <i className="bi bi-pencil"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -1024,6 +1065,22 @@ function ContactViewTabs({ id, viewType = null }) {
         onAddComment={() => {
           openCreateCommentModal(selectedPersonForComments?.id, selectedPersonForComments?.nom);
         }}
+      />
+      
+      <StructureCreationModal
+        show={showEditStructureModal}
+        onHide={() => {
+          setShowEditStructureModal(false);
+          setEditingStructure(null);
+        }}
+        onCreated={() => {
+          // Rafraîchir les données après la mise à jour
+          invalidateContactCache(cleanId);
+          setShowEditStructureModal(false);
+          setEditingStructure(null);
+        }}
+        editMode={true}
+        initialData={editingStructure}
       />
     </>
   );

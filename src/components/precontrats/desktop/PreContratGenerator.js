@@ -387,7 +387,7 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
     if (artiste) {
       setFormData(prev => ({
         ...prev,
-        artistes: prev.artistes?.length > 0 ? prev.artistes : [artiste.nom || '']
+        artistes: prev.artistes?.length > 0 ? prev.artistes : [artiste.artisteNom || '']
       }));
     }
 

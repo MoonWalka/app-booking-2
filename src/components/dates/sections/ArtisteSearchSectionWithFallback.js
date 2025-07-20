@@ -64,7 +64,7 @@ const ArtisteSearchSectionWithFallback = ({
       const allArtistes = snapshot.docs
         .map(doc => ({ id: doc.id, ...doc.data() }))
         .filter(artiste => 
-          artiste.nom?.toLowerCase().includes(term.toLowerCase()) ||
+          artiste.artisteNom?.toLowerCase().includes(term.toLowerCase()) ||
           artiste.style?.toLowerCase().includes(term.toLowerCase())
         );
       
@@ -90,7 +90,7 @@ const ArtisteSearchSectionWithFallback = ({
   const handleSelectWithFix = async (artiste) => {
     if (!artiste.entrepriseId && currentEntreprise?.id) {
       const confirmFix = window.confirm(
-        `L'artiste "${artiste.nom}" n'appartient à aucune entreprise.\n\n` +
+        `L'artiste "${artiste.artisteNom}" n'appartient à aucune entreprise.\n\n` +
         `Voulez-vous l'associer à votre entreprise "${currentEntreprise.name}" ?`
       );
       
@@ -105,7 +105,7 @@ const ArtisteSearchSectionWithFallback = ({
           
           // Mettre à jour l'objet local
           artiste.entrepriseId = currentEntreprise.id;
-          console.log(`✅ Artiste ${artiste.nom} associé à l'entreprise`);
+          console.log(`✅ Artiste ${artiste.artisteNom} associé à l'entreprise`);
         } catch (error) {
           console.error('Erreur lors de la mise à jour de l\'artiste:', error);
         }

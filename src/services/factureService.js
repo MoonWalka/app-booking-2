@@ -670,8 +670,8 @@ class FactureService {
           }
         }
         
-        if (factureData.structure?.nom) {
-          structureName = factureData.structure.nom;
+        if (factureData.structure?.raisonSociale) {
+          structureName = factureData.structure.raisonSociale;
         }
         
         await tachesService.creerTache({

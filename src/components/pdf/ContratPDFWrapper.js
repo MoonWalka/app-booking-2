@@ -4,6 +4,7 @@ import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/render
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import pdfService from '@/services/pdfService';
+import { prepareContractData, replaceVariables as replaceVariablesUnified } from '@/hooks/contrats/contractVariablesUnified';
 // Import du fichier CSS dédié à l'impression - Ce fichier sera utilisé pour les styles
 import '@styles/index.css';
 // Import du fichier CSS modulaire pour les styles spécifiques au composant
@@ -473,8 +474,19 @@ const prepareContractVariables = (safeData) => {
 /**
  * Fonction pour remplacer les variables dans le contenu
  */
-const replaceVariables = (content, variables) => {
+const replaceVariables = (content, variables, useUnifiedSystem = false) => {
   if (!content) return '';
+  
+  // Option pour utiliser le nouveau système unifié (plus simple)
+  if (useUnifiedSystem && variables.contratData) {
+    const unifiedData = prepareContractData(
+      variables.contratData,
+      variables.date,
+      variables.artiste,
+      variables.entreprise
+    );
+    return replaceVariablesUnified(content, unifiedData);
+  }
   
   console.log('🔄 [PDF] Remplacement des variables:', {
     contentLength: content.length,
@@ -1122,7 +1134,7 @@ const ContratPDFWrapper = ({
             Date: {formatSafeDate(safeData.date.date)}
           </Text>
           <Text>
-            Contrat pour: {safeData.artiste.nom || 'Non spécifié'}
+            Contrat pour: {safeData.artiste.artisteNom || 'Non spécifié'}
           </Text>
           <Text>
             Lieu: {safeData.lieu.nom || 'Non spécifié'}

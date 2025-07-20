@@ -151,7 +151,7 @@ const FacturesTableView = ({
         if (!date) return '—';
         
         const dateObj = date.toDate ? date.toDate() : new Date(date);
-        const isOverdue = dateObj < new Date() && facture.status !== 'paid';
+        const isOverdue = dateObj < new Date() && facture.statut !== 'paid';
         
         return (
           <span className={isOverdue ? 'text-danger' : ''}>
@@ -187,7 +187,7 @@ const FacturesTableView = ({
           'sent': { label: 'Envoyé', variant: 'info' },
           'cancelled': { label: 'Annulé', variant: 'dark' }
         };
-        const etat = facture.etat || facture.status || 'draft';
+        const etat = facture.etat || facture.statut || 'draft';
         const config = etatMap[etat] || etatMap['draft'];
         return <Badge variant={config.variant}>{config.label}</Badge>;
       }

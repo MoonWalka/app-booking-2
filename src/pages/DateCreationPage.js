@@ -107,7 +107,7 @@ function DateCreationPage({ params = {} }) {
       
       artistesSnapshot.forEach((doc) => {
         const artisteData = { id: doc.id, ...doc.data() };
-        const artisteNom = artisteData.nom || artisteData.nomArtiste;
+        const artisteNom = artisteData.artisteNom || artisteData.nomArtiste || artisteData.nom;
         
         // Ajouter les projets de la nouvelle collection
         const projetsFromCollection = projetsByArtiste[doc.id] || [];
@@ -115,12 +115,13 @@ function DateCreationPage({ params = {} }) {
         // Ajouter chaque projet de l'artiste comme une option séparée
         if (projetsFromCollection.length > 0) {
           projetsFromCollection.forEach(projet => {
+            const projetNom = projet.projetNom || projet.nom || projet.titre;
             artistes.push({
               id: doc.id,
-              nom: artisteNom,
-              projet: projet.nom,
+              artisteNom: artisteNom,  // Variable standardisée
+              projetNom: projetNom,    // Variable standardisée
               projetId: projet.id,
-              searchText: `${artisteNom} ${projet.nom}`.toLowerCase()
+              searchText: `${artisteNom} ${projetNom}`.toLowerCase()
             });
           });
         }
@@ -128,12 +129,13 @@ function DateCreationPage({ params = {} }) {
         // Ajouter aussi les anciens projets (pour compatibilité)
         if (artisteData.projets && artisteData.projets.length > 0) {
           artisteData.projets.forEach(projet => {
+            const projetNom = projet.projetNom || projet.nom || projet.titre;
             artistes.push({
               id: doc.id,
-              nom: artisteNom,
-              projet: projet.nom || projet.titre,
+              artisteNom: artisteNom,  // Variable standardisée
+              projetNom: projetNom,    // Variable standardisée
               projetId: projet.id,
-              searchText: `${artisteNom} ${projet.nom || projet.titre}`.toLowerCase()
+              searchText: `${artisteNom} ${projetNom}`.toLowerCase()
             });
           });
         }
@@ -142,8 +144,8 @@ function DateCreationPage({ params = {} }) {
         if (projetsFromCollection.length === 0 && (!artisteData.projets || artisteData.projets.length === 0)) {
           artistes.push({
             id: doc.id,
-            nom: artisteNom,
-            projet: '',
+            artisteNom: artisteNom,  // Variable standardisée
+            projetNom: '',          // Variable standardisée
             projetId: null,
             searchText: (artisteNom || '').toLowerCase()
           });
@@ -184,7 +186,8 @@ function DateCreationPage({ params = {} }) {
         
         structures.push({
           id: doc.id,
-          nom: nomStructure,
+          structureNom: nomStructure,  // Variable standardisée
+          raisonSociale: structureData.raisonSociale,  // Garder pour compatibilité
           searchText: nomStructure.toLowerCase()
         });
       });
@@ -193,7 +196,7 @@ function DateCreationPage({ params = {} }) {
       console.log(`[DateCreationPage] ${structures.length} structures chargées`);
       if (structures.length > 0) {
         console.log('[DateCreationPage] Échantillon des structures chargées:', 
-          structures.slice(0, 3).map(s => ({ id: s.id, nom: s.nom }))
+          structures.slice(0, 3).map(s => ({ id: s.id, structureNom: s.structureNom }))
         );
       }
     } catch (error) {
@@ -223,10 +226,10 @@ function DateCreationPage({ params = {} }) {
     setFormData(prev => ({
       ...prev,
       artisteId: artiste.id,
-      artisteNom: artiste.nom,
-      projetNom: artiste.projet
+      artisteNom: artiste.artisteNom,  // Utiliser la variable standardisée
+      projetNom: artiste.projetNom      // Utiliser la variable standardisée
     }));
-    setArtisteSearch(`${artiste.nom} - ${artiste.projet}`);
+    setArtisteSearch(`${artiste.artisteNom} - ${artiste.projetNom}`);
     setShowArtisteDropdown(false);
   };
 
@@ -234,9 +237,9 @@ function DateCreationPage({ params = {} }) {
     setFormData(prev => ({
       ...prev,
       structureId: structure.id,
-      structureNom: structure.nom
+      structureNom: structure.structureNom // Utiliser la variable standardisée
     }));
-    setStructureSearch(structure.nom);
+    setStructureSearch(structure.structureNom);
     setShowStructureDropdown(false);
   };
 
@@ -295,25 +298,27 @@ function DateCreationPage({ params = {} }) {
 
     try {
       // Créer le document date dans la collection dates
+      // UTILISATION DES CONVENTIONS : on arrête de dupliquer !
       const dateData = {
+        // Données principales
         date: formData.date,
         artisteId: formData.artisteId,
         artisteNom: formData.artisteNom,
         projetNom: formData.projetNom,
-        structureId: formData.structureId,
-        structureNom: formData.structureNom,
-        // Compatibilité avec l'ancien système (organisateur)
-        organisateurId: formData.structureId,
-        organisateurNom: formData.structureNom,
+        structureId: formData.structureId,      // Une seule fois !
+        structureNom: formData.structureNom,    // Une seule fois !
         libelle: formData.libelle,
-        // Ajouter automatiquement la date du jour comme prise d'option
-        priseOption: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
+        montant: 0, // À définir plus tard
+        statut: 'En cours',
+        
+        // Métadonnées
+        priseOption: new Date().toISOString().split('T')[0],
         entrepriseId: currentEntreprise.id,
-        createdBy: currentUser?.uid || null,
-        createdByName: currentUser?.displayName || currentUser?.email || null,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        statut: 'En cours' // Statut par défaut
+        // Métadonnées en français
+        creePar: currentUser?.uid || null,
+        creeParNom: currentUser?.displayName || currentUser?.email || null,
+        dateCreation: serverTimestamp(),
+        dateModification: serverTimestamp()
       };
 
       console.log('🔍 DEBUG - Sauvegarde de la date:', dateData);
@@ -408,7 +413,7 @@ function DateCreationPage({ params = {} }) {
                 <>
                   {artistesData.slice(0, 3).map((a, i) => (
                     <div key={i} style={{ fontSize: '11px' }}>
-                      {i+1}. {a.nom} {a.projet ? `- ${a.projet}` : ''}
+                      {i+1}. {a.artisteNom} {a.projetNom ? `- ${a.projetNom}` : ''}
                     </div>
                   ))}
                   {artistesData.length > 3 && <div>... et {artistesData.length - 3} autres</div>}
@@ -424,7 +429,7 @@ function DateCreationPage({ params = {} }) {
                 <>
                   {filteredArtistes.slice(0, 3).map((a, i) => (
                     <div key={i} style={{ fontSize: '11px' }}>
-                      {i+1}. {a.nom} {a.projet ? `- ${a.projet}` : ''}
+                      {i+1}. {a.artisteNom} {a.projetNom ? `- ${a.projetNom}` : ''}
                     </div>
                   ))}
                   {filteredArtistes.length > 3 && <div>... et {filteredArtistes.length - 3} autres</div>}
@@ -520,8 +525,8 @@ function DateCreationPage({ params = {} }) {
                           className={styles.dropdownItem}
                           onClick={() => handleArtisteSelect(artiste)}
                         >
-                          <strong>{artiste.nom}</strong>
-                          {artiste.projet && <span className={styles.projet}> - {artiste.projet}</span>}
+                          <strong>{artiste.artisteNom}</strong>
+                          {artiste.projetNom && <span className={styles.projet}> - {artiste.projetNom}</span>}
                         </div>
                       ))}
                     </div>
@@ -555,7 +560,7 @@ function DateCreationPage({ params = {} }) {
                             className={styles.dropdownItem}
                             onClick={() => handleStructureSelect(structure)}
                           >
-                            {structure.nom || 'Structure sans nom'}
+                            {structure.structureNom || 'Structure sans nom'}
                           </div>
                         ))
                       ) : (

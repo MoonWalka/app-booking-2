@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useEntreprise } from '@/context/EntrepriseContext';
-import { collection, getDocs, query, where, orderBy } from '@/services/firebase-service';
+import { collection, getDocs, query, where, orderBy, doc, getDoc } from '@/services/firebase-service';
 import { db } from '@services/firebase-service';
 import ListWithFilters from '@/components/ui/ListWithFilters';
 
@@ -68,18 +68,43 @@ function DatesTable({
         );
         
         const datesSnapshot = await getDocs(datesQuery);
+        
+        // Charger les structures pour avoir les noms à jour
+        const structureIds = [...new Set(datesSnapshot.docs.map(doc => doc.data().structureId).filter(id => id))];
+        const structureNames = {};
+        
+        // Charger les noms de structures en parallèle
+        if (structureIds.length > 0) {
+          await Promise.all(structureIds.map(async (structureId) => {
+            try {
+              const structureDoc = await getDoc(doc(db, 'structures', structureId));
+              if (structureDoc.exists()) {
+                const structureData = structureDoc.data();
+                structureNames[structureId] = structureData.raisonSociale || structureData.nom || 'Structure inconnue';
+              }
+            } catch (err) {
+              console.warn(`Erreur lors du chargement de la structure ${structureId}:`, err);
+            }
+          }));
+        }
+        
         const datesData = datesSnapshot.docs.map(doc => {
           const date = { id: doc.id, ...doc.data() };
+          
+          // Utiliser le nom dynamique de la structure si disponible
+          const dynamicStructureName = date.structureId && structureNames[date.structureId] 
+            ? structureNames[date.structureId] 
+            : date.structureNom;
           
           // Transformer les données Firebase pour correspondre aux configurations
           return {
             ...date,
             // Mapping Firebase → Configurations
-            entreprise: date.structureNom || '-',
+            entreprise: dynamicStructureName || '-',
             artiste: date.artisteNom || date.titre || '-',
             lieu: date.lieuNom || '-',
             ville: date.lieuVille || '-', 
-            organisateur: date.contactNom || '-',
+            organisateur: dynamicStructureName || date.contactNom || '-',
             dateDebut: date.date,
             dateFin: date.dateFin,
             salle: date.lieuNom || '-',
@@ -88,7 +113,7 @@ function DatesTable({
             libelle: date.titre || '-',
             niv: date.niveau || '1',
             // Champs dérivés ou par défaut
-            coll: deriveCollaboratorCode(date.structureNom),
+            coll: deriveCollaboratorCode(dynamicStructureName),
             type: date.type || 'date',
             isPublic: date.isPublic || false,
             communicationStatus: date.communicationStatus || 'pending',

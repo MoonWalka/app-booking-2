@@ -1,5 +1,6 @@
 // src/hooks/common/index.js
 export { default as useAddressSearch } from './useAddressSearch';
+export { default as useGooglePlacesAutocomplete } from './useGooglePlacesAutocomplete';
 export { default as useCompanySearch } from './useCompanySearch';
 export { useEntitySearch } from './useEntitySearch';
 export { useLocationIQ } from './useLocationIQ';

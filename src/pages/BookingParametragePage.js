@@ -320,7 +320,7 @@ const BookingParametragePage = () => {
                               <div className="col-md-6">
                                 <div className="mb-2">
                                   <strong>Projet (ancien) :</strong> 
-                                  <span className="ms-2">{artiste.projet.nom}</span>
+                                  <span className="ms-2">{artiste.projet.projetNom}</span>
                                 </div>
                               </div>
                               <div className="col-md-6">

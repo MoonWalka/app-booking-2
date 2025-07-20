@@ -16,7 +16,7 @@ const useInvitationNotifications = () => {
     const invitationsQuery = query(
       collection(db, 'entreprise_invitations'),
       where('email', '==', currentUser.email),
-      where('status', '==', 'active')
+      where('statut', '==', 'active')
     );
 
     const unsubscribe = onSnapshot(invitationsQuery, (snapshot) => {

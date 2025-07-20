@@ -72,7 +72,7 @@ export const CONTRACT_VARIABLES = {
   'programmateur_qualite_representant': { label: 'Qualité du représentant', category: 'contact', source: 'programmateur.qualiteRepresentant' },
   
   // Variables structure (ajout des variables manquantes)
-  'structure_nom': { label: 'Nom de la structure', category: 'structure', source: 'structure.nom' },
+  'structure_nom': { label: 'Nom de la structure', category: 'structure', source: 'structure.raisonSociale' },
   'structure_siret': { label: 'SIRET de la structure', category: 'structure', source: 'structure.siret' },
   'structure_adresse': { label: 'Adresse de la structure', category: 'structure', source: 'structure.adresse.adresse' },
   'structure_code_postal': { label: 'Code postal de la structure', category: 'structure', source: 'structure.adresse.codePostal' },
@@ -82,7 +82,7 @@ export const CONTRACT_VARIABLES = {
   'structure_type': { label: 'Type de structure', category: 'structure', source: 'structure.type' },
   
   // Variables artiste
-  'artiste_nom': { label: 'Nom de l\'artiste', category: 'artiste', source: 'artiste.nom' },
+  'artiste_nom': { label: 'Nom de l\'artiste', category: 'artiste', source: 'artiste.artisteNom' },
   'artiste_genre': { label: 'Genre musical', category: 'artiste', source: 'artiste.genre' },
   'artiste_contact': { label: 'Contact de l\'artiste', category: 'artiste', source: 'artiste.contact' },
   
@@ -186,7 +186,7 @@ export const mapStructureDataToVariables = (structureData) => {
   if (!structureData) return {};
   
   return {
-    'structure_nom': structureData.nom || '',
+    'structure_nom': structureData.raisonSociale || '',
     'structure_siret': structureData.siret || '',
     'structure_adresse': structureData.adresse || '',
     'structure_code_postal': structureData.codePostal || '',
@@ -214,7 +214,7 @@ export const mapContactWithStructure = (contactData, structureData) => {
   
   // Si la structure est fournie, utiliser ses données pour l'adresse et le SIRET
   if (structureData) {
-    contact['contact_structure'] = structureData.nom || '';
+    contact['contact_structure'] = structureData.raisonSociale || '';
     contact['contact_siret'] = structureData.siret || '';
     contact['contact_adresse'] = structureData.adresse || '';
     contact['contact_numero_intracommunautaire'] = structureData.numeroIntracommunautaire || '';
@@ -241,7 +241,7 @@ export const mapProgrammateurWithStructure = (contactData, structureData) => {
   
   // Si la structure est fournie, utiliser ses données pour l'adresse et le SIRET
   if (structureData) {
-    programmateur['programmateur_structure'] = structureData.nom || '';
+    programmateur['programmateur_structure'] = structureData.raisonSociale || '';
     programmateur['programmateur_siret'] = structureData.siret || '';
     programmateur['programmateur_adresse'] = structureData.adresse || '';
     programmateur['programmateur_numero_intracommunautaire'] = structureData.numeroIntracommunautaire || '';

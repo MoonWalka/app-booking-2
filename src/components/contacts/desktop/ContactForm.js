@@ -81,7 +81,7 @@ const ContactForm = () => {
       setFormData(prev => ({
         ...prev,
         structureId: structure.id,
-        structureRaisonSociale: structure.nom || '',
+        structureRaisonSociale: structure.raisonSociale || '',
         structureSiret: structure.siret || '',
         structureAdresse: structure.adresse || '',
         structureCodePostal: structure.codePostal || '',

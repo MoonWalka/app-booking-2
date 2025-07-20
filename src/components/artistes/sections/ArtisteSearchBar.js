@@ -69,7 +69,7 @@ const ArtisteSearchBar = ({
                   <Link to={`/artistes/${artiste.id}`} key={artiste.id} className={styles.searchResultItem}>
                     <div className={styles.searchResultAvatar}>
                       {artiste.photoPrincipale ? (
-                        <img src={artiste.photoPrincipale} alt={artiste.nom} className="img-fluid" />
+                        <img src={artiste.photoPrincipale} alt={artiste.artisteNom} className="img-fluid" />
                       ) : (
                         <div className={styles.placeholderAvatar}>
                           <i className="bi bi-music-note"></i>
@@ -77,7 +77,7 @@ const ArtisteSearchBar = ({
                       )}
                     </div>
                     <div className="text-truncate">
-                      <div className="fw-bold text-truncate">{artiste.nom}</div>
+                      <div className="fw-bold text-truncate">{artiste.artisteNom}</div>
                       {artiste.genre && <div className="small text-muted text-truncate">{artiste.genre}</div>}
                     </div>
                   </Link>

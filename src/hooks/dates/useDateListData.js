@@ -363,6 +363,8 @@ export const useDateListData = () => {
       const enrichedDates = datesData.map(date => {
         const enriched = { ...date };
         
+        // Plus besoin de compatibilité - on utilise uniquement les nouveaux noms !
+        
         // Ajouter les données du lieu s'il existe
         if (date.lieuId) {
           const lieu = lieuxData.find(l => l.id === date.lieuId);

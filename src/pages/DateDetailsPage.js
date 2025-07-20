@@ -185,6 +185,20 @@ function DateDetailsPage({ params = {} }) {
         const ownerId = data.structureId || data.organisateurId;
         setContactId(ownerId);
         
+        // Charger le nom actuel de la structure si on a un ID
+        let dynamicStructureName = data.structureNom || data.organisateurNom || '';
+        if (data.structureId) {
+          try {
+            const structureDoc = await getDoc(doc(db, 'structures', data.structureId));
+            if (structureDoc.exists()) {
+              const structureData = structureDoc.data();
+              dynamicStructureName = structureData.raisonSociale || structureData.nom || dynamicStructureName;
+            }
+          } catch (err) {
+            console.warn('Erreur lors du chargement de la structure:', err);
+          }
+        }
+        
         // Charger les données financières depuis les documents liés
         const financialData = await loadFinancialData(docSnap.id);
         
@@ -196,7 +210,7 @@ function DateDetailsPage({ params = {} }) {
           date: data.date || '',
           artisteNom: data.artisteNom || '',
           projetNom: data.projetNom || '',
-          structureNom: data.structureNom || data.organisateurNom || '',
+          structureNom: dynamicStructureName,
           lieuNom: data.lieuNom || '',
           lieuVille: data.lieuVille || '',
           heureDebut: data.heureDebut || '',

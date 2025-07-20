@@ -346,6 +346,57 @@ export const createEntreprise = async (entrepriseData, userId) => {
     // Créer l'entreprise
     await setDoc(entrepriseRef, entrepriseDataToSave);
     
+    // Créer le groupe admin par défaut
+    const adminGroupRef = doc(db, 'entreprises', entrepriseId, 'groupesPermissions', 'admin');
+    await setDoc(adminGroupRef, {
+      nom: 'Administrateur',
+      description: 'Accès complet à toutes les fonctionnalités',
+      permissions: {
+        artistes: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        contacts: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        dates: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        entreprises: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        collaborateurs: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        contrats: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        factures: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        devis: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        projets: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        taches: { creer: true, modifier: true, voir: true, supprimer: true, historique: true },
+        parametrage: { modifier: true, voir: true },
+        permissions: { modifier: true, voir: true }
+      },
+      collaborateurs: [],
+      dateCreation: serverTimestamp(),
+      derniereModification: serverTimestamp()
+    });
+    
+    // Ajouter le créateur comme collaborateur admin
+    const collaborationConfigRef = doc(db, 'collaborationConfig', entrepriseId);
+    await setDoc(collaborationConfigRef, {
+      collaborateurs: [{
+        id: userId,
+        actif: true,
+        nom: '',
+        prenom: '',
+        email: '',
+        initiales: 'AD',
+        identifiant: 'admin',
+        groupes: ['admin'],
+        entreprises: [],
+        comptesMessagerie: [],
+        artistes: [],
+        partageEmails: {},
+        partageCommentaires: {},
+        partageNotes: {},
+        statut: 'active',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }],
+      entrepriseId: entrepriseId,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+    
     // Ajouter l'entreprise à l'index utilisateur
     const userEntRef = doc(db, 'user_entreprises', userId);
     await setDoc(userEntRef, {
@@ -359,6 +410,7 @@ export const createEntreprise = async (entrepriseData, userId) => {
     }, { merge: true });
     
     console.log('✅ Entreprise créée avec succès:', entrepriseId);
+    console.log('✅ Groupe admin créé par défaut');
     return entrepriseId;
   } catch (error) {
     console.error('❌ Erreur lors de la création de l\'entreprise:', error);
@@ -451,7 +503,7 @@ export const updateEntrepriseSettings = async (entrepriseId, settings) => {
 };
 
 // Générer un code d'invitation pour rejoindre une entreprise
-export const generateInvitationCode = async (entrepriseId, createdBy, role = 'member', expiresInDays = 7) => {
+export const generateInvitationCode = async (entrepriseId, role = 'member', expiresInDays = 7, maxUses = 10) => {
   console.log('🎫 Génération d\'un code d\'invitation pour l\'entreprise:', entrepriseId);
   
   try {
@@ -460,20 +512,27 @@ export const generateInvitationCode = async (entrepriseId, createdBy, role = 'me
     
     const invitationRef = doc(collection(db, 'entreprise_invitations'));
     
-    await setDoc(invitationRef, {
+    const invitationData = {
       code: code,
       entrepriseId: entrepriseId,
       role: role,
-      createdBy: createdBy,
-      status: 'active',
-      maxUses: 10, // Limite d'utilisation du code
+      statut: 'active', // Utiliser 'statut' au lieu de 'status'
+      maxUses: maxUses,
       usedBy: [],
       createdAt: serverTimestamp(),
       expiresAt: Timestamp.fromDate(new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000))
-    });
+    };
+    
+    await setDoc(invitationRef, invitationData);
     
     console.log('✅ Code d\'invitation généré:', code);
-    return code;
+    
+    // Retourner l'objet complet avec l'ID
+    return {
+      id: invitationRef.id,
+      code: code,
+      ...invitationData
+    };
   } catch (error) {
     console.error('❌ Erreur lors de la génération du code d\'invitation:', error);
     throw error;
@@ -489,7 +548,7 @@ export const joinEntreprise = async (invitationCode, userId) => {
     const invitationsQuery = query(
       collection(db, 'entreprise_invitations'),
       where('code', '==', invitationCode.toUpperCase()),
-      where('status', '==', 'active')
+      where('statut', '==', 'active')
     );
     
     const invitationSnapshot = await getDocs(invitationsQuery);

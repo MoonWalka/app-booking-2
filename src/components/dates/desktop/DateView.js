@@ -45,7 +45,7 @@ function DateView({ id: propId }) {
     artiste: artiste ? { 
       id: artiste.id, 
       artisteId: artiste.artisteId, 
-      nom: artiste.nom,
+      artisteNom: artiste.artisteNom,
       allKeys: Object.keys(artiste)
     } : null,
     contact: contact ? { 
@@ -58,7 +58,7 @@ function DateView({ id: propId }) {
     structure: structure ? { 
       id: structure.id, 
       structureId: structure.structureId, 
-      nom: structure.nom,
+      nom: structure.raisonSociale,
       allKeys: Object.keys(structure)
     } : null,
     lieu: lieu ? { 
@@ -229,7 +229,7 @@ function DateView({ id: propId }) {
             {artiste && (
               <EntityCard
                 entityType="artiste"
-                name={artiste.nom || 'Artiste'}
+                name={artiste.artisteNom || 'Artiste'}
                 subtitle="Artiste"
                 onClick={() => {
                   console.log('[DateView] Clic sur artiste:', artiste);
@@ -259,7 +259,7 @@ function DateView({ id: propId }) {
             {structure && (
               <EntityCard
                 entityType="structure"
-                name={structure.nom || 'Structure'}
+                name={structure.raisonSociale || 'Structure'}
                 subtitle="Structure"
                 onClick={() => {
                   console.log('[DateView] Clic sur structure:', structure);

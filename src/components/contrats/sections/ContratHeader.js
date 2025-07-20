@@ -21,7 +21,7 @@ const ContratHeader = ({ contrat, date, artiste, lieu }) => {
   // Construire le sous-titre avec les métadonnées
   const metadataItems = [
     `Créé le ${creationDate}`,
-    artiste?.nom && artiste.nom,
+    artiste?.artisteNom && artiste.artisteNom,
     lieu?.nom && lieu.nom
   ].filter(Boolean);
 

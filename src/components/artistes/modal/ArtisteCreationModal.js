@@ -54,7 +54,7 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
       } else if (editArtiste.projet) {
         // Ancien format : utiliser l'objet projet
         projetData = {
-          nom: editArtiste.projet.nom || '',
+          nom: editArtiste.projet.projetNom || '',
           code: editArtiste.projet.code || ''
         };
       }
@@ -128,13 +128,13 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
         actif: formData.actif,
         auCatalogue: formData.auCatalogue,
         // Stocker les projets en tant qu'array
-        projets: formData.projet.nom ? [{
-          nom: formData.projet.nom,
+        projets: formData.projet.projetNom ? [{
+          nom: formData.projet.projetNom,
           code: formData.projet.code,
           id: Date.now().toString() // ID temporaire
         }] : [],
         // Garder aussi projet pour compatibilité temporaire
-        projet: formData.projet.nom ? formData.projet : null,
+        projet: formData.projet.projetNom ? formData.projet : null,
         entrepriseId: currentEntreprise.id,
         updatedAt: serverTimestamp(),
         status: formData.actif ? 'active' : 'inactive'
@@ -267,8 +267,8 @@ function ArtisteCreationModal({ show, onHide, onCreated, editArtiste = null }) {
               <Form.Control
                 type="text"
                 placeholder="Nom du projet"
-                value={formData.projet.nom}
-                onChange={(e) => handleInputChange('projet.nom', e.target.value)}
+                value={formData.projet.projetNom}
+                onChange={(e) => handleInputChange('projet.projetNom', e.target.value)}
               />
             </div>
             

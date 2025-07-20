@@ -86,7 +86,7 @@ const DateArtistSection = ({
                         className={`dropdown-item ${styles.artisteItem}`}
                         onClick={() => handleSelectArtiste(artiste)}
                       >
-                        <div className={styles.artisteName}>{artiste.nom}</div>
+                        <div className={styles.artisteName}>{artiste.artisteNom}</div>
                         <div className={styles.artisteDetails}>
                           {artiste.genre && <span className={styles.artisteGenre}>{artiste.genre}</span>}
                         </div>
@@ -139,7 +139,7 @@ const DateArtistSection = ({
               <div className="col-md-6">
                 <div className="mb-3">
                   <div className="fw-bold">Nom:</div>
-                  <div>{artiste.nom}</div>
+                  <div>{artiste.artisteNom}</div>
                 </div>
                 <div className="mb-3">
                   <div className="fw-bold">Genre:</div>

@@ -4,7 +4,7 @@ import { Modal, Button, Form, Nav, Tab } from 'react-bootstrap';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { structuresService } from '@/services/contacts/structuresService';
-import AddressInput from '@/components/ui/AddressInput';
+import AddressInput from '@/components/ui/AddressInputUnified';
 import styles from './StructureCreationModal.module.css';
 
 /**
@@ -830,14 +830,13 @@ function StructureCreationModal({ show, onHide, onCreated, editMode = false, ini
                 onChange={(e) => handleInputChange('type', e.target.value)}
               >
                 <option value="">Sélectionner...</option>
-                <option value="Salle">Salle</option>
-                <option value="Festival">Festival</option>
-                <option value="Association">Association</option>
-                <option value="Théâtre">Théâtre</option>
-                <option value="Centre culturel">Centre culturel</option>
-                <option value="Producteur">Producteur</option>
-                <option value="Label">Label</option>
-                <option value="Autre">Autre</option>
+                <option value="salle">Salle</option>
+                <option value="festival">Festival</option>
+                <option value="association">Association</option>
+                <option value="institution">Institution</option>
+                <option value="media">Média</option>
+                <option value="label">Label</option>
+                <option value="autre">Autre</option>
               </Form.Select>
             </div>
             

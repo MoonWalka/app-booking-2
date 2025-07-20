@@ -139,8 +139,8 @@ const ProjetsPage = () => {
       const artiste = artistes.find(a => a.id === id);
       if (artiste) {
         // Afficher le nom complet (prénom + nom)
-        const nomComplet = [artiste.prenom, artiste.nom].filter(Boolean).join(' ');
-        return nomComplet || artiste.nom || id;
+        const nomComplet = [artiste.prenom, artiste.artisteNom].filter(Boolean).join(' ');
+        return nomComplet || artiste.artisteNom || id;
       }
       return id;
     }).filter(Boolean).join(', ');
@@ -287,7 +287,7 @@ const ProjetsPage = () => {
                     <tr key={projet.id}>
                       <td>
                         <div>
-                          <strong>{projet.intitule || projet.nom || 'Sans nom'}</strong>
+                          <strong>{projet.intitule || projet.projetNom || 'Sans nom'}</strong>
                           {projet.description && (
                             <div className="text-muted small">{projet.description}</div>
                           )}
@@ -296,7 +296,7 @@ const ProjetsPage = () => {
                       <td>
                         {getArtistesNames(projet.artistesSelectionnes) || (
                           projet.artiste ? (
-                            <span>{projet.artiste.prenom} {projet.artiste.nom}</span>
+                            <span>{projet.artiste.prenom} {projet.artiste.artisteNom}</span>
                           ) : (
                             <span className="text-muted">Non assigné</span>
                           )

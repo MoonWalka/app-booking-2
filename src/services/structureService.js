@@ -49,7 +49,7 @@ export async function ensureStructureEntity(structureId, structureData = {}, ent
     } else {
       // Structure n'existe pas, la créer
       const newStructureData = {
-        nom: structureData.nom || `Structure ${structureId}`,
+        nom: structureData.raisonSociale || `Structure ${structureId}`,
         type: structureData.type || 'association',
         adresse: structureData.adresse || {},
         contacts: structureData.contacts || {},
@@ -168,7 +168,7 @@ export async function syncStructureToAssociatedContacts(structureId) {
         await updateDoc(progRef, {
           // Données de structure plates avec préfixe
           structureId: structureId,
-          structureNom: structureData.nom,
+          structureNom: structureData.raisonSociale,
           structureType: structureData.type,
           updatedAt: Timestamp.now()
         });

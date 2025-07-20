@@ -23,7 +23,7 @@ const ArtistesTable = ({ artistes, onDelete }) => {
         <div className={styles.artistInfo}>
           <div className={styles.artistName}>
             <i className="bi bi-person-fill me-2 text-primary"></i>
-            {artiste.nom}
+            {artiste.artisteNom}
           </div>
           {artiste.genre && (
             <div className={styles.artistGenre}>{artiste.genre}</div>

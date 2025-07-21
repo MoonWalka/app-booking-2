@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, updateDoc, query, where, getDocs, orderBy, addDoc, deleteDoc } from '@/services/firebase-service';
+import { collection, doc, getDoc, updateDoc, query, where, getDocs, orderBy, addDoc, deleteDoc, serverTimestamp } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import tachesService from '@/services/tachesService';
 
@@ -25,6 +25,23 @@ const devisService = {
       
       const docRef = await addDoc(collection(db, 'devis'), newDevis);
       console.log('✅ Devis créé avec succès - ID:', docRef.id);
+      
+      // Mettre à jour la date pour indiquer qu'elle a un devis
+      if (devisData.dateId) {
+        try {
+          const dateRef = doc(db, 'dates', devisData.dateId);
+          await updateDoc(dateRef, {
+            hasDevis: true,
+            devisId: docRef.id,
+            devisNumero: numero,
+            devisStatut: devisData.statut || 'brouillon',
+            updatedAt: serverTimestamp()
+          });
+          console.log('✅ Date mise à jour avec les infos du devis');
+        } catch (error) {
+          console.error('⚠️ Erreur lors de la mise à jour de la date:', error);
+        }
+      }
       
       // Créer automatiquement une tâche pour le pré-contrat
       try {
@@ -68,6 +85,21 @@ const devisService = {
         ...devisData,
         updatedAt: new Date()
       });
+      
+      // Mettre à jour la date si le statut du devis a changé
+      if (devisData.dateId && devisData.statut) {
+        try {
+          const dateRef = doc(db, 'dates', devisData.dateId);
+          await updateDoc(dateRef, {
+            devisStatut: devisData.statut,
+            updatedAt: serverTimestamp()
+          });
+          console.log('✅ Statut du devis mis à jour dans la date');
+        } catch (error) {
+          console.error('⚠️ Erreur lors de la mise à jour du statut dans la date:', error);
+        }
+      }
+      
       return {
         id: devisId,
         ...devisData,

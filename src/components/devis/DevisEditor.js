@@ -213,8 +213,8 @@ function DevisEditor({ dateId, structureId, devisId }) {
           titreEvenement: dateData.libelle || dateData.titre || '',
           lieuNom: dateData.lieuNom || '',
           lieuVille: dateData.lieuVille || '',
-          structureId: dateData.organisateurId || finalStructureId || '',
-          structureNom: dateData.organisateurNom || ''
+          structureId: dateData.structureId || finalStructureId || '',
+          structureNom: dateData.structureNom || ''
         };
         
         console.log('📦 Données du devis à mettre à jour:', updatedDevisData);

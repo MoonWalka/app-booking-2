@@ -77,7 +77,7 @@ const ArtisteView = ({ id }) => {
       <div className="form-container">
         {/* Header harmonisé avec FormHeader */}
         <FormHeader 
-          title={artiste.nom || 'Artiste'}
+          title={artiste.artisteNom || 'Artiste'}
           icon={<i className="bi bi-music-note-beamed"></i>}
           subtitle={artiste.genre || ''}
           roundedTop={true}
@@ -112,7 +112,7 @@ const ArtisteView = ({ id }) => {
                 {artiste.photoPrincipale ? (
                   <img 
                     src={artiste.photoPrincipale} 
-                    alt={artiste.nom} 
+                    alt={artiste.artisteNom} 
                     style={{ 
                       width: '150px', 
                       height: '150px', 

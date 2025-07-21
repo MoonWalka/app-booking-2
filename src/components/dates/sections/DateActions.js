@@ -268,13 +268,13 @@ const DateActions = ({
         onClick={(e) => {
           e.stopPropagation();
           // Vérifier si la date a une structure associée
-          const structureId = date.structureId || date.organisateurId;
+          const structureId = date.structureId;
           if (structureId && handleViewStructure) {
             handleViewStructure(structureId);
           }
         }}
         title="Fiche structure"
-        disabled={!date.structureId && !date.organisateurId}
+        disabled={!date.structureId}
       >
         <i className="bi bi-building"></i>
       </button>

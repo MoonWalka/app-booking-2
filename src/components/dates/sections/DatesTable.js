@@ -194,7 +194,7 @@ const DatesTable = memo(({
           return dynamicName;
         }
         // Fallback sur les anciennes valeurs
-        return row.organisateurNom || row.organisateur?.raisonSociale || row.structureNom || row.structure?.raisonSociale || '—';
+        return row.structureNom || row.structure?.raisonSociale || '—';
       }
     },
     {

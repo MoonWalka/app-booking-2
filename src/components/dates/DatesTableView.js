@@ -392,7 +392,7 @@ const DatesTableView = ({
                 handleOpenDevis(item.devisId, devisTitle, false);
               } else {
                 const title = `Nouveau Devis - ${item.artisteNom || 'Date'}`;
-                handleOpenDevis(null, title, true, item.id, item.structureId || item.organisateurId);
+                handleOpenDevis(null, title, true, item.id, item.structureId);
               }
             }}
             title={title}

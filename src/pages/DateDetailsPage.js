@@ -181,12 +181,12 @@ function DateDetailsPage({ params = {} }) {
           typeContrat: data.typeContrat
         });
         
-        // Récupérer l'ID du contact propriétaire (structureId ou organisateurId)
-        const ownerId = data.structureId || data.organisateurId;
+        // Récupérer l'ID du contact propriétaire
+        const ownerId = data.structureId;
         setContactId(ownerId);
         
         // Charger le nom actuel de la structure si on a un ID
-        let dynamicStructureName = data.structureNom || data.organisateurNom || '';
+        let dynamicStructureName = data.structureNom || '';
         if (data.structureId) {
           try {
             const structureDoc = await getDoc(doc(db, 'structures', data.structureId));

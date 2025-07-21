@@ -212,13 +212,11 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
         try {
           const structure = await getStructureById(devisData.structureId);
           if (structure) {
-            // Construire l'adresse complète
+            // Construire l'adresse simplifiée (sans département ni région)
             const adresseComplete = [
               structure.adresse,
               structure.suiteAdresse1,
               structure.codePostal && structure.ville ? `${structure.codePostal} ${structure.ville}` : '',
-              structure.departement,
-              structure.region,
               structure.pays || 'France'
             ].filter(Boolean).join('\n');
 
@@ -247,13 +245,11 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
       try {
         const structure = await getStructureById(devisData.structureId);
         if (structure) {
-          // Construire l'adresse complète
+          // Construire l'adresse simplifiée (sans département ni région)
           const adresseComplete = [
             structure.adresse,
             structure.suiteAdresse1,
             structure.codePostal && structure.ville ? `${structure.codePostal} ${structure.ville}` : '',
-            structure.departement,
-            structure.region,
             structure.pays || 'France'
           ].filter(Boolean).join('\n');
 
@@ -314,8 +310,6 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
             structure.adresse,
             structure.suiteAdresse1,
             structure.codePostal && structure.ville ? `${structure.codePostal} ${structure.ville}` : '',
-            structure.departement,
-            structure.region,
             structure.pays || 'France'
           ].filter(Boolean).join('\n')
         });

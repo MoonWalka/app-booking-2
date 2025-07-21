@@ -58,8 +58,13 @@ function DevisPreview({ devisData }) {
               {devisData.contactNom && (
                 <div>À l'attention de : {devisData.contactNom}</div>
               )}
-              <div>Adresse du client</div>
-              <div>Email • Téléphone</div>
+              {devisData.adresseAdministrative && (
+                <div style={{ whiteSpace: 'pre-line' }}>{devisData.adresseAdministrative}</div>
+              )}
+              <div>
+                {devisData.contactEmail || 'Email'} 
+                {devisData.contactTelephone && ` • ${devisData.contactTelephone}`}
+              </div>
             </div>
           </div>
         </div>

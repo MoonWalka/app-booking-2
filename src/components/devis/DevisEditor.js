@@ -201,6 +201,28 @@ function DevisEditor({ dateId, structureId, devisId }) {
         console.log('  - projet:', dateData.projet);
         console.log('  - projetId:', dateData.projetId);
         console.log('🎨 Artiste de la date:', dateData.artisteNom || 'Aucun artiste');
+        console.log('🏢 Structure de la date:', dateData.structureNom || 'Aucune structure');
+        console.log('🆔 Structure ID:', dateData.structureId || 'Aucun ID');
+        
+        // Charger dynamiquement le nom de la structure si on a un ID
+        let structureNomDynamique = '';
+        const structureIdToUse = dateData.structureId || finalStructureId;
+        
+        if (structureIdToUse) {
+          try {
+            console.log('🔄 Chargement dynamique de la structure:', structureIdToUse);
+            const structureDoc = await getDoc(doc(db, 'structures', structureIdToUse));
+            if (structureDoc.exists()) {
+              const structureData = structureDoc.data();
+              structureNomDynamique = structureData.raisonSociale || structureData.nom || '';
+              console.log('✅ Structure chargée dynamiquement:', structureNomDynamique);
+            } else {
+              console.log('❌ Structure non trouvée:', structureIdToUse);
+            }
+          } catch (error) {
+            console.error('Erreur lors du chargement de la structure:', error);
+          }
+        }
         
         // Mettre à jour les données du devis avec les infos de la date
         const updatedDevisData = {
@@ -213,8 +235,8 @@ function DevisEditor({ dateId, structureId, devisId }) {
           titreEvenement: dateData.libelle || dateData.titre || '',
           lieuNom: dateData.lieuNom || '',
           lieuVille: dateData.lieuVille || '',
-          structureId: dateData.structureId || finalStructureId || '',
-          structureNom: dateData.structureNom || ''
+          structureId: structureIdToUse || '',
+          structureNom: structureNomDynamique
         };
         
         console.log('📦 Données du devis à mettre à jour:', updatedDevisData);

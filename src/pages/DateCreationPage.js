@@ -305,8 +305,8 @@ function DateCreationPage({ params = {} }) {
         artisteId: formData.artisteId,
         artisteNom: formData.artisteNom,
         projetNom: formData.projetNom,
-        structureId: formData.structureId,      // On garde uniquement l'ID !
-        // structureNom supprimé - sera chargé dynamiquement
+        structureId: formData.structureId,
+        // structureNom sera chargé dynamiquement
         libelle: formData.libelle,
         montant: 0, // À définir plus tard
         statut: 'En cours',

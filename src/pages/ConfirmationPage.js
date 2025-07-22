@@ -152,28 +152,37 @@ function ConfirmationPage({ dateId: propDateId }) {
             const dateData = dateDoc.data();
             console.log('[ConfirmationPage] Données de la date:', dateData);
             
+            // D'abord vérifier si on a directement artisteNom dans dateData (champ dénormalisé)
+            if (dateData.artisteNom) {
+              artisteNom = dateData.artisteNom;
+              console.log('[ConfirmationPage] Artiste trouvé directement dans dateData.artisteNom:', artisteNom);
+            }
+            
             // Récupérer l'artiste (peut être dans artiste ou artisteId)
-            if (dateData.artisteId) {
+            if (!artisteNom && dateData.artisteId) {
               console.log('[ConfirmationPage] artisteId trouvé:', dateData.artisteId);
               try {
                 const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artisteId));
                 if (artisteDoc.exists()) {
-                  artisteNom = artisteDoc.data().artisteNom || '';
+                  artisteNom = artisteDoc.data().nom || '';
                   console.log('[ConfirmationPage] Nom artiste récupéré:', artisteNom);
                 }
               } catch (error) {
                 console.error('[ConfirmationPage] Erreur récupération artiste:', error);
               }
-            } else if (dateData.artiste) {
+            } else if (!artisteNom && dateData.artiste) {
               if (typeof dateData.artiste === 'string') {
                 // C'est un ID, il faut récupérer l'artiste
                 const artisteDoc = await getDoc(doc(db, 'artistes', dateData.artiste));
                 if (artisteDoc.exists()) {
-                  artisteNom = artisteDoc.data().artisteNom || '';
+                  artisteNom = artisteDoc.data().nom || '';
                 }
               } else if (dateData.artiste.artisteNom) {
                 // C'est déjà un objet avec le nom
                 artisteNom = dateData.artiste.artisteNom;
+              } else if (dateData.artiste.nom) {
+                // Ou avec 'nom'
+                artisteNom = dateData.artiste.nom;
               }
             }
             
@@ -278,7 +287,7 @@ function ConfirmationPage({ dateId: propDateId }) {
             numeroTvaInternational: publicData.tvaIntracom || '',
             codeTps: publicData.tps || '',
             codeTvq: publicData.tvq || '',
-            nomSignataire: publicData.signataire || '',
+            nomSignataire: publicData.nomSignataire || '',
             qualiteSignataire: publicData.qualiteSignataire || '',
             
             // Section Responsable
@@ -306,12 +315,12 @@ function ConfirmationPage({ dateId: propDateId }) {
             
             // Section Négociation
             contratPropose: publicData.contratPropose || 'cession',
-            montantHT: publicData.cachetMinimum || '',
-            moyenPaiement: publicData.modePaiement || 'virement',
+            montantHT: publicData.montantHT || '',
+            moyenPaiement: publicData.moyenPaiement || 'virement',
             devise: publicData.devise || 'EUR',
             acompte: publicData.acompte || '',
             frais: publicData.frais || '',
-            precisionsNego: publicData.precisionNego || '',
+            precisionsNego: publicData.precisionsNegoc || '',
             
             // Section Régie
             nomResponsableRegie: publicData.nomRegie || '',
@@ -397,13 +406,13 @@ function ConfirmationPage({ dateId: propDateId }) {
           salle: preContratAvecDonnees.salle || publicData.salle || '',
           
           // Négociation
-          montantHT: preContratAvecDonnees.montantHT || publicData.cachetMinimum || '',
+          montantHT: preContratAvecDonnees.montantHT || publicData.montantHT || '',
           acompte: preContratAvecDonnees.acompte || publicData.acompte || '',
           frais: preContratAvecDonnees.frais || publicData.frais || '',
           contratPropose: preContratAvecDonnees.contratPropose || publicData.contratPropose || 'cession',
           devise: preContratAvecDonnees.devise || publicData.devise || 'EUR',
           moyenPaiement: preContratAvecDonnees.moyenPaiement || publicData.modePaiement || 'virement',
-          precisionsNego: preContratAvecDonnees.precisionsNego || publicData.precisionNego || '',
+          precisionsNego: preContratAvecDonnees.precisionsNego || publicData.precisionsNegoc || '',
           
           // Régie
           nomResponsableRegie: preContratAvecDonnees.nomResponsableRegie || publicData.nomRegie || '',
@@ -500,22 +509,30 @@ function ConfirmationPage({ dateId: propDateId }) {
       
       alert('Confirmation validée avec succès !');
       
+      // Récupérer l'ID de la structure depuis le précontrat
+      const structureId = preContrat.structureId || mesInfos.structureId;
+      
       // Fermer l'onglet actuel si on est dans un onglet
       const activeTab = getActiveTab && getActiveTab();
       if (activeTab && closeTab) {
         closeTab(activeTab.id);
       }
       
-      // Ouvrir la fiche date dans un nouvel onglet ou naviguer directement
-      if (openTab && dateId) {
-        openTab({
-          type: 'date',
-          params: { dateId },
-          title: 'Date'
-        });
+      // Rediriger vers la fiche contact/structure
+      if (structureId) {
+        if (openTab) {
+          openTab({
+            type: 'contact',
+            params: { id: structureId },
+            title: 'Contact'
+          });
+        } else {
+          // Fallback : naviguer vers la fiche contact
+          navigate(`/contacts/${structureId}`);
+        }
       } else {
-        // Fallback : naviguer vers la fiche date
-        navigate(`/dates/${dateId}`);
+        // Si pas de structure, retourner au tableau de bord
+        navigate('/tableau-de-bord');
       }
     } catch (error) {
       console.error('Erreur lors de la validation:', error);

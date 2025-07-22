@@ -285,42 +285,54 @@ const ContratGeneratorNew = ({
       console.log('[ContratGeneratorNew] Utilisation des données du pré-contrat confirmé');
       
       // Utiliser le mapper pour normaliser les données de l'organisateur
+      // Les données peuvent être soit fusionnées, soit encore dans publicFormData
+      const donneesAUtiliser = preContratData.publicFormData || preContratData;
       const organisateurNormalise = normaliserOrganisateur({
         ...structure,
-        ...preContratData,
+        ...donneesAUtiliser,
         // Le mapper gérera automatiquement toutes les variations
+      });
+      
+      console.log('[ContratGeneratorNew] Données normalisées:', {
+        organisateurNormalise,
+        preContratData,
+        structure,
+        'organisateurNormalise.nom': organisateurNormalise.nom,
+        'preContratData.raisonSociale': preContratData.raisonSociale,
+        'preContratData.publicFormData': preContratData.publicFormData,
+        'Données validées fusionnées?': !preContratData.publicFormData || Object.keys(preContratData).length > 10
       });
       
       setContratData(prev => ({
         ...prev,
         organisateur: {
           ...prev.organisateur,
-          raisonSociale: organisateurNormalise.nom || '',
-          adresse: preContratData.adresse || structure?.adresse || '',
-          suiteAdresse: preContratData.suiteAdresse || '',
+          raisonSociale: organisateurNormalise.raisonSociale || organisateurNormalise.nom || donneesAUtiliser.raisonSociale || '',
+          adresse: donneesAUtiliser.adresse || structure?.adresse || '',
+          suiteAdresse: donneesAUtiliser.suiteAdresse || '',
           ville: organisateurNormalise.ville || '',
           codePostal: organisateurNormalise.codePostal || '',
-          pays: preContratData.pays || structure?.pays || 'France',
-          telephone: preContratData.tel || structure?.telephone || '',
-          fax: preContratData.fax || '',
-          email: preContratData.email || structure?.email || '',
+          pays: donneesAUtiliser.pays || structure?.pays || 'France',
+          telephone: donneesAUtiliser.tel || structure?.telephone || '',
+          fax: donneesAUtiliser.fax || '',
+          email: donneesAUtiliser.email || structure?.email || '',
           siret: organisateurNormalise.siret || '',
-          site: preContratData.site || structure?.siteWeb || '',
+          site: donneesAUtiliser.site || structure?.siteWeb || '',
           signataire: organisateurNormalise.signataire || '',
           qualite: organisateurNormalise.qualiteSignataire || '',
-          numeroTva: preContratData.numeroTvaIntracommunautaire || '',
-          codeApe: preContratData.codeActivite || '',
-          numeroLicence: preContratData.numeroLicence || ''
+          numeroTva: donneesAUtiliser.numeroTvaIntracommunautaire || '',
+          codeApe: donneesAUtiliser.codeActivite || '',
+          numeroLicence: donneesAUtiliser.numeroLicence || ''
         },
         negociation: {
           ...prev.negociation,
-          montantNet: preContratData.montantHT || date?.montant || 0,
-          montantBrut: preContratData.montantHT || date?.montant || 0,
+          montantNet: donneesAUtiliser.montantHT || date?.montant || 0,
+          montantBrut: donneesAUtiliser.montantHT || date?.montant || 0,
           tauxTva: 0, // Sera calculé depuis les prestations
           montantTva: 0, // Sera calculé après
           montantTTC: 0, // Sera calculé après
-          contratType: preContratData.contratPropose || 'cession',
-          devise: preContratData.devise || 'EUR',
+          contratType: donneesAUtiliser.contratPropose || 'cession',
+          devise: donneesAUtiliser.devise || 'EUR',
           moyenPaiement: preContratData.moyenPaiement || 'virement',
           acompte: preContratData.acompte || '',
           frais: preContratData.frais || ''
@@ -1957,8 +1969,8 @@ const ContratGeneratorNew = ({
                       </div>
                       <div className="mb-3">
                         <h6>Structure organisatrice</h6>
-                        <p className="small mb-1"><strong>Nom:</strong> {preContratData.structure?.nom || 'Non défini'}</p>
-                        <p className="small mb-1"><strong>Signataire:</strong> {preContratData.signataire?.nom || 'Non défini'}</p>
+                        <p className="small mb-1"><strong>Nom:</strong> {preContratData.raisonSociale || preContratData.structureNom || 'Non défini'}</p>
+                        <p className="small mb-1"><strong>Signataire:</strong> {preContratData.signataire || preContratData.nomSignataire || 'Non défini'}</p>
                       </div>
                       <div className="mb-3">
                         <h6>Négociation</h6>

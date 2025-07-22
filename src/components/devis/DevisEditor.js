@@ -170,7 +170,7 @@ function DevisEditor({ dateId, structureId, devisId }) {
     };
 
     loadDevis();
-  }, [finalDevisId, devisData, currentEntreprise?.id, currentUser]);
+  }, [finalDevisId]);
 
   // Charger les données du date si dateId fourni
   useEffect(() => {

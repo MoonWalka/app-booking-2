@@ -20,23 +20,28 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
       return {};
     }
     
-    // Debug détaillé des champs d'adresse
-    console.log('[PreContratFormPublic] mapExistingData - Champs adresse:', {
+    // Debug détaillé des champs critiques
+    console.log('[PreContratFormPublic] mapExistingData - Champs critiques:', {
+      'data.raisonSociale': data.raisonSociale,
       'data.adresse': data.adresse,
       'data.suiteAdresse': data.suiteAdresse,
       'data.cp': data.cp,
       'data.ville': data.ville,
       'data.pays': data.pays,
-      'type de data.adresse': typeof data.adresse
+      'data.tel': data.tel,
+      'data.montantHT': data.montantHT,
+      'data.moyenPaiement': data.moyenPaiement
     });
     
     // Si publicFormData existe, regarder dedans aussi
     if (data.publicFormData) {
       console.log('[PreContratFormPublic] mapExistingData - publicFormData trouvé:', data.publicFormData);
-      console.log('[PreContratFormPublic] mapExistingData - Adresse dans publicFormData:', {
+      console.log('[PreContratFormPublic] mapExistingData - Données dans publicFormData:', {
+        'publicFormData.raisonSociale': data.publicFormData.raisonSociale,
         'publicFormData.adresse': data.publicFormData.adresse,
         'publicFormData.cp': data.publicFormData.cp,
-        'publicFormData.ville': data.publicFormData.ville
+        'publicFormData.ville': data.publicFormData.ville,
+        'publicFormData.montantHT': data.publicFormData.montantHT
       });
     }
     
@@ -54,21 +59,21 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
       
       // Négociation
       contratPropose: data.contratPropose || '',
-      cachetMinimum: data.montant || '',
-      modePaiement: data.modePaiement || '',
+      cachetMinimum: data.montantHT || '', // Correction: montantHT au lieu de montant
+      modePaiement: data.moyenPaiement || '', // Correction: moyenPaiement au lieu de modePaiement
       devise: data.devise || 'EUR',
       acompte: data.acompte || '',
       frais: data.frais || '',
-      precisionNego: data.precisionNego || '',
+      precisionNego: data.precisionsNegoc || '', // Correction: precisionsNegoc au lieu de precisionNego
       
       // Organisateur
-      raisonSociale: data.structureNom || '',
+      raisonSociale: data.raisonSociale || '', // Correction: raisonSociale au lieu de structureNom
       adresseOrga: data.adresse || '',
       suiteAdresseOrga: data.suiteAdresse || '',
-      codePostalOrga: data.codePostal || '',
+      codePostalOrga: data.cp || '', // Correction: cp au lieu de codePostal
       villeOrga: data.ville || '',
       paysOrga: data.pays || 'France',
-      telOrga: data.telephone || '',
+      telOrga: data.tel || '', // Correction: tel au lieu de telephone
       faxOrga: data.fax || '',
       emailOrga: data.email || '',
       siteWebOrga: data.siteWeb || '',
@@ -76,21 +81,21 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
       codeAPE: data.codeAPE || '',
       tvaIntracom: data.tvaIntracom || '',
       licences: data.licence || '',
-      signataire: data.signataire || '',
+      signataire: data.nomSignataire || '', // Correction: nomSignataire au lieu de signataire
       qualiteSignataire: data.qualiteSignataire || '',
       
       // Régie
-      nomRegie: data.nomRegie || '',
-      emailRegie: data.emailRegie || '',
-      telRegie: data.telRegie || '',
-      mobileRegie: data.mobileRegie || '',
-      horairesRegie: data.horairesRegie || '',
+      nomRegie: data.responsableRegie || '', // Correction: responsableRegie au lieu de nomRegie
+      emailRegie: data.emailProRegie || '', // Correction: emailProRegie au lieu de emailRegie
+      telRegie: data.telProRegie || '', // Correction: telProRegie au lieu de telRegie
+      mobileRegie: data.mobileProRegie || '', // Correction: mobileProRegie au lieu de mobileRegie
+      horairesRegie: data.horaires || '', // Correction: horaires au lieu de horairesRegie
       
       // Promo
-      nomPromo: data.nomPromo || '',
-      emailPromo: data.emailPromo || '',
-      telPromo: data.telPromo || '',
-      mobilePromo: data.mobilePromo || '',
+      nomPromo: data.responsablePromo || '', // Correction: responsablePromo au lieu de nomPromo
+      emailPromo: data.emailProPromo || '', // Correction: emailProPromo au lieu de emailPromo
+      telPromo: data.telProPromo || '', // Correction: telProPromo au lieu de telPromo
+      mobilePromo: data.mobileProPromo || '', // Correction: mobileProPromo au lieu de mobilePromo
       demandePromo: data.demandePromo || '',
       
       // Autres
@@ -368,13 +373,14 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
 
           <div className={styles.grid}>
             <div className={styles.fieldGroup}>
+              <label htmlFor="adresseSalle">Adresse</label>
               <AddressInput
-                label="Adresse"
                 value={formData.adresseSalle}
                 onChange={(e) => handleChange({ target: { name: 'adresseSalle', value: e.target.value } })}
                 onAddressSelected={handleSalleAddressSelected}
                 placeholder="Commencez à taper pour rechercher une adresse..."
                 className={styles.addressInput}
+                name="adresseSalle"
               />
             </div>
             <div className={styles.fieldGroup}>
@@ -569,13 +575,14 @@ const PreContratFormPublic = ({ dateData, entrepriseData, onSubmit, existingData
 
           <div className={styles.grid}>
             <div className={styles.fieldGroup}>
+              <label htmlFor="adresseOrga">Adresse</label>
               <AddressInput
-                label="Adresse"
                 value={formData.adresseOrga}
                 onChange={(e) => handleChange({ target: { name: 'adresseOrga', value: e.target.value } })}
                 onAddressSelected={handleAddressSelected}
                 placeholder="Commencez à taper pour rechercher une adresse..."
                 className={styles.addressInput}
+                name="adresseOrga"
               />
             </div>
             <div className={styles.fieldGroup}>

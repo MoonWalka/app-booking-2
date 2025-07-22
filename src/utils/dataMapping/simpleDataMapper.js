@@ -34,8 +34,9 @@ export function normaliserOrganisateur(data) {
   if (!data) return null;
   
   return {
-    // Mapping des variations courantes
-    nom: data.nom || data.raisonSociale || data.structureNom || '',
+    // Mapping des variations courantes - on cherche dans toutes les variantes possibles
+    nom: data.nom || data.raisonSociale || data.structureNom || data.structureRaisonSociale || '',
+    raisonSociale: data.raisonSociale || data.structureRaisonSociale || data.nom || data.structureNom || '',
     siret: data.siret || data.SIRET || data.numeroSiret || '',
     adresse: data.adresse || data.adresseComplete || '',
     codePostal: data.codePostal || data.cp || '',

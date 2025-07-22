@@ -176,13 +176,18 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
         const collaborateursData = await collaborateurService.getCollaborateursByOrganization(currentEntreprise.id);
         setCollaborateurs(collaborateursData);
         
-        // Charger les contacts (selon la structure si présente)
-        if (devisData.structureId) {
-          const contactsData = await contactServiceRelational.getContactsByStructure(devisData.structureId);
-          setContacts(contactsData);
+        // Charger les contacts
+        const contactsData = await contactServiceRelational.getAllContacts(currentEntreprise.id);
+        // Si une structure est sélectionnée, filtrer les personnes liées à cette structure
+        if (devisData.structureId && contactsData.personnes) {
+          const filteredPersonnes = contactsData.personnes.filter(
+            personne => personne.structureId === devisData.structureId
+          );
+          // Utiliser seulement les personnes filtrées
+          setContacts(filteredPersonnes);
         } else {
-          const contactsData = await contactServiceRelational.getContactsByOrganization(currentEntreprise.id);
-          setContacts(contactsData);
+          // Utiliser toutes les personnes
+          setContacts(contactsData.personnes || []);
         }
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
@@ -454,17 +459,17 @@ function DevisForm({ devisData, setDevisData, onCalculateTotals, readonly = fals
                   <Form.Select
                     value={devisData.contactId || ''}
                     onChange={(e) => {
-                      const selectedContact = contacts.find(c => c.id === e.target.value);
+                      const selectedContact = contacts && contacts.find(c => c.id === e.target.value);
                       setDevisData(prev => ({ 
                         ...prev, 
                         contactId: e.target.value,
                         contactNom: selectedContact ? `${selectedContact.prenom || ''} ${selectedContact.nom || ''}`.trim() : ''
                       }))
                     }}
-                    disabled={readonly || loading || contacts.length === 0}
+                    disabled={readonly || loading || !contacts || contacts.length === 0}
                   >
                     <option value="">Sélectionner un contact</option>
-                    {contacts.map(contact => (
+                    {contacts && contacts.map(contact => (
                       <option key={contact.id} value={contact.id}>
                         {contact.prenom} {contact.nom}
                         {contact.fonction && ` - ${contact.fonction}`}

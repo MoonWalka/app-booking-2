@@ -693,189 +693,262 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
               <h4>Structure</h4>
             </Card.Header>
             <Card.Body>
-              <Row>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Raison sociale :</div>
-                  <div className={styles.labelItem}>Suite adresse :</div>
-                  <div className={styles.labelItem}>Ville :</div>
-                  <div className={styles.labelItem}>Région :</div>
-                  <div className={styles.labelItem}>Tél :</div>
-                  <div className={styles.labelItem}>Email :</div>
-                  <div className={styles.labelItem}>Qualité du signataire :</div>
-                  <div className={styles.labelItem}>Nom responsable admin :</div>
-                  <div className={styles.labelItem}>Email pro :</div>
-                  <div className={styles.labelItem}>Code d'activité :</div>
-                  <div className={styles.labelItem}>N° TVA international :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="text"
-                    value={formData.raisonSociale}
-                    onChange={(e) => handleInputChange('raisonSociale', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.suiteAdresse}
-                    onChange={(e) => handleInputChange('suiteAdresse', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.ville}
-                    onChange={(e) => handleInputChange('ville', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.region}
-                    onChange={(e) => handleInputChange('region', e.target.value)}
-                  />
-                  <Form.Control
-                    type="tel"
-                    value={formData.tel}
-                    onChange={(e) => handleInputChange('tel', e.target.value)}
-                  />
-                  <Form.Control
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                  />
-                  <Form.Select
-                    value={formData.qualiteSignataire}
-                    onChange={(e) => handleInputChange('qualiteSignataire', e.target.value)}
-                  >
-                    <option value="">Sélectionner...</option>
-                    <option value="Directeur">Directeur</option>
-                    <option value="Gérant">Gérant</option>
-                    <option value="Président">Président</option>
-                    <option value="Autre">Autre</option>
-                  </Form.Select>
-                  <Form.Select
-                    value={formData.nomResponsableAdminId}
-                    disabled={loadingResponsables}
-                    onChange={(e) => {
-                      const selectedId = e.target.value;
-                      const selectedResponsable = responsablesAdmin.find(r => r.id === selectedId);
-                      
-                      if (selectedResponsable) {
-                        handleInputChange('nomResponsableAdminId', selectedId);
-                        handleInputChange('nomResponsableAdmin', selectedResponsable.nom);
-                        handleInputChange('emailPro', selectedResponsable.email);
-                        handleInputChange('telPro', selectedResponsable.telephone);
-                      } else {
-                        handleInputChange('nomResponsableAdminId', '');
-                        handleInputChange('nomResponsableAdmin', '');
-                        handleInputChange('emailPro', '');
-                        handleInputChange('telPro', '');
-                      }
-                    }}
-                  >
-                    <option value="">
-                      {loadingResponsables ? 'Chargement...' : 
-                       responsablesAdmin.length === 0 ? 'Aucun responsable trouvé' : 
-                       'Sélectionner un responsable...'}
-                    </option>
-                    {responsablesAdmin.map((responsable) => (
-                      <option key={responsable.id} value={responsable.id}>
-                        {responsable.nom} {responsable.fonction && `(${responsable.fonction})`}
+              <Form>
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Raison sociale :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.raisonSociale}
+                      onChange={(e) => handleInputChange('raisonSociale', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Adresse :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.adresse}
+                      onChange={(e) => handleInputChange('adresse', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Suite adresse :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.suiteAdresse}
+                      onChange={(e) => handleInputChange('suiteAdresse', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">CP :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.cp}
+                      onChange={(e) => handleInputChange('cp', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Ville :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.ville}
+                      onChange={(e) => handleInputChange('ville', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Pays :</label>
+                  <Col md={4}>
+                    <Form.Select
+                      value={formData.pays}
+                      onChange={(e) => handleInputChange('pays', e.target.value)}
+                    >
+                      <option value="France">France</option>
+                      <option value="Belgique">Belgique</option>
+                      <option value="Suisse">Suisse</option>
+                      <option value="Autre">Autre</option>
+                    </Form.Select>
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Région :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.region}
+                      onChange={(e) => handleInputChange('region', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Département :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.departement}
+                      onChange={(e) => handleInputChange('departement', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Tél :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.tel}
+                      onChange={(e) => handleInputChange('tel', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Fax :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.fax}
+                      onChange={(e) => handleInputChange('fax', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Email :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Site :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="url"
+                      value={formData.siteWeb}
+                      onChange={(e) => handleInputChange('siteWeb', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Qualité du signataire :</label>
+                  <Col md={4}>
+                    <Form.Select
+                      value={formData.qualiteSignataire}
+                      onChange={(e) => handleInputChange('qualiteSignataire', e.target.value)}
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="Directeur">Directeur</option>
+                      <option value="Gérant">Gérant</option>
+                      <option value="Président">Président</option>
+                      <option value="Autre">Autre</option>
+                    </Form.Select>
+                  </Col>
+                  <label className="col-md-2 col-form-label">Nom du signataire :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.nomSignataire}
+                      onChange={(e) => handleInputChange('nomSignataire', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Nom responsable admin :</label>
+                  <Col md={4}>
+                    <Form.Select
+                      value={formData.nomResponsableAdminId}
+                      disabled={loadingResponsables}
+                      onChange={(e) => {
+                        const selectedId = e.target.value;
+                        const selectedResponsable = responsablesAdmin.find(r => r.id === selectedId);
+                        
+                        if (selectedResponsable) {
+                          handleInputChange('nomResponsableAdminId', selectedId);
+                          handleInputChange('nomResponsableAdmin', selectedResponsable.nom);
+                          handleInputChange('emailPro', selectedResponsable.email);
+                          handleInputChange('telPro', selectedResponsable.telephone);
+                        } else {
+                          handleInputChange('nomResponsableAdminId', '');
+                          handleInputChange('nomResponsableAdmin', '');
+                          handleInputChange('emailPro', '');
+                          handleInputChange('telPro', '');
+                        }
+                      }}
+                    >
+                      <option value="">
+                        {loadingResponsables ? 'Chargement...' : 
+                         responsablesAdmin.length === 0 ? 'Aucun responsable trouvé' : 
+                         'Sélectionner un responsable...'}
                       </option>
-                    ))}
-                  </Form.Select>
-                  <Form.Control
-                    type="email"
-                    value={formData.emailPro}
-                    onChange={(e) => handleInputChange('emailPro', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.codeActivite}
-                    onChange={(e) => handleInputChange('codeActivite', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.numeroTvaInternational}
-                    onChange={(e) => handleInputChange('numeroTvaInternational', e.target.value)}
-                  />
-                </Col>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Adresse :</div>
-                  <div className={styles.labelItem}>CP :</div>
-                  <div className={styles.labelItem}>Pays :</div>
-                  <div className={styles.labelItem}>Département :</div>
-                  <div className={styles.labelItem}>Fax :</div>
-                  <div className={styles.labelItem}>Nom du signataire :</div>
-                  <div className={styles.labelItem}>Tel pro :</div>
-                  <div className={styles.labelItem}>Mobile pro :</div>
-                  <div className={styles.labelItem}>Siret :</div>
-                  <div className={styles.labelItem}>N° de licence :</div>
-                  <div className={styles.labelItem}>N° TVA intracommunautaire :</div>
-                  <div className={styles.labelItem}>Site :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="text"
-                    value={formData.adresse}
-                    onChange={(e) => handleInputChange('adresse', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.cp}
-                    onChange={(e) => handleInputChange('cp', e.target.value)}
-                  />
-                  <Form.Select
-                    value={formData.pays}
-                    onChange={(e) => handleInputChange('pays', e.target.value)}
-                  >
-                    <option value="France">France</option>
-                    <option value="Belgique">Belgique</option>
-                    <option value="Suisse">Suisse</option>
-                    <option value="Autre">Autre</option>
-                  </Form.Select>
-                  <Form.Control
-                    type="text"
-                    value={formData.departement}
-                    onChange={(e) => handleInputChange('departement', e.target.value)}
-                  />
-                  <Form.Control
-                    type="tel"
-                    value={formData.fax}
-                    onChange={(e) => handleInputChange('fax', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.nomSignataire}
-                    onChange={(e) => handleInputChange('nomSignataire', e.target.value)}
-                  />
-                  <Form.Control
-                    type="tel"
-                    value={formData.telPro}
-                    onChange={(e) => handleInputChange('telPro', e.target.value)}
-                  />
-                  <Form.Control
-                    type="tel"
-                    value={formData.mobilePro}
-                    onChange={(e) => handleInputChange('mobilePro', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.siret}
-                    onChange={(e) => handleInputChange('siret', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.numeroLicence}
-                    onChange={(e) => handleInputChange('numeroLicence', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.numeroTvaIntracommunautaire}
-                    onChange={(e) => handleInputChange('numeroTvaIntracommunautaire', e.target.value)}
-                  />
-                  <Form.Control
-                    type="url"
-                    value={formData.site}
-                    onChange={(e) => handleInputChange('site', e.target.value)}
-                  />
-                </Col>
-              </Row>
+                      {responsablesAdmin.map((responsable) => (
+                        <option key={responsable.id} value={responsable.id}>
+                          {responsable.nom} {responsable.fonction && `(${responsable.fonction})`}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Col>
+                  <label className="col-md-2 col-form-label">Tel pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.telPro}
+                      onChange={(e) => handleInputChange('telPro', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Email pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="email"
+                      value={formData.emailPro}
+                      onChange={(e) => handleInputChange('emailPro', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Mobile pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.mobilePro}
+                      onChange={(e) => handleInputChange('mobilePro', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Code d'activité :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.codeActivite}
+                      onChange={(e) => handleInputChange('codeActivite', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Siret :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.siret}
+                      onChange={(e) => handleInputChange('siret', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">N° TVA international :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.numeroTvaInternational}
+                      onChange={(e) => handleInputChange('numeroTvaInternational', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">TVA intracom. :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.numeroTvaIntracommunautaire}
+                      onChange={(e) => handleInputChange('numeroTvaIntracommunautaire', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">N° de licence :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.numeroLicence}
+                      onChange={(e) => handleInputChange('numeroLicence', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
             </Card.Body>
           </Card>
 
@@ -885,41 +958,46 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
               <h4>Projet</h4>
             </Card.Header>
             <Card.Body>
-              <Row>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Artiste(s) :</div>
-                  <div className={styles.labelItem}>Festival / Evénement :</div>
-                  <div className={styles.labelItem}>Prix des places :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="text"
-                    value={Array.isArray(formData.artistes) ? formData.artistes.join(', ') : ''}
-                    onChange={(e) => handleInputChange('artistes', e.target.value.split(', '))}
-                    placeholder="Séparer par des virgules"
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.festival}
-                    onChange={(e) => handleInputChange('festival', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.prixPlaces}
-                    onChange={(e) => handleInputChange('prixPlaces', e.target.value)}
-                  />
-                </Col>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Projet :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="text"
-                    value={formData.projet}
-                    onChange={(e) => handleInputChange('projet', e.target.value)}
-                  />
-                </Col>
-              </Row>
+              <Form>
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Artiste(s) :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={Array.isArray(formData.artistes) ? formData.artistes.join(', ') : ''}
+                      onChange={(e) => handleInputChange('artistes', e.target.value.split(', '))}
+                      placeholder="Séparer par des virgules"
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Projet :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.projet}
+                      onChange={(e) => handleInputChange('projet', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Festival / Evénement :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.festival}
+                      onChange={(e) => handleInputChange('festival', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Prix des places :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.prixPlaces}
+                      onChange={(e) => handleInputChange('prixPlaces', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
             </Card.Body>
           </Card>
 
@@ -963,88 +1041,105 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
               <h4>Négociation</h4>
             </Card.Header>
             <Card.Body>
-              <Row>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>
+              <Form>
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">
                     Montant HT :
                     {devisData && devisData.montantHT && (
                       <small className="text-muted d-block">(depuis devis)</small>
                     )}
-                  </div>
-                  <div className={styles.labelItem}>Frais :</div>
-                  <div className={styles.labelItem}>Devise :</div>
-                  <div className={styles.labelItem}>Précisions négoc :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="number"
-                    step="0.01"
-                    value={formData.montantHT}
-                    onChange={(e) => handleInputChange('montantHT', e.target.value)}
-                    placeholder={devisData?.montantHT ? `Montant du devis: ${devisData.montantHT} €` : ''}
-                  />
-                  <Form.Control
-                    type="number"
-                    step="0.01"
-                    value={formData.frais}
-                    onChange={(e) => handleInputChange('frais', e.target.value)}
-                  />
-                  <Form.Select
-                    value={formData.devise}
-                    onChange={(e) => handleInputChange('devise', e.target.value)}
-                  >
-                    <option value="EUR">EUR</option>
-                    <option value="USD">USD</option>
-                    <option value="GBP">GBP</option>
-                  </Form.Select>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={formData.precisionsNegoc}
-                    onChange={(e) => handleInputChange('precisionsNegoc', e.target.value)}
-                  />
-                </Col>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Acompte :</div>
-                  <div className={styles.labelItem}>Contrat proposé :</div>
-                  <div className={styles.labelItem}>Moyen de paiement :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Select
-                    value={formData.acompte}
-                    onChange={(e) => handleInputChange('acompte', e.target.value)}
-                  >
-                    <option value="">Sélectionner un acompte...</option>
-                    {[10, 20, 30, 40, 50, 60, 70, 80, 90].map(percentage => {
-                      const montantHT = parseFloat(formData.montantHT) || 0;
-                      const montantAcompte = (montantHT * percentage / 100).toFixed(2);
-                      return (
-                        <option key={percentage} value={percentage}>
-                          {percentage}% - {montantAcompte} {formData.devise}
-                        </option>
-                      );
-                    })}
-                  </Form.Select>
-                  <Form.Select
-                    value={formData.contratPropose}
-                    onChange={(e) => handleInputChange('contratPropose', e.target.value)}
-                  >
-                    <option value="">Sélectionner...</option>
-                    <option value="cession">Cession</option>
-                    <option value="corealisation">Coréalisation</option>
-                    <option value="location">Location</option>
-                  </Form.Select>
-                  <Form.Select
-                    value={formData.moyenPaiement}
-                    onChange={(e) => handleInputChange('moyenPaiement', e.target.value)}
-                  >
-                    <option value="">Sélectionner...</option>
-                    <option value="Virement">Virement</option>
-                    <option value="Chèque">Chèque</option>
-                    <option value="Espèces">Espèces</option>
-                  </Form.Select>
-                </Col>
-              </Row>
+                  </label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="number"
+                      step="0.01"
+                      value={formData.montantHT}
+                      onChange={(e) => handleInputChange('montantHT', e.target.value)}
+                      placeholder={devisData?.montantHT ? `Montant du devis: ${devisData.montantHT} €` : ''}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Acompte :</label>
+                  <Col md={4}>
+                    <Form.Select
+                      value={formData.acompte}
+                      onChange={(e) => handleInputChange('acompte', e.target.value)}
+                    >
+                      <option value="">Sélectionner un acompte...</option>
+                      {[10, 20, 30, 40, 50, 60, 70, 80, 90].map(percentage => {
+                        const montantHT = parseFloat(formData.montantHT) || 0;
+                        const montantAcompte = (montantHT * percentage / 100).toFixed(2);
+                        return (
+                          <option key={percentage} value={percentage}>
+                            {percentage}% - {montantAcompte} {formData.devise}
+                          </option>
+                        );
+                      })}
+                    </Form.Select>
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Frais :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="number"
+                      step="0.01"
+                      value={formData.frais}
+                      onChange={(e) => handleInputChange('frais', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Contrat proposé :</label>
+                  <Col md={4}>
+                    <Form.Select
+                      value={formData.contratPropose}
+                      onChange={(e) => handleInputChange('contratPropose', e.target.value)}
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="cession">Cession</option>
+                      <option value="corealisation">Coréalisation</option>
+                      <option value="location">Location</option>
+                    </Form.Select>
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Devise :</label>
+                  <Col md={4}>
+                    <Form.Select
+                      value={formData.devise}
+                      onChange={(e) => handleInputChange('devise', e.target.value)}
+                    >
+                      <option value="EUR">EUR</option>
+                      <option value="USD">USD</option>
+                      <option value="GBP">GBP</option>
+                    </Form.Select>
+                  </Col>
+                  <label className="col-md-2 col-form-label">Moyen de paiement :</label>
+                  <Col md={4}>
+                    <Form.Select
+                      value={formData.moyenPaiement}
+                      onChange={(e) => handleInputChange('moyenPaiement', e.target.value)}
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="Virement">Virement</option>
+                      <option value="Chèque">Chèque</option>
+                      <option value="Espèces">Espèces</option>
+                    </Form.Select>
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Précisions négoc :</label>
+                  <Col md={10}>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={formData.precisionsNegoc}
+                      onChange={(e) => handleInputChange('precisionsNegoc', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
             </Card.Body>
           </Card>
 
@@ -1054,53 +1149,68 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
               <h4>Régie</h4>
             </Card.Header>
             <Card.Body>
-              <Row>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Responsable :</div>
-                  <div className={styles.labelItem}>Mobile pro :</div>
-                  <div className={styles.labelItem}>Autres artistes :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="text"
-                    value={formData.responsableRegie}
-                    onChange={(e) => handleInputChange('responsableRegie', e.target.value)}
-                  />
-                  <Form.Control
-                    type="tel"
-                    value={formData.mobileProRegie}
-                    onChange={(e) => handleInputChange('mobileProRegie', e.target.value)}
-                  />
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={formData.autresArtistes}
-                    onChange={(e) => handleInputChange('autresArtistes', e.target.value)}
-                  />
-                </Col>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Tel pro :</div>
-                  <div className={styles.labelItem}>Email pro :</div>
-                  <div className={styles.labelItem}>Horaires :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="tel"
-                    value={formData.telProRegie}
-                    onChange={(e) => handleInputChange('telProRegie', e.target.value)}
-                  />
-                  <Form.Control
-                    type="email"
-                    value={formData.emailProRegie}
-                    onChange={(e) => handleInputChange('emailProRegie', e.target.value)}
-                  />
-                  <Form.Control
-                    type="text"
-                    value={formData.horaires}
-                    onChange={(e) => handleInputChange('horaires', e.target.value)}
-                  />
-                </Col>
-              </Row>
+              <Form>
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Responsable :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.responsableRegie}
+                      onChange={(e) => handleInputChange('responsableRegie', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Tel pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.telProRegie}
+                      onChange={(e) => handleInputChange('telProRegie', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Mobile pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.mobileProRegie}
+                      onChange={(e) => handleInputChange('mobileProRegie', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Email pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="email"
+                      value={formData.emailProRegie}
+                      onChange={(e) => handleInputChange('emailProRegie', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Horaires :</label>
+                  <Col md={10}>
+                    <Form.Control
+                      type="text"
+                      value={formData.horaires}
+                      onChange={(e) => handleInputChange('horaires', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Autres artistes :</label>
+                  <Col md={10}>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={formData.autresArtistes}
+                      onChange={(e) => handleInputChange('autresArtistes', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
             </Card.Body>
           </Card>
 
@@ -1110,54 +1220,69 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
               <h4>Promo</h4>
             </Card.Header>
             <Card.Body>
-              <Row>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Responsable :</div>
-                  <div className={styles.labelItem}>Mobile pro :</div>
-                  <div className={styles.labelItem}>Demande promo :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="text"
-                    value={formData.responsablePromo}
-                    onChange={(e) => handleInputChange('responsablePromo', e.target.value)}
-                  />
-                  <Form.Control
-                    type="tel"
-                    value={formData.mobileProPromo}
-                    onChange={(e) => handleInputChange('mobileProPromo', e.target.value)}
-                  />
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={formData.demandePromo}
-                    onChange={(e) => handleInputChange('demandePromo', e.target.value)}
-                  />
-                </Col>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Tel pro :</div>
-                  <div className={styles.labelItem}>Email pro :</div>
-                  <div className={styles.labelItem}>Adresse envoi promo :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    type="tel"
-                    value={formData.telProPromo}
-                    onChange={(e) => handleInputChange('telProPromo', e.target.value)}
-                  />
-                  <Form.Control
-                    type="email"
-                    value={formData.emailProPromo}
-                    onChange={(e) => handleInputChange('emailProPromo', e.target.value)}
-                  />
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={formData.adresseEnvoiPromo}
-                    onChange={(e) => handleInputChange('adresseEnvoiPromo', e.target.value)}
-                  />
-                </Col>
-              </Row>
+              <Form>
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Responsable :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="text"
+                      value={formData.responsablePromo}
+                      onChange={(e) => handleInputChange('responsablePromo', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Tel pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.telProPromo}
+                      onChange={(e) => handleInputChange('telProPromo', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Mobile pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="tel"
+                      value={formData.mobileProPromo}
+                      onChange={(e) => handleInputChange('mobileProPromo', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Email pro :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      type="email"
+                      value={formData.emailProPromo}
+                      onChange={(e) => handleInputChange('emailProPromo', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Adresse envoi promo :</label>
+                  <Col md={10}>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={formData.adresseEnvoiPromo}
+                      onChange={(e) => handleInputChange('adresseEnvoiPromo', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Demande promo :</label>
+                  <Col md={10}>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={formData.demandePromo}
+                      onChange={(e) => handleInputChange('demandePromo', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
             </Card.Body>
           </Card>
 
@@ -1167,30 +1292,28 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
               <h4>Autres infos</h4>
             </Card.Header>
             <Card.Body>
-              <Row>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Réceptif :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    value={formData.receptif}
-                    onChange={(e) => handleInputChange('receptif', e.target.value)}
-                  />
-                </Col>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Divers :</div>
-                </Col>
-                <Col md={5} className={styles.fieldColumn}>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    value={formData.divers}
-                    onChange={(e) => handleInputChange('divers', e.target.value)}
-                  />
-                </Col>
-              </Row>
+              <Form>
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Réceptif :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      as="textarea"
+                      rows={4}
+                      value={formData.receptif}
+                      onChange={(e) => handleInputChange('receptif', e.target.value)}
+                    />
+                  </Col>
+                  <label className="col-md-2 col-form-label">Divers :</label>
+                  <Col md={4}>
+                    <Form.Control
+                      as="textarea"
+                      rows={4}
+                      value={formData.divers}
+                      onChange={(e) => handleInputChange('divers', e.target.value)}
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
             </Card.Body>
           </Card>
 
@@ -1203,20 +1326,20 @@ const PreContratGenerator = ({ date, contact, artiste, lieu, structure }) => {
               <p className="text-muted mb-3">
                 Sélectionnez les personnes qui recevront le pré-contrat pour validation.
               </p>
-              <Row>
-                <Col md={1} className={styles.labelColumn}>
-                  <div className={styles.labelItem}>Adresses email :</div>
-                </Col>
-                <Col md={11} className={styles.fieldColumn}>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    placeholder="Séparer les adresses par des virgules"
-                    value={formData.destinataires.join(', ')}
-                    onChange={(e) => handleInputChange('destinataires', e.target.value.split(', '))}
-                  />
-                </Col>
-              </Row>
+              <Form>
+                <Form.Group as={Row} className="mb-3">
+                  <label className="col-md-2 col-form-label">Adresses email :</label>
+                  <Col md={10}>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      placeholder="Séparer les adresses par des virgules"
+                      value={formData.destinataires.join(', ')}
+                      onChange={(e) => handleInputChange('destinataires', e.target.value.split(', '))}
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
             </Card.Body>
           </Card>
         </div>

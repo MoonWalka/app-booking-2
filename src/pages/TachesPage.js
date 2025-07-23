@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { collection, addDoc, updateDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTaches } from '@/hooks/taches/useTaches';
+import { useInteractiveTour } from '@/hooks/useInteractiveTour';
 import Modal from '@/components/common/Modal';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
@@ -18,6 +19,7 @@ function TachesPage() {
   const { currentEntreprise } = useEntreprise();
   const { currentUser } = useAuth();
   const { taches, loading, error, refreshTaches } = useTaches();
+  const { startInteractiveTour } = useInteractiveTour();
   
   const [showModal, setShowModal] = useState(false);
   const [selectedTache, setSelectedTache] = useState(null);
@@ -61,6 +63,93 @@ function TachesPage() {
       return matchesSearch && matchesStatut && matchesImportant;
     });
   }, [taches, filters]);
+
+  // Fonction pour lancer le tour général de l'app
+  const launchAppTour = () => {
+    // Fonction pour déployer un menu
+    const expandMenu = (menuName) => {
+      const menuElement = document.querySelector(`[data-menu="${menuName}"]`);
+      if (menuElement) {
+        menuElement.click();
+        return new Promise(resolve => setTimeout(resolve, 300));
+      }
+      return Promise.resolve();
+    };
+
+    const tourSteps = [
+      {
+        intro: `
+          <div style="text-align: center; padding: 20px;">
+            <h2 style="margin-bottom: 20px;">👋 Bienvenue dans TourCraft !</h2>
+            <p style="font-size: 16px; margin-bottom: 20px;">Découvrons ensemble comment utiliser l'application pour gérer vos concerts et événements.</p>
+            <p style="color: #6c757d;">Ce tour va vous montrer les fonctionnalités principales.</p>
+          </div>
+        `
+      },
+      {
+        element: '[data-menu="collaboration"]',
+        intro: '<strong>🤝 Collaboration</strong><br/>Ici vous trouvez vos tâches, mails et notes. Cliquez pour ouvrir le menu.',
+        position: 'right',
+        beforeShow: async () => {
+          await expandMenu('collaboration');
+        }
+      },
+      {
+        element: '[data-menu="contact"]',
+        intro: '<strong>📋 Contacts</strong><br/>Gérez tous vos contacts : structures, personnes, salles...',
+        position: 'right',
+        beforeShow: async () => {
+          await expandMenu('contact');
+        }
+      },
+      {
+        element: '[data-menu="booking"]',
+        intro: '<strong>🎵 Booking</strong><br/>Le cœur de l\'application : créez et gérez vos dates de concerts',
+        position: 'right',
+        beforeShow: async () => {
+          await expandMenu('booking');
+        }
+      },
+      {
+        element: '[data-menu="admin"]',
+        intro: '<strong>📊 Admin</strong><br/>Tableau de bord, contrats, factures et devis',
+        position: 'right', 
+        beforeShow: async () => {
+          await expandMenu('admin');
+        }
+      },
+      {
+        intro: `
+          <div style="text-align: center; padding: 20px;">
+            <h3>🎯 Le workflow TourCraft</h3>
+            <div style="margin: 20px 0; text-align: left; max-width: 400px; margin: 0 auto;">
+              <p><strong>1.</strong> Créez une date dans <strong>Booking > Nouvelle date</strong></p>
+              <p><strong>2.</strong> Générez un devis → niveau passe automatiquement à "Option"</p>
+              <p><strong>3.</strong> Envoyez le pré-contrat → niveau passe à "Confirmé"</p>
+              <p><strong>4.</strong> Rédigez le contrat final</p>
+              <p><strong>5.</strong> Créez la facture</p>
+            </div>
+            <p style="color: #28a745; font-weight: bold; margin-top: 20px;">✅ Les tâches se créent automatiquement à chaque étape !</p>
+          </div>
+        `
+      },
+      {
+        intro: `
+          <div style="text-align: center; padding: 20px;">
+            <h3>💡 Conseils</h3>
+            <div style="text-align: left; max-width: 400px; margin: 20px auto;">
+              <p>• Les <strong>tâches</strong> sont dans <strong>Collaboration > Tâches</strong></p>
+              <p>• Le <strong>tableau de bord</strong> est dans <strong>Admin > Tableau de bord</strong></p>
+              <p>• Certaines fonctionnalités marquées 🚧 sont en développement</p>
+            </div>
+            <p style="margin-top: 30px;">Bonne utilisation de TourCraft ! 🎵</p>
+          </div>
+        `
+      }
+    ];
+
+    startInteractiveTour(tourSteps);
+  };
 
   // Calculer les statistiques
   const stats = useMemo(() => {
@@ -156,7 +245,7 @@ function TachesPage() {
       }
 
       setShowModal(false);
-      refreshTaches();
+      // refreshTaches() supprimé - onSnapshot détecte automatiquement les changements
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
       alert('Erreur lors de la sauvegarde de la tâche');
@@ -170,7 +259,8 @@ function TachesPage() {
 
     try {
       await deleteDoc(doc(db, 'taches', tacheId));
-      refreshTaches();
+      // Ne pas appeler refreshTaches car onSnapshot détecte automatiquement la suppression
+      // refreshTaches met loading à true sans jamais le remettre à false
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
       alert('Erreur lors de la suppression de la tâche');
@@ -186,7 +276,7 @@ function TachesPage() {
         dateTerminee: newStatut === 'termine' ? serverTimestamp() : null,
         updatedAt: serverTimestamp()
       });
-      refreshTaches();
+      // refreshTaches() supprimé - onSnapshot détecte automatiquement les changements
     } catch (error) {
       console.error('Erreur lors de la mise à jour du statut:', error);
       alert('Erreur lors de la mise à jour du statut');
@@ -199,7 +289,7 @@ function TachesPage() {
         important: !tache.important,
         updatedAt: serverTimestamp()
       });
-      refreshTaches();
+      // refreshTaches() supprimé - onSnapshot détecte automatiquement les changements
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'importance:', error);
       alert('Erreur lors de la mise à jour de l\'importance');
@@ -255,13 +345,24 @@ function TachesPage() {
     <div className={styles.container}>
       {/* Header de la page */}
       <div className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>
-          <i className="bi bi-check2-square me-3"></i>
-          Gestion des Tâches
-        </h1>
-        <p className={styles.pageSubtitle}>
-          Organisez et suivez vos tâches et projets
-        </p>
+        <div>
+          <h1 className={styles.pageTitle}>
+            <i className="bi bi-check2-square me-3"></i>
+            Gestion des Tâches
+          </h1>
+          <p className={styles.pageSubtitle}>
+            Organisez et suivez vos tâches et projets
+          </p>
+        </div>
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          onClick={launchAppTour}
+          title="Lancer le tour guidé de l'application"
+        >
+          <i className="bi bi-question-circle me-2"></i>
+          Aide
+        </Button>
       </div>
 
       {/* Statistiques */}

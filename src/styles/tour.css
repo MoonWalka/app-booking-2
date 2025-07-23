@@ -1,0 +1,178 @@
+/* Styles personnalisés pour le tour guidé TourCraft */
+
+/* Tooltip principal */
+.tourcraft-tooltip {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 450px;
+  max-width: 600px;
+}
+
+/* Surbrillance des éléments */
+.tourcraft-highlight {
+  border: 3px solid #007bff;
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* Header du tooltip */
+.introjs-tooltip-header {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 12px 12px 0 0;
+}
+
+/* Contenu du tooltip */
+.introjs-tooltiptext {
+  padding: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Zone des boutons */
+.introjs-tooltipbuttons {
+  padding: 15px 20px;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Boutons */
+.introjs-button {
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.introjs-nextbutton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.introjs-nextbutton:hover {
+  background-color: #0056b3;
+  transform: translateX(2px);
+}
+
+.introjs-prevbutton {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #dee2e6;
+}
+
+.introjs-skipbutton {
+  color: #6c757d;
+  font-weight: normal;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+/* Progress bar */
+.introjs-progress {
+  background-color: #e9ecef;
+  height: 4px;
+}
+
+.introjs-progressbar {
+  background-color: #007bff;
+  transition: width 0.3s ease;
+}
+
+/* Bullets */
+.introjs-bullets ul li a {
+  width: 8px;
+  height: 8px;
+  border: 2px solid #007bff;
+  background: transparent;
+}
+
+.introjs-bullets ul li a.active {
+  background: #007bff;
+}
+
+/* Overlay */
+.introjs-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Numéro d'étape */
+.introjs-helperNumberLayer {
+  background: #007bff;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  font-weight: bold;
+}
+
+/* Badge pour les zones en développement */
+.tour-wip {
+  display: inline-block;
+  background: #ffc107;
+  color: #000;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.tour-wip::before {
+  content: "🚧 ";
+  margin-right: 4px;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+.introjs-fixedTooltip .introjs-helperLayer {
+  animation: pulse 2s infinite;
+}
+
+/* Fix pour le format du tooltip */
+.introjs-tooltip {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Fix pour centrer correctement */
+.introjs-floating {
+  margin: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tourcraft-tooltip {
+    min-width: auto;
+    max-width: 90vw;
+    margin: 10px;
+  }
+  
+  .introjs-tooltiptext {
+    font-size: 14px;
+    padding: 15px;
+  }
+  
+  .introjs-tooltipbuttons {
+    flex-wrap: wrap;
+  }
+}

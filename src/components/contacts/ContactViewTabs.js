@@ -6,6 +6,7 @@ import { useContactModals } from '@/context/ContactModalsContext';
 import { personnesService } from '@/services/contacts/personnesService';
 import { datesService } from '@/services/dateService';
 import { getPreContratsByDate } from '@/services/preContratService';
+import contratService from '@/services/contratService';
 import { useAuth } from '@/context/AuthContext';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import EntityViewTabs from '@/components/common/EntityViewTabs';
@@ -556,10 +557,13 @@ function ContactViewTabs({ id, viewType = null }) {
       
       console.log(`📊 [ContactViewTabs] TOTAL: ${dates.length} dates trouvées avant enrichissement`);
       
-      // Enrichir les dates avec les données de pré-contrat
+      // Enrichir les dates avec les données de pré-contrat et contrat
       const datesWithPreContrat = await Promise.all(
         (dates || []).map(async (date) => {
+          let enrichedDate = { ...date };
+          
           try {
+            // 1. Charger les données de pré-contrat
             const preContrats = await getPreContratsByDate(date.id);
             if (preContrats && preContrats.length > 0) {
               // Prendre le pré-contrat confirmé en priorité, sinon le plus récent
@@ -581,24 +585,40 @@ function ContactViewTabs({ id, viewType = null }) {
                 return dateB - dateA;
               })[0];
               
-              // Ajouter les infos de pré-contrat à la date
-              return {
-                ...date,
+              // Ajouter les infos de pré-contrat
+              enrichedDate = {
+                ...enrichedDate,
                 preContratId: latestPreContrat.id,
                 publicFormData: latestPreContrat.publicFormData,
                 publicFormCompleted: latestPreContrat.publicFormCompleted,
-                confirmationValidee: latestPreContrat.confirmationValidee,
-                // Debug: log pour vérifier les valeurs
-                ...(console.log('[ContactViewTabs] PreContrat pour date', date.id, ':', {
-                  confirmationValidee: latestPreContrat.confirmationValidee,
-                  publicFormDataConfirmation: latestPreContrat.publicFormData?.confirmationValidee
-                }), {})
+                confirmationValidee: latestPreContrat.confirmationValidee
               };
             }
+            
+            // 2. Charger les données de contrat et facture
+            const contrat = await contratService.getContratByDate(date.id);
+            if (contrat) {
+              enrichedDate.contratId = contrat.id;
+              enrichedDate.contratStatus = contrat.status;
+              enrichedDate.contratStatut = contrat.contratStatut;
+              
+              // Si le contrat a une facture
+              if (contrat.factureId) {
+                console.log('[ContactViewTabs] Facture trouvée dans contrat pour date', date.id, ':', {
+                  contratId: contrat.id,
+                  factureId: contrat.factureId,
+                  factureStatus: contrat.factureStatus
+                });
+                enrichedDate.factureId = contrat.factureId;
+                enrichedDate.factureStatus = contrat.factureStatus || 'generated';
+                enrichedDate.hasFacture = true;
+              }
+            }
           } catch (error) {
-            console.error('Erreur chargement pré-contrat pour date', date.id, error);
+            console.error('Erreur chargement données enrichies pour date', date.id, error);
           }
-          return date;
+          
+          return enrichedDate;
         })
       );
       

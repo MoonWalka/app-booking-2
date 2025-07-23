@@ -1,0 +1,1100 @@
+{
+  "timestamp": "2025-07-22T19:45:53.838Z",
+  "systems": {
+    "cache": {
+      "exists": true,
+      "files": [
+        "hooks/common/useCache.js",
+        "services/cacheService.js"
+      ],
+      "features": [
+        "TTL support",
+        "Invalidation",
+        "Namespaces",
+        "TTL support",
+        "Invalidation"
+      ]
+    },
+    "auth": {
+      "exists": true,
+      "files": [
+        "context/AuthContext.js"
+      ],
+      "features": []
+    },
+    "variables": {
+      "files": [
+        "components/contrats/ContratVariable.js",
+        "components/contrats/ContratVariable.module.css",
+        "components/contrats/desktop/ContratVariable.js",
+        "components/contrats/desktop/sections/VariablesPanel.js",
+        "components/contrats/desktop/sections/VariablesPanel.module.css",
+        "components/contrats/sections/ContratVariablesCard.js",
+        "hooks/contrats/contractVariables.js",
+        "hooks/contrats/contractVariablesUnified.js",
+        "styles/base/variables.css",
+        "utils/createDefaultContractTemplate.js",
+        "utils/dataMapping/simpleDataMapper.js",
+        "utils/templateVariables.js"
+      ],
+      "patterns": [
+        {
+          "file": "components/contrats/ContratVariable.js",
+          "pattern": "braces",
+          "count": 4
+        },
+        {
+          "file": "components/contrats/desktop/ContratVariable.js",
+          "pattern": "braces",
+          "count": 4
+        },
+        {
+          "file": "components/contrats/desktop/sections/VariablesPanel.js",
+          "pattern": "brackets",
+          "count": 4
+        },
+        {
+          "file": "components/contrats/desktop/sections/VariablesPanel.js",
+          "pattern": "braces",
+          "count": 14
+        },
+        {
+          "file": "components/contrats/sections/ContratVariablesCard.js",
+          "pattern": "brackets",
+          "count": 2
+        },
+        {
+          "file": "components/contrats/sections/ContratVariablesCard.js",
+          "pattern": "braces",
+          "count": 2
+        },
+        {
+          "file": "hooks/contrats/contractVariables.js",
+          "pattern": "brackets",
+          "count": 2
+        },
+        {
+          "file": "hooks/contrats/contractVariables.js",
+          "pattern": "braces",
+          "count": 104
+        },
+        {
+          "file": "hooks/contrats/contractVariablesUnified.js",
+          "pattern": "brackets",
+          "count": 10
+        },
+        {
+          "file": "hooks/contrats/contractVariablesUnified.js",
+          "pattern": "braces",
+          "count": 10
+        },
+        {
+          "file": "utils/createDefaultContractTemplate.js",
+          "pattern": "brackets",
+          "count": 30
+        },
+        {
+          "file": "utils/createDefaultContractTemplate.js",
+          "pattern": "braces",
+          "count": 2
+        },
+        {
+          "file": "utils/dataMapping/simpleDataMapper.js",
+          "pattern": "brackets",
+          "count": 7
+        },
+        {
+          "file": "utils/dataMapping/simpleDataMapper.js",
+          "pattern": "braces",
+          "count": 7
+        },
+        {
+          "file": "utils/templateVariables.js",
+          "pattern": "brackets",
+          "count": 3
+        },
+        {
+          "file": "utils/templateVariables.js",
+          "pattern": "braces",
+          "count": 28
+        }
+      ]
+    }
+  },
+  "features": {
+    "customHooks": [
+      {
+        "name": "useDeleteArtiste",
+        "file": "hooks/artistes/useDeleteArtiste.js",
+        "features": [
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useSearchAndFilter",
+        "file": "hooks/artistes/useSearchAndFilter.js",
+        "features": []
+      },
+      {
+        "name": "useAddressSearch",
+        "file": "hooks/common/useAddressSearch.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useCache",
+        "file": "hooks/common/useCache.js",
+        "features": [
+          "effects",
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useCompanySearch",
+        "file": "hooks/common/useCompanySearch.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useDebounce",
+        "file": "hooks/common/useDebounce.js",
+        "features": [
+          "state",
+          "effects"
+        ]
+      },
+      {
+        "name": "useEntitySearch",
+        "file": "hooks/common/useEntitySearch.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useFirestoreSubscription",
+        "file": "hooks/common/useFirestoreSubscription.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useFormSubmission",
+        "file": "hooks/common/useFormSubmission.js",
+        "features": [
+          "state",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useGenericEntityDelete",
+        "file": "hooks/common/useGenericEntityDelete.js",
+        "features": [
+          "state",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useGenericEntityDetails",
+        "file": "hooks/common/useGenericEntityDetails.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useGenericEntityForm",
+        "file": "hooks/common/useGenericEntityForm.js",
+        "features": []
+      },
+      {
+        "name": "useGenericEntitySearch",
+        "file": "hooks/common/useGenericEntitySearch.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useGooglePlacesAutocomplete",
+        "file": "hooks/common/useGooglePlacesAutocomplete.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useGooglePlacesAutocompleteNew",
+        "file": "hooks/common/useGooglePlacesAutocompleteNew.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useLocationIQ",
+        "file": "hooks/common/useLocationIQ.js",
+        "features": []
+      },
+      {
+        "name": "useResponsive",
+        "file": "hooks/common/useResponsive.js",
+        "features": [
+          "cache"
+        ]
+      },
+      {
+        "name": "useSafeRelations",
+        "file": "hooks/common/useSafeRelations.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useSearchAndFilter",
+        "file": "hooks/common/useSearchAndFilter.js",
+        "features": [
+          "state",
+          "effects"
+        ]
+      },
+      {
+        "name": "useAddressSearch",
+        "file": "hooks/contacts/useAddressSearch.js",
+        "features": []
+      },
+      {
+        "name": "useCompanySearch",
+        "file": "hooks/contacts/useCompanySearch.js",
+        "features": []
+      },
+      {
+        "name": "useContactActions",
+        "file": "hooks/contacts/useContactActions.js",
+        "features": []
+      },
+      {
+        "name": "useContactActionsRelational",
+        "file": "hooks/contacts/useContactActionsRelational.js",
+        "features": [
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useContactContrats",
+        "file": "hooks/contacts/useContactContrats.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useContactFactures",
+        "file": "hooks/contacts/useContactFactures.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useContactFestivals",
+        "file": "hooks/contacts/useContactFestivals.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useContactSearch",
+        "file": "hooks/contacts/useContactSearch.js",
+        "features": []
+      },
+      {
+        "name": "useContactSearchRelational",
+        "file": "hooks/contacts/useContactSearchRelational.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useContactsRelational",
+        "file": "hooks/contacts/useContactsRelational.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useDeleteContact",
+        "file": "hooks/contacts/useDeleteContact.js",
+        "features": [
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useDeleteContactRelational",
+        "file": "hooks/contacts/useDeleteContactRelational.js",
+        "features": [
+          "state",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useFormSubmission",
+        "file": "hooks/contacts/useFormSubmission.js",
+        "features": []
+      },
+      {
+        "name": "useHistoriqueEchanges",
+        "file": "hooks/contacts/useHistoriqueEchanges.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useLieuSearch",
+        "file": "hooks/contacts/useLieuSearch.js",
+        "features": []
+      },
+      {
+        "name": "useSimpleContactDetails",
+        "file": "hooks/contacts/useSimpleContactDetails.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useContratActions",
+        "file": "hooks/contrats/useContratActions.js",
+        "features": [
+          "state",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useContratDetails",
+        "file": "hooks/contrats/useContratDetails.js",
+        "features": [
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useContratGenerator",
+        "file": "hooks/contrats/useContratGenerator.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "usePdfPreview",
+        "file": "hooks/contrats/usePdfPreview.js",
+        "features": [
+          "state"
+        ]
+      },
+      {
+        "name": "useDateActions",
+        "file": "hooks/dates/useDateActions.js",
+        "features": []
+      },
+      {
+        "name": "useDateAssociations",
+        "file": "hooks/dates/useDateAssociations.js",
+        "features": [
+          "firebase"
+        ]
+      },
+      {
+        "name": "useDateDelete",
+        "file": "hooks/dates/useDateDelete.js",
+        "features": [
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useDateDetails",
+        "file": "hooks/dates/useDateDetails.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useDateForm",
+        "file": "hooks/dates/useDateForm.js",
+        "features": [
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useDateFormWithRelations",
+        "file": "hooks/dates/useDateFormWithRelations.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useDateFormsManagement",
+        "file": "hooks/dates/useDateFormsManagement.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useDateListData",
+        "file": "hooks/dates/useDateListData.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useDateStatus",
+        "file": "hooks/dates/useDateStatus.js",
+        "features": []
+      },
+      {
+        "name": "useEntitySearch",
+        "file": "hooks/dates/useEntitySearch.js",
+        "features": []
+      },
+      {
+        "name": "useFormSubmission",
+        "file": "hooks/dates/useFormSubmission.js",
+        "features": []
+      },
+      {
+        "name": "useFormSubmission",
+        "file": "hooks/forms/useFormSubmission.js",
+        "features": []
+      },
+      {
+        "name": "useFormTokenValidation",
+        "file": "hooks/forms/useFormTokenValidation.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useFormValidation",
+        "file": "hooks/forms/useFormValidation.js",
+        "features": [
+          "state",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useFormValidationData",
+        "file": "hooks/forms/useFormValidationData.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useValidationBatchActions",
+        "file": "hooks/forms/useValidationBatchActions.js",
+        "features": [
+          "state",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useGenericAction",
+        "file": "hooks/generics/actions/useGenericAction.js",
+        "features": [
+          "state",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useGenericFieldActions",
+        "file": "hooks/generics/actions/useGenericFieldActions.js",
+        "features": [
+          "state",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useGenericDataFetcher",
+        "file": "hooks/generics/data/useGenericDataFetcher.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useGenericEntityForm",
+        "file": "hooks/generics/forms/useGenericEntityForm.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useGenericEntityList",
+        "file": "hooks/generics/lists/useGenericEntityList.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useGenericFilteredSearch",
+        "file": "hooks/generics/search/useGenericFilteredSearch.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useGenericSearch",
+        "file": "hooks/generics/search/useGenericSearch.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useGenericEntityStatus",
+        "file": "hooks/generics/status/useGenericEntityStatus.js",
+        "features": [
+          "memoization"
+        ]
+      },
+      {
+        "name": "useGenericResponsive",
+        "file": "hooks/generics/utils/useGenericResponsive.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useGenericValidation",
+        "file": "hooks/generics/validation/useGenericValidation.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useAddressSearch",
+        "file": "hooks/lieux/useAddressSearch.js",
+        "features": []
+      },
+      {
+        "name": "useLieuDelete",
+        "file": "hooks/lieux/useLieuDelete.js",
+        "features": [
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useLieuDetails",
+        "file": "hooks/lieux/useLieuDetails.js",
+        "features": [
+          "effects",
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useLieuForm",
+        "file": "hooks/lieux/useLieuForm.js",
+        "features": [
+          "effects"
+        ]
+      },
+      {
+        "name": "useLieuSearch",
+        "file": "hooks/lieux/useLieuSearch.js",
+        "features": [
+          "state",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useLieuxFilters",
+        "file": "hooks/lieux/useLieuxFilters.js",
+        "features": [
+          "state",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useLieuxQuery",
+        "file": "hooks/lieux/useLieuxQuery.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useEntrepriseForm",
+        "file": "hooks/parametres/useEntrepriseForm.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useLieuSearch",
+        "file": "hooks/search/useLieuSearch.js",
+        "features": [
+          "effects"
+        ]
+      },
+      {
+        "name": "useSearchAndFilter",
+        "file": "hooks/search/useSearchAndFilter.js",
+        "features": []
+      },
+      {
+        "name": "useDeleteStructure",
+        "file": "hooks/structures/useDeleteStructure.js",
+        "features": [
+          "state",
+          "memoization",
+          "cache"
+        ]
+      },
+      {
+        "name": "useStructureDetails",
+        "file": "hooks/structures/useStructureDetails.js",
+        "features": [
+          "memoization",
+          "firebase",
+          "cache"
+        ]
+      },
+      {
+        "name": "useStructureForm",
+        "file": "hooks/structures/useStructureForm.js",
+        "features": [
+          "effects",
+          "memoization"
+        ]
+      },
+      {
+        "name": "useStructureValidation",
+        "file": "hooks/structures/useStructureValidation.js",
+        "features": [
+          "state"
+        ]
+      },
+      {
+        "name": "useTaches",
+        "file": "hooks/taches/useTaches.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useInvitationNotifications",
+        "file": "hooks/useInvitationNotifications.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useMultiEntQuery",
+        "file": "hooks/useMultiEntQuery.js",
+        "features": [
+          "state",
+          "effects",
+          "memoization",
+          "firebase"
+        ]
+      },
+      {
+        "name": "usePermissions",
+        "file": "hooks/usePermissions.js",
+        "features": [
+          "state",
+          "effects",
+          "firebase"
+        ]
+      },
+      {
+        "name": "useTabsSafe",
+        "file": "hooks/useTabsSafe.js",
+        "features": []
+      }
+    ]
+  },
+  "patterns": {
+    "dataFlow": {
+      "contextApi": [
+        "App.js",
+        "__tests__/integration/brevoEmailIntegration.test.js",
+        "__tests__/integration/contactCreationFromForms.test.js",
+        "components/recherches/RechercheLayout.js",
+        "components/recherches/sections/MesSelectionsSection.js",
+        "components/ui/AddressInputUnified.js",
+        "context/AuthContext.js",
+        "context/ContactModalsContext.js",
+        "context/EntrepriseContext.js",
+        "context/ModalContext.js",
+        "context/ModalsContext.js",
+        "context/ParametresContext.js",
+        "context/TabsContext.js",
+        "hooks/useTabsSafe.js",
+        "services/__tests__/brevoTemplateService.test.js",
+        "services/__tests__/emailService.test.js",
+        "services/brevoTemplateService.js"
+      ],
+      "firebase": [
+        "App.js",
+        "__tests__/integration/brevoEmailIntegration.test.js",
+        "__tests__/integration/contactCreationFromForms.test.js",
+        "components/api/ContratDownloadDirect.js",
+        "components/artistes/desktop/ArtisteForm.js",
+        "components/artistes/desktop/ArtisteView.js",
+        "components/artistes/modal/ArtisteCreationModal.js",
+        "components/collaboration/CollaborateursManagerFirebase.js",
+        "components/collaboration/EntreprisesManagerFirebase.js",
+        "components/collaboration/InvitationsManager.js",
+        "components/common/ContactSelectorRelational.js",
+        "components/common/DateSelectorRelational.js",
+        "components/common/Modal.js",
+        "components/common/OptimizedModal.js",
+        "components/common/layout/DesktopLayout.js",
+        "components/common/modals/SalleCreationModal.js",
+        "components/contact/parametrage/BrevoManager.js",
+        "components/contact/parametrage/TagsManager.js",
+        "components/contacts/ContactViewTabs.js",
+        "components/contacts/ContactsListFiltered.js",
+        "components/contacts/FestivalCreationModal.js",
+        "components/contacts/desktop/ContactForm.js",
+        "components/contacts/desktop/ContactView.js",
+        "components/contacts/desktop/ContactsList.js",
+        "components/contacts/desktop/sections/ContactsListSearchFilter.js",
+        "components/contacts/modal/PersonneCreationModal.js",
+        "components/contacts/modal/StructureCreationModal.js",
+        "components/contacts/sections/ContactBottomTabs.js",
+        "components/contacts/sections/ContactPersonneSection.js",
+        "components/contrats/ContratPdfViewerComparison.js",
+        "components/contrats/ContratPdfViewerEnhanced.js",
+        "components/contrats/ContratPdfViewerExample.js",
+        "components/contrats/ContratPdfViewerNative.js",
+        "components/contrats/ContratPdfViewerWithControls.js",
+        "components/contrats/ContratTemplateEditorModal.js",
+        "components/contrats/ContratTemplateEditorSimple.js",
+        "components/contrats/TemplateMigrationTool.js",
+        "components/contrats/desktop/ContratGeneratorNew.js",
+        "components/contrats/desktop/sections/ContratGenerationActions.js",
+        "components/contrats/desktop/sections/UserGuide.js",
+        "components/contrats/desktop/sections/VariablesPanel.js",
+        "components/contrats/modals/ContratModelsModal.js",
+        "components/dates/DatesTable.js",
+        "components/dates/DatesTableView.js",
+        "components/dates/PublicationsList.js",
+        "components/dates/configs/publicationConfig.js",
+        "components/dates/desktop/DateView.js",
+        "components/dates/sections/ArtisteSearchSectionWithFallback.js",
+        "components/dates/sections/DateSearchBar.js",
+        "components/dates/sections/LieuSearchSection.js",
+        "components/dates/sections/SelectedEntityCard.js",
+        "components/debug/AddressAutocompleteTest.js",
+        "components/devis/DevisEditor.js",
+        "components/devis/DevisForm.js",
+        "components/devis/DevisList.js",
+        "components/entreprise/EntrepriseSelector.js",
+        "components/entreprise/OnboardingFlow.js",
+        "components/factures/FactureParametersEditor.js",
+        "components/factures/FacturePreview.js",
+        "components/factures/FactureTemplateEditor.js",
+        "components/factures/FactureTemplateEditorModal.js",
+        "components/factures/FacturesTableView.js",
+        "components/festivals/FestivalsTableView.js",
+        "components/forms/FormGenerator.js",
+        "components/forms/PublicContactForm.js",
+        "components/parametrage/CollaborateursModal.js",
+        "components/parametrage/GroupesPermissionsManager.js",
+        "components/parametrage/ModeleContratContent.js",
+        "components/parametrage/PermissionsTree.js",
+        "components/parametrage/TvaManager.js",
+        "components/parametrage/TypesEvenementContent.js",
+        "components/parametrage/TypesSalleContent.js",
+        "components/parametrage/UnitesManager.js",
+        "components/pdf/ContratPDFWrapper.js",
+        "components/precontrats/desktop/PreContratGenerator.js",
+        "components/projets/modal/ProjetCreationModal.js",
+        "components/recherches/RechercheLayout.js",
+        "components/recherches/sections/ActivitesSection.js",
+        "components/recherches/sections/DatesSection.js",
+        "components/recherches/sections/FestivalsSection.js",
+        "components/recherches/sections/GenresSection.js",
+        "components/recherches/sections/GeolocalisationSection.js",
+        "components/recherches/sections/IdentificationSection.js",
+        "components/recherches/sections/ReseauxSection.js",
+        "components/recherches/sections/SallesSection.js",
+        "components/structures/StructureViewTabs.js",
+        "components/structures/core/useStructureDetails.js",
+        "components/structures/desktop/StructureForm.js",
+        "components/structures/desktop/StructureLegalSection.js",
+        "components/structures/desktop/StructureView.js",
+        "components/structures/desktop/StructuresList.js",
+        "components/ui/AddressInputGoogle.js",
+        "components/ui/AddressInputUnified.js",
+        "components/ui/AssociatePersonModal.js",
+        "components/ui/EntitySelector.js",
+        "components/ui/ListWithFilters.js",
+        "components/ui/TagsInput.js",
+        "config/entityConfigurations.js",
+        "config/searchFieldsMapping.js",
+        "context/AuthContext.js",
+        "context/EntrepriseContext.js",
+        "context/ParametresContext.js",
+        "hooks/artistes/useDeleteArtiste.js",
+        "hooks/common/useAddressSearch.js",
+        "hooks/common/useCompanySearch.js",
+        "hooks/common/useEntitySearch.js",
+        "hooks/common/useFirestoreSubscription.js",
+        "hooks/common/useFormSubmission.js",
+        "hooks/common/useGenericEntityDelete.js",
+        "hooks/common/useGenericEntityDetails.js",
+        "hooks/common/useGenericEntitySearch.js",
+        "hooks/common/useGooglePlacesAutocomplete.js",
+        "hooks/common/useGooglePlacesAutocompleteNew.js",
+        "hooks/common/useSafeRelations.js",
+        "hooks/common/useSearchAndFilter.js",
+        "hooks/contacts/useContactActionsRelational.js",
+        "hooks/contacts/useContactContrats.js",
+        "hooks/contacts/useContactFactures.js",
+        "hooks/contacts/useContactFestivals.js",
+        "hooks/contacts/useContactSearchRelational.js",
+        "hooks/contacts/useContactsRelational.js",
+        "hooks/contacts/useDeleteContact.js",
+        "hooks/contacts/useSimpleContactDetails.js",
+        "hooks/contrats/useContratActions.js",
+        "hooks/contrats/useContratDetails.js",
+        "hooks/contrats/useContratGenerator.js",
+        "hooks/dates/useDateAssociations.js",
+        "hooks/dates/useDateDelete.js",
+        "hooks/dates/useDateDetails.js",
+        "hooks/dates/useDateForm.js",
+        "hooks/dates/useDateFormWithRelations.js",
+        "hooks/dates/useDateFormsManagement.js",
+        "hooks/dates/useDateListData.js",
+        "hooks/forms/useFormTokenValidation.js",
+        "hooks/forms/useFormValidationData.js",
+        "hooks/forms/useValidationBatchActions.js",
+        "hooks/generics/actions/useGenericAction.js",
+        "hooks/generics/data/useGenericDataFetcher.js",
+        "hooks/generics/lists/useGenericEntityList.js",
+        "hooks/generics/search/useGenericFilteredSearch.js",
+        "hooks/generics/search/useGenericSearch.js",
+        "hooks/index.js",
+        "hooks/lieux/useLieuDelete.js",
+        "hooks/lieux/useLieuDetails.js",
+        "hooks/lieux/useLieuForm.js",
+        "hooks/lieux/useLieuSearch.js",
+        "hooks/lieux/useLieuxQuery.js",
+        "hooks/parametres/useEntrepriseForm.js",
+        "hooks/structures/index.js",
+        "hooks/structures/useDeleteStructure.js",
+        "hooks/structures/useStructureDetails.js",
+        "hooks/structures/useStructureForm.js",
+        "hooks/taches/useTaches.js",
+        "hooks/useInvitationNotifications.js",
+        "hooks/useMultiEntQuery.js",
+        "hooks/usePermissions.js",
+        "index.js",
+        "pages/BookingParametragePage.js",
+        "pages/CollaborationParametragePage.js",
+        "pages/ConfirmationPage.js",
+        "pages/ContratGenerationNewPage.js",
+        "pages/ContratGenerationPage.js",
+        "pages/ContratRedactionPage.js",
+        "pages/ContratsPage.js",
+        "pages/DateCreationPage.js",
+        "pages/DateDetailsPage.js",
+        "pages/DebugToolsPage.js",
+        "pages/FactureDetailsPage.js",
+        "pages/FactureGeneratorPage.js",
+        "pages/FacturesPage.js",
+        "pages/FestivalsDatesPage.js",
+        "pages/InventairePagesPage.js",
+        "pages/LoginPage.js",
+        "pages/MesRecherchesPage.js",
+        "pages/PreContratFormResponsePage.js",
+        "pages/PreContratGenerationPage.js",
+        "pages/ProjetsPage.js",
+        "pages/SallesPage.js",
+        "pages/TableauDeBordPage.js",
+        "pages/TachesPage.js",
+        "pages/admin/MigrationPage.js",
+        "pages/contratTemplatesEditPage.js",
+        "pages/contratTemplatesPage.js",
+        "pages/factureTemplatesEditPage.js",
+        "pages/factureTemplatesPage.js",
+        "schemas/ContactRefactoredSchemas.js",
+        "services/__tests__/brevoTemplateService.test.js",
+        "services/__tests__/emailService.test.js",
+        "services/bidirectionalRelationsService.js",
+        "services/brevoTemplateService.js",
+        "services/cacheService.js",
+        "services/collaborateurService.js",
+        "services/contactServiceRelational.js",
+        "services/contacts/liaisonsService.js",
+        "services/contacts/personnesService.js",
+        "services/contacts/structuresService.js",
+        "services/contratService.js",
+        "services/dataService.js",
+        "services/dateService.js",
+        "services/devisService.js",
+        "services/emailService.js",
+        "services/factureService.js",
+        "services/firebase-emulator-service.js",
+        "services/firebase-service.js",
+        "services/fonctionsService.js",
+        "services/historiqueEchangesService.js",
+        "services/index.js",
+        "services/pdfService.js",
+        "services/preContratService.js",
+        "services/projetService.js",
+        "services/searchService.js",
+        "services/selectionsService.js",
+        "services/structureService.js",
+        "services/tachesService.js",
+        "setupTests.js",
+        "types/brevoTypes.js",
+        "utils/FirebaseInterceptor.js",
+        "utils/autoMigrateRIB.js",
+        "utils/createDefaultContractTemplate.js",
+        "utils/dataCompatibility.js",
+        "utils/dataMapping/canonicalDataStructure.js",
+        "utils/dateUtils.js",
+        "utils/diagnoseOrphanArtistes.js",
+        "utils/firebaseDataUtils.js",
+        "utils/fixArtistesOrganizationIds.js",
+        "utils/fixBidirectionalRelationsBrowser.js",
+        "utils/fixNumeroIntracommunautaire.js",
+        "utils/fixOrganizationIds.js",
+        "utils/formatters.js",
+        "utils/migrateRIBData.js",
+        "utils/migrationHelper.js",
+        "utils/seedEmulator.js",
+        "utils/structureNameLoader.js",
+        "utils/templateVariables.js"
+      ]
+    }
+  },
+  "issues": [
+    {
+      "type": "naming_inconsistency",
+      "concept": "artiste.nom",
+      "formats": [
+        "Artiste.nom",
+        "artiste.nom"
+      ],
+      "fileCount": 20
+    },
+    {
+      "type": "naming_inconsistency",
+      "concept": "artiste_nom",
+      "formats": [
+        "artiste_nom",
+        "ARTISTE_NOM"
+      ],
+      "fileCount": 27
+    },
+    {
+      "type": "naming_inconsistency",
+      "concept": "structure_nom",
+      "formats": [
+        "structure_nom",
+        "STRUCTURE_NOM"
+      ],
+      "fileCount": 15
+    }
+  ]
+}

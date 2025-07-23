@@ -470,20 +470,25 @@ export const useDateListData = () => {
           
           setDatesWithContracts(contractsMap);
           
-          // 3. Récupération des factures UNIQUEMENT pour les dates actuels
-          const facturesRef = collection(db, 'entreprises', currentEntreprise.id, 'factures');
-          const facturesQuery = query(
-            facturesRef, 
-            where('dateId', 'in', dateIds)
-          );
-          const facturesSnapshot = await getDocs(facturesQuery);
-          
+          // 3. Les factures sont liées aux contrats, pas directement aux dates
+          // On construit la map des factures à partir des contrats
           const facturesMap = {};
           
-          facturesSnapshot.docs.forEach(doc => {
-            const facture = { id: doc.id, ...doc.data() };
-            if (facture.dateId) {
-              facturesMap[facture.dateId] = facture;
+          Object.entries(contractsMap).forEach(([dateId, contrat]) => {
+            // Si le contrat a une facture
+            if (contrat.factureId) {
+              logger.log(`[useDateListData] Facture trouvée dans contrat pour date ${dateId}:`, {
+                contratId: contrat.id,
+                factureId: contrat.factureId,
+                factureStatus: contrat.factureStatus
+              });
+              
+              facturesMap[dateId] = {
+                id: contrat.factureId,
+                status: contrat.factureStatus || 'generated',
+                // On peut ajouter d'autres infos de facture ici si nécessaire
+                fromContrat: true
+              };
             }
           });
           

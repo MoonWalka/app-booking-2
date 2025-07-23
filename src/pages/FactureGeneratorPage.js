@@ -236,7 +236,8 @@ const FactureGeneratorPage = () => {
     console.log('[generateFacturesFromContrat] IBAN depuis entrepriseData:', entrepriseData?.iban);
     console.log('[generateFacturesFromContrat] BIC depuis entrepriseData:', entrepriseData?.bic);
     console.log('[generateFacturesFromContrat] ORDRE depuis entrepriseData:', entrepriseData?.ordre);
-    console.log('[generateFacturesFromContrat] Contractant2 (destinataire):', contratData.contractant2);
+    console.log('[generateFacturesFromContrat] Organisateur (destinataire):', contratData.organisateur);
+    console.log('[generateFacturesFromContrat] Producteur (émetteur):', contratData.producteur);
     console.log('[generateFacturesFromContrat] Structure depuis la date:', {
       structureNom: dateData.structureNom,
       structureAdresse: dateData.structureAdresse,
@@ -254,37 +255,37 @@ const FactureGeneratorPage = () => {
       // Informations de la date
       dateId: dateData.id,
       
-      // Informations du destinataire (organisateur) - contractant2 dans le contrat
+      // Informations du destinataire (organisateur) - organisateur dans le contrat
       structureId: contratData.structureId || dateData.structureId,
-      structureNom: contratData.contractant2?.nom || structureData?.nom || contratData.structureNom || dateData.structureNom,
-      structureAdresse: contratData.contractant2?.adresse || structureData?.adresse || contratData.structureAdresse || dateData.structureAdresse || '',
-      structureCodePostal: contratData.contractant2?.codePostal || structureData?.codePostal || contratData.structureCodePostal || dateData.structureCodePostal || '',
-      structureVille: contratData.contractant2?.ville || structureData?.ville || contratData.structureVille || dateData.structureVille || '',
-      structureTVA: contratData.contractant2?.numeroTVA || structureData?.numeroTVA || '',
+      structureNom: contratData.organisateur?.raisonSociale || contratData.organisateur?.nom || structureData?.nom || contratData.structureNom || dateData.structureNom,
+      structureAdresse: contratData.organisateur?.adresse || structureData?.adresse || contratData.structureAdresse || dateData.structureAdresse || '',
+      structureCodePostal: contratData.organisateur?.codePostal || structureData?.codePostal || contratData.structureCodePostal || dateData.structureCodePostal || '',
+      structureVille: contratData.organisateur?.ville || structureData?.ville || contratData.structureVille || dateData.structureVille || '',
+      structureTVA: contratData.organisateur?.numeroTVA || structureData?.numeroTVA || '',
       
-      // Informations de l'émetteur (producteur/tourneur) - contractant1 dans le contrat
-      organisationNom: contratData.contractant1?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentEntreprise?.nom,
-      organisationAdresse: contratData.contractant1?.adresse || entrepriseData?.adresse || currentEntreprise?.adresse,
-      organisationCodePostal: contratData.contractant1?.codePostal || entrepriseData?.codePostal || currentEntreprise?.codePostal,
-      organisationVille: contratData.contractant1?.ville || entrepriseData?.ville || currentEntreprise?.ville,
+      // Informations de l'émetteur (producteur/tourneur) - producteur dans le contrat
+      organisationNom: contratData.producteur?.raisonSociale || contratData.producteur?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentEntreprise?.nom,
+      organisationAdresse: contratData.producteur?.adresse || entrepriseData?.adresse || currentEntreprise?.adresse,
+      organisationCodePostal: contratData.producteur?.codePostal || entrepriseData?.codePostal || currentEntreprise?.codePostal,
+      organisationVille: contratData.producteur?.ville || entrepriseData?.ville || currentEntreprise?.ville,
       
       // Champs émetteur pour FactureEditor
-      emetteurNom: contratData.contractant1?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentEntreprise?.nom,
-      emetteurAdresse: contratData.contractant1?.adresse || entrepriseData?.adresse || currentEntreprise?.adresse,
-      emetteurVille: (contratData.contractant1?.codePostal && contratData.contractant1?.ville) ? 
-        `${contratData.contractant1.codePostal} ${contratData.contractant1.ville}` :
+      emetteurNom: contratData.producteur?.raisonSociale || contratData.producteur?.nom || entrepriseData?.nom || entrepriseData?.raisonSociale || currentEntreprise?.nom,
+      emetteurAdresse: contratData.producteur?.adresse || entrepriseData?.adresse || currentEntreprise?.adresse,
+      emetteurVille: (contratData.producteur?.codePostal && contratData.producteur?.ville) ? 
+        `${contratData.producteur.codePostal} ${contratData.producteur.ville}` :
         (entrepriseData?.codePostal && entrepriseData?.ville) ? 
         `${entrepriseData.codePostal} ${entrepriseData.ville}` :
         (currentEntreprise?.codePostal && currentEntreprise?.ville) ?
         `${currentEntreprise.codePostal} ${currentEntreprise.ville}` : '',
       
       // Informations bancaires de l'émetteur
-      coordonneesBancairesEmetteur: contratData.contractant1?.coordonneesBancaires || contratData.coordonneesBancaires || parametres?.entreprise?.coordonneesBancaires || currentEntreprise.coordonneesBancaires,
-      ibanEmetteur: contratData.contractant1?.iban || contratData.iban || parametres?.entreprise?.iban || currentEntreprise.iban,
-      bicEmetteur: contratData.contractant1?.bic || contratData.bic || parametres?.entreprise?.bic || currentEntreprise.bic,
+      coordonneesBancairesEmetteur: contratData.producteur?.coordonneesBancaires || contratData.coordonneesBancaires || parametres?.entreprise?.coordonneesBancaires || currentEntreprise.coordonneesBancaires,
+      ibanEmetteur: contratData.producteur?.iban || contratData.iban || parametres?.entreprise?.iban || currentEntreprise.iban,
+      bicEmetteur: contratData.producteur?.bic || contratData.bic || parametres?.entreprise?.bic || currentEntreprise.bic,
       
       // Informations de paiement par défaut
-      aLOrdreDe: entrepriseData?.ordre || entrepriseData?.nom || contratData.contractant1?.nom || contratData.aLOrdreDe || currentEntreprise?.nom,
+      aLOrdreDe: entrepriseData?.ordre || entrepriseData?.nom || contratData.producteur?.raisonSociale || contratData.producteur?.nom || contratData.aLOrdreDe || currentEntreprise?.nom,
       
       // TVA - Calculer depuis les prestations uniquement
       tauxTVA: (() => {
@@ -329,8 +330,8 @@ const FactureGeneratorPage = () => {
         
         return tauxMoyen;
       })(),
-      numeroTVA: contratData.contractant1?.numeroTVA || entrepriseData?.tva || entrepriseData?.numeroTVA || contratData.numeroTVA || currentEntreprise?.numeroTVA,
-      assujettissementTVA: contratData.contractant1?.assujettissementTVA || entrepriseData?.assujettie || contratData.assujettissementTVA || currentEntreprise?.assujettissementTVA,
+      numeroTVA: contratData.producteur?.numeroTVA || entrepriseData?.tva || entrepriseData?.numeroTVA || contratData.numeroTVA || currentEntreprise?.numeroTVA,
+      assujettissementTVA: contratData.producteur?.assujettissementTVA || entrepriseData?.assujettie || contratData.assujettissementTVA || currentEntreprise?.assujettissementTVA,
       
       // Informations bancaires de l'entreprise (sans duplication)
       iban: entrepriseData?.iban || parametres?.entreprise?.iban || '',
@@ -647,8 +648,8 @@ const FactureGeneratorPage = () => {
             console.log('[FactureGeneratorPage] === AUDIT CONTRAT CHARGÉ ===');
             console.log('[FactureGeneratorPage] Contrat complet:', contratData);
             console.log('[FactureGeneratorPage] Champs disponibles dans le contrat:', Object.keys(contratData));
-            console.log('[FactureGeneratorPage] Contractant1 (Producteur/Tourneur):', contratData.contractant1);
-            console.log('[FactureGeneratorPage] Contractant2 (Organisateur):', contratData.contractant2);
+            console.log('[FactureGeneratorPage] Producteur (Émetteur/Tourneur):', contratData.producteur);
+            console.log('[FactureGeneratorPage] Organisateur (Destinataire):', contratData.organisateur);
             console.log('[FactureGeneratorPage] Négociation:', contratData.negociation);
             console.log('[FactureGeneratorPage] Facturation:', contratData.facturation);
             console.log('[FactureGeneratorPage] Règlement:', contratData.reglement);
@@ -836,6 +837,12 @@ const FactureGeneratorPage = () => {
           savedFactureIds.push(newFactureId);
           savedNumeroFacture = numeroFacture;
           console.log(`[handleSaveFactures] Facture ${i + 1} sauvegardée avec ID:`, newFactureId);
+          
+          // Lier la facture au contrat pour que l'icône s'affiche correctement dans les tableaux
+          if (contrat?.id) {
+            console.log(`[handleSaveFactures] Liaison de la facture ${newFactureId} au contrat ${contrat.id}`);
+            await contratService.linkFacture(contrat.id, newFactureId);
+          }
         }
       }
       

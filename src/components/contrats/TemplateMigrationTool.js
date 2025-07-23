@@ -64,23 +64,51 @@ const TemplateMigrationTool = () => {
       setMigrating(true);
       setErrorMessage('');
       
-      // Migrer le contenu
-      const migratedBody = migrateTemplate(selectedTemplate.body || '');
-      const migratedHeader = migrateTemplate(selectedTemplate.header || '');
-      const migratedFooter = migrateTemplate(selectedTemplate.footer || '');
-      const migratedSignature = migrateTemplate(selectedTemplate.signature || '');
+      // Migrer le contenu - gérer les deux formats possibles
+      const bodyContent = selectedTemplate.body || selectedTemplate.bodyContent || '';
+      const headerContent = selectedTemplate.header || selectedTemplate.headerContent || '';
+      const footerContent = selectedTemplate.footer || selectedTemplate.footerContent || '';
+      const signatureContent = selectedTemplate.signature || selectedTemplate.signatureContent || '';
+      
+      const migratedBody = migrateTemplate(bodyContent);
+      const migratedHeader = migrateTemplate(headerContent);
+      const migratedFooter = migrateTemplate(footerContent);
+      const migratedSignature = migrateTemplate(signatureContent);
       
       // Mettre à jour dans Firebase (collection globale contratTemplates)
       const templateRef = doc(db, 'contratTemplates', selectedTemplate.id);
-      await updateDoc(templateRef, {
-        body: migratedBody,
-        header: migratedHeader,
-        footer: migratedFooter,
-        signature: migratedSignature,
+      const updateData = {
         migrated: true,
         migratedAt: new Date(),
         updatedAt: new Date()
-      });
+      };
+      
+      // Mettre à jour les bons champs selon ce qui existe
+      if (selectedTemplate.bodyContent !== undefined) {
+        updateData.bodyContent = migratedBody;
+      } else {
+        updateData.body = migratedBody;
+      }
+      
+      if (selectedTemplate.headerContent !== undefined) {
+        updateData.headerContent = migratedHeader;
+      } else {
+        updateData.header = migratedHeader;
+      }
+      
+      if (selectedTemplate.footerContent !== undefined) {
+        updateData.footerContent = migratedFooter;
+      } else {
+        updateData.footer = migratedFooter;
+      }
+      
+      if (selectedTemplate.signatureContent !== undefined) {
+        updateData.signatureContent = migratedSignature;
+      } else {
+        updateData.signature = migratedSignature;
+      }
+      
+      await updateDoc(templateRef, updateData);
       
       // Mettre à jour l'état local
       const updatedTemplate = {
@@ -185,7 +213,7 @@ const TemplateMigrationTool = () => {
                         <Form.Control
                           as="textarea"
                           rows={15}
-                          value={selectedTemplate.body || ''}
+                          value={selectedTemplate.body || selectedTemplate.bodyContent || ''}
                           readOnly
                           style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}
                         />
@@ -197,7 +225,7 @@ const TemplateMigrationTool = () => {
                         <Form.Control
                           as="textarea"
                           rows={15}
-                          value={migrateTemplate(selectedTemplate.body || '')}
+                          value={migrateTemplate(selectedTemplate.body || selectedTemplate.bodyContent || '')}
                           readOnly
                           style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}
                         />
@@ -209,7 +237,7 @@ const TemplateMigrationTool = () => {
                     <Button 
                       variant="primary" 
                       onClick={handleMigrate}
-                      disabled={migrating || selectedTemplate.migrated}
+                      disabled={migrating}
                     >
                       {migrating ? (
                         <>
@@ -217,12 +245,12 @@ const TemplateMigrationTool = () => {
                           Migration en cours...
                         </>
                       ) : (
-                        'Migrer ce template'
+                        selectedTemplate.migrated ? 'Forcer la re-migration' : 'Migrer ce template'
                       )}
                     </Button>
                     {selectedTemplate.migrated && (
-                      <span className="text-muted align-self-center">
-                        Ce template a déjà été migré
+                      <span className="text-warning align-self-center">
+                        ⚠️ Template marqué comme migré mais peut nécessiter une nouvelle migration
                       </span>
                     )}
                   </div>

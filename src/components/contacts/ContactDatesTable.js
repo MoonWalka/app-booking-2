@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatesTableView from '@/components/dates/DatesTableView';
 import useDateDelete from '@/hooks/dates/useDateDelete';
-import { useDateListData } from '@/hooks/dates/useDateListData';
 import { useDateActions } from '@/hooks/dates/useDateActions';
 
 /**
@@ -14,20 +13,52 @@ const ContactDatesTable = ({ contactId, dates = [], onAddClick = null, onDeleteS
   
   console.log(`[ContactDatesTable] Rendu avec ${dates.length} dates pour contact ${contactId}`);
 
-  // Hooks pour les données et actions des dates
-  const {
-    hasContract,
-    getContractStatus,
-    getContractData,
-    hasFacture,
-    getFactureStatus,
-    getFactureData
-  } = useDateListData();
-  
+  // Hooks pour les actions des dates
   const {
     handleViewFacture,
     handleGenerateFacture
   } = useDateActions();
+  
+  // Fonctions locales pour gérer les données des dates passées en props
+  const hasContract = useCallback((dateId) => {
+    const date = dates.find(d => d.id === dateId);
+    return date && (date.contratId || date.contratStatus);
+  }, [dates]);
+  
+  const getContractStatus = useCallback((dateId) => {
+    const date = dates.find(d => d.id === dateId);
+    return date ? date.contratStatus : null;
+  }, [dates]);
+  
+  const getContractData = useCallback((dateId) => {
+    const date = dates.find(d => d.id === dateId);
+    if (!date || !date.contratId) return null;
+    return {
+      id: date.contratId,
+      status: date.contratStatus,
+      factureId: date.factureId,
+      factureStatus: date.factureStatus
+    };
+  }, [dates]);
+  
+  const hasFacture = useCallback((dateId) => {
+    const date = dates.find(d => d.id === dateId);
+    return date && (date.factureId || date.hasFacture);
+  }, [dates]);
+  
+  const getFactureStatus = useCallback((dateId) => {
+    const date = dates.find(d => d.id === dateId);
+    return date ? date.factureStatus : null;
+  }, [dates]);
+  
+  const getFactureData = useCallback((dateId) => {
+    const date = dates.find(d => d.id === dateId);
+    if (!date || !date.factureId) return null;
+    return {
+      id: date.factureId,
+      status: date.factureStatus
+    };
+  }, [dates]);
 
   // Hook pour la suppression des dates
   const { handleDeleteDate: deleteDate } = useDateDelete(() => {

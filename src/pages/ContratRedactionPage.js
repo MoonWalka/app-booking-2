@@ -7,7 +7,7 @@ import { doc, updateDoc, serverTimestamp, getDoc } from '@/services/firebase-ser
 import contratService from '@/services/contratService';
 import ContratModelsModal from '@/components/contrats/modals/ContratModelsModal';
 import ContratPdfViewerWithControls from '@/components/contrats/ContratPdfViewerWithControls';
-import { preparerDonneesContrat, remplacerVariables } from '@/utils/dataMapping/simpleDataMapper';
+import { prepareContractData, replaceVariables } from '@/hooks/contrats/contractVariablesUnified';
 import styles from './ContratRedactionPage.module.css';
 import { toast } from 'react-toastify';
 
@@ -184,13 +184,43 @@ const ContratRedactionPage = () => {
       try {
         console.log('[ContratRedactionPage] Début chargement - ID:', id);
         console.log('[ContratRedactionPage] Chargement du contrat pour date:', id);
-        const contrat = await contratService.getContratByDate(id);
+        let contrat = await contratService.getContratByDate(id);
         
         if (contrat) {
           console.log('[ContratRedactionPage] Contrat trouvé:', contrat);
           console.log('[ContratRedactionPage] Contenu du contrat:', contrat.contratContenu ? 'Présent' : 'Absent');
           console.log('[ContratRedactionPage] Modèles du contrat:', contrat.contratModeles);
           console.log('[ContratRedactionPage] Statut du contrat:', contrat.status, '/ contratStatut:', contrat.contratStatut);
+          
+          // Si on vient du générateur et que les données ne sont pas complètes, attendre et recharger
+          const activeTab = getActiveTab && getActiveTab();
+          const fromGenerator = activeTab?.params?.fromGenerator;
+          
+          // Si on vient du générateur, toujours recharger pour s'assurer d'avoir les dernières données
+          if (fromGenerator) {
+            // Faire plusieurs tentatives si nécessaire
+            let attempts = 0;
+            const maxAttempts = 3;
+            
+            while (attempts < maxAttempts) {
+              attempts++;
+              console.log(`[ContratRedactionPage] Tentative ${attempts}/${maxAttempts} de rechargement...`);
+              
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              const freshContrat = await contratService.getContratByDate(id);
+              
+              if (freshContrat && freshContrat.artisteId && freshContrat.structureId) {
+                console.log('[ContratRedactionPage] Contrat rechargé avec succès:', {
+                  artisteId: freshContrat.artisteId,
+                  structureId: freshContrat.structureId,
+                  lieuId: freshContrat.lieuId
+                });
+                contrat = freshContrat;
+                break;
+              }
+            }
+          }
+          
           setContratData(contrat);
           
           // Si le contrat a déjà du contenu rédigé, le charger
@@ -441,6 +471,24 @@ const ContratRedactionPage = () => {
   const handleSaveAndPreview = async () => {
     console.log('[ContratRedactionPage] handleSaveAndPreview appelé');
     
+    // Si les données essentielles sont manquantes, recharger le contrat
+    if (!contratData || !contratData.artisteId || !contratData.structureId) {
+      console.log('[ContratRedactionPage] Données essentielles manquantes, rechargement du contrat...');
+      const freshContrat = await contratService.getContratByDate(id);
+      if (freshContrat) {
+        console.log('[ContratRedactionPage] Contrat rechargé avec:', {
+          artisteId: freshContrat.artisteId,
+          structureId: freshContrat.structureId,
+          hasArtiste: !!freshContrat.artiste,
+          hasStructure: !!freshContrat.structure
+        });
+        setContratData(freshContrat);
+        // Attendre le prochain cycle pour que le state soit mis à jour
+        setTimeout(() => handleSaveAndPreview(), 100);
+        return;
+      }
+    }
+    
     // Récupérer le contenu actuel depuis l'éditeur
     const currentContent = isHtmlMode ? editorContent : (editorRef.current?.getContent() || editorContent);
     
@@ -465,13 +513,19 @@ const ContratRedactionPage = () => {
         }
         
         // Charger les données de l'artiste si nécessaire
-        if (contratData.artisteId && !contratData.artiste) {
+        // TOUJOURS charger si on a un artisteId pour être sûr d'avoir les bonnes données
+        if (contratData.artisteId) {
           console.log('[ContratRedactionPage] Chargement des données de l\'artiste...');
           const artisteDoc = await getDoc(doc(db, 'artistes', contratData.artisteId));
           if (artisteDoc.exists()) {
             dataForReplacement.artiste = { id: artisteDoc.id, ...artisteDoc.data() };
             console.log('[ContratRedactionPage] Données artiste chargées:', dataForReplacement.artiste);
           }
+        } else if (contratData.artiste) {
+          // Si pas d'ID mais qu'on a déjà l'objet artiste
+          dataForReplacement.artiste = contratData.artiste;
+        } else {
+          console.log('[ContratRedactionPage] ATTENTION: Aucune donnée artiste disponible');
         }
         
         // Charger les données du lieu si nécessaire
@@ -530,26 +584,49 @@ const ContratRedactionPage = () => {
           hasLieu: !!dataForReplacement.lieu
         });
         
-        // Utiliser le mapper simple pour préparer les données
-        const donneesNormalisees = preparerDonneesContrat(
-          dataForReplacement.date,
-          dataForReplacement,
-          {
-            organisateur: dataForReplacement.organisateur,
-            producteur: dataForReplacement.producteur
-          }
+        // Utiliser le nouveau système unifié pour préparer les données
+        // IMPORTANT: Si c'est un pré-contrat validé, fusionner publicFormData dans les données principales
+        let dataToUse = dataForReplacement;
+        if (dataForReplacement.publicFormData && dataForReplacement.confirmationValidee) {
+          // Fusionner publicFormData dans l'organisateur
+          dataToUse = {
+            ...dataForReplacement,
+            organisateur: {
+              ...dataForReplacement.organisateur,
+              ...dataForReplacement.publicFormData,
+              signataire: dataForReplacement.publicFormData.nomSignataire || dataForReplacement.organisateur?.signataire,
+              qualite: dataForReplacement.publicFormData.qualiteSignataire || dataForReplacement.organisateur?.qualite
+            },
+            // Ajouter les montants depuis publicFormData
+            negociation: {
+              montantNet: dataForReplacement.publicFormData.montantHT || dataForReplacement.montantHT,
+              tauxTva: 20, // Par défaut ou calculer depuis TVA
+              montantTTC: dataForReplacement.publicFormData.montantHT || dataForReplacement.montantHT
+            }
+          };
+        }
+        
+        console.log('[ContratRedactionPage] Avant prepareContractData:', {
+          dataToUse,
+          hasNegociation: !!dataToUse.negociation,
+          negociation: dataToUse.negociation,
+          organisateur: dataToUse.organisateur,
+          artiste: dataToUse.artiste,
+          lieu: dataToUse.lieu
+        });
+        
+        const donneesPreparees = prepareContractData(
+          dataToUse,
+          dataToUse.date,
+          dataToUse.artiste,
+          dataToUse.entreprise || dataToUse.producteur,
+          dataToUse.lieu
         );
         
-        // Ajouter les données supplémentaires nécessaires
-        donneesNormalisees.artiste = dataForReplacement.artiste;
-        donneesNormalisees.lieu = dataForReplacement.lieu;
-        donneesNormalisees.prestations = dataForReplacement.prestations;
-        donneesNormalisees.representations = dataForReplacement.representations;
-        donneesNormalisees.reglement = dataForReplacement.reglement;
-        donneesNormalisees.producteur = dataForReplacement.producteur;
+        console.log('[ContratRedactionPage] Après prepareContractData:', donneesPreparees);
         
-        // Remplacer les variables avec notre fonction simple
-        let processedContent = remplacerVariables(currentContent, donneesNormalisees);
+        // Remplacer les variables avec le nouveau système
+        let processedContent = replaceVariables(currentContent, donneesPreparees);
         
         // Log pour voir quelles variables sont présentes dans le contenu
         const variablesInContent = [];
@@ -763,20 +840,29 @@ const ContratRedactionPage = () => {
         }
         
         // Variables artiste - Récupérer les données depuis le contrat
-        if (contratData.artisteId || contratData.artiste) {
+        if (dataForReplacement.artiste || contratData.artisteId) {
           console.log('[ContratRedactionPage] Données artiste:', {
             artisteId: contratData.artisteId,
-            artiste: contratData.artiste
+            artiste: dataForReplacement.artiste,
+            hasArtisteNom: dataForReplacement.artiste?.artisteNom,
+            hasNom: dataForReplacement.artiste?.nom
           });
           
-          // Si on a les données de l'artiste directement
-          if (contratData.artiste) {
+          // Si on a les données de l'artiste
+          if (dataForReplacement.artiste) {
+            // Essayer plusieurs variantes du nom
+            const nomArtiste = dataForReplacement.artiste.artisteNom || 
+                              dataForReplacement.artiste.nom || 
+                              dataForReplacement.artiste.name || '';
+            
             processedContent = processedContent
-              .replace(/{artiste_nom}/g, contratData.artiste.artisteNom || '')
-              .replace(/{artiste_genre}/g, contratData.artiste.genre || '')
+              .replace(/{artiste_nom}/g, nomArtiste)
+              .replace(/{artiste_genre}/g, dataForReplacement.artiste.genre || '')
               // Support des crochets
-              .replace(/\[artiste_nom\]/g, contratData.artiste.artisteNom || '')
-              .replace(/\[artiste_genre\]/g, contratData.artiste.genre || '');
+              .replace(/\[artiste_nom\]/g, nomArtiste)
+              .replace(/\[artiste_genre\]/g, dataForReplacement.artiste.genre || '');
+            
+            console.log('[ContratRedactionPage] Remplacement artiste effectué avec nom:', nomArtiste);
           }
         } else {
           console.log('[ContratRedactionPage] Pas de données artiste disponibles');

@@ -106,7 +106,7 @@ const ContratGeneratorNew = ({
     negociation: {
       montantNet: 0,
       montantBrut: 0,
-      tauxTva: 0, // Calculé automatiquement depuis les prestations
+      tauxTva: 20, // Taux par défaut à 20%
       montantTva: 0,
       montantTTC: 0,
       contratType: 'cession',
@@ -328,7 +328,7 @@ const ContratGeneratorNew = ({
           ...prev.negociation,
           montantNet: donneesAUtiliser.montantHT || date?.montant || 0,
           montantBrut: donneesAUtiliser.montantHT || date?.montant || 0,
-          tauxTva: 0, // Sera calculé depuis les prestations
+          tauxTva: donneesAUtiliser.tauxTVA || preContratData.tauxTVA || 20, // Récupérer le taux du pré-contrat ou 20% par défaut
           montantTva: 0, // Sera calculé après
           montantTTC: 0, // Sera calculé après
           contratType: donneesAUtiliser.contratPropose || 'cession',
@@ -718,6 +718,9 @@ const ContratGeneratorNew = ({
       const contratId = dateId || `nouveau-${Date.now()}`;
       
       console.log('[ContratGeneratorNew] Ouverture de la page de rédaction avec contratId:', contratId);
+      
+      // Attendre un peu pour que Firebase propage les données
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Ouvrir la page de rédaction dans un nouvel onglet
       if (openTab) {

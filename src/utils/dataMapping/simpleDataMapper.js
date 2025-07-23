@@ -80,6 +80,7 @@ export function mapperPourTemplate(data) {
   // Organisateur
   if (data.organisateur) {
     const org = data.organisateur;
+    // Format avec underscore (ancien format)
     variables['organisateur_nom'] = org.nom || org.raisonSociale || '';
     variables['organisateur_raison_sociale'] = org.raisonSociale || org.nom || '';
     variables['organisateur_siret'] = org.siret || '';
@@ -97,6 +98,21 @@ export function mapperPourTemplate(data) {
     variables['organisateur_numero_tva'] = org.numeroTva || org.tva || '';
     variables['organisateur_code_ape'] = org.codeApe || '';
     variables['organisateur_numero_licence'] = org.numeroLicence || '';
+    
+    // Format camelCase (nouveau format standardisé)
+    variables['organisateur_raisonSociale'] = org.raisonSociale || org.nom || '';
+    variables['organisateur_siret'] = org.siret || '';
+    variables['organisateur_adresse'] = org.adresse || '';
+    variables['organisateur_codePostal'] = org.codePostal || '';
+    variables['organisateur_ville'] = org.ville || '';
+    variables['organisateur_pays'] = org.pays || 'France';
+    variables['organisateur_telephone'] = org.telephone || '';
+    variables['organisateur_email'] = org.email || '';
+    variables['organisateur_signataire'] = org.signataire || '';
+    variables['organisateur_qualiteSignataire'] = org.qualiteSignataire || org.qualite || '';
+    variables['organisateur_numeroTva'] = org.numeroTva || org.tva || '';
+    variables['organisateur_codeApe'] = org.codeApe || '';
+    variables['organisateur_numeroLicence'] = org.numeroLicence || '';
     
     // Compatibilité avec l'ancien format
     variables['contact_nom'] = org.nom || org.raisonSociale || '';
@@ -144,6 +160,13 @@ export function mapperPourTemplate(data) {
     variables['concert_date'] = dateFormatee;
     variables['date_titre'] = dateObj.titre || dateObj.libelle || '';
     variables['date_heure'] = dateObj.heure || '';
+    
+    // Date complète en français
+    if (dateObj.date) {
+      const d = new Date(dateObj.date);
+      const mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+      variables['date_complete'] = `${d.getDate()} ${mois[d.getMonth()]} ${d.getFullYear()}`;
+    }
   }
   
   // Artiste
@@ -162,6 +185,11 @@ export function mapperPourTemplate(data) {
     variables['lieu_ville'] = data.lieu.ville || '';
   } else if (data.date?.lieuNom) {
     variables['lieu_nom'] = data.date.lieuNom || data.date.libelle || '';
+  }
+  
+  // Si on a les données du lieu dans representations
+  if (data.representations?.salle) {
+    variables['lieu_nom'] = data.representations.salle || variables['lieu_nom'] || '';
   }
   
   // Montants et prix
@@ -184,6 +212,23 @@ export function mapperPourTemplate(data) {
     variables['total_ttc'] = totalTTC.toFixed(2).replace('.', ',') + ' €';
     variables['total_ttc_lettres'] = montantEnLettres(totalTTC);
     variables['montant_ttc'] = totalTTC.toFixed(2).replace('.', ',') + ' €';
+    variables['montant_lettres'] = montantEnLettres(totalTTC);
+  }
+  
+  // Négociation (pour ContratGeneratorNew)
+  if (data.negociation) {
+    const montantHT = parseFloat(data.negociation.montantNet) || 0;
+    const tauxTVA = parseFloat(data.negociation.tauxTva) || 20;
+    const montantTVA = montantHT * (tauxTVA / 100);
+    const totalTTC = montantHT + montantTVA;
+    
+    variables['montant_ht'] = montantHT.toFixed(2).replace('.', ',') + ' €';
+    variables['taux_tva'] = tauxTVA + '%';
+    variables['montant_tva'] = montantTVA.toFixed(2).replace('.', ',') + ' €';
+    variables['total_ttc'] = totalTTC.toFixed(2).replace('.', ',') + ' €';
+    variables['total_ttc_lettres'] = montantEnLettres(totalTTC);
+    variables['montant_ttc'] = totalTTC.toFixed(2).replace('.', ',') + ' €';
+    variables['montant_lettres'] = montantEnLettres(totalTTC);
   }
   
   return variables;

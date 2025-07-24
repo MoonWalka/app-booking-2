@@ -102,10 +102,19 @@ if (IS_LOCAL_MODE) {
     })
   };
   
-  // Mock du stockage
-  storage = {
-    // Implémenter au besoin pour simuler le stockage
-  };
+  // En mode local, utiliser aussi Firebase Storage si disponible
+  // Vérifier d'abord si on a une configuration Firebase valide
+  if (firebaseConfig.storageBucket) {
+    console.log('[Firebase Service] Utilisation de Firebase Storage en mode local');
+    app = initializeApp(firebaseConfig);
+    storage = getStorage(app);
+  } else {
+    console.log('[Firebase Service] Configuration Storage manquante, utilisation du mock');
+    // Mock du stockage si pas de configuration
+    storage = {
+      // Mock minimal pour éviter les erreurs
+    };
+  }
   
   // Mock de remoteConfig
   remoteConfig = {
@@ -246,7 +255,7 @@ export const deleteField = IS_LOCAL_MODE ? getDirectMockFunction('deleteField') 
 // Fonctions Auth
 export { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged };
 
-// Fonctions Storage
+// Fonctions Storage - toujours utiliser Firebase Storage
 export { storageRef as ref, uploadBytes, getDownloadURL };
 
 // Indicateur de mode
@@ -389,8 +398,8 @@ export const createEntreprise = async (entrepriseData, userId) => {
         partageCommentaires: {},
         partageNotes: {},
         statut: 'active',
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        createdAt: new Date(),
+        updatedAt: new Date()
       }],
       entrepriseId: entrepriseId,
       createdAt: serverTimestamp(),

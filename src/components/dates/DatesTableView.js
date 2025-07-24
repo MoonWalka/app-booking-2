@@ -488,9 +488,12 @@ const DatesTableView = ({
         // Simplification : utiliser la fonction fournie ou vérifier l'ID du contrat
         const hasContrat = hasContractFunc ? hasContractFunc(item.id) : (item.contratId ? true : false);
         const isOpening = openingContrats.has(item.id);
-        // Le contrat est rédigé s'il a un statut (depuis la collection contrats)
+        // Le contrat est rédigé s'il a un statut différent de 'draft' OU s'il a du contenu
         const contractStatus = getContractStatus ? getContractStatus(item.id) : null;
-        const isRedige = contractStatus && contractStatus !== 'draft';
+        const contractData = getContractData ? getContractData(item.id) : null;
+        const isRedige = (contractStatus && contractStatus !== 'draft') || 
+                        (contractData && contractData.hasContent) ||
+                        (contractStatus === 'finalized' || contractStatus === 'sent' || contractStatus === 'signed');
         
         // Vérifier les permissions
         const canManageContract = hasContrat ? canEdit('contrats') : canCreate('contrats');
@@ -908,7 +911,7 @@ const DatesTableView = ({
         <Table
           data={paginatedDates}
           columns={columns}
-          onRowClick={handleRowClick}
+          onRowDoubleClick={handleRowClick}
           renderActions={renderActions}
           sortField={sortField}
           sortDirection={sortDirection}

@@ -140,7 +140,7 @@ const DatesTableControls = ({
       <div className={styles.separator}></div>
 
       {/* Groupe 3: Filtres de date */}
-      <div className={styles.controlGroup}>
+      <div className={styles.controlGroup} data-tour="dates-filters">
         <div className={styles.dateFilterControls}>
           <span className={styles.dateLabel}>Voir les dates à partir de :</span>
           <input

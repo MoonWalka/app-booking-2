@@ -275,7 +275,7 @@ function DatesTable({
         filterOptions={config.filterOptions || []}
         sort={config.sort || { field: 'createdAt', direction: 'desc' }}
         actions={headerActions}
-        onRowClick={config.allowRowClick ? handleRowClick : undefined}
+        onRowDoubleClick={config.allowRowClick ? handleRowClick : undefined}
         renderActions={config.actions ? renderActions : undefined}
         pageSize={config.pageSize || 20}
         showRefresh={config.showRefresh !== false}

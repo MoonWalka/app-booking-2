@@ -497,6 +497,24 @@ const contratService = {
       // Supprimer le contrat
       await deleteDoc(doc(db, 'contrats', contratId));
       
+      // Nettoyer les références dans le document date
+      // Note: l'ID du contrat est le même que l'ID du date (relation 1:1)
+      const dateRef = doc(db, 'dates', contratId);
+      try {
+        await updateDoc(dateRef, {
+          contratId: null,
+          contratStatus: null,
+          contratNumber: null,
+          contratStatut: null,
+          hasContratContent: null,
+          hasContratRedige: null,
+          updatedAt: serverTimestamp()
+        });
+        console.log('[ContratService] ✅ Références nettoyées dans le document date');
+      } catch (error) {
+        console.log('[ContratService] ⚠️ Impossible de nettoyer les références dans le date (peut-être déjà supprimé):', error);
+      }
+      
       console.log('[ContratService] ✅ Contrat supprimé avec succès - ID:', contratId);
       console.log('[ContratService] === SUPPRESSION CONTRAT - FIN ===');
       

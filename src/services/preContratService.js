@@ -19,6 +19,7 @@ import emailService from './emailService';
 import { debugLog } from '@/utils/logUtils';
 import { generateSecureToken } from '@/utils/cryptoUtils';
 import tachesService from '@/services/tachesService';
+import dateNiveauService from '@/services/dateNiveauService';
 
 class PreContratService {
   /**
@@ -123,6 +124,16 @@ class PreContratService {
         debugLog('[PreContratService] Tâche automatique créée pour l\'envoi du pré-contrat', 'success');
       } catch (error) {
         debugLog('[PreContratService] Erreur création tâche automatique:', error, 'warning');
+      }
+
+      // Mettre à jour le niveau de la date (interet -> option)
+      if (dateId) {
+        try {
+          await dateNiveauService.onPreContratCreated(dateId);
+          debugLog('[PreContratService] Niveau de la date mis à jour automatiquement', 'success');
+        } catch (error) {
+          debugLog('[PreContratService] Erreur lors de la mise à jour du niveau:', error, 'warning');
+        }
       }
 
       return {
@@ -285,6 +296,16 @@ class PreContratService {
           debugLog('[PreContratService] Tâche automatique créée pour la validation du pré-contrat', 'success');
         } catch (error) {
           debugLog('[PreContratService] Erreur création tâche automatique:', error, 'warning');
+        }
+
+        // Mettre à jour le niveau de la date (option -> confirme)
+        if (preContrat.dateId) {
+          try {
+            await dateNiveauService.onPreContratEnvoye(preContrat.dateId);
+            debugLog('[PreContratService] Niveau de la date mis à jour automatiquement vers confirmé', 'success');
+          } catch (error) {
+            debugLog('[PreContratService] Erreur lors de la mise à jour du niveau:', error, 'warning');
+          }
         }
       }
 

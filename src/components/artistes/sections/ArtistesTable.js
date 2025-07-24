@@ -98,7 +98,7 @@ const ArtistesTable = ({ artistes, onDelete }) => {
         columns={columns}
         data={artistes}
         renderActions={renderActions}
-        onRowClick={handleRowClick}
+        onRowDoubleClick={handleRowClick}
       />
     </div>
   );

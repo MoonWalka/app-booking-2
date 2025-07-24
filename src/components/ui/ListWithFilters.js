@@ -19,6 +19,7 @@ const ListWithFilters = ({
   sort: initialSort = { field: 'createdAt', direction: 'desc' },
   actions,
   onRowClick,
+  onRowDoubleClick,
   pageSize = 10,
   showRefresh = true,
   filterOptions = [],
@@ -494,7 +495,8 @@ const ListWithFilters = ({
                     key={item.id} 
                     className={styles.tableRow}
                     onClick={onRowClick ? () => onRowClick(item) : undefined}
-                    style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                    onDoubleClick={onRowDoubleClick ? () => onRowDoubleClick(item) : undefined}
+                    style={{ cursor: (onRowClick || onRowDoubleClick) ? 'pointer' : 'default' }}
                   >
                     {columns.map(column => {
                       const value = item[column.field];
@@ -541,6 +543,7 @@ const ListWithFilters = ({
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
           }}
           onClick={onRowClick ? () => onRowClick(item) : undefined}
+          onDoubleClick={onRowDoubleClick ? () => onRowDoubleClick(item) : undefined}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <h3 style={{ margin: '0 0 8px 0', fontSize: '18px' }}>
@@ -732,6 +735,7 @@ ListWithFilters.propTypes = {
   sort: PropTypes.object,
   actions: PropTypes.node,
   onRowClick: PropTypes.func,
+  onRowDoubleClick: PropTypes.func,
   pageSize: PropTypes.number,
   showRefresh: PropTypes.bool,
   filterOptions: PropTypes.array,

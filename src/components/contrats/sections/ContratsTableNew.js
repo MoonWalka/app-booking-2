@@ -643,7 +643,7 @@ const ContratsTableNew = ({
 
   // Actions par ligne
   const renderActions = (contrat) => (
-    <div className={styles.actionButtons} onClick={e => e.stopPropagation()}>
+    <div className={styles.actionButtons} onClick={e => e.stopPropagation()} data-tour="contrats-actions">
       {canEdit('contrats') && (
         <button 
           className={styles.actionButton}
@@ -688,6 +688,11 @@ const ContratsTableNew = ({
                 // Mettre à jour l'état local immédiatement
                 setLocalContrats(prev => prev.filter(c => c.id !== contrat.id));
                 console.log('Contrat supprimé avec succès:', contrat.id);
+                
+                // Notifier le parent si une fonction de callback est fournie
+                if (onUpdateContrat) {
+                  onUpdateContrat();
+                }
               } catch (error) {
                 console.error('Erreur lors de la suppression du contrat:', error);
                 alert('Erreur lors de la suppression du contrat');
@@ -801,7 +806,7 @@ const ContratsTableNew = ({
         columns={columns}
         data={paginatedContrats}
         renderActions={renderActions}
-        onRowClick={handleRowClick}
+        onRowDoubleClick={handleRowClick}
       />
       
       {/* Pagination */}

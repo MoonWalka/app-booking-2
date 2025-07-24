@@ -13,6 +13,7 @@ const ContactsListHeader = () => {
         <Link 
           to="/contacts/nouveau" 
           className={styles.addButton}
+          data-tour="contacts-add-button"
         >
           <i className="bi bi-plus-lg"></i>
           Ajouter un contact

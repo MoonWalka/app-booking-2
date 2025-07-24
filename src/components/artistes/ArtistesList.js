@@ -205,7 +205,7 @@ function ArtistesList() {
       filterOptions={filterOptions}
       sort={{ field: 'nom', direction: 'asc' }}
       actions={headerActions}
-      onRowClick={handleRowClick}
+      onRowDoubleClick={handleRowClick}
       renderActions={renderActions}
       pageSize={20}
       showRefresh={true}

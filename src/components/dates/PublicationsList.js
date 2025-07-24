@@ -409,7 +409,7 @@ function PublicationsList() {
       filterOptions={filterOptions}
       sort={{ field: 'date', direction: 'asc' }}
       actions={headerActions}
-      onRowClick={handleRowClick}
+      onRowDoubleClick={handleRowClick}
       renderActions={renderActions}
       pageSize={20}
       showRefresh={true}

@@ -1,142 +1,246 @@
 /* Styles personnalisés pour le tour guidé TourCraft */
+/* Utilise le système de design tokens de l'application */
 
-/* Tooltip principal */
+/* Override des styles par défaut d'Intro.js */
+.introjs-helperLayer {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Forcer la largeur sur TOUS les tooltips Intro.js */
+.introjs-tooltip,
+.introjs-tooltip.introjs-floating,
+.introjs-tooltip.tourcraft-tooltip {
+  width: 700px !important;
+  min-width: 700px !important;
+  max-width: 90vw !important;
+}
+
+/* Override spécifique pour être sûr */
+body .introjs-tooltip {
+  width: 700px !important;
+  min-width: 700px !important;
+}
+
+/* Tooltip principal - styles additionnels */
 .tourcraft-tooltip {
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  min-width: 450px;
-  max-width: 600px;
+  border-radius: var(--tc-radius-lg);
+  box-shadow: var(--tc-shadow-lg);
+  background-color: var(--tc-color-white) !important;
+  color: var(--tc-color-text) !important;
 }
 
 /* Surbrillance des éléments */
 .tourcraft-highlight {
-  border: 3px solid #007bff;
-  border-radius: 8px;
-  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+  border: 3px solid var(--color-primary);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.25);
 }
 
 /* Header du tooltip */
 .introjs-tooltip-header {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  color: white;
-  padding: 15px 20px;
-  border-radius: 12px 12px 0 0;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--color-text-inverse);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Cacher le titre vide */
+.introjs-tooltip-title:empty {
+  display: none;
+}
+
+/* Style du bouton skip dans le header */
+.introjs-tooltip-header .introjs-skipbutton {
+  color: var(--color-text-inverse);
+  opacity: 0.9;
+  font-size: var(--font-size-sm);
+}
+
+.introjs-tooltip-header .introjs-skipbutton:hover {
+  opacity: 1;
 }
 
 /* Contenu du tooltip */
 .introjs-tooltiptext {
-  padding: 20px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: #333;
+  padding: var(--spacing-6) var(--spacing-8);
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+  color: #212529 !important;
+  min-height: 120px;
+}
+
+/* Forcer les styles pour tout le contenu */
+.introjs-tooltiptext strong {
+  color: #212529 !important;
+  font-weight: 600 !important;
+}
+
+/* Styles pour le contenu du tour */
+.introjs-tooltiptext .tour-welcome {
+  text-align: center;
+  padding: var(--spacing-5);
+}
+
+.introjs-tooltiptext .tour-welcome h2 {
+  color: #212529 !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.introjs-tooltiptext .tour-welcome p {
+  color: #212529 !important;
+  font-size: 1.125rem !important;
+  margin-bottom: 1.25rem !important;
+  line-height: 1.75 !important;
+}
+
+.introjs-tooltiptext .tour-welcome .tour-subtitle {
+  color: #6c757d !important;
+  font-size: 1rem !important;
 }
 
 /* Zone des boutons */
 .introjs-tooltipbuttons {
-  padding: 15px 20px;
-  border-top: 1px solid #e9ecef;
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: 1px solid var(--color-gray-200);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-3);
+  min-height: 60px;
+  flex-wrap: wrap;
 }
 
 /* Boutons */
 .introjs-button {
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  border-radius: var(--border-radius-base);
+  padding: var(--spacing-2) var(--spacing-4);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-base);
   white-space: nowrap;
+  font-size: var(--font-size-base);
 }
 
 .introjs-nextbutton {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
   border: none;
 }
 
 .introjs-nextbutton:hover {
-  background-color: #0056b3;
+  background-color: var(--color-primary-dark);
   transform: translateX(2px);
 }
 
 .introjs-prevbutton {
-  background-color: #f8f9fa;
-  color: #333;
-  border: 1px solid #dee2e6;
+  background-color: var(--color-gray-50);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-gray-300);
+}
+
+.introjs-prevbutton:hover {
+  background-color: var(--color-gray-100);
 }
 
 .introjs-skipbutton {
-  color: #6c757d;
-  font-weight: normal;
-  margin-left: auto;
-  margin-right: 10px;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-normal);
+  background: none;
+  border: none;
+  text-decoration: none;
+  padding: var(--spacing-2) var(--spacing-3);
+  flex-shrink: 0;
+}
+
+.introjs-skipbutton:hover {
+  color: var(--color-text-primary);
+  text-decoration: underline;
 }
 
 /* Progress bar */
 .introjs-progress {
-  background-color: #e9ecef;
+  background-color: var(--color-gray-200);
   height: 4px;
 }
 
 .introjs-progressbar {
-  background-color: #007bff;
-  transition: width 0.3s ease;
+  background-color: var(--color-primary);
+  transition: width var(--transition-base);
 }
 
 /* Bullets */
+.introjs-bullets ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: var(--spacing-2);
+}
+
 .introjs-bullets ul li a {
   width: 8px;
   height: 8px;
-  border: 2px solid #007bff;
+  border: 2px solid var(--color-primary);
   background: transparent;
+  border-radius: 50%;
+  display: block;
 }
 
 .introjs-bullets ul li a.active {
-  background: #007bff;
+  background: var(--color-primary);
 }
 
 /* Overlay */
 .introjs-overlay {
   background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9998;
+}
+
+/* Tooltip z-index */
+.introjs-tooltip {
+  z-index: 9999;
 }
 
 /* Numéro d'étape */
 .introjs-helperNumberLayer {
-  background: #007bff;
-  border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
-  font-weight: bold;
+  background: var(--color-primary);
+  border: 3px solid var(--color-white);
+  box-shadow: var(--shadow-sm);
+  font-weight: var(--font-weight-bold);
+  z-index: 9999;
 }
 
 /* Badge pour les zones en développement */
 .tour-wip {
   display: inline-block;
-  background: #ffc107;
-  color: #000;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.85em;
-  font-weight: 500;
-  margin-left: 8px;
+  background: var(--color-warning);
+  color: var(--color-gray-900);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-left: var(--spacing-2);
 }
 
 .tour-wip::before {
   content: "🚧 ";
-  margin-right: 4px;
+  margin-right: var(--spacing-1);
 }
 
 /* Animations */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.7);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+    box-shadow: 0 0 0 10px rgba(var(--color-primary-rgb), 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0);
   }
 }
 
@@ -146,8 +250,9 @@
 
 /* Fix pour le format du tooltip */
 .introjs-tooltip {
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: auto;
+  min-height: 250px;
 }
 
 /* Fix pour centrer correctement */
@@ -162,17 +267,24 @@
 /* Responsive */
 @media (max-width: 768px) {
   .tourcraft-tooltip {
+    width: auto;
     min-width: auto;
     max-width: 90vw;
-    margin: 10px;
+    margin: var(--spacing-3);
   }
   
   .introjs-tooltiptext {
-    font-size: 14px;
-    padding: 15px;
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-4);
   }
   
   .introjs-tooltipbuttons {
     flex-wrap: wrap;
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .introjs-button {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
   }
 }

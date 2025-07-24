@@ -8,12 +8,13 @@ const DatesListHeader = () => {
   const { canCreate } = usePermissions();
   
   return (
-    <div className={styles.headerContainer}>
+    <div className={styles.headerContainer} data-tour="dates-header">
       <h2 className={styles.headerTitle}>Liste des dates</h2>
       {canCreate('dates') && (
         <button
           className={styles.addButton}
           onClick={() => navigate('/dates/nouveau')}
+          data-tour="dates-add-button"
         >
           <i className="bi bi-plus-lg"></i>
           Ajouter un date

@@ -378,17 +378,20 @@ const ContactsList = () => {
   return (
     <div className={styles.contactsListContainer}>
       {/* Title and Add button */}
-      <ContactsListHeader />
+      <div className="contacts-header">
+        <ContactsListHeader />
+      </div>
 
       {/* Stats cards (placeholder) */}
       {stats && <ContactsStatsCards stats={stats} />}
 
       {/* Search and filter controls avec filtres avancés sophistiqués */}
-      <ContactsListSearchFilter 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        filteredCount={filteredContacts.length}
-        totalCount={contacts.length}
+      <div data-tour="contacts-search">
+        <ContactsListSearchFilter 
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filteredCount={filteredContacts.length}
+          totalCount={contacts.length}
         showAdvancedFilters={showAdvancedFilters}
         setShowAdvancedFilters={setShowAdvancedFilters}
         hasActiveAdvancedFilters={hasActiveAdvancedFilters}
@@ -503,7 +506,7 @@ const ContactsList = () => {
             onContactClick={(contact) => openContactTab(contact.id, contact.displayName || contact.nom || 'Contact')}
           />
         ) : (
-          <div className={styles.tableContainer}>
+          <div className={styles.tableContainer} data-tour="contacts-table">
             <Table
               columns={columns}
               data={paginatedContacts}
@@ -511,7 +514,7 @@ const ContactsList = () => {
               sortField={sortField}
               sortDirection={sortDirection}
               onSort={handleSortClick}
-              onRowClick={(row) => openContactTab(row.id, row.displayName || row.nom || 'Contact')}
+              onRowDoubleClick={(row) => openContactTab(row.id, row.displayName || row.nom || 'Contact')}
             />
           </div>
         )

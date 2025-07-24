@@ -79,24 +79,16 @@ function TachesPage() {
     const tourSteps = [
       {
         intro: `
-          <div style="text-align: center; padding: 20px;">
-            <h2 style="margin-bottom: 20px;">👋 Bienvenue dans TourCraft !</h2>
-            <p style="font-size: 16px; margin-bottom: 20px;">Découvrons ensemble comment utiliser l'application pour gérer vos concerts et événements.</p>
-            <p style="color: #6c757d;">Ce tour va vous montrer les fonctionnalités principales.</p>
+          <div class="tour-welcome">
+            <h2>👋 Bienvenue dans TourCraft !</h2>
+            <p>Découvrons ensemble comment utiliser l'application pour gérer vos concerts et événements.</p>
+            <p class="tour-subtitle">Ce tour va vous montrer les fonctionnalités principales.</p>
           </div>
         `
       },
       {
-        element: '[data-menu="collaboration"]',
-        intro: '<strong>🤝 Collaboration</strong><br/>Ici vous trouvez vos tâches, mails et notes. Cliquez pour ouvrir le menu.',
-        position: 'right',
-        beforeShow: async () => {
-          await expandMenu('collaboration');
-        }
-      },
-      {
         element: '[data-menu="contact"]',
-        intro: '<strong>📋 Contacts</strong><br/>Gérez tous vos contacts : structures, personnes, salles...',
+        intro: '<strong>📋 Contact</strong><br/>Gérez tous vos contacts : structures, personnes, salles...',
         position: 'right',
         beforeShow: async () => {
           await expandMenu('contact');
@@ -108,6 +100,14 @@ function TachesPage() {
         position: 'right',
         beforeShow: async () => {
           await expandMenu('booking');
+        }
+      },
+      {
+        element: '[data-menu="collaboration"]',
+        intro: '<strong>🤝 Collaboration</strong><br/>Ici vous trouvez vos tâches, mails et notes. Cliquez pour ouvrir le menu.',
+        position: 'right',
+        beforeShow: async () => {
+          await expandMenu('collaboration');
         }
       },
       {
@@ -344,7 +344,7 @@ function TachesPage() {
   return (
     <div className={styles.container}>
       {/* Header de la page */}
-      <div className={styles.pageHeader}>
+      <div className={styles.pageHeader} data-tour="taches-header">
         <div>
           <h1 className={styles.pageTitle}>
             <i className="bi bi-check2-square me-3"></i>
@@ -366,7 +366,7 @@ function TachesPage() {
       </div>
 
       {/* Statistiques */}
-      <div className={styles.statsRow}>
+      <div className={styles.statsRow} data-tour="taches-stats">
         <Card className={styles.statCard}>
           <div className={styles.statContent}>
             <div className={styles.statIcon}>
@@ -445,7 +445,7 @@ function TachesPage() {
       </div>
 
       {/* Filters et actions */}
-      <Card className={styles.filtersCard}>
+      <Card className={styles.filtersCard} data-tour="taches-filters">
         <div className={styles.filtersRow}>
           <div className={styles.filterGroup}>
             <Form.Control
@@ -501,7 +501,7 @@ function TachesPage() {
       </Card>
 
       {/* Tableau des tâches */}
-      <Card className={styles.tableCard}>
+      <Card className={styles.tableCard} data-tour="taches-table">
         <div className={styles.tableContainer}>
           <table className={styles.table}>
             <thead>

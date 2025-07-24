@@ -244,6 +244,13 @@ const ContratsPage = () => {
   }, []);
 
   const handleUpdateContrat = async (contratUpdated) => {
+    // Si pas de paramètre, c'est qu'on veut juste rafraîchir (après suppression par exemple)
+    if (!contratUpdated) {
+      console.log('[ContratsPage] Rafraîchissement des contrats demandé');
+      fetchContrats();
+      return;
+    }
+    
     try {
       // Préparer les données à mettre à jour
       const updates = {
@@ -444,7 +451,8 @@ const ContratsPage = () => {
               ))}
             </div>
           ) : (
-            <ContratsTableNew 
+            <div data-tour="contrats-table">
+              <ContratsTableNew 
               contrats={contrats} 
               onUpdateContrat={handleUpdateContrat}
               openDevisTab={openDevisTab}
@@ -454,6 +462,7 @@ const ContratsPage = () => {
               handleGenerateFacture={handleGenerateFacture}
               getStructureName={getStructureName}
             />
+            </div>
           )}
         </>
       )}

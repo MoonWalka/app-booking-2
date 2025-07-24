@@ -178,7 +178,9 @@ const DatesList = () => {
     <>
       <div className={styles.tableContainer}>
         {/* Section d'en-tête avec titre et bouton d'ajout */}
-        <DatesListHeader />
+        <div className="dates-header">
+          <DatesListHeader />
+        </div>
         <DatesStatsCards stats={{ total: dates.length, aVenir: dates.filter(c => !isDatePassed(c.date)).length, passes: dates.filter(c => isDatePassed(c.date)).length }} />
         
         {/* Bandeau de contrôle unifié */}
@@ -204,7 +206,7 @@ const DatesList = () => {
 
         {/* Tableau des dates */}
         {paginatedDates.length > 0 ? (
-          <div className={styles.modernTableContainer}>
+          <div className={styles.modernTableContainer} data-tour="dates-table">
             <DatesTable
               dates={paginatedDates}
               selectedIds={selectedIds}

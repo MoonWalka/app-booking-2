@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Alert, Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useTabs } from '@/context/TabsContext';
-import { db } from '@/services/firebase-service';
+import { db, storage } from '@/services/firebase-service';
 import { doc, updateDoc, serverTimestamp, getDoc } from '@/services/firebase-service';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import contratService from '@/services/contratService';
 import ContratModelsModal from '@/components/contrats/modals/ContratModelsModal';
 import ContratPdfViewerWithControls from '@/components/contrats/ContratPdfViewerWithControls';
+import ContratPdfViewerSimple from '@/components/contrats/ContratPdfViewerSimple';
 import { prepareContractData, replaceVariables } from '@/hooks/contrats/contractVariablesUnified';
 import styles from './ContratRedactionPage.module.css';
 import { toast } from 'react-toastify';
@@ -1122,6 +1124,61 @@ const ContratRedactionPage = () => {
         // Sauvegarder dans la collection contrats
         await contratService.saveContrat(id, dataToUpdate, contratData?.entrepriseId);
         
+        // Générer et sauvegarder le PDF
+        let pdfUrl = null;
+        let pdfStoragePath = null;
+        
+        try {
+          console.log('[ContratRedactionPage] Génération du PDF...');
+          
+          // Générer le numéro de contrat si nécessaire
+          const contratNumber = contratData?.contratNumber || `CONT-${Date.now()}`;
+          
+          // Récupérer toutes les données du contrat pour le PDF
+          const fullContratData = await contratService.getContratByDate(id);
+          
+          // Générer le PDF en utilisant le module existant
+          const { generateContractPdf } = await import('@/utils/pdfGenerator');
+          const pdfBlob = await generateContractPdf({
+            ...fullContratData,
+            contratNumber,
+            contratContenu: finalContent
+          });
+          
+          // Sauvegarder le PDF dans Firebase Storage
+          console.log('[ContratRedactionPage] Sauvegarde du PDF dans Firebase Storage...');
+          const fileName = `contrats/${contratData?.entrepriseId}/${contratNumber}_${Date.now()}.pdf`;
+          const fileRef = ref(storage, fileName);
+          
+          await uploadBytes(fileRef, pdfBlob, {
+            contentType: 'application/pdf',
+            customMetadata: {
+              contratId: id,
+              contratNumber: contratNumber,
+              dateId: id,
+              entrepriseId: contratData?.entrepriseId || '',
+              generatedAt: new Date().toISOString()
+            }
+          });
+          
+          // Récupérer l'URL du PDF
+          pdfUrl = await getDownloadURL(fileRef);
+          pdfStoragePath = fileName;
+          console.log('[ContratRedactionPage] PDF sauvegardé avec succès:', pdfUrl);
+          
+          // Mettre à jour le contrat avec l'URL du PDF
+          await contratService.updateContrat(id, {
+            pdfUrl: pdfUrl,
+            pdfStoragePath: pdfStoragePath,
+            contratNumber: contratNumber
+          });
+          
+        } catch (pdfError) {
+          console.error('[ContratRedactionPage] Erreur génération/sauvegarde PDF:', pdfError);
+          // On continue même si le PDF échoue
+          toast.error('Erreur lors de la génération du PDF, mais le contrat a été sauvegardé');
+        }
+        
         // Mettre à jour le statut dans la date
         const dateRef = doc(db, 'dates', id);
         await updateDoc(dateRef, {
@@ -1137,9 +1194,12 @@ const ContratRedactionPage = () => {
         if (updatedContrat) {
           setContratData(updatedContrat);
         }
+        
+        toast.success('Contrat terminé et sauvegardé avec succès !');
       }
     } catch (error) {
       console.error('[ContratRedactionPage] Erreur lors de la sauvegarde du statut du contrat:', error);
+      toast.error('Erreur lors de la finalisation du contrat');
     }
   };
 
@@ -1291,6 +1351,9 @@ const ContratRedactionPage = () => {
   
   if (isReadOnly && previewContent) {
     console.log('[ContratRedactionPage] Affichage de l\'aperçu en mode lecture seule');
+    console.log('[ContratRedactionPage] contratData:', contratData);
+    
+    // Toujours afficher le visualiseur PDF (génération à la volée)
     return (
       <Container fluid className="p-4">
         <div className={styles.editorLayout}>

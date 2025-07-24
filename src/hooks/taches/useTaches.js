@@ -14,8 +14,10 @@ export const useTaches = () => {
   const [error, setError] = useState(null);
 
   const refreshTaches = () => {
-    setLoading(true);
-    setError(null);
+    // Avec onSnapshot, les données sont automatiquement mises à jour
+    // Cette fonction est conservée pour la compatibilité mais n'est plus nécessaire
+    // car Firebase détecte automatiquement tous les changements
+    console.log('refreshTaches appelé - onSnapshot gère déjà les mises à jour automatiquement');
   };
 
   useEffect(() => {

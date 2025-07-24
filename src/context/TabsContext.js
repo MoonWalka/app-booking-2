@@ -321,17 +321,16 @@ export const TabsProvider = ({ children }) => {
     console.log('[TabsContext] openContratTab appelé - dateId:', dateId, 'isRedige:', isRedige);
     
     if (isRedige) {
-      // Si le contrat est rédigé, ouvrir directement la page de rédaction/aperçu
-      console.log('[TabsContext] Ouverture en mode aperçu (contrat rédigé)');
+      // Si le contrat est rédigé, ouvrir directement la page de rédaction
+      console.log('[TabsContext] Ouverture de la page de rédaction (contrat rédigé)');
       openTab({
         id: `contrat-redaction-${dateId}`,
-        title: `Aperçu contrat - ${dateTitle}`,
+        title: `Contrat - ${dateTitle}`,
         path: `/contrats/${dateId}/redaction`,
         component: 'ContratRedactionPage',
         params: { 
           originalDateId: dateId,
-          contratId: dateId,
-          readOnly: true // Indiquer qu'on est en mode lecture seule
+          contratId: dateId
         },
         icon: 'bi-file-earmark-check-fill'
       });

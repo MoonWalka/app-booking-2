@@ -24,7 +24,7 @@ const ContratGeneratorNew = ({
   preContratData 
 }) => {
   const navigate = useNavigate();
-  const { openTab } = useTabs();
+  const { openTab, closeTab, getActiveTab } = useTabs();
   const { currentEntreprise: currentEntreprise } = useEntreprise();
   
   // État pour l'onglet actif du panneau latéral
@@ -722,8 +722,27 @@ const ContratGeneratorNew = ({
       // Attendre un peu pour que Firebase propage les données
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Ouvrir la page de rédaction dans un nouvel onglet
-      if (openTab) {
+      // Fermer d'abord l'onglet du formulaire puis ouvrir le nouveau
+      if (openTab && closeTab && dateId) {
+        // Fermer l'onglet actuel
+        closeTab(`contrat-${dateId}`);
+        
+        // Ouvrir immédiatement le nouvel onglet
+        setTimeout(() => {
+          openTab({
+            id: `contrat-redaction-${contratId}`,
+            title: `Rédaction contrat`,
+            path: `/contrats/${contratId}/redaction`,
+            component: 'ContratRedactionPage',
+            params: { 
+              originalDateId: dateId || null,
+              contratId: contratId,
+              fromGenerator: true // Indique qu'on vient du générateur
+            }
+          });
+        }, 50);
+      } else if (openTab) {
+        // Si pas de closeTab ou dateId, juste ouvrir normalement
         openTab({
           id: `contrat-redaction-${contratId}`,
           title: `Rédaction contrat`,

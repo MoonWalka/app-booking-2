@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import '@styles/index.css';
+import './styles/tour.css';
 import { 
   BrowserRouter as Router, 
   Routes, 
@@ -57,6 +58,8 @@ import ComponentPreviewPage from '@/pages/ComponentPreviewPage';
 import PreviewWrapper from '@/components/preview/PreviewWrapper';
 import FestivalsDatesPage from '@/pages/FestivalsDatesPage';
 import PreContratFormResponsePage from '@/pages/PreContratFormResponsePage';
+import { useModuleTour } from '@/hooks/useModuleTour';
+import ModuleTourWrapper from '@/components/tour/ModuleTourWrapper';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -416,7 +419,9 @@ function App() {
                           <Route path="/*" element={
                             <PrivateRoute>
                               <TabsProvider>
-                                <Layout />
+                                <ModuleTourWrapper>
+                                  <Layout />
+                                </ModuleTourWrapper>
                               </TabsProvider>
                             </PrivateRoute>
                           } />

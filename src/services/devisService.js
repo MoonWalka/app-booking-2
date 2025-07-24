@@ -1,6 +1,7 @@
 import { collection, doc, getDoc, updateDoc, query, where, getDocs, orderBy, addDoc, deleteDoc, serverTimestamp } from '@/services/firebase-service';
 import { db } from '@/services/firebase-service';
 import tachesService from '@/services/tachesService';
+import dateNiveauService from '@/services/dateNiveauService';
 
 const devisService = {
   // Créer un nouveau devis
@@ -63,6 +64,17 @@ const devisService = {
       } catch (error) {
         console.error('⚠️ Erreur lors de la création de la tâche automatique:', error);
         // Ne pas bloquer la création du devis si la tâche échoue
+      }
+
+      // Mettre à jour le niveau de la date (interet -> option)
+      if (devisData.dateId) {
+        try {
+          await dateNiveauService.onDevisCreated(devisData.dateId);
+          console.log('✅ Niveau de la date mis à jour automatiquement');
+        } catch (error) {
+          console.error('⚠️ Erreur lors de la mise à jour du niveau:', error);
+          // Ne pas bloquer la création du devis si la mise à jour du niveau échoue
+        }
       }
       
       console.log('=== CRÉATION DEVIS - FIN ===');

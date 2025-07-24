@@ -87,14 +87,17 @@ const TableauDeBordPage = () => {
                 // Utiliser le statut réel du contrat depuis la collection 'contrats'
                 dateData.contratStatus = contrat.status || 'draft';
                 dateData.contratNumber = contrat.contratNumber;
+                // Vérifier si le contrat a du contenu (est rédigé)
+                dateData.hasContratContent = !!contrat.contratContenu;
                 console.log('[TableauDeBordPage] Statut contrat assigné:', {
                   dateId: doc.id,
                   contratId: contrat.id,
                   status: contrat.status,
-                  assignedStatus: dateData.contratStatus
+                  assignedStatus: dateData.contratStatus,
+                  hasContent: dateData.hasContratContent
                 });
                 // Si le contrat a un statut 'redige' dans la collection contrats
-                if (contrat.contratStatut === 'redige') {
+                if (contrat.contratStatut === 'redige' || contrat.contratContenu) {
                   dateData.contratStatut = 'redige';
                   dateData.hasContratRedige = true;
                 }
@@ -795,7 +798,7 @@ const TableauDeBordPage = () => {
     <Container fluid className={styles.container}>
       <Row>
         <Col>
-          <div className={styles.header}>
+          <div className={styles.header} data-tour="tableau-header">
             <div className={styles.headerContent}>
               <div>
                 <h1 className={styles.title}>
@@ -816,8 +819,8 @@ const TableauDeBordPage = () => {
             </div>
           </div>
 
-          <Card className={styles.tableCard}>
-            <Card.Body className={styles.cardBody}>
+          <Card className={styles.tableCard} data-tour="tableau-stats">
+            <Card.Body className={styles.cardBody} data-tour="tableau-calendar">
               <DatesTableView
                 dates={dates}
                 loading={loading}
@@ -852,7 +855,8 @@ const TableauDeBordPage = () => {
                     id: date.contratId,
                     status: date.contratStatus,
                     factureId: date.factureId,
-                    factureStatus: date.factureStatus
+                    factureStatus: date.factureStatus,
+                    hasContent: date.hasContratContent || date.hasContratRedige || (date.contratStatus && date.contratStatus !== 'draft')
                   };
                   if (date.factureId) {
                     console.log('[TableauDeBordPage] getContractData retourne une facture:', {

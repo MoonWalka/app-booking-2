@@ -9,6 +9,9 @@ import { useResponsive } from '@/hooks/common';
 import { EntrepriseSelector } from '@/components/entreprise';
 import { useContactModals } from '@/context/ContactModalsContext';
 import ContactModalsContainer from '@/components/contacts/modal/ContactModalsContainer';
+import AppTour from '@/components/tour/AppTour';
+import { useInteractiveTour } from '@/hooks/useInteractiveTour';
+import { useModuleTour } from '@/hooks/useModuleTour';
 import { APP_NAME } from '@/config.js';
 import layoutStyles from '@/components/layout/Layout.module.css';
 import sidebarStyles from '@/components/layout/Sidebar.module.css';
@@ -25,6 +28,8 @@ function DesktopLayout({ children }) {
   const { isMobile } = useResponsive();
   const { currentEntreprise } = useEntreprise();
   const { canEditSettings } = usePermissions();
+  const { resetTour } = useInteractiveTour();
+  const { resetAllTours } = useModuleTour();
   const { 
     openContactsListTab,
     openDatesListTab,
@@ -862,6 +867,7 @@ function DesktopLayout({ children }) {
             onClick={() => toggleMenu(item.id)}
             aria-expanded={isExpanded}
             title={item.label}
+            data-menu={item.id}
           >
             <i className={`bi ${item.icon}`}></i>
             {!isMobile && <span className={sidebarStyles.tooltip}>{item.label}</span>}
@@ -1269,7 +1275,18 @@ function DesktopLayout({ children }) {
             <h3>{APP_NAME}</h3>
           </div>
           <div className={layoutStyles.headerActions}>
-            {/* Actions du header pourront être ajoutées ici */}
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={() => {
+                resetTour();
+                window.location.reload();
+              }}
+              title="Lancer le tour guidé de l'application"
+            >
+              <i className="bi bi-question-circle me-2"></i>
+              Tour de l'app
+            </Button>
           </div>
         </div>
       </header>
@@ -1283,6 +1300,9 @@ function DesktopLayout({ children }) {
       
       {/* Conteneur des modals de contact */}
       <ContactModalsContainer />
+      
+      {/* Tour guidé de l'application */}
+      <AppTour />
       
       {/* Menu contextuel pour les recherches et sélections sauvegardées */}
       {console.log('🖱️ Rendu du composant, contextMenu:', contextMenu)}

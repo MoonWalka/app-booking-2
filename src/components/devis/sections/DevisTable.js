@@ -386,7 +386,7 @@ const DevisTable = ({ devis = [], onUpdateDevis }) => {
         columns={columns}
         data={paginatedDevis}
         renderActions={renderActions}
-        onRowClick={handleRowClick}
+        onRowDoubleClick={handleRowClick}
       />
       
       {/* Pagination */}

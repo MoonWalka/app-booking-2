@@ -298,7 +298,7 @@ const DatesTable = memo(({
         sortField={sortField}
         sortDirection={sortDirection}
         onSort={handleSort}
-        onRowClick={(row) => handleViewDate(row.id)}
+        onRowDoubleClick={(row) => handleViewDate(row.id)}
       />
     </div>
   );

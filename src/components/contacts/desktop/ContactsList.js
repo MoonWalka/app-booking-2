@@ -398,6 +398,7 @@ const ContactsList = () => {
         handleResetAdvancedFilters={handleResetAdvancedFilters}
         activeFiltersCount={activeFiltersCount()}
       />
+      </div>
       
       {/* Panel des filtres avancés */}
       {showAdvancedFilters && (

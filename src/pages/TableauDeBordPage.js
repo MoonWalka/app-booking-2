@@ -6,7 +6,7 @@ import AddButton from '@/components/ui/AddButton';
 import DatesTableView from '@/components/dates/DatesTableView';
 // useAuth import retiré car non utilisé
 import { useEntreprise } from '@/context/EntrepriseContext';
-import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { getPreContratsByDate } from '@/services/preContratService';
 import contratService from '@/services/contratService';

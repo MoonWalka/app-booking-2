@@ -1,7 +1,6 @@
 // src/components/artistes/ArtisteDetail.js
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useResponsive } from '@/hooks/common';
 
 // Imports directs des composants
 import ArtistesDesktopView from './desktop/ArtisteView';
@@ -13,7 +12,6 @@ import ArtistesDesktopView from './desktop/ArtisteView';
  */
 const ArtisteDetail = () => {
   const { id } = useParams();
-  const { isMobile } = useResponsive();
   
   // Rendu conditionnel simple avec passage de l'ID
   // Mobile désactivé temporairement - utilisation du desktop uniquement

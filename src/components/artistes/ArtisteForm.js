@@ -1,6 +1,5 @@
 // src/components/artistes/ArtisteForm.js
 import React from 'react';
-import { useResponsive } from '@/hooks/common';
 
 // Imports directs des composants
 import ArtistesDesktopForm from './desktop/ArtisteForm';
@@ -11,7 +10,6 @@ import ArtistesDesktopForm from './desktop/ArtisteForm';
  * Affiche la version desktop ou mobile selon la taille d'écran
  */
 function ArtisteForm(props) {
-  const { isMobile } = useResponsive();
   
   // Rendu conditionnel simple
   // Mobile désactivé temporairement - utilisation du desktop uniquement

@@ -5,18 +5,20 @@ import SalleCreationModal from '../components/common/modals/SalleCreationModal';
 import '@styles/index.css';
 
 const SallesPage = () => {
-  const [refreshKey, setRefreshKey] = useState(0);
+  console.log('[SallesPage] RENDER');
   const [showModal, setShowModal] = useState(false);
   
   // Récupérer la liste des salles depuis la collection 'salles'
-  const { items: salles, loading, error } = useGenericEntityList('salles', {
-    sort: { field: 'nom', direction: 'asc' },
-    refreshKey
+  const { items: salles, loading: loadingSalles, error, refetch: refetchSalles } = useGenericEntityList('salles', {
+    pageSize: 50,
+    defaultSort: { field: 'nom', direction: 'asc' }
   });
 
-  // TEMPORAIREMENT DÉSACTIVÉ - Cause une boucle infinie avec deux hooks
-  // TODO: Utiliser une approche différente pour récupérer les contacts avec infos de salle
-  const contacts = [];
+  // Récupérer aussi les contacts qui ont des informations de salle (pour compatibilité)
+  const { items: contacts, loading: loadingContacts, refetch: refetchContacts } = useGenericEntityList('contacts', {
+    pageSize: 100,
+    defaultSort: { field: 'salleNom', direction: 'asc' }
+  });
 
   const handleEdit = (contactId) => {
     // TODO: Implémenter la modification du contact pour les infos de salle
@@ -34,7 +36,8 @@ const SallesPage = () => {
 
   const handleSalleCreated = (newSalle) => {
     // Actualiser la liste après création
-    setRefreshKey(prev => prev + 1);
+    refetchSalles();
+    refetchContacts();
     console.log('Nouvelle salle créée:', newSalle);
   };
 
@@ -77,7 +80,7 @@ const SallesPage = () => {
   // Combiner les deux sources
   const sallesData = [...sallesFromSalles, ...sallesFromContacts];
 
-  if (loading) {
+  if (loadingSalles || loadingContacts) {
     return (
       <Container className="py-4">
         <div className="text-center">

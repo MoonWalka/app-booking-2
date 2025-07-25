@@ -453,9 +453,11 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
   
   // ✅ CORRECTION 11: Effet de récupération automatique optimisé
   useEffect(() => {
-    if (stableOptions.autoFetch) {
-      fetchData();
-    }
+    // Ne pas inclure currentEntreprise?.id dans les dépendances pour éviter la boucle
+    if (!stableOptions.autoFetch || !currentEntreprise?.id) return;
+    
+    // Appeler fetchData directement
+    fetchData();
     
     if (stableOptions.enableRealTime) {
       setupRealTimeListener();
@@ -476,7 +478,8 @@ const useGenericDataFetcher = (entityType, fetchConfig = {}, options = {}) => {
         abortControllerRef.current = null;
       }
     };
-  }, [stableOptions.autoFetch, stableOptions.enableRealTime, fetchData, setupRealTimeListener]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stableOptions.autoFetch, stableOptions.enableRealTime]);
   
   // ✅ CORRECTION 12: Effet de vérification de fraîcheur des données optimisé
   useEffect(() => {

@@ -1,17 +1,18 @@
 import React, { useState, useCallback } from 'react';
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useAuth } from '@/context/AuthContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
 import * as FirebaseService from '@/services/firebase-service';
 
 const TypesEvenementContent = () => {
-  const { currentEntreprise } = useAuth();
+  const { currentEntreprise } = useEntreprise();
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ nom: '', categorie: 'spectacle' });
   
   const { items: typesEvenement, loading, refetch } = useGenericEntityList('typesEvenement', {
-    sort: { field: 'nom', direction: 'asc' }
+    pageSize: 100,
+    defaultSort: { field: 'nom', direction: 'asc' }
   });
 
   const handleSubmit = useCallback(async (e) => {
@@ -19,6 +20,12 @@ const TypesEvenementContent = () => {
     
     if (!formData.nom.trim()) {
       toast.error('Le nom est obligatoire');
+      return;
+    }
+    
+    if (!currentEntreprise?.id) {
+      toast.error('Aucune entreprise sélectionnée');
+      console.error('currentEntreprise est undefined:', currentEntreprise);
       return;
     }
     
@@ -36,7 +43,7 @@ const TypesEvenementContent = () => {
         await FirebaseService.addDoc(FirebaseService.collection(FirebaseService.db, 'typesEvenement'), {
           nom: formData.nom,
           categorie: formData.categorie,
-          entrepriseId: currentEntreprise?.id,
+          entrepriseId: currentEntreprise.id,
           createdAt: new Date(),
           updatedAt: new Date()
         });

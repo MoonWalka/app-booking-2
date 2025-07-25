@@ -14,6 +14,7 @@ import FactureGeneratorPage from '@/pages/FactureGeneratorPage';
 // FactureDetailsPage remplacé par FactureGeneratorPage
 import DevisPage from '@/pages/DevisPage';
 import BookingParametragePage from '@/pages/BookingParametragePage';
+// import BookingParametragePage from '@/pages/BookingParametragePageSimple'; // Version temporaire sans boucle
 import ProjetsPage from '@/pages/ProjetsPage';
 import SallesPage from '@/pages/SallesPage';
 import TableauDeBordPage from '@/pages/TableauDeBordPage';

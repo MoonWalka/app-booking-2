@@ -135,7 +135,7 @@ function ContactBottomTabs({
                       openTab({
                         id: 'gerer-salles',
                         title: 'Gérer les salles',
-                        path: '/parametres/salles',
+                        path: '/salles',
                         component: 'SallesPage',
                         icon: 'bi-building'
                       });

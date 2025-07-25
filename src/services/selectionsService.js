@@ -110,6 +110,17 @@ class SelectionsService {
       };
     } catch (error) {
       console.error('❌ [SelectionsService] Erreur récupération sélections:', error);
+      
+      // Si c'est une erreur d'index en construction, retourner un tableau vide temporairement
+      if (error.code === 'failed-precondition' && error.message.includes('index') && error.message.includes('building')) {
+        console.warn('⚠️ [SelectionsService] Index en cours de construction, veuillez patienter quelques minutes');
+        return {
+          success: true,
+          data: [],
+          warning: 'Index en cours de construction. Les sélections seront disponibles dans quelques minutes.'
+        };
+      }
+      
       return {
         success: false,
         error: error.message,

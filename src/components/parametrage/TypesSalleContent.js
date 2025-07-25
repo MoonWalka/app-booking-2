@@ -1,16 +1,17 @@
 import React, { useState, useCallback } from 'react';
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useAuth } from '@/context/AuthContext';
+import { useEntreprise } from '@/context/EntrepriseContext';
 import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
 import * as FirebaseService from '@/services/firebase-service';
 
 const TypesSalleContent = () => {
-  const { currentEntreprise } = useAuth();
+  const { currentEntreprise } = useEntreprise();
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ nom: '' });
   const { items: typesSalle, loading, refetch } = useGenericEntityList('typesSalle', {
-    sort: { field: 'nom', direction: 'asc' }
+    pageSize: 100,
+    defaultSort: { field: 'nom', direction: 'asc' }
   });
 
   const handleSubmit = useCallback(async (e) => {
@@ -21,9 +22,15 @@ const TypesSalleContent = () => {
       return;
     }
     
+    if (!currentEntreprise?.id) {
+      toast.error('Aucune entreprise sélectionnée');
+      console.error('currentEntreprise est undefined:', currentEntreprise);
+      return;
+    }
+    
     const dataToSave = {
       nom: formData.nom,
-      entrepriseId: currentEntreprise?.id,
+      entrepriseId: currentEntreprise.id,
       createdAt: editingId ? undefined : new Date(),
       updatedAt: new Date()
     };

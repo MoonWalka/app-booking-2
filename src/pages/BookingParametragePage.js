@@ -19,12 +19,11 @@ const BookingParametragePage = () => {
   
   // Configuration stable pour éviter les re-renders
   const artistesConfig = React.useMemo(() => ({
-    sort: { field: 'nom', direction: 'asc' }
-    // Retirer refreshKey de la config pour éviter la boucle
+    defaultSort: { field: 'nom', direction: 'asc' }
   }), []); // Dépendances vides = stable
   
   const projetsConfig = React.useMemo(() => ({
-    sort: { field: 'intitule', direction: 'asc' }
+    defaultSort: { field: 'intitule', direction: 'asc' }
   }), []);
   
   // Récupérer la liste des artistes pour le menu
@@ -44,8 +43,10 @@ const BookingParametragePage = () => {
 
   
   // Sélectionner le premier artiste si aucun n'est sélectionné
-  // Mais sans useEffect pour éviter les boucles infinies
-  const effectiveSelectedArtisteId = selectedArtisteId || (artistes.length > 0 ? artistes[0].id : null);
+  // Utiliser useMemo pour stabiliser cette valeur
+  const effectiveSelectedArtisteId = React.useMemo(() => {
+    return selectedArtisteId || (artistes.length > 0 ? artistes[0].id : null);
+  }, [selectedArtisteId, artistes]);
 
   
   // Gestionnaire pour la sélection d'un artiste
@@ -58,12 +59,9 @@ const BookingParametragePage = () => {
   // Gestionnaire pour la création/modification d'un artiste
   const handleArtisteCreated = useCallback((artisteData) => {
     console.log('Artiste créé/modifié:', artisteData);
-    // Utiliser setTimeout pour éviter la boucle infinie
-    setTimeout(() => {
-      refetchArtistes(); // Rafraîchir la liste après un court délai
-    }, 100);
+    // Ne pas appeler refetch car les données se mettent à jour automatiquement via Firebase
     setEditArtisteData(null); // Réinitialiser le mode édition
-  }, [refetchArtistes]);
+  }, []);
   
   // Gestionnaire pour ouvrir la modal en mode édition
   const handleEditArtiste = useCallback((artiste) => {
@@ -86,28 +84,18 @@ const BookingParametragePage = () => {
   // Gestionnaires pour les projets
   const handleProjetCreated = useCallback((projetData) => {
     console.log('Projet créé/modifié:', projetData);
-    // Utiliser setTimeout pour éviter la boucle infinie
-    setTimeout(() => {
-      refetchProjets(); // Rafraîchir la liste après un court délai
-    }, 100);
+    // Ne pas appeler refetch car les données se mettent à jour automatiquement via Firebase
     setEditProjetData(null); // Réinitialiser le mode édition
-  }, [refetchProjets]);
+  }, []);
   
-  // Mémoriser les données initiales pour éviter les re-créations d'objet
-  const initialProjetData = React.useMemo(() => {
-    if (effectiveSelectedArtisteId) {
-      return {
-        artistesSelectionnes: [effectiveSelectedArtisteId]
-      };
-    }
-    return null;
-  }, [effectiveSelectedArtisteId]);
-
   const handleCreateProjet = useCallback(() => {
-    // Utiliser les données mémorisées
-    setEditProjetData(initialProjetData);
+    // Créer les données directement dans le handler pour éviter les dépendances circulaires
+    const projetData = effectiveSelectedArtisteId ? {
+      artistesSelectionnes: [effectiveSelectedArtisteId]
+    } : null;
+    setEditProjetData(projetData);
     setShowProjetModal(true);
-  }, [initialProjetData]);
+  }, [effectiveSelectedArtisteId]);
   
   const handleCloseProjetModal = useCallback(() => {
     setShowProjetModal(false);
@@ -403,18 +391,12 @@ const BookingParametragePage = () => {
         )}
         {activeTab === 'types-evenement' && (
           <Col md={10}>
-            <div className="alert alert-warning">
-              Types d'événement - Temporairement désactivé (boucle infinie)
-            </div>
-            {/* <TypesEvenementContent /> */}
+            <TypesEvenementContent />
           </Col>
         )}
         {activeTab === 'types-salle' && (
           <Col md={10}>
-            <div className="alert alert-warning">
-              Types de salle - Temporairement désactivé (boucle infinie)
-            </div>
-            {/* <TypesSalleContent /> */}
+            <TypesSalleContent />
           </Col>
         )}
       </Row>

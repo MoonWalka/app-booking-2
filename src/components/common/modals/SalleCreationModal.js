@@ -4,12 +4,23 @@ import { addDoc, collection } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { toast } from 'react-toastify';
+import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
 
 const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
   const { currentEntreprise } = useEntreprise();
   const [activeTab, setActiveTab] = useState('general');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  
+  // Récupérer les types de salle depuis le paramétrage
+  const { items: typesSalle } = useGenericEntityList('typesSalle', {
+    pageSize: 100,
+    defaultSort: { field: 'nom', direction: 'asc' }
+  });
+  
+  // Debug
+  console.log('[SalleCreationModal] Types de salle récupérés:', typesSalle);
+  console.log('[SalleCreationModal] Entreprise courante:', currentEntreprise?.id);
 
   const [formData, setFormData] = useState({
     // Informations générales
@@ -457,16 +468,14 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
                         onChange={handleChange}
                       >
                         <option value="">Sélectionner un type</option>
-                        <option value="Salle de date">Salle de date</option>
-                        <option value="Théâtre">Théâtre</option>
-                        <option value="Opéra">Opéra</option>
-                        <option value="Auditorium">Auditorium</option>
-                        <option value="Centre culturel">Centre culturel</option>
-                        <option value="MJC">MJC</option>
-                        <option value="Café-date">Café-date</option>
-                        <option value="Club">Club</option>
-                        <option value="Plein air">Plein air</option>
-                        <option value="Autre">Autre</option>
+                        {typesSalle.map(type => (
+                          <option key={type.id} value={type.nom}>
+                            {type.nom}
+                          </option>
+                        ))}
+                        {typesSalle.length === 0 && (
+                          <option value="" disabled>Aucun type configuré</option>
+                        )}
                       </Form.Select>
                     </Form.Group>
                   </Col>

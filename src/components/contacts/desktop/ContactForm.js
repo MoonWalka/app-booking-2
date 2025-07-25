@@ -336,9 +336,10 @@ const ContactForm = () => {
       errors.push('Le prénom est obligatoire');
     }
     
-    if (!formData.nom.trim()) {
-      errors.push('Le nom est obligatoire');
-    }
+    // Le nom n'est plus obligatoire
+    // if (!formData.nom.trim()) {
+    //   errors.push('Le nom est obligatoire');
+    // }
     
     // Email facultatif, mais si fourni, doit être valide
     if (formData.email.trim() && !/^\S+@\S+\.\S+$/.test(formData.email)) {

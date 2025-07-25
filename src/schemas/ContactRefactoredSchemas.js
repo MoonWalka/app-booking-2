@@ -211,8 +211,11 @@ export const personneSchema = Yup.object().shape({
     .max(100, 'Maximum 100 caractères'),
   
   nom: Yup.string()
-    .required('Nom requis')
-    .min(2, 'Minimum 2 caractères')
+    .nullable()
+    .test('min-length', 'Minimum 2 caractères', function(value) {
+      if (!value || value === '') return true; // Accepter vide ou null
+      return value.length >= 2;
+    })
     .max(100, 'Maximum 100 caractères'),
   
   // Contact principal (unique dans l'organisation si fourni)

@@ -141,8 +141,8 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.prenom.trim() || !formData.nom.trim()) {
-      alert('Le prénom et le nom sont obligatoires');
+    if (!formData.prenom.trim()) {
+      alert('Le prénom est obligatoire');
       return;
     }
 
@@ -493,13 +493,12 @@ function PersonneCreationModal({ show, onHide, onCreated, editMode = false, init
             </div>
             
             <div className="col-md-4 mb-3">
-              <Form.Label>Nom *</Form.Label>
+              <Form.Label>Nom</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Nom de famille"
                 value={formData.nom}
                 onChange={(e) => handleInputChange('nom', e.target.value)}
-                required
               />
             </div>
             

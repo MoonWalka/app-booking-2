@@ -14,17 +14,9 @@ const SallesPage = () => {
     refreshKey
   });
 
-  // Récupérer aussi les contacts qui ont des informations de salle (pour compatibilité)
-  const { items: contacts } = useGenericEntityList('contacts', {
-    sort: { field: 'salleNom', direction: 'asc' },
-    refreshKey,
-    // Filtrer uniquement les contacts qui ont au moins un nom de salle
-    filter: {
-      field: 'salleNom',
-      operator: '!=',
-      value: ''
-    }
-  });
+  // TEMPORAIREMENT DÉSACTIVÉ - Cause une boucle infinie avec deux hooks
+  // TODO: Utiliser une approche différente pour récupérer les contacts avec infos de salle
+  const contacts = [];
 
   const handleEdit = (contactId) => {
     // TODO: Implémenter la modification du contact pour les infos de salle

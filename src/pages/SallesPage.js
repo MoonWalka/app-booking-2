@@ -1,8 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
 import useGenericEntityList from '../hooks/generics/lists/useGenericEntityList';
 import SalleCreationModal from '../components/common/modals/SalleCreationModal';
 import '@styles/index.css';
+
+/**
+ * Formate un numéro de téléphone avec des espaces
+ */
+const formatPhoneNumber = (phone) => {
+  if (!phone) return phone;
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.length === 10 && cleaned.startsWith('0')) {
+    return cleaned.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5');
+  }
+  if (cleaned.length === 11 && cleaned.startsWith('33')) {
+    return cleaned.replace(/(\d{2})(\d{1})(\d{2})(\d{2})(\d{2})(\d{2})/, '+$1 $2 $3 $4 $5 $6');
+  }
+  return phone;
+};
+
+/**
+ * Composant pour afficher un numéro de téléphone avec toggle de formatage
+ */
+const PhoneDisplay = ({ phone }) => {
+  const [isFormatted, setIsFormatted] = useState(() => {
+    const saved = localStorage.getItem('phoneFormatPreference');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('phoneFormatPreference', isFormatted);
+  }, [isFormatted]);
+
+  if (!phone || phone === '-') return phone;
+
+  const displayPhone = isFormatted ? formatPhoneNumber(phone) : phone;
+
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+      <span>{displayPhone}</span>
+      <button
+        onClick={() => setIsFormatted(!isFormatted)}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '1px',
+          color: '#6c757d',
+          fontSize: '12px',
+          display: 'inline-flex',
+          alignItems: 'center',
+          transition: 'color 0.2s'
+        }}
+        onMouseEnter={(e) => e.target.style.color = '#007bff'}
+        onMouseLeave={(e) => e.target.style.color = '#6c757d'}
+        title={isFormatted ? 'Afficher sans formatage' : 'Afficher avec formatage'}
+      >
+        <i className={isFormatted ? 'bi bi-dash-circle' : 'bi bi-plus-circle'}></i>
+      </button>
+    </span>
+  );
+};
 
 const SallesPage = () => {
   console.log('[SallesPage] RENDER');
@@ -162,7 +220,7 @@ const SallesPage = () => {
             <Col>
               <div className="table-responsive">
                 <Table striped bordered hover className="mb-0">
-                  <thead className="table-dark">
+                  <thead className="bg-light">
                     <tr>
                       <th>Nom de la salle</th>
                       <th>Adresse</th>
@@ -202,7 +260,7 @@ const SallesPage = () => {
                         <td>{salle.departement || '-'}</td>
                         <td>{salle.region || '-'}</td>
                         <td>{salle.pays || '-'}</td>
-                        <td>{salle.telephone || '-'}</td>
+                        <td><PhoneDisplay phone={salle.telephone || '-'} /></td>
                         <td>
                           <span className="fw-bold text-primary">
                             {salle.jauges || '-'}

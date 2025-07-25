@@ -284,7 +284,7 @@ const ContactsList = () => {
           className={styles.actionButton}
           onClick={(e) => {
             e.stopPropagation();
-            handleDeleteContact(row.id);
+            handleDeleteContact(row.id, e, row.entityType || 'structure');
           }} 
           disabled={isDeleting}
           title="Supprimer"

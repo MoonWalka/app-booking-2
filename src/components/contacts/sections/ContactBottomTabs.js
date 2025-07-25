@@ -1,11 +1,70 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ContactDatesTable from '../ContactDatesTable';
 import ContratsTableNew from '@/components/contrats/sections/ContratsTableNew';
 import ContactFacturesTable from '../ContactFacturesTable';
 import ContactFestivalsTable from '../ContactFestivalsTable';
+import HistoriqueEchanges from '../HistoriqueEchanges';
 import { useContactContrats } from '@/hooks/contacts/useContactContrats';
 import { useTabs } from '@/context/TabsContext';
 import styles from '../ContactViewTabs.module.css';
+
+/**
+ * Formate un numéro de téléphone avec des espaces
+ */
+const formatPhoneNumber = (phone) => {
+  if (!phone) return phone;
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.length === 10 && cleaned.startsWith('0')) {
+    return cleaned.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5');
+  }
+  if (cleaned.length === 11 && cleaned.startsWith('33')) {
+    return cleaned.replace(/(\d{2})(\d{1})(\d{2})(\d{2})(\d{2})(\d{2})/, '+$1 $2 $3 $4 $5 $6');
+  }
+  return phone;
+};
+
+/**
+ * Composant pour afficher un numéro de téléphone avec toggle de formatage
+ */
+const PhoneDisplay = ({ phone }) => {
+  const [isFormatted, setIsFormatted] = useState(() => {
+    const saved = localStorage.getItem('phoneFormatPreference');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('phoneFormatPreference', isFormatted);
+  }, [isFormatted]);
+
+  if (!phone) return phone;
+
+  const displayPhone = isFormatted ? formatPhoneNumber(phone) : phone;
+
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+      <span>{displayPhone}</span>
+      <button
+        onClick={() => setIsFormatted(!isFormatted)}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '2px',
+          color: '#6c757d',
+          fontSize: '14px',
+          display: 'inline-flex',
+          alignItems: 'center',
+          transition: 'color 0.2s'
+        }}
+        onMouseEnter={(e) => e.target.style.color = '#007bff'}
+        onMouseLeave={(e) => e.target.style.color = '#6c757d'}
+        title={isFormatted ? 'Afficher sans formatage' : 'Afficher avec formatage'}
+      >
+        <i className={isFormatted ? 'bi bi-dash-circle' : 'bi bi-plus-circle'}></i>
+      </button>
+    </span>
+  );
+};
 
 /**
  * Gestion du contenu des onglets du bas
@@ -63,15 +122,10 @@ function ContactBottomTabs({
       case 'historique':
         return (
           <div className={styles.tabContent}>
-            <div className={`${styles.tabContentCentered} ${styles.constructionZone}`}>
-              <i className="bi bi-clock-history" style={{ fontSize: '3rem', color: '#28a745' }}></i>
-              <h3>Section Historique</h3>
-              <p>En construction</p>
-              <small>
-                Cette section contiendra bientôt toutes les informations relatives à l'historique 
-                de ce contact.
-              </small>
-            </div>
+            <HistoriqueEchanges 
+              contactId={contactId}
+              dates={datesData}
+            />
           </div>
         );
 
@@ -172,7 +226,7 @@ function ContactBottomTabs({
                 {extractedData?.salleTelephone && (
                   <div className={styles.metadataItem}>
                     <strong>Téléphone:</strong>
-                    <span>{extractedData.salleTelephone}</span>
+                    <span><PhoneDisplay phone={extractedData.salleTelephone} /></span>
                   </div>
                 )}
                 {(extractedData?.salleJauge1 || extractedData?.salleJauge2 || extractedData?.salleJauge3) && (

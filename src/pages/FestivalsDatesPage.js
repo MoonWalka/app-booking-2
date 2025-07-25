@@ -114,40 +114,43 @@ const FestivalsDatesPage = () => {
         </Button>
       </div>
 
-      {festivals.length === 0 ? (
-        <div className="text-center py-5">
-          <i className="bi bi-calendar2-week" style={{ fontSize: '3rem', color: '#6c757d' }}></i>
-          <p className="mt-3">Aucun festival enregistré</p>
-        </div>
-      ) : (
-        <div className={styles.tableWrapper}>
-          <table className={styles.festivalsTable}>
-            <thead>
-              <tr>
-                <th className={styles.fixedColumn}>
-                  <Form.Check
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={handleSelectAll}
-                    className="me-2"
-                  />
+      <div className={styles.tableWrapper}>
+        <table className={styles.festivalsTable}>
+          <thead>
+            <tr>
+              <th className={styles.fixedColumn}>
+                <Form.Check
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                  className="me-2"
+                  disabled={festivals.length === 0}
+                />
+              </th>
+              <th className={styles.nameColumn}>Nom du festival</th>
+              {months.map((month, index) => (
+                <th key={index} className={styles.monthColumn}>
+                  <div className={styles.monthHeader}>{month}</div>
+                  <div className={styles.weekHeaders}>
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                  </div>
                 </th>
-                <th className={styles.nameColumn}>Nom du festival</th>
-                {months.map((month, index) => (
-                  <th key={index} className={styles.monthColumn}>
-                    <div className={styles.monthHeader}>{month}</div>
-                    <div className={styles.weekHeaders}>
-                      <span>1</span>
-                      <span>2</span>
-                      <span>3</span>
-                      <span>4</span>
-                    </div>
-                  </th>
-                ))}
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {festivals.length === 0 ? (
+              <tr>
+                <td colSpan={14} className="text-center py-5">
+                  <i className="bi bi-calendar2-week" style={{ fontSize: '2rem', color: '#6c757d' }}></i>
+                  <p className="mt-2 mb-0">Aucun festival enregistré</p>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {festivals.map((festival) => (
+            ) : (
+              festivals.map((festival) => (
                 <tr key={festival.id}>
                   <td className={styles.fixedColumn}>
                     <Form.Check
@@ -183,11 +186,11 @@ const FestivalsDatesPage = () => {
                     </td>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </Container>
   );
 };

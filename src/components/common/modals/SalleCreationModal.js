@@ -5,6 +5,7 @@ import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { toast } from 'react-toastify';
 import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
+import AddressInputGoogle from '@/components/ui/AddressInputGoogle';
 
 const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
   const { currentEntreprise } = useEntreprise();
@@ -240,16 +241,30 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>
-                    <i className="bi bi-geo-alt me-2"></i>
-                    Adresse
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
+                  <AddressInputGoogle
+                    label={
+                      <>
+                        <i className="bi bi-geo-alt me-2"></i>
+                        Adresse
+                      </>
+                    }
                     name="adresse"
                     value={formData.adresse}
                     onChange={handleChange}
-                    placeholder="Numéro et nom de rue"
+                    onAddressSelected={(addressData) => {
+                      // Remplir automatiquement les champs d'adresse
+                      console.log('Données reçues de Google:', addressData);
+                      setFormData(prev => ({
+                        ...prev,
+                        adresse: addressData.adresse || addressData.formattedAddress || '',
+                        codePostal: addressData.codePostal || prev.codePostal,
+                        ville: addressData.ville || prev.ville,
+                        region: addressData.region || prev.region,
+                        departement: addressData.departement || prev.departement,
+                        pays: addressData.pays || prev.pays
+                      }));
+                    }}
+                    placeholder="Commencez à taper pour rechercher une adresse..."
                   />
                 </Form.Group>
 

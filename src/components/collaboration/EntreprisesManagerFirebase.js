@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Button, Form, Modal, Alert, Nav } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import { doc, getDoc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs, deleteDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import usePermissions from '@/hooks/usePermissions';
+import collaborateurService from '@/services/collaborateurService';
 import './EntreprisesManager.css';
 
 /**
@@ -365,6 +366,13 @@ const EntreprisesManagerFirebase = () => {
         try {
             setLoading(true);
             await saveEntreprisesToFirebase(entreprisesList);
+            
+            // Mettre à jour aussi le document principal de l'entreprise avec les collaborateurs sélectionnés
+            const entrepriseDocRef = doc(db, 'entreprises', currentEntreprise.id);
+            await updateDoc(entrepriseDocRef, {
+                collaborateurs: selectedCollaborateurs,
+                updatedAt: serverTimestamp()
+            });
             
             // Si c'est l'entreprise principale, mettre à jour aussi dans settings/entreprise
             if (selectedEntreprise.principal || selectedEntreprise.id === 'main') {
@@ -1004,14 +1012,11 @@ const EntreprisesManagerFirebase = () => {
             
             setLoadingCollaborateurs(true);
             try {
-                // Charger les collaborateurs depuis la collection
-                const collaborateursRef = collection(db, 'entreprises', currentEntreprise.id, 'collaborateurs');
-                const collaborateursSnapshot = await getDocs(collaborateursRef);
+                console.log('[EntreprisesManager] Chargement des collaborateurs pour entreprise:', currentEntreprise.id);
                 
-                const collaborateurs = [];
-                collaborateursSnapshot.forEach(doc => {
-                    collaborateurs.push({ id: doc.id, ...doc.data() });
-                });
+                // Utiliser le service pour charger les collaborateurs
+                const collaborateurs = await collaborateurService.getCollaborateursByOrganization(currentEntreprise.id);
+                console.log('[EntreprisesManager] Collaborateurs chargés:', collaborateurs.length);
                 
                 setAllCollaborateurs(collaborateurs);
                 
@@ -1019,7 +1024,13 @@ const EntreprisesManagerFirebase = () => {
                 if (selectedEntreprise.collaborateurs && Array.isArray(selectedEntreprise.collaborateurs)) {
                     setSelectedCollaborateurs(selectedEntreprise.collaborateurs);
                 } else {
-                    setSelectedCollaborateurs([]);
+                    // Si aucun collaborateur n'est associé, ajouter automatiquement le propriétaire
+                    const owner = collaborateurs.find(c => c.id === selectedEntreprise.ownerId);
+                    if (owner) {
+                        setSelectedCollaborateurs([owner.id]);
+                    } else {
+                        setSelectedCollaborateurs([]);
+                    }
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des collaborateurs:', error);
@@ -1099,7 +1110,12 @@ const EntreprisesManagerFirebase = () => {
                                             id={`collab-${collaborateur.id}`}
                                             label={
                                                 <div>
-                                                    <strong>{collaborateur.prenom} {collaborateur.nom}</strong>
+                                                    <strong>
+                                                        {collaborateur.prenom && collaborateur.nom ? 
+                                                            `${collaborateur.prenom} ${collaborateur.nom}` : 
+                                                            collaborateur.displayName || collaborateur.email || 'Sans nom'
+                                                        }
+                                                    </strong>
                                                     <br />
                                                     <small className="text-muted">{collaborateur.email}</small>
                                                 </div>

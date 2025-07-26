@@ -336,6 +336,7 @@ export const createEntreprise = async (entrepriseData, userId, userData = null) 
       ...entrepriseData,
       slug: entrepriseData.slug || entrepriseData.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
       ownerId: userId,
+      collaborateurs: [userId], // Ajouter automatiquement le créateur comme collaborateur
       members: {
         [userId]: {
           role: 'owner',

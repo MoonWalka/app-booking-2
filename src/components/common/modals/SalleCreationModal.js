@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Tab, Tabs, Form, Row, Col, Button, Alert } from 'react-bootstrap';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, updateDoc, doc, collection } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { toast } from 'react-toastify';
 import useGenericEntityList from '@/hooks/generics/lists/useGenericEntityList';
 import AddressInputGoogle from '@/components/ui/AddressInputGoogle';
 
-const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
+const SalleCreationModal = ({ show, onHide, onSalleCreated, editMode = false, initialData = null }) => {
   const { currentEntreprise } = useEntreprise();
   const [activeTab, setActiveTab] = useState('general');
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
   
   // Debug
   console.log('[SalleCreationModal] Types de salle récupérés:', typesSalle);
-  console.log('[SalleCreationModal] Entreprise courante:', currentEntreprise?.id);
+  console.log('[SalleCreationModal] Props:', { show, editMode, initialData });
 
   const [formData, setFormData] = useState({
     // Informations générales
@@ -60,6 +60,82 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
     // Commentaires
     commentaires: ''
   });
+
+  // Effect pour charger les données en mode édition
+  useEffect(() => {
+    console.log('🏢 [SalleCreationModal] useEffect déclenché:', { editMode, initialData });
+    
+    if (editMode && initialData) {
+      // Charger les données de la salle pour l'édition
+      console.log('🏢 [SalleCreationModal] Chargement des données pour édition:', initialData);
+      
+      setFormData({
+        // Informations générales
+        nom: initialData.nom || '',
+        adresse: initialData.adresse || '',
+        suiteAdresse: initialData.suiteAdresse || '',
+        suiteAdresse2: initialData.suiteAdresse2 || '',
+        suiteAdresse3: initialData.suiteAdresse3 || '',
+        codePostal: initialData.codePostal || '',
+        ville: initialData.ville || '',
+        pays: initialData.pays || 'France',
+        region: initialData.region || '',
+        departement: initialData.departement || '',
+        telephone: initialData.telephone || '',
+        fax: initialData.fax || '',
+        email: initialData.email || '',
+        siteInternet: initialData.siteInternet || '',
+        
+        // Informations techniques
+        responsable: initialData.responsable || '',
+        type: initialData.type || '',
+        ouverture: initialData.ouverture || '',
+        profondeur: initialData.profondeur || '',
+        hauteur: initialData.hauteur || '',
+        jauges: initialData.jauges || '',
+        hauteurSalleScene: initialData.hauteurSalleScene || '',
+        plateaux: initialData.plateaux || '',
+        penteScene: initialData.penteScene || '',
+        fosse: initialData.fosse || '',
+        proscenium: initialData.proscenium || '',
+        horaires: initialData.horaires || '',
+        
+        // Commentaires
+        commentaires: initialData.commentaires || ''
+      });
+    } else if (!editMode) {
+      // Réinitialiser en mode création
+      setFormData({
+        nom: '',
+        adresse: '',
+        suiteAdresse: '',
+        suiteAdresse2: '',
+        suiteAdresse3: '',
+        codePostal: '',
+        ville: '',
+        pays: 'France',
+        region: '',
+        departement: '',
+        telephone: '',
+        fax: '',
+        email: '',
+        siteInternet: '',
+        responsable: '',
+        type: '',
+        ouverture: '',
+        profondeur: '',
+        hauteur: '',
+        jauges: '',
+        hauteurSalleScene: '',
+        plateaux: '',
+        penteScene: '',
+        fosse: '',
+        proscenium: '',
+        horaires: '',
+        commentaires: ''
+      });
+    }
+  }, [editMode, initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -114,22 +190,48 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
     setLoading(true);
     
     try {
-      const salleData = {
-        ...formData,
-        entrepriseId: currentEntreprise?.id,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      
-      const docRef = await addDoc(collection(db, 'salles'), salleData);
-      
-      toast.success('Salle créée avec succès !');
-      
-      if (onSalleCreated) {
-        onSalleCreated({
-          id: docRef.id,
-          ...salleData
-        });
+      if (editMode && initialData) {
+        // Mode édition - mettre à jour la salle existante
+        console.log('🔄 [SalleCreationModal] Mode édition - mise à jour de la salle:', initialData.id);
+        
+        const updatedData = {
+          ...formData,
+          entrepriseId: currentEntreprise?.id,
+          updatedAt: new Date()
+        };
+        
+        // Enlever createdAt pour l'update
+        delete updatedData.createdAt;
+        
+        await updateDoc(doc(db, 'salles', initialData.id), updatedData);
+        
+        toast.success('Salle mise à jour avec succès !');
+        
+        if (onSalleCreated) {
+          onSalleCreated({
+            id: initialData.id,
+            ...updatedData
+          });
+        }
+      } else {
+        // Mode création - créer une nouvelle salle
+        const salleData = {
+          ...formData,
+          entrepriseId: currentEntreprise?.id,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        const docRef = await addDoc(collection(db, 'salles'), salleData);
+        
+        toast.success('Salle créée avec succès !');
+        
+        if (onSalleCreated) {
+          onSalleCreated({
+            id: docRef.id,
+            ...salleData
+          });
+        }
       }
       
       // Réinitialiser le formulaire
@@ -186,8 +288,8 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
     <Modal show={show} onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <i className="bi bi-building me-2"></i>
-          Nouvelle salle
+          <i className={`bi ${editMode ? 'bi-building-gear' : 'bi-building-add'} me-2`}></i>
+          {editMode ? 'Modifier la salle' : 'Nouvelle salle'}
         </Modal.Title>
       </Modal.Header>
       
@@ -732,12 +834,12 @@ const SalleCreationModal = ({ show, onHide, onSalleCreated }) => {
             {loading ? (
               <>
                 <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Création...
+                {editMode ? 'Mise à jour...' : 'Création...'}
               </>
             ) : (
               <>
                 <i className="bi bi-check-lg me-2"></i>
-                Créer la salle
+                {editMode ? 'Mettre à jour' : 'Créer la salle'}
               </>
             )}
           </Button>

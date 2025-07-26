@@ -12,6 +12,10 @@ const OnboardingFlow = ({ onComplete }) => {
   const urlParams = new URLSearchParams(window.location.search);
   const action = urlParams.get('action');
   
+  // Récupérer les données du nouvel utilisateur depuis sessionStorage
+  const newUserDataStr = sessionStorage.getItem('newUserData');
+  const newUserData = newUserDataStr ? JSON.parse(newUserDataStr) : null;
+  
   const getInitialStep = () => {
     if (action === 'create') return 'create';
     if (action === 'join') return 'join';
@@ -44,8 +48,14 @@ const OnboardingFlow = ({ onComplete }) => {
     try {
       console.log('📝 Création de l\'entreprise:', entrepriseData.name);
       
-      const entrepriseId = await createEntreprise(entrepriseData, currentUser.uid);
+      // Passer les données utilisateur si disponibles
+      const entrepriseId = await createEntreprise(entrepriseData, currentUser.uid, newUserData);
       console.log('✅ Entreprise créée:', entrepriseId);
+      
+      // Nettoyer les données temporaires
+      if (newUserData) {
+        sessionStorage.removeItem('newUserData');
+      }
       
       // Recharger les entreprises
       await loadUserEntreprises();

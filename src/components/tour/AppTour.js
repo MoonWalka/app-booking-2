@@ -109,17 +109,19 @@ const AppTour = () => {
     }
   ];
 
-  // Lancer le tour automatiquement au premier chargement
+  // Fonction pour démarrer le tour manuellement
+  const startManualTour = React.useCallback(() => {
+    startInteractiveTour(tourSteps);
+  }, [startInteractiveTour]);
+
+  // Exposer la fonction via un événement global
   useEffect(() => {
-    if (!hasSeenTour && location.pathname === '/') {
-      // Petit délai pour que tout soit chargé
-      const timer = setTimeout(() => {
-        startInteractiveTour(tourSteps);
-      }, 1000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [hasSeenTour, location]);
+    window.startAppTour = startManualTour;
+    
+    return () => {
+      delete window.startAppTour;
+    };
+  }, [startManualTour]);
 
   return null; // Ce composant ne rend rien visuellement
 };

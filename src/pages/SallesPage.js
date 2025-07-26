@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { db } from '@/services/firebase-service';
+import { toast } from 'react-toastify';
 import useGenericEntityList from '../hooks/generics/lists/useGenericEntityList';
 import SalleCreationModal from '../components/common/modals/SalleCreationModal';
 import '@styles/index.css';
@@ -65,6 +68,8 @@ const PhoneDisplay = ({ phone }) => {
 const SallesPage = () => {
   console.log('[SallesPage] RENDER');
   const [showModal, setShowModal] = useState(false);
+  const [editingMode, setEditingMode] = useState(false);
+  const [salleToEdit, setSalleToEdit] = useState(null);
   
   // Récupérer la liste des salles depuis la collection 'salles'
   const { items: salles, loading: loadingSalles, error, refetch: refetchSalles } = useGenericEntityList('salles', {
@@ -78,25 +83,62 @@ const SallesPage = () => {
     defaultSort: { field: 'salleNom', direction: 'asc' }
   });
 
-  const handleEdit = (contactId) => {
-    // TODO: Implémenter la modification du contact pour les infos de salle
-    console.log('Modifier les infos de salle pour le contact:', contactId);
+  const handleEdit = (salleId, sourceType) => {
+    if (sourceType === 'salle') {
+      // Trouver la salle à éditer
+      const salle = sallesFromSalles.find(s => s.id === salleId);
+      if (salle) {
+        setSalleToEdit(salle);
+        setEditingMode(true);
+        setShowModal(true);
+      }
+    } else {
+      // Pour les salles dans les contacts, on ne peut pas les éditer directement
+      toast.warning('La modification des informations de salle depuis un contact n\'est pas encore implémentée');
+    }
   };
 
-  const handleDelete = (contactId) => {
-    // TODO: Implémenter la suppression des infos de salle
-    console.log('Supprimer les infos de salle pour le contact:', contactId);
+  const handleDelete = async (salleId, sourceType) => {
+    // Confirmation avant suppression
+    const confirmMessage = sourceType === 'salle' 
+      ? 'Êtes-vous sûr de vouloir supprimer cette salle ?'
+      : 'Êtes-vous sûr de vouloir supprimer les informations de salle de ce contact ?';
+    
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      if (sourceType === 'salle') {
+        // Supprimer de la collection salles
+        await deleteDoc(doc(db, 'salles', salleId));
+        toast.success('Salle supprimée avec succès');
+        refetchSalles(); // Rafraîchir la liste
+      } else {
+        // Pour les salles dans les contacts, on ne peut pas les supprimer directement
+        // Il faudrait mettre à jour le contact pour retirer les infos de salle
+        toast.warning('La suppression des informations de salle depuis un contact n\'est pas encore implémentée');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast.error('Erreur lors de la suppression de la salle');
+    }
   };
 
   const handleCreateSalle = () => {
+    setSalleToEdit(null);
+    setEditingMode(false);
     setShowModal(true);
   };
 
   const handleSalleCreated = (newSalle) => {
-    // Actualiser la liste après création
+    // Actualiser la liste après création ou modification
     refetchSalles();
     refetchContacts();
-    console.log('Nouvelle salle créée:', newSalle);
+    console.log(editingMode ? 'Salle modifiée:' : 'Nouvelle salle créée:', newSalle);
+    // Réinitialiser l'état d'édition
+    setEditingMode(false);
+    setSalleToEdit(null);
   };
 
   // Combiner les salles de la collection 'salles' et les infos de salle des contacts
@@ -276,7 +318,7 @@ const SallesPage = () => {
                             <Button
                               variant="outline-primary"
                               size="sm"
-                              onClick={() => handleEdit(salle.id)}
+                              onClick={() => handleEdit(salle.id, salle.sourceType)}
                               title="Modifier"
                             >
                               <i className="bi bi-pencil"></i>
@@ -284,7 +326,7 @@ const SallesPage = () => {
                             <Button
                               variant="outline-danger"
                               size="sm"
-                              onClick={() => handleDelete(salle.id)}
+                              onClick={() => handleDelete(salle.id, salle.sourceType)}
                               title="Supprimer"
                             >
                               <i className="bi bi-trash"></i>
@@ -310,11 +352,17 @@ const SallesPage = () => {
         </>
       )}
 
-      {/* Modal de création de salle */}
+      {/* Modal de création/édition de salle */}
       <SalleCreationModal
         show={showModal}
-        onHide={() => setShowModal(false)}
+        onHide={() => {
+          setShowModal(false);
+          setEditingMode(false);
+          setSalleToEdit(null);
+        }}
         onSalleCreated={handleSalleCreated}
+        editMode={editingMode}
+        initialData={salleToEdit}
       />
     </Container>
   );

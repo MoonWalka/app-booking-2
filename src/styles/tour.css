@@ -56,11 +56,16 @@ body .introjs-tooltip {
 .introjs-tooltip-header .introjs-skipbutton {
   color: var(--color-text-inverse);
   opacity: 0.9;
-  font-size: var(--font-size-sm);
+  width: auto;
+  height: auto;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: 1rem;
 }
 
 .introjs-tooltip-header .introjs-skipbutton:hover {
   opacity: 1;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-inverse);
 }
 
 /* Contenu du tooltip */
@@ -152,13 +157,23 @@ body .introjs-tooltip {
   background: none;
   border: none;
   text-decoration: none;
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-2);
   flex-shrink: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition-base);
 }
 
 .introjs-skipbutton:hover {
-  color: var(--color-text-primary);
-  text-decoration: underline;
+  color: var(--color-danger);
+  background-color: rgba(var(--color-danger-rgb), 0.1);
+  text-decoration: none;
 }
 
 /* Progress bar */

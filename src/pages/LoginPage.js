@@ -13,7 +13,8 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [userName, setUserName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -34,7 +35,7 @@ const LoginPage = () => {
     setSuccess(false);
 
     // Validation client basique
-    if (!email || !password || (isSignUp && (!confirmPassword || !userName))) {
+    if (!email || !password || (isSignUp && (!confirmPassword || !firstName || !lastName))) {
       setError('Veuillez remplir tous les champs');
       setLoading(false);
       return;
@@ -69,17 +70,27 @@ const LoginPage = () => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        // Mise à jour du profil utilisateur avec le nom
+        // Mise à jour du profil utilisateur avec le nom complet
+        const displayName = `${firstName} ${lastName}`.trim();
         await updateProfile(user, {
-          displayName: userName
+          displayName: displayName
         });
         
         console.log('✅ Inscription réussie pour:', user.email);
         setSuccess(true);
         setLoading(false);
         
-        // Redirection vers l'onboarding après 1 seconde
+        // Redirection vers l'onboarding après 1 seconde avec les infos utilisateur
         setTimeout(() => {
+          const userData = {
+            firstName: firstName,
+            lastName: lastName,
+            displayName: displayName,
+            email: email,
+            uid: user.uid
+          };
+          // Stocker temporairement les données dans sessionStorage pour l'onboarding
+          sessionStorage.setItem('newUserData', JSON.stringify(userData));
           navigate('/onboarding?action=create');
         }, 1000);
         
@@ -155,7 +166,8 @@ const LoginPage = () => {
     // Vider les champs spécifiques à l'inscription
     if (isSignUp) {
       setConfirmPassword('');
-      setUserName('');
+      setFirstName('');
+      setLastName('');
     }
   };
 
@@ -214,27 +226,51 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit}>
             {/* Champs spécifiques à l'inscription */}
             {isSignUp && (
-              <div className={styles.formGroup}>
-                <label htmlFor="userName" className={styles.formLabel}>
-                  <i className="bi bi-person-fill"></i>
-                  Nom d'utilisateur
-                </label>
-                <div className={styles.inputGroup}>
-                  <i className={`${styles.inputIcon} bi bi-person`}></i>
-                  <input
-                    type="text"
-                    className={`${styles.formControl} ${styles.withIcon}`}
-                    id="userName"
-                    name="userName"
-                    placeholder="Votre nom d'utilisateur"
-                    autoComplete="name"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    onInput={hideErrorAlert}
-                    required
-                  />
+              <>
+                <div className={styles.formGroup}>
+                  <label htmlFor="firstName" className={styles.formLabel}>
+                    <i className="bi bi-person-fill"></i>
+                    Prénom
+                  </label>
+                  <div className={styles.inputGroup}>
+                    <i className={`${styles.inputIcon} bi bi-person`}></i>
+                    <input
+                      type="text"
+                      className={`${styles.formControl} ${styles.withIcon}`}
+                      id="firstName"
+                      name="firstName"
+                      placeholder="Votre prénom"
+                      autoComplete="given-name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      onInput={hideErrorAlert}
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
+                
+                <div className={styles.formGroup}>
+                  <label htmlFor="lastName" className={styles.formLabel}>
+                    <i className="bi bi-person-fill"></i>
+                    Nom
+                  </label>
+                  <div className={styles.inputGroup}>
+                    <i className={`${styles.inputIcon} bi bi-person`}></i>
+                    <input
+                      type="text"
+                      className={`${styles.formControl} ${styles.withIcon}`}
+                      id="lastName"
+                      name="lastName"
+                      placeholder="Votre nom"
+                      autoComplete="family-name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      onInput={hideErrorAlert}
+                      required
+                    />
+                  </div>
+                </div>
+              </>
             )}
             
             <div className={styles.formGroup}>

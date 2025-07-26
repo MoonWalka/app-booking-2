@@ -29,7 +29,7 @@ function DesktopLayout({ children }) {
   const { currentEntreprise } = useEntreprise();
   const { canEditSettings } = usePermissions();
   const { resetTour } = useInteractiveTour();
-  const { resetAllTours } = useModuleTour();
+  const { resetAllTours, startModuleTour } = useModuleTour();
   const { 
     openContactsListTab,
     openDatesListTab,
@@ -1279,8 +1279,33 @@ function DesktopLayout({ children }) {
               variant="outline-primary"
               size="sm"
               onClick={() => {
-                resetTour();
-                window.location.reload();
+                // Détecter le menu actuellement ouvert et lancer le tour approprié
+                if (expandedMenu) {
+                  // Mapper les IDs de menu aux modules de tour
+                  const menuToModuleMap = {
+                    'contact': 'contacts',
+                    'booking': 'booking',
+                    'collaboration': 'taches',
+                    'admin': 'tableau'
+                  };
+                  
+                  const moduleToStart = menuToModuleMap[expandedMenu];
+                  if (moduleToStart) {
+                    startModuleTour(moduleToStart);
+                  } else {
+                    // Si pas de tour spécifique, lancer le tour général
+                    if (window.startAppTour) {
+                      window.startAppTour();
+                    }
+                  }
+                } else {
+                  // Si aucun menu n'est ouvert, lancer le tour général
+                  if (window.startAppTour) {
+                    window.startAppTour();
+                  } else {
+                    console.error('Fonction startAppTour non disponible');
+                  }
+                }
               }}
               title="Lancer le tour guidé de l'application"
             >

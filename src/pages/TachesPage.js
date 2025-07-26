@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import { collection, addDoc, updateDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Button, Form, Dropdown } from 'react-bootstrap';
+import { collection, addDoc, updateDoc, doc, deleteDoc, serverTimestamp, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/services/firebase-service';
 import { useEntreprise } from '@/context/EntrepriseContext';
 import { useAuth } from '@/context/AuthContext';
 import { useTaches } from '@/hooks/taches/useTaches';
 import { useInteractiveTour } from '@/hooks/useInteractiveTour';
+import collaborateurService from '@/services/collaborateurService';
 import Modal from '@/components/common/Modal';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
@@ -29,6 +30,18 @@ function TachesPage() {
     important: '',
     search: ''
   });
+  
+  // États pour la recherche de collaborateurs
+  const [collaborateurs, setCollaborateurs] = useState([]);
+  const [searchCollaborateur, setSearchCollaborateur] = useState('');
+  const [showCollaborateurDropdown, setShowCollaborateurDropdown] = useState(false);
+  const [loadingCollaborateurs, setLoadingCollaborateurs] = useState(false);
+  
+  // États pour la recherche de contacts
+  const [contacts, setContacts] = useState([]);
+  const [searchContact, setSearchContact] = useState('');
+  const [showContactDropdown, setShowContactDropdown] = useState(false);
+  const [loadingContacts, setLoadingContacts] = useState(false);
 
   // Formulaire pour créer/modifier une tâche
   const [formData, setFormData] = useState({
@@ -36,6 +49,7 @@ function TachesPage() {
     commentaire: '',
     tag: '',
     assigneA: '',
+    assigneANom: '', // Nouveau champ pour stocker le nom du collaborateur
     deadline: '',
     contactId: '',
     contactNom: '',
@@ -63,6 +77,157 @@ function TachesPage() {
       return matchesSearch && matchesStatut && matchesImportant;
     });
   }, [taches, filters]);
+  
+  // Charger les collaborateurs de l'entreprise
+  useEffect(() => {
+    const loadCollaborateurs = async () => {
+      if (!currentEntreprise?.id) return;
+      
+      setLoadingCollaborateurs(true);
+      try {
+        console.log('[TachesPage] Chargement des collaborateurs pour entreprise:', currentEntreprise.id);
+        // Note: La méthode s'appelle encore getCollaborateursByOrganization mais utilise bien entrepriseId
+        const collaborateursList = await collaborateurService.getCollaborateursByOrganization(currentEntreprise.id);
+        console.log('[TachesPage] Collaborateurs chargés:', collaborateursList.length, collaborateursList);
+        setCollaborateurs(collaborateursList);
+      } catch (error) {
+        console.error('Erreur lors du chargement des collaborateurs:', error);
+      } finally {
+        setLoadingCollaborateurs(false);
+      }
+    };
+    
+    loadCollaborateurs();
+  }, [currentEntreprise?.id]);
+  
+  // Charger les contacts (structures et personnes) de l'entreprise
+  useEffect(() => {
+    const loadContacts = async () => {
+      if (!currentEntreprise?.id) return;
+      
+      setLoadingContacts(true);
+      try {
+        console.log('Chargement des contacts pour l\'entreprise:', currentEntreprise.id);
+        
+        // Charger les structures sans orderBy pour éviter les problèmes d'index
+        const structuresQuery = query(
+          collection(db, 'structures'),
+          where('entrepriseId', '==', currentEntreprise.id)
+        );
+        const structuresSnapshot = await getDocs(structuresQuery);
+        const structures = structuresSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          _type: 'structure',
+          displayName: doc.data().raisonSociale || doc.data().nom || 'Structure sans nom'
+        }));
+        console.log('Structures chargées:', structures.length);
+        
+        // Charger les personnes sans orderBy pour éviter les problèmes d'index
+        const personnesQuery = query(
+          collection(db, 'personnes'),
+          where('entrepriseId', '==', currentEntreprise.id)
+        );
+        const personnesSnapshot = await getDocs(personnesQuery);
+        const personnes = personnesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          _type: 'personne',
+          displayName: `${doc.data().prenom || ''} ${doc.data().nom || ''}`.trim() || 'Personne sans nom'
+        }));
+        console.log('Personnes chargées:', personnes.length);
+        
+        // Combiner et trier en JavaScript
+        const allContacts = [...structures, ...personnes].sort((a, b) => 
+          a.displayName.localeCompare(b.displayName)
+        );
+        
+        setContacts(allContacts);
+        console.log('Total contacts:', allContacts.length);
+      } catch (error) {
+        console.error('Erreur lors du chargement des contacts:', error);
+        // En cas d'erreur, essayer sans where clause pour voir si c'est un problème d'index
+        try {
+          const structuresSnapshot = await getDocs(collection(db, 'structures'));
+          const personnesSnapshot = await getDocs(collection(db, 'personnes'));
+          
+          const structures = structuresSnapshot.docs
+            .filter(doc => doc.data().entrepriseId === currentEntreprise.id)
+            .map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              _type: 'structure',
+              displayName: doc.data().raisonSociale || doc.data().nom || 'Structure sans nom'
+            }));
+          
+          const personnes = personnesSnapshot.docs
+            .filter(doc => doc.data().entrepriseId === currentEntreprise.id)
+            .map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              _type: 'personne',
+              displayName: `${doc.data().prenom || ''} ${doc.data().nom || ''}`.trim() || 'Personne sans nom'
+            }));
+          
+          const allContacts = [...structures, ...personnes].sort((a, b) => 
+            a.displayName.localeCompare(b.displayName)
+          );
+          
+          setContacts(allContacts);
+          console.log('Contacts chargés via fallback:', allContacts.length);
+        } catch (fallbackError) {
+          console.error('Erreur même avec le fallback:', fallbackError);
+        }
+      } finally {
+        setLoadingContacts(false);
+      }
+    };
+    
+    loadContacts();
+  }, [currentEntreprise?.id]);
+  
+  // Filtrer les collaborateurs selon la recherche
+  const filteredCollaborateurs = useMemo(() => {
+    console.log('[TachesPage] Filtrage collaborateurs - Total:', collaborateurs.length, 'Recherche:', searchCollaborateur);
+    if (!searchCollaborateur) return collaborateurs;
+    
+    const search = searchCollaborateur.toLowerCase();
+    const filtered = collaborateurs.filter(collab => {
+      const name = (collab.displayName || collab.email || '').toLowerCase();
+      const matches = name.includes(search);
+      if (matches) {
+        console.log('[TachesPage] Collaborateur trouvé:', collab.displayName || collab.email);
+      }
+      return matches;
+    });
+    console.log('[TachesPage] Collaborateurs filtrés:', filtered.length);
+    return filtered;
+  }, [collaborateurs, searchCollaborateur]);
+  
+  // Filtrer les contacts selon la recherche
+  const filteredContacts = useMemo(() => {
+    if (!searchContact) {
+      console.log('Pas de recherche, retour de tous les contacts:', contacts.length);
+      return contacts;
+    }
+    
+    const search = searchContact.toLowerCase();
+    console.log('Recherche de contact avec:', search);
+    
+    const filtered = contacts.filter(contact => {
+      const name = contact.displayName.toLowerCase();
+      const email = (contact.email || '').toLowerCase();
+      const ville = (contact.ville || '').toLowerCase();
+      const matches = name.includes(search) || email.includes(search) || ville.includes(search);
+      if (matches) {
+        console.log('Contact trouvé:', contact.displayName);
+      }
+      return matches;
+    });
+    
+    console.log('Contacts filtrés:', filtered.length);
+    return filtered;
+  }, [contacts, searchContact]);
 
   // Fonction pour lancer le tour général de l'app
   const launchAppTour = () => {
@@ -179,11 +344,14 @@ function TachesPage() {
   const handleCreateTache = () => {
     setIsEditing(false);
     setSelectedTache(null);
+    setSearchCollaborateur(''); // Réinitialiser la recherche collaborateur
+    setSearchContact(''); // Réinitialiser la recherche contact
     setFormData({
       titre: '',
       commentaire: '',
       tag: '',
       assigneA: '',
+      assigneANom: '',
       deadline: '',
       contactId: '',
       contactNom: '',
@@ -198,11 +366,14 @@ function TachesPage() {
   const handleEditTache = (tache) => {
     setIsEditing(true);
     setSelectedTache(tache);
+    setSearchCollaborateur(''); // Réinitialiser la recherche collaborateur
+    setSearchContact(''); // Réinitialiser la recherche contact
     setFormData({
       titre: tache.titre || '',
       commentaire: tache.commentaire || '',
       tag: tache.tag || '',
       assigneA: tache.assigneA || '',
+      assigneANom: tache.assigneANom || '',
       deadline: tache.deadline || '',
       contactId: tache.contactId || '',
       contactNom: tache.contactNom || '',
@@ -211,6 +382,20 @@ function TachesPage() {
       statut: tache.statut || 'a_faire',
       important: tache.important || false
     });
+    // Si on a un assigneA, charger le nom du collaborateur
+    if (tache.assigneA && !tache.assigneANom) {
+      const collab = collaborateurs.find(c => c.id === tache.assigneA);
+      if (collab) {
+        setFormData(prev => ({ ...prev, assigneANom: collab.displayName || collab.email }));
+      }
+    }
+    // Si on a un contactId, charger le nom du contact
+    if (tache.contactId && !tache.contactNom) {
+      const contact = contacts.find(c => c.id === tache.contactId);
+      if (contact) {
+        setFormData(prev => ({ ...prev, contactNom: contact.displayName }));
+      }
+    }
     setShowModal(true);
   };
 
@@ -570,7 +755,7 @@ function TachesPage() {
                       </td>
                       <td>
                         <div className={styles.assigneeCell}>
-                          {tache.assigneA || '-'}
+                          {tache.assigneANom || (tache.assigneA ? 'Chargement...' : '-')}
                         </div>
                       </td>
                       <td>
@@ -686,12 +871,63 @@ function TachesPage() {
             <div className="col-md-6">
               <Form.Group className="mb-3">
                 <Form.Label>Assigné à</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={formData.assigneA}
-                  onChange={(e) => setFormData(prev => ({ ...prev, assigneA: e.target.value }))}
-                  placeholder="Personne assignée"
-                />
+                <Dropdown
+                  show={showCollaborateurDropdown}
+                  onToggle={(isOpen) => setShowCollaborateurDropdown(isOpen)}
+                >
+                  <Form.Control
+                    type="text"
+                    value={searchCollaborateur || formData.assigneANom}
+                    onChange={(e) => {
+                      setSearchCollaborateur(e.target.value);
+                      setShowCollaborateurDropdown(true);
+                      // Si on efface tout, réinitialiser
+                      if (!e.target.value) {
+                        setFormData(prev => ({ ...prev, assigneA: '', assigneANom: '' }));
+                      }
+                    }}
+                    onFocus={() => setShowCollaborateurDropdown(true)}
+                    placeholder="Rechercher un collaborateur..."
+                    autoComplete="off"
+                  />
+                  <Dropdown.Menu style={{ width: '100%', maxHeight: '400px', overflowY: 'auto', padding: '8px' }}>
+                    {loadingCollaborateurs ? (
+                      <Dropdown.Item disabled>
+                        <span className="spinner-border spinner-border-sm me-2" />
+                        Chargement...
+                      </Dropdown.Item>
+                    ) : filteredCollaborateurs.length === 0 ? (
+                      <Dropdown.Item disabled>
+                        Aucun collaborateur trouvé
+                      </Dropdown.Item>
+                    ) : (
+                      filteredCollaborateurs.map(collab => (
+                        <Dropdown.Item
+                          key={collab.id}
+                          onClick={() => {
+                            setFormData(prev => ({
+                              ...prev,
+                              assigneA: collab.id,
+                              assigneANom: collab.displayName || collab.email
+                            }));
+                            setSearchCollaborateur('');
+                            setShowCollaborateurDropdown(false);
+                          }}
+                        >
+                          <div className="d-flex align-items-center" style={{ padding: '4px 0' }}>
+                            <div className="me-3">
+                              <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }} />
+                            </div>
+                            <div style={{ overflow: 'hidden' }}>
+                              <div className="fw-bold text-truncate">{collab.displayName || 'Sans nom'}</div>
+                              <small className="text-muted text-truncate d-block">{collab.email}</small>
+                            </div>
+                          </div>
+                        </Dropdown.Item>
+                      ))
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
               </Form.Group>
             </div>
           </div>
@@ -727,12 +963,69 @@ function TachesPage() {
             <div className="col-md-6">
               <Form.Group className="mb-3">
                 <Form.Label>Contact</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={formData.contactNom}
-                  onChange={(e) => setFormData(prev => ({ ...prev, contactNom: e.target.value }))}
-                  placeholder="Contact lié à la tâche"
-                />
+                <Dropdown
+                  show={showContactDropdown}
+                  onToggle={(isOpen) => setShowContactDropdown(isOpen)}
+                >
+                  <Form.Control
+                    type="text"
+                    value={searchContact || formData.contactNom}
+                    onChange={(e) => {
+                      setSearchContact(e.target.value);
+                      setShowContactDropdown(true);
+                      // Si on efface tout, réinitialiser
+                      if (!e.target.value) {
+                        setFormData(prev => ({ ...prev, contactId: '', contactNom: '' }));
+                      }
+                    }}
+                    onFocus={() => setShowContactDropdown(true)}
+                    placeholder="Rechercher un contact (structure ou personne)..."
+                    autoComplete="off"
+                  />
+                  <Dropdown.Menu style={{ width: '100%', maxHeight: '400px', overflowY: 'auto', padding: '8px' }}>
+                    {loadingContacts ? (
+                      <Dropdown.Item disabled>
+                        <span className="spinner-border spinner-border-sm me-2" />
+                        Chargement...
+                      </Dropdown.Item>
+                    ) : filteredContacts.length === 0 ? (
+                      <Dropdown.Item disabled>
+                        Aucun contact trouvé
+                      </Dropdown.Item>
+                    ) : (
+                      filteredContacts.map(contact => (
+                        <Dropdown.Item
+                          key={contact.id}
+                          onClick={() => {
+                            setFormData(prev => ({
+                              ...prev,
+                              contactId: contact.id,
+                              contactNom: contact.displayName
+                            }));
+                            setSearchContact('');
+                            setShowContactDropdown(false);
+                          }}
+                        >
+                          <div className="d-flex align-items-center" style={{ padding: '4px 0' }}>
+                            <div className="me-3">
+                              <i className={`bi ${contact._type === 'structure' ? 'bi-building' : 'bi-person'} text-${contact._type === 'structure' ? 'primary' : 'info'}`} style={{ fontSize: '1.5rem' }} />
+                            </div>
+                            <div className="flex-grow-1" style={{ overflow: 'hidden', minWidth: 0 }}>
+                              <div className="fw-bold text-truncate">{contact.displayName}</div>
+                              {contact.email && <small className="text-muted text-truncate d-block">{contact.email}</small>}
+                              {contact.ville && <small className="text-muted text-truncate d-block"><i className="bi bi-geo-alt me-1" />{contact.ville}</small>}
+                            </div>
+                            <div className="ms-2">
+                              <span className={`badge bg-${contact._type === 'structure' ? 'primary' : 'info'}`} style={{ fontSize: '0.75rem' }}>
+                                {contact._type === 'structure' ? 'Structure' : 'Personne'}
+                              </span>
+                            </div>
+                          </div>
+                        </Dropdown.Item>
+                      ))
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
               </Form.Group>
             </div>
             <div className="col-md-6">

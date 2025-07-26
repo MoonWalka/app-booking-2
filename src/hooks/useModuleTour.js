@@ -170,18 +170,18 @@ export const useModuleTour = () => {
       currentModule = 'contrats';
     }
     
-    // Si on est sur un module et qu'on n'a pas vu son tour
-    if (currentModule && moduleTours[currentModule] && !hasSeenModuleTours[currentModule]) {
-      // Attendre un peu que la page se charge
-      setTimeout(() => {
-        startInteractiveTour(moduleTours[currentModule], {
-          doneLabel: 'Compris !',
-          skipLabel: 'Passer',
-          onComplete: () => markModuleTourAsSeen(currentModule),
-          onExit: () => markModuleTourAsSeen(currentModule)
-        });
-      }, 500);
-    }
+    // DÉSACTIVÉ : Les tours de modules ne se déclenchent plus automatiquement
+    // L'utilisateur doit les lancer manuellement via un bouton
+    // if (currentModule && moduleTours[currentModule] && !hasSeenModuleTours[currentModule]) {
+    //   setTimeout(() => {
+    //     startInteractiveTour(moduleTours[currentModule], {
+    //       doneLabel: 'Compris !',
+    //       skipLabel: 'Passer',
+    //       onComplete: () => markModuleTourAsSeen(currentModule),
+    //       onExit: () => markModuleTourAsSeen(currentModule)
+    //     });
+    //   }, 500);
+    // }
   }, [location.pathname]);
 
   // Fonction pour relancer manuellement le tour d'un module
@@ -189,7 +189,7 @@ export const useModuleTour = () => {
     if (moduleTours[module]) {
       startInteractiveTour(moduleTours[module], {
         doneLabel: 'Compris !',
-        skipLabel: 'Passer'
+        skipLabel: '<i class="bi bi-x-lg"></i>'
       });
     }
   };

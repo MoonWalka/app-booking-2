@@ -323,7 +323,7 @@ export const getEntDoc = (collectionName, docId) => {
 };
 
 // Créer une nouvelle entreprise
-export const createEntreprise = async (entrepriseData, userId) => {
+export const createEntreprise = async (entrepriseData, userId, userData = null) => {
   console.log('🏢 Création d\'une nouvelle entreprise:', entrepriseData.name);
   
   try {
@@ -380,15 +380,39 @@ export const createEntreprise = async (entrepriseData, userId) => {
     });
     
     // Ajouter le créateur comme collaborateur admin
+    // Générer les initiales à partir du nom et prénom si disponibles
+    let initiales = 'AD';
+    let nom = '';
+    let prenom = '';
+    let email = '';
+    
+    if (userData) {
+      nom = userData.lastName || '';
+      prenom = userData.firstName || '';
+      email = userData.email || '';
+      
+      // Générer les initiales
+      if (prenom && nom) {
+        initiales = (prenom.charAt(0) + nom.charAt(0)).toUpperCase();
+      } else if (userData.displayName) {
+        const parts = userData.displayName.split(' ');
+        if (parts.length >= 2) {
+          initiales = (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+        } else if (parts.length === 1) {
+          initiales = parts[0].substring(0, 2).toUpperCase();
+        }
+      }
+    }
+    
     const collaborationConfigRef = doc(db, 'collaborationConfig', entrepriseId);
     await setDoc(collaborationConfigRef, {
       collaborateurs: [{
         id: userId,
         actif: true,
-        nom: '',
-        prenom: '',
-        email: '',
-        initiales: 'AD',
+        nom: nom,
+        prenom: prenom,
+        email: email,
+        initiales: initiales,
         identifiant: 'admin',
         groupes: ['admin'],
         entreprises: [],
@@ -405,6 +429,35 @@ export const createEntreprise = async (entrepriseData, userId) => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     });
+    
+    // Créer ou mettre à jour le document utilisateur dans la collection users
+    const userDocRef = doc(db, 'users', userId);
+    const userDocData = {
+      uid: userId,
+      email: email || '',
+      displayName: userData?.displayName || `${prenom} ${nom}`.trim() || '',
+      firstName: prenom,
+      lastName: nom,
+      entrepriseId: entrepriseId,
+      role: 'admin',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
+    
+    // Vérifier si le document existe déjà
+    const userDocSnap = await firestoreGetDoc(userDocRef);
+    if (!userDocSnap.exists()) {
+      await firestoreSetDoc(userDocRef, userDocData);
+    } else {
+      // Mettre à jour avec les nouvelles données si nécessaire
+      await firestoreUpdateDoc(userDocRef, {
+        firstName: prenom || userDocSnap.data().firstName || '',
+        lastName: nom || userDocSnap.data().lastName || '',
+        displayName: userData?.displayName || userDocSnap.data().displayName || '',
+        entrepriseId: entrepriseId,
+        updatedAt: serverTimestamp()
+      });
+    }
     
     // Ajouter l'entreprise à l'index utilisateur
     const userEntRef = doc(db, 'user_entreprises', userId);

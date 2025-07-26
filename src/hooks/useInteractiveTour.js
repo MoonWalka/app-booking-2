@@ -27,7 +27,7 @@ export const useInteractiveTour = () => {
       })),
       nextLabel: 'Suivant →',
       prevLabel: '← Précédent',
-      skipLabel: 'Passer le tour',
+      skipLabel: '<i class="bi bi-x-lg"></i>',
       doneLabel: 'Terminer',
       tooltipClass: 'tourcraft-tooltip',
       highlightClass: 'tourcraft-highlight',
